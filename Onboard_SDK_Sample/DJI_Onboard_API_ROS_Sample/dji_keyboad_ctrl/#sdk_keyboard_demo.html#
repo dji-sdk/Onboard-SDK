@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<meta charset="utf-8" />
+
+	<!--
+		<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" />
+
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
+
+		<script type="text/javascript" src="http://cdn.robotwebtools.org/EventEmitter2/current/eventemitter.min.js"></script>
+		<script type="text/javascript" src="http://cdn.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
+		<script type="text/javascript" src="http://cdn.robotwebtools.org/keyboardteleopjs/current/keyboardteleop.min.js"></script>
+		-->
+	<link rel="stylesheet" type="text/css" href="jquery-ui.css" />
+
+	<script type="text/javascript" src="jquery.min.js"></script>
+	<script type="text/javascript" src="jquery-ui.min.js"></script>
+
+	<script type="text/javascript" src="eventemitter.min.js"></script>
+	<script type="text/javascript" src="roslib.min.js"></script>
+	<script type="text/javascript" src="keyboardteleop.js"></script>
+
+
+	<script type="text/javascript">
+	  /**
+	  * Setup all GUI elements when the page is loaded.
+	  */
+	  function init() {
+	  // Connecting to ROS.
+	  var ros = new ROSLIB.Ros({
+	  url : 'ws://127.0.0.1:9090'
+	  });
+
+	  // Initialize the teleop.
+	  var teleop = new KEYBOARDTELEOP.Teleop({
+	  ros : ros,
+	  topic : '/sdk_request_ctrl'
+	  });
+
+         // listen to status
+	  var flight_status_listener = new ROSLIB.Topic({
+	  ros : ros,
+	  name : '/flight_status',
+	  messageType : 'std_msgs/Float32'
+	  });
+      	  var status_display = document.getElementById('status-view');
+      	  var status_list = new Array('unknown', 'standby','takingoff','in the air','landing','post landing');
+
+	  while( status_display.firstChild ) {
+	  status_display.removeChild( status_display.firstChild );
+	  }
+	  status_display.appendChild( document.createTextNode(status_list[0]) );
+	  // Then we add a callback to be called every time a message is published on this topic.
+	  flight_status_listener.subscribe(function(message) {
+	  console.log('Received message on ' + flight_status_listener.name + ': ' + message.data);
+	  while( status_display.firstChild ) {
+	  status_display.removeChild( status_display.firstChild );
+	  }
+	  status_display.appendChild( document.createTextNode(status_list[message.data]) );
+	  });
+
+         // listen to nav open close status
+
+	  var nav_status_listener = new ROSLIB.Topic({
+	  ros : ros,
+	  name : '/nav_open_close_status',
+	  messageType : 'std_msgs/Float32'
+	  });
+      	  var nav_status_display = document.getElementById('nav-status-view');
+      	  var nav_status_list = new Array('refused','closed', 'opened', 'can not open, APP ctrl ', 'closed , APP ctrl','unknown');
+
+	  while( nav_status_display.firstChild ) {
+	  nav_status_display.removeChild( nav_status_display.firstChild );
+	  }
+	  nav_status_display.appendChild( document.createTextNode(nav_status_list[5]) );
+	  // Then we add a callback to be called every time a message is published on this topic.
+	  nav_status_listener.subscribe(function(message) {
+	  console.log('Received message on ' + nav_status_listener.name + ': ' + message.data);
+	  while( nav_status_display.firstChild ) {
+	  nav_status_display.removeChild( nav_status_display.firstChild );
+	  }
+	  nav_status_display.appendChild( document.createTextNode(nav_status_list[message.data]) );
+	  });
+
+         // listen to battery status
+
+	  var battery_status_listener = new ROSLIB.Topic({
+	  ros : ros,
+	  name : '/battery_status',
+	  messageType : 'std_msgs/Float32'
+	  });
+      	  var battery_status_display = document.getElementById('battery-status-view');
+
+	  while( battery_status_display.firstChild ) {
+	  battery_status_display.removeChild( battery_status_display.firstChild );
+	  }
+	  battery_status_display.appendChild( document.createTextNode('unknown') );
+	  // Then we add a callback to be called every time a message is published on this topic.
+	  battery_status_listener.subscribe(function(message) {
+	  console.log('Received message on ' + battery_status_listener.name + ': ' + message.data);
+	  while( battery_status_display.firstChild ) {
+	  battery_status_display.removeChild( battery_status_display.firstChild );
+	  }
+	  battery_status_display.appendChild( document.createTextNode(String(message.data) + "%") );
+	  });
+
+         // listen to status
+	  var activation_listener = new ROSLIB.Topic({
+	  ros : ros,
+	  name : '/activation_status',
+	  messageType : 'std_msgs/Float32'
+	  });
+      	  var activation_display = document.getElementById('activation-view');
+      	  var activation_list = new Array('ACTIVATION_SUCCESS','PARAM_ERROR','ERROR_ENCODE','NEW_DEVICE,TRY_AGAIN','DJI_APP_TIMEOUT','DJI_APP_NO_INTERNET','SERVER_REFUSED','LEVEL_ERROR','WARNING, NO_AUTHORITY!','unknow');
+
+	  while( activation_display.firstChild ) {
+	  activation_display.removeChild( activation_display.firstChild );
+	  }
+	  activation_display.appendChild( document.createTextNode(activation_list[9]) );
+	  // Then we add a callback to be called every time a message is published on this topic.
+	  activation_listener.subscribe(function(message) {
+	  console.log('Received message on ' + activation_listener.name + ': ' + message.data);
+	  while( activation_display.firstChild ) {
+	  activation_display.removeChild( activation_display.firstChild );
+	  }
+	  activation_display.appendChild( document.createTextNode(activation_list[message.data]) );
+	  });
+
+
+	  }
+	</script>
+  </head>
+
+  <body onload="init()">
+
+	<div>
+   	  <div>
+		<h3>DJI SDK DEMO</h3>
+		<div>
+		  <h4>Registration &amp; Activation</h4>
+		  <div>Activation status: <span id="activation-view"></span></div>
+		  <div><button id="activation-button">Activation</button></div>
+		</div>
+
+		<div>
+		  <h4>Nav Mission Control Display</h4>
+		  <div>nav control status: <span id="nav-status-view"></span></div>
+		  <div><button id="open-close-nav-button">Open/Close</button> click to <span id="nav-open-close-request"></span> </div>
+		</div>
+
+		<div>
+		  <h4>Flight Status Display &amp; CMD</h4>	
+		  <div>current status is: <span id="status-view"></span></div>
+		  <div>remaining battery: <span id="battery-status-view"></span></div>
+		  <div>request cmd:  <span id="cmd-request"></span></div>
+		  <div><button id="takeoff-button">Take Off</button> <button id="landing-button">Landing</button> <button id="gohome-button">Go home</button> </div>
+		</div>
+
+		<div>
+		  <h4>Control Mode</h4>
+	          <div>Ctrl mode: <span id="ctrl-mode">0</span></div>
+		  <div>Speed level: <span id="speed-level">0</span></div>
+		</div>
+
+		<div>
+		  <h4>Simple Task</h4>
+	          <div>(premise: Activated and open navi_mode)</div>
+		  <div><button id="task-button">start/stop</button><span id="task-onoff"></span></div>
+		</div>
+
+
+	  </div>
+	</div>
+  </body>
+</html>
