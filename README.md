@@ -7,7 +7,7 @@ Usage
 =========
 ### Windows ###
 
-A example with GUI can be found in *Onboard_SDK_Sample/DJI_Onboard_API_Windows_QT_Sample*.
+An example with GUI can be found in *Onboard_SDK_Sample/DJI_Onboard_API_Windows_QT_Sample*.
 
 ### Linux ###
 
@@ -15,4 +15,4 @@ A **cmake**-based example is included in *Onboard_SDK_Sample/DJI_Onboard_API_Cmd
 
 Contribution
 =========
-This repository is in its very early stage. Any contribution is welcomed.
+This repository is in its very early stage. Any contribution is welcome.
