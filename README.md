@@ -1,7 +1,7 @@
 DJI Onboard API
 ========================
 
-Official UART interface examples for communicating between a DJI autopilot and an offboard computer.
+Official UART interface examples for communicating between a DJI autopilot and an onboard computer.
 
 Usage
 =========

@@ -1,0 +1,3 @@
+*.o
+*~
+Onboard_SDK_Sample/DJI_Onboard_API_Cmdline_Sample/output/
