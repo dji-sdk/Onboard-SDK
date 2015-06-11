@@ -16,3 +16,6 @@ A **cmake**-based example is included in *Onboard_SDK_Sample/DJI_Onboard_API_Cmd
 Contribution
 =========
 This repository is in its very early stage. Any contribution is welcome.
+
+
+dji-sdk/dji-sdk is forked from xuhao1, which is a better ROS package developed by xuhao1
