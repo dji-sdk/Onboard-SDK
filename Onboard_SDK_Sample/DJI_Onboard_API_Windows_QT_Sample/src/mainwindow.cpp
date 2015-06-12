@@ -27,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     time = new QTimer(this);
     TakeoffDelay = new QTimer(this);
+    Activation = new QTimer(this);
     keybuf = new QByteArray(DEFAULT_KEY);
 
     foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts()) {
@@ -42,6 +43,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->btn_nav_open_close->setText(NAV_OPEN);
     connect(time, SIGNAL(timeout()), this, SLOT(Timeout_handle()));
     connect(TakeoffDelay, SIGNAL(timeout()), this, SLOT(TakeoffDelay_handle()));
+    connect(Activation, SIGNAL(timeout()), this, SLOT(Activation_handle()));
     connect(ui->actionAbout, SIGNAL(triggered()),this, SLOT(btn_About()));
     time->start(20);
 
@@ -84,6 +86,7 @@ void MainWindow::on_BtnActivation_clicked()
     printf("key = %s\n",key);
     Save_Setting();
     DJI_Onboard_API_Activation();
+    Activation->start(2000);;
 }
 
 void MainWindow::on_btn_open_serialport_clicked()
@@ -218,10 +221,19 @@ void MainWindow::Timeout_handle()
         {
              char result[][50]={{"ACTIVATION_SUCCESS"},{"PARAM_ERROR"},{"DATA_ENC_ERROR"},{"NEW_DEVICE_TRY_AGAIN"},{"DJI_APP_TIMEOUT"},{" DJI_APP_NO_INTERNET"},{"SERVER_REFUSED"},{"LEVEL_ERROR"}};
              ui->label_Activation_Status->setText(*(result+actavation_status));
-             QMessageBox::information(NULL, "Warning", *(result+actavation_status), QMessageBox::Ok);
+             if(3 != actavation_status)
+             {
+                 Activation->stop();
+                 QMessageBox::information(NULL, "Warning", *(result+actavation_status), QMessageBox::Ok);
+
+             }
 
 
              activation_callback_flag=0;
+             if(3 != actavation_status)
+             {
+                 Activation->stop();
+             }
         }
         else
         {
@@ -238,6 +250,11 @@ void MainWindow::TakeoffDelay_handle()
     ui->btn_Landing->setEnabled(true);
 }
 
+
+void MainWindow::Activation_handle()
+{
+    DJI_Onboard_API_Activation();
+}
 void MainWindow::btn_About()
 {
     About about;

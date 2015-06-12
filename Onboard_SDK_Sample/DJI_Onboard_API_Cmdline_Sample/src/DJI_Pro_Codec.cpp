@@ -790,13 +790,26 @@ void sdk_stream_recalc_crc(void* p_data)
 	}
 }
 
+static void sdk_transform2byte(const char *pstr,unsigned char *pdata)
+{
+	int i;
+	char temp_area[3];
+	unsigned int temp8;
+	temp_area[0] = temp_area[1] = temp_area[2] = 0;
+
+	for(i = 0 ; i < 32; i++)
+	{
+		temp_area[0] = pstr[0];
+		temp_area[1] = pstr[1];
+		sscanf(temp_area,"%x",&temp8);
+		pdata[i] = temp8;
+		pstr += 2;
+	}
+}
+
 void sdk_comm_set_key(SDKFilter* p_filter, const char* sz_key)
 {
-    unsigned short i;
-    for (i = 0; i < 32; i++)
-    {
-        p_filter->comm_key[i] = *sz_key ++;
-    }
+    sdk_transform2byte(sz_key,p_filter->comm_key);
     p_filter->enc_enabled = 1;
 }
 

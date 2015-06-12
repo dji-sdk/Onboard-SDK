@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 3.3.1, 2015-05-18T15:24:31. -->
+<!-- Written by QtCreator 3.3.1, 2015-06-10T12:01:04. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -65,7 +65,7 @@
    <value type="int" key="ProjectExplorer.Target.ActiveDeployConfiguration">0</value>
    <value type="int" key="ProjectExplorer.Target.ActiveRunConfiguration">0</value>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.BuildConfiguration.0">
-    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">../output/DJI_Onboard_API_Windows_QT_Sample-Desktop_Qt_5_4_1_MinGW_32bit</value>
+    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">../output/DJI_Onboard_API_Windows_QT_Sample</value>
     <valuemap type="QVariantMap" key="ProjectExplorer.BuildConfiguration.BuildStepList.0">
      <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.0">
       <value type="bool" key="ProjectExplorer.BuildStep.Enabled">true</value>
@@ -119,7 +119,7 @@
     <value type="bool" key="Qt4ProjectManager.Qt4BuildConfiguration.UseShadowBuild">true</value>
    </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.BuildConfiguration.1">
-    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">../output/DJI_Onboard_API_Windows_QT_Sample-Desktop_Qt_5_4_1_MinGW_32bit</value>
+    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">../output/DJI_Onboard_API_Windows_QT_Sample</value>
     <valuemap type="QVariantMap" key="ProjectExplorer.BuildConfiguration.BuildStepList.0">
      <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.0">
       <value type="bool" key="ProjectExplorer.BuildStep.Enabled">true</value>
@@ -226,7 +226,7 @@
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">DJI_Onboard_API_Windows_QT_Sample</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">DJI_Onboard_API_Windows_QT_Sample2</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:C:/Users/sky.zhou/Desktop/DJI_Onboard_API_Windows_QT_Sample/src/DJI_Onboard_API_Windows_QT_Sample.pro</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:C:/Users/sky.zhou/Desktop/1/onboard-master/onboard-master/Onboard_SDK_Sample/DJI_Onboard_API_Windows_QT_Sample/src/DJI_Onboard_API_Windows_QT_Sample.pro</value>
     <value type="QString" key="Qt4ProjectManager.Qt4RunConfiguration.CommandLineArguments"></value>
     <value type="QString" key="Qt4ProjectManager.Qt4RunConfiguration.ProFile">DJI_Onboard_API_Windows_QT_Sample.pro</value>
     <value type="bool" key="Qt4ProjectManager.Qt4RunConfiguration.UseDyldImageSuffix">false</value>

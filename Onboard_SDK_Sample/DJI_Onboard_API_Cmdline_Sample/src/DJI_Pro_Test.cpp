@@ -812,7 +812,7 @@ int DJI_Pro_Test_Setup(void)
 	activation_msg.app_api_level = 2;
 	activation_msg.app_ver = 1;
 	memcpy(activation_msg.app_bundle_id,"1234567890123456789012", 32);
-	key = "DJI-DEMO AES256 KEY-lala-haha-MA";
+	key = "5837313ef98f1f7f1c50eebb0b06363d523a369289e042c4d00b66d8e49337a7";
 
 	ret = Pro_Hw_Setup("/dev/ttyUSB0",230400);
 	if(ret < 0)

@@ -47,6 +47,8 @@ private slots:
 
     void TakeoffDelay_handle();
 
+    void Activation_handle();
+
     void btn_About();
 
     void on_btn_Landing_clicked();
@@ -55,7 +57,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    QTimer *time;
+    QTimer *time,*Activation;
     QTimer *TakeoffDelay;
     QByteArray *keybuf;
     void Set_Default_Ini();
