@@ -1316,6 +1316,7 @@ To control the spatial movement of MATRICE 100, we split control inputs into thr
 </table>
 
 The ctrl mode flag is divided into 8 bits:
+<table>
 <tr>
   <td rowspan="5">ctrl_mode_flag<br>1byte</td>
   <td>bit[7:6]</td>
@@ -1337,6 +1338,7 @@ The ctrl mode flag is divided into 8 bits:
   <td>bit[0]</td>
   <td>0x0: yaw frame is ground frame<br>0x1: yaw frame is body frame</td>
 </tr>
+<table>
 
 `HORI_FRAME` and `YAW_FRAME` can be an arbitrary if the corresponding mode does not need a specify frame. For instance, `HORI_ATTI_TILT_ANG` defines pitch and roll angles in body frame regardless of input.
 
