@@ -936,6 +936,10 @@ Message Package content and frequency can be configured by DJI N1 assistant soft
 </tr>
 </table>
 
+**Note: The first data item is time stamp. Following data items may or may not present in the message packages, so their offsets are *not fixed*. Here we only list the offsets when all data items are sent.**
+
+<br>
+
 Each data item in the message package is explained below:
 
 <table>
