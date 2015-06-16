@@ -3,6 +3,25 @@ DJI Onboard API
 
 Official UART interface examples for communicating between a DJI autopilot and an onboard computer.
 
+Document
+============
+
+English version:
+
+　[Onboard API Introduction](Onboard_API_Doc/Onboard_API_introduction.md)
+
+　[Data Transparent Transport Introduction](Onboard_API_Doc/Data_Transparent_Transport_Introduction.md)
+
+中文版本：
+
+　[Onboard API 说明文档](Onboard_API_Doc/Onboard_API_说明文档.md)
+
+　[数据透传说明文档](Onboard_API_Doc/数据透传说明文档.md)
+
+PDF Download:
+
+　https://github.com/dji-sdk/onboard/tree/master/Onboard_API_Doc/pdfDocument
+
 Usage
 =========
 ### Windows ###
