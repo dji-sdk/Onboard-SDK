@@ -1,6 +1,14 @@
 #DJI Onboard API Document 
 
+last update: 06/15/2015
 
+*In the event of any conflict between markdown document and the newest pdf document, please refer to the pdf document and report to us.*
+
+*Also, please report us if there is any conflict between the newest Chinese and English versions of pdf document*
+<br>
+<br>
+
+---
 DJI offers two powerful APIs for developers to create custom applications: the Mobile Device API, and the UAV Onboard API. The Mobile Device API is part of the DJI Mobile SDK and lets developers monitor and control the UAV from a mobile device running iOS or Android that is connected to the remote controller. The UAV Onboard API allows developers to monitor and control the UAV from any wired connected system through the serial (UART) interface. 
 
 This document introduces the onboard API. It consists of two parts. A quick start gives introduction to the main components of the onboard API, and a programming guide describes all development related information.  
@@ -89,7 +97,13 @@ An important concept in the activation process is the Device Available Number (D
 
 DJI Matrice Multirotor is designed to be controlled by Remote Controller (RC), onboard device and mobile device. The standard assistant software “DJI Pilot” for DJI Inspire 1 and Phantom 3 can also be used on the platform. Also DJI Mobile SDK is applicable to the platform, so the platform can be controlled via mobile API (please visit _dev.dji.com_ to learn more about DJI Mobile SDK). Since there are three possible control inputs, it is necessary to prioritize them.  
 
-RC is designed to be the primary input source. It can decide whether to grant control authority to onboard device and mobile device or not. If RC enables API control (by configuring the platform and switch RC mode selection bar to F position, onboard API and mobile API can request control authority using their API functions. Mobile API is designed to have higher control priority. If mobile API has the control authority, onboard API cannot successfully obtain the control.
+RC is designed to be the primary input source. It can decide whether the flight control is allowed to grant control authority to onboard device and mobile device or not. The F (stands for function) position of the RC controls the flight controller to enter several functions including IOC and API control mode. The flight controller can enter API control mode if the following settings are done:
+
+1. “enable API control” box is ticked in PC assistant software (See example below for more details).
+2. IOC mode is turned off (Use DJI Pilot App to check this setting).
+3. RC mode selection bar to F position (see the below figure).
+
+If RC allows the flight controller to enable API control, onboard API and mobile API can request control authority using their API request functions. Mobile API is designed to have higher control priority than onboard API. If mobile API has the control authority, onboard API cannot obtain the control authority.
 
 ![rc](Images/controller.png)
 
@@ -193,7 +207,10 @@ Configure the 433 transceivers to the baud rate 230400 (different transceivers m
  |enc_key|String|The encryption key assigned by dev.dji.com server to developer when registration.|
  
  **Note: This command must be run as root. (i.e. `sudo su` first).**
- 
+     
+      sudo su
+      roslaunch dji_sdk sdk_demo.launch
+
 4. Edit `sdk_keyboard_demo.html`. Change the address in the URL to the Linux machine hostname, localhost/127.0.0.1 when single machine and the LAN IP when running ROS multi-machine.
 
     ```c
@@ -403,7 +420,7 @@ When developers compiles a message package in the onboard device program, a sess
 |Session Mode|SESSION|Description|
 |------------|-------|-----------|
 |Mode 1|0|Sender do not need acknowledgement|
-|Mode 1|1|Sender need acknowledgement, but can tolerate ACK package loss.|
+|Mode 2|1|Sender need acknowledgement, but can tolerate ACK package loss.|
 |Mode 3|2-31|Sender wants to make sure the ACK is reliably sent. For these sessions, Receiver saves the sequence number in the command package and send an  ACK package upon receiving it. If ACK package loss happened, Sender may request Receiver again using the same command package with the same sequence number, and Receiver will reply by sending saved acknowledge result. Unless Sender sends a new sequence number, Receiver will not forget the last command acknowledge result|
 
 <br>
@@ -445,7 +462,9 @@ Arguments explained:
 #### Command Set and Authorization Level
 
 The DJI onboard API has three sets or categories of commands:
+
 |Category|Description|Command Set ID|
+|--------|-----------|--------------|
 |Activation related|All commands used to activate API|0x00|
 |Control related|Commands to control MATRICE 100|0x01|
 |Monitoring related|Commands that contains autopilot data|0x02|
@@ -571,7 +590,7 @@ Session Mode 3 is used to get API version. After the autopilot receives request 
 <tr>
   <td>8</td>
   <td>4</td>
-  <td>app+ver, the version of onboard application</td>
+  <td>app_ver, the version of onboard application</td>
 </tr>
 
 <tr>
@@ -743,14 +762,14 @@ Firstly, the command 0x01 should be sent to trigger the mode changing logic:
 <tr>
   <td>1</td>
   <td>1</td>
-  <td>Request mode <ui><li>1 = request go home</li><li>4 = request auto take off</li><li>6 = request auto landing</li></ui></td>
+  <td>Request mode<ui><li>1 = request go home</li><li>4 = request auto take off</li><li>6 = request auto landing</li></ui></td>
 </tr>
 
 <tr>
   <td>Return Data</td>
   <td>0</td>
   <td>1</td>
-  <td>Return code <ui><li>0x0001 = the command is received but rejected</li><li>0x0002 = start to execute the command</li></ui></td>
+  <td>Return code<ui><li>0x0001 = the command is received but rejected</li><li>0x0002 = start to execute the command</li></ui></td>
 </tr>
 
 </table>
@@ -762,7 +781,7 @@ The second command is a query from the onboard device to obtain the execution re
 |Data Type|Offset|Size|Description|
 |---------|------|----|-----------|
 |Request Data|0|1|Command Sequence Number|
-|Return Data|0|1|Return code <ui><li>0x0001 = query failed, current command is not the query command</li><li>0x0003 = command is executing</li><li>0x0004 = command failed</li><li>0x0005 = command succeed</li></ui>
+|Return Data|0|1|Return code<ui><li>0x0001 = query failed, current command is not the query command</li><li>0x0003 = command is executing</li><li>0x0004 = command failed</li><li>0x0005 = command succeed</li></ui>
 
 These two commands, together with the "session mechanism", can guarantee the flight control command is executed and its execution result reaches the onboard device reliably.
 
