@@ -923,7 +923,10 @@ int main (int argc, char** argv)
 	/* ros timer 50Hz */
 	simple_task_timer 	= nh.createTimer(ros::Duration(1.0/50.0), spin_callback);
 	/* open serial port */
-	Pro_Hw_Setup((char *)serial_name.c_str(),baud_rate);
+	if (0!=Pro_Hw_Setup((char *)serial_name.c_str(),baud_rate))
+	{
+		exit(1);
+	};
 	Pro_Link_Setup();
 	App_Recv_Set_Hook(App_Recv_Req_Data);
 	App_Set_Table(set_handler_tab, cmd_handler_tab);

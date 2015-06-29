@@ -5,7 +5,10 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include<sys/ioctl.h>
+#include <sys/ioctl.h>
+
+#include <errno.h>
+#include <string.h>
 
 #include <termios.h>
 #include <string.h>
@@ -22,6 +25,8 @@ int SerialOpen(const char *port_str)
 	if(serial_fd < 0)
 	{
 		printf("%s,%d:ERROR\n",__func__,__LINE__);
+		printf("\x1b[31m" "Fail when setup serial. Error msg:");
+		printf(" ERRNO[%d]: %s\n" "\x1b[0m",errno, strerror(errno));
 		return -1;
 	}
 	return 0;
