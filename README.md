@@ -18,10 +18,6 @@ English version:
 
 　[数据透传说明文档](Onboard_API_Doc/数据透传说明文档.md)
 
-PDF Download:
-
-　https://github.com/dji-sdk/onboard/tree/master/Onboard_API_Doc/pdfDocument
-
 Usage
 =========
 ### Windows ###
