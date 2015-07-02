@@ -1,6 +1,6 @@
 #DJI Onboard API Document 
 
-last update: 06/30/2015
+last update: 07/02/2015
 
 *In case of any mistake or bug, please report to us using Github issue or DJI forum or email. You are welcome to send your pull request helping us fix issue. However, all pull requests related to document must follow the [document style](https://github.com/dji-sdk/onboard/issues/8#issuecomment-115976289)*
 <br>
@@ -1308,21 +1308,21 @@ To control the spatial movement of MATRICE 100, we split control inputs into thr
 </tr>
 <tr>
   <td>VERT_THRUST</td>
-  <td>Directly control the height of MATRICE 100</td>
+  <td>Directly control the thrust (lifting force expressed as 0%-100% percentage) of MATRICE 100</td>
 </tr>
 
 <tr>
   <td rowspan="3">Horizontal</td>
   <td>HORI_ATTI_TILT_ANG</td>
-  <td>Pitch & roll angle, referenced to the body frame</td>
+  <td>Pitch & roll angle, <b>referenced to either the ground or body frame</b></td>
 </tr>
 <tr>
   <td>HORI_POS</td>
-  <td>Offsets of pitch & roll directions, referenced to either the ground or body frame</td>
+  <td>Position offsets of pitch & roll directions, <b>referenced to either the ground or body frame</b></td>
 </tr>
 <tr>
   <td>HORI_VEL</td>
-  <td>Input are velocities on pitches & roll directions, offset can be chosen in either the ground frame or body frame</td>
+  <td>Velocities on pitches & roll directions, <b>referenced to either the ground or body frame</b></td>
 </tr>
 
 <tr>
@@ -1332,7 +1332,7 @@ To control the spatial movement of MATRICE 100, we split control inputs into thr
 </tr>
 <tr>
   <td>YAW_RATE</td>
-  <td>Yaw angular rate. It can either be referenced to either the ground frame or the body frame</td>
+  <td>Yaw angular rate. It can either be <b>referenced to either the ground frame or the body frame</b></td>
 </tr>
 </table>
 
@@ -1341,27 +1341,27 @@ The ctrl mode flag is divided into 8 bits:
 <tr>
   <td rowspan="5">ctrl_mode_flag<br>1byte</td>
   <td>bit[7:6]</td>
-  <td>0x00: horizontal angle<br>0x01: horizontal velocity<br>0x10:horizontal position</td>
+  <td>0b00: horizontal angle<br>0b01: horizontal velocity<br>0b10:horizontal position</td>
 </tr>
 <tr>
   <td>bit[5:4]</td>
-  <td>0x00: vertical velocity<br>0x01: vertical position<br>0x10: vertical thrust</td>
+  <td>0b00: vertical velocity<br>0b01: vertical position<br>0b10: vertical thrust</td>
 </tr>
 <tr>
   <td>bit[3]</td>
-  <td>0x0: yaw angle<br>0x1: yaw angular rate</td>
+  <td>0b0: yaw angle<br>0b1: yaw angular rate</td>
 </tr>
 <tr>
   <td>bit[2:1]</td>
-  <td>0x00: horizontal frame is ground frame<br>0x01: horizontal frame is body frame</td>
+  <td>0b00: horizontal frame is ground frame<br>0b01: horizontal frame is body frame</td>
 </tr>
 <tr>
   <td>bit[0]</td>
-  <td>0x0: yaw frame is ground frame<br>0x1: yaw frame is body frame</td>
+  <td>0b0: yaw frame is ground frame<br>0b1: yaw frame is body frame</td>
 </tr>
 <table>
 
-`HORI_FRAME` and `YAW_FRAME` can be an arbitrary if the corresponding mode does not need a specify frame. For instance, `HORI_ATTI_TILT_ANG` defines pitch and roll angles in body frame regardless of input.
+`HORI_FRAME` and `YAW_FRAME` can be an arbitrary if the corresponding mode does not need a specify frame. 
 
 By specifying `ctrl_mode_flag`, 14 control modes can be constructed (`ctrl_mode_flag` is represented as an 8-bit binary number here. The bit position with X means that this certain mode doesn't depend on the bit of this position, it can be either 0 or 1):
 

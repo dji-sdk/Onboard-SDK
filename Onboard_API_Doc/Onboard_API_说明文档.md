@@ -1,6 +1,6 @@
 #DJI Onboard API 说明文档
 
-最后更新: 2015年06月30日
+最后更新: 2015年07月02日
 
 *如发现任何错误，请通过Github issue或开发者论坛或邮件反馈给我们。欢迎提交pull request来帮助我们修正问题，关于文档的修改需要符合[格式标准](https://github.com/dji-sdk/onboard/issues/8#issuecomment-115976289)*
 
@@ -1300,21 +1300,21 @@ void recv_std_package (unsigned char* pbuf, unsigned int len) {
 </tr>
 <tr>
   <td>VERT_THRUST</td>
-  <td>垂直方向上控制的是油门百分比</td>
+  <td>垂直方向上控制的是油门百分比(0-100)</td>
 </tr>
 
 <tr>
   <td rowspan="3">水平方向</td>
   <td>HORI_ATTI_TILT_ANG</td>
-  <td>水平方向控制的是 body 坐标系下 pitch 和 roll 两个方向上的倾角（和加速度对应）</td>
+  <td>水平方向控制的是pitch 和 roll 两个方向上的倾角（和加速度对应），<b>可以选择这个 offset 是 ground 坐标系下还是body 坐标系下</b></td>
 </tr>
 <tr>
   <td>HORI_POS</td>
-  <td>水平方向控制的是 pitch 和 roll 两个方向上的位置offset，可以选择这个 offset 是 ground 坐标系下还是body 坐标系下</td>
+  <td>水平方向控制的是 pitch 和 roll 两个方向上的位置offset，<b>可以选择这个 offset 是 ground 坐标系下还是body 坐标系下</b></td>
 </tr>
 <tr>
   <td>HORI_VEL</td>
-  <td>水平方向控制的是 pitch 和 roll 两个方向上的速度，可以选择这个速度是 ground 坐标系下还是 body 坐标系下</td>
+  <td>水平方向控制的是 pitch 和 roll 两个方向上的速度，<b>可以选择这个速度是 ground 坐标系下还是 body 坐标系下</b></td>
 </tr>
 
 <tr>
@@ -1324,7 +1324,7 @@ void recv_std_package (unsigned char* pbuf, unsigned int len) {
 </tr>
 <tr>
   <td>YAW_RATE</td>
-  <td>偏航控制目标角速度，可以选择这个角速度是 ground 坐标系下还是 body 坐标系下</td>
+  <td>偏航控制目标角速度，<b>可以选择这个角速度是 ground 坐标系下还是 body 坐标系下</b></td>
 </tr>
 </table>
 
@@ -1333,27 +1333,27 @@ void recv_std_package (unsigned char* pbuf, unsigned int len) {
 <tr>
   <td rowspan="5">模式标识位<br>1byte</td>
   <td>bit[7:6]</td>
-  <td>0x00：水平倾角<br>0x01：水平速度<br>0x10：水平位置</td>
+  <td>0b00：水平倾角<br>0b01：水平速度<br>0b10：水平位置</td>
 </tr>
 <tr>
   <td>bit[5:4]</td>
-  <td>0x00：垂直速度<br>0x01：垂直位置<br>0x10：垂直推力</td>
+  <td>0b00：垂直速度<br>0b01：垂直位置<br>0b10：垂直推力</td>
 </tr>
 <tr>
   <td>bit[3]</td>
-  <td>0x0: 偏航 YAW 角度<br>0x1: 偏航 YAW 角速度</td>
+  <td>0b0: 偏航 YAW 角度<br>0b1: 偏航 YAW 角速度</td>
 </tr>
 <tr>
   <td>bit[2:1]</td>
-  <td>0x00：水平坐标系为 Ground 系<br>0x01：水平坐标系为 Body 系</td>
+  <td>0b00：水平坐标系为 Ground 系<br>0b01：水平坐标系为 Body 系</td>
 </tr>
 <tr>
   <td>bit[0]</td>
-  <td>0x0：偏航坐标系为 Ground 系<br>0x1：偏航坐标系为 Body 系</td>
+  <td>0b0：偏航坐标系为 Ground 系<br>0b1：偏航坐标系为 Body 系</td>
 </tr>
 <table>
 
-在某些模式中，水平坐标系和偏航坐标系可以是任意的。比如当水平方向选择`HORI_ATTI_TILT_ANG`模式时，pitch 和 roll 的输入量一定会被解释成 body 坐标系中角度。
+在某些模式中，水平坐标系和偏航坐标系可以是任意的。
 
 经过多种模式的组合，共有 14 种模式 (模式标志指的是 1byte 标志位中的每个 bit 应该如何取值可以实现该模式。数值为 X 的 bit 说明该模式不判断该位置，因此该 bit 可以为任意值)：
 
