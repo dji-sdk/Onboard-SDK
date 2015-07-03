@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 3.2.1, 2015-06-30T16:25:32. -->
+<!-- Written by QtCreator 3.2.1, 2015-07-03T12:21:42. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -223,8 +223,8 @@
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">DJI_Onboard_API_Windows_QT_Sample</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:C:/Users/vincent.wu/Desktop/temp/onboard/Onboard_SDK_Sample/DJI_Onboard_API_Windows_QT_Sample/src/DJI_Onboard_API_Windows_QT_Sample.pro</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">DJI_Onboard_API_Windows_QT_Sample2</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:C:/Users/vincent.wu/Desktop/git_push/onboard/Onboard_SDK_Sample/DJI_Onboard_API_Windows_QT_Sample/src/DJI_Onboard_API_Windows_QT_Sample.pro</value>
     <value type="QString" key="Qt4ProjectManager.Qt4RunConfiguration.CommandLineArguments"></value>
     <value type="QString" key="Qt4ProjectManager.Qt4RunConfiguration.ProFile">DJI_Onboard_API_Windows_QT_Sample.pro</value>
     <value type="bool" key="Qt4ProjectManager.Qt4RunConfiguration.UseDyldImageSuffix">false</value>

@@ -185,7 +185,7 @@ void MainWindow::on_btn_simpletask_clicked()
 void MainWindow::Timeout_handle()
 {
     unsigned char battery, actavation_status, ctrl_device;
-    this->statusBar()->showMessage(tr("RX: %1")
+    statusBar()->showMessage(tr("RX: %1")
                                    .arg(Pro_Hw.load_con));
 
     DJI_Get_Info(&battery, &actavation_status, &ctrl_device);

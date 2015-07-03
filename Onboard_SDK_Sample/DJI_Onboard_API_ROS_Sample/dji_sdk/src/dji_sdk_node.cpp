@@ -537,40 +537,44 @@ void test_all(bool &is_init)
 		static bool init_flag = false;
 		if(cnt < 1)
 		{
-			uint8_t send_data = 4; 
+			uint8_t send_data = 4;
 			App_Complex_Send_Cmd(send_data, cmd_callback_fun);
 			cnt ++;
 		}
-		else if(cnt < 50*12)
+        else if(cnt < 50 * 12)
 		{
 			/* wait for takeoff finish */
 			cnt ++;
 		}
-		else if(cnt < 50*40)
+        else if(cnt < 50 * (40 + 12))
 		{
+            if(cnt == 50 * 12)
+                printf("Debug info: start mode2\n");
 			basic_test_mode2(init_flag);
 			cnt ++;
 		}
-		else if(cnt < 50*40+1)
+        else if(cnt < 50 * (40 + 12) + 1)
 		{
 			init_flag = false;
 			cnt ++;
 		}
-		else if(cnt < 50*40*2)
+        else if(cnt < 50 * 40 * 2 + 50 * 12)
 		{
+            if(cnt == (50 *(40 + 12) + 1))
+                printf("Debug info: start mode4\n");
 			basic_test_mode4(init_flag);
 			cnt ++;
 		}
-		else if(cnt < 50*40*2+1)
+        else if(cnt < 50 * 40 * 2 + 50 * 12 + 1)
 		{
 			init_flag = false;
-			uint8_t send_data = 1; 
+			uint8_t send_data = 1;
 			App_Complex_Send_Cmd(send_data, cmd_callback_fun);
 			cnt ++;
 		}
-		else if(cnt < 50*40*2+50*15)
+        else if(cnt < 50 * (40 + 12) * 2 + 50 * 15)
 		{
-			/*wait for landing */
+			//wait landing
 			cnt ++;
 		}
 		else
@@ -579,7 +583,7 @@ void test_all(bool &is_init)
 			cnt = 0;
 			simple_task_num = -1;
 		}
-				
+
 	}
 }
 
