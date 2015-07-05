@@ -1,4 +1,4 @@
-TARGET = ../output/DJI_Onboard_API_Cmdline_Test
+TARGET = ../output/DJI_Onboard_API_RaspberryPi_Test
 
 OBJECTS = main.o DJI_Pro_App.o DJI_Pro_Hw.o DJI_Pro_Link.o DJI_Pro_Test.o DJI_Pro_Codec.o
 
