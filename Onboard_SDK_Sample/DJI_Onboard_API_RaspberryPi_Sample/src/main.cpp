@@ -1,6 +1,7 @@
 //============================================================================
 // Name        : DJI_Onboard_Sdk_Test.cpp
 // Author      : wuyuwei
+// Modified By : Evan.Gu
 // Version     :
 // Copyright   : DJI Inc
 // Description : DJI Onboard SDK test in C++, Ansi-style
@@ -50,6 +51,7 @@ int main(int argc,char **argv)
 	if(DJI_Pro_Test_Setup() < 0)
 	{
 		printf("Serial Port Open ERROR\n");
+                printf("Permission denied? Try \"sudo chmod 777 /dev/ttyUSB0\"\n");
 		return 0;
 	}
 	Display_Main_Menu();

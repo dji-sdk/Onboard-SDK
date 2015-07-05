@@ -810,40 +810,85 @@ int DJI_Pro_Test_Setup(void)
         char* line = NULL;
         size_t len = 0;
         ssize_t read;
+        //store in Config.txt
+        char* config_device = NULL;
+        int config_baudrate = 230400;
         unsigned int config_id = 0;
         char* config_key = NULL;
         configFile = fopen("Config.txt", "r");
         if(configFile == NULL)
         {
-            printf("read Config.txt error!\n");
+            printf("Read Config.txt error!\n");
             exit(0);
         }
+        printf("Start read config from Config.txt...\n");
+        //device
+        read = getline(&line, &len, configFile);
+        if(read != -1)
+        {
+            config_device = (char*)malloc(strlen(line));
+            //remove "\n" from line
+            strncpy(config_device, line, strlen(line)-1);
+            printf("Read config_device = %s\n", config_device);
+        }
+        else
+        {
+            printf("Read config_device error!\n");
+            exit(0);
+        }
+        //baudrate
+        read = getline(&line, &len, configFile);
+        if(read != -1)
+        {
+            config_baudrate = atoi(line);
+            printf("Read config_baudrate = %d\n", config_baudrate);
+        }
+        else
+        {
+            printf("Read config_baudrate error!\n");
+            exit(0);
+        }
+        //id
         read = getline(&line, &len, configFile);
         if(read != -1)
         {
             config_id = atoi(line);
-            printf("read config_id = %d\n",config_id);
+            printf("Read config_id = %d\n", config_id);
         }
+        else
+        {
+            printf("Read config_id error!\n");
+            exit(0);
+        }
+        //key
         read = getline(&line, &len, configFile);
         if(read != -1)
         {
-            config_key = line;
-            printf("read config_key = %s\n",config_key);
+            config_key = (char*)malloc(strlen(line));
+            //remove "\n" from line
+            strncpy(config_key, line, strlen(line)-1);
+            printf("Read config_key = %s\n", config_key);
         }
+        else
+        {
+            printf("Read config_key error!\n");
+            exit(0);
+        }
+        printf("Success read config from Config.txt\n");
         fclose(configFile);
 
 	int ret;
-	//activation_msg.app_id = 10086;
         activation_msg.app_id = config_id;
 	activation_msg.app_api_level = 2;
 	activation_msg.app_ver = 1;
 	memcpy(activation_msg.app_bundle_id,"1234567890123456789012", 32);
-	//key = "5837313ef98f1f7f1c50eebb0b06363d523a369289e042c4d00b66d8e49337a7";
         key = config_key;
 
-	ret = Pro_Hw_Setup("/dev/ttyUSB0",230400);
+	ret = Pro_Hw_Setup(config_device, config_baudrate);
 	if(ret < 0)
-		return ret;
+        {
+	    return ret;
+        }
 	Pro_Link_Setup();
 	App_Recv_Set_Hook(App_Recv_Req_Data);
 	App_Set_Table(set_handler_tab, cmd_handler_tab);
