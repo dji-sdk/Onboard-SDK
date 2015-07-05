@@ -806,13 +806,40 @@ void DJI_Onboard_API_Activation(void)
 
 int DJI_Pro_Test_Setup(void)
 {
-	int ret;
+        FILE* configFile;
+        char* line = NULL;
+        size_t len = 0;
+        ssize_t read;
+        unsigned int config_id = 0;
+        char* config_key = NULL;
+        configFile = fopen("Config.txt", "r");
+        if(configFile == NULL)
+        {
+            printf("read Config.txt error!\n");
+            exit(0);
+        }
+        read = getline(&line, &len, configFile);
+        if(read != -1)
+        {
+            config_id = atoi(line);
+            printf("read config_id = %d\n",config_id);
+        }
+        read = getline(&line, &len, configFile);
+        if(read != -1)
+        {
+            config_key = line;
+            printf("read config_key = %s\n",config_key);
+        }
+        fclose(configFile);
 
-	activation_msg.app_id = 10086;
+	int ret;
+	//activation_msg.app_id = 10086;
+        activation_msg.app_id = config_id;
 	activation_msg.app_api_level = 2;
 	activation_msg.app_ver = 1;
 	memcpy(activation_msg.app_bundle_id,"1234567890123456789012", 32);
-	key = "5837313ef98f1f7f1c50eebb0b06363d523a369289e042c4d00b66d8e49337a7";
+	//key = "5837313ef98f1f7f1c50eebb0b06363d523a369289e042c4d00b66d8e49337a7";
+        key = config_key;
 
 	ret = Pro_Hw_Setup("/dev/ttyUSB0",230400);
 	if(ret < 0)
