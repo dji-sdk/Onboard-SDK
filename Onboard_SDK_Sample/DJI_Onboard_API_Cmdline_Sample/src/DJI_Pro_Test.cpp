@@ -23,6 +23,10 @@
 /* MATH for_example */
 #include <math.h>
 
+#include <stdio.h>
+#include <unistd.h>
+#include <signal.h>
+
 /* parameter */
 #define C_EARTH (double) 6378137.0
 #define C_PI	(double) 3.141592653589793
@@ -443,38 +447,42 @@ void test_all(bool &is_init)
 		static bool init_flag = false;
 		if(cnt < 1)
 		{
-			unsigned char send_data = 4;
+			uint8_t send_data = 4;
 			App_Complex_Send_Cmd(send_data, cmd_callback_fun);
 			cnt ++;
 		}
-		else if(cnt < 50*12)
+        else if(cnt < 50 * 12)
 		{
 			/* wait for takeoff finish */
 			cnt ++;
 		}
-		else if(cnt < 50*40)
+        else if(cnt < 50 * (40 + 12))
 		{
+            if(cnt == 50 * 12)
+                printf("Debug info: start mode2\n");
 			basic_test_mode2(init_flag);
 			cnt ++;
 		}
-		else if(cnt < 50*40+1)
+        else if(cnt < 50 * (40 + 12) + 1)
 		{
 			init_flag = false;
 			cnt ++;
 		}
-		else if(cnt < 50*40*2)
+        else if(cnt < 50 * 40 * 2 + 50 * 12)
 		{
+            if(cnt == (50 *(40 + 12) + 1))
+                printf("Debug info: start mode4\n");
 			basic_test_mode4(init_flag);
 			cnt ++;
 		}
-		else if(cnt < 50*40*2+1)
+        else if(cnt < 50 * 40 * 2 + 50 * 12 + 1)
 		{
 			init_flag = false;
-			unsigned char send_data = 1;
+			uint8_t send_data = 1;
 			App_Complex_Send_Cmd(send_data, cmd_callback_fun);
 			cnt ++;
 		}
-		else if(cnt < 50*40*2+50*15)
+        else if(cnt < 50 * (40 + 12) * 2 + 50 * 15)
 		{
 			//wait landing
 			cnt ++;
@@ -488,6 +496,7 @@ void test_all(bool &is_init)
 
 	}
 }
+
 /*
  *  test activation
  */
@@ -522,6 +531,11 @@ void test_activation_ack_cmd_callback(ProHeader *header)
 		{
 			Pro_Config_Comm_Encrypt_Key(key);
 			printf("[ACTIVATION] set key %s\n",key);
+		}
+		else if(ack_data == 3)
+		{
+			/* new device, try again when activation is failed */
+			alarm(2);
 		}
 	}
 }
@@ -804,6 +818,12 @@ void DJI_Onboard_API_Activation(void)
 	Pro_API_Activation();
 }
 
+void Activation_Alrm(int sig)
+{
+	printf("Debug info:activation try again\n");
+	Pro_API_Activation();
+}
+
 int DJI_Pro_Test_Setup(void)
 {
 	int ret;
@@ -817,6 +837,8 @@ int DJI_Pro_Test_Setup(void)
 	ret = Pro_Hw_Setup("/dev/ttyUSB0",230400);
 	if(ret < 0)
 		return ret;
+	/* setup a timer */
+	signal(SIGALRM, Activation_Alrm);
 	Pro_Link_Setup();
 	App_Recv_Set_Hook(App_Recv_Req_Data);
 	App_Set_Table(set_handler_tab, cmd_handler_tab);

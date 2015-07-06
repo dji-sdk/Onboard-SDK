@@ -22,6 +22,10 @@
 /* MATH for_example */
 #include <math.h>
 
+#include <stdio.h>
+#include <unistd.h>
+#include <signal.h>
+
 /* parameter */
 #define C_EARTH (double) 6378137.0
 #define C_PI	(double) 3.141592653589793
@@ -523,7 +527,6 @@ void random_test_cmd(bool &is_init)
 		App_Send_Data(2, 1, MY_CTRL_CMD_SET, API_CMD_STATUS_REQUEST, (uint8_t*)&req_status, sizeof(req_status),random_test_ack_cmd_callback, 500, 10);
 	}
 }
-
 void test_all(bool &is_init)
 {
 	static int cnt;
@@ -586,7 +589,6 @@ void test_all(bool &is_init)
 
 	}
 }
-
 /* test activation */
 void test_activation_ack_cmd_callback(ProHeader *header)
 {
@@ -623,6 +625,11 @@ void test_activation_ack_cmd_callback(ProHeader *header)
 		{
 			Pro_Config_Comm_Encrypt_Key(key);
 			printf("[ACTIVATION] set key %s\n",key);
+		}
+		else if(ack_data == 3)
+		{
+			/* new device, try again when activation is failed */
+			alarm(2);
 		}
 	}
 }
@@ -875,6 +882,12 @@ void spin_callback(const ros::TimerEvent& e)
 	}
 }
 
+void Activation_Alrm(int sig)
+{
+    printf("Debug info:activation try again\n");
+	test_activation();
+}
+
 /*
   * main_function
   */
@@ -937,7 +950,9 @@ int main (int argc, char** argv)
 
 	CmdStartThread();
 
-	Pro_Config_Comm_Encrypt_Key(key);
+	/* setup a timer */
+	signal(SIGALRM, Activation_Alrm);
+
 	/* ros spin for timer */
 	ros::spin();
 
