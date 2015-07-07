@@ -13,11 +13,14 @@
 #include "DJI_Pro_Test.h"
 using namespace std;
 
-static void Display_Main_Menu(void)
+static void Display_Input()
 {
-	printf("\r\n");
-	printf("-----------   < Main menu >  ----------\r\n\r\n");
+        printf("input:");
+}
 
+static void Display_Main_Menu()
+{
+	printf("--------   < Main menu >   --------\n");
 	printf("[a]  Request activation\n");
 	printf("[b]  Request to obtain control\n");
 	printf("[c]  Release control\n");
@@ -25,42 +28,37 @@ static void Display_Main_Menu(void)
 	printf("[e]  Landing\n");
 	printf("[f]  Go home\n");
 	printf("[g]  Query UAV current status\n");
-
-	printf("\ninput a/b/c etc..then press enter key\r\n");
-	printf("---------------------------------------\r\n");
-	printf("input: ");
+        printf("[h]  Help:display main menu\n");
+	printf("[q]  Quit\n");
+	printf("-----------------------------------\n");
+	//Display_Input();
 }
 
 int main(int argc,char **argv)
 {
 	int main_operate_code = 0;
-
 	int temp32;
 	bool valid_flag = false;
 	bool err_flag = false;
 
-
-
 	if(argc == 2 && strcmp(argv[1],"-v") == 0)
 	{
-		printf("\nDJI Onboard API Cmdline Test,Ver 1.0.0\n\n");
+		printf("DJI Onboard API Cmdline Test,Ver 1.0.0\n");
 		return 0;
 	}
-	printf("\nDJI Onboard API Cmdline Test,Ver 1.0.0\n\n");
 
 	if(DJI_Pro_Test_Setup() < 0)
 	{
-		printf("Serial Port Open ERROR\n");
-                printf("Permission denied? Try \"sudo chmod 777 /dev/ttyUSB0\"\n");
+                printf("Open Serial Port Error!(Try \"sudo chmod 777 /dev/ttyUSB0\")\n");
 		return 0;
-	}
+	} 
 	Display_Main_Menu();
 	while(1)
 	{
 		temp32 = getchar();
 		if(temp32 != 10)
 		{
-			if(temp32 >= 'a' && temp32 <= 'g' && valid_flag == false)
+			if((temp32 == 'q' || (temp32 >= 'a' && temp32 <= 'h')) && valid_flag == false)
 			{
 				main_operate_code = temp32;
 				valid_flag = true;
@@ -76,7 +74,6 @@ int main(int argc,char **argv)
 			if(err_flag == true)
 			{
 				printf("input: ERROR\n");
-				Display_Main_Menu();
 				err_flag = valid_flag = false;
 				continue;
 			}
@@ -112,11 +109,17 @@ int main(int argc,char **argv)
 			/* status query */
 			DJI_Onboard_API_Status_Query();
 			break;
-		}
+                case 'h':
+                        /* help:display main menu */
+                        Display_Main_Menu();
+                        break;
+                case 'q':
+                        /*  quit  */
+                        return 0;
+                }
 		main_operate_code = -1;
 		err_flag = valid_flag = false;
-		Display_Main_Menu();
+                Display_Input();
 	}
-
 	return 0;
 }

@@ -2,6 +2,7 @@
  ============================================================================
  Name        : DJI_Pro_Test.cpp
  Author      : Wu Yuwei
+ Modified By : Evan.Gu
  Version     :
  Copyright   : Your copyright notice
  Description :
@@ -628,6 +629,8 @@ void ros_ctrl_mode_callback(int data)
 /*
  * timer spin_function 50Hz
  */
+int16_t rc_mode = 0;
+int8_t ctrl_device = 0;
 void spin_callback(void)
 {
 	static unsigned int count = 0;
@@ -636,7 +639,7 @@ void spin_callback(void)
 	if(count % 50 == 0)
 	{
 /*
-		ROS_INFO("STD_MSGS:");
+		//ROS_INFO("STD_MSGS:");
 		printf("[STD_MSGS] time_stamp %d \n",recv_sdk_std_msgs.time_stamp);
 		printf("[STD_MSGS] q %f %f %f %f \n",recv_sdk_std_msgs.q.q0,recv_sdk_std_msgs.q.q1,recv_sdk_std_msgs.q.q2,recv_sdk_std_msgs.q.q3);
 		printf("[STD_MSGS] a %f %f %f\n",recv_sdk_std_msgs.a.x,recv_sdk_std_msgs.a.y,recv_sdk_std_msgs.a.z);
@@ -650,6 +653,20 @@ void spin_callback(void)
 		printf("[STD_MSGS] battery %d\n",recv_sdk_std_msgs.battery_remaining_capacity);
 		printf("[STD_MSGS] ctrl_device %d\n",recv_sdk_std_msgs.ctrl_device);
 */
+#if 0
+                //switch rmc F button to execute auto mission
+                rc_mode = recv_sdk_std_msgs.rc.mode;
+                ctrl_device = recv_sdk_std_msgs.ctrl_device;
+                if(rc_mode == 8000 && ctrl_device != 2)
+                {
+                    /* get controller */
+		    DJI_Onboard_API_Control(1);
+                }
+                else if(rc_mode = 8000 && ctrl_device == 2)
+                {
+                    DJI_Onboard_API_Simple_Task(4);
+                }
+#endif
 	}
 
 	/* test session ack for force close */
@@ -894,7 +911,7 @@ int DJI_Pro_Test_Setup(void)
 	App_Set_Table(set_handler_tab, cmd_handler_tab);
 	CmdStartThread();
 	Start_Simple_Task_Thread();
-
+        
 	return 0;
 }
 
