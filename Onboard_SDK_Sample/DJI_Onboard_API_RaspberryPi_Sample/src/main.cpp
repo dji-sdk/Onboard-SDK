@@ -13,11 +13,6 @@
 #include "DJI_Pro_Test.h"
 using namespace std;
 
-static void Display_Input()
-{
-        printf("input:");
-}
-
 static void Display_Main_Menu()
 {
 	printf("--------   < Main menu >   --------\n");
@@ -31,7 +26,6 @@ static void Display_Main_Menu()
         printf("[h]  Help:display main menu\n");
 	printf("[q]  Quit\n");
 	printf("-----------------------------------\n");
-	//Display_Input();
 }
 
 int main(int argc,char **argv)
@@ -119,7 +113,6 @@ int main(int argc,char **argv)
                 }
 		main_operate_code = -1;
 		err_flag = valid_flag = false;
-                Display_Input();
 	}
 	return 0;
 }

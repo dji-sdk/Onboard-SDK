@@ -68,16 +68,16 @@ int16_t	nav_force_close_handler(unsigned char cmd_id,unsigned char* pbuf,unsigne
 /* cmd id table */
 cmd_handler_table_t cmd_handler_tab[] =
 {
-	{0x00,sdk_std_msgs_handler				},
-	{0x01,nav_force_close_handler			},
-	{ERR_INDEX,NULL							}
+	{0x00,sdk_std_msgs_handler},
+	{0x01,nav_force_close_handler},
+	{ERR_INDEX,NULL}
 };
 
 /* cmd set table */
 set_handler_table_t set_handler_tab[] =
 {
-	{0x02,cmd_handler_tab					},
-	{ERR_INDEX,NULL							}
+	{0x02,cmd_handler_tab},
+	{ERR_INDEX,NULL}
 };
 
 /*
