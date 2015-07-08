@@ -1,0 +1,13 @@
+/dev/ttyUSB0
+230400
+[put your id here]
+[put your key here]
+
+
+
+
+config file define like this:
+device
+baudrate
+id
+key
