@@ -135,8 +135,8 @@ MATRICE 100 被设计为可以使用遥控器、机载设备和移动设备进�
 1. MATRICE 100 多轴飞行器
 2. DJI 串口连接线（包含在 MATRICE 100 附件当中）
 3. 若干杜邦线
-4. 一对配置好的 230400 无线串口（淘宝购买）  
-   注：也可使用其他比特率的串口线（如115200），只需要在调参软件中设置相应比特率数值即可。
+4. 一对配置好的 115200 无线串口（淘宝购买）  
+   注：也可使用其他比特率的串口线（如230400），只需要在调参软件中设置相应比特率数值即可。
 5. USB-TTL 转换接头（淘宝购买）
 
   注意：Windows/Mac 上使用 USB-TTL 转换接头需要安装 PL2303 驱动
@@ -181,7 +181,7 @@ MATRICE 100 被设计为可以使用遥控器、机载设备和移动设备进�
     <node pkg="dji_sdk" type="dji_sdk_node" name="dji_sdk_node" output="screen">
     <!-- node parameters -->
     <param name="serial_name" type="string" value="/dev/ttySAC0"/> 
-    <param name="baud_rate" type="int" value="230400"/>
+    <param name="baud_rate" type="int" value="115200"/>
     <param name="app_id" type="int" value="<!-- your appid -->"/>
     <param name="app_api_level" type="int" value="<!-- your app level -->"/>
     <param name="app_version" type="int" value="<!-- your app version -->"/>
@@ -840,6 +840,15 @@ typedef __attribute__((__packed__)) struct { // 1 byte aligned
 
 根据模式标志位的值，四个输入控制量会被解释成不同含义的输入，有些情况下是 Body 坐标系，有些情况下是 Ground 坐标系。关于坐标系和模式标志位的说明请参考附述章节。
 
+**注意！非常重要：控制模式有进入条件限制：**
+
+- 当且仅当GPS信号正常（health\_flag >=3）时，才可以使用水平**位置**控制（HORI_POS）相关的控制指令
+- 当GPS信号正常（health\_flag >=3），或者Gudiance系统正常工作（连接安装正确）时，可以使用水平**速度**控制（HORI_VEL）相关的控制指令
+
+**关于GPS信号健康度的获取，请参考“命令码 0x00 标准数据包”**
+**关于位置控制和速度控制相关的指令，请参考附述章节**
+
+
 <br>
 ##### 命令集 0x02 飞控外发的数据 
 
@@ -1291,7 +1300,7 @@ void recv_std_package (unsigned char* pbuf, unsigned int len) {
 </tr>
 <tr>
   <td rowspan="3">竖直方向</td>
-  <td>VERT_POSE</td>
+  <td>VERT_POS</td>
   <td>垂直方向上控制的是位置，输入的控制量必须为对地面的高度量</td>
 </tr>
 <tr>
@@ -1355,21 +1364,28 @@ void recv_std_package (unsigned char* pbuf, unsigned int len) {
 
 在某些模式中，水平坐标系和偏航坐标系可以是任意的。
 
-经过多种模式的组合，共有 14 种模式 (模式标志指的是 1byte 标志位中的每个 bit 应该如何取值可以实现该模式。数值为 X 的 bit 说明该模式不判断该位置，因此该 bit 可以为任意值)：
+经过多种模式的组合，共有 14 种模式 (模式标志指的是 1byte 标志位中的每个 bit 应该如何取值可以实现该模式。数值为 X 的 bit 说明该模式不判断该位置，因此该 bit 可以为任意值。这里“0b”表示的是二进制表示，后八位数字构成一个0-255的整数)：
 
 |模式编号|组合形式|输入数值范围<br>(throttle/pitch&roll/yaw)|模式标志|
 |--------|--------|-----------------------------------------|--------|
-|1|VERT_VEL<br>HORI_ATTI_TILT_ANG<br>YAW_ANG|-4 m/s ~ 4 m/s<br>-30 度 ~ 30 度<br>-180 度 ~ 180 度|000000XX|
-|2|VERT_VEL<br>HORI_ATTI_TILT_ANG<br>YAW_RATE|-4 m/s ~ 4 m/s<br>-30 度 ~ 30 度<br>-100 度/s ~ 100 度/s|000010XX|
-|3|VERT_VEL<br>HORI_VEL<br>YAW_ANG|-4 m/s ~ 4 m/s<br>-10 m/s ~ 10 m/s<br>-180 度 ~ 180 度|010000XX|
-|4|VERT_VEL<br>HORI_VEL<br>YAW_RATE|-4 m/s ~ 4 m/s<br>-10 m/s ~ 10 m/s<br>-100 度/s ~ 100 度/s|010010XX|
-|5|VERT_VEL<br>HORI_POS<br>YAW_ANG|-4 m/s ~ 4 m/s<br>米为单位的相对位置，数值无限制<br>-180 度 ~ 180 度|100000XX|
-|6|VERT_VEL<br>HORI_POS<br>YAW_RATE|-4 m/s ~ 4 m/s<br>米为单位的相对位置，数值无限制<br>-100 度/s ~ 100 度/s|100010XX|
-|7|VERT_POS<br>HORI_ATTI_TILT_ANG<br>YAW_ANG|0m 到最大飞行高度<br>-30 度 ~ 30 度<br>-180 度 ~ 180 度|000100XX|
-|8|VERT_POS<br>HORI_ATTI_TILT_ANG<br>YAW_RATE|0m 到最大飞行高度<br>-30 度 ~ 30 度<br>-100 度/s ~ 100 度/s|000110XX|
-|9|VERT_POS<br>HORI_VEL<br>YAW_ANG|0m 到最大飞行高度<br>-10 m/s ~ 10 m/s<br>-180 度 ~ 180 度|010100XX|
-|10|VERT_POS<br>HORI_VEL<br>YAW_RATE|0m 到最大飞行高度<br>-10 m/s ~ 10 m/s<br>-100 度/s ~ 100 度/s|010110XX|
-|11|VERT_POS<br>HORI_POS<br>YAW_ANG|0m 到最大飞行高度<br>米为单位的相对位置，数值无限制<br>-180 度 ~ 180 度|100100XX|
-|12|VERT_POS<br>HORI_POS<br>YAW_RATE|0m 到最大飞行高度<br>米为单位的相对位置，数值无限制<br>-100 度/s ~ 100 度/s|100110XX|
-|13|VERT_THRUST<br>HORI_ATTI_TILT_ANG<br>YAW_ANG|0 ~ 100 （危险，请小心使用）<br>-30 度 ~ 30 度<br>-180 度 ~ 180 度|001000XX|
-|14|VERT_THRUST<br>HORI_ATTI_TILT_ANG<br>YAW_RATE|0 ~ 100（危险，请小心使用）<br>-30 度 ~ 30 度<br>-100 度/s ~ 100 度/s|001010XX|
+|1|VERT_VEL<br>HORI_ATTI_TILT_ANG<br>YAW_ANG|-4 m/s ~ 4 m/s<br>-30 度 ~ 30 度<br>-180 度 ~ 180 度|0b000000XX|
+|2|VERT_VEL<br>HORI_ATTI_TILT_ANG<br>YAW_RATE|-4 m/s ~ 4 m/s<br>-30 度 ~ 30 度<br>-100 度/s ~ 100 度/s|0b000010XX|
+|3|VERT_VEL<br>HORI_VEL<br>YAW_ANG|-4 m/s ~ 4 m/s<br>-10 m/s ~ 10 m/s<br>-180 度 ~ 180 度|0b010000XX|
+|4|VERT_VEL<br>HORI_VEL<br>YAW_RATE|-4 m/s ~ 4 m/s<br>-10 m/s ~ 10 m/s<br>-100 度/s ~ 100 度/s|0b010010XX|
+|5|VERT_VEL<br>HORI_POS<br>YAW_ANG|-4 m/s ~ 4 m/s<br>米为单位的相对位置，数值无限制<br>-180 度 ~ 180 度|0b100000XX|
+|6|VERT_VEL<br>HORI_POS<br>YAW_RATE|-4 m/s ~ 4 m/s<br>米为单位的相对位置，数值无限制<br>-100 度/s ~ 100 度/s|0b100010XX|
+|7|VERT_POS<br>HORI_ATTI_TILT_ANG<br>YAW_ANG|0m 到最大飞行高度<br>-30 度 ~ 30 度<br>-180 度 ~ 180 度|0b000100XX|
+|8|VERT_POS<br>HORI_ATTI_TILT_ANG<br>YAW_RATE|0m 到最大飞行高度<br>-30 度 ~ 30 度<br>-100 度/s ~ 100 度/s|0b000110XX|
+|9|VERT_POS<br>HORI_VEL<br>YAW_ANG|0m 到最大飞行高度<br>-10 m/s ~ 10 m/s<br>-180 度 ~ 180 度|0b010100XX|
+|10|VERT_POS<br>HORI_VEL<br>YAW_RATE|0m 到最大飞行高度<br>-10 m/s ~ 10 m/s<br>-100 度/s ~ 100 度/s|0b010110XX|
+|11|VERT_POS<br>HORI_POS<br>YAW_ANG|0m 到最大飞行高度<br>米为单位的相对位置，数值无限制<br>-180 度 ~ 180 度|0b100100XX|
+|12|VERT_POS<br>HORI_POS<br>YAW_RATE|0m 到最大飞行高度<br>米为单位的相对位置，数值无限制<br>-100 度/s ~ 100 度/s|0b100110XX|
+|13|VERT_THRUST<br>HORI_ATTI_TILT_ANG<br>YAW_ANG|10 ~ 100 （危险，请小心使用）<br>-30 度 ~ 30 度<br>-180 度 ~ 180 度|0b001000XX|
+|14|VERT_THRUST<br>HORI_ATTI_TILT_ANG<br>YAW_RATE|10 ~ 100（危险，请小心使用）<br>-30 度 ~ 30 度<br>-100 度/s ~ 100 度/s|0b001010XX|
+
+
+
+**注意！非常重要：控制模式有进入条件限制：**
+
+- 当且仅当GPS信号正常（health\_flag >=3）时，才可以使用水平**位置**控制（HORI_POS）相关的控制指令
+- 当GPS信号正常（health\_flag >=3），或者Gudiance系统正常工作（连接安装正确）时，可以使用水平**速度**控制（HORI_VEL）相关的控制指令
