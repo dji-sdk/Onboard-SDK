@@ -1257,10 +1257,15 @@ void recv_std_package (unsigned char* pbuf, unsigned int len) {
 ```
 **Note: All the structs in the document requires 1 byte alignment (for example using `typedef __attribute__((__packed__))` struct. Developers must make sure their structs are 1-byte aligned.**
 
+<br>
+
 ** Further Explanation to The Content **
+
 _alti_ is the result of barometer-IMU fusion in the unit of pressure. While _height_ fuses ultrasonic sensor, barometer and IMU, it means the relative distance in meter from Matrice 100 to the takeoff spot. If the Matrice 100 has no ultrasonic sensor (no Gudiance installed), or it has ultrasonic sensor but its distance to the ground is larger than 3 meters (the measurement of ultrasonic sensor will be unstable at this distance), than _height_ is supported by barometer and IMU only. So developers may notice that Matrice 100 will draft at height above 3 meters, because barometer is very inaccurate indoor. It is very important to remember if developer wants to do indoor flight control.
 
 Since _height_ is a relative distance, so it wouldn't refreash to meaningful value if Matrice does not takeoff after being powered on.
+
+The unit of _lati_, _longti_ in _GPS_ information is **radian**.
 
 The acceleration and angular velocity sent from IMU is processed by signal processing algorithm. We will add flags in the furture version to enable sending raw data out. 
 
