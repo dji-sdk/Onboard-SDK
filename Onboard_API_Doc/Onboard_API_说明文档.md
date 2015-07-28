@@ -1,6 +1,6 @@
 #DJI Onboard API 说明文档
 
-最后更新: 2015年07月02日
+最后更新: 2015年07月28日
 
 *如发现任何错误，请通过Github issue或开发者论坛或邮件反馈给我们。欢迎提交pull request来帮助我们修正问题，关于文档的修改需要符合[格式标准](https://github.com/dji-sdk/onboard/issues/8#issuecomment-115976289)*
 
