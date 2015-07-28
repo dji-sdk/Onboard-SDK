@@ -1257,6 +1257,13 @@ void recv_std_package (unsigned char* pbuf, unsigned int len) {
 ```
 **Note: All the structs in the document requires 1 byte alignment (for example using `typedef __attribute__((__packed__))` struct. Developers must make sure their structs are 1-byte aligned.**
 
+** Further Explanation to The Content **
+_alti_ is the result of barometer-IMU fusion in the unit of pressure. While _height_ fuses ultrasonic sensor, barometer and IMU, it means the relative distance in meter from Matrice 100 to the takeoff spot. If the Matrice 100 has no ultrasonic sensor (no Gudiance installed), or it has ultrasonic sensor but its distance to the ground is larger than 3 meters (the measurement of ultrasonic sensor will be unstable at this distance), than _height_ is supported by barometer and IMU only. So developers may notice that Matrice 100 will draft at height above 3 meters, because barometer is very inaccurate indoor. It is very important to remember if developer wants to do indoor flight control.
+
+Since _height_ is a relative distance, so it wouldn't refreash to meaningful value if Matrice does not takeoff after being powered on.
+
+The acceleration and angular velocity sent from IMU is processed by signal processing algorithm. We will add flags in the furture version to enable sending raw data out. 
+
 <br>
 ###### Command ID 0x01: Control Authority Change Notification
 
@@ -1392,7 +1399,9 @@ By specifying `ctrl_mode_flag`, 14 control modes can be constructed (`ctrl_mode_
 |13|VERT_THRUST<br>HORI_ATTI_TILT_ANG<br>YAW_ANG|10 ~ 100 (use with precaution)<br>-30 degree ~ 30 degree<br>-180 degree ~ 180 degree|0b001000XX|
 |14|VERT_THRUST<br>HORI_ATTI_TILT_ANG<br>YAW_RATE|10 ~ 100 (use with precaution)<br>-30 degree ~ 30 degree<br>-100 degree/s ~ 100 degree/s|0b001010XX|
 
+The input of HORI_POS is a position offset instead a actual position. This design aims to take both GPS flight and vision-based flight into account. If the developer wants to use GPS navigation, the GPS information sent by Matrice 100 can be used to calculate position offset. While in vision-based flight application, developers should have their own positioning device (along with Gudiance or GPS to provide velocity measurement) to do position control. For example, [xuhao1 SDK package](https://github.com/xuhao1/dji_sdk/blob/master/src/modules/dji_services.cpp) realizes a GPS-based position control where target position can be passed as GPS coordinate.
 
+We suggest developers do not user VERT_POS control mode indoor when Matrice 100 does not have Guidance installed or the flight height is larget than 3 meters. Because in indoor environment, barometer can be very inaccurate, the vertical controller may fail to keep the height of Matrice 100. 
 
 **CAUTION！VERY IMPORTANT：control mode has entering conditions：**
 
