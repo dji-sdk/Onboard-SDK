@@ -195,7 +195,7 @@ MATRICE 100 被设计为可以使用遥控器、机载设备和移动设备进�
 
     |Name|Type|说明|
     |----|----|----|
-    |serial_name|String|串口设备名,通常为“/dev/ttyUSB0”,但是在不同的Linux系统上有不同的名称。可以通过ls /dev和dmesg|tail查看设备名|
+    |serial_name|String|串口设备名,通常为“/dev/ttyUSB0”,但是在不同的Linux系统上有不同的名称。可以通过ls /dev和dmesg |tail 查看设备名|
     |baud_rate|Int|串口波特率，必须与通过调参软件设置的相同。|
     |app_id|Int|dev.dji.com 服务器返回的 AppID|
     |app_api_level|Int|dev.dji.com 服务器返回的 API 级别|
