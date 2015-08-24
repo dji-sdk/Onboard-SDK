@@ -192,16 +192,51 @@ MATRICE 100 被设计为可以使用遥控器、机载设备和移动设备进�
     </launch> 
     ```
     其中的 node parameters 含义如下
+    
+<table>
+<tr>
+	<td>Name</td>
+	<td>Type</td>
+	<td>说明</td>
+</tr>
+<tr>
+	<td>serial_name</td>
+	<td>String</td>
+	<td>串口设备名,通常为“/dev/ttyUSB0”,但是在不同的Linux系统上有不同的名称。可以通过ls /dev和dmesg |tail 查看设备名</td>
+</tr>
+<tr>
+	<td>baud_rate</td>
+	<td>Int</td>
+	<td>串口波特率，必须与通过调参软件设置的相同。</td>
+</tr>
+<tr>
+	<td>app_id</td>
+	<td>Int</td>
+	<td>dev.dji.com 服务器返回的 AppID</td>
+</tr>
+<tr>
+	<td>app_api_level</td>
+	<td>Int</td>
+	<td>dev.dji.com 服务器返回的 API 级别</td>
+</tr>
+<tr>
+	<td>app_version</td>
+	<td>Int</td>
+	<td>开发者设定的应用版本号</td>
+</tr>
+<tr>
+	<td>app_bundle_id</td>
+	<td>String</td>
+	<td>dev.dji.com 服务器返回的 bundle ID</td>
+</tr>
+<tr>
+	<td>enc_key</td>
+	<td>String</td>
+	<td>dev.dji.com 服务器返回的 AES 密钥</td>
+</tr>
 
-    |Name|Type|说明|
-    |----|----|----|
-    |serial_name|String|串口设备名,通常为“/dev/ttyUSB0”,但是在不同的Linux系统上有不同的名称。可以通过ls /dev和dmesg |tail 查看设备名|
-    |baud_rate|Int|串口波特率，必须与通过调参软件设置的相同。|
-    |app_id|Int|dev.dji.com 服务器返回的 AppID|
-    |app_api_level|Int|dev.dji.com 服务器返回的 API 级别|
-    |app_version|Int|开发者设定的应用版本号|
-    |app_bundle_id|String|dev.dji.com 服务器返回的 bundle ID|
-    |enc_key|String|dev.dji.com 服务器返回的 AES 密钥|
+</table>
+
     
     **注意：这条命令一定要在 sudo su 模式下启动，因为打开串口需要 root 权限。**
     
