@@ -1319,7 +1319,7 @@ api_ctrl_without_sensor_data_t ctrl_data;
 }
 /* 示例5：水平面的位置（HORI_ATTI_TILT_ANG）控制选择ground坐标系，此时将y轴为旋转轴转动30度 */
 {
-    ctrl_data.ctrl_flag = 0x0a; /* 控制模式2，body坐标系 */
+    ctrl_data.ctrl_flag = 0x0a; /* 控制模式2，ground坐标系 */
     ctrl_data.roll_or_x = 0;
     ctrl_data.pitch_or_y = 30;
     ctrl_data.thr_z = 0;
@@ -1328,8 +1328,7 @@ api_ctrl_without_sensor_data_t ctrl_data;
 }
 ```
 4.小结：这里为了方面将对飞机的控制分解为水平面（HORI）和竖直面（VERT）的控制，我们采用了一种“中间坐标系”，从示例2和示例3的区别可以看出来，“中间坐标系”和body坐标系的区别在与把body坐标系下的控制量分解到水平面上（示例3可以看出），而中间坐标系和ground坐标系的区别仅在与yaw角。
-  **备注：关于水平方向上得控制模式解释如下：注意理解“水平”，即飞机从在的与XY平面平行的面**
-
+ 
 ##四. API编程说明
 假设通信中发送协议数据的函数定义如下：
 ```c
