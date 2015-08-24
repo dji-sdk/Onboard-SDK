@@ -1262,10 +1262,11 @@ HORI_POS模式的输入量是相对位置。这个设计是为了兼顾GPS飞行
 
   坐标满足右手定则。ground 坐标系下通用的航向定义是以北为 0，顺时针到 180 度，逆时针到-180 度。这样用-180 到 180 度的数值表示飞行平台在空间中的朝向。
   
-  *进一步解释说明*
+ 3. 进一步解释说明:
   ![bFrame](https://github.com/dsgthlr123/onboard/blob/master/Onboard_API_Doc/Images/img.png)
   
-  
+ *图例注释：椭圆平面为飞机所在与XOY平行的平面，有颜色一面为机头，XYZ为Ground坐标系,roll,pitch,yaw轴为body坐标系，_demo为该示例下飞机的运动方向*
+ 
 ```c  
 / *控制指令接口* /
 typedef struct
@@ -1276,18 +1277,58 @@ typedef struct
     fp32	thr_z;
     fp32	yaw;
 }api_ctrl_without_sensor_data_t;
+
+api_ctrl_without_sensor_data_t ctrl_data;
+
+/* 示例1：ground_demo1:选择ground坐标系，此时沿ground_demo1（正北）方向以3m/s速度运动 */
+{
+    ctrl_data.ctrl_flag = 0x48; /* 控制模式4，ground坐标系 */
+    ctrl_data.roll_or_x = 3;
+    ctrl_data.pitch_or_y = 0;
+    ctrl_data.thr_z = 0;
+    ctrl_data.yaw = 0;
+    /* send ctlr_data here */
+}
+
+/* 示例2：body_demo1:选择body坐标系，此时沿body_demo1（roll轴）方向以3m/s速度运动 */
+{
+    ctrl_data.ctrl_flag = 0x4a; /* 控制模式4，body坐标系 */
+    ctrl_data.roll_or_x = 3;
+    ctrl_data.pitch_or_y = 0;
+    ctrl_data.thr_z = 0;
+    ctrl_data.yaw = 0;
+    /* send ctlr_data here */
+}
+/* 示例3：body_demo2:选择body坐标系，此时沿body_demo2（pitch轴在水平面的投影）方向以3m/s速度运动 */
+{
+    ctrl_data.ctrl_flag = 0x4a; /* 控制模式4，body坐标系 */
+    ctrl_data.roll_or_x = 0;
+    ctrl_data.pitch_or_y = 3;
+    ctrl_data.thr_z = 0;
+    ctrl_data.yaw = 0;
+    /* send ctlr_data here */
+}
+/* 示例4：水平面的位置（HORI_ATTI_TILT_ANG）控制选择body坐标系，此时将pitch轴为旋转轴转动30度 */
+{
+    ctrl_data.ctrl_flag = 0x08; /* 控制模式2，body坐标系 */
+    ctrl_data.roll_or_x = 0;
+    ctrl_data.pitch_or_y = 30;
+    ctrl_data.thr_z = 0;
+    ctrl_data.yaw = 0;
+    /* send ctlr_data here */
+}
+/* 示例5：水平面的位置（HORI_ATTI_TILT_ANG）控制选择ground坐标系，此时将y轴为旋转轴转动30度 */
+{
+    ctrl_data.ctrl_flag = 0x0a; /* 控制模式2，body坐标系 */
+    ctrl_data.roll_or_x = 0;
+    ctrl_data.pitch_or_y = 30;
+    ctrl_data.thr_z = 0;
+    ctrl_data.yaw = 0;
+    /* send ctlr_data here */
+}
 ```
+4.小结：这里为了方面将对飞机的控制分解为水平面（HORI）和竖直面（VERT）的控制，我们采用了一种“中间坐标系”，从示例2和示例3的区别可以看出来，“中间坐标系”和body坐标系的区别在与把body坐标系下的控制量分解到水平面上（示例3可以看出），而中间坐标系和ground坐标系的区别仅在与yaw角。
   **备注：关于水平方向上得控制模式解释如下：注意理解“水平”，即飞机从在的与XY平面平行的面**
-  
-  + **HORI_ATTI_TILT_ANG对应控制的是转角（单位°），Ground坐标系下给roll_or_x赋正值x，将向正东方向转x°，Body坐标系下给roll_or_x赋值将向机头正方向的右边转x°，以此类推。**
-  
-  + **HORI_POS对应控制的是距离（单位米），Ground坐标系下给roll_or_x赋正值x，将向正东方向运动x米，Body坐标系下给roll赋值将向机头正方向的右边运动x米。**
-  
-  + **HORI_VEL对应控制速度（单位m/s），Ground坐标系下给roll赋正值x ，将向正东方向运动x m/s，Body坐标系下给roll赋值将向机头正方向的右边运动xm/s.**
-  
-  + **简单来说，在Ground坐标系下，不管飞机处于什么姿态，给roll_or_x赋正值就水平往正北方向运动，给pitch_or_y赋正值将水平往东方向运动，都赋值就往他们的合向量水平方向运动，在Body坐标系下，要考虑机头的方向，给roll_or_x赋正值将向机头正方向的右边水平运动（注意是水平运动，和此时的飞机的roll和pitch角无关），给pitch_or_y赋正值将向机头正方向水平运动**
- 
-  **备注：Ground 坐标系的高度方向与人对飞行控制的直觉不符，因此我们将竖直方向的高度和速度都调整成了以天空方向为正，也即发送数值为正的速度会让飞行平台远离地面。但是调整高度方向并不改变Ground 坐标系的另外两个轴的方向和顺序。**
 
 ##四. API编程说明
 假设通信中发送协议数据的函数定义如下：
