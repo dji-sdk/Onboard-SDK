@@ -1261,6 +1261,11 @@ HORI_POS模式的输入量是相对位置。这个设计是为了兼顾GPS飞行
   + 指向地心-z 
 
   坐标满足右手定则。ground 坐标系下通用的航向定义是以北为 0，顺时针到 180 度，逆时针到-180 度。这样用-180 到 180 度的数值表示飞行平台在空间中的朝向。
+  
+  *进一步解释说明*
+  ![bFrame](https://github.com/dsgthlr123/onboard/blob/master/Onboard_API_Doc/Images/img.png)
+  
+  
 ```c  
 / *控制指令接口* /
 typedef struct
