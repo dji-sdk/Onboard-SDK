@@ -128,11 +128,7 @@ MATRICE 100 被设计为可以使用遥控器、机载设备和移动设备进�
 
 <br> 
 ###1.2 [ROS]通过无线串口控制 MATRICE 100 
-<<<<<<< HEAD
-**详细信息参考onboard文件下的DJI_Onboard_API_ROS_Sample**
-=======
 **详细信息参考onboard文件下的[DJI_Onboard_API_ROS_Sample](https://github.com/dji-sdk/onboard/tree/master/Onboard_SDK_Sample/DJI_Onboard_API_Cmdline_Sample)**
->>>>>>> origin/master
 
 在这个示例中，我们使用示例代码“dji_sdk_keyboard_ctrl”对 MATRICE 100 进行远程控制。该代码基于 ROS 软件包 keyboardteleop.js。我们设计了一个简单的 HTML GUI 帮助开发者熟悉如何使用键盘和鼠标控制 MATRICE 100。
 
@@ -258,13 +254,8 @@ MATRICE 100 被设计为可以使用遥控器、机载设备和移动设备进�
     } 
     ```
   5. 安装 rosbridge serverrosbridge 终端模式下
-<<<<<<< HEAD
-      sudo apt-get install ros-jade-rosbridge-server 
-      
-=======
 		  sudo apt-get install ros-jade-rosbridge-server 
 		  
->>>>>>> origin/master
  6.  浏览器中打开 “sdk_keyboard_demo.html” 。rosbridge_server 会显示有新的 client 连接上，否则请检查步骤 4 中的设置。此时可以在页面中读取到飞行平台的状态信息。
 
 + 测试通信链路。在 sdk_keyboard_demo 页面中点击“Activation”。如果 PC 和飞行平台之间的链接畅通，页面上可以看到返回码。否则请检查链路连接状况。
@@ -285,22 +276,6 @@ MATRICE 100 被设计为可以使用遥控器、机载设备和移动设备进�
 
 <br> 
 ## 二 协议说明
-<<<<<<< HEAD
-
-###2.1 协议格式
-
-**协议帧**
-<table>
-<tr>
-  <td>Protocol Frame Header</td>
-  <td>Protocol Frame Data</td>
-  <td>Protocol Frame Checksum</td>
-</tr>
-<tr>
-  <td> |SOF|LEN|VER|SESSION|A|RES0|PADDING|ENC|RES1|SEQ|CRC16|</td>
-  <td>    DATA   </td>
-  <td>  CRC32</td>
-=======
 
 ###2.1 协议格式
 
@@ -315,7 +290,6 @@ MATRICE 100 被设计为可以使用遥控器、机载设备和移动设备进�
 	<td> |SOF|LEN|VER|SESSION|A<br>|RES0|PADDING|ENC|RES1|SEQ|CRC16|</td>
 	<td>   DATA   </td>
 	<td>  CRC32</td>
->>>>>>> origin/master
 </tr>
 </table>
 <br> 
@@ -480,11 +454,7 @@ DATA 长度大小不固定，最大长度为 1007。crc32字节索引根据 DATA
 |--------|-------|----|
 |方式1|0|发送端不需要接收端应答|
 |方式2|1|发送端需要接收端应答数据，但是可以容忍应答数据丢包|
-<<<<<<< HEAD
-|方式3|2-31|发送端需要正确收到接收端的应答包。<br>发送端使用这些session 发送命令数据包时，接收端应答后要保存当前的应答包作为该 session 的应答数据，应答包中包含该命令数据包中的 sequence number 和 session id。如果通信过程中，发送端没有正确收到应答包，可以重新发送该命令数据包，接收端收到后将保存的应答包重新发送回去。<br>下一次，如果发送端使用和上一次相同的 session id，但不同的 sequence number 来发送命令数据包时，接收端会丢弃上一次保存的 session 应答数据，重新保存新的 session 应答数据。|
-=======
 |方式3|2-31|发送端需要正确收到接收端的应答包。<br>发送端使用这些session 发送命令数据包时，<br>接收端应答后要保存当前的应答包作为该 session 的应答数据，<br>应答包中包含该命令数据包中的 sequence number 和 session id。<br>如果通信过程中，发送端没有正确收到应答包，<br>可以重新发送该命令数据包，接收端收到后将保存的应答包重新发送回去。<br>下一次，如果发送端使用和上一次相同的 session id，<br>但不同的 sequence number 来发送命令数据包时，<br>接收端会丢弃上一次保存的 session 应答数据，重新保存新的 session 应答数据。|
->>>>>>> origin/master
 **备注：由于会话方式 3 是一种可靠会话方式，开发者在协议链路层实现中应考虑数据丢包后的重发机制，在设计链路层发送接口时应提供超时时间、重发次数等参数。**
 ###2.5命令集说明 
 
@@ -512,26 +482,16 @@ DJI Onboard API 相关的命令分为三大类：
    + 命令码 0x01 激活 API
    + 命令码 0xFE 透传数据（机载设备至移动设备）
 +  命令集 0x01 飞行控制类
-<<<<<<< HEAD
-  + 命令码 0x00 请求获得控制权
-  + 命令码 0x01-0x02 状态控制命令
-  + 命令码 0x03 姿态控制命令
-=======
 	+ 命令码 0x00 请求获得控制权
 	+ 命令码 0x01-0x02 状态控制命令
 	+ 命令码 0x03 姿态控制命令
->>>>>>> origin/master
 + 命令集 0x02 飞控外发的数据
     + 命令码 0x00 标准数据包
     + 命令码 0x01 控制权归属切换
     + 命令码 0x02 透传数据（移动设备至机载设备）
 
 **备注:**
-<<<<<<< HEAD
-+ API 激活验证命令集的所有命令权限级别为 0，即所有用户都可以使用命令集中的命令对飞机进行激活与版本查询等操作。激活 API 通过 DJI Pilot 与 DJI Server 连接，需要手机连接互联网。
-=======
 + API 激活验证命令集的所有命令权限级别为 0，即所有用户都可以使用命令集中的命令对飞机进行激活与版本查询等操作。激活 API 通过 DJI GO 与 DJI Server 连接，需要手机连接互联网。
->>>>>>> origin/master
 + 机载设备发送给移动的数据包。最大包大小为 100 字节，带宽约 8KB/s。
 + 飞机可以接受三种设备的控制输入：遥控器、移动设备、机载设备而。三种设备的控制输入的优先级最大是遥控器，其次是移动设备，优先级最低是机载设备。
 + 机载设备对飞机的状态控制分为两个阶段。第一个阶段是发送命令码为 0x01 的状态控制指令。飞机收到状态控制指令之后会立即发送表明已经收到指令的应答数据包，正常情况飞机返回表示“开始执行”应答数据；但如果飞控正在执行一条之前的指令，则返回“执行失败”的应答数据。飞控开始执行指令之后会尝试切换状态模式，并把执行成功与否的结果保存下来。第二个阶段是机载设备在发送状态控制指令之后可以开始尝试发送命令码为 0x02 的执行结果查询命令。
@@ -544,13 +504,8 @@ DJI Onboard API 相关的命令分为三大类：
    <th colspan=4>详细说明</th>
 </tr>
 <tr>
-<<<<<<< HEAD
-<th rowspan=14">0x00激活验证类</th>
-  <th rowspan="5">0x00获取 API 版本</th>
-=======
 <th rowspan=14">0x00<br>激活验证类</th>
   <th rowspan="5">0x00<br>获取 API 版本</th>
->>>>>>> origin/master
   <th>数据类型</th>
   <th>偏移（字节）</th>
   <th>大小（字节）</th>
@@ -584,11 +539,7 @@ DJI Onboard API 相关的命令分为三大类：
 </tr>
 
 <tr>
-<<<<<<< HEAD
-   <th rowspan="6">0x01激活 API</th>
-=======
    <th rowspan="6">0x01<br>激活 API</th>
->>>>>>> origin/master
   <th>数据类型</th>
   <th>偏移（字节）</th>
   <th>大小（字节）</th>
@@ -628,11 +579,7 @@ DJI Onboard API 相关的命令分为三大类：
 </tr>
 
 <tr>
-<<<<<<< HEAD
- <th rowspan="3">0xFE 透传数据（机载设备至移动设备）</th>
-=======
  <th rowspan="3">0xFE<br> 透传数据<br>（机载设备至移动设备）</th>
->>>>>>> origin/master
   <th>数据类型</th>
   
   <th>偏移（字节）</th>
@@ -655,13 +602,8 @@ DJI Onboard API 相关的命令分为三大类：
 </tr>
 
 <tr>
-<<<<<<< HEAD
-<th rowspan=17"> 0x01 飞行控制类</th>
- <th rowspan="3"> 0x00 请求获得控制权</th>
-=======
 <th rowspan=17"> 0x01<br>飞行控制类</th>
  <th rowspan="3"> 0x00<br>请求获得控制权</th>
->>>>>>> origin/master
   <th>数据类型</th>
   <th>偏移（字节）</th>
   <th>大小（字节）</th>
@@ -682,19 +624,11 @@ DJI Onboard API 相关的命令分为三大类：
   <td>返回码 <ul><li>0x0001：成功释放控制权</li><li>0x0002：成功获得控制权</li><li>0x0003：获得控制权失败</li></ul></td>
 </tr>
 <tr>
-<<<<<<< HEAD
-    <th rowspan="4">0x01(0x01-0x02) 状态控制命令</th>
-    <th>数据类型</th>
-    <th>偏移（字节）</th>
-    <th>大小（字节）</th>
-    <th>说明</th>
-=======
 		<th rowspan="4">0x01<br> 状态控制命令</th>
 	  <th>数据类型</th>
 	  <th>偏移（字节）</th>
 	  <th>大小（字节）</th>
 	  <th>说明</th>
->>>>>>> origin/master
 </tr>
 
 <tr>
@@ -717,19 +651,11 @@ DJI Onboard API 相关的命令分为三大类：
   <td>返回码<ui><li>0x0001：执行失败</li><li>0x0002：开始执行</li></ui></td>
 </tr>
 <tr>
-<<<<<<< HEAD
-      <th rowspan="3">0x02(0x01-0x02) 状态控制命令</th>
-    <th>数据类型</th>
-    <th>偏移（字节）</th>
-    <th>大小（字节）</th>
-    <th>说明</th>
-=======
 			<th rowspan="3">0x02<br>状态查询命令</th>
 	  <th>数据类型</th>
 	  <th>偏移（字节）</th>
 	  <th>大小（字节）</th>
 	  <th>说明</th>
->>>>>>> origin/master
 </tr>
 <tr>
   <td>请求数据</td>
@@ -743,11 +669,7 @@ DJI Onboard API 相关的命令分为三大类：
   <td>1</td>
   <td>返回码<ui><li>0x0001：执行失败（指令序列号不是当前执行的指令）</li><li>0x0003：指令正在执行</li><li>0x0004：指令执行失败</li><li>0x0005：指令执行成功</li></ui></td>
 <tr>
-<<<<<<< HEAD
-<th rowspan="7">0x03 姿态控制命令</th>
-=======
 <th rowspan="7">0x03 <br>姿态控制命令</th>
->>>>>>> origin/master
   <th>数据类型</th>
   <th>偏移（字节）</th>
   <th>大小（字节）</th>
@@ -792,13 +714,8 @@ DJI Onboard API 相关的命令分为三大类：
   <td>无应答数据</td>
 </tr>
 <tr>
-<<<<<<< HEAD
-<th rowspan=22">0x02 飞控外发的数据</th>
-<th rowspan="15">0x00 标准数据包</th>
-=======
 <th rowspan=22">0x02<br>飞控外发的数据</th>
 <th rowspan="15">0x00<br>标准数据包</th>
->>>>>>> origin/master
   <th>数据类型</th>
   <th>偏移（字节）</th>
   <th>大小（字节）</th>
@@ -892,19 +809,11 @@ DJI Onboard API 相关的命令分为三大类：
 </tr>
 
 <tr>
-<<<<<<< HEAD
-<th rowspan="4">0x01 控制权归属切换</th>
-    <th>数据类型</th>
-    <th>偏移（字节）</th>
-    <th>大小（字节）</th>
-    <th>说明</th>
-=======
 <th rowspan="4">0x01<br>控制权归属切换</th>
 	  <th>数据类型</th>
 	  <th>偏移（字节）</th>
 	  <th>大小（字节）</th>
 	  <th>说明</th>
->>>>>>> origin/master
 </tr>
 <tr>
   <td>请求数据</td>
@@ -920,19 +829,11 @@ DJI Onboard API 相关的命令分为三大类：
 <tr>
 
 <tr>
-<<<<<<< HEAD
-<th rowspan="3"> 0x02 透传数据（移动设备至机载设备）</th>
-    <th>数据类型</th>
-    <th>偏移（字节）</th>
-    <th>大小（字节）</th>
-    <th>说明</th>
-=======
 <th rowspan="3"> 0x02<br>透传数据<br>（移动设备至机载设备）</th>
 	  <th>数据类型</th>
 	  <th>偏移（字节）</th>
 	  <th>大小（字节）</th>
 	  <th>说明</th>
->>>>>>> origin/master
 </tr>
 <tr>
   <td>请求数据</td>
@@ -954,25 +855,6 @@ DJI Onboard API 相关的命令分为三大类：
 + 因为_height_是相对起飞点的高度，因此如果上电后不起飞，这个数值不会刷新成有意义的值。
 
 + _GPS_ 信息中的 _lati_, _longti_ 均为弧度制。
-<<<<<<< HEAD
-
-+ IMU外发的加速度和角速度都是经过滤波算法处理的结果，我们会在未来的版本中加入标志位允许IMU外发传感器的原始数据。
-###2.6 通信会话加密机制
-**协议帧**
-<table>
-<tr>
-  <td>Protocol Frame Header</td>
-  <td>Protocol Frame Data</td>
-  <td>Protocol Frame Checksum</td>
-</tr>
-<tr>
-  <td> |SOF|LEN|VER|SESSION|A|RES0|PADDING|ENC|RES1|SEQ|CRC16|</td>
-  <td>    DATA   </td>
-  <td>  CRC32</td>
-</tr>
-</table>
-
-=======
 
 + IMU外发的加速度和角速度都是经过滤波算法处理的结果，我们会在未来的版本中加入标志位允许IMU外发传感器的原始数据。
 ###2.6 通信会话加密机制
@@ -991,16 +873,11 @@ DJI Onboard API 相关的命令分为三大类：
 </table>
 <br> 
 
->>>>>>> origin/master
    通信会话加密机制防止第三方直接窜入修改，夺取控制权，上述协议帧帧头和CRC校验部分不加密，数据段加密。
    具体哪些指令需要加密发送如下所示：
    
    **LEVEL 0 即 API激活相关指令无需加密**   
-<<<<<<< HEAD
-   **控制指令议建议不加密**   
-=======
    **控制指令（速度控制，位置控制接口）等建议不加密**   
->>>>>>> origin/master
    **状态控制命令（起飞，降落，返航）等指令需加密**   
    **获取控制权可加可不加密**
    **获取飞机数据指令可加可不加密**
@@ -1411,24 +1288,14 @@ HORI_POS模式的输入量是相对位置。这个设计是为了兼顾GPS飞行
 
 1. Body 坐标系：
 
-<<<<<<< HEAD
-  ![bFrame](Images/axis.png)
-  
-2. Ground 坐标系（北东地坐标系）：
-=======
   <img src="Images/axis.png" width="300">
   
   如图所示，在body坐标系下,沿机头正方向，绕Roll Axis轴顺时针旋转roll角增大，逆时针减小。绕Pitch Axis轴顺时针旋转pitch角增大，逆时针减小。绕Yaw Axis轴顺时针旋转yaw角增大，逆时针减小。
 2. Ground 坐标系（北东天坐标系）：
->>>>>>> origin/master
   
-  + 北-X or Roll 
-  + 东-y or Pitch
-  + 指向地心-z 
-
+   <img src="Images/gnd_axis.png" width="300">
+   
   坐标满足右手定则。ground 坐标系下通用的航向定义是以北为 0，顺时针到 180 度，逆时针到-180 度。这样用-180 到 180 度的数值表示飞行平台在空间中的朝向。
-<<<<<<< HEAD
-=======
   
   
  3. 进一步解释说明:
@@ -1436,45 +1303,11 @@ HORI_POS模式的输入量是相对位置。这个设计是为了兼顾GPS飞行
   
  *图例注释：椭圆平面为飞机所在与XOY平行的平面，有颜色一面为机头，XYZ为Ground坐标系,roll,pitch,yaw轴为body坐标系，_demo为该示例下飞机的运动方向*
  
->>>>>>> origin/master
 ```c  
 / *控制指令接口* /
 typedef struct
 {
     uint8_t ctrl_flag;
-<<<<<<< HEAD
-    fp32  roll_or_x;
-    fp32  pitch_or_y;
-    fp32  thr_z;
-    fp32  yaw;
-}api_ctrl_without_sensor_data_t;
-```
-  **备注：关于水平方向上得控制模式解释如下：注意理解“水平”，即飞机从在的与XY平面平行的面**
-  
-  + **HORI_ATTI_TILT_ANG对应控制的是转角（单位°），Ground坐标系下给roll_or_x赋正值x，将向正东方向转x°，Body坐标系下给roll_or_x赋值将向机头正方向的右边转x°，以此类推。**
-  
-  + **HORI_POS对应控制的是距离（单位米），Ground坐标系下给roll_or_x赋正值x，将向正东方向运动x米，Body坐标系下给roll赋值将向机头正方向的右边运动x米。**
-  
-  + **HORI_VEL对应控制速度（单位m/s），Ground坐标系下给roll赋正值x ，将向正东方向运动x m/s，Body坐标系下给roll赋值将向机头正方向的右边运动xm/s.**
-  
-  + **简单来说，在Ground坐标系下，不管飞机处于什么姿态，给roll_or_x赋正值就水平往正北方向运动，给pitch_or_y赋正值将水平往东方向运动，都赋值就往他们的合向量水平方向运动，在Body坐标系下，要考虑机头的方向，给roll_or_x赋正值将向机头正方向的右边水平运动（注意是水平运动，和此时的飞机的roll和pitch角无关），给pitch_or_y赋正值将向机头正方向水平运动**
- 
-  **备注：Ground 坐标系的高度方向与人对飞行控制的直觉不符，因此我们将竖直方向的高度和速度都调整成了以天空方向为正，也即发送数值为正的速度会让飞行平台远离地面。但是调整高度方向并不改变Ground 坐标系的另外两个轴的方向和顺序。**
-
-##四. API编程说明
-假设通信中发送协议数据的函数定义如下：
-```c
-void App_Send_Data(unsigned char flag,    //通信会话方式
-           uint8_t is_enc,      //是否采用加密发送
-           unsigned char  cmd_set,  //命令集
-           unsigned char cmd_id,    //命令码
-           unsigned char *pdata,    //数据段
-           int len,                 //数据段长度
-           ACK_Callback_Func ack_callback, //回调函数
-           int timeout ,            //使用会话方式 3 时接收端应答的超时时间，单位 ms
-           int n                    //使用会话方式 3 接收端不应答时，发送端重发的次数
-          )
-=======
     fp32 	roll_or_x;
     fp32	pitch_or_y;
     fp32	thr_z;
@@ -1545,7 +1378,6 @@ void App_Send_Data(unsigned char flag,		//通信会话方式
 				   int timeout ,            //使用会话方式 3 时接收端应答的超时时间，单位 ms
 				   int n                    //使用会话方式 3 接收端不应答时，发送端重发的次数
 					)
->>>>>>> origin/master
 ```
 **备注：由于会话方式 3 是一种可靠会话方式，开发者在协议链路层实现中应考虑数据丢包后的重发机制，在设计链路层发送接口时应提供超时时间、重发次数等参数。**
 + 激活API如下所示：
@@ -1553,85 +1385,23 @@ void App_Send_Data(unsigned char flag,		//通信会话方式
 /* 数据段结构体 */
 typedef struct
 {
-<<<<<<< HEAD
-  uint32_t  app_id;
-  uint32_t  app_api_level;
-  uint32_t  app_ver;
-  uint8_t   app_bundle_id[32];
-=======
 	uint32_t	app_id;
 	uint32_t	app_api_level;
 	uint32_t	app_ver;
 	uint8_t		app_bundle_id[32];
->>>>>>> origin/master
 }activation_data_t;
 
 /* 接收应答数据结构体 */
 typedef struct
 {
-<<<<<<< HEAD
-  uint16_t  version_ack;
-  uint32_t  version_crc;
-  char      version_name[32];
-=======
 	uint16_t	version_ack;
 	uint32_t	version_crc;
 	char     	version_name[32];
->>>>>>> origin/master
 }version_query_data_t;
 
 /* 获取 API 版本命令的回调函数 */
 void test_activation_ack_cmd_callback(ProHeader *header)
 {
-<<<<<<< HEAD
-  /*
-    #define ACTIVATION_SUCCESS    0x0000
-    #define PARAM_ERROR       0x0001
-    #define DATA_ENC_ERROR      0x0002
-    #define NEW_DEVICE_TRY_AGAIN  0x0003
-    #define DJI_APP_TIMEOUT     0x0004
-    #define DJI_APP_NO_INTERNET   0x0005
-    #define SERVER_REFUSED      0x0006
-    #define LEVEL_ERROR       0x0007
-  */
-  uint16_t ack_data;
-  printf("Sdk_ack_cmd0_callback,
-      sequence_number=%d,
-      session_id=%d,
-      data_len=%d\n", 
-      header->sequence_number, 
-      header->session_id, 
-      header->length - EXC_DATA_SIZE);
-  memcpy((uint8_t *)&ack_data,(uint8_t *)&header->magic, (header->length - EXC_DATA_SIZE));
-
-  if( is_sys_error(ack_data))
-  {
-        printf("[DEBUG] SDK_SYS_ERROR 3!!! \n");
-        activation_callback_flag=2;
-     //   QMessageBox::warning(NULL,"Error", "Activation Error", QMessageBox::Ok);
-  }
-  else
-  {
-        char result[][50]={{"ACTIVATION_SUCCESS"},
-                 {"PARAM_ERROR"},
-                 {"DATA_ENC_ERROR"},
-                 {"NEW_DEVICE_TRY_AGAIN"},
-                 {"DJI_APP_TIMEOUT"},
-                 {" DJI_APP_NO_INTERNET"},
-                 {"SERVER_REFUSED"},
-                 {"LEVEL_ERROR"}};
-        printf("[ACTIVATION] Activation result: %s \n", *(result+ack_data));
-        activation_callback_flag=1;
-      //  QMessageBox::information(NULL, "Warning", *(result+ack_data), QMessageBox::Ok);
-    activation_status_s = (uint8_t)ack_data;
-
-    if(ack_data == 0)
-    {
-      Pro_Config_Comm_Encrypt_Key(key);
-      printf("[ACTIVATION] set key %s\n",key);
-    }
-  }
-=======
 	/*
 		#define	ACTIVATION_SUCCESS		0x0000
 		#define PARAM_ERROR				0x0001
@@ -1679,103 +1449,20 @@ void test_activation_ack_cmd_callback(ProHeader *header)
 			printf("[ACTIVATION] set key %s\n",key);
 		}
 	}
->>>>>>> origin/master
 }
 
 **则应用程序中发送请求获取 API 版本命令的操作如下：**
 App_Send_Data(2, 
-<<<<<<< HEAD
-        0, 
-        MY_ACTIVATION_SET, 
-        API_USER_ACTIVATION,                 (uint8_t*)&activation_msg,
-        sizeof(activation_msg),     test_activation_ack_cmd_callback, 
-        1000, 
-        1);
-=======
 			  0, 
 			  MY_ACTIVATION_SET, 
 			  API_USER_ACTIVATION,       	   	     (uint8_t*)&activation_msg,
 			  sizeof(activation_msg), 	  test_activation_ack_cmd_callback, 
 			  1000, 
 			  1);
->>>>>>> origin/master
 ```
 + 发送状态控制命令如下所示：
    + 机载设备对飞机的状态控制分为两个阶段。第一个阶段是发送命令码为 0x01 的状态控制指令。第二个阶段是机载设备在发送状态控制指令之后可以开始尝试发送命令码为 0x02 的执行结果查询命令。我们单独开一个线程来实现此类操作
 ```c
-<<<<<<< HEAD
-   while(1)
-  {
-    if(cmd_unit.is_send_cmd)
-    {
-      printf("[DEBUG] in send\n");
-      cmd_unit.is_send_cmd = 0;
-      App_Send_Data(2,        /* 发送第一阶段指令 */
-              1,
-              MY_CTRL_CMD_SET, 
-              API_CMD_REQUEST,    
-              (uint8_t*)&cmd_unit.cmd,sizeof(cmd_unit.cmd),
-              sdk_ack_cmd_callback, 
-              10, 
-              0);
-      printf("[DEBUG] send req cmd ok\n");
-      sleep(2);
-      if( (cmd_unit.ack_result&0xFF00) == 0xFF00 )
-      {
-        cmd_unit.ack_callback(&cmd_unit.ack_result);
-        continue;
-      }
-      else if(cmd_unit.ack_result == REQ_TIME_OUT)
-      {
-        printf("[DEBUG] recv ack cmd time out \n");
-        cmd_unit.ack_callback(&cmd_unit.ack_result);
-        continue;
-      }
-      else if(cmd_unit.ack_result == REQ_REFUSE)
-      {
-        cmd_unit.ack_callback(&cmd_unit.ack_result);
-        continue;
-      }
-      else if (cmd_unit.ack_result == CMD_RECIEVE)
-      {
-        printf("[DEBUG] CMD_RECIEVE \n");
-
-        uint8_t req_status = cmd_unit.cmd.cmd_sequence; // can be anything
-        sleep(7);
-        App_Send_Data(2,        /* 发送第二阶段指令 */
-                1,
-                MY_CTRL_CMD_SET, 
-                API_CMD_STATUS_REQUEST,
-                (uint8_t*)&req_status,sizeof(uint8_t),
-                sdk_ack_cmd_callback, 
-                10, 
-                0);
-        printf("[DEBUG] send req status ok\n");
-        sleep(1);
-        printf("[DEBUG] recv ack1 status ok\n");
-        if( is_sys_error(cmd_unit.ack_result))
-        {
-          printf("SDK_SYS_ERROR!!! \n");
-          continue;
-        }
-        else
-        {
-          cmd_unit.ack_callback(&cmd_unit.ack_result);
-        }
-        
-        // for debug
-        if(cmd_unit.ack_result != STATUS_CMD_EXE_SUCCESS)
-        {
-          printf("[DEBUG] WARNING CMD UN-SECCUSS\n");
-        }
-      }
-    }
-    else
-    {
-      usleep(100000);
-    }
-  }
-=======
 	 while(1)
 	{
 		if(cmd_unit.is_send_cmd)
@@ -1847,6 +1534,5 @@ App_Send_Data(2,
 			usleep(100000);
 		}
 	}
->>>>>>> origin/master
 ```
 **备注，详细代码实现请参考源码**
