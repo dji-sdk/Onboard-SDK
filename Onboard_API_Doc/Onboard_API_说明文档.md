@@ -1394,6 +1394,7 @@ HORI_POS模式的输入量是相对位置。这个设计是为了兼顾GPS飞行
  + 若采用body坐标系，此时要考虑飞机的姿态，给roll_or_x赋值沿**pitch轴在oxy平面上的投影方向**运动，给pitch_or_y赋值沿**roll轴在oxy平面上的投影方向**运动。
 
  #####这个地方可能不是很好理解，我们具体举几个例子来说明：
+ 
 ```c 
  
 / *假设控制指令接口为* /
@@ -1418,7 +1419,17 @@ api_ctrl_without_sensor_data_t ctrl_data;
     /* send ctlr_data here */
 }
 
-/* 示例2：body_demo1:选择body坐标系，此时沿body_demo1（roll轴）方向以3m/s速度运动 */
+/* 示例2：选择ground坐标系，给roll_or_x赋值为3,给pitch_or_y 赋值为3,此时沿(东北)方向运动 */
+{
+    ctrl_data.ctrl_flag = 0x4a; /* 控制模式4，body坐标系 */
+    ctrl_data.roll_or_x = 3;
+    ctrl_data.pitch_or_y = 3;
+    ctrl_data.thr_z = 0;
+    ctrl_data.yaw = 0;
+    /* send ctlr_data here */
+}
+
+/* 示例3：选择body坐标系，给roll_or_x赋值为3,此时沿（Pitch Axis轴在OXY面的投影）方向以3m/s速度运动 */
 {
     ctrl_data.ctrl_flag = 0x4a; /* 控制模式4，body坐标系 */
     ctrl_data.roll_or_x = 3;
@@ -1427,16 +1438,17 @@ api_ctrl_without_sensor_data_t ctrl_data;
     ctrl_data.yaw = 0;
     /* send ctlr_data here */
 }
-/* 示例3：body_demo2:选择body坐标系，此时沿body_demo2（pitch轴在水平面的投影）方向以3m/s速度运动 */
+
+/* 示例4：选择body坐标系，给roll_or_x赋值为3，给pitch_or_y赋值为3，此时沿（Pitch Axis轴与Roll Axis轴的合向量在OXY面的投影）方向运动 */
 {
     ctrl_data.ctrl_flag = 0x4a; /* 控制模式4，body坐标系 */
-    ctrl_data.roll_or_x = 0;
+    ctrl_data.roll_or_x = 3;
     ctrl_data.pitch_or_y = 3;
     ctrl_data.thr_z = 0;
     ctrl_data.yaw = 0;
     /* send ctlr_data here */
 }
-/* 示例4：水平面的位置（HORI_ATTI_TILT_ANG）控制选择body坐标系，此时将pitch轴为旋转轴转动30度 */
+/* 示例5：水平面的位置（HORI_ATTI_TILT_ANG）控制选择body坐标系，此时将pitch轴为旋转轴转动30度 */
 {
     ctrl_data.ctrl_flag = 0x08; /* 控制模式2，body坐标系 */
     ctrl_data.roll_or_x = 0;
@@ -1445,7 +1457,7 @@ api_ctrl_without_sensor_data_t ctrl_data;
     ctrl_data.yaw = 0;
     /* send ctlr_data here */
 }
-/* 示例5：水平面的位置（HORI_ATTI_TILT_ANG）控制选择ground坐标系，此时将y轴为旋转轴转动30度 */
+/* 示例6：水平面的位置（HORI_ATTI_TILT_ANG）控制选择ground坐标系，此时将y轴为旋转轴转动30度 */
 {
     ctrl_data.ctrl_flag = 0x0a; /* 控制模式2，ground坐标系 */
     ctrl_data.roll_or_x = 0;
@@ -1455,7 +1467,6 @@ api_ctrl_without_sensor_data_t ctrl_data;
     /* send ctlr_data here */
 }
 ```
-4.小结：这里为了方面将对飞机的控制分解为水平面（HORI）和竖直面（VERT）的控制，我们采用了一种“中间坐标系”，从示例2和示例3的区别可以看出来，“中间坐标系”和body坐标系的区别在与把body坐标系下的控制量分解到水平面上（示例3可以看出），而中间坐标系和ground坐标系的区别仅在与yaw角。
  
 ##四. API编程说明
 假设通信中发送协议数据的函数定义如下：
