@@ -163,8 +163,8 @@ MATRICE 100 被设计为可以使用遥控器、机载设备和移动设备进�
 + MATRICE 100 飞行器配置。给飞控上电，DJI N1 PC 调参软件可以用于升级固件和配置启用 API 模式。
 
   在页面“基础”当中，开发者可以勾选“启用 API 控制”来配置遥控器和 MATRICE 100 启用API 模式控制相关的功能。开发者能够通过“串口波特率和外发数据设置”区的选项来配置串口波特率和飞控外发数据的内容。
-
-  ![N1UI](Images/N1UICN.png)
+  
+<img src="Images/N1UICN.png" width = "600" height = "400" alt="" div align=center />
 
   启用 API 控制之后，将遥控器模式开关置为中位（F 档）。
 
