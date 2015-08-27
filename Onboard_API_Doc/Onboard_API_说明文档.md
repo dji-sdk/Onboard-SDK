@@ -1374,7 +1374,7 @@ HORI_POS模式的输入量是相对位置。这个设计是为了兼顾GPS飞行
 
 1. Body 坐标系：
 
-  <img src="Images/axis.png" width="300">
+  <img src="Images/body.png" width="300">
   
   如图所示，在body坐标系下,沿机头正方向，绕Roll Axis轴顺时针旋转roll角增大，逆时针减小。绕Pitch Axis轴顺时针旋转pitch角增大，逆时针减小。绕Yaw Axis轴顺时针旋转yaw角增大，逆时针减小。
 2. Ground 坐标系（北东天坐标系）：
@@ -1382,15 +1382,20 @@ HORI_POS模式的输入量是相对位置。这个设计是为了兼顾GPS飞行
    <img src="Images/gnd_axis.png" width="300">
    
   坐标满足右手定则。ground 坐标系下通用的航向定义是以北为 0，顺时针到 180 度，逆时针到-180 度。这样用-180 到 180 度的数值表示飞行平台在空间中的朝向。
+
+
     **备注：Ground 坐标系的高度方向与人对飞行控制的直觉不符，因此我们将竖直方向的高度和速度都调整成了以天空方向为正，也即发送数值为正的速度会让飞行平台远离地面。但是调整高度方向并不改变Ground 坐标系的另外两个轴的方向和顺序。**
   
-  进一步解释说明:
-     <img src="Images/img.png" width="500">
+  ####进一步解释说明:
+     <img src="Images/final.png" width="500">
      
- *图例注释：椭圆平面为飞机所在与XOY平行的平面，有颜色一面为机头，XYZ为Ground坐标系,roll,pitch,yaw轴为body坐标系，_demo为该示例下飞机的运动方向*
+ #####图例注释：XYZ为Ground坐标系,roll,pitch,yaw轴为body坐标系,其实在这里我们为了方便将飞机在空间中的运动分解在水平面和竖直面上的运动，我们这里引入了一种“中间坐标系”，在该坐标系下的控制就变成这样：
+ + 若采用ground坐标系不考虑飞机此刻的姿态，给roll_or_x赋值沿x方向（即正北方向）运动，给pitch_or_y赋值就沿（正东方向）运动。
+ + 若采用body坐标系，此时要考虑飞机的姿态，给roll_or_x赋值沿**pitch轴在oxy平面上的投影方向**运动，给pitch_or_y赋值沿**roll轴在oxy平面上的投影方向**运动。
+ #####这个地方可能不是很好理解，我们具体举几个例子来说明：
+```c 
  
-```c  
-/ *控制指令接口* /
+/ *假设控制指令接口为* /
 typedef struct
 {
     uint8_t ctrl_flag;
@@ -1402,7 +1407,7 @@ typedef struct
 
 api_ctrl_without_sensor_data_t ctrl_data;
 
-/* 示例1：ground_demo1:选择ground坐标系，此时沿ground_demo1（正北）方向以3m/s速度运动 */
+/* 示例1：选择ground坐标系，此时沿ground_demo1（正北）方向以3m/s速度运动 */
 {
     ctrl_data.ctrl_flag = 0x48; /* 控制模式4，ground坐标系 */
     ctrl_data.roll_or_x = 3;
