@@ -784,7 +784,7 @@ DJI Onboard API 相关的命令分为三大类：
   <td>命令执行速度，单位0.1°/s，范围0~255</td>
 </tr>
 <tr>
-  <td>6</td>
+  <td>8</td>
   <td>1</td>
   <td>控制权<br>bit 0: 增量/绝对选择位 <ol start="0"><li>增量（相对于当前云台的欧拉角）<li>绝对（相对于ground坐标系）</ol>bit 1 : Yaw轴控制有效位  <ol start="0"><li>有效<li>无效（Yaw维持上一时刻的状态）</ol>bit 2 : Roll轴控制有效位  <ol start="0"><li>有效<li>无效（Yaw维持上一时刻的状态）</ol>bit 3 : Pitch轴控制有效位  <ol start="0"><li>有效<li>无效（Yaw维持上一时刻的状态）</ol></ol>bit 4..7 : 保留（必须为0）</td>
 </tr>
