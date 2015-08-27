@@ -97,7 +97,7 @@ DJI N1 PC 调参软件用于配置 MATRICE 100 的串口和 MATRICE 100 固件�
 <br> 
 #### 1.1.3 遥控器、Onboard API 和 Mobile API
 
-MATRICE 100 被设计为可以使用遥控器、机载设备和移动设备进行控制。为 Inspire 1 和Phantom3 系列设计的标准 DJI 辅助软件“DJI Pilot”也可以在 MATRICE 100 上使用。另外 DJIMobile SDK 也适用于MATRICE 100（请访问 dev.dji.com了解关于DJI Mobile SDK 的更多信息）。因为 MATRICE 100 有三种可能的控制输入，控制输入必须有优先级管理。
+MATRICE 100 被设计为可以使用遥控器、机载设备和移动设备进行控制。为 Inspire 1 和Phantom3 系列设计的标准 DJI 辅助软件“DJI GO”也可以在 MATRICE 100 上使用。另外 DJIMobile SDK 也适用于MATRICE 100（请访问 dev.dji.com了解关于DJI Mobile SDK 的更多信息）。因为 MATRICE 100 有三种可能的控制输入，控制输入必须有优先级管理。
 
 我们将遥控器设计为控制权限最高的设备。遥控器可以选择让飞控是否将控制权转给 API 控制。
 
@@ -152,7 +152,7 @@ MATRICE 100 被设计为可以使用遥控器、机载设备和移动设备进�
 #### 1.2.2 必备软件
 
 1. 装有 DJI N1 PC 调参软件的 windows 电脑
-2. 装有 DJI Pilot（最新版本）的可联网移动设备
+2. 装有 DJI GO（最新版本）的可联网移动设备
 3. 装有 Ubuntu 14.04 (或更高版本) 和 ROS Indigo（或更高版本）的 Linux 电脑。示例代码在 ROS Indigo 上进行过测试。
 4. ROS package rosbridge_server
 5. 示例代码 dji_sdk 与 dji_keyboard_ctrl
