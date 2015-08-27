@@ -1175,7 +1175,7 @@ DJI Onboard API 相关的命令分为三大类：
   <td>控制设备</td>
   <td>status</td>
   <td>uint8_t</td>
-  <td>控制设备<br>0：遥控器<br>1：移动设备<br>2：机载设备</td>
+  <td>bit 7~5 : 控制设备<ol start="0"><li>遥控器<li>移动设备app<li>机载设备</ol>bit 4 : 串口请求<ol start="0"><li>关闭<li>打开</ol>bit  3~0 :  保留</td>
   <td>0Hz</td>
 </tr>
 </table>
