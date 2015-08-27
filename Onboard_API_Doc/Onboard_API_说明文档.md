@@ -82,11 +82,11 @@ DJI N1 PC 调参软件用于配置 MATRICE 100 的串口和 MATRICE 100 固件�
 
 系统架构框图：
 
-![systemDiagram](Images/systemDiagramCN.png)
+<img src="Images/systemDiagramCN.png" width = "400" height = "400" alt="" div align=center />
 
 注册和激活的过程图：
 
-![registrationDiagram](Images/registrationDiagramCN.png)
+<img src="Images/registrationDiagramCN.png" width = "400" height = "400" alt="" div align=center />
 
 激活过程中的一个重要概念是设备许可数量（DAN）。它有以下性质：
 + 每个 App ID 对应一个 DAN。它表示着这个 App ID 可以激活的飞控数量。
