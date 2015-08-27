@@ -540,7 +540,7 @@ DJI Onboard API 相关的命令分为三大类：
 <tr>
   <td>6</td>
   <td>32</td>
-  <td>不定长，最大长度 32bytes。有效部分到’\0’结尾</td>
+  <td>设备版本的字符串</td>
 </tr>
 
 <tr>
@@ -580,7 +580,7 @@ DJI Onboard API 相关的命令分为三大类：
   <td>Return Data</td>
   <td>0</td>
   <td>2</td>
-  <td>返回码，应答码： <ol start="0"><li>成功</li><li>参数非法，参数长度不匹配</li><li>数据包加密了，未能正确识别</li><li>没有激活过的设备，尝试激活</li><li>DJI App 没有响应，可能是没有连接 DJI App</li><li>DJI App 没有联网</li><li>服务器拒绝，激活失败</li><li>权限级别不够</li></ol></td>
+  <td>返回码，应答码： <ol start="0"><li>成功</li><li>参数非法，参数长度不匹配</li><li>数据包加密了，未能正确识别</li><li>没有激活过的设备，尝试激活</li><li>DJI App 没有响应，可能是没有连接 DJI App</li><li>DJI App 没有联网</li><li>服务器拒绝，激活失败</li><li>权限级别不够</li><li>SDK版本错误，需要更新SDK版本</ol></td>
 </tr>
 
 <tr>
@@ -1490,6 +1490,7 @@ void App_Send_Data(unsigned char flag,		//通信会话方式
 **备注：由于会话方式 3 是一种可靠会话方式，开发者在协议链路层实现中应考虑数据丢包后的重发机制，在设计链路层发送接口时应提供超时时间、重发次数等参数。**
 ###4.1 激活API如下所示：
 ```c
+
 /* 数据段结构体 */
 typedef struct
 {
@@ -1506,6 +1507,9 @@ typedef struct
 	uint32_t	version_crc;
 	char     	version_name[32];
 }version_query_data_t;
+
+#define MAKE_VERSION(a,b,c,d) (((a << 24)&0xff000000) | ((b << 16)&0x00ff0000) | ((c << 8)&0x0000ff00) | (d&0x000000ff))
+#define SDK_VERSION           (MAKE_VERSION(2,3,10,0))
 
 /* 获取 API 版本命令的回调函数 */
 void test_activation_ack_cmd_callback(ProHeader *header)
@@ -1559,16 +1563,26 @@ void test_activation_ack_cmd_callback(ProHeader *header)
 	}
 }
 
-/* 则应用程序调用请求激活 API 命令的操作如下：*/
-App_Send_Data(2, 
-			  0, 
-			  MY_ACTIVATION_SET, 
-			  API_USER_ACTIVATION,       	   	     
-			  (uint8_t*)&activation_msg,
-			  sizeof(activation_msg), 	  
-			  test_activation_ack_cmd_callback, 
-			  1000, 
-			  1);
+void test_activation(void)
+{
+	/* 则应用程序调用请求激活 API 命令的操作如下：*/
+	activation_data_t activation_msg;
+	activation_msg.app_id = 10086;
+ 	activation_msg.app_api_level = 2;
+	activation_msg.app_ver = SDK_VERSION;
+	memcpy(activation_msg.app_bundle_id,"1234567890123456789012", 32);
+	key = "5837313ef98f1f7f1c50eebb0b06363d523a369289e042c4d00b66d8e49337a7";
+	App_Send_Data(2, 
+				  0, 
+				  MY_ACTIVATION_SET, 
+				  API_USER_ACTIVATION,       	   	     
+				  (uint8_t*)&activation_msg,
+				  sizeof(activation_msg), 	  
+				  test_activation_ack_cmd_callback, 
+				  1000, 
+				  1);
+}
+
 ```
 ###4.2 发送状态控制命令如下所示：
    + 机载设备对飞机的状态控制（起飞，降落，返航等）分为两个阶段。第一个阶段是发送命令码为 0x01 的状态控制指令。第二个阶段是机载设备在发送状态控制指令之后可以开始尝试发送命令码为 0x02 的执行结果查询命令。我们单独开一个线程来实现此类操作
