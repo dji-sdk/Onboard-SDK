@@ -128,7 +128,7 @@ MATRICE 100 被设计为可以使用遥控器、机载设备和移动设备进�
 
 <br> 
 ###1.2 [ROS]通过无线串口控制 MATRICE 100 
-**详细信息参考onboard文件下的DJI_Onboard_API_ROS_Sample**
+**详细信息参考onboard文件下的[DJI_Onboard_API_ROS_Sample](https://github.com/dji-sdk/onboard/tree/master/Onboard_SDK_Sample/DJI_Onboard_API_Cmdline_Sample)**
 
 在这个示例中，我们使用示例代码“dji_sdk_keyboard_ctrl”对 MATRICE 100 进行远程控制。该代码基于 ROS 软件包 keyboardteleop.js。我们设计了一个简单的 HTML GUI 帮助开发者熟悉如何使用键盘和鼠标控制 MATRICE 100。
 
