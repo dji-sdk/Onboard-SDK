@@ -485,6 +485,8 @@ DJI Onboard API 相关的命令分为三大类：
 	+ 命令码 0x00 请求获得控制权
 	+ 命令码 0x01-0x02 状态控制命令
 	+ 命令码 0x03 姿态控制命令
+	+ 命令码0x1A云台角速度控制
+	+ 命令码0x1B云台角度控制
 + 命令集 0x02 飞控外发的数据
     + 命令码 0x00 标准数据包
     + 命令码 0x01 控制权归属切换
@@ -602,7 +604,7 @@ DJI Onboard API 相关的命令分为三大类：
 </tr>
 
 <tr>
-<th rowspan=17"> 0x01<br>飞行控制类</th>
+<th rowspan=30"> 0x01<br>飞行控制类</th>
  <th rowspan="3"> 0x00<br>请求获得控制权</th>
   <th>数据类型</th>
   <th>偏移（字节）</th>
@@ -663,6 +665,7 @@ DJI Onboard API 相关的命令分为三大类：
   <td>1</td>
   <td>指令序列号</td>
 </tr>
+
 <tr>
   <td>应答数据</td>
   <td>0</td>
@@ -707,6 +710,89 @@ DJI Onboard API 相关的命令分为三大类：
   <td>throttle 方向控制量或 Z 轴控制量</td>
 </tr>
 
+<tr>
+  <td>Return Data</td>
+  <td>0</td>
+  <td></td>
+  <td>无应答数据</td>
+</tr>
+
+<th rowspan="6">0x1A<br>云台角速度<br>控制命令</th>
+  <th>数据类型</th>
+  <th>偏移（字节）</th>
+  <th>大小（字节）</th>
+  <th>说明</th>
+</tr>
+
+<tr>
+  <td rowspan="4">请求数据</td>
+  <td>0</td>
+  <td>2</td>
+  <td>云台Yaw角速度（16位整型，单位0.1°/s，-1800~+1800）</td>
+</tr>
+
+<tr>
+  <td>2</td>
+  <td>2</td>
+  <td>云台Roll角速度（16位整型，单位0.1°/s，-1800~+1800）</td>
+</tr>
+
+<tr>
+  <td>4</td>
+  <td>2</td>
+  <td>云台Pitch角速度（16位整型，单位0.1°/s，-1800~+1800）</td>
+</tr>
+
+<tr>
+  <td>6</td>
+  <td>1</td>
+  <td>控制权<br>0x80接手控制权<br>0x00释放控制权</td>
+</tr>
+
+<tr>
+  <td>Return Data</td>
+  <td>0</td>
+  <td></td>
+  <td>无应答数据</td>
+</tr>
+<tr>
+
+<th rowspan="7">0x1B <br>云台角度<br>控制命令</th>
+  <th>数据类型</th>
+  <th>偏移（字节）</th>
+  <th>大小（字节）</th>
+  <th>说明</th>
+</tr>
+
+<tr>
+  <td rowspan="5">请求数据</td>
+  <td>0</td>
+  <td>2</td>
+  <td>云台Yaw角度（16位整型，单位0.1°，-1800~+1800）</td>
+</tr>
+
+<tr>
+  <td>2</td>
+  <td>2</td>
+  <td>云台Roll角度（16位整型，单位0.1°，-1800~+1800）</td>
+</tr>
+
+<tr>
+  <td>4</td>
+  <td>2</td>
+  <td>云台Pitch角度（16位整型，单位0.1°，-1800~+1800）</td>
+</tr>
+
+<tr>
+  <td>7</td>
+  <td>1</td>
+  <td>命令执行速度，单位0.1°/s，范围0~255</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td>1</td>
+  <td>控制权<br>bit 0: 增量/绝对选择位 <ol start="0"><li>增量（相对于当前云台的欧拉角）<li>绝对（相对于ground坐标系）</ol>bit 1 : Yaw轴控制有效位  <ol start="0"><li>有效<li>无效（Yaw维持上一时刻的状态）</ol>bit 2 : Roll轴控制有效位  <ol start="0"><li>有效<li>无效（Yaw维持上一时刻的状态）</ol>bit 3 : Pitch轴控制有效位  <ol start="0"><li>有效<li>无效（Yaw维持上一时刻的状态）</ol></ol>bit 4..7 : 保留（必须为0）</td>
+</tr>
 <tr>
   <td>Return Data</td>
   <td>0</td>
@@ -1381,7 +1467,7 @@ void App_Send_Data(unsigned char flag,		//通信会话方式
 ```
 
 **备注：由于会话方式 3 是一种可靠会话方式，开发者在协议链路层实现中应考虑数据丢包后的重发机制，在设计链路层发送接口时应提供超时时间、重发次数等参数。**
-+ 激活API如下所示：
+###4.1 激活API如下所示：
 ```c
 /* 数据段结构体 */
 typedef struct
@@ -1452,17 +1538,19 @@ void test_activation_ack_cmd_callback(ProHeader *header)
 	}
 }
 
-**则应用程序中发送请求获取 API 版本命令的操作如下：**
+/* 则应用程序调用请求激活 API 命令的操作如下：*/
 App_Send_Data(2, 
 			  0, 
 			  MY_ACTIVATION_SET, 
-			  API_USER_ACTIVATION,       	   	     (uint8_t*)&activation_msg,
-			  sizeof(activation_msg), 	  test_activation_ack_cmd_callback, 
+			  API_USER_ACTIVATION,       	   	     
+			  (uint8_t*)&activation_msg,
+			  sizeof(activation_msg), 	  
+			  test_activation_ack_cmd_callback, 
 			  1000, 
 			  1);
 ```
-+ 发送状态控制命令如下所示：
-   + 机载设备对飞机的状态控制分为两个阶段。第一个阶段是发送命令码为 0x01 的状态控制指令。第二个阶段是机载设备在发送状态控制指令之后可以开始尝试发送命令码为 0x02 的执行结果查询命令。我们单独开一个线程来实现此类操作
+###4.2 发送状态控制命令如下所示：
+   + 机载设备对飞机的状态控制（起飞，降落，返航等）分为两个阶段。第一个阶段是发送命令码为 0x01 的状态控制指令。第二个阶段是机载设备在发送状态控制指令之后可以开始尝试发送命令码为 0x02 的执行结果查询命令。我们单独开一个线程来实现此类操作
 ```c
 	 while(1)
 	{
@@ -1536,4 +1624,105 @@ App_Send_Data(2,
 		}
 	}
 ```
+###4.3 发送控制命令如下所示：
+**关于控制指令的详细介绍，用户参考3.2坐标系说明**
+```c  
+/ *控制指令接口* /
+typedef struct
+{
+    uint8_t ctrl_flag;
+    fp32 	roll_or_x;
+    fp32	pitch_or_y;
+    fp32	thr_z;
+    fp32	yaw;
+}api_ctrl_without_sensor_data_t;
+
+/* 控制指令需不断发送，建议用户已50HZ的频率发送控制指令 */
+
+void timer_50hz_spin(void)
+{
+	api_ctrl_without_sensor_data_t ctrl_data;
+	
+	ctrl_data.ctrl_flag = 0x0a; /* 控制模式2，ground坐标系 */
+    ctrl_data.roll_or_x = 0;
+    ctrl_data.pitch_or_y = 30;
+    ctrl_data.thr_z = 0;
+    ctrl_data.yaw = 0;
+    
+	App_Send_Data(0,				/* 发送第二阶段指令 */
+			  0,
+			  MY_CTRL_CMD_SET, 
+			  API_CTRL_REQUEST,
+			  (uint8_t*)&ctrl_data,
+			  sizeof(ctrl_data),
+			  NULL,
+			  0, 
+			  0
+			  );
+}
+
+```
+###4.4 发送云台控制命令如下所示：
+####云台控制
+
++ **onboard SDK可以控制云台的角速度或者角度，一般情况下，云台ROLL方向会自动控制使相机保持水平，所以不建议用户去控制云台的ROLL角。**
+```c  
+/ *云台控制指令接口* /
+
+/* 云台角度控制结构体 */
+typedef struct
+{
+    int16_t yaw_angle;
+    int16_t roll_angle;
+    int16_t pitch_angle;
+    struct
+    {
+		uint8_t base : 1;
+		uint8_t yaw_cmd_ignore : 1;
+		uint8_t roll_cmd_ignore : 1;
+	    uint8_t pitch_cmd_ignore : 1;
+	    uint8_t reserve : 4;
+    }ctrl_byte;
+}gimbal_custom_control_angle_t;
+
+/* 云台角速度控制结构体 */
+typedef struct
+{
+    int16_t yaw_angle_rate;
+    int16_t roll_angle_rate;
+    int16_t pitch_angle_rate;
+    struct
+    {
+	    uint8_t reserve : 7;
+	    uint8_t ctrl_switch : 1;
+    }ctrl_byte;
+}gimbal_custom_speed_t;
+/* 控制指令需不断发送，建议用户已50HZ的频率发送控制指令 */
+
+void timer_50hz_spin(void)
+{
+	gimbal_custom_control_angle_t gimbal_angel;
+	
+    gimbal_angel.yaw_angle = 5;
+    gimbal_angel.roll_angle = 0;
+    gimbal_angel.pitch_angle = 0;
+    gimbal_angel.ctrl_byte.base = 0; /* 增量控制 */
+    gimbal_angel.ctrl_byte.yaw_cmd_ignore = 0; /* 控制有效 */ 
+    gimbal_angel.ctrl_byte.roll_cmd_ignore = 0; /* 控制有效 */ 
+    gimbal_angel.ctrl_byte.pitch_cmd_ignore = 0; /* 控制有效 */ 
+ 
+    App_Send_Data(0,				
+				  0,
+				  MY_CTRL_CMD_SET, 
+				  API_GIMBAL_CTRL_REQUEST,
+				  (uint8_t*)&gimbal_angel,
+				  sizeof(gimbal_angel),
+				  NULL,
+				  0, 
+				  0
+				  );
+}
+
+```
+
 **备注，详细代码实现请参考源码**
