@@ -1296,7 +1296,7 @@ HORI_POS模式的输入量是相对位置。这个设计是为了兼顾GPS飞行
    <img src="Images/gnd_axis.png" width="300">
    
   坐标满足右手定则。ground 坐标系下通用的航向定义是以北为 0，顺时针到 180 度，逆时针到-180 度。这样用-180 到 180 度的数值表示飞行平台在空间中的朝向。
-  
+    **备注：Ground 坐标系的高度方向与人对飞行控制的直觉不符，因此我们将竖直方向的高度和速度都调整成了以天空方向为正，也即发送数值为正的速度会让飞行平台远离地面。但是调整高度方向并不改变Ground 坐标系的另外两个轴的方向和顺序。**
   
  3. 进一步解释说明:
   ![bFrame](https://github.com/dsgthlr123/onboard/blob/master/Onboard_API_Doc/Images/img.png)
