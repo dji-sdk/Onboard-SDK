@@ -1288,9 +1288,10 @@ HORI_POS模式的输入量是相对位置。这个设计是为了兼顾GPS飞行
 
 1. Body 坐标系：
 
-  ![bFrame](Images/axis.png)
+  <img src="Images/axis.png" width="300">
   
-2. Ground 坐标系（北东地坐标系）：
+  如图所示，在body坐标系下,沿机头正方向，绕Roll Axis轴顺时针旋转roll角增大，逆时针减小。绕Pitch Axis轴顺时针旋转pitch角增大，逆时针减小。绕Yaw Axis轴顺时针旋转yaw角增大，逆时针减小。
+2. Ground 坐标系（北东天坐标系）：
   
   + 北-X or Roll 
   + 东-y or Pitch
