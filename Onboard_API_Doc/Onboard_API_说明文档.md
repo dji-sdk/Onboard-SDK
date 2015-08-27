@@ -110,7 +110,7 @@ MATRICE 100 被设计为可以使用遥控器、机载设备和移动设备进�
 如果遥控器让飞控切换到 API 控制模式，设备通过 Onboard API 和 Mobile API 可以请求获得控制权。移动设备的 API 有更高的控制优先级。如果移动设备先获得了控制权，那么机载设备无法成功获得控制权。
 
 ![](Images/controller.png =100x20)
-
+<img src="Images/controller.png" width = "300" height = "200" alt="图片名称" align=center />
 本文档着重介绍 Onboard API。我们假设开发者在使用 Onboard API 的过程中不使用 mobileAPI。**在目前版本中，混合控制（同时使用 Mobile API 和 Onboard API）没有得到完整支持。**
 
 <br> 
