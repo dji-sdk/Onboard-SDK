@@ -82,11 +82,11 @@ DJI N1 PC 调参软件用于配置 MATRICE 100 的串口和 MATRICE 100 固件�
 
 系统架构框图：
 
-<img src="Images/systemDiagramCN.png" width = "600" height = "400" alt="" div align=center />
+  <img src="Images/systemDiagramCN.png" width = "600" height = "400" alt="" div align=center />
 
 注册和激活的过程图：
 
-<img src="Images/registrationDiagramCN.png" width = "600" height = "400" alt="" div align=center />
+   <img src="Images/registrationDiagramCN.png" width = "600" height = "400" alt="" div align=center />
 
 激活过程中的一个重要概念是设备许可数量（DAN）。它有以下性质：
 + 每个 App ID 对应一个 DAN。它表示着这个 App ID 可以激活的飞控数量。
@@ -109,7 +109,7 @@ MATRICE 100 被设计为可以使用遥控器、机载设备和移动设备进�
 
 如果遥控器让飞控切换到 API 控制模式，设备通过 Onboard API 和 Mobile API 可以请求获得控制权。移动设备的 API 有更高的控制优先级。如果移动设备先获得了控制权，那么机载设备无法成功获得控制权。
 
-<img src="Images/controller.png" width = "300" height = "250" alt="" div align=center />
+   <img src="Images/controller.png" width = "300" height = "250" alt="" div align=center />
 
 本文档着重介绍 Onboard API。我们假设开发者在使用 Onboard API 的过程中不使用 mobileAPI。**在目前版本中，混合控制（同时使用 Mobile API 和 Onboard API）没有得到完整支持。**
 
@@ -164,7 +164,7 @@ MATRICE 100 被设计为可以使用遥控器、机载设备和移动设备进�
 
   在页面“基础”当中，开发者可以勾选“启用 API 控制”来配置遥控器和 MATRICE 100 启用API 模式控制相关的功能。开发者能够通过“串口波特率和外发数据设置”区的选项来配置串口波特率和飞控外发数据的内容。
   
-<img src="Images/N1UICN.png" width = "600" height = "400" alt="" div align=center />
+    <img src="Images/N1UICN.png" width = "600" height = "400" alt="" div align=center />
 
   启用 API 控制之后，将遥控器模式开关置为中位（F 档）。
 
@@ -282,13 +282,13 @@ MATRICE 100 被设计为可以使用遥控器、机载设备和移动设备进�
 **协议帧**
 <table>
 <tr>
-	<td>Protocol Frame Header</td>
+	<td>  Protocol Frame Header  </td>
 	<td>Protocol Frame Data</td>
 	<td>Protocol Frame Checksum</td>
 </tr>
 <tr>
-	<td> |SOF|LEN|VER|SESSION|A|RES0|PADDING|ENC|RES1|SEQ|CRC16|</td>
-	<td>    DATA   </td>
+	<td> |SOF|LEN|VER|SESSION|A<br>|RES0|PADDING|ENC|RES1|SEQ|CRC16|</td>
+	<td>   DATA   </td>
 	<td>  CRC32</td>
 </tr>
 </table>
@@ -504,8 +504,8 @@ DJI Onboard API 相关的命令分为三大类：
    <th colspan=4>详细说明</th>
 </tr>
 <tr>
-<th rowspan=14">0x00激活验证类</th>
-  <th rowspan="5">0x00获取 API 版本</th>
+<th rowspan=14">0x00<br>激活验证类</th>
+  <th rowspan="5">0x00<br>获取 API 版本</th>
   <th>数据类型</th>
   <th>偏移（字节）</th>
   <th>大小（字节）</th>
@@ -539,7 +539,7 @@ DJI Onboard API 相关的命令分为三大类：
 </tr>
 
 <tr>
-   <th rowspan="6">0x01激活 API</th>
+   <th rowspan="6">0x01<br>激活 API</th>
   <th>数据类型</th>
   <th>偏移（字节）</th>
   <th>大小（字节）</th>
@@ -579,7 +579,7 @@ DJI Onboard API 相关的命令分为三大类：
 </tr>
 
 <tr>
- <th rowspan="3">0xFE 透传数据（机载设备至移动设备）</th>
+ <th rowspan="3">0xFE<br> 透传数据<br>（机载设备至移动设备）</th>
   <th>数据类型</th>
   
   <th>偏移（字节）</th>
@@ -602,8 +602,8 @@ DJI Onboard API 相关的命令分为三大类：
 </tr>
 
 <tr>
-<th rowspan=17"> 0x01 飞行控制类</th>
- <th rowspan="3"> 0x00 请求获得控制权</th>
+<th rowspan=17"> 0x01<br>飞行控制类</th>
+ <th rowspan="3"> 0x00<br>请求获得控制权</th>
   <th>数据类型</th>
   <th>偏移（字节）</th>
   <th>大小（字节）</th>
@@ -624,7 +624,7 @@ DJI Onboard API 相关的命令分为三大类：
   <td>返回码 <ul><li>0x0001：成功释放控制权</li><li>0x0002：成功获得控制权</li><li>0x0003：获得控制权失败</li></ul></td>
 </tr>
 <tr>
-		<th rowspan="4">0x01(0x01-0x02) 状态控制命令</th>
+		<th rowspan="4">0x01<br> 状态控制命令</th>
 	  <th>数据类型</th>
 	  <th>偏移（字节）</th>
 	  <th>大小（字节）</th>
@@ -651,7 +651,7 @@ DJI Onboard API 相关的命令分为三大类：
   <td>返回码<ui><li>0x0001：执行失败</li><li>0x0002：开始执行</li></ui></td>
 </tr>
 <tr>
-			<th rowspan="3">0x02(0x01-0x02) 状态控制命令</th>
+			<th rowspan="3">0x02<br>状态查询命令</th>
 	  <th>数据类型</th>
 	  <th>偏移（字节）</th>
 	  <th>大小（字节）</th>
@@ -669,7 +669,7 @@ DJI Onboard API 相关的命令分为三大类：
   <td>1</td>
   <td>返回码<ui><li>0x0001：执行失败（指令序列号不是当前执行的指令）</li><li>0x0003：指令正在执行</li><li>0x0004：指令执行失败</li><li>0x0005：指令执行成功</li></ui></td>
 <tr>
-<th rowspan="7">0x03 姿态控制命令</th>
+<th rowspan="7">0x03 <br>姿态控制命令</th>
   <th>数据类型</th>
   <th>偏移（字节）</th>
   <th>大小（字节）</th>
@@ -714,8 +714,8 @@ DJI Onboard API 相关的命令分为三大类：
   <td>无应答数据</td>
 </tr>
 <tr>
-<th rowspan=22">0x02 飞控外发的数据</th>
-<th rowspan="15">0x00 标准数据包</th>
+<th rowspan=22">0x02<br>飞控外发的数据</th>
+<th rowspan="15">0x00<br>标准数据包</th>
   <th>数据类型</th>
   <th>偏移（字节）</th>
   <th>大小（字节）</th>
@@ -809,7 +809,7 @@ DJI Onboard API 相关的命令分为三大类：
 </tr>
 
 <tr>
-<th rowspan="4">0x01 控制权归属切换</th>
+<th rowspan="4">0x01<br>控制权归属切换</th>
 	  <th>数据类型</th>
 	  <th>偏移（字节）</th>
 	  <th>大小（字节）</th>
@@ -829,7 +829,7 @@ DJI Onboard API 相关的命令分为三大类：
 <tr>
 
 <tr>
-<th rowspan="3"> 0x02 透传数据（移动设备至机载设备）</th>
+<th rowspan="3"> 0x02<br>透传数据<br>（移动设备至机载设备）</th>
 	  <th>数据类型</th>
 	  <th>偏移（字节）</th>
 	  <th>大小（字节）</th>
@@ -861,22 +861,23 @@ DJI Onboard API 相关的命令分为三大类：
 **协议帧**
 <table>
 <tr>
-	<td>Protocol Frame Header</td>
+	<td>  Protocol Frame Header  </td>
 	<td>Protocol Frame Data</td>
 	<td>Protocol Frame Checksum</td>
 </tr>
 <tr>
-	<td> |SOF|LEN|VER|SESSION|A|RES0|PADDING|ENC|RES1|SEQ|CRC16|</td>
-	<td>    DATA   </td>
+	<td> |SOF|LEN|VER|SESSION|A<br>|RES0|PADDING|ENC|RES1|SEQ|CRC16|</td>
+	<td>   DATA   </td>
 	<td>  CRC32</td>
 </tr>
 </table>
+<br> 
 
    通信会话加密机制防止第三方直接窜入修改，夺取控制权，上述协议帧帧头和CRC校验部分不加密，数据段加密。
    具体哪些指令需要加密发送如下所示：
    
    **LEVEL 0 即 API激活相关指令无需加密**   
-   **控制指令议建议不加密**   
+   **控制指令（速度控制，位置控制接口）等建议不加密**   
    **状态控制命令（起飞，降落，返航）等指令需加密**   
    **获取控制权可加可不加密**
    **获取飞机数据指令可加可不加密**
@@ -907,7 +908,7 @@ DJI Onboard API 相关的命令分为三大类：
   <td rowspan="4">姿态四元素</td>
   <td>q0</td>
   <td>float32</td>
-  <td rowspan="4">姿态四元数（从 Ground 坐标系转到 Body 坐标系）</td>
+  <td rowspan="4">姿态四元数<br>（从 Ground 坐标系<br>转到 Body 坐标系）</td>
   <td rowspan="4">100Hz</td>
 </tr>
 <tr>
@@ -924,7 +925,7 @@ DJI Onboard API 相关的命令分为三大类：
 </tr>
 
 <tr>
-  <td rowspan="3">Ground 坐标系下的加速度</td>
+  <td rowspan="3">Ground 坐标系<br>下的加速度</td>
   <td>agx</td>
   <td>float32</td>
   <td rowspan="3"></td>
@@ -940,7 +941,7 @@ DJI Onboard API 相关的命令分为三大类：
 </tr>
 
 <tr>
-  <td rowspan="3">Ground 坐标系下的速度</td>
+  <td rowspan="3">Ground 坐标系<br>下的速度</td>
   <td>vgx</td>
   <td>float32</td>
   <td rowspan="3"></td>
@@ -956,7 +957,7 @@ DJI Onboard API 相关的命令分为三大类：
 </tr>
 
 <tr>
-  <td rowspan="3">Body 坐标系下的角速度</td>
+  <td rowspan="3">Body 坐标系下<br>的角速度</td>
   <td>wx</td>
   <td>float32</td>
   <td rowspan="3"></td>
@@ -972,7 +973,7 @@ DJI Onboard API 相关的命令分为三大类：
 </tr>
 
 <tr>
-  <td rowspan="5">GPS 位置、海拔、相对地面高度、信号健康度</td>
+  <td rowspan="5">GPS 位置、<br>海拔、<br>相对地面高度、<br>信号健康度</td>
   <td>longti</td>
   <td>double</td>
   <td rowspan="2">GPS 位置</td>
@@ -990,12 +991,12 @@ DJI Onboard API 相关的命令分为三大类：
 <tr>
   <td>height</td>
   <td>float32</td>
-  <td>相对地面高度（超声波和气压计融合）</td>
+  <td>相对地面高度<br>（超声波和气压计融合）</td>
 </tr>
 <tr>
   <td>health_flag</td>
   <td>uint8_t</td>
-  <td>GPS 健康度 (0-5, 5 为最好)</td>
+  <td>GPS 健康度<br> (0-5, 5 为最好)</td>
 </tr>
 
 <tr>
@@ -1039,12 +1040,12 @@ DJI Onboard API 相关的命令分为三大类：
 <tr>
   <td>mode</td>
   <td>int16_t</td>
-  <td>遥控通道 mode 数据（模式选择开关）</td>
+  <td>遥控通道 mode 数据<br>（模式选择开关）</td>
 </tr>
 <tr>
   <td>gear</td>
   <td>int16_t</td>
-  <td>遥控通道 gear 数据（正面的圆形拨杆）</td>
+  <td>遥控通道 gear 数据<br>（正面的圆形拨杆）</td>
 </tr>
 
 <tr>
@@ -1193,7 +1194,7 @@ void recv_std_package (unsigned char* pbuf, unsigned int len) {
 <tr>
   <td rowspan="3">竖直方向</td>
   <td>VERT_POS</td>
-  <td>垂直方向上控制的是位置，输入的控制量必须为对地面的高度量</td>
+  <td>垂直方向上控制的是位置，<br>输入的控制量必须为对地面的高度量</td>
 </tr>
 <tr>
   <td>VERT_VEL</td>
@@ -1207,15 +1208,15 @@ void recv_std_package (unsigned char* pbuf, unsigned int len) {
 <tr>
   <td rowspan="3">水平方向</td>
   <td>HORI_ATTI_TILT_ANG</td>
-  <td>水平方向控制的是pitch 和 roll 两个方向上的倾角（和加速度对应），<b>可以选择这个 offset 是 ground 坐标系下还是body 坐标系下</b></td>
+  <td>水平方向控制的是pitch 和 roll 两个方向上的倾角（和加速度对应），<br><b>可以选择这个 offset 是 ground 坐标系下还是body 坐标系下</b></td>
 </tr>
 <tr>
   <td>HORI_POS</td>
-  <td>水平方向控制的是 pitch 和 roll 两个方向上的位置offset，<b>可以选择这个 offset 是 ground 坐标系下还是body 坐标系下</b></td>
+  <td>水平方向控制的是 pitch 和 roll 两个方向上的位置offset，<br><b>可以选择这个 offset 是 ground 坐标系下还是body 坐标系下</b></td>
 </tr>
 <tr>
   <td>HORI_VEL</td>
-  <td>水平方向控制的是 pitch 和 roll 两个方向上的速度，<b>可以选择这个速度是 ground 坐标系下还是 body 坐标系下</b></td>
+  <td>水平方向控制的是 pitch 和 roll 两个方向上的速度，<br><b>可以选择这个速度是 ground 坐标系下还是 body 坐标系下</b></td>
 </tr>
 
 <tr>
@@ -1225,7 +1226,7 @@ void recv_std_package (unsigned char* pbuf, unsigned int len) {
 </tr>
 <tr>
   <td>YAW_RATE</td>
-  <td>偏航控制目标角速度，<b>可以选择这个角速度是 ground 坐标系下还是 body 坐标系下</b></td>
+  <td>偏航控制目标角速度，<br><b>可以选择这个角速度是 ground 坐标系下还是 body 坐标系下</b></td>
 </tr>
 </table>
 
