@@ -26,7 +26,9 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <signal.h>
-
+/* VERSION  */
+#define MAKE_VERSION(a,b,c,d) (((a << 24)&0xff000000) | ((b << 16)&0x00ff0000) | ((c << 8)&0x0000ff00) | (d&0x000000ff))
+#define SDK_VERSION           (MAKE_VERSION(3,0,0,4))
 /* parameter */
 #define C_EARTH (double) 6378137.0
 #define C_PI	(double) 3.141592653589793
@@ -511,6 +513,7 @@ void test_activation_ack_cmd_callback(ProHeader *header)
 		#define DJI_APP_NO_INTERNET		0x0005
 		#define SERVER_REFUSED			0x0006
 		#define LEVEL_ERROR				0x0007
+        #define SDK_VERSION_ERROR       0x0008
 	*/
 	unsigned short ack_data;
 	printf("Sdk_ack_cmd0_callback,sequence_number=%d,session_id=%d,data_len=%d\n", header->sequence_number, header->session_id, header->length - EXC_DATA_SIZE);
@@ -522,7 +525,7 @@ void test_activation_ack_cmd_callback(ProHeader *header)
 	}
 	else
 	{
-		char result[][50]={{"ACTIVATION_SUCCESS"},{"PARAM_ERROR"},{"DATA_ENC_ERROR"},{"NEW_DEVICE_TRY_AGAIN"},{"DJI_APP_TIMEOUT"},{" DJI_APP_NO_INTERNET"},{"SERVER_REFUSED"},{"LEVEL_ERROR"}};
+		char result[][50]={{"ACTIVATION_SUCCESS"},{"PARAM_ERROR"},{"DATA_ENC_ERROR"},{"NEW_DEVICE_TRY_AGAIN"},{"DJI_APP_TIMEOUT"},{" DJI_APP_NO_INTERNET"},{"SERVER_REFUSED"},{"LEVEL_ERROR"},{"SDK_VERSION_ERROR"}};
 		printf("[ACTIVATION] Activation result: %s \n", *(result+ack_data));
 
 		activation_status_s = (unsigned char)ack_data;
@@ -830,7 +833,7 @@ int DJI_Pro_Test_Setup(void)
 
 	activation_msg.app_id = 10086;
 	activation_msg.app_api_level = 2;
-	activation_msg.app_ver = 1;
+	activation_msg.app_ver = SDK_VERSION;
 	memcpy(activation_msg.app_bundle_id,"1234567890123456789012", 32);
 	key = "5837313ef98f1f7f1c50eebb0b06363d523a369289e042c4d00b66d8e49337a7";
 
