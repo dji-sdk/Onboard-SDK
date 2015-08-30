@@ -188,49 +188,49 @@ MATRICE 100 被设计为可以使用遥控器、机载设备和移动设备进�
     ```
     其中的 node parameters 含义如下
     
-<table>
-<tr>
-	<td>Name</td>
-	<td>Type</td>
-	<td>说明</td>
-</tr>
-<tr>
-	<td>serial_name</td>
-	<td>String</td>
-	<td>串口设备名,通常为“/dev/ttyUSB0”,但是在不同的Linux系统上有不同的名称。可以通过ls /dev和dmesg |tail 查看设备名</td>
-</tr>
-<tr>
-	<td>baud_rate</td>
-	<td>Int</td>
-	<td>串口波特率，必须与通过调参软件设置的相同。</td>
-</tr>
-<tr>
-	<td>app_id</td>
-	<td>Int</td>
-	<td>dev.dji.com 服务器返回的 AppID</td>
-</tr>
-<tr>
-	<td>app_api_level</td>
-	<td>Int</td>
-	<td>dev.dji.com 服务器返回的 API 级别</td>
-</tr>
-<tr>
-	<td>app_version</td>
-	<td>Int</td>
-	<td>开发者设定的应用版本号</td>
-</tr>
-<tr>
-	<td>app_bundle_id</td>
-	<td>String</td>
-	<td>dev.dji.com 服务器返回的 bundle ID</td>
-</tr>
-<tr>
-	<td>enc_key</td>
-	<td>String</td>
-	<td>dev.dji.com 服务器返回的 AES 密钥</td>
-</tr>
+	<table>
+	<tr>
+		<td>Name</td>
+		<td>Type</td>
+		<td>说明</td>
+	</tr>
+	<tr>
+		<td>serial_name</td>
+		<td>String</td>
+		<td>串口设备名,通常为“/dev/ttyUSB0”,但是在不同的Linux系统上有不同的名称。可以通过ls /dev和dmesg |tail 查看设备名</td>
+	</tr>
+	<tr>
+		<td>baud_rate</td>
+		<td>Int</td>
+		<td>串口波特率，必须与通过调参软件设置的相同。</td>
+	</tr>
+	<tr>
+		<td>app_id</td>
+		<td>Int</td>
+		<td>dev.dji.com 服务器返回的 AppID</td>
+	</tr>
+	<tr>
+		<td>app_api_level</td>
+		<td>Int</td>
+		<td>dev.dji.com 服务器返回的 API 级别</td>
+	</tr>
+	<tr>
+		<td>app_version</td>
+		<td>Int</td>
+		<td>开发者设定的应用版本号</td>
+	</tr>
+	<tr>
+		<td>app_bundle_id</td>
+		<td>String</td>
+		<td>dev.dji.com 服务器返回的 bundle ID</td>
+	</tr>
+	<tr>
+		<td>enc_key</td>
+		<td>String</td>
+		<td>dev.dji.com 服务器返回的 AES 密钥</td>
+	</tr>
 
-</table>
+	</table>
 
     
     **注意：这条命令一定要在 sudo su 模式下启动，因为打开串口需要 root 权限。**
@@ -275,18 +275,12 @@ MATRICE 100 被设计为可以使用遥控器、机载设备和移动设备进�
 ###2.1 协议格式
 
 **协议帧**
-<table>
-<tr>
-	<td>  Protocol Frame Header  </td>
-	<td>Protocol Frame Data</td>
-	<td>Protocol Frame Checksum</td>
-</tr>
-<tr>
-	<td> |SOF|LEN|VER|SESSION|A<br>|RES0|PADDING|ENC|RES1|SEQ|CRC16|</td>
-	<td>   DATA   </td>
-	<td>  CRC32</td>
-</tr>
-</table>
+
+   ```
+   |<--------------Protocol Frame Header---------------->|<--Protocol Frame Data-->|<--Protocol Frame Checksum-->|
+   |SOF|LEN|VER|SESSION|A|RES0|PADDING|ENC|RES1|SEQ|CRC16|          DATA           |            CRC32            |
+   ```
+   
 <br> 
 
 ###2.2 协议帧头格式说明
@@ -451,6 +445,7 @@ DATA 长度大小不固定，最大长度为 1007。crc32字节索引根据 DATA
 |方式2|1|发送端需要接收端应答数据，但是可以容忍应答数据丢包|
 |方式3|2-31|发送端需要正确收到接收端的应答包。<br>发送端使用这些session 发送命令数据包时，<br>接收端应答后要保存当前的应答包作为该 session 的应答数据，<br>应答包中包含该命令数据包中的 sequence number 和 session id。<br>如果通信过程中，发送端没有正确收到应答包，<br>可以重新发送该命令数据包，接收端收到后将保存的应答包重新发送回去。<br>下一次，如果发送端使用和上一次相同的 session id，<br>但不同的 sequence number 来发送命令数据包时，<br>接收端会丢弃上一次保存的 session 应答数据，重新保存新的 session 应答数据。|
 **备注：由于会话方式 3 是一种可靠会话方式，开发者在协议链路层实现中应考虑数据丢包后的重发机制，在设计链路层发送接口时应提供超时时间、重发次数等参数。**
+
 ###2.5命令集说明 
 
 ####2.5.1命令及权限
@@ -480,8 +475,8 @@ DJI Onboard API 相关的命令分为三大类：
 	+ 命令码 0x00 请求获得控制权
 	+ 命令码 0x01-0x02 状态控制命令
 	+ 命令码 0x03 姿态控制命令
-	+ 命令码0x1A云台角速度控制
-	+ 命令码0x1B云台角度控制
+	+ 命令码 0x1A 云台角速度控制
+	+ 命令码 0x1B 云台角度控制
 + 命令集 0x02 飞控外发的数据
     + 命令码 0x00 标准数据包
     + 命令码 0x01 控制权归属切换
@@ -498,10 +493,10 @@ DJI Onboard API 相关的命令分为三大类：
 <tr>
  <th>命令集</th>
   <th>命令码</th>
-   <th colspan=4>详细说明</th>
+   <th colspan="4">详细说明</th>
 </tr>
 <tr>
-<th rowspan=14">0x00<br>激活验证类</th>
+<th rowspan="14">0x00<br>激活验证类</th>
   <th rowspan="5">0x00<br>获取 API 版本</th>
   <th>数据类型</th>
   <th>偏移（字节）</th>
@@ -599,7 +594,7 @@ DJI Onboard API 相关的命令分为三大类：
 </tr>
 
 <tr>
-<th rowspan=30"> 0x01<br>飞行控制类</th>
+<th rowspan="30"> 0x01<br>飞行控制类</th>
  <th rowspan="3"> 0x00<br>请求获得控制权</th>
   <th>数据类型</th>
   <th>偏移（字节）</th>
@@ -795,7 +790,7 @@ DJI Onboard API 相关的命令分为三大类：
   <td>无应答数据</td>
 </tr>
 <tr>
-<th rowspan=22">0x02<br>飞控外发的数据</th>
+<th rowspan="22">0x02<br>飞控外发的数据</th>
 <th rowspan="15">0x00<br>标准数据包</th>
   <th>数据类型</th>
   <th>偏移（字节）</th>
@@ -938,7 +933,9 @@ DJI Onboard API 相关的命令分为三大类：
 + _GPS_ 信息中的 _lati_, _longti_ 均为弧度制。
 
 + IMU外发的加速度和角速度都是经过滤波算法处理的结果，我们会在未来的版本中加入标志位允许IMU外发传感器的原始数据。
+
 ###2.6 通信会话加密机制
+
 **协议帧**
 <table>
 <tr>
