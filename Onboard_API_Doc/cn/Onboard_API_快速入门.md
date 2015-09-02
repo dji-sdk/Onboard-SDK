@@ -48,6 +48,7 @@ DJI N1 PC 调参软件用于配置 MATRICE 100 的串口和 MATRICE 100 固件�
 ![registrationDiagram](Images/registrationDiagramCN.png)
 
 激活过程中的一个重要概念是设备许可数量（DAN）。它有以下性质：
+
 + 每个 App ID 对应一个 DAN。它表示着这个 App ID 可以激活的飞控数量。
 + 每个新的 App ID 的 DAN 上限默认为 5。
 + 在激活过程中，每一个新的飞控都会让 App ID 的 DAN 增加 1。如果某个 App ID 的 DAN 达到上限，那么激活就会失败，新的飞控不能激活。
@@ -125,6 +126,7 @@ MATRICE 100 被设计为可以使用遥控器、机载设备和移动设备进�
 + 启动示例代码
 
 	**1.** 编译 ROS package dji_sdk
+	
 	**2.** 启动 roscore, 然后启动 rosbridge_server 
 	
 	```
