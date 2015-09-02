@@ -39,7 +39,7 @@ DJI N1 PC assistant software can configure MATRICE 100 serial port and upgrade f
 Due to the safety concern, since onboard API allows developers to implement autonomous UAV systems beyond line-of-sight, DJI has to impose more restricted control registration methods for MATRICE 100. Before using MATRICE 100, a developer must register his personal information on _dev.dji.com_ and then activate his MATRICE 100. DJI Server will provide an APP ID and an AES key to the developer. Most parts of the communication between the onboard device and MATRICE 100 is encrypted by this key, which reaches MATRICE 100 separately during activation progress. The activation and encryption will be explained in detail in the "Active Command Set" section.
 
 Diagram of System Structure:
-![systemDiagram](Images/systemDiagram.png)
+![systemDiagram](Images/systemDiagramPhoto.png)
 
 Diagram of registration and activation process:
 ![registrationDiagram](Images/registrationDiagram.png)
@@ -122,11 +122,15 @@ Configure the 433 transceivers to the baud rate 115200 (different transceivers m
 
 #### Run sample code
 
-1. Compile ROS package dji_sdk.
-2. Start roscore, and then start rosbridge server in a new terminal.
+**1.** Compile ROS package dji_sdk.
 
-        roslaunch rosbridge_server rosbridge_websocket.launch
-3. Use the launch file in the sample code to start dji_sdk_node.
+**2.** Start roscore, and then start rosbridge server in a new terminal.
+
+```
+roslaunch rosbridge_server rosbridge_websocket.launch
+```
+
+**3.** Use the launch file in the sample code to start dji_sdk_node.
 
   Following is the sample launch file
   
@@ -144,24 +148,25 @@ Configure the 433 transceivers to the baud rate 115200 (different transceivers m
   </node>
   </launch> 
   ```
+  
  The node parameters are:
  
- |Name|Type|Explanation|
- |----|----|-----------|
- |serial_name|String|Serial device's name. Usually it looks like `/dev/ttyUSBx` but different Linux Distribution may have different device name. `ls /dev/` and `dmesg | tail` commands can be used to identify the device name.|
- |baud_rate|Int|The serial port baud rate. It must be the same as the one in MATRICE 100's configuration.|
- |app_id|Int|The APP ID assigned by _dev.dji.com_ server to developer when registration.|
- |app_api_level|Int|The APP API control level assigned by _dev.dji.com_ server to developer when registration.|
- |app_version|Int|Developer assigned application version|
- |app_bundle_id|String|The APP bundle ID assigned by _dev.dji.com_ server to developer when registration.|
- |enc_key|String|The encryption key assigned by dev.dji.com server to developer when registration.|
+|Name|Type|Explanation|
+|----|----|-----------|
+|serial_name|String|Serial device's name. Usually it looks like `/dev/ttyUSBx` but different Linux Distribution may have different device name. `ls /dev/` and `dmesg | tail` commands can be used to identify the device name.|
+|baud_rate|Int|The serial port baud rate. It must be the same as the one in MATRICE 100's configuration.|
+|app_id|Int|The APP ID assigned by _dev.dji.com_ server to developer when registration.|
+|app_api_level|Int|The APP API control level assigned by _dev.dji.com_ server to developer when registration.|
+|app_version|Int|Developer assigned application version|
+|app_bundle_id|String|The APP bundle ID assigned by _dev.dji.com_ server to developer when registration.|
+|enc_key|String|The encryption key assigned by dev.dji.com server to developer when registration.|
  
  **Note: This command must be run as root. (i.e. `sudo su` first).**
      
       sudo su
       roslaunch dji_sdk sdk_demo.launch
 
-4. Edit `sdk_keyboard_demo.html`. Change the address in the URL to the Linux machine hostname, localhost/127.0.0.1 when single machine and the LAN IP when running ROS multi-machine.
+**4.** Edit `sdk_keyboard_demo.html`. Change the address in the URL to the Linux machine hostname, localhost/127.0.0.1 when single machine and the LAN IP when running ROS multi-machine.
 
 ~~~c
 function init() {
@@ -172,7 +177,7 @@ function init() {
 } 
 ~~~
 
-5. Open `sdk_keyboard_demo.html` in web browser. `rosbridge_server` will print log showing new client connected. If not, please check your connection settings in step 4. After the html page is connected to `rosbridge_server`, the web GUI will display flight status and it is also possible to check flight status directly by `rostopic`.
+**5.** Open `sdk_keyboard_demo.html` in web browser. `rosbridge_server` will print log showing new client connected. If not, please check your connection settings in step 4. After the html page is connected to `rosbridge_server`, the web GUI will display flight status and it is also possible to check flight status directly by `rostopic`.
 
 #### Test communication link
 
@@ -188,7 +193,7 @@ The web GUI has control buttons as shown below. Moreover, key `W`,`A`,`S`,`D` al
 
 The horizontal movement is controlled by angle command associated with button `W`,`A`,`S`,`D`. The angular speed is `5*speed_level`. `speed_level` is an inner variable with default value 1. The value can be changed using key `123456`. Be careful when you are working with high angular speed, MATRICE 100 will accelerate quickly.
 
-<img src="Images/webGUI.png" width="200">
+![webGUI](Images/webGUISample.png)
 
 #### Safety Flight
 

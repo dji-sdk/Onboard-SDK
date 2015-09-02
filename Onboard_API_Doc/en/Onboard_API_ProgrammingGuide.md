@@ -121,8 +121,12 @@ Frame data size varies, 1007 is the maximum length. The index of the CRC32 depen
 ### Protocol Data Field Explanation
 
 All serial packages exchanged between MATRICE 100 and the onboard device can be classified into three types:
+
 1. Command Package. From the onboard device to MATRICE 100. It mainly contains flight control commands.
+
 2. Message Package. From MATRICE 100 to the onboard device. It contains the autopilot data.
+
+
 3. Acknowledgement Package (ACK package). From MATRICE 100 to the onboard device. It contains execution results of commands.
 
 #### Package from the onboard device to MATRICE 100 (Command Package)

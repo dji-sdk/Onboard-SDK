@@ -2,26 +2,11 @@
 
 *In case of any mistake or bug, please report to us using Github issue or DJI forum or email. You are welcome to send your pull request helping us fix issue. However, all pull requests related to document must follow the [document style](https://github.com/dji-sdk/onboard/issues/8#issuecomment-115976289)*
 
----
-## Content
-
-+ Introduction
-+ Transparent Data Transmission (Onboard to Mobile)
-  + Onboard Device to UAV
-  + UAV to Mobile Device
-+ Transparent Data Transmission (Mobile to Onboard)
-  + Mobile Device to UAV
-  + UAV to Mobile Device
-  
-<br>
-
 ## Introduction
 
 This guide gives an overview of the Transparent Data Transmission function between onboard and mobile devices. Topics covered include development purpose, methods of use and sample codes.
 
 **Note that the upstream bandwidth (mobile to onboard) is around _1KB/s_, while the downstream bandwidth (onboard to mobile) is around _8KB/s_.**
-
-<br>
 
 ### Development Purpose
 
@@ -69,7 +54,6 @@ Linklayer_Send(SESSION_MODE3,
 );
 ~~~
 
-<br>
 ### UAV to Mobile Device
 
 This section use the Android system as an example. Users can enter the DJI-SDK-DEMO application to monitor the UAV status through relevant functions and use the Transparent Data Transmission function on the Controller State page.
@@ -82,7 +66,7 @@ This section use the Android system as an example. Users can enter the DJI-SDK-D
 
 The relative sample codes are shown as below:
 
-1. iOS
+- iOS
 
 ~~~cSharp
 //Setting Delegation
@@ -95,7 +79,7 @@ NSLog(@"%@",data);
 }
 ~~~
   
-2. Android
+- Android
 
 ~~~java
 //Receiving the data callback interface sent from UAV
@@ -113,15 +97,13 @@ public void onResult(byte[] data) {
 DJIDrone.getDjiMC().setExternalDeviceRecvDataCallBack(mExtDevReceiveDataCallBack);
 ~~~
 
-<br>
-
 ## Transparent Data Transmission (Mobile to Onboard)
 
 ### Mobile Device to UAV
 
 The relevant sample code are shown as below:
 
-1. iOS
+#### iOS
 
   - Initialization
   
@@ -153,7 +135,7 @@ DJIInspireMainController* inspireMC = (DJIInspireMainController*)drone.mainContr
   }];
 ~~~
   
-2. Android
+#### Android
 
 ~~~java
   //Data needs to be sent, please note that data size should be no larger than 100 bytes.
@@ -170,8 +152,6 @@ DJIInspireMainController* inspireMC = (DJIInspireMainController*)drone.mainContr
   });
 ~~~
 
-<br>
-
 ### UAV to Onboard Device
 
 Use this function with the same method mentioned previously. The communication protocol is described as below:
@@ -183,3 +163,6 @@ Use this function with the same method mentioned previously. The communication p
 |---------|------|----|-----------|
 |Request Data|0|1~100|User defined data|
 |Return Data|0|0|No return data|
+
+
+

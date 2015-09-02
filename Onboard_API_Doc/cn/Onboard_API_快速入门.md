@@ -123,58 +123,64 @@ MATRICE 100 被设计为可以使用遥控器、机载设备和移动设备进�
 + 连接无线串口。电脑安装 USB-TTL 软件驱动，通过 USB-TTL 连接一个串口模块。另一个串口模块连接飞控附带的串口转接线。注意放在 MATRICE 100 上的串口模块需要 5V 电源模块单独供电。5V 电源模块可以使用 MATRICE 100 的电源作为输入。
 
 + 启动示例代码
-  1. 编译 ROS package dji_sdk
-  2. 启动 roscore, 然后启动 rosbridge_server 
-  
-          roslaunch rosbridge_server rosbridge_websocket.launch
-  3. 通过代码中的 launch 文件启动 dji_sdk_node。
-  
-    下面的代码是示例 launch 文件
-    
-~~~xml
-<launch>
-<node pkg="dji_sdk" type="dji_sdk_node" name="dji_sdk_node" output="screen">
-<!-- node parameters -->
-<param name="serial_name" type="string" value="/dev/ttySAC0"/> 
-<param name="baud_rate" type="int" value="115200"/>
-<param name="app_id" type="int" value="<!-- your appid -->"/>
-<param name="app_api_level" type="int" value="<!-- your app level -->"/>
-<param name="app_version" type="int" value="<!-- your app version -->"/>
-<param name="app_bundle_id" type="string" value="<!-- your app bundle id ->"/>
-<param name="enc_key" type="string" value="<!-- your app enc key -->"/> 
-</node>
-</launch> 
-~~~
-    
-    其中的 node parameters 含义如下
 
-    |Name|Type|说明|
-    |----|----|----|
-    |serial_name|String|g 串口设备名。通常为 “/dev/ttyUSB0”，但是在不同的Linux 设备上可能有不同的名称。 “ls /dev/*”和”dmesg| tail”命令可以用于查询设备名。|
-    |baud_rate|Int|串口波特率，必须与通过调参软件设置的相同。|
-    |app_id|Int|dev.dji.com 服务器返回的 AppID|
-    |app_api_level|Int|dev.dji.com 服务器返回的 API 级别|
-    |app_version|Int|开发者设定的应用版本号|
-    |app_bundle_id|String|dev.dji.com 服务器返回的 bundle ID|
-    |enc_key|String|dev.dji.com 服务器返回的 AES 密钥|
+	**1.** 编译 ROS package dji_sdk
+	**2.** 启动 roscore, 然后启动 rosbridge_server 
+	
+	```
+   roslaunch rosbridge_server rosbridge_websocket.launch
+	```
+	      
+	**3.** 通过代码中的 launch 文件启动 dji_sdk_node。
+	  
+	下面的代码是示例 launch 文件
+	    
+	~~~xml
+	<launch>
+	<node pkg="dji_sdk" type="dji_sdk_node" name="dji_sdk_node" output="screen">
+	<!-- node parameters -->
+	<param name="serial_name" type="string" value="/dev/ttySAC0"/> 
+	<param name="baud_rate" type="int" value="115200"/>
+	<param name="app_id" type="int" value="<!-- your appid -->"/>
+	<param name="app_api_level" type="int" value="<!-- your app level -->"/>
+	<param name="app_version" type="int" value="<!-- your app version -->"/>
+	<param name="app_bundle_id" type="string" value="<!-- your app bundle id ->"/>
+	<param name="enc_key" type="string" value="<!-- your app enc key -->"/> 
+	</node>
+	</launch> 
+	~~~
     
-    **注意：这条命令一定要在 sudo su 模式下启动，因为打开串口需要 root 权限。**
+	其中的 node parameters 含义如下
+
+	|Name|Type|说明|
+	|----|----|----|
+	|serial_name|String|g 串口设备名。通常为 “/dev/ttyUSB0”，但是在不同的Linux 设备上可能有不同的名称。 “ls /dev/*”和”dmesg| tail”命令可以用于查询设备名。|
+	|baud_rate|Int|串口波特率，必须与通过调参软件设置的相同。|
+	|app_id|Int|dev.dji.com 服务器返回的 AppID|
+	|app_api_level|Int|dev.dji.com 服务器返回的 API 级别|
+	|app_version|Int|开发者设定的应用版本号|
+	|app_bundle_id|String|dev.dji.com 服务器返回的 bundle ID|
+	|enc_key|String|dev.dji.com 服务器返回的 AES 密钥|
     
-        sudo su
-        roslaunch dji_sdk sdk_demo.launch
-        
-  4. 编辑 “sdk_keyboard_demo.html”, 把 url 中的地址改成 Linux 系统的主机名或者localhost（127.0.0.1）
+	**注意：这条命令一定要在 sudo su 模式下启动，因为打开串口需要 root 权限。**
 
-~~~c
-function init() {
-  // Connecting to ROS.
-  var ros = new ROSLIB.Ros({
-  url: 'ws://127.0.0.1:9090'
-  });
-} 
-~~~
+	```
+	sudo su
+	roslaunch dji_sdk sdk_demo.launch
+	```
+     
+   **4.** 编辑 “sdk_keyboard_demo.html”, 把 url 中的地址改成 Linux 系统的主机名或者localhost（127.0.0.1）
 
-  5. 在浏览器中打开 “sdk_keyboard_demo.html” 。rosbridge_server 会显示有新的 client 连接上，否则请检查步骤 4 中的设置。此时可以在页面中读取到飞行平台的状态信息。
+	~~~c
+	function init() {
+	  // Connecting to ROS.
+	  var ros = new ROSLIB.Ros({
+	  url: 'ws://127.0.0.1:9090'
+	  });
+	} 
+	~~~
+
+  **5.** 在浏览器中打开 “sdk_keyboard_demo.html” 。rosbridge_server 会显示有新的 client 连接上，否则请检查步骤 4 中的设置。此时可以在页面中读取到飞行平台的状态信息。
 
 + 测试通信链路。在 sdk_keyboard_demo 页面中点击“Activation”。如果 PC 和飞行平台之间的链接畅通，页面上可以看到返回码。否则请检查链路连接状况。
 
@@ -182,7 +188,7 @@ function init() {
 
 + 启动飞行器在空中悬停，与周围物体保持安全距离。遥控器切入 F 档，通过程序请求控制权，此时可以通过示例程序发送控制指令。除了下图所示的指令外，键盘“WASD”键控制飞行器向对应方向的倾角，“ZC” 控制竖直速度、“QE”控制偏航旋转。“WASD”控制的倾角度数为 5*speed_level。这个 speed_level 默认为 1，可以通过键盘数字键 123456 来修改。speed_level 修改后，姿态控制指令的数值也会随之改变。请谨慎使用大姿态角度的指令，飞行器会很快加速。
 
-  <img src="Images/webGUI.png" width="200">
+  ![webGUI](Images/webGUISample.png)
 
 + 安全飞行注意事项：配置完成后用户必须把遥控器切到 F 档 API 控制模式，飞控才会准备接受串口控制。此后机载设备可以发送请求获得控制权。这样的设计是将遥控器的模式切换拨杆作为紧急情况下的保险开关。任何情况下用户拨动遥控器模式切换拨杆，都会退出 API 控制模式。我们建议两位开发者一起合作进行测试，一个人控制网页 GUI，另一个人使用遥控器紧急制动。
 
