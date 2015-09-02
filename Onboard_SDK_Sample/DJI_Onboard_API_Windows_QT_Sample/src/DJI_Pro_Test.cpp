@@ -13,23 +13,26 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/time.h>
-
+#include <unistd.h>
+#include <pthread.h>
 #include "DJI_Pro_Codec.h"
 #include "DJI_Pro_Hw.h"
 #include "DJI_Pro_Link.h"
 #include "DJI_Pro_App.h"
 #include "DJI_Pro_Test.h"
-
-
-#include <unistd.h>
-#include <pthread.h>
-#include <string.h>
+#include "DJI_Pro_Config.h"
 
 /* MATH for_example */
 #include <math.h>
-#include <QMessageBox>
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
+
+#ifdef PLATFORM_LINUX
+#include <stdio.h>
+#include <unistd.h>
+#include <signal.h>
+#include "tinyxml2.h"
+using namespace tinyxml2;
+using namespace std;
+#endif
 
 /* parameter */
 #define C_EARTH (double) 6378137.0
@@ -38,33 +41,47 @@
 #define NO_AUTHORITY 8
 
 /* cmd agency ack func */
-void cmd_callback_fun(uint16_t *ack);
+void cmd_callback_fun(unsigned short *ack);
 
 /* enc_key */
-//static const char *key
 const char *key;
+
 /* switch mode */
 static float ctrl_mode = 1;
 /* switch simple task */
 int simple_task_num = -1;
 /* req_id for nav closed by app msg */
-static req_id_t nav_force_close_req_id;
+static req_id_t nav_force_close_req_id = {0};
 /* std msg from uav */
-static sdk_std_msg_t recv_sdk_std_msgs;
+static sdk_std_msg_t recv_sdk_std_msgs = {0};
 
-extern int activation_callback_flag;
+#ifdef Q_OS_WIN32
+    extern int activation_callback_flag;
+#endif
 
+#ifdef PLATFORM_LINUX
+
+std::string	serial_name;
+int		baud_rate;
+
+int		app_id;
+int		app_api_level;
+int		app_version;
+std::string	app_bundle_id;
+
+std::string     enc_key;
+#endif
 // activation
 activation_data_t activation_msg = {14,2,1,""};
 
-static uint8_t battery_remaining_s = 0xFF;
-static uint8_t ctrl_device_s = 0xFF;
-static uint8_t activation_status_s = 0xFF;
+static unsigned char battery_remaining_s = 0xFF;
+static unsigned char ctrl_device_s = 0xFF;
+static unsigned char activation_status_s = 0xFF;
 static pthread_mutex_t status_lock_s = PTHREAD_MUTEX_INITIALIZER;
 
 /* table of sdk req data handler */
-int16_t sdk_std_msgs_handler(uint8_t cmd_id,uint8_t* pbuf,uint16_t len,req_id_t req_id);
-int16_t	nav_force_close_handler(uint8_t cmd_id,uint8_t* pbuf,uint16_t len,req_id_t req_id);
+int16_t sdk_std_msgs_handler(unsigned char cmd_id,unsigned char* pbuf,unsigned short len,req_id_t req_id);
+int16_t	nav_force_close_handler(unsigned char cmd_id,unsigned char* pbuf,unsigned short len,req_id_t req_id);
 
 /* cmd id table */
 cmd_handler_table_t cmd_handler_tab[] =
@@ -84,12 +101,12 @@ set_handler_table_t set_handler_tab[] =
 /*
  *  sdk_req_data_callback
  */
-int16_t nav_force_close_handler(uint8_t cmd_id,uint8_t* pbuf,uint16_t len,req_id_t req_id)
+int16_t nav_force_close_handler(unsigned char cmd_id,unsigned char* pbuf,unsigned short len,req_id_t req_id)
 {
     cmd_id=cmd_id;  //For eliminating the warning messages.
-    if(len != sizeof(uint8_t))
+    if(len != sizeof(unsigned char))
 		return -1;
-	uint8_t msg;
+	unsigned char msg;
 	memcpy(&msg, pbuf, sizeof(msg));
 	/* test session ack */
 	nav_force_close_req_id.sequence_number = req_id.sequence_number;
@@ -104,17 +121,17 @@ int16_t nav_force_close_handler(uint8_t cmd_id,uint8_t* pbuf,uint16_t len,req_id
 #define _recv_std_msgs(_flag, _enable, _data, _buf, _datalen) \
 	if( (_flag & _enable))\
 	{\
-		memcpy((uint8_t *)&(_data),(uint8_t *)(_buf)+(_datalen), sizeof(_data));\
+		memcpy((unsigned char *)&(_data),(unsigned char *)(_buf)+(_datalen), sizeof(_data));\
 		_datalen += sizeof(_data);\
 	}
 
-int16_t sdk_std_msgs_handler(uint8_t cmd_id,uint8_t* pbuf,uint16_t len,req_id_t req_id)
+int16_t sdk_std_msgs_handler(unsigned char cmd_id,unsigned char* pbuf,unsigned short len,req_id_t req_id)
 {
     cmd_id = cmd_id;  //For eliminating the warning messages.
     len = len;  //For eliminating the warning messages.
     req_id = req_id; //For eliminating the warning messages.
-    uint16_t *msg_enable_flag = (uint16_t *)pbuf;
-	uint16_t data_len = MSG_ENABLE_FLAG_LEN;
+    unsigned short *msg_enable_flag = (unsigned short *)pbuf;
+	unsigned short data_len = MSG_ENABLE_FLAG_LEN;
 
 	_recv_std_msgs( *msg_enable_flag, ENABLE_MSG_TIME	, recv_sdk_std_msgs.time_stamp			, pbuf, data_len);
 	_recv_std_msgs( *msg_enable_flag, ENABLE_MSG_Q		, recv_sdk_std_msgs.q				, pbuf, data_len);
@@ -137,8 +154,10 @@ int16_t sdk_std_msgs_handler(uint8_t cmd_id,uint8_t* pbuf,uint16_t len,req_id_t 
 
 	pthread_mutex_lock(&status_lock_s);
 	battery_remaining_s = recv_sdk_std_msgs.battery_remaining_capacity;
-	ctrl_device_s = recv_sdk_std_msgs.ctrl_device;
-	pthread_mutex_unlock(&status_lock_s);
+
+    ctrl_device_s = recv_sdk_std_msgs.ctrl_device.cur_ctrl_dev_in_navi_mode;
+
+    pthread_mutex_unlock(&status_lock_s);
 
 	return 0;
 }
@@ -158,8 +177,7 @@ void basic_test_mode2(bool &is_init)
 	}
 	else
 	{
-        api_ctrl_without_sensor_data_t send_data;
-        memset(&send_data, 0 , sizeof(send_data));
+        api_ctrl_without_sensor_data_t send_data = {0};
 		cnt++;
 		if(cnt < 5*50)
 		{
@@ -229,7 +247,7 @@ void basic_test_mode2(bool &is_init)
 		{
 			cnt = 0;
 		}
-		App_Send_Data(0, 0, MY_CTRL_CMD_SET, API_CTRL_REQUEST, (uint8_t*)&send_data, sizeof(send_data), NULL, 0, 0);
+		App_Send_Data(0, 0, MY_CTRL_CMD_SET, API_CTRL_REQUEST, (unsigned char*)&send_data, sizeof(send_data), NULL, 0, 0);
 	}
 }
 
@@ -246,8 +264,7 @@ void basic_test_mode4(bool &is_init)
 	}
 	else
 	{
-        api_ctrl_without_sensor_data_t send_data;
-        memset(&send_data,0,sizeof(send_data));
+        api_ctrl_without_sensor_data_t send_data = {0};
 		cnt++;
 		if(cnt < 5*50)
 		{
@@ -317,19 +334,19 @@ void basic_test_mode4(bool &is_init)
 		{
 			cnt = 0;
 		}
-		App_Send_Data(0, 0,MY_CTRL_CMD_SET, API_CTRL_REQUEST, (uint8_t*)&send_data, sizeof(send_data), NULL, 0, 0);
+		App_Send_Data(0, 0,MY_CTRL_CMD_SET, API_CTRL_REQUEST, (unsigned char*)&send_data, sizeof(send_data), NULL, 0, 0);
 	}
 
 }
 
 /* test cmd agency */
-static uint8_t test_cmd_send_flag = 1;
-static uint8_t test_cmd_is_resend = 0;
+static unsigned char test_cmd_send_flag = 1;
+static unsigned char test_cmd_is_resend = 0;
 
-void cmd_callback_test_fun(uint16_t *ack)
+void cmd_callback_test_fun(unsigned short *ack)
 {
 	char result[6][50]={{"REQ_TIME_OUT"},{"REQ_REFUSE"},{"CMD_RECIEVE"},{"STATUS_CMD_EXECUTING"},{"STATUS_CMD_EXE_FAIL"},{"STATUS_CMD_EXE_SUCCESS"}};
-	uint16_t recv_ack = *ack;
+	unsigned short recv_ack = *ack;
 	printf("[DEBUG] recv_ack %#x \n", recv_ack);
 	printf("[TEST_CMD] Cmd result: %s \n", *(result+recv_ack));
 	test_cmd_send_flag = 1;
@@ -353,7 +370,7 @@ void cmd_callback_test_fun(uint16_t *ack)
 void basic_test_cmd(bool &is_init)
 {
 	static int cnt;
-	uint8_t send_data = 0;
+	unsigned char send_data = 0;
 	if(!is_init)
 	{
 		cnt = 0;
@@ -407,9 +424,9 @@ void random_test_ack_cmd_callback(ProHeader *header)
 		#define STATUS_CMD_EXE_FAIL		0x0004
 		#define STATUS_CMD_EXE_SUCCESS		0x0005
 	*/
-	uint16_t ack_data;
+	unsigned short ack_data;
 	printf("Sdk_ack_cmd0_callback,sequence_number=%d,session_id=%d,data_len=%d\n", header->sequence_number, header->session_id, header->length - EXC_DATA_SIZE);
-	memcpy((uint8_t *)&ack_data,(uint8_t *)&header->magic, (header->length - EXC_DATA_SIZE));
+	memcpy((unsigned char *)&ack_data,(unsigned char *)&header->magic, (header->length - EXC_DATA_SIZE));
 
 	if( is_sys_error(ack_data))
 	{
@@ -426,16 +443,16 @@ void random_test_cmd(bool &is_init)
 {
     is_init = is_init;
 	cmd_agency_data_t cmd;
-    cmd.cmd_data = uint8_t(rand()%22);
-    cmd.cmd_sequence = uint8_t(rand()%5 +1);
+    cmd.cmd_data = (unsigned char)(rand()%22);
+    cmd.cmd_sequence = (unsigned char)(rand()%5 +1);
     if(int(rand()%2) == 0)
 	{
-		App_Send_Data(2, 1, MY_CTRL_CMD_SET, API_CMD_REQUEST, (uint8_t*)&cmd, sizeof(cmd), random_test_ack_cmd_callback, 500, 10);
+		App_Send_Data(2, 1, MY_CTRL_CMD_SET, API_CMD_REQUEST, (unsigned char*)&cmd, sizeof(cmd), random_test_ack_cmd_callback, 500, 10);
 	}
 	else
 	{
-		uint8_t req_status = cmd.cmd_sequence;
-		App_Send_Data(2, 1, MY_CTRL_CMD_SET, API_CMD_STATUS_REQUEST, (uint8_t*)&req_status, sizeof(req_status),random_test_ack_cmd_callback, 500, 10);
+		unsigned char req_status = cmd.cmd_sequence;
+		App_Send_Data(2, 1, MY_CTRL_CMD_SET, API_CMD_STATUS_REQUEST, (unsigned char*)&req_status, sizeof(req_status),random_test_ack_cmd_callback, 500, 10);
 	}
 }
 
@@ -507,44 +524,57 @@ void test_all(bool &is_init)
 void test_activation_ack_cmd_callback(ProHeader *header)
 {
 	/*
-		#define	ACTIVATION_SUCCESS		0x0000
-		#define PARAM_ERROR				0x0001
-		#define DATA_ENC_ERROR			0x0002
-		#define NEW_DEVICE_TRY_AGAIN	0x0003
-		#define DJI_APP_TIMEOUT			0x0004
-		#define DJI_APP_NO_INTERNET		0x0005
-		#define SERVER_REFUSED			0x0006
-		#define LEVEL_ERROR				0x0007
+        #define	SDK_ACTIVATION_SUCCESS          0x0000
+        #define SDK_ACTIVE_PARAM_ERROR          0x0001
+        #define SDK_ACTIVE_DATA_ENC_ERROR       0x0002
+        #define SDK_ACTIVE_NEW_DEVICE           0x0003
+        #define SDK_ACTIVE_DJI_APP_NOT_CONNECT	0x0004
+        #define SDK_ACTIVE_DIJ_APP_NO_INTERNET	0x0005
+        #define SDK_ACTIVE_SERVER_REFUSED		0x0006
+        #define SDK_ACTIVE_LEVEL_ERROR			0x0007
+        #define SDK_ACTIVE_SDK_VERSION_ERROR    0x0008
 	*/
-	uint16_t ack_data;
+	unsigned short ack_data;
 	printf("Sdk_ack_cmd0_callback,sequence_number=%d,session_id=%d,data_len=%d\n", header->sequence_number, header->session_id, header->length - EXC_DATA_SIZE);
-	memcpy((uint8_t *)&ack_data,(uint8_t *)&header->magic, (header->length - EXC_DATA_SIZE));
+	memcpy((unsigned char *)&ack_data,(unsigned char *)&header->magic, (header->length - EXC_DATA_SIZE));
 
 	if( is_sys_error(ack_data))
 	{
         printf("[DEBUG] SDK_SYS_ERROR!!! \n");
-        activation_callback_flag=2;
-     //   QMessageBox::warning(NULL,"Error", "Activation Error", QMessageBox::Ok);
+#ifdef Q_OS_WIN32
+    	activation_callback_flag=2;
+#endif
+        
 	}
 	else
 	{
-        char result[][50]={{"ACTIVATION_SUCCESS"},{"PARAM_ERROR"},{"DATA_ENC_ERROR"},{"NEW_DEVICE_TRY_AGAIN"},{"DJI_APP_TIMEOUT"},{" DJI_APP_NO_INTERNET"},{"SERVER_REFUSED"},{"LEVEL_ERROR"}};
+        char result[][50]={{"SDK_ACTIVATION_SUCCESS"},{"SDK_ACTIVE_PARAM_ERROR"},{"SDK_ACTIVE_DATA_ENC_ERROR"},\
+                           {"SDK_ACTIVE_NEW_DEVICE"},{"SDK_ACTIVE_DJI_APP_NOT_CONNECT"},{" SDK_ACTIVE_DIJ_APP_NO_INTERNET"},\
+                           {"SDK_ACTIVE_SERVER_REFUSED"},{"SDK_ACTIVE_LEVEL_ERROR"},{"SDK_ACTIVE_SDK_VERSION_ERROR"}};
         printf("[ACTIVATION] Activation result: %s \n", *(result+ack_data));
-        activation_callback_flag=1;
-      //  QMessageBox::information(NULL, "Warning", *(result+ack_data), QMessageBox::Ok);
-		activation_status_s = (uint8_t)ack_data;
+#ifdef Q_OS_WIN32
+    	activation_callback_flag=1;
+#endif
+		activation_status_s = (unsigned char)ack_data;
 
 		if(ack_data == 0)
 		{
 			Pro_Config_Comm_Encrypt_Key(key);
 			printf("[ACTIVATION] set key %s\n",key);
 		}
+#ifdef PLATFORM_LINUX
+		else if(ack_data == 3)
+		{
+			/* new device, try again when activation is failed */
+			alarm(2);
+		}
+#endif
 	}
 }
 
-void test_activation(void)
+void Pro_API_Activation(void)
 {
-	App_Send_Data( 2, 0, MY_ACTIVATION_SET, API_USER_ACTIVATION,(uint8_t*)&activation_msg,sizeof(activation_msg), test_activation_ack_cmd_callback, 1000, 1);
+    App_Send_Data( 2, 0, MY_ACTIVATION_SET, API_USER_ACTIVATION,(unsigned char*)&activation_msg,sizeof(activation_msg), test_activation_ack_cmd_callback, 1000, 1);
 	printf("[ACTIVATION] send acticition msg: %d %d %d %d \n", activation_msg.app_id, activation_msg.app_api_level, activation_msg.app_ver ,activation_msg.app_bundle_id[0]);
 }
 
@@ -552,9 +582,9 @@ void test_version_query_ack_cmd_callback(ProHeader *header)
 {
 	version_query_data_t ack;
 	printf("Sdk_ack_cmd0_callback,sequence_number=%d,session_id=%d,data_len=%d\n", header->sequence_number, header->session_id, header->length - EXC_DATA_SIZE);
-	memcpy((uint8_t *)&ack,(uint8_t *)&header->magic, sizeof(uint16_t));
+	memcpy((unsigned char *)&ack,(unsigned char *)&header->magic, sizeof(unsigned short));
 	/* pay attention to memory holes */
-	memcpy((uint8_t *)&ack.version_crc,(uint8_t *)&header->magic+sizeof(uint16_t), (header->length - EXC_DATA_SIZE)-sizeof(uint16_t));
+	memcpy((unsigned char *)&ack.version_crc,(unsigned char *)&header->magic+sizeof(unsigned short), (header->length - EXC_DATA_SIZE)-sizeof(unsigned short));
 	if(ack.version_ack == SDK_ERR_SUCCESS)
 	{
 		printf("[ACTIVATION] Activation result:\n 	ack SDK_ACT_SUCCESS\n");
@@ -568,17 +598,17 @@ void test_version_query_ack_cmd_callback(ProHeader *header)
 
 void test_version_query(void)
 {
-	uint8_t msg = 1;
-	App_Send_Data(2, 0, MY_ACTIVATION_SET, API_VERSION_QUERY, (uint8_t*)&msg,sizeof(msg), test_version_query_ack_cmd_callback, 1000, 0);
+	unsigned char msg = 1;
+	App_Send_Data(2, 0, MY_ACTIVATION_SET, API_VERSION_QUERY, (unsigned char*)&msg,sizeof(msg), test_version_query_ack_cmd_callback, 1000, 0);
 	printf("[ACTIVATION] send version_query msg \n");
 }
 
 /*
  * DJI_callback function
  */
-static uint8_t cmd_send_flag = 1;
+static unsigned char cmd_send_flag = 1;
 
-void cmd_callback_fun(uint16_t *ack)
+void cmd_callback_fun(unsigned short *ack)
 {
 	/*
 	*	#define	REQ_TIME_OUT			0x0000
@@ -588,7 +618,7 @@ void cmd_callback_fun(uint16_t *ack)
 		#define STATUS_CMD_EXE_FAIL		0x0004
 		#define STATUS_CMD_EXE_SUCCESS	0x0005
 	*/
-	uint16_t ack_data = *ack;
+	unsigned short ack_data = *ack;
 
 	if( is_sys_error(ack_data))
 	{
@@ -603,39 +633,18 @@ void cmd_callback_fun(uint16_t *ack)
 	cmd_send_flag = 1;
 }
 
-void DJI_cmd_data_callback(uint8_t data)
-{
-	uint8_t send_data = data;
-	// if landing,reset simple task flag;
-	if(data == 6)
-		simple_task_num = -1;
-	printf("cmd %d\n", send_data);
-	if( send_data > 21)
-		return;
-
-	if(cmd_send_flag)
-	{
-		App_Complex_Send_Cmd(send_data, cmd_callback_fun);
-		cmd_send_flag = 0;
-	}
-	else
-	{
-		printf("[CMD] waiting! \n");
-	}
-}
-
 void sdk_ack_nav_open_close_callback(ProHeader *header)
 {
-	uint16_t ack_data;
+	unsigned short ack_data;
 	printf("call %s\n",__func__);
 	printf("Recv ACK,sequence_number=%d,session_id=%d,data_len=%d\n", header->sequence_number, header->session_id, header->length - EXC_DATA_SIZE);
-	memcpy((uint8_t *)&ack_data,(uint8_t *)&header->magic, (header->length - EXC_DATA_SIZE));
+	memcpy((unsigned char *)&ack_data,(unsigned char *)&header->magic, (header->length - EXC_DATA_SIZE));
 }
 
 void DJI_ctrl_data_callback(float x,float y,float z,float w)
 {
-    api_ctrl_without_sensor_data_t send_data;
-    memset(&send_data,0,sizeof(send_data));
+    api_ctrl_without_sensor_data_t send_data = {0};
+
 	printf("mode %f yaw %f pitch %f roll %f vel %f\n", ctrl_mode, z,x,y,w);
 
 	if(ctrl_mode == 1)
@@ -654,7 +663,7 @@ void DJI_ctrl_data_callback(float x,float y,float z,float w)
 		send_data.thr_z 		= w; 		//m/s
 		send_data.yaw 			= z;
 	}
-	App_Send_Data(0, 0, MY_CTRL_CMD_SET, API_CTRL_REQUEST, (uint8_t*)&send_data, sizeof(send_data), NULL, 0, 0);
+	App_Send_Data(0, 0, MY_CTRL_CMD_SET, API_CTRL_REQUEST, (unsigned char*)&send_data, sizeof(send_data), NULL, 0, 0);
 }
 
 void DJI_ctrl_mode_callback(int data)
@@ -663,12 +672,7 @@ void DJI_ctrl_mode_callback(int data)
 	printf("mode %f\n",ctrl_mode);
 }
 
-void DJI_simple_task_callback(int data)
-{
-	simple_task_num = data;
-}
-
-void DJI_query_callback(void)
+void DJI_Onboard_API_Status_Query(void)
 {
 	pthread_mutex_lock(&status_lock_s);
     printf("--  Current status info: --\n");
@@ -676,12 +680,12 @@ void DJI_query_callback(void)
     if(activation_status_s == 0x0)
         printf("Activation status:[Activation pass]\n");
     else
-        printf("Activation status:[unknow]\n");
+        printf("Activation status:[unknown]\n");
 
     if(battery_remaining_s == 0xFF)
         printf("Battery capacity:[invalid]\n");
     else
-        printf("battery capacity:%d%%\n",battery_remaining_s);
+        printf("Battery capacity:[%d%%]\n",battery_remaining_s);
 
     if(ctrl_device_s == 0x0)
         printf("Control device:[RC]\n");
@@ -690,9 +694,8 @@ void DJI_query_callback(void)
     else if(ctrl_device_s == 0x2)
         printf("Control device:[third party onboard device]\n");
     else
-        printf("Control device:[unknow]\n");
+        printf("Control device:[unknown]\n");
 
-    printf("----------  End -----------\n");
     pthread_mutex_unlock(&status_lock_s);
 }
 
@@ -737,15 +740,15 @@ void spin_callback(void)
 	if(nav_force_close_req_id.reserve == 1)
 	{
 		nav_force_close_req_id.reserve = 0;
-		uint16_t ack = 0x0001;
+		unsigned short ack = 0x0001;
 		printf("Ack close send %d !!!!!!!!!!! \n", ack);
-		App_Send_Ack(nav_force_close_req_id, (uint8_t *)&ack, sizeof(ack));
+		App_Send_Ack(nav_force_close_req_id, (unsigned char *)&ack, sizeof(ack));
 	}
 
 	if(simple_task_num > -1)
 	{
 		static bool init_flag;
-		static unsigned int time = Get_Time();
+        static unsigned long int time = Get_Time();
 		if(Get_Time() - time < 1000)
 		{
 		}
@@ -757,34 +760,34 @@ void spin_callback(void)
 
 		switch(simple_task_num)
 		{
-			case 0:
-			basic_test_mode2(init_flag);
-			break;
-			case 1:
-			basic_test_mode4(init_flag);
-			break;
-			case 2:
-			basic_test_cmd(init_flag);
-			break;
-			case 3:
-			random_test_cmd(init_flag);
-			break;
-			case 4:
-			test_all(init_flag);
-			break;
-			case 5:
-			test_activation();
-			simple_task_num = -1;
-			break;
-			case 6:
-			test_version_query();
-			simple_task_num = -1;
-			break;
+        case 0:
+            basic_test_mode2(init_flag);
+            break;
+        case 1:
+            basic_test_mode4(init_flag);
+            break;
+        case 2:
+            basic_test_cmd(init_flag);
+            break;
+        case 3:
+            random_test_cmd(init_flag);
+            break;
+        case 4:
+            test_all(init_flag);
+            break;
+        case 5:
+            Pro_API_Activation();
+            simple_task_num = -1;
+            break;
+        case 6:
+            test_version_query();
+            simple_task_num = -1;
+            break;
 		}
     }
 }
 
-unsigned int Get_Time(void)
+unsigned long int Get_Time(void)
 {
 	struct timeval cur_time;
 	gettimeofday(&cur_time,NULL);
@@ -793,7 +796,7 @@ unsigned int Get_Time(void)
 
 static void * Simple_Task_Threadfun(void * arg)
 {
-   arg = arg; //For eliminating the warning messages.
+    arg = arg; //For eliminating the warning messages.
 	while(1)
 	{
         spin_callback();
@@ -814,35 +817,255 @@ int Start_Simple_Task_Thread(void)
 	return 0;
 }
 
-void DJI_Onboard_API_Takeoff(void)
+void gimbal_speed_ctrl(int16_t yaw_angle_rate,
+                       int16_t roll_angle_rate,
+                       int16_t pitch_angle_rate)
 {
-    DJI_cmd_data_callback(4);
+     gimbal_custom_speed_t gimbal_speed = {0};
+     gimbal_speed.yaw_angle_rate = yaw_angle_rate;
+     gimbal_speed.roll_angle_rate = roll_angle_rate;
+     gimbal_speed.pitch_angle_rate = pitch_angle_rate;
+     gimbal_speed.ctrl_byte.ctrl_switch = 1;
+
+     App_Send_Data(0,
+                   0,
+                   MY_CTRL_CMD_SET,
+                   API_GIMBAL_CTRL_SPEED_REQUEST,
+                   (uint8_t*)&gimbal_speed,
+                   sizeof(gimbal_speed),
+                   NULL,
+                   0,
+                   0
+                   );
 }
 
-void DJI_Onboard_API_Landing(void)
+void gimbal_angel_ctrl(int16_t yaw_angle,
+                       int16_t roll_angle,
+                       int16_t pitch_angle,
+                       uint8_t duration)
 {
-    DJI_cmd_data_callback(6);
+    gimbal_custom_control_angle_t gimbal_angel = {0};
+
+    gimbal_angel.yaw_angle = yaw_angle;
+    gimbal_angel.roll_angle = roll_angle;
+    gimbal_angel.pitch_angle = pitch_angle;
+    gimbal_angel.ctrl_byte.base = 0;
+    gimbal_angel.ctrl_byte.yaw_cmd_ignore = 0;
+    gimbal_angel.ctrl_byte.roll_cmd_ignore = 0;
+    gimbal_angel.ctrl_byte.pitch_cmd_ignore = 0;
+    gimbal_angel.duration = duration;
+
+    App_Send_Data(0,
+                  0,
+                  MY_CTRL_CMD_SET,
+                  API_GIMBAL_CTRL_ANGLE_REQUEST,
+                  (uint8_t*)&gimbal_angel,
+                  sizeof(gimbal_angel),
+                  NULL,
+                  0,
+                  0
+                  );
+
 }
 
-void DJI_Onboard_API_Gohome(void)
+
+static void * Gimbal_Task_Threadfun(void * arg)
 {
-    DJI_cmd_data_callback(1);
+    arg = arg; //For eliminating the warning messages.
+
+    printf("\nGimbal test start...\r\n");
+    int i = 0;
+
+    gimbal_angel_ctrl(1800, 0, 0, 20);
+    sleep(2);
+    usleep(100000);
+
+    gimbal_angel_ctrl(-1800, 0, 0, 20);
+    sleep(2);
+    usleep(100000);
+
+    gimbal_angel_ctrl(0, 300, 0, 20);
+    sleep(2);
+    usleep(100000);
+
+    gimbal_angel_ctrl(0, -300, 0, 20);
+    sleep(2);
+    usleep(100000);
+
+    gimbal_angel_ctrl(0, 0, 300, 20);
+    sleep(2);
+    usleep(100000);
+
+    gimbal_angel_ctrl(0, 0, -300, 20);
+    sleep(2);
+    usleep(100000);
+
+
+    for(i = 0; i < 20; i++)
+    {
+        gimbal_speed_ctrl(200, 0, 0);
+        usleep(100000);
+    }
+
+    for(i = 0; i < 20; i++)
+    {
+        gimbal_speed_ctrl(-200, 0, 0);
+        usleep(100000);
+    }
+
+    for(i = 0; i < 20; i++)
+    {
+        gimbal_speed_ctrl(0, 200, 0);
+        usleep(100000);
+    }
+
+    for(i = 0; i < 20; i++)
+    {
+        gimbal_speed_ctrl(0, -200, 0);
+        usleep(100000);
+    }
+
+    for(i = 0; i < 20; i++)
+    {
+        gimbal_speed_ctrl(0, 0, 200);
+        usleep(100000);
+    }
+
+    for(i = 0; i < 20; i++)
+    {
+        gimbal_speed_ctrl(0, 0, -200);
+        usleep(100000);
+    }
+
+    gimbal_angel_ctrl(0, 0, 0, 10);
+
+    printf("Gimbal test end.\r\n");
 }
 
-void DJI_Onboard_API_Control(unsigned char data)
+int DJI_Onboard_API_Gimbal_Task(void)
 {
-    unsigned char send_data = data;
-    printf("send open nav %d\n",send_data);
-    App_Send_Data(1, 1, MY_CTRL_CMD_SET, API_OPEN_SERIAL, (uint8_t*)&send_data, sizeof(send_data), sdk_ack_nav_open_close_callback,  1000, 0);
+    int ret;
+    pthread_t B_BRR;
+    ret = pthread_create(&B_BRR, 0,Gimbal_Task_Threadfun,NULL);
+    if(ret != 0)
+    {
+        printf("Gimbal_Task_Start_Err, Code = %d\r\n",ret);
+        return -1;
+    }
+    return 0;
+}
+
+void DJI_Onboard_API_Simple_Task(int data)
+{
+
+	simple_task_num = data;
+}
+
+void DJI_Onboard_API_Control(unsigned char arg)
+{
+	unsigned char send_data = arg;
+	printf("send open nav %d\n",send_data);
+	if(arg == 1 || arg == 0)
+	{
+	}
+	else
+	{
+		printf("Parameter [ERROR]\n");
+	}
+	App_Send_Data(1,1,MY_CTRL_CMD_SET,API_OPEN_SERIAL,(unsigned char*)&send_data,
+					sizeof(send_data),sdk_ack_nav_open_close_callback,1000,0);
+}
+
+void DJI_Onboard_API_UAV_Control(unsigned char arg)
+{
+    unsigned char send_data = arg;
+
+    if( !(arg == 1 || arg == 4 || arg == 6) )
+    {
+        printf("Parameter [ERROR]\n");
+    }
+
+    if(cmd_send_flag)
+    {
+        App_Complex_Send_Cmd(send_data, cmd_callback_fun);
+        cmd_send_flag = 0;
+    }
+    else
+    {
+        printf("Previous Command not finish [ERROR]\n");
+    }
 }
 
 void DJI_Onboard_API_Activation(void)
 {
-    test_activation();
+    Pro_API_Activation();
 }
 
+#ifdef PLATFORM_LINUX
+void Activation_Alrm(int sig)
+{
+	printf("Debug info:activation try again\n");
+	Pro_API_Activation();
+}
+int DJI_Pro_Get_Cfg(int *baud, char *dev,unsigned int *app_id, unsigned int *app_api_level,char *app_key)
+{
+	XMLDocument xml_file;
+	const XMLAttribute *xml_attr;
+	xml_file.LoadFile("config.xml");
+	if(xml_file.ErrorID())
+	{
+		printf("%s:%d:Load user config.xml file ERROR,using default user setting\n",__func__,__LINE__);
+		return -1;
+	}
+	xml_attr = xml_file.RootElement()->FirstChildElement("UART")->FirstAttribute();
+	*baud = atoi(xml_attr->Value());
+	strcpy(dev,xml_attr->Next()->Value());
+
+	xml_attr = xml_file.RootElement()->FirstChildElement("Account")->FirstAttribute();
+	*app_id = atoi(xml_attr->Value());
+	*app_api_level = atoi(xml_attr->Next()->Value());
+	strcpy(app_key,xml_attr->Next()->Next()->Value());
+	return 0;
+}
+#endif
 int DJI_Pro_Test_Setup(void)
 {
+#ifdef PLATFORM_LINUX
+	int ret;
+    int baudrate = 115200;
+    char uart_name[32] = {"/dev/ttyUSB0"};
+    static char app_key[80];
+	if(DJI_Pro_Get_Cfg(&baudrate,uart_name,&activation_msg.app_id,
+            &activation_msg.app_api_level,app_key) == 0)
+	{
+		/* user setting */
+		printf("\n--------------------------\n");
+		printf("uart_baud=%d\n",baudrate);
+		printf("uart_name=%s\n",uart_name);
+		printf("app_id=%d\n",activation_msg.app_id);
+		printf("app_api_level=%d\n",activation_msg.app_api_level);
+        printf("app_key=%s\n",app_key);
+		printf("--------------------------\n");
+	}
+	else
+	{
+		/* load config file error,using default setting */
+		activation_msg.app_id = 10086;
+		activation_msg.app_api_level = 1;
+		activation_msg.app_ver = 1;
+		memcpy(activation_msg.app_bundle_id,"1234567890123456789012", 32);
+        memcpy(app_key,"0000000000000000000000000000000000000000000000000000000000000000",64);
+	}
+	activation_msg.app_ver = SDK_VERSION;
+    key = app_key;
+	ret = Pro_Hw_Setup(uart_name,baudrate);
+	if(ret < 0)
+		return ret;
+	/* setup a timer */
+	signal(SIGALRM, Activation_Alrm);
+
+#endif
+    srand(time(NULL));
     Pro_Link_Setup();
 	App_Recv_Set_Hook(App_Recv_Req_Data);
 	App_Set_Table(set_handler_tab, cmd_handler_tab);

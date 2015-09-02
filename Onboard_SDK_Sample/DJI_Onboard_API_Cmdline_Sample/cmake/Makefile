@@ -1,8 +1,9 @@
 TARGET = ../output/DJI_Onboard_API_Cmdline_Test
 
-OBJECTS = main.o DJI_Pro_App.o DJI_Pro_Hw.o DJI_Pro_Link.o DJI_Pro_Test.o DJI_Pro_Codec.o
+OBJECTS = main.o DJI_Pro_App.o DJI_Pro_Hw.o DJI_Pro_Link.o DJI_Pro_Test.o DJI_Pro_Codec.o DJI_Pro_Rmu.o tinyxml2.o
 
-CFLAGS = -Wall -O3 -Isrc/
+CFLAGS = -Wall -O3 -DPLATFORM_LINUX -Isrc/
+
 LDFLAGS = -lpthread
 
 CXX = g++
@@ -27,6 +28,12 @@ DJI_Pro_Test.o : ../src/DJI_Pro_Test.cpp
 	
 DJI_Pro_Codec.o : ../src/DJI_Pro_Codec.cpp
 	$(CXX) $(CFLAGS) -c ../src/DJI_Pro_Codec.cpp
+
+DJI_Pro_Rmu.o: ../src/DJI_Pro_Rmu.cpp
+	$(CXX) $(CFLAGS) -c ../src/DJI_Pro_Rmu.cpp
+
+tinyxml2.o : ../src/tinyxml2.cpp
+	$(CXX) $(CFLAGS) -c ../src/tinyxml2.cpp
 	
 clean:
 	-rm *.o

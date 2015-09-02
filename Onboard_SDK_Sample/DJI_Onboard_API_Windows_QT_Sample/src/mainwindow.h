@@ -18,6 +18,8 @@
 #define NAV_CLOSE       "Release Control"
 #define SETTING_FILENAMES  "Setting.ini"
 
+#define DEFAULT_KEY     "0123012301230123012301230123012301230123012301230123012301230123"
+
 namespace Ui {
 class MainWindow;
 }
@@ -54,6 +56,8 @@ private slots:
     void on_btn_Landing_clicked();
 
     void on_btn_GoHome_clicked();
+
+    void on_btn_gimbaltask_clicked();
 
 private:
     Ui::MainWindow *ui;

@@ -1,20 +1,10 @@
-//  DJI Open SDK
-//  
-//  author: itolfo.pan@dji.com 
-//
-// 
-// 
-// 
-
-
 #include "DJI_Pro_Codec.h"
 #include "DJI_Pro_Link.h"
 
 //////////////////////////////////////////////////////////////////////////
 // BEGIN OF AES-256
-// 鍔犲瘑浠ｇ爜鍘熶綔鑰呭涓嬶紝浠ｇ爜鍋氫簡閮ㄥ垎淇敼鏉ラ�傚簲
+// 加密代码原作者如下，代码做了部分修改来适应
 //
-
 /*
 *   Byte-oriented AES-256 implementation.
 *   All lookup tables replaced with 'on the fly' calculations.

@@ -29,7 +29,8 @@ SOURCES += main.cpp\
     qextserialbase.cpp \
     qextserialport.cpp \
     win_qextserialport.cpp \
-    about.cpp
+    about.cpp \
+    DJI_Pro_Rmu.cpp
 
 HEADERS  += mainwindow.h \
     DJI_Pro_Hw.h \
@@ -40,7 +41,9 @@ HEADERS  += mainwindow.h \
     qextserialbase.h \
     qextserialport.h \
     win_qextserialport.h \
-    about.h
+    about.h \
+    DJI_Pro_Rmu.h \
+    DJI_Pro_Config.h
 
 FORMS    += mainwindow.ui \
     about.ui
