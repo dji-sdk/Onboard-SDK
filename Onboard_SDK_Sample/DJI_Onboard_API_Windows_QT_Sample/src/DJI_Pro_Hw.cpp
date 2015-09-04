@@ -283,9 +283,9 @@ int Pro_Hw_Setup(const char *device,int baudrate)
 
 	return 0;
 }
-#endif
 
-#ifdef Q_OS_WIN32
+#else
+
 #include "DJI_Pro_Hw.h"
 #include "DJI_Pro_Codec.h"
 #include <QThread>
