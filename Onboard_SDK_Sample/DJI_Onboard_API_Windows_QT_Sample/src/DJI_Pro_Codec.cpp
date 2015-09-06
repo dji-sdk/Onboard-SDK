@@ -1,20 +1,10 @@
-//  DJI Open SDK
-//  
-//  author: itolfo.pan@dji.com 
-//
-// 
-// 
-// 
-
-
 #include "DJI_Pro_Codec.h"
 #include "DJI_Pro_Link.h"
 
 //////////////////////////////////////////////////////////////////////////
 // BEGIN OF AES-256
-// 鍔犲瘑浠ｇ爜鍘熶綔鑰呭涓嬶紝浠ｇ爜鍋氫簡閮ㄥ垎淇敼鏉ラ�傚簲
+// 加密代码原作者如下，代码做了部分修改来适应
 //
-
 /*
 *   Byte-oriented AES-256 implementation.
 *   All lookup tables replaced with 'on the fly' calculations.
@@ -35,9 +25,9 @@
 *   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 typedef struct tagAES256Context {
-    uint8_t key[32];
-    uint8_t enckey[32];
-    uint8_t deckey[32];
+    unsigned char key[32];
+    unsigned char enckey[32];
+    unsigned char deckey[32];
 } aes256_context;
 
 #define F(x)   (((x)<<1) ^ ((((x)>>7) & 1) * 0x1b))
@@ -46,7 +36,7 @@ typedef struct tagAES256Context {
 #define BACK_TO_TABLES
 #ifdef BACK_TO_TABLES
 
-const uint8_t sbox[256] ={
+const unsigned char sbox[256] ={
     0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5,
     0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76,
     0xca, 0x82, 0xc9, 0x7d, 0xfa, 0x59, 0x47, 0xf0,
@@ -80,7 +70,7 @@ const uint8_t sbox[256] ={
     0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68,
     0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16
 };
-const uint8_t sboxinv[256] ={
+const unsigned char sboxinv[256] ={
     0x52, 0x09, 0x6a, 0xd5, 0x30, 0x36, 0xa5, 0x38,
     0xbf, 0x40, 0xa3, 0x9e, 0x81, 0xf3, 0xd7, 0xfb,
     0x7c, 0xe3, 0x39, 0x82, 0x9b, 0x2f, 0xff, 0x87,
@@ -121,9 +111,9 @@ const uint8_t sboxinv[256] ={
 #else /* tableless subroutines */
 
 /* -------------------------------------------------------------------------- */
-uint8_t gf_alog(uint8_t x) // calculate anti-logarithm gen 3
+unsigned char gf_alog(unsigned char x) // calculate anti-logarithm gen 3
 {
-    uint8_t atb = 1, z;
+    unsigned char atb = 1, z;
 
     while (x--) { z = atb; atb <<= 1; if (z & 0x80) atb ^= 0x1b; atb ^= z; }
 
@@ -131,9 +121,9 @@ uint8_t gf_alog(uint8_t x) // calculate anti-logarithm gen 3
 } /* gf_alog */
 
 /* -------------------------------------------------------------------------- */
-uint8_t gf_log(uint8_t x) // calculate logarithm gen 3
+unsigned char gf_log(unsigned char x) // calculate logarithm gen 3
 {
-    uint8_t atb = 1, i = 0, z;
+    unsigned char atb = 1, i = 0, z;
 
     do {
         if (atb == x) break;
@@ -145,15 +135,15 @@ uint8_t gf_log(uint8_t x) // calculate logarithm gen 3
 
 
 /* -------------------------------------------------------------------------- */
-uint8_t gf_mulinv(uint8_t x) // calculate multiplicative inverse
+unsigned char gf_mulinv(unsigned char x) // calculate multiplicative inverse
 {
     return (x) ? gf_alog(255 - gf_log(x)) : 0;
 } /* gf_mulinv */
 
 /* -------------------------------------------------------------------------- */
-uint8_t rj_sbox(uint8_t x)
+unsigned char rj_sbox(unsigned char x)
 {
-    uint8_t y, sb;
+    unsigned char y, sb;
 
     sb = y = gf_mulinv(x);
     y = (y << 1) | (y >> 7); sb ^= y;  y = (y << 1) | (y >> 7); sb ^= y;
@@ -163,9 +153,9 @@ uint8_t rj_sbox(uint8_t x)
 } /* rj_sbox */
 
 /* -------------------------------------------------------------------------- */
-uint8_t rj_sbox_inv(uint8_t x)
+unsigned char rj_sbox_inv(unsigned char x)
 {
-    uint8_t y, sb;
+    unsigned char y, sb;
 
     y = x ^ 0x63;
     sb = y = (y << 1) | (y >> 7);
@@ -177,48 +167,48 @@ uint8_t rj_sbox_inv(uint8_t x)
 #endif
 
 /* -------------------------------------------------------------------------- */
-uint8_t rj_xtime(uint8_t x)
+unsigned char rj_xtime(unsigned char x)
 {
     return (x & 0x80) ? ((x << 1) ^ 0x1b) : (x << 1);
 } /* rj_xtime */
 
 /* -------------------------------------------------------------------------- */
-void aes_subBytes(uint8_t *buf)
+void aes_subBytes(unsigned char *buf)
 {
-    register uint8_t i = 16;
+    register unsigned char i = 16;
 
     while (i--) buf[i] = rj_sbox(buf[i]);
 } /* aes_subBytes */
 
 /* -------------------------------------------------------------------------- */
-void aes_subBytes_inv(uint8_t *buf)
+void aes_subBytes_inv(unsigned char *buf)
 {
-    register uint8_t i = 16;
+    register unsigned char i = 16;
 
     while (i--) buf[i] = rj_sbox_inv(buf[i]);
 } /* aes_subBytes_inv */
 
 /* -------------------------------------------------------------------------- */
-void aes_addRoundKey(uint8_t *buf, uint8_t *key)
+void aes_addRoundKey(unsigned char *buf, unsigned char *key)
 {
-    register uint8_t i = 16;
+    register unsigned char i = 16;
 
     while (i--) buf[i] ^= key[i];
 } /* aes_addRoundKey */
 
 /* -------------------------------------------------------------------------- */
-void aes_addRoundKey_cpy(uint8_t *buf, uint8_t *key, uint8_t *cpk)
+void aes_addRoundKey_cpy(unsigned char *buf, unsigned char *key, unsigned char *cpk)
 {
-    register uint8_t i = 16;
+    register unsigned char i = 16;
 
     while (i--)  buf[i] ^= (cpk[i] = key[i]), cpk[16 + i] = key[16 + i];
 } /* aes_addRoundKey_cpy */
 
 
 /* -------------------------------------------------------------------------- */
-void aes_shiftRows(uint8_t *buf)
+void aes_shiftRows(unsigned char *buf)
 {
-    register uint8_t i, j; /* to make it potentially parallelable :) */
+    register unsigned char i, j; /* to make it potentially parallelable :) */
 
     i = buf[1]; buf[1] = buf[5]; buf[5] = buf[9]; buf[9] = buf[13]; buf[13] = i;
     i = buf[10]; buf[10] = buf[2]; buf[2] = i;
@@ -228,9 +218,9 @@ void aes_shiftRows(uint8_t *buf)
 } /* aes_shiftRows */
 
 /* -------------------------------------------------------------------------- */
-void aes_shiftRows_inv(uint8_t *buf)
+void aes_shiftRows_inv(unsigned char *buf)
 {
-    register uint8_t i, j; /* same as above :) */
+    register unsigned char i, j; /* same as above :) */
 
     i = buf[1]; buf[1] = buf[13]; buf[13] = buf[9]; buf[9] = buf[5]; buf[5] = i;
     i = buf[2]; buf[2] = buf[10]; buf[10] = i;
@@ -240,9 +230,9 @@ void aes_shiftRows_inv(uint8_t *buf)
 } /* aes_shiftRows_inv */
 
 /* -------------------------------------------------------------------------- */
-void aes_mixColumns(uint8_t *buf)
+void aes_mixColumns(unsigned char *buf)
 {
-    register uint8_t i, a, b, c, d, e;
+    register unsigned char i, a, b, c, d, e;
 
     for (i = 0; i < 16; i += 4)
     {
@@ -254,9 +244,9 @@ void aes_mixColumns(uint8_t *buf)
 } /* aes_mixColumns */
 
 /* -------------------------------------------------------------------------- */
-void aes_mixColumns_inv(uint8_t *buf)
+void aes_mixColumns_inv(unsigned char *buf)
 {
-    register uint8_t i, a, b, c, d, e, x, y, z;
+    register unsigned char i, a, b, c, d, e, x, y, z;
 
     for (i = 0; i < 16; i += 4)
     {
@@ -270,9 +260,9 @@ void aes_mixColumns_inv(uint8_t *buf)
 } /* aes_mixColumns_inv */
 
 /* -------------------------------------------------------------------------- */
-void aes_expandEncKey(uint8_t *k, uint8_t *rc)
+void aes_expandEncKey(unsigned char *k, unsigned char *rc)
 {
-    register uint8_t i;
+    register unsigned char i;
 
     k[0] ^= rj_sbox(k[29]) ^ (*rc);
     k[1] ^= rj_sbox(k[30]);
@@ -293,9 +283,9 @@ void aes_expandEncKey(uint8_t *k, uint8_t *rc)
 } /* aes_expandEncKey */
 
 /* -------------------------------------------------------------------------- */
-void aes_expandDecKey(uint8_t *k, uint8_t *rc)
+void aes_expandDecKey(unsigned char *k, unsigned char *rc)
 {
-    uint8_t i;
+    unsigned char i;
 
     for (i = 28; i > 16; i -= 4) k[i + 0] ^= k[i - 4], k[i + 1] ^= k[i - 3],
         k[i + 2] ^= k[i - 2], k[i + 3] ^= k[i - 1];
@@ -317,10 +307,10 @@ void aes_expandDecKey(uint8_t *k, uint8_t *rc)
 
 
 /* -------------------------------------------------------------------------- */
-void aes256_init(aes256_context *ctx, uint8_t *k)
+void aes256_init(aes256_context *ctx, unsigned char *k)
 {
-    uint8_t rcon = 1;
-    register uint8_t i;
+    unsigned char rcon = 1;
+    register unsigned char i;
 
     for (i = 0; i < sizeof(ctx->key); i++) ctx->enckey[i] = ctx->deckey[i] = k[i];
     for (i = 8; --i;) aes_expandEncKey(ctx->deckey, &rcon);
@@ -329,16 +319,16 @@ void aes256_init(aes256_context *ctx, uint8_t *k)
 /* -------------------------------------------------------------------------- */
 void aes256_done(aes256_context *ctx)
 {
-    register uint8_t i;
+    register unsigned char i;
 
     for (i = 0; i < sizeof(ctx->key); i++)
         ctx->key[i] = ctx->enckey[i] = ctx->deckey[i] = 0;
 } /* aes256_done */
 
 /* -------------------------------------------------------------------------- */
-void aes256_encrypt_ecb(aes256_context *ctx, uint8_t *buf)
+void aes256_encrypt_ecb(aes256_context *ctx, unsigned char *buf)
 {
-    uint8_t i, rcon;
+    unsigned char i, rcon;
 
     aes_addRoundKey_cpy(buf, ctx->enckey, ctx->key);
     for (i = 1, rcon = 1; i < 14; ++i)
@@ -356,9 +346,9 @@ void aes256_encrypt_ecb(aes256_context *ctx, uint8_t *buf)
 } /* aes256_encrypt */
 
 /* -------------------------------------------------------------------------- */
-void aes256_decrypt_ecb(aes256_context *ctx, uint8_t *buf)
+void aes256_decrypt_ecb(aes256_context *ctx, unsigned char *buf)
 {
-    uint8_t i, rcon;
+    unsigned char i, rcon;
 
     aes_addRoundKey_cpy(buf, ctx->deckey, ctx->key);
     aes_shiftRows_inv(buf);
@@ -382,7 +372,7 @@ void aes256_decrypt_ecb(aes256_context *ctx, uint8_t *buf)
 // END OF AES-256
 
 //////////////////////////////////////////////////////////////////////////
-uint16_t crc_tab16[] =
+unsigned short crc_tab16[] =
 {
 	0x0000, 0xc0c1, 0xc181, 0x0140, 0xc301, 0x03c0, 0x0280, 0xc241,
 	0xc601, 0x06c0, 0x0780, 0xc741, 0x0500, 0xc5c1, 0xc481, 0x0440,
@@ -418,7 +408,7 @@ uint16_t crc_tab16[] =
 	0x8201, 0x42c0, 0x4380, 0x8341, 0x4100, 0x81c1, 0x8081, 0x4040,
 };
 
-uint32_t crc_tab32[] =
+unsigned int crc_tab32[] =
 {
 	0x00000000, 0x77073096, 0xee0e612c, 0x990951ba, 0x076dc419, 0x706af48f, 0xe963a535, 0x9e6495a3,
 	0x0edb8832, 0x79dcb8a4, 0xe0d5e91e, 0x97d2d988, 0x09b64c2b, 0x7eb17cbd, 0xe7b82d07, 0x90bf1d91,
@@ -454,35 +444,35 @@ uint32_t crc_tab32[] =
 	0xb3667a2e, 0xc4614ab8, 0x5d681b02, 0x2a6f2b94, 0xb40bbe37, 0xc30c8ea1, 0x5a05df1b, 0x2d02ef8d,
 };
 
-const uint16_t CRC_INIT = 0x3AA3;
+const unsigned short CRC_INIT = 0x3AA3;
 
-uint16_t crc16_update(uint16_t crc, uint8_t ch)
+unsigned short crc16_update(unsigned short crc, unsigned char ch)
 {
-	uint16_t tmp;
-	uint16_t msg;
+	unsigned short tmp;
+	unsigned short msg;
 
-	msg = 0x00ff & (uint16_t)ch;
+	msg = 0x00ff & (unsigned short)ch;
 	tmp = crc       ^ msg;
 	crc = (crc >> 8) ^ crc_tab16[tmp & 0xff];
 
 	return crc;
 }
 
-uint32_t crc32_update(uint32_t crc, uint8_t ch)
+unsigned int crc32_update(unsigned int crc, unsigned char ch)
 {
-	uint32_t tmp;
-	uint32_t msg;
+	unsigned int tmp;
+	unsigned int msg;
 
-	msg = 0x000000ffL & (uint32_t)ch;
+	msg = 0x000000ffL & (unsigned int)ch;
 	tmp = crc       ^ msg;
 	crc = (crc >> 8) ^ crc_tab32[tmp & 0xff];
 	return crc;
 }
 
-uint16_t sdk_stream_crc16_calc(const uint8_t* pMsg, uint32_t nLen)
+unsigned short sdk_stream_crc16_calc(const unsigned char* pMsg, unsigned int nLen)
 {
-	uint32_t i;
-	uint16_t wCRC = CRC_INIT;
+	unsigned int i;
+	unsigned short wCRC = CRC_INIT;
 
 	for (i = 0; i < nLen; i++)
 	{
@@ -492,10 +482,10 @@ uint16_t sdk_stream_crc16_calc(const uint8_t* pMsg, uint32_t nLen)
 	return wCRC;
 }
 
-uint32_t sdk_stream_crc32_calc(const uint8_t* pMsg, uint32_t nLen)
+unsigned int sdk_stream_crc32_calc(const unsigned char* pMsg, unsigned int nLen)
 {
-	uint32_t i;
-	uint32_t wCRC = CRC_INIT;
+	unsigned int i;
+	unsigned int wCRC = CRC_INIT;
 
 	for (i = 0; i < nLen; i++)
 	{
@@ -507,8 +497,11 @@ uint32_t sdk_stream_crc32_calc(const uint8_t* pMsg, uint32_t nLen)
 //////////////////////////////////////////////////////////////////////////
 
 
-SDKFilter serial_sdk;
+SDKFilter serial_sdk = { 0 };
 ptr_filter_hook serial_hook = (ptr_filter_hook)Pro_Link_Recv_Hook;
+// if there more than one input device, you can
+// SDKFilter_t can_sdk; ??
+// 
 
 
 void sdk_serial_set_hook(ptr_filter_hook p_hook)
@@ -531,25 +524,24 @@ void sdk_serial_set_hook(ptr_filter_hook p_hook)
 *    pre-cmd 7 byte has been saved, and continue to filter
 **/
 void sdk_stream_prepare(SDKFilter* p_filter, SDKHeader* p_head)
-{	
-    uint32_t bytes_to_move = sizeof(SDKHeader) - 1;
-	uint32_t index_of_move = p_filter->recv_index - bytes_to_move;
+{
+	unsigned int bytes_to_move = sizeof(SDKHeader) - 1;
+	unsigned int index_of_move = p_filter->recv_index - bytes_to_move;
 
-    p_head=p_head;//For eliminating the warning messages.
 	memmove(p_filter->comm_recv_buf, p_filter->comm_recv_buf + index_of_move, bytes_to_move);
 	memset(p_filter->comm_recv_buf + bytes_to_move, 0, index_of_move);
 	p_filter->recv_index = bytes_to_move;
 }
 
-typedef void(*ptr_aes256_codec)(aes256_context *ctx, uint8_t *buf);
+typedef void(*ptr_aes256_codec)(aes256_context *ctx, unsigned char *buf);
 void sdk_stream_codec(SDKFilter* p_filter, SDKHeader* p_head, ptr_aes256_codec codec_func)
 {
     aes256_context ctx;
-    uint32_t buf_i;
-    uint32_t loop_blk;
-    uint32_t data_len;
-    uint32_t data_idx;
-    uint8_t* data_ptr;
+    unsigned int buf_i;
+    unsigned int loop_blk;
+    unsigned int data_len;
+    unsigned int data_idx;
+    unsigned char* data_ptr;
 
     if (p_head->enc_type == 0)
         return;
@@ -558,7 +550,7 @@ void sdk_stream_codec(SDKFilter* p_filter, SDKHeader* p_head, ptr_aes256_codec c
     if (p_head->length <= sizeof(SDKHeader) + _SDK_CRC_DATA_SIZE)
         return;
 
-    data_ptr = (uint8_t*)p_head + sizeof(SDKHeader);
+    data_ptr = (unsigned char*)p_head + sizeof(SDKHeader);
     data_len = p_head->length - _SDK_CRC_DATA_SIZE - sizeof(SDKHeader);
     loop_blk = data_len / 16;
     data_idx = 0;
@@ -603,7 +595,7 @@ void sdk_stream_shift_data(SDKFilter* p_filter)
 }
 
 // push data to filter buffer
-void sdk_stream_store_data(SDKFilter* p_filter, uint8_t in_data)
+void sdk_stream_store_data(SDKFilter* p_filter, unsigned char in_data)
 {
 	if (p_filter->recv_index < _SDK_MAX_RECV_SIZE)
 	{
@@ -643,12 +635,12 @@ void sdk_stream_store_data(SDKFilter* p_filter, uint8_t in_data)
 
 void sdk_stream_update_reuse_part(SDKFilter* p_filter)
 {
-	uint8_t* p_buf = p_filter->comm_recv_buf;
-	uint16_t bytes_to_move = p_filter->recv_index - sizeof(SDKHeader);
-	uint8_t* p_src = p_buf + sizeof(SDKHeader);
+	unsigned char* p_buf = p_filter->comm_recv_buf;
+	unsigned short bytes_to_move = p_filter->recv_index - sizeof(SDKHeader);
+	unsigned char* p_src = p_buf + sizeof(SDKHeader);
 
-	uint16_t n_dest_index = p_filter->reuse_index - bytes_to_move;
-	uint8_t* p_dest = p_buf + n_dest_index;
+	unsigned short n_dest_index = p_filter->reuse_index - bytes_to_move;
+	unsigned char* p_dest = p_buf + n_dest_index;
 
 	memmove(p_dest, p_src, bytes_to_move);
 
@@ -665,7 +657,6 @@ void sdk_stream_verify_data(SDKFilter* p_filter)
 	SDKHeader* p_head = (SDKHeader*)(p_filter->comm_recv_buf);
 	if (_SDK_CALC_CRC_TAIL(p_head, p_head->length) == 0)
 	{
-
 		sdk_call_data_app(p_filter);
 	}
 	else
@@ -707,29 +698,25 @@ void sdk_check_stream_state(SDKFilter* p_filter)
 	{
 		// Continue receive data, nothing to do
 
-
 	}
 	else if (p_filter->recv_index == sizeof(SDKHeader))
 	{
 		// recv a full-head
-
 		sdk_stream_verify_head(p_filter);
 	}
 	else if (p_filter->recv_index == p_head->length)
 	{
-
-        sdk_stream_verify_data(p_filter);
+		sdk_stream_verify_data(p_filter);
 	}
 }
 
-void sdk_byte_stream_handler(SDKFilter* p_filter, uint8_t in_data)
+void sdk_byte_stream_handler(SDKFilter* p_filter, unsigned char in_data)
 {
-
 	sdk_stream_store_data(p_filter, in_data);
 	sdk_check_stream_state(p_filter);
 }
 
-void sdk_serial_byte_handle(uint8_t in_data)
+void sdk_serial_byte_handle(unsigned char in_data)
 {
 	serial_sdk.reuse_count = 0;
 	serial_sdk.reuse_index = _SDK_MAX_RECV_SIZE;
@@ -763,14 +750,11 @@ void sdk_serial_byte_handle(uint8_t in_data)
 		while (serial_sdk.reuse_index < _SDK_MAX_RECV_SIZE)
 		{
 			in_data = serial_sdk.comm_recv_buf[serial_sdk.reuse_index];
-
 			// because reuse_index maybe re-located, so reuse_index must be
 			// always point to un-used index
 			serial_sdk.reuse_index++;
-
 			// re-loop the buffered data
 			sdk_byte_stream_handler(&serial_sdk, in_data);
-
 		}
 		serial_sdk.reuse_count = 0;
 	}
@@ -779,8 +763,8 @@ void sdk_serial_byte_handle(uint8_t in_data)
 void sdk_stream_recalc_crc(void* p_data)
 {
 	SDKHeader* p_head = (SDKHeader*)p_data;
-	uint8_t* p_byte = (uint8_t*)p_data;
-	uint32_t index_of_crc2;
+	unsigned char* p_byte = (unsigned char*)p_data;
+	unsigned int index_of_crc2;
 
 	if (p_head->sof != _SDK_SOF) return;
 	if (p_head->version != 0) return;
@@ -798,19 +782,19 @@ void sdk_stream_recalc_crc(void* p_data)
 
 static void sdk_transform2byte(const char *pstr,unsigned char *pdata)
 {
-    int i;
-    char temp_area[3];
-    unsigned int temp8;
-    temp_area[0] = temp_area[1] = temp_area[2] = 0;
+	int i;
+	char temp_area[3];
+	unsigned int temp8;
+	temp_area[0] = temp_area[1] = temp_area[2] = 0;
 
-    for(i = 0 ; i < 32; i++)
-    {
-        temp_area[0] = pstr[0];
-        temp_area[1] = pstr[1];
-        sscanf(temp_area,"%x",&temp8);
-        pdata[i] = temp8;
-        pstr += 2;
-    }
+	for(i = 0 ; i < 32; i++)
+	{
+		temp_area[0] = pstr[0];
+		temp_area[1] = pstr[1];
+		sscanf(temp_area,"%x",&temp8);
+		pdata[i] = temp8;
+		pstr += 2;
+	}
 }
 
 void sdk_comm_set_key(SDKFilter* p_filter, const char* sz_key)
@@ -824,11 +808,11 @@ void sdk_set_encrypt_key_interface(const char* sz_key)
 	sdk_comm_set_key(&serial_sdk,sz_key);
 }
 
-unsigned short sdk_encrypt_interface(uint8_t *pdest, const uint8_t *psrc,
-		uint16_t w_len,uint8_t is_ack,uint8_t is_enc,uint8_t session_id,
-		uint16_t seq_num)
+unsigned short sdk_encrypt_interface(unsigned char *pdest, const unsigned char *psrc,
+		unsigned short w_len,unsigned char is_ack,unsigned char is_enc,unsigned char session_id,
+		unsigned short seq_num)
 {
-	uint16_t data_len;
+	unsigned short data_len;
 
 	SDKHeader* p_head = (SDKHeader*)pdest;
 
@@ -839,9 +823,9 @@ unsigned short sdk_encrypt_interface(uint8_t *pdest, const uint8_t *psrc,
     	return 0;
 
     if (w_len == 0 || psrc == 0)
-        data_len = (uint16_t)sizeof(SDKHeader);
+        data_len = (unsigned short)sizeof(SDKHeader);
     else
-        data_len = (uint16_t)sizeof(SDKHeader) + _SDK_CRC_DATA_SIZE + w_len;
+        data_len = (unsigned short)sizeof(SDKHeader) + _SDK_CRC_DATA_SIZE + w_len;
 
     if(is_enc)
     	data_len = data_len + (16 - w_len % 16);

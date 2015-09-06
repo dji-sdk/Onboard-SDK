@@ -14,17 +14,17 @@
 #include <sys/time.h>
 #include <unistd.h>
 
-static dji_sdk_data_msg_t recv_data;
+static dji_sdk_data_msg_t recv_data = {0};
 static unsigned char Pro_Encode_Data[1024];
 static unsigned char Pro_Encode_ACK[10];
 
 set_handler_table_t* app_set_tab_ptr;
 cmd_handler_table_t* app_cmd_tab_ptr;
 
-uint8_t find_set_index(uint8_t cmd_set,set_handler_table_t* p_set_handler_tab)
+unsigned char find_set_index(unsigned char cmd_set,set_handler_table_t* p_set_handler_tab)
 {
-    uint8_t item_data=0;
-    uint8_t item_index=0;
+    unsigned char item_data=0;
+    unsigned char item_index=0;
     if(cmd_set == ERR_INDEX)return ERR_INDEX;
     if(p_set_handler_tab==NULL)return ERR_INDEX;
 
@@ -40,10 +40,10 @@ uint8_t find_set_index(uint8_t cmd_set,set_handler_table_t* p_set_handler_tab)
     return ERR_INDEX;
 }
 
-uint8_t find_cmd_index(uint8_t cmd_id,cmd_handler_table_t* p_cmd_handler_tab)
+unsigned char find_cmd_index(unsigned char cmd_id,cmd_handler_table_t* p_cmd_handler_tab)
 {
-    uint16_t item_data=0;
-    uint16_t item_index=0;
+    unsigned short item_data=0;
+    unsigned short item_index=0;
     if(cmd_id == ERR_INDEX) return ERR_INDEX;
     if(p_cmd_handler_tab==NULL) return ERR_INDEX;
     while(item_data!=ERR_INDEX)
@@ -64,13 +64,12 @@ void App_Set_Table(set_handler_table_t* set_tab,cmd_handler_table_t* cmd_tab)
 	app_cmd_tab_ptr = cmd_tab;
 }
 
-void App_Send_Data(unsigned char flag, uint8_t is_enc, unsigned char  cmd_set, unsigned char cmd_id,unsigned char *pdata,int len,ACK_Callback_Func ack_callback, int timeout ,int n)
+void App_Send_Data(unsigned char flag, unsigned char is_enc, unsigned char  cmd_set, unsigned char cmd_id,unsigned char *pdata,int len,ACK_Callback_Func ack_callback, int timeout ,int n)
 {
 	ProSendParameter param;
-    unsigned char *ptemp = (unsigned char *)Pro_Encode_Data;
-    *ptemp++ = cmd_set;
-    *ptemp++ = cmd_id;
-
+	unsigned char *ptemp = (unsigned char *)Pro_Encode_Data;
+	*ptemp++ = cmd_set;
+	*ptemp++ = cmd_id;
 
 	memcpy(Pro_Encode_Data + SET_CMD_SIZE,pdata,len);
 
@@ -94,10 +93,10 @@ void App_Recv_Req_Data(ProHeader *header)
 	recv_req_id.need_encrypt    = header->enc_type & 0xff;
 	recv_data.len 		    = header->length - EXC_DATA_SIZE;
 
-	memcpy((uint8_t *)&recv_data.cmd_set,(uint8_t *)&header->magic, recv_data.len);
+	memcpy((unsigned char *)&recv_data.cmd_set,(unsigned char *)&header->magic, recv_data.len);
 
-	uint8_t set_index = 0;
-	uint8_t cmd_index = 0;
+	unsigned char set_index = 0;
+	unsigned char cmd_index = 0;
 
 	set_index = find_set_index(recv_data.cmd_set,app_set_tab_ptr);
 	cmd_index = find_cmd_index(recv_data.cmd_id,app_set_tab_ptr[set_index].p_cmd_handler_table);
@@ -113,7 +112,7 @@ void App_Recv_Req_Data(ProHeader *header)
 	                                                                         recv_req_id);
 }
 
-void App_Send_Ack(req_id_t req_id, uint8_t *ack, int len)
+void App_Send_Ack(req_id_t req_id, unsigned char *ack, int len)
 {
 	ProAckParameter param;
 
@@ -131,29 +130,28 @@ void App_Send_Ack(req_id_t req_id, uint8_t *ack, int len)
 // cmd agency
 //----------------------------------------------------------------------
 
-static dji_sdk_cmd_unit cmd_unit;
+static dji_sdk_cmd_unit cmd_unit = {0};
 
 void sdk_ack_cmd_callback(ProHeader *header)
 {
 	/*
 	 *	ack_data  0 -> null  1 -> recieve request but cmd can't exec  2 -> cmd exec
 	 */
-	uint16_t ack_data;
+	unsigned short ack_data;
 	printf("Sdk_ack_cmd0_callback,sequence_number=%d,session_id=%d,data_len=%d\n", header->sequence_number, header->session_id, header->length - EXC_DATA_SIZE);
-	memcpy((uint8_t *)&ack_data,(uint8_t *)&header->magic, (header->length - EXC_DATA_SIZE));
+	memcpy((unsigned char *)&ack_data,(unsigned char *)&header->magic, (header->length - EXC_DATA_SIZE));
 	cmd_unit.ack_result = ack_data;
 }
 
 static void * CmdRecvThread(void * arg)
 {
-    arg = arg;  //For eliminating the warning messages.
-    while(1)
+	while(1)
 	{
 		if(cmd_unit.is_send_cmd)
 		{
 			printf("[DEBUG] in send\n");
 			cmd_unit.is_send_cmd = 0;
-			App_Send_Data(2,1,MY_CTRL_CMD_SET, API_CMD_REQUEST,(uint8_t*)&cmd_unit.cmd,sizeof(cmd_unit.cmd),sdk_ack_cmd_callback, 10, 0);
+			App_Send_Data(2,1,MY_CTRL_CMD_SET, API_CMD_REQUEST,(unsigned char*)&cmd_unit.cmd,sizeof(cmd_unit.cmd),sdk_ack_cmd_callback, 10, 0);
 			printf("[DEBUG] send req cmd ok\n");
 			sleep(2);
 			if( (cmd_unit.ack_result&0xFF00) == 0xFF00 )
@@ -176,9 +174,9 @@ static void * CmdRecvThread(void * arg)
 			{
 				printf("[DEBUG] CMD_RECIEVE \n");
 
-				uint8_t req_status = cmd_unit.cmd.cmd_sequence; // can be anything
+				unsigned char req_status = cmd_unit.cmd.cmd_sequence; // can be anything
 				sleep(7);
-				App_Send_Data(2, 1,MY_CTRL_CMD_SET, API_CMD_STATUS_REQUEST,(uint8_t*)&req_status,sizeof(uint8_t),sdk_ack_cmd_callback, 10, 0);
+				App_Send_Data(2, 1,MY_CTRL_CMD_SET, API_CMD_STATUS_REQUEST,(unsigned char*)&req_status,sizeof(unsigned char),sdk_ack_cmd_callback, 10, 0);
 				printf("[DEBUG] send req status ok\n");
 				sleep(1);
 				printf("[DEBUG] recv ack1 status ok\n");
@@ -220,7 +218,7 @@ int CmdStartThread(void)
 	return 0;
 }
 
-void App_Complex_Send_Cmd(uint8_t cmd, cmd_ack_callback ack_callback)
+void App_Complex_Send_Cmd(unsigned char cmd, cmd_ack_callback ack_callback)
 {
 	cmd_unit.cmd.cmd_data = cmd;
 	cmd_unit.is_send_cmd = 1;
@@ -232,7 +230,7 @@ void App_Complex_Send_Cmd(uint8_t cmd, cmd_ack_callback ack_callback)
 //----------------------------------------------------------------------
 // for activation
 //----------------------------------------------------------------------
-bool is_sys_error(uint16_t ack_data)
+bool is_sys_error(unsigned short ack_data)
 {
 	if( ack_data == SDK_ERR_COMMAND_NOT_SUPPORTED)
 	{

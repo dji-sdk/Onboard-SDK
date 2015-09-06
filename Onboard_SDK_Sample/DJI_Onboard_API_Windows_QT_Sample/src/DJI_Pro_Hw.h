@@ -1,5 +1,12 @@
-#ifndef DJI_PRO_HW_H
-#define DJI_PRO_HW_H
+#ifndef __DJI_PRO_HW_H__
+#define __DJI_PRO_HW_H__
+
+#ifdef PLATFORM_LINUX
+int Pro_Hw_Send(unsigned char *buf, int len);
+int Pro_Hw_Recv(unsigned char *buf, int len);
+int Pro_Hw_Setup(const char *device,int baudrate);
+
+#else
 
 #include <QMainWindow>
 
@@ -37,13 +44,9 @@ public:
 protected:
     void run();
 };
-
-
-
-
-
-
-
 extern DJI_Pro_Hw Pro_Hw;
+int Pro_Hw_Send(unsigned char *buf, int len);
+
+#endif
 
 #endif // DJI_PRO_HW_H

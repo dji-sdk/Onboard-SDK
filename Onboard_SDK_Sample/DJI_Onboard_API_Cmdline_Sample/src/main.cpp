@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "DJI_Pro_Test.h"
+
 using namespace std;
 
 static void Display_Main_Menu(void)
@@ -23,7 +24,8 @@ static void Display_Main_Menu(void)
 	printf("[d]  Takeoff\n");
 	printf("[e]  Landing\n");
 	printf("[f]  Go home\n");
-	printf("[g]  Query UAV current status\n");
+	printf("[g]  Gimbal test\n");
+	printf("[h]  Query UAV current status\n");
 
 	printf("\ninput a/b/c etc..then press enter key\r\n");
 	printf("---------------------------------------\r\n");
@@ -58,7 +60,7 @@ int main(int argc,char **argv)
 		temp32 = getchar();
 		if(temp32 != 10)
 		{
-			if(temp32 >= 'a' && temp32 <= 'g' && valid_flag == false)
+			if(temp32 >= 'a' && temp32 <= 'h' && valid_flag == false)
 			{
 				main_operate_code = temp32;
 				valid_flag = true;
@@ -107,6 +109,9 @@ int main(int argc,char **argv)
 			DJI_Onboard_API_UAV_Control(1);
 			break;
 		case 'g':
+			DJI_Onboard_API_Gimbal_Task();
+			break;
+		case 'h':
 			/* status query */
 			DJI_Onboard_API_Status_Query();
 			break;

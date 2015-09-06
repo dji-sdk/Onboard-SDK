@@ -1,0 +1,6 @@
+<?DJI Onboard API Sample XML version="1.0.0"?>
+<root>
+	<UART Baud="230400" Name="/dev/ttyUSB0"/>
+	<Account AppID="1005002" ApiLevel="2" AppKey="390b75d49d51e9cea4f8724bfc4b1549eb2a325c3239d1e3b6ea3cccd37b7b9f" />
+</root>
+

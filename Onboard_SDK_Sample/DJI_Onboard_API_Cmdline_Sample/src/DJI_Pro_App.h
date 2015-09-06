@@ -12,6 +12,7 @@
  * (1byte)   (1byte)    (* byte)
  */
 #include <stdint.h>
+#include "DJI_Pro_Link.h"
 // cmd_set
 #define MY_DEV_ID         	0x00
 
@@ -23,6 +24,9 @@
 #define API_CMD_REQUEST       	0x01
 #define API_CMD_STATUS_REQUEST 	0x02
 #define API_CTRL_REQUEST      	0x03
+
+#define API_GIMBAL_CTRL_SPEED_REQUEST   0x1A
+#define API_GIMBAL_CTRL_ANGLE_REQUEST   0x1B
 
 #define API_MISSION_WP_INFO   	0x10
 #define API_MISSION_WP_DATA   	0x11
@@ -38,6 +42,9 @@
 #define API_USER_ACTIVATION	0x01
 #define API_INFO_QUERY		0x02
 #define	API_SIM_ECHO		0xFF
+
+#define MAKE_VERSION(a,b,c,d) (((a << 24)&0xff000000) | ((b << 16)&0x00ff0000) | ((c << 8)&0x0000ff00) | (d&0x000000ff))
+#define SDK_VERSION           (MAKE_VERSION(2,3,2,0))
 
 // data_type
 typedef float 	fp32;
@@ -62,6 +69,37 @@ typedef double	fp64;
 #define ENABLE_MSG_DEVICE		0x0800
 
 #pragma  pack(1)
+
+/* ��̨�Ƕȿ��ƽṹ�� */
+typedef struct
+{
+    int16_t yaw_angle;
+    int16_t roll_angle;
+    int16_t pitch_angle;
+    struct
+    {
+        uint8_t base : 1;
+        uint8_t yaw_cmd_ignore : 1;
+        uint8_t roll_cmd_ignore : 1;
+        uint8_t pitch_cmd_ignore : 1;
+        uint8_t reserve : 4;
+    }ctrl_byte;
+    uint8_t duration;
+}gimbal_custom_control_angle_t;
+
+/* ��̨���ٶȿ��ƽṹ�� */
+typedef struct
+{
+    int16_t yaw_angle_rate;
+    int16_t roll_angle_rate;
+    int16_t pitch_angle_rate;
+    struct
+    {
+        uint8_t reserve : 7;
+        uint8_t ctrl_switch : 1;
+    }ctrl_byte;
+}gimbal_custom_speed_t;
+
 typedef struct
 {
 	unsigned char ctrl_flag;
@@ -73,60 +111,79 @@ typedef struct
 
 typedef struct
 {
-	fp32	q0;
-	fp32	q1;
-	fp32	q2;
-	fp32	q3;
+    fp32            q0;
+    fp32            q1;
+    fp32            q2;
+    fp32            q3;
 }sdk_4_16B_data_t;
 
 typedef struct
 {
-	fp32	x;
-	fp32	y;
-	fp32	z;
+    fp32            x;
+    fp32            y;
+    fp32            z;
 }sdk_3_12B_data_t;
 
 typedef struct
 {
-	fp64	lati;
-	fp64	longti;
-	fp32	alti;
-	fp32	height;
-	unsigned char health_flag;
-}sdk_4_24B_data_t;
+    fp32            x;
+    fp32            y;
+    fp32            z;
+    uint8_t         health_flag         :1;
+    uint8_t         feedback_sensor_id  :4;
+    uint8_t         reserve             :3;
+}sdk_4_13B_data_t;
 
 typedef struct
 {
-	int16_t	roll;
-	int16_t	pitch;
-	int16_t	yaw;
-	int16_t	throttle;
-	int16_t	mode;
-	int16_t gear;
+    fp64            lati;
+    fp64            longti;
+    fp32            alti;
+    fp32            height;
+    uint8_t         health_flag;
+}sdk_5_25B_data_t;
+
+typedef struct
+{
+    int16_t         roll;
+    int16_t         pitch;
+    int16_t         yaw;
+    int16_t         throttle;
+    int16_t         mode;
+    int16_t         gear;
 }sdk_5_10B_data_t;
 
 typedef struct
 {
-	int16_t	x;
-	int16_t	y;
-	int16_t	z;
+    int16_t         x;
+    int16_t         y;
+    int16_t         z;
 }sdk_3_6B_data_t;
 
 typedef struct
 {
-	unsigned int		time_stamp;
-	sdk_4_16B_data_t	q;
-	sdk_3_12B_data_t	a;
-	sdk_3_12B_data_t	v;
-	sdk_3_12B_data_t	w;
-	sdk_4_24B_data_t	pos;
-	sdk_3_6B_data_t		mag;
-	sdk_5_10B_data_t	rc;
-	sdk_3_12B_data_t	gimbal;
-	unsigned char			status;
-	unsigned char			battery_remaining_capacity;
-	unsigned char			ctrl_device;
-}sdk_std_msg_t;
+    uint8_t         cur_ctrl_dev_in_navi_mode   :3;/*0->rc  1->app  2->serial*/
+    uint8_t         serial_req_status           :1;/*1->opensd  0->close*/
+    uint8_t         reserved                    :4;
+}_ctrl_device;
+
+
+
+typedef struct
+{
+    unsigned int		time_stamp;
+    sdk_4_16B_data_t	q;
+    sdk_3_12B_data_t	a;
+    sdk_4_13B_data_t	v;
+    sdk_3_12B_data_t	w;
+    sdk_5_25B_data_t	pos;
+    sdk_3_6B_data_t		mag;
+    sdk_5_10B_data_t	rc;
+    sdk_3_12B_data_t	gimbal;
+    uint8_t             status;
+    uint8_t             battery_remaining_capacity;
+    _ctrl_device         ctrl_device;
+}uplink_data_t,sdk_std_msg_t;
 
 #pragma  pack()
 
@@ -216,7 +273,7 @@ typedef struct
 	unsigned int	app_id;
 	unsigned int	app_api_level;
 	unsigned int	app_ver;
-	unsigned char		app_bundle_id[32];
+    unsigned char	app_bundle_id[32];
 }activation_data_t;
 
 typedef struct

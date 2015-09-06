@@ -16,8 +16,10 @@
 #include <QFile>
 #include <QFileDialog>
 #include <QByteArray>
+#include "DJI_Pro_App.h"
 extern int activation_callback_flag;
-
+extern activation_data_t activation_msg;
+extern const char *key;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -79,14 +81,14 @@ void MainWindow::on_BtnActivation_clicked()
 {
     activation_msg.app_id = ui->AppID->text().toInt();
     activation_msg.app_api_level = ui->AppLevel->currentText().toInt();
-    activation_msg.app_ver = 1;
+    activation_msg.app_ver = SDK_VERSION;
     memcpy(activation_msg.app_bundle_id,"1234567890123456789012", 32);
     *keybuf = ui->AppKey->text().toLocal8Bit();
     key = keybuf->data();
     printf("key = %s\n",key);
     Save_Setting();
     DJI_Onboard_API_Activation();
-    Activation->start(2000);;
+    Activation->start(2000);
 }
 
 void MainWindow::on_btn_open_serialport_clicked()
@@ -133,7 +135,7 @@ void MainWindow::on_btn_nav_open_close_clicked()
 
 void MainWindow::on_btn_Takeoff_clicked()
 {
-   DJI_Onboard_API_Takeoff();
+   DJI_Onboard_API_UAV_Control(1);
    ui->btn_Takeoff->setEnabled(false);
    ui->btn_Landing->setEnabled(false);
    TakeoffDelay->start(13*1000);
@@ -141,7 +143,7 @@ void MainWindow::on_btn_Takeoff_clicked()
 
 void MainWindow::on_btn_Landing_clicked()
 {
-    DJI_Onboard_API_Landing();
+    DJI_Onboard_API_UAV_Control(6);
     ui->btn_Takeoff->setEnabled(false);
     ui->btn_Landing->setEnabled(false);
     TakeoffDelay->start(12*1000);
@@ -149,7 +151,7 @@ void MainWindow::on_btn_Landing_clicked()
 
 void MainWindow::on_btn_GoHome_clicked()
 {
-    DJI_Onboard_API_Gohome();
+    DJI_Onboard_API_UAV_Control(1);
 }
 
 void MainWindow::on_btn_update_com_clicked()
@@ -173,7 +175,7 @@ void MainWindow::on_btn_simpletask_clicked()
                                    QMessageBox::Ok | QMessageBox::Cancel);
     if(QMessageBox::Ok == ret)
     {
-        simple_task_num = 4;
+        DJI_Onboard_API_Simple_Task(4);
         printf("OK\n");
     }
     if(QMessageBox::Cancel == ret)
@@ -219,7 +221,9 @@ void MainWindow::Timeout_handle()
     {
         if(1==activation_callback_flag)
         {
-             char result[][50]={{"ACTIVATION_SUCCESS"},{"PARAM_ERROR"},{"DATA_ENC_ERROR"},{"NEW_DEVICE_TRY_AGAIN"},{"DJI_APP_TIMEOUT"},{" DJI_APP_NO_INTERNET"},{"SERVER_REFUSED"},{"LEVEL_ERROR"}};
+            char result[][50]={{"SDK_ACTIVATION_SUCCESS"},{"SDK_ACTIVE_PARAM_ERROR"},{"SDK_ACTIVE_DATA_ENC_ERROR"},\
+                               {"SDK_ACTIVE_NEW_DEVICE"},{"SDK_ACTIVE_DJI_APP_NOT_CONNECT"},{" SDK_ACTIVE_DIJ_APP_NO_INTERNET"},\
+                               {"SDK_ACTIVE_SERVER_REFUSED"},{"SDK_ACTIVE_LEVEL_ERROR"},{"SDK_ACTIVE_SDK_VERSION_ERROR"}};
              ui->label_Activation_Status->setText(*(result+actavation_status));
              if(3 != actavation_status)
              {
@@ -290,13 +294,6 @@ void MainWindow::Set_Default_Ini()
 
     configIni->setValue("Check",Get_Check(configIni));
 
-    activation_msg.app_id = ui->AppID->text().toInt();
-    activation_msg.app_api_level = ui->AppLevel->currentText().toInt();
-    activation_msg.app_ver = 1;
-    memcpy(activation_msg.app_bundle_id,"1234567890123456789012", 32);
-    *keybuf = ui->AppKey->text().toLocal8Bit();
-    key = keybuf->data();
-
     delete configIni;
 
     Read_Setting();
@@ -326,13 +323,6 @@ void MainWindow::Save_Setting()
 {
     QSettings *configIni = new QSettings(SETTING_FILENAMES, QSettings::IniFormat);
 
-    activation_msg.app_id = ui->AppID->text().toInt();
-    activation_msg.app_api_level = ui->AppLevel->currentText().toInt();
-    activation_msg.app_ver = 1;
-    memcpy(activation_msg.app_bundle_id,"1234567890123456789012", 32);
-    *keybuf = ui->AppKey->text().toLocal8Bit();
-    key = keybuf->data();
-
     configIni->beginGroup("user");
     configIni->setValue("AppID", activation_msg.app_id);
     configIni->setValue("Key",key);
@@ -342,4 +332,9 @@ void MainWindow::Save_Setting()
     configIni->setValue("Check",Get_Check(configIni));
 
     delete configIni;
+}
+
+void MainWindow::on_btn_gimbaltask_clicked()
+{
+   DJI_Onboard_API_Gimbal_Task();
 }
