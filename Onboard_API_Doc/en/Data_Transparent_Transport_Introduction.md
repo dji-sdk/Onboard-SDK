@@ -1,6 +1,6 @@
 # User Guide for Transparent Data Transmission between Mobile and Onboard Devices 
 
-*In case of any mistake or bug, please report to us using Github issue or DJI forum or email. You are welcome to send your pull request helping us fix issue. However, all pull requests related to document must follow the [document style](https://github.com/dji-sdk/onboard/issues/8#issuecomment-115976289)*
+*In case of any mistake or bug, please report to us using Github issue or DJI forum or email. You are welcome to send your pull request helping us fix issue. However, all pull requests related to document must follow the [document style](https://github.com/dji-sdk/Onboard-SDK/issues/19)*
 
 ## Introduction
 
