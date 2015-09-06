@@ -284,7 +284,9 @@ int Pro_Hw_Setup(const char *device,int baudrate)
 	return 0;
 }
 
-#else
+#endif
+
+#ifdef PLATFORM_QT
 
 #include "DJI_Pro_Hw.h"
 #include "DJI_Pro_Codec.h"

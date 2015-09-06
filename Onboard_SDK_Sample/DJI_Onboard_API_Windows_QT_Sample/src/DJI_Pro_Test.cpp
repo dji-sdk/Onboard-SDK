@@ -55,7 +55,7 @@ static req_id_t nav_force_close_req_id = {0};
 /* std msg from uav */
 static sdk_std_msg_t recv_sdk_std_msgs = {0};
 
-#ifdef Q_OS_WIN32
+#ifdef PLATFORM_QT
     extern int activation_callback_flag;
 #endif
 
@@ -541,7 +541,7 @@ void test_activation_ack_cmd_callback(ProHeader *header)
 	if( is_sys_error(ack_data))
 	{
         printf("[DEBUG] SDK_SYS_ERROR!!! \n");
-#ifdef Q_OS_WIN32
+#ifdef PLATFORM_QT
     	activation_callback_flag=2;
 #endif
         
@@ -552,7 +552,7 @@ void test_activation_ack_cmd_callback(ProHeader *header)
                            {"SDK_ACTIVE_NEW_DEVICE"},{"SDK_ACTIVE_DJI_APP_NOT_CONNECT"},{" SDK_ACTIVE_DIJ_APP_NO_INTERNET"},\
                            {"SDK_ACTIVE_SERVER_REFUSED"},{"SDK_ACTIVE_LEVEL_ERROR"},{"SDK_ACTIVE_SDK_VERSION_ERROR"}};
         printf("[ACTIVATION] Activation result: %s \n", *(result+ack_data));
-#ifdef Q_OS_WIN32
+#ifdef PLATFORM_QT
     	activation_callback_flag=1;
 #endif
 		activation_status_s = (unsigned char)ack_data;

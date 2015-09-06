@@ -5,9 +5,9 @@
 int Pro_Hw_Send(unsigned char *buf, int len);
 int Pro_Hw_Recv(unsigned char *buf, int len);
 int Pro_Hw_Setup(const char *device,int baudrate);
+#endif
 
-#else
-
+#ifdef PLATFORM_QT
 #include <QMainWindow>
 
 #include <QString>

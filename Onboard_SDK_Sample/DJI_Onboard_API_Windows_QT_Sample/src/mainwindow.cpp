@@ -135,7 +135,7 @@ void MainWindow::on_btn_nav_open_close_clicked()
 
 void MainWindow::on_btn_Takeoff_clicked()
 {
-   DJI_Onboard_API_UAV_Control(1);
+   DJI_Onboard_API_UAV_Control(4);
    ui->btn_Takeoff->setEnabled(false);
    ui->btn_Landing->setEnabled(false);
    TakeoffDelay->start(13*1000);
@@ -191,10 +191,6 @@ void MainWindow::Timeout_handle()
                                    .arg(Pro_Hw.load_con));
 
     DJI_Get_Info(&battery, &actavation_status, &ctrl_device);
-    //if(actavation_status == 0x0)
-   //     ui->label_Activation_Status->setText("Activation pass");
-   // else
-    //    ui->label_Activation_Status->setText("unknown");
 
     if(battery == 0xFF)
         ui->label_Battery_Capacity->setText("invalid");
