@@ -7,6 +7,7 @@
 #include <QByteArray>
 #include <QLabel>
 #include <QSettings>
+#include "DJI_Pro_Sample.h"
 
 #define TAKEOFF    4
 #define LANDING    6
@@ -34,7 +35,6 @@ public:
 
 private slots:
     void on_BtnActivation_clicked();
-
     void on_btn_open_serialport_clicked();
 
     void on_btn_nav_open_close_clicked();
@@ -43,13 +43,9 @@ private slots:
 
     void on_btn_update_com_clicked();
 
-    void on_btn_simpletask_clicked();
-
     void Timeout_handle();
 
     void TakeoffDelay_handle();
-
-    void Activation_handle();
 
     void btn_About();
 
@@ -57,18 +53,25 @@ private slots:
 
     void on_btn_GoHome_clicked();
 
-    void on_btn_gimbaltask_clicked();
+    void on_btn_gimbal_ctrl_clicked();
+
+    void on_btn_atti_ctrl_clicked();
 
 private:
     Ui::MainWindow *ui;
-    QTimer *time,*Activation;
+    QTimer *time;
     QTimer *TakeoffDelay;
     QByteArray *keybuf;
+    activate_data_t user_act_data;
     void Set_Default_Ini();
     int Get_Check(QSettings *set);
     void Read_Setting();
     void Save_Setting();
-
+    static void MainWindow_Activate_Callback(unsigned short res);
+public:
+    static MainWindow *mainwindow_object;
+    static MainWindow* Create_Instance(void);
+    static MainWindow* Get_Instance(void);
 };
 
 #endif // MAINWINDOW_H

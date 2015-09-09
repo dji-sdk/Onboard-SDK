@@ -4,12 +4,8 @@
 #include <qdebug.h>
 #include <windows.h>
 #include <stdio.h>
-#include "DJI_Pro_Hw.h"
-#include "DJI_Pro_Link.h"
-#include "DJI_Pro_Test.h"
+#include "DJI_Pro_Sample.h"
 
-
-int activation_callback_flag=0;
 int main(int argc, char *argv[])
 {
     AllocConsole();
@@ -17,13 +13,12 @@ int main(int argc, char *argv[])
     freopen("conout$","w+t",stdout);
     freopen("conout$","w+t",stderr);
 
-
     QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
+    //MainWindow w;
+   // w.show();
+    MainWindow::Get_Instance()->show();
 
+    DJI_Sample_Setup();
 
-    DJI_Pro_Test_Setup();
     return a.exec();
-
 }
