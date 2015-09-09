@@ -1,15 +1,15 @@
 //============================================================================
-// Name        : DJI_Onboard_Sdk_Test.cpp
+// Name        : main.cpp
 // Author      : wuyuwei
 // Version     :
 // Copyright   : DJI Inc
-// Description : DJI Onboard SDK test in C++, Ansi-style
+// Description : DJI Onboard API test in C++, Ansi-style
 //============================================================================
 
 #include <iostream>
 #include <stdio.h>
 #include <string.h>
-#include "DJI_Pro_Test.h"
+#include "DJI_Pro_Sample.h"
 
 using namespace std;
 
@@ -24,8 +24,9 @@ static void Display_Main_Menu(void)
 	printf("[d]  Takeoff\n");
 	printf("[e]  Landing\n");
 	printf("[f]  Go home\n");
-	printf("[g]  Gimbal test\n");
-	printf("[h]  Query UAV current status\n");
+	printf("[g]  Attitude control sample\n");
+	printf("[h]  Gimbal control sample\n");
+	printf("[i]  Query UAV current status\n");
 
 	printf("\ninput a/b/c etc..then press enter key\r\n");
 	printf("---------------------------------------\r\n");
@@ -35,32 +36,49 @@ static void Display_Main_Menu(void)
 int main(int argc,char **argv)
 {
 	int main_operate_code = 0;
-
 	int temp32;
 	bool valid_flag = false;
 	bool err_flag = false;
-
-
+	activate_data_t user_act_data; 
+	char temp_buf[65];
 
 	if(argc == 2 && strcmp(argv[1],"-v") == 0)
 	{
 		printf("\nDJI Onboard API Cmdline Test,Ver 1.0.0\n\n");
 		return 0;
 	}
-	printf("\nDJI Onboard API Cmdline Test,Ver 1.0.0\n\n");
+	printf("\nDJI Onboard API Cmdline Test,Ver 1.1.0\n\n");
 
-	if(DJI_Pro_Test_Setup() < 0)
+	if(DJI_Sample_Setup() < 0)
 	{
 		printf("Serial Port Open ERROR\n");
 		return 0;
 	}
+
+	user_act_data.app_key = temp_buf;
+	user_act_data.app_ver = SDK_VERSION;
+    	if(DJI_Pro_Get_Cfg(NULL,NULL,&user_act_data.app_id,&user_act_data.app_api_level,user_act_data.app_key) == 0)
+	{
+		/* user setting */
+		printf("--------------------------\n");
+		printf("app id=%d\n",user_act_data.app_id);
+		printf("app api level=%d\n",user_act_data.app_api_level);
+		printf("app key=%s\n",user_act_data.app_key);
+		printf("--------------------------\n");
+	}
+	else
+	{
+		printf("ERROR:There is no user account\n");	
+		return 0;
+	}
+
 	Display_Main_Menu();
 	while(1)
 	{
 		temp32 = getchar();
 		if(temp32 != 10)
 		{
-			if(temp32 >= 'a' && temp32 <= 'h' && valid_flag == false)
+			if(temp32 >= 'a' && temp32 <= 'i' && valid_flag == false)
 			{
 				main_operate_code = temp32;
 				valid_flag = true;
@@ -86,34 +104,44 @@ int main(int argc,char **argv)
 		{
 		case 'a':
 			/* api activation */
-			DJI_Onboard_API_Activation();
+			DJI_Pro_Activate_API(&user_act_data,NULL);
 			break;
 		case 'b':
 			/* get controller */
-			DJI_Onboard_API_Control(1);
+			DJI_Pro_Control_Management(1,NULL);
 			break;
 		case 'c':
 			/* release controller */
-			DJI_Onboard_API_Control(0);
+			DJI_Pro_Control_Management(0,NULL);
 			break;
 		case 'd':
 			/* takeoff */
-			DJI_Onboard_API_UAV_Control(4);
+			DJI_Pro_Status_Ctrl(4,0);
 			break;
 		case 'e':
 			/* landing */
-			DJI_Onboard_API_UAV_Control(6);
+			DJI_Pro_Status_Ctrl(6,0);
 			break;
 		case 'f':
 			/* go home */
-			DJI_Onboard_API_UAV_Control(1);
+			DJI_Pro_Status_Ctrl(1,0);
 			break;
 		case 'g':
-			DJI_Onboard_API_Gimbal_Task();
+			/* attitude ctrl */
+			if(DJI_Sample_Atti_Ctrl()< 0)
+    			{
+        			printf("Please waiting current sample finish\n");
+   			}
 			break;
 		case 'h':
+			if(DJI_Sample_Gimbal_Ctrl()< 0)
+    			{
+        			printf("Please waiting current sample finish\n");
+   			}
+			break;
+		case 'i':
 			/* status query */
-			DJI_Onboard_API_Status_Query();
+			DJI_Sample_Drone_Status_Query();
 			break;
 		}
 		main_operate_code = -1;

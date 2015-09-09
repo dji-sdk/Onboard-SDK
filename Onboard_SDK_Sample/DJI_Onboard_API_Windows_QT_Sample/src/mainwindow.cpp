@@ -88,7 +88,7 @@ void MainWindow::MainWindow_Activate_Callback(unsigned short res)
                        {"SDK_ACTIVE_NEW_DEVICE"},{"SDK_ACTIVE_DJI_APP_NOT_CONNECT"},{" SDK_ACTIVE_DIJ_APP_NO_INTERNET"},\
                        {"SDK_ACTIVE_SERVER_REFUSED"},{"SDK_ACTIVE_LEVEL_ERROR"},{"SDK_ACTIVE_SDK_VERSION_ERROR"}};
 
-    if(res > 0 && res < 9)
+    if(res >= 0 && res < 9)
     {
         MainWindow::Get_Instance()->ui->label_Activation_Status->setText(*(result+res));
     }

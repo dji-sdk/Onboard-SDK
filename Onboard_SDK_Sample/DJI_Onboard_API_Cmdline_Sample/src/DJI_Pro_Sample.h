@@ -26,3 +26,4 @@ int DJI_Sample_Gimbal_Ctrl(void);
 int DJI_Sample_Setup(void);
 
 #endif /* DJI_PRO_TEST_H_ */
+

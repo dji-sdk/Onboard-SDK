@@ -371,3 +371,4 @@ int DJI_Sample_Setup(void)
     DJI_Pro_Setup(NULL);
 	return 0;
 }
+

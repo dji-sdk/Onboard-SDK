@@ -7,8 +7,6 @@
 #include <string.h>
 #include <memory.h>
 
-
-
 #define _SDK_MAX_RECV_SIZE          (1024)
 #define _SDK_SOF                    ((unsigned char)(0xAA))
 #define _SDK_CRC_HEAD_SIZE          (2)                 // CRC16
