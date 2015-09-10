@@ -14,10 +14,7 @@ int main(int argc, char *argv[])
     freopen("conout$","w+t",stderr);
 
     QApplication a(argc, argv);
-    //MainWindow w;
-   // w.show();
     MainWindow::Get_Instance()->show();
-
     DJI_Sample_Setup();
 
     return a.exec();

@@ -490,10 +490,13 @@ static void DJI_Pro_Control_Management_CallBack(ProHeader *header)
 
 int DJI_Pro_Control_Management(unsigned char cmd,Command_Result_Notify user_notice_entrance)
 {
-    unsigned char data = cmd;
+    unsigned char data = cmd & 0x1;
+    DJI_Pro_App_Send_Data(2,1, MY_CTRL_CMD_SET, API_CTRL_MANAGEMENT,
+               &data,1,NULL,500,1);
+    usleep(50000);
     p_control_management_interface = user_notice_entrance ? user_notice_entrance : 0;
     DJI_Pro_App_Send_Data(2,1, MY_CTRL_CMD_SET, API_CTRL_MANAGEMENT,
-               &data,1,DJI_Pro_Control_Management_CallBack,500,2);
+               &data,1,DJI_Pro_Control_Management_CallBack,500,1);
     return 0;
 }
 
