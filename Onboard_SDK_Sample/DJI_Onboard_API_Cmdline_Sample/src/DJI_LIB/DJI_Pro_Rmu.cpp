@@ -167,7 +167,6 @@ MMU_Tab * Request_Memory(unsigned short size)
 
 	if(STATIC_MEMORY_SIZE < (mem_used + size))
 	{
-		Free_Memory_Lock();
 		return (MMU_Tab *)0;
 	}
 
@@ -176,7 +175,6 @@ MMU_Tab * Request_Memory(unsigned short size)
 		DJI_MMU_Tab[1].pmem = DJI_MMU_Tab[0].pmem;
 		DJI_MMU_Tab[1].mem_size = size;
 		DJI_MMU_Tab[1].usage_flag = 1;
-		Free_Memory_Lock();
 		return &DJI_MMU_Tab[1];
 	}
 
@@ -246,11 +244,9 @@ MMU_Tab * Request_Memory(unsigned short size)
 
 				DJI_MMU_Tab[i].mem_size = size;
 				DJI_MMU_Tab[i].usage_flag = 1;
-				Free_Memory_Lock();
 				return &DJI_MMU_Tab[i];
 			}
 		}
-		Free_Memory_Lock();
 		return (MMU_Tab *)0;
 	}
 
@@ -263,7 +259,6 @@ MMU_Tab * Request_Memory(unsigned short size)
 
 			DJI_MMU_Tab[i].mem_size = size;
 			DJI_MMU_Tab[i].usage_flag = 1;
-			Free_Memory_Lock();
 			return &DJI_MMU_Tab[i];
 		}
 	}

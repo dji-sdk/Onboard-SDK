@@ -15,7 +15,6 @@
 #include "DJI_Pro_Codec.h"
 #include "DJI_Pro_Rmu.h"
 
-static pthread_mutex_t sync_lock = PTHREAD_MUTEX_INITIALIZER;
 static ACK_Callback_Func Call_APP_Func = 0;
 static Req_Callback_Func APP_Recv_Hook = 0;
 
@@ -30,16 +29,6 @@ static void Send_Pro_Data(unsigned char *buf)
 #endif
 }
 
-static inline void Get_Sync_Lock(void)
-{
-	pthread_mutex_lock(&sync_lock);
-}
-
-static inline void Free_Sync_Lock(void)
-{
-	pthread_mutex_unlock(&sync_lock);
-}
-
 void Pro_Link_Recv_Hook(ProHeader *header)
 {
 	ProHeader *p2header;
@@ -50,7 +39,6 @@ void Pro_Link_Recv_Hook(ProHeader *header)
 	{
 		if(header->session_id == 1)
 		{
-            //printf("%s:Recv Session 1 ACK\n",__func__);
 			if(cmd_session[1].usage_flag == 1 && cmd_session[1].ack_callback)
 			{
 				cmd_session[1].ack_callback(header);
@@ -61,7 +49,6 @@ void Pro_Link_Recv_Hook(ProHeader *header)
 		}
 		else if(header->session_id > 1 && header->session_id < 32)
 		{
-			Get_Sync_Lock();
 			if(cmd_session[header->session_id].usage_flag == 1)
 			{
 				Get_Memory_Lock();
@@ -83,7 +70,6 @@ void Pro_Link_Recv_Hook(ProHeader *header)
 					Free_Memory_Lock();
 				}
 			}
-			Free_Sync_Lock();
 		}
 	}
 	else
@@ -118,9 +104,7 @@ void Pro_Link_Recv_Hook(ProHeader *header)
 				{
 					printf("%s:repeat ACK to remote,session id=%d,seq_num=%d\n",
 								__func__,header->session_id,header->sequence_number);
-					Get_Sync_Lock();
 					Send_Pro_Data(ack_session[header->session_id - 1].mmu->pmem);
-					Free_Sync_Lock();
 					Free_Memory_Lock();
 				}
 				else
@@ -144,7 +128,6 @@ static void Send_Poll(void)
 	unsigned char i;
 	unsigned int cur_timestamp;
 	static CMD_Session_Tab * cmd_session = Get_CMD_Session_Tab();
-	Get_Sync_Lock();
 	for(i = 1 ; i < SESSION_TABLE_NUM ; i ++)
 	{
 		if(cmd_session[i].usage_flag == 1)
@@ -178,7 +161,6 @@ static void Send_Poll(void)
 		}
 
 	}
-	Free_Sync_Lock();
 }
 
 static void * PollThread(void * arg)
@@ -273,9 +255,7 @@ int Pro_Ack_Interface(ProAckParameter *parameter)
 			return -1;
 		}
 
-		Get_Sync_Lock();
 		Send_Pro_Data(ack_session->mmu->pmem);
-		Free_Sync_Lock();
 		Free_Memory_Lock();
 		ack_session->session_status = ACK_SESSION_USING;
 		return 0;
@@ -296,7 +276,6 @@ int Pro_Send_Interface(ProSendParameter *parameter)
 		return -1;
 	}
 
-	Get_Sync_Lock();
     switch(parameter->session_mode)
 	{
 	case 0:
@@ -305,7 +284,6 @@ int Pro_Send_Interface(ProSendParameter *parameter)
 		if(cmd_session == (CMD_Session_Tab *)NULL)
 		{
 			Free_Memory_Lock();
-			Free_Sync_Lock();
 			printf("%s:%d:ERROR,there is not enough memory\n",__func__,__LINE__);
 			return -1;
 		}
@@ -315,7 +293,6 @@ int Pro_Send_Interface(ProSendParameter *parameter)
 		{
 			printf("%s:%d:encrypt ERROR\n",__func__,__LINE__);
 			Free_Memory_Lock();
-			Free_Sync_Lock();
 			return -1;
 		}
 		Send_Pro_Data(cmd_session->mmu->pmem);
@@ -329,7 +306,6 @@ int Pro_Send_Interface(ProSendParameter *parameter)
 		if(cmd_session == (CMD_Session_Tab *)NULL)
 		{
 			Free_Memory_Lock();
-			Free_Sync_Lock();
 			printf("%s:%d:ERROR,there is not enough memory\n",__func__,__LINE__);
 			return -1;
 		}
@@ -343,7 +319,6 @@ int Pro_Send_Interface(ProSendParameter *parameter)
 		{
 			printf("%s:%d:encrypt ERROR\n",__func__,__LINE__);
 			Free_Memory_Lock();
-			Free_Sync_Lock();
 			return -1;
 		}
 		cmd_session->pre_seq_num = global_seq_num ++;
@@ -364,7 +339,6 @@ int Pro_Send_Interface(ProSendParameter *parameter)
 		if(cmd_session == (CMD_Session_Tab *)NULL)
 		{
 			Free_Memory_Lock();
-			Free_Sync_Lock();
 			printf("%s:%d:ERROR,there is not enough memory\n",__func__,__LINE__);
 			return -1;
 		}
@@ -378,7 +352,6 @@ int Pro_Send_Interface(ProSendParameter *parameter)
 		{
 			printf("%s:%d:encrypt ERROR\n",__func__,__LINE__);
 			Free_Memory_Lock();
-			Free_Sync_Lock();
 			return -1;
 		}
 		cmd_session->pre_seq_num = global_seq_num ++;
@@ -392,7 +365,6 @@ int Pro_Send_Interface(ProSendParameter *parameter)
 		Free_Memory_Lock();
 		break;
 	}
-	Free_Sync_Lock();
 	return 0;
 }
 
