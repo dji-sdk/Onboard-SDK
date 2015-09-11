@@ -67,7 +67,7 @@ static int DJI_Pro_Create_Thread(void *(* func)(void *), void *arg)
  *  interface: drone status control
  */
 
-static pthread_mutex_t statuc_ctrl_lock = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t status_ctrl_lock = PTHREAD_MUTEX_INITIALIZER;
 static Command_Result_Notify p_status_ctrl_interface = 0;
 static unsigned short status_ctrl_return_code = SDK_ERR_NO_RESPONSE;
 static cmd_agency_data_t status_ctrl_cmd_data = {0,0};
@@ -173,7 +173,7 @@ static void * Status_Ctrl_Thread_Func(void * arg)
             break;
         }
     }
-    pthread_mutex_unlock(&statuc_ctrl_lock);
+    pthread_mutex_unlock(&status_ctrl_lock);
     return (void*) NULL;
 }
 
@@ -190,13 +190,13 @@ int DJI_Pro_Status_Ctrl(unsigned char cmd,Command_Result_Notify user_notice_entr
         return -1;
     }
 
-    pthread_mutex_lock(&statuc_ctrl_lock);
+    pthread_mutex_lock(&status_ctrl_lock);
     p_status_ctrl_interface = user_notice_entrance ? user_notice_entrance : 0;
     cur_cmd = cmd;
 
     if(DJI_Pro_Create_Thread(Status_Ctrl_Thread_Func,&cur_cmd) != 0)
     {
-        pthread_mutex_unlock(&statuc_ctrl_lock);
+        pthread_mutex_unlock(&status_ctrl_lock);
         return -1;
     }
     return 0;
@@ -277,7 +277,7 @@ int DJI_Pro_Get_API_Version(Get_API_Version_Notify user_notice_entrance)
 
     if(DJI_Pro_Create_Thread(Get_API_Version_Thread_Func,&to_user_version_data) != 0)
     {
-        pthread_mutex_unlock(&statuc_ctrl_lock);
+        pthread_mutex_unlock(&status_ctrl_lock);
         return -1;
     }
     return 0;
@@ -390,7 +390,7 @@ int DJI_Pro_Activate_API(activate_data_t *p_user_data,
     if(DJI_Pro_Create_Thread(Activate_API_Thread_Func,p_user_data) != 0)
     {
         printf("%s,line %d,ERROR\n",__func__,__LINE__);
-        pthread_mutex_unlock(&statuc_ctrl_lock);
+        pthread_mutex_unlock(&activate_api_lock);
         return -1;
     }
     return 0;
