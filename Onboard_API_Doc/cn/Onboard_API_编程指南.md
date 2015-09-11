@@ -1,4 +1,4 @@
-# DJI Onboard API 编程指南
+#Onboard SDK 编程指南
 
 *如发现任何错误，请通过Github issue或开发者论坛或邮件反馈给我们。欢迎提交pull request来帮助我们修正问题，关于文档的修改需要符合[格式标准](https://github.com/dji-sdk/Onboard-SDK/issues/19)*
 
@@ -8,17 +8,19 @@ DJI 为开发者提供两种功能完善的飞行控制 API 帮助开发飞行�
 库编写控制飞行器的移动端应用。而 Onboard API 则提供串行接口（UART），允许开发者将 自己的计算设备挂载到飞行器上，通过有线的方式直接控制飞行器。 
 
 本指南中介绍了如何通过程序与 MATRICE 100 交互并发送控制指令。我们推荐开发者先通过快速入门实现我们的示例代码，然后再阅读编程指南。
+
+**本编程指南不包含与Mobile SDK进行数据透传的相关内容**
  
 ## 协议说明 
 
-### 协议格式
+### 协议帧格式
 
    ```
    |<--------------Protocol Frame Header---------------->|<--Protocol Frame Data-->|<--Protocol Frame Checksum-->|
    |SOF|LEN|VER|SESSION|A|RES0|PADDING|ENC|RES1|SEQ|CRC16|          DATA           |            CRC32            |
-   ``` 
+   ```
 
-### 协议格式说明
+#### 协议帧头段
 
 <table>
 <tr>
@@ -32,7 +34,7 @@ DJI 为开发者提供两种功能完善的飞行控制 API 帮助开发飞行�
   <td>SOF</td>
   <td>0</td>
   <td>8</td>
-  <td>帧起始标识。固定位 0xAA</td>
+  <td>帧起始标识。固定值 0xAA</td>
 </tr>
 
 <tr>
@@ -56,9 +58,12 @@ DJI 为开发者提供两种功能完善的飞行控制 API 帮助开发飞行�
 </tr>
 
 <tr>
-  <td>A</td>
+  <td>ACK</td>
   <td>1</td>
-  <td>帧标识<ol start="0"><li>数据帧</li><li>应答帧</li></ol></td>
+  <td>帧标识<ul>
+    <li>0 ： 数据帧</li>
+    <li>1 ： 应答帧</li>
+    </ul></td>
 </tr>
 
 <tr>
@@ -77,14 +82,17 @@ DJI 为开发者提供两种功能完善的飞行控制 API 帮助开发飞行�
 <tr>
   <td>ENC</td>
   <td>3</td>
-  <td>帧数据加密类型<ol start="0"><li>不加密</li><li>AES 加密</li></ol></td>
+  <td>帧数据加密类型<ul>
+    <li>0 ： 不加密</li>
+    <li>1 ： AES 加密</li>
+    </ul></td>
 </tr>
 
 <tr>
   <td>RES1</td>
   <td>5</td>
   <td>24</td>
-  <td>保留不用。固定值为 0x0</td>
+  <td>保留。固定值为 0x0</td>
 </tr>
 
 <tr>
@@ -105,28 +113,30 @@ DJI 为开发者提供两种功能完善的飞行控制 API 帮助开发飞行�
   <td>DATA</td>
   <td>12</td>
   <td>---</td>
-  <td>帧数据段。最大长度为 1007bytes</td>
+  <td>帧数据段。长度不定，最大长度为 1007bytes</td>
 </tr>
 
 <tr>
   <td>CRC32</td>
   <td>---</td>
   <td>32</td>
-  <td>帧 CRC32 校验值</td>
+  <td>帧 CRC32 校验值。字节索引由 DATA 长度决定。</td>
 </tr>
 </table>
 
-DATA 长度大小不固定，最大长度为 1007。crc32字节索引根据 DATA 长度大小而定。
 
-### 协议数据段说明
 
-飞控和机载设备通信的数据包分为三类：
+#### 协议数据段
 
-1. 命令数据包。从机载设备发送到飞控，包含对飞行器的控制指令。
-2. 信息数据包。从飞控发送到机载设备，包含飞控的各种状态信息和传感器数据。
-3. 应答数据包。从飞控发送到机载设备，包含控制指令的执行结果。
+协议数据段根据数据传输方向和传输内容分为三类
 
-#### 机载设备发送给飞控的命令数据包的数据段格式 
+|数据包类型|传输方向|传输内容|
+|------------|:----------:|---------------|
+|命令数据包|机载设备==>飞控|飞行器控制指令|
+|应答数据包|飞控==>机载设备|控制指令的执行结果
+|推送数据包|飞控==>机载设备|飞控的各种状态信息和传感器数据
+
+##### 命令数据包 
 
 ```
 |<-------Protocol Frame Data------->|
@@ -139,7 +149,22 @@ DATA 长度大小不固定，最大长度为 1007。crc32字节索引根据 DATA
 |COMMAND ID|1|1|命令码|
 |COMMAND DATA|2|大小根据具体命令而定|命令数据|
 
-#### 飞控发给机载设备的信息数据包的数据段格式 
+##### 应答数据包
+*应答数据包的帧头部分帧标识（ACK）为1*
+
+```
+|<-Protocol Frame Data->|
+|COMMAND RETURN|ACK DATA|
+```
+
+
+|字段|字节索引|大小（单位 byte）|说明|
+|----|--------|-----------------|----|
+|COMMAND RETURN|0|2|命令执行的返回信息|
+|ACK DATA|2|大小根据具体命令而定。|应答数据|
+
+
+##### 推送数据包
 
 ```
 |<-------Protocol Frame Data------->|
@@ -150,21 +175,16 @@ DATA 长度大小不固定，最大长度为 1007。crc32字节索引根据 DATA
 |----|--------|-----------------|----|
 |COMMAND SET|0|1|命令集|
 |COMMAND ID|1|1|命令码|
-|COMMAND DATA|2|大小根据具体命令而定|飞机状态及传感器等数据|
+|COMMAND DATA|2|大小根据具体命令而定|飞行器状态|
 
-#### 飞控发给机载设备的应答数据包的数据段格式 
+**备注：飞行器状态包含了飞行器姿态、加速度、GPS、高度等信息，具体包含内容通过调参软件配置**
 
-```
-|<-Protocol Frame Data->|
-|COMMAND RETURN|ACK DATA|
-```
+---
 
-|字段|字节索引|大小（单位 byte）|说明|
-|----|--------|-----------------|----|
-|COMMAND RETURN|0|2|命令执行的返回信息|
-|ACK DATA|2|大小根据具体命令而定。|应答数据|
+### 协议通信机制
 
-### 通信会话机制
+
+#### 会话机制
 
 协议设计使用了会话机制，以保证命令数据和应答数据不会因为丢包而出现通信双方异常。通信双方在向对方发起通信会话时，可以根据需要通过设置协议的 SESSION 字段来选择会话方式。协议中设计了三种会话方式。
 
@@ -174,65 +194,115 @@ DATA 长度大小不固定，最大长度为 1007。crc32字节索引根据 DATA
 |方式2|1|发送端需要接收端应答数据，但是可以容忍应答数据丢包|
 |方式3|2-31|发送端需要正确收到接收端的应答包。<br>发送端使用这些session 发送命令数据包时，接收端应答后要保存当前的应答包作为该 session 的应答数据，应答包中包含该命令数据包中的 sequence number 和 session id。如果通信过程中，发送端没有正确收到应答包，可以重新发送该命令数据包，接收端收到后将保存的应答包重新发送回去。<br>下一次，如果发送端使用和上一次相同的 session id，但不同的 sequence number 来发送命令数据包时，接收端会丢弃上一次保存的 session 应答数据，重新保存新的 session 应答数据。|
 
-### API 示例
-
-假设使用以下 C/C++枚举类型表示会话方式：
-
-~~~c
-enum SESSION_MODE {
-  SESSION_MODE1,
-  SESSION_MODE2,
-  SESSION_MODE3
-}
-~~~
-
-命令数据包的回调接口函数定义如下：
-
-    typedef void (*CMD_CALLBACK_FUNC)(const void* p_data, unsigned int n_size)
-    
-假设通信中发送协议数据的函数定义如下：
-
-    unsigned int Linklayer_Send(SESSION_MODE session_mode, const void* p_data, unsigned int n_size, char enc_type, unsigned short ack_timeout, unsigned char retry_time, CMD_CALLBACK_FUNC cmd_callback)
-    
-参数 session_mode：会话方式。<br>
-参数 p_data：指向待发协议数据流的起始地址。<br>
-参数 n_size：协议数据流的大小。<br>
-参数 enc_type：是否采用加密发送。<br>
-参数 ack_timeout：使用会话方式 3 时接收端应答的超时时间，单位 ms。<br>
-参数 retry_time:使用会话方式 3 接收端不应答时，发送端重发的次数。<br>
-参数 cmd_callback:回调函数接口。<br>
-
 **备注：由于会话方式 3 是一种可靠会话方式，开发者在协议链路层实现中应考虑数据丢包后的重发机制，在设计链路层发送接口时应提供超时时间、重发次数等参数。**
+
+#### AES加密机制
+
 
 ---
 
-## 命令集说明 
+## 命令集与命令码
 
-### 命令及权限
+### 命令集
 
-DJI Onboard API 相关的命令分为三大类：
+**Onboard API 命令分为三大命令集**  
 
-|类别|说明|命令集代码|
-|----|----|----------|
-|激活验证类|该命令集包含的 ID 只与激活相关|0x00|
-|飞控接受的控制控制数据的命令集|0x01|
-|飞控外发的数据|飞控外发的命令集|0x02|
+|命令集|命令集代码|说明|
+|------|---------|----|
+|激活验证类|0x00|机载设备查询飞控激活状态完成激活的相关命令|
+|控制命令类|0x01|机载设备完成对飞行器及云台等设备控制的相关命令|
+|推送数据类|0x02|由飞控主动向机载设备的数据，如传感器数据、云台数据等
 
-每类命令有唯一的命令集代码，命令集包含的所有命令有各自的命名码和命令数据。飞控接受的控制命令全部有权限级别。在未来版本中会有更多的控制命令以不同的权限级别开放。目前权限级别如下：
+### 命令码
+命令集包含一系列命令码，根据具体的命令码决定其命令数据。  
 
-|权限级别（API 级别）|权限描述|
-|--------------------|--------|
+*命令需要在相应的权限级别下才能够被执行。当机载设备发出的命令所需的权限级别高于飞控所处权限级别时，该命令将不会被执行。较高的权限级别下可以执行低级别权限命令*
+
+|权限级别|权限描述|
+|:-----:|--------|
 |0|API 激活命令|
 |1|相机和云台的控制命令|
 |2|飞行控制命令|
 
-### 命令集
+*权限级别可通过激活命令改变。飞行器激活前默认权限级别为0*
 
-#### 命令集 0x00 激活验证类 
 
-API 激活验证命令集的所有命令权限级别为 0，即所有用户都可以使用命令集中的命令对飞机进行激活与版本查询等操作。激活 API 通过 DJI Pilot 与 DJI Server 连接，需要手机连接互联网。
+**Onboard API 功能索引**
+<table>
+<tr>
+  <th>命令集</th>
+  <th>命令码</th>
+  <th>功能</th>
+  <th>所需权限级别</th>
+</tr>
+  <td rowspan="2">0x00<br>激活验证类 </td>
+  <td>0x00</td>
+  <td>获取 API 版本</td>
+  <td>0</td>
+</tr>
 
-##### 命令码 0x00 获取 API 版本
+</tr>
+  <td>0x01</td>
+  <td>激活</td>
+  <td>0</td>
+</tr>
+
+<tr>
+  <td rowspan="6">0x01<br>控制命令类 </td>
+  <td>0x00</td>
+  <td>请求获得控制权</td>
+  <td>1</td>
+</tr>
+
+<tr>
+  <td>0x01</td>
+  <td>切换飞行状态</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>0x02</td>
+  <td>查询飞行状态切换结果</td>
+  <td>1</td>
+</tr>
+
+<tr>
+  <td>0x03</td>
+  <td>姿态控制</td>
+  <td>2</td>
+</tr>
+
+<tr>
+  <td>0x0A</td>
+  <td>云台角速度控制</td>
+  <td>1</td>
+</tr>
+
+<tr>
+  <td>0x0B</td>
+  <td>云台角度控制</td>
+  <td>1</td>
+</tr>
+
+<tr>
+  <td rowspan="2">0x02<br>推送数据类</td>
+  <td>0x00</td>
+  <td>推送数据</td>
+  <td>0</td>
+</tr>
+
+<tr>
+  <td>0x01</td>
+  <td>失去控制权</td>
+  <td>0</td>
+</tr>
+</table>
+
+
+## 命令说明
+
+### 命令集 0x00 激活验证类 
+
+#### 命令码 0x00 获取 API 版本
 
 <table>
 <tr>
@@ -242,76 +312,39 @@ API 激活验证命令集的所有命令权限级别为 0，即所有用户都�
   <th>说明</th>
 </tr>
 
-<tr>
+<tr> 
   <td>请求数据</td>
+  <td>0</td>
   <td>1</td>
-  <td>1</td>
-  <td>任意请求数据</td>
+  <td>保留</td>
 </tr>
 
 <tr>
   <td rowspan="3">应答数据</td>
   <td>0</td>
   <td>2</td>
-  <td>返回码<br>0x0000：激活成功<br>0xFF00：命令不支持<br>0xFF01：机载设备无授权<br>0xFF02：机载设备权限不足</td>
+  <td>返回码<ul>
+    <li>0x0000：激活成功</li>
+    <li>0xFF00：命令不支持</li>
+    <li>0xFF01：机载设备无授权</li>
+    <li>0xFF02：机载设备权限不足</li></ul>
 </tr>
 
 <tr>
   <td>2</td>
   <td>4</td>
-  <td>CRC32, 字符串版本的 CRC32</td>
+  <td>API版本号校验值</td>
 </tr>
 
 <tr>
   <td>6</td>
   <td>32</td>
-  <td>不定长，最大长度 32bytes。有效部分到’\0’结尾</td>
+  <td>API版本号</td>
 </tr>
 </table>
 
-推荐接收应答数据的 C/C++结构体：
 
-~~~c
-typedef struct {
-  unsigned short version_ack;
-  unsigned int varsion_crc;
-  signed char version_number[32];
-} version_query_data_t;
-~~~
-
-假设获取 API 版本命令的回调函数为：
-
-~~~c
-void print_sdk_version(const void* p_data, unsigned int n_size) {
-  version_quesry_data_t* p_version = (version_query_data_t*)p_data;
-  if (p_version->version_ack == 0) {
-    printf("%s\n",p_version->version_name);
-  }
-}
-~~~
-
-应用程序中发送请求获取 API 版本命令的操作如下：
-
-~~~c
-unsigned char cmd_buf[3];
-cmd_buf[0] = 0x00; //command set
-cmd_buf[1] = 0x00; //command id
-cmd+buf[2] = 0x00; //command data, an arbitrary number as said above
-Linklayer_Send(SESSION_MODE3,
-                cmd_buf,
-                3,
-                0,
-                200.
-                3,
-                print_sdk_version
-};
-~~~  
-
-以上使用的会话方式 3 进行 API 版本获取请求，飞机收到请求并响应后，应用程序相应的回调函数 print_sdk_version 会执行，并输出版本信息示例如下：
-
-    SDK vX.X XXXX
-
-###### 命令码 0x01 激活 API
+#### 命令码 0x01 激活
 
 <table>
 <tr>
@@ -325,7 +358,7 @@ Linklayer_Send(SESSION_MODE3,
   <td rowspan="4">请求数据</td>
   <td>0</td>
   <td>4</td>
-  <td>appid, 服务器注册时候生成的内容</td>
+  <td>app_id, 服务器注册时候生成的内容</td>
 </tr>
 
 <tr>
@@ -337,152 +370,72 @@ Linklayer_Send(SESSION_MODE3,
 <tr>
   <td>8</td>
   <td>4</td>
-  <td>app_ver，用户程序版本</td>
+  <td>固定值，0x02030A00</td>
 </tr>
 
 <tr>
   <td>12</td>
   <td>32</td>
-  <td>bundle_id， App 的唯一 ID</td>
+  <td>保留</td>
 </tr>
 
 <tr>
-  <td>Return Data</td>
+  <td>应答数据</td>
   <td>0</td>
   <td>2</td>
-  <td>返回码，应答码： <ol start="0"><li>成功</li><li>参数非法，参数长度不匹配</li><li>数据包加密了，未能正确识别</li><li>没有激活过的设备，尝试激活</li><li>DJI App 没有响应，可能是没有连接 DJI App</li><li>DJI App 没有联网</li><li>服务器拒绝，激活失败</li><li>权限级别不够</li></ol></td>
+  <td>返回码：<ul>
+    <li>0x0000：成功</li>
+    <li>0x0001：参数非法</li>
+    <li>0x0002：数据包加密，未能正确识别</li>
+    <li>0x0003：没有激活过的设备，尝试激活</li>
+    <li>0x0004：DJI GO 没有响应 </li>
+    <li>0x0005：DJI GO 没有联网</li>
+    <li>0x0006：服务器拒绝，激活失败</li>
+    <li>0x0007：权限级别不够</li>
+    <li>0x0008：SDK版本错误</li>
+    </ul></td>
 </tr>
 
 </table>
 
-推荐发送命令数据的 C/C++结构体
+### 命令集 0x01 控制命令类 
 
-~~~c
-typedef __attribute_((__packed__)) struct { //1 byte aligned
-  unsigned int app_id;
-  unsigned int ap_api_level;
-  unsigned int app_ver;
-  unsigned char app_bundle_id[32];
-} activation_data_t;
-~~~
+#### 命令码 0x00 请求获得控制权
 
-**备注：文档中介绍的结构体示例都要求 1 字节对齐。开发者需要根据自身的开发编程环境及编程语言保证结构体的对齐方式为 1 字节对齐。**
+<table>
+<tr>
+  <th>数据类型</th>
+  <th>偏移（字节）</th>
+  <th>大小（字节）</th>
+  <th>说明</th>
+</tr>
 
-推荐接收应答数据的 C/C++枚举类型为：
+<tr>
+  <td >请求数据</td>
+  <td>0</td>
+  <td>1</td>
+  <td>请求命令<ul>
+    <li>0x01 ： 请求获得控制权</li>
+    <li>0x00 ： 请求释放控制权</li>
+    </ul></td>
+</tr>
 
-~~~c
-enum ErrorCodeForActivatie {
-  errActivateSuccess,
-  errActivateInvalidParamLength,
-  errActivateDataIsEncrypted,
-  errActivateNewDevice,
-  errActivateDJIAppNotConnected.
-  errActivateDJIAppNoInternet,
-  errActivateDJIServerReject,
-  errActivateLevelError
-};
-~~~
+<tr>
+ <td >应答数据</td>
+  <td>0</td>
+  <td>2</td>
+  <td>返回码 <ul>
+    <li>0x0001：成功释放控制权</li>
+    <li>0x0002：成功获得控制权</li>
+    <li>0x0003：正在获取控制权</li>
+    </ul></td>
+</tr>
 
-假设激活 API 命令的回调函数为：
+</table>
 
-~~~c
-void activation_callback(const void* p_data, unsigned int n_size) {
+飞行器可以接受三种设备的控制输入：遥控器、移动设备、机载设备而。三种设备的控制输入的优先级最大是遥控器，其次是移动设备，优先级最低是机载设备。假设请求获得控制权命令的回调函数为：
 
-}
-~~~
-
-应用程序中发送激活 API 命令的操作如下：
-
-~~~c
-unsigned char com_buf[46];
-activation_data_t activation_request_data;
-//USER TODO...
-//activation_request_data.app_id        =0x00;
-//activation_request_data.app_api_level =0x00;
-//activation_request_data.app_ver       =0x00;
-//memset(activation_request_data.app_bundle_id,0,32)
-cmd_buf[0] = 0x00; //command set
-cmd_buf[1] = 0x01; //command id
-memcpy((void*)&cmd_buf[2], (void*)&activation_request_data),sizeof(activation_data_t));
-Linklayer_Send(SESSION_MODE3,
-                cmd_buf,
-                46,
-                0,
-                200,
-                3,
-                activation_callback
-  );
-~~~
-
-以上使用的会话方式 3 进行激活 API 请求，飞机收到请求并响应后，应用程序相应的回调函数 activation_callback 会执行，可以判断是否激活成功。
-
-###### 命令码 0xFE 透传数据（机载设备至移动设备）
-
-机载设备发送给移动的数据包。最大包大小为 100 字节，带宽约 8KB/s。
-
-|数据类型|偏移（字节）|大小（字节）|说明|
-|--------|------------|------------|----|
-|请求数据|0|1~100|用户自定义数据|
-|应答数据|0|2|返回码，应答码 0：成功|
-
-~~~c
-char cmd_buf[10];
-cmd_buf[0] = 0x00;
-cmd_buf[1] = 0xFE;
-memcpy(&cmd_buf[2], "Hello!", 7);
-Linklayer_Send(SESSION_MODE3,
-                cmd_buf,
-                9,
-                0,
-                200,
-                3,
-                0
-);
-~~~
-
-#### 命令集 0x01 飞行控制类 
-
-##### 命令码 0x00 请求获得控制权
-
-|数据类型|偏移（字节）|大小（字节）|说明|
-|--------|------------|------------|----|
-|请求数据|0|1|<ul><li>1 = 请求获得控制权</li><li>0 = 请求释放控制权</li></ul>|
-|应答数据|0|2|返回码 <ul><li>0x0001：成功释放控制权</li><li>0x0002：成功获得控制权</li><li>0x0003：获得控制权失败</li></ul>
-
-飞机可以接受三种设备的控制输入：遥控器、移动设备、机载设备而。三种设备的控制输入的优先级最大是遥控器，其次是移动设备，优先级最低是机载设备。假设请求获得控制权命令的回调函数为：
-
-~~~c
-void get_control_callback(const void* p_data, unsigned int n_size) {
-
-}
-~~~
-
-应用程序中发送激活 API 命令的操作如下：
-
-~~~c
-unsigned char cmd_buf[46];
-cmd_buf[0] = 0x01; //command set
-cmd_buf[1] = 0x00; //command id
-cmd_buf[2] = 0x01; //get control
-Linklayer_send(SESSION_MODE3,
-                cmd_buf,
-                3,
-                1,
-                200,
-                3,
-                get_control_callback
-);
-~~~
-
-以上使用的会话方式 3 进行获取控制权请求，飞机收到请求并响应后，应用程序相应的回调函数 get_control_callback 会执行，可以判断是否成功。
-
-**备注：获得控制权请求需在激活成功后进行，激活成功后，机载设备和飞机的通信必须采用密文通信。**
-
-##### 命令码 0x01-0x02 状态控制命令
-
-机载设备对飞机的状态控制分为两个阶段。
-
-第一个阶段是发送命令码为 0x01 的状态控制指令。
+#### 命令码 0x01 切换飞行状态
 
 <table>
 <tr>
@@ -502,29 +455,57 @@ Linklayer_send(SESSION_MODE3,
 <tr>
   <td>1</td>
   <td>1</td>
-  <td>控制<ui><li>1 = 请求进入自动返航</li><li>4 = 请求自动起飞</li><li>6 = 请求自动降落</li></ui></td>
+  <td>控制命令<ul>
+    <li>0x01 ： 请求进入自动返航</li>
+    <li>0x04 ： 请求自动起飞</li>
+    <li>0x06 ： 请求自动降落</li>
+    </ul></td>
 </tr>
 
 <tr>
   <td>应答数据</td>
   <td>0</td>
   <td>1</td>
-  <td>返回码<ui><li>0x0001：执行失败</li><li>0x0002：开始执行</li></ui></td>
+  <td>返回码<ul>
+    <li>0x01：执行失败</li>
+    <li>0x02：开始执行</li>
+    </ul></td>
 </tr>
 
 </table>
 
-飞机收到状态控制指令之后会立即发送表明已经收到指令的应答数据包，正常情况飞机返回表示“开始执行”应答数据；但如果飞控正在执行一条之前的指令，则返回“执行失败”的应答数据。飞控开始执行指令之后会尝试切换状态模式，并把执行成功与否的结果保存下来。
+#### 命令码 0x02 查询飞行状态切换结果
+<table>
+<tr>
+  <th>数据类型</th>
+  <th>偏移（字节）</th>
+  <th>大小（字节）</th>
+  <th>说明</th>
+</tr>
 
-第二个阶段是机载设备在发送状态控制指令之后可以开始尝试发送命令码为 0x02 的执行结果查询命令。
+<tr>
+  <td >请求数据</td>
+  <td>0</td>
+  <td>1</td>
+  <td>指令序列号</td>
+</tr>
 
-|数据类型|偏移（字节）|大小（字节）|说明|
-|--------|------------|------------|----|
-|请求数据|0|1|指令序列号|
-|应答数据|0|1|返回码<ui><li>0x0001：执行失败（指令序列号不是当前执行的指令）</li><li>0x0003：指令正在执行</li><li>0x0004：指令执行失败</li><li>0x0005：指令执行成功</li></ui>
 
+<tr>
+  <td>应答数据</td>
+  <td>0</td>
+  <td>1</td>
+  <td>返回码<ul>
+    <li>0x01：执行失败（指令序列号不是当前执行的指令）</li>
+    <li>0x03：指令正在执行</li>
+    <li>0x04：指令执行失败</li>
+    <li>0x05：指令执行成功</li>
+    </ul></td>
+</tr>
 
-##### 命令码 0x03 姿态控制命令
+</table>
+
+#### 命令码 0x03 姿态控制
 
 <table>
 <tr>
@@ -566,25 +547,13 @@ Linklayer_send(SESSION_MODE3,
 </tr>
 
 <tr>
-  <td>Return Data</td>
-  <td>0</td>
-  <td></td>
+  <td>应答数据</td>
+  <td>---</td>
+  <td>---</td>
   <td>无应答数据</td>
 </tr>
 
 </table>
-
-推荐发送姿态控制命令数据的 C/C++结构体
-
-~~~c
-typedef __attribute__((__packed__)) struct { // 1 byte aligned
-  unsigned char ctrl_flag;
-  float roll_or_x;
-  float pitch_or_y;
-  float yaw;
-  float throttle_or_z;
-} control_input;
-~~~
 
 **备注：文档中介绍的结构体示例都要求 1 字节对齐。开发者需要根据自身的开发编程环境及编程语言保证结构体的对齐方式为 1 字节对齐。**
 
@@ -599,11 +568,165 @@ typedef __attribute__((__packed__)) struct { // 1 byte aligned
 **关于位置控制和速度控制相关的指令，请参考附述章节**
 
 
-#### 命令集 0x02 飞控外发的数据 
+#### 命令码 0x0A 云台角速度控制
+<table>
+<tr>
+  <th>数据类型</th>
+  <th>偏移（字节）</th>
+  <th>大小（字节）</th>
+  <th>说明</th>
+</tr>
 
-##### 命令码 0x00 标准数据包
+<tr>
+  <td rowspan="4">请求数据</td>
+  <td>0</td>
+  <td>2</td>
+  <td>Yaw轴角速度</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td>2</td>
+  <td>Roll轴角速度</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td>2</td>
+  <td>Pitch轴角速度</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td>1</td>
+  <td>固定值，0x80</td>
+</tr>
 
-飞控外发的状态数据包可以通过 DJI N1 PC 调参软件配置。可以配置状态包是否发送及发送的频率。
+<tr>
+  <td>应答数据</td>
+  <td>---</td>
+  <td>---</td>
+  <td>无应答数据</td>
+</tr>
+
+</table>
+
+
+<table>
+<tr>
+  <th>数据名称</th>
+  <th>数据类型</th>
+  <th>说明</th>
+</tr>
+
+<tr>
+  <td>Yaw轴角速度</td>
+  <td>int16_t</td>
+  <td>单位0.1度/s，输入范围（[-1800,+1800]）</td>
+</tr>
+
+<tr>
+  <td>Roll轴角速度</td>
+  <td>int16_t</td>
+  <td>单位0.1度/s，输入范围（[-1800,+1800]）</td>
+</tr>
+
+<tr>
+  <td>Pitch轴角速度</td>
+  <td>int16_t</td>
+  <td>单位0.1度/s，输入范围（[-1800,+1800]）</td>
+</tr>
+</table>
+
+#### 命令码 0x0B 云台角度控制
+<table>
+<tr>
+  <th>数据类型</th>
+  <th>偏移（字节）</th>
+  <th>大小（字节）</th>
+  <th>说明</th>
+</tr>
+
+<tr>
+  <td rowspan="5">请求数据</td>
+  <td>0</td>
+  <td>2</td>
+  <td>Yaw轴角度</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td>2</td>
+  <td>Roll轴角度</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td>2</td>
+  <td>Pitch轴角度</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td>1</td>
+  <td>属性控制字节<ul>
+    <li>bit 0：控制模式选择位</li>
+        <ul>0 ： 增量控制，角度基准为当前云台所处位置</ul>
+        <ul>1 ： 绝对控制，角度基准为东北地坐标系</ul>
+    <li>bit 1：Yaw轴命令控制失效位 
+        <ul>0 ： 云台Yaw角度运动到命令位置 </ul>
+        <ul>1 ： 云台Yaw将维持上一时刻状态 </ul>
+    <li>bit 2：Roll轴命令控制失效位，同bit[1]描述</li>
+    <li>bit 3：Pitch轴命令控制失效位，同bit[1]描述</li>
+    <li>bit [4:7]：保留，必须为0</li>
+    </ul></td>
+
+<tr>
+  <td>7</td>
+  <td>1</td>
+  <td>命令完成时间</td>
+</tr>
+</tr>
+
+<tr>
+  <td>应答数据</td>
+  <td>---</td>
+  <td>---</td>
+  <td>无应答数据</td>
+</tr>
+</table>
+
+<table>
+<tr>
+  <th>数据名称</th>
+  <th>数据类型</th>
+  <th>说明</th>
+</tr>
+
+<tr>
+  <td>Yaw轴角度</td>
+  <td>int16_t</td>
+  <td>单位0.1度，输入范围 [-3200~+3200]</td>
+</tr>
+
+<tr>
+  <td>Roll轴角度</td>
+  <td>int16_t</td>
+  <td>单位0.1度，输入范围 [-350~+350]</td>
+</tr>
+
+<tr>
+  <td>Pitch轴角度</td>
+  <td>int16_t</td>
+  <td>单位0.1度，输入范围 [-900~+300]</td>
+</tr>
+
+<tr>
+  <td>命令完成时间</td>
+  <td>uint8_t</td>
+  <td>单位0.1s，例如20代表云台在2s内匀速转动至命令位置<br>建议用户控制速度不超过400度/秒</td>
+</tr>
+</table>
+
+### 命令集 0x02 推送数据类
+
+#### 命令码 0x00 推送数据
+
+飞控外发的状态数据包可以通过 DJI N1 PC 调参软件配置。可以配置状态包是否发送及发送的频率。  
 
 <table>
 <tr>
@@ -617,7 +740,21 @@ typedef __attribute__((__packed__)) struct { // 1 byte aligned
   <td rowspan="13">推送数据</td>
   <td>0</td>
   <td>2</td>
-  <td>状态包存在标志位<br>bit 0：时间戳包存在标志<br>bit 1：姿态四元素包存在标志<br>bit 2：Ground 坐标系下的加速度包存在标志<br>bit 3：Ground 坐标系下的速度包存在标志<br>bit 4：Body 坐标系的角速度包存在标志<br>bit 5：GPS 位置、海拔（气压计数值）、相对地面高度、健康度包存在标志<br>bit 6：磁感计数值包存在标志<br>bit 7：遥控器通道值包存在标志<br>bit 8：云台 roll、pitch、yaw 数据包存在标志<br>bit 9：飞行状态包存在标志<br>bit 10：剩余电池百分比包存在标志<br>bit 11：控制设备包存在标志<br>bit [12:15]：保留不用<br><br>标志位为 1 表示标准数据包中存在该状态包</td>
+  <td>状态包存在标志位，标志位为 1 表示标准数据包中存在该状态包<ul>
+    <li>bit 0：时间戳包存在标</li>
+    <li>bit 1：姿态四元素包存在标志</li>
+    <li>bit 2：Ground 坐标系下的加速度包存在标志</li>
+    <li>bit 3：Ground 坐标系下的速度包存在标志</li>
+    <li>bit 4：Body 坐标系的角速度包存在标志</li>
+    <li>bit 5：GPS 位置、海拔（气压计数值）、相对地面高度、健康度包存在标志</li>
+    <li>bit 6：磁感计数值包存在标志</li>
+    <li>bit 7：遥控器通道值包存在标志</li>
+    <li>bit 8：云台 roll、pitch、yaw 数据包存在标志</li>
+    <li>bit 9：飞行状态包存在标志</li>
+    <li>bit 10：剩余电池百分比包存在标志</li>
+    <li>bit 11：控制设备包存在标志</li>
+    <li>bit [12:15]：保留不用</li>
+    </td>></ul>
 </tr>
 
 <tr>
@@ -691,13 +828,6 @@ typedef __attribute__((__packed__)) struct { // 1 byte aligned
   <td>1</td>
   <td>控制设备</td>
 </tr>
-
-<tr>
-  <td>Return Data</td>
-  <td>0</td>
-  <td></td>
-  <td>无应答数据</td>
-</tr>
 </table>
 
 第一个状态包是时间戳包，之后的状态包偏移字节是不固定的，根据该状态包之前的状态包是否发送而定。
@@ -705,9 +835,6 @@ typedef __attribute__((__packed__)) struct { // 1 byte aligned
 标准数据包中各个状态包的数据段含义如下表所示：
 
 <table>
-<tr>
-  <td colspan="5" align="middle">标志数据包</td>
-</tr>
 <tr>
   <td>状态包</td>
   <td>状态包字段</td>
@@ -724,10 +851,10 @@ typedef __attribute__((__packed__)) struct { // 1 byte aligned
   <td>100Hz</td>
 </tr>
 <tr>
-  <td rowspan="4">姿态四元素</td>
+  <td rowspan="4">姿态四元数</td>
   <td>q0</td>
   <td>float32</td>
-  <td rowspan="4">姿态四元数（从 Ground 坐标系转到 Body 坐标系）</td>
+  <td rowspan="4">姿态四元数<br>（从 Ground 坐标系转到 Body 坐标系）</td>
   <td rowspan="4">100Hz</td>
 </tr>
 <tr>
@@ -744,10 +871,10 @@ typedef __attribute__((__packed__)) struct { // 1 byte aligned
 </tr>
 
 <tr>
-  <td rowspan="3">Ground 坐标系下的加速度</td>
+  <td rowspan="3">加速度</td>
   <td>agx</td>
   <td>float32</td>
-  <td rowspan="3"></td>
+  <td rowspan="3">Ground 坐标系</td>
   <td rowspan="3">100Hz</td>
 </tr>
 <tr>
@@ -760,10 +887,10 @@ typedef __attribute__((__packed__)) struct { // 1 byte aligned
 </tr>
 
 <tr>
-  <td rowspan="3">Ground 坐标系下的速度</td>
+  <td rowspan="3">速度</td>
   <td>vgx</td>
   <td>float32</td>
-  <td rowspan="3"></td>
+  <td rowspan="3">Ground 坐标系</td>
   <td rowspan="3">100Hz</td>
 </tr>
 <tr>
@@ -776,10 +903,10 @@ typedef __attribute__((__packed__)) struct { // 1 byte aligned
 </tr>
 
 <tr>
-  <td rowspan="3">Body 坐标系下的角速度</td>
+  <td rowspan="3">角速度</td>
   <td>wx</td>
   <td>float32</td>
-  <td rowspan="3"></td>
+  <td rowspan="3">Body 坐标系</td>
   <td rowspan="3">100Hz</td>
 </tr>
 <tr>
@@ -792,10 +919,10 @@ typedef __attribute__((__packed__)) struct { // 1 byte aligned
 </tr>
 
 <tr>
-  <td rowspan="5">GPS 位置、海拔、相对地面高度、信号健康度</td>
+  <td rowspan="5">GPS及高度</td>
   <td>longti</td>
   <td>double</td>
-  <td rowspan="2">GPS 位置</td>
+  <td rowspan="2">GPS 位置（弧度）</td>
   <td rowspan="5">100Hz</td>
 </tr>
 <tr>
@@ -810,7 +937,7 @@ typedef __attribute__((__packed__)) struct { // 1 byte aligned
 <tr>
   <td>height</td>
   <td>float32</td>
-  <td>相对地面高度（超声波和气压计融合）</td>
+  <td>相对地面高度（超声波和气压计融合）（米）</td>
 </tr>
 <tr>
   <td>health_flag</td>
@@ -821,21 +948,21 @@ typedef __attribute__((__packed__)) struct { // 1 byte aligned
 <tr>
   <td rowspan="3">磁感计</td>
   <td>mx</td>
-  <td>float32</td>
+  <td>int16_t</td>
   <td rowspan="3">磁感计数值</td>
   <td rowspan="3">0Hz</td>
 </tr>
 <tr>
   <td>my</td>
-  <td>float32</td>
+  <td>int16_t</td>
 </tr>
 <tr>
   <td>mz</td>
-  <td>float32</td>
+  <td>int16_t</td>
 </tr>
 
 <tr>
-  <td rowspan="6">遥控器数据</td>
+  <td rowspan="6">遥控器</td>
   <td>roll</td>
   <td>int16_t</td>
   <td>遥控通道 roll 数据</td>
@@ -868,7 +995,7 @@ typedef __attribute__((__packed__)) struct { // 1 byte aligned
 </tr>
 
 <tr>
-  <td rowspan="3">云台状态数据</td>
+  <td rowspan="3">云台状态</td>
   <td>roll</td>
   <td>float32</td>
   <td>云台 roll 数据</td>
@@ -895,129 +1022,57 @@ typedef __attribute__((__packed__)) struct { // 1 byte aligned
 
 <tr>
   <td>电量</td>
-  <td>status</td>
+  <td>battery</td>
   <td>uint8_t</td>
   <td>剩余电量百分比</td>
   <td>1Hz</td>
 </tr>
 
 <tr>
-  <td>控制设备</td>
+  <td>控制信号源</td>
   <td>status</td>
   <td>uint8_t</td>
-  <td>控制设备<br>0：遥控器<br>1：移动设备<br>2：机载设备</td>
+  <td>控制设备<ul>
+     <li>0x00 ： 遥控器</li>
+     <li>0x01 ： 移动设备</li>
+     <li>0x02 ： 机载设备</li>
+     </ul></td>
   <td>0Hz</td>
 </tr>
 </table>
 
-机载设备端可以按照如下 C/C++程序示例接收飞控外发的包含飞机状态的标准数据包
-
-~~~c
-typedef struct {
-  float q0;
-  float q1;
-  float q2;
-  float q3;
-}sdk_q_data_t;
-
-typedef struct {
-  float x;
-  float y;
-  float z;
-}sdk_common_data_t;
-
-typedef struct {
-  double lati;
-  double longti;
-  float alti;
-  float height;
-  short health_flag;
-}sdk_gps_height_data_t;
-
-typedef struct {
-  signed short roll;
-  signed short pitch;
-  signed short yaw;
-  signed short throttle;
-  signed short mode;
-  signed short gear;
-}sdk_rc_data_t;
-
-typedef struct {
-  signed short x;
-  signed short y;
-  signed short z;
-}sdk_mag_data_t;
-
-typedef __attribute_((__packed__)) struct { //1 byte aligned
-  unsigned int time_stamp;
-  sdk_q_data_t          q;
-  sdk_common_data_t     a;
-  sdk_common_data_t     v;
-  sdk_common_data_t     w;
-  sdk_gps_height_data   pos;
-  sdk_mag_data_t        msg;
-  sdk_rc_data_t         rc;
-  sdk_common_data_t     gimbal;
-  unsigned char         status;
-  unsigned char         battery_remaining_capacity;
-  unsigned char         ctrl_device;
-}sdk_std_data_t;
-
-#define _recv_std_data(_flag, _enable, _data, _buf, _datalen) \
-    if(_flag * _enable) { \
-      memcpy ((unsigned char*) &(_data), (unsigned char*)(_buf)+(_datalen), sizeof(_data)); \
-      _datalen += sizeof(_data); \
-    }
-
-static sdk_std_data_t recv_sdk_std_data = {0};
-
-void recv_std_package (unsigned char* pbuf, unsigned int len) {
-  unsigned short *valid_flag = (unsigned short*) pbuf;
-  unsigned short data_len = 2;
-  
-  _recv_std_data(*valid_flag, 0x0001, recv_sdk_std_data.time_stamp,                 pbuf,data_len);
-  _recv_std_data(*valid_flag, 0x0002, recv_sdk_std_data.q,                          pbuf,data_len);
-  _recv_std_data(*valid_flag, 0x0004, recv_sdk_std_data.a,                          pbuf,data_len);
-  _recv_std_data(*valid_flag, 0x0008, recv_sdk_std_data.v,                          pbuf,data_len);
-  _recv_std_data(*valid_flag, 0x0010, recv_sdk_std_data.w,                          pbuf,data_len);
-  _recv_std_data(*valid_flag, 0x0020, recv_sdk_std_data.pos,                        pbuf,data_len);
-  _recv_std_data(*valid_flag, 0x0040, recv_sdk_std_data.mag,                        pbuf,data_len);
-  _recv_std_data(*valid_flag, 0x0001, recv_sdk_std_data.rc,                         pbuf,data_len);
-  _recv_std_data(*valid_flag, 0x0001, recv_sdk_std_data.gimbal,                     pbuf,data_len);
-  _recv_std_data(*valid_flag, 0x0001, recv_sdk_std_data.statis,                     pbuf,data_len);
-  _recv_std_data(*valid_flag, 0x0001, recv_sdk_std_data.battery_remaining_capacity, pbuf,data_len);
-  _recv_std_data(*valid_flag, 0x0001, recv_sdk_std_data.ctrl_device,                pbuf,data_len);
-}
-~~~
-
-**备注：文档中介绍的结构体示例都要求 1 字节对齐。开发者需要根据自身的开发编程环境及编程语言保证结构体的对齐方式为 1 字节对齐。**
-
 **对数据内容的进一步说明**
 
-_alti_是气压计和IMU融合的结果，单位为气压值；_height_是超声波、气压计和IMU融合的结果，表示相对起飞点的高度，单位是米。如果飞行器上没有超声波传感器（没有安装Guidance），或者有超声波传感器但是相对地面的距离超过3米（距离过远时超声波测量值不稳定），则_height_主要由气压计提供，因此在室内环境中可能会出现超过3米时飞行器因为气压计不稳突然飘动的问题，使用时一定要注意。
+_alti_是，单位为气压值；_height_是超声波、气压计和IMU融合的结果，表示相对起飞点的高度，单位是米。如果飞行器上没有超声波传感器（没有安装Guidance），或者有超声波传感器但是相对地面的距离超过3米（距离过远时超声波测量值不稳定），则_height_主要由气压计提供，因此在室内环境中可能会出现超过3米时飞行器因为气压计不稳突然飘动的问题，使用时一定要注意。
 
-因为_height_是相对起飞点的高度，因此如果上电后不起飞，这个数值不会刷新成有意义的值。
 
-_GPS_ 信息中的 _lati_, _longti_ 均为弧度制。
+#### 命令码 0x01 失去控制权
+失去控制权数据包会在机载控制权被夺去的时由飞控主动推送。  
+机载设备的控制权优先级最低，其控制权可能在任何时候被夺去。
 
-IMU外发的加速度和角速度都是经过滤波算法处理的结果，我们会在未来的版本中加入标志位允许IMU外发传感器的原始数据。
+<table>
+<tr>
+  <th>数据类型</th>
+  <th>偏移（字节）</th>
+  <th>大小（字节）</th>
+  <th>说明</th>
+</tr>
 
-##### 命令码 0x01 控制权归属切换
+<tr>
+  <td >请求数据</td>
+  <td>0</td>
+  <td>1</td>
+  <td>固定值，0x04</td>
+</tr>
 
-机载设备的控制权优先级最低，其控制权可能在任何时候被夺去。控制权归属切换数据包会在机载控制权被夺去的时由飞控主动推送。
+<tr>
+ <td >应答数据</td>
+  <td>---</td>
+  <td>---</td>
+  <td>无应答数据</td>
+</tr>
 
-|数据类型|偏移（字节）|大小（字节）|说明|
-|--------|------------|------------|----|
-|请求数据|0|1|数据值固定为 0x04|
-|应答数据|0|0|无应答数据|
+</table>
 
-##### 命令码 0x02 透传数据（移动设备至机载设备）
 
-移动设备发送给机载设备的数据包。最大包大小为 100 字节，带宽约 1KB/s。
-
-|数据类型|偏移（字节）|大小（字节）|说明|
-|--------|------------|------------|----|
-|请求数据|0|1~100|用户自定义数据|
-|应答数据|0|0|无应答数据|
 
