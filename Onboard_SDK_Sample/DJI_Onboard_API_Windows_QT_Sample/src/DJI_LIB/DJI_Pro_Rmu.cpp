@@ -8,9 +8,9 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <pthread.h>
 #include "DJI_Pro_Rmu.h"
 
-#include <pthread.h>
 static pthread_mutex_t mmu_lock = PTHREAD_MUTEX_INITIALIZER;
 
 static MMU_Tab DJI_MMU_Tab[MMU_TABLE_NUM];
@@ -72,6 +72,7 @@ void Free_Memory(MMU_Tab *mmu_tab)
 
 void Display_Memory_Info(void)
 {
+#ifdef SYS_MEM_DEBUG
 	unsigned char i,j;
 	unsigned char mmu_tab_used_num = 0;
 	unsigned char mmu_tab_used_index[MMU_TABLE_NUM];
@@ -128,18 +129,19 @@ void Display_Memory_Info(void)
 
 	}
 
-	printf("<S=%08X L=%d I=%d E=%08X>\n",(unsigned long)DJI_MMU_Tab[mmu_tab_used_index[mmu_tab_used_num - 1]].pmem,
+    printf("<S=%08X L=%d I=%d E=%08X>\n",(unsigned long)DJI_MMU_Tab[mmu_tab_used_index[mmu_tab_used_num - 1]].pmem,
 			DJI_MMU_Tab[mmu_tab_used_index[mmu_tab_used_num - 1]].mem_size,
 			DJI_MMU_Tab[mmu_tab_used_index[mmu_tab_used_num - 1]].tab_index,
 			(unsigned long)(DJI_MMU_Tab[mmu_tab_used_index[mmu_tab_used_num - 1]].pmem +
 			DJI_MMU_Tab[mmu_tab_used_index[mmu_tab_used_num - 1]].mem_size));
+#endif
 }
 
 MMU_Tab * Request_Memory(unsigned short size)
 {
 	unsigned int mem_used = 0;
 	unsigned char i;
-	unsigned char j;
+    unsigned char j = 0;
 	unsigned char mmu_tab_used_num = 0;
 	unsigned char mmu_tab_used_index[MMU_TABLE_NUM];
 
@@ -165,7 +167,6 @@ MMU_Tab * Request_Memory(unsigned short size)
 
 	if(STATIC_MEMORY_SIZE < (mem_used + size))
 	{
-		Free_Memory_Lock();
 		return (MMU_Tab *)0;
 	}
 
@@ -174,7 +175,6 @@ MMU_Tab * Request_Memory(unsigned short size)
 		DJI_MMU_Tab[1].pmem = DJI_MMU_Tab[0].pmem;
 		DJI_MMU_Tab[1].mem_size = size;
 		DJI_MMU_Tab[1].usage_flag = 1;
-		Free_Memory_Lock();
 		return &DJI_MMU_Tab[1];
 	}
 
@@ -244,11 +244,9 @@ MMU_Tab * Request_Memory(unsigned short size)
 
 				DJI_MMU_Tab[i].mem_size = size;
 				DJI_MMU_Tab[i].usage_flag = 1;
-				Free_Memory_Lock();
 				return &DJI_MMU_Tab[i];
 			}
 		}
-		Free_Memory_Lock();
 		return (MMU_Tab *)0;
 	}
 
@@ -261,7 +259,6 @@ MMU_Tab * Request_Memory(unsigned short size)
 
 			DJI_MMU_Tab[i].mem_size = size;
 			DJI_MMU_Tab[i].usage_flag = 1;
-			Free_Memory_Lock();
 			return &DJI_MMU_Tab[i];
 		}
 	}

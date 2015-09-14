@@ -1,4 +1,4 @@
-# DJI Onboard API Quick Start 
+# DJI Onboard API Quickstart 
 
 *If you come across any mistakes or bugs in this tutorial, please let us know using a Github issue, a post on the DJI forum, or email. Please feel free to send us Github pull request and help us fix any issues. However, all pull requests related to document must follow the [document style](https://github.com/dji-sdk/Onboard-SDK/issues/19)*
 

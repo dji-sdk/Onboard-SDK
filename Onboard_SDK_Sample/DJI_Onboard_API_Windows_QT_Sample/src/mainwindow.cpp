@@ -1,25 +1,19 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "DJI_Pro_Test.h"
 #include <stdint.h>
 #include <QSerialPortInfo>
 #include <QtSerialPort/QSerialPort>
 #include <QDebug>
-#include <DJI_Pro_Hw.h>
 #include <QMessageBox>
-#include "DJI_Pro_Hw.h"
-#include "DJI_Pro_Codec.h"
 #include <QTimer>
 #include  "about.h"
-#include <DJI_Pro_Test.h>
 #include <QSettings>
 #include <QFile>
 #include <QFileDialog>
 #include <QByteArray>
-#include "DJI_Pro_App.h"
-extern int activation_callback_flag;
-extern activation_data_t activation_msg;
-extern const char *key;
+#include "DJI_Pro_Sample.h"
+
+MainWindow *MainWindow::mainwindow_object = (MainWindow*)NULL;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -29,7 +23,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     time = new QTimer(this);
     TakeoffDelay = new QTimer(this);
-    Activation = new QTimer(this);
     keybuf = new QByteArray(DEFAULT_KEY);
 
     foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts()) {
@@ -45,10 +38,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->btn_nav_open_close->setText(NAV_OPEN);
     connect(time, SIGNAL(timeout()), this, SLOT(Timeout_handle()));
     connect(TakeoffDelay, SIGNAL(timeout()), this, SLOT(TakeoffDelay_handle()));
-    connect(Activation, SIGNAL(timeout()), this, SLOT(Activation_handle()));
     connect(ui->actionAbout, SIGNAL(triggered()),this, SLOT(btn_About()));
-    time->start(20);
-
+    time->start(50);
 
     QFile *f = new QFile("Setting.ini");
     if(f->open(QIODevice::ReadOnly | QIODevice::Text))
@@ -77,29 +68,58 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+MainWindow* MainWindow::Create_Instance(void)
+{
+    if(mainwindow_object == (MainWindow*)NULL)
+    {
+        mainwindow_object = new MainWindow;
+    }
+    return mainwindow_object;
+}
+
+MainWindow* MainWindow::Get_Instance(void)
+{
+    return Create_Instance();
+}
+
+void MainWindow::MainWindow_Activate_Callback(unsigned short res)
+{
+    char result[][50]={{"SDK_ACTIVATION_SUCCESS"},{"SDK_ACTIVE_PARAM_ERROR"},{"SDK_ACTIVE_DATA_ENC_ERROR"},\
+                       {"SDK_ACTIVE_NEW_DEVICE"},{"SDK_ACTIVE_DJI_APP_NOT_CONNECT"},{" SDK_ACTIVE_DIJ_APP_NO_INTERNET"},\
+                       {"SDK_ACTIVE_SERVER_REFUSED"},{"SDK_ACTIVE_LEVEL_ERROR"},{"SDK_ACTIVE_SDK_VERSION_ERROR"}};
+
+    if(res >= 0 && res < 9)
+    {
+        MainWindow::Get_Instance()->ui->label_Activation_Status->setText(*(result+res));
+    }
+    else
+    {
+        MainWindow::Get_Instance()->ui->label_Activation_Status->setText("Unkown ERROR");
+    }
+}
+
 void MainWindow::on_BtnActivation_clicked()
 {
-    activation_msg.app_id = ui->AppID->text().toInt();
-    activation_msg.app_api_level = ui->AppLevel->currentText().toInt();
-    activation_msg.app_ver = SDK_VERSION;
-    memcpy(activation_msg.app_bundle_id,"1234567890123456789012", 32);
+    user_act_data.app_id = ui->AppID->text().toInt();
+    user_act_data.app_api_level = ui->AppLevel->currentText().toInt();
+    user_act_data.app_ver = SDK_VERSION;
     *keybuf = ui->AppKey->text().toLocal8Bit();
-    key = keybuf->data();
-    printf("key = %s\n",key);
+    user_act_data.app_key = keybuf->data();
     Save_Setting();
-    DJI_Onboard_API_Activation();
-    Activation->start(2000);
+    ui->label_Activation_Status->setText("Activating,Waiting...");
+    DJI_Pro_Activate_API(&user_act_data,MainWindow::MainWindow_Activate_Callback);
 }
 
 void MainWindow::on_btn_open_serialport_clicked()
 {
+    DJI_Pro_Hw *hw_instance = DJI_Pro_Hw::Pro_Hw_Get_Instance();
     if(OPEN_SERIAL == ui->btn_open_serialport->text())
     {
 
-        if(true == Pro_Hw.Pro_Hw_Setup(ui->serial_comboBox->currentText(),\
+        if(true == hw_instance->Pro_Hw_Setup(ui->serial_comboBox->currentText(),\
                                               ui->baud_comboBox->currentText().toInt()))
          {
-             Pro_Hw.start();
+             hw_instance->start();
              //QMessageBox::information(this, tr(" "), "Port Open Succeed", QMessageBox::Ok);
              ui->btn_open_serialport->setIcon(QIcon(":/icon/Images/ok.png"));
              ui->btn_open_serialport->setText(CLOSE_SERIAL);
@@ -112,7 +132,7 @@ void MainWindow::on_btn_open_serialport_clicked()
     }
     else if(CLOSE_SERIAL == ui->btn_open_serialport->text())
     {
-        Pro_Hw.Pro_Hw_Close();
+        hw_instance->Pro_Hw_Close();
         ui->btn_open_serialport->setText(OPEN_SERIAL);
         ui->btn_open_serialport->setIcon(QIcon(":/icon/Images/err.png"));
     }
@@ -123,35 +143,35 @@ void MainWindow::on_btn_nav_open_close_clicked()
 {
     if(NAV_OPEN == ui->btn_nav_open_close->text())
     {
-        DJI_Onboard_API_Control(1);
+        DJI_Pro_Control_Management(1,NULL);
         ui->btn_nav_open_close->setText(NAV_CLOSE);
     }
     else
     {
-       DJI_Onboard_API_Control(0);
+       DJI_Pro_Control_Management(0,NULL);
        ui->btn_nav_open_close->setText(NAV_OPEN);
     }
 }
 
 void MainWindow::on_btn_Takeoff_clicked()
 {
-   DJI_Onboard_API_UAV_Control(4);
-   ui->btn_Takeoff->setEnabled(false);
-   ui->btn_Landing->setEnabled(false);
-   TakeoffDelay->start(13*1000);
+    DJI_Pro_Status_Ctrl(4,0);
+    ui->btn_Takeoff->setEnabled(false);
+    ui->btn_Landing->setEnabled(false);
+    TakeoffDelay->start(10*1000);
 }
 
 void MainWindow::on_btn_Landing_clicked()
 {
-    DJI_Onboard_API_UAV_Control(6);
+    DJI_Pro_Status_Ctrl(6,0);
     ui->btn_Takeoff->setEnabled(false);
     ui->btn_Landing->setEnabled(false);
-    TakeoffDelay->start(12*1000);
+    TakeoffDelay->start(10*1000);
 }
 
 void MainWindow::on_btn_GoHome_clicked()
 {
-    DJI_Onboard_API_UAV_Control(1);
+    DJI_Pro_Status_Ctrl(1,0);
 }
 
 void MainWindow::on_btn_update_com_clicked()
@@ -167,79 +187,38 @@ void MainWindow::on_btn_update_com_clicked()
        }
 }
 
-void MainWindow::on_btn_simpletask_clicked()
-{
-    int ret = QMessageBox::warning(this, tr("Warning"),
-                                   tr("Attention for flight safety.\n"
-                                      "Make sure you are in a wide area if you are not using simulator."),
-                                   QMessageBox::Ok | QMessageBox::Cancel);
-    if(QMessageBox::Ok == ret)
-    {
-        DJI_Onboard_API_Simple_Task(4);
-        printf("OK\n");
-    }
-    if(QMessageBox::Cancel == ret)
-    {
-        printf("Cancel\n");
-    }
-}
-
 void MainWindow::Timeout_handle()
 {
-    unsigned char battery, actavation_status, ctrl_device;
-    statusBar()->showMessage(tr("RX: %1")
-                                   .arg(Pro_Hw.load_con));
+    static int count0 = 0;
+    static int count1 = 0;
+    unsigned char bat = 0;
+    api_ctrl_info_data_t ctrl_info;
 
-    DJI_Get_Info(&battery, &actavation_status, &ctrl_device);
+    char info[][32]={{"Remote controller"},
+                     {"Mobile device"},
+                     {"Onboard device"},
+                    };
 
-    if(battery == 0xFF)
-        ui->label_Battery_Capacity->setText("invalid");
-    else
+    statusBar()->showMessage(
+                tr("RX: %1").arg(DJI_Pro_Hw::Pro_Hw_Get_Instance()->load_con));
+
+    /* refresh battery capacity per second */
+    if(++ count0 == 20)
     {
         QString str;
-        str.setNum((uint)battery);
+        DJI_Pro_Get_Bat_Capacity(&bat);
+        str.setNum((uint)bat);
         str += '%';
         ui->label_Battery_Capacity->setText(str);
+        count0 = 0;
     }
 
-
-    if(ctrl_device == 0x0)
-        ui->label_Control_Device->setText("RC");
-    else if(ctrl_device == 0x1)
-        ui->label_Control_Device->setText("APP");
-    else if(ctrl_device == 0x2)
-        ui->label_Control_Device->setText("Third party onboard device");
-    else
-        ui->label_Control_Device->setText("unknown");
-
-
-    if(activation_callback_flag!=0)
+    /* refresh ctrl info per 500ms */
+    if(++ count1 == 10)
     {
-        if(1==activation_callback_flag)
-        {
-            char result[][50]={{"SDK_ACTIVATION_SUCCESS"},{"SDK_ACTIVE_PARAM_ERROR"},{"SDK_ACTIVE_DATA_ENC_ERROR"},\
-                               {"SDK_ACTIVE_NEW_DEVICE"},{"SDK_ACTIVE_DJI_APP_NOT_CONNECT"},{" SDK_ACTIVE_DIJ_APP_NO_INTERNET"},\
-                               {"SDK_ACTIVE_SERVER_REFUSED"},{"SDK_ACTIVE_LEVEL_ERROR"},{"SDK_ACTIVE_SDK_VERSION_ERROR"}};
-             ui->label_Activation_Status->setText(*(result+actavation_status));
-             if(3 != actavation_status)
-             {
-                 Activation->stop();
-                 QMessageBox::information(NULL, "Warning", *(result+actavation_status), QMessageBox::Ok);
-
-             }
-
-
-             activation_callback_flag=0;
-             if(3 != actavation_status)
-             {
-                 Activation->stop();
-             }
-        }
-        else
-        {
-            QMessageBox::warning(NULL, "Warning", "Activation Failed", QMessageBox::Ok);
-            activation_callback_flag=0;
-        }
+        DJI_Pro_Get_CtrlInfo(&ctrl_info);
+        ui->label_Control_Device->setText(*(info + ctrl_info.cur_ctrl_dev_in_navi_mode));
+        count1 = 0;
     }
 }
 
@@ -250,11 +229,6 @@ void MainWindow::TakeoffDelay_handle()
     ui->btn_Landing->setEnabled(true);
 }
 
-
-void MainWindow::Activation_handle()
-{
-    DJI_Onboard_API_Activation();
-}
 void MainWindow::btn_About()
 {
     About about;
@@ -320,9 +294,9 @@ void MainWindow::Save_Setting()
     QSettings *configIni = new QSettings(SETTING_FILENAMES, QSettings::IniFormat);
 
     configIni->beginGroup("user");
-    configIni->setValue("AppID", activation_msg.app_id);
-    configIni->setValue("Key",key);
-    configIni->setValue("ApiLevel", activation_msg.app_api_level);
+    configIni->setValue("AppID", user_act_data.app_id);
+    configIni->setValue("Key",user_act_data.app_key);
+    configIni->setValue("ApiLevel", user_act_data.app_api_level);
     configIni->endGroup();
 
     configIni->setValue("Check",Get_Check(configIni));
@@ -330,7 +304,28 @@ void MainWindow::Save_Setting()
     delete configIni;
 }
 
-void MainWindow::on_btn_gimbaltask_clicked()
+void MainWindow::on_btn_gimbal_ctrl_clicked()
 {
-   DJI_Onboard_API_Gimbal_Task();
+    if(DJI_Sample_Gimbal_Ctrl()< 0)
+    {
+        QMessageBox::warning(this,tr("Warning"),tr("Please waiting current sample finish"),QMessageBox::Ok);
+    }
+}
+
+void MainWindow::on_btn_atti_ctrl_clicked()
+{
+    int ret = QMessageBox::warning(this, tr("Warning"),
+                                   tr("Attention for flight safety.\n"
+                                      "Make sure you are in a wide area if you are not using simulator."),
+                                   QMessageBox::Ok | QMessageBox::Cancel);
+    if(QMessageBox::Ok == ret)
+    {
+        if(DJI_Sample_Atti_Ctrl() < 0)
+        {
+            QMessageBox::warning(this,tr("Warning"),tr("Please waiting current sample finish"),QMessageBox::Ok);
+        }
+    }
+    if(QMessageBox::Cancel == ret)
+    {
+    }
 }

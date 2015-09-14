@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>359</width>
-    <height>391</height>
+    <width>372</width>
+    <height>389</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -66,16 +66,16 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="btn_simpletask">
+      <widget class="QPushButton" name="btn_atti_ctrl">
        <property name="text">
-        <string>Simple Task</string>
+        <string>Attitude Ctrl Sample</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="btn_gimbaltask">
+      <widget class="QPushButton" name="btn_gimbal_ctrl">
        <property name="text">
-        <string>Gimbal Task</string>
+        <string>Gimbal Ctrl Sample</string>
        </property>
       </widget>
      </item>
@@ -318,7 +318,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>359</width>
+     <width>372</width>
      <height>23</height>
     </rect>
    </property>
