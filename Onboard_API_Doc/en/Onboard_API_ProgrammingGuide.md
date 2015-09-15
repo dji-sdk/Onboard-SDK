@@ -8,16 +8,16 @@ DJI offers two powerful APIs for developers to create custom applications: the M
 
 This documentation discusses the protocol programming when communicating with MATRICE 100. We recommend developers follow quick start first to run our sample code before reading this programming guide.
 
+**There is not any content about transparent transport.**
 ## Protocol Description
 
 ### Protocol Frame Format
 
-```
+   ```
    |<--------------Protocol Frame Header---------------->|<--Protocol Frame Data-->|<--Protocol Frame Checksum-->|
-   |SOF|LEN|VER|SESSION|A|RES0|PADDING|ENC|RES1|SEQ|CRC16|          DATA           |            CRC32            |
-   
-```
- 
+   |SOF|LEN|VER|SESSION|ACK|RES0|PADDING|ENC|RES1|SEQ|CRC16|          DATA           |            CRC32            |
+   ```
+
 ### Protocol Frame Explanation
 
 <table>
@@ -56,9 +56,12 @@ This documentation discusses the protocol programming when communicating with MA
 </tr>
 
 <tr>
-  <td>A</td>
+  <td>ACK</td>
   <td>1</td>
-  <td>Frame Type: <ol start="0"><li>data</li><li>acknowledgement</li></ol></td>
+  <td>Frame Type<ul>
+    <li>0 ： data</li>
+    <li>1 ： acknowlegement</li>
+    </ul></td>
 </tr>
 
 <tr>
@@ -77,7 +80,10 @@ This documentation discusses the protocol programming when communicating with MA
 <tr>
   <td>ENC</td>
   <td>3</td>
-  <td>Frame data encryption type: <ol start="0"><li>no encryption</li><li>AES encryption</li></ol></td>
+  <td>Frame data encryption type<ul>
+    <li>0 ： no encryption</li>
+    <li>1 ： AES encryption</li>
+    </ul></td>
 </tr>
 
 <tr>
@@ -116,641 +122,739 @@ This documentation discusses the protocol programming when communicating with MA
 </tr>
 </table>
 
-Frame data size varies, 1007 is the maximum length. The index of the CRC32 depends on the length of data field.
-
-### Protocol Data Field Explanation
-
-All serial packages exchanged between MATRICE 100 and the onboard device can be classified into three types:
-
-1. Command Package. From the onboard device to MATRICE 100. It mainly contains flight control commands.
-
-2. Message Package. From MATRICE 100 to the onboard device. It contains the autopilot data.
 
 
-3. Acknowledgement Package (ACK package). From MATRICE 100 to the onboard device. It contains execution results of commands.
+#### Protocol Data Field Explanation
 
-#### Package from the onboard device to MATRICE 100 (Command Package)
+All serial packages exchanged between MATRICE 100 and the onboard device can be classified into three types
 
-```
-|<-------Protocol Frame Data------->|
-|COMMAND SET|COMMAND ID|COMMAND DATA|
-```
+|Packages Types|Transmission direction|Transmission Content|
+|------------|:----------:|---------------|
+|command package|Onboard Device==>MATRICE 100|control commands|
+|ACK package|MATRICE 100==>Onboard Device|control results|
+|message package|MATRICE 100==>Onboard Device|status|
 
-|Data Field|Byte Index|Size(byte)|
-|----------|----------|----------|
-|COMMAND SET|0|1|
-|COMMAND ID|1|1|
-|COMMAND DATA|2|depends on the exact command|
-
-For the detailed description, please refer to `Command Set Explanation: control commands`
-
-#### Package from the autopilot to onboard device (Message Package)
+##### 命令数据包 
 
 ```
 |<-------Protocol Frame Data------->|
 |COMMAND SET|COMMAND ID|COMMAND DATA|
 ```
 
-|Data Field|Byte Index|Size(byte)|
-|----------|----------|----------|
-|COMMAND SET|0|1|
-|COMMAND ID|1|1|
-|COMMAND DATA|2|depends on the exact command|
-For the detailed description, please refer to `Command Set Explanation: monitor commands`
+|字段|字节索引|大小（单位 byte）|说明|
+|----|--------|-----------------|----|
+|COMMAND SET|0|1|命令集|
+|COMMAND ID|1|1|命令码|
+|COMMAND DATA|2|与命令码有关|命令数据|
 
-#### Package from the autopilot to onboard device (ACK package)
+##### 应答数据包
+*应答数据包的帧头部分帧标识（ACK）为1*
 
 ```
 |<-Protocol Frame Data->|
 |COMMAND RETURN|ACK DATA|
 ```
 
-|Data Field|Byte Index|Size(byte)|Description|
-|----------|----------|----------|-----------|
-|COMMAND RETURN|0|2|The return code of the command result|
-|ACK DATA|2|depends on the exact command|Return data|
 
-### Session
+|字段|字节索引|大小（单位 byte）|说明|
+|----|--------|-----------------|----|
+|COMMAND RETURN|0|2|返回码|
+|ACK DATA|2|与命令有关|返回数据|
 
-An important requirement of autonomous control is the communication reliability. We design a "session mechanism" to make sure command packages and ACK packages are exchanged successfully.
 
-When developers compiles a message package in the onboard device program, a session ID should be used depending on the reliability requirement. Different session IDs correspond to different communication channels, i.e. sessions. Onboard API serial link layer has three types of sessions (for brevity, in the following table, we use Sender referring onboard device and Receiver as the autopilot of MATRICE 100).
+##### 推送数据包
 
-|Session Mode|SESSION|Description|
-|------------|-------|-----------|
-|Mode 1|0|Sender do not need acknowledgement|
-|Mode 2|1|Sender need acknowledgement, but can tolerate ACK package loss.|
-|Mode 3|2-31|Sender wants to make sure the ACK is reliably sent. For these sessions, Receiver saves the sequence number in the command package and send an  ACK package upon receiving it. If ACK package loss happened, Sender may request Receiver again using the same command package with the same sequence number, and Receiver will reply by sending saved acknowledge result. Unless Sender sends a new sequence number, Receiver will not forget the last command acknowledge result|
+```
+|<-------Protocol Frame Data------->|
+|COMMAND SET|COMMAND ID|COMMAND DATA|
+```
 
-### API Example
+|字段|字节索引|大小（单位 byte）|说明|
+|----|--------|-----------------|----|
+|COMMAND SET|0|1|命令集|
+|COMMAND ID|1|1|命令码|
+|COMMAND DATA|2|与命令码有关|飞行器状态*|
 
-Use the following enum to represent the session mode:
+*\*飞行器状态包含了飞行器姿态、加速度、GPS、高度等信息，具体包含内容通过调参软件配置*
 
-~~~c
-enum SESSION_MODE {
-  SESSION_MODE1,
-  SESSION_MODE2,
-  SESSION_MODE3
-}
-~~~
+---
 
-And define a callback function to handle the return data of the command:
+### 协议通信机制
 
-    typedef void (*CMD_CALLBACK_FUNC)(const void* p_data, unsigned int n_size)
 
-Finally we define 
+#### 会话机制
 
-    unsigned int Linklayer_Send(SESSION_MODE session_mode, const void* p_data, unsigned int n_size, char enc_type, unsigned short ack_timeout, unsigned char retry_time, CMD_CALLBACK_FUNC cmd_callback)
+协议设计使用了会话机制，以保证命令数据和应答数据不会因为丢包而出现通信双方异常。通信双方在向对方发起通信会话时，可以根据需要通过设置协议的 SESSION 字段来选择会话方式。协议中设计了三种会话方式。
 
-Arguments explained:
+|会话方式|SESSION|描述|
+|--------|-------|----|
+|方式1|0|发送端不需要接收端应答|
+|方式2|1|发送端需要接收端应答数据，但是可以容忍应答数据丢包|
+|方式3|2-31|发送端需要正确收到接收端的应答包。*|
 
-|Argument|Description|
-|--------|-----------|
-|p_data|The start pointer to the datastream|
-|n_size|The size of datastream|
-|enc_type|Whether this package is encrypted or not|
-|ack_timeout|When using session 3, this parameter decides how long to resend command|
-|retry_time|When using session 3, this parameter decides how many times to retry|
-|cmd_callback|The function pointer to the callback function|
+*\*发送端使用这些SESSION 发送命令数据包时，应答包中包含该命令数据包中的 帧序列号(SEQ) 和 通信过程中的会话 ID (SESSION)。如果通信过程中，发送端没有正确收到应答包，可以重新发送命令数据包。*
 
-**Note: Here a dummy link layer send interface is defined for demonstration purpose. Since Session Mode 3 is reliable, the communication function interface should contain parameters such as length of timeout and number of resending times.**
 
-## Command Set Explanation
+*备注：由于会话方式 3 是一种可靠会话方式，开发者在协议链路层实现中应考虑数据丢包后的重发机制，在设计链路层发送接口时应提供超时时间、重发次数等参数。*
 
-### Command Set and Authorization Level
+---
 
-The DJI onboard API has three sets or categories of commands:
+## 命令集与命令码
 
-|Category|Description|Command Set ID|
-|--------|-----------|--------------|
-|Activation related|All commands used to activate API|0x00|
-|Control related|Commands to control MATRICE 100|0x01|
-|Monitoring related|Commands that contains autopilot data|0x02|
+### 命令集
 
-Each command set has a unique set ID. All commands belong to one command set have different command ID.
+**Onboard API 命令分为三大命令集**  
 
-All control commands have an associated authorization level. In the current version, we have set up 5 stable control commands and several unstable commands. All these controls command are level 2 API. In the standard version and future versions, more control commands will be opened up at different authorization levels. A tentative level schedule is shown as follow:
+|命令集|命令集代码|说明|
+|------|---------|----|
+|激活验证类|0x00|机载设备查询飞控激活状态完成激活的相关命令|
+|控制命令类|0x01|机载设备完成对飞行器及云台等设备控制的相关命令|
+|推送数据类|0x02|由飞控主动向机载设备的数据，如传感器数据、云台数据等
 
-|API Levels|Brief Plan|
-|----------|----------|
-|0|API activation commands|
-|1|Camera and gimbal control commands|
-|2|Flight control commands|
+### 命令码
+命令集包含一系列命令码，根据具体的命令码实现相应的功能。  
 
-### Command Sets
+*命令需要在相应的权限级别下才能够被执行。当机载设备发出的命令所需的权限级别高于飞控所处权限级别时，该命令将不会被执行。较高的权限级别下可以执行低级别权限命令*
 
-#### Activation Command Set: 0x00
+|权限级别|权限描述|
+|:-----:|--------|
+|0|API 激活命令|
+|1|相机和云台的控制命令|
+|2|飞行控制命令|
 
-To activate the API, session ID 2-31 can be used to guarantee ACK packages are returned. All commands in this command set has authorization level 0. Therefore, all users can use these commands to activate MATRICE 100 and debug the connection status. The activation process allows MATRICE 100 to connect to Internet via DJI Pilot and of course a mobile device with Internet access is needed.
+*权限级别可通过激活命令改变。飞行器激活前默认权限级别为0*
 
-##### Command ID 0x00: Get API version
+
+**Onboard API 功能索引**
+<table>
+<tr>
+  <th>命令集</th>
+  <th>命令码</th>
+  <th>功能</th>
+  <th>所需权限级别</th>
+</tr>
+  <td rowspan="2">0x00<br>激活验证类 </td>
+  <td>0x00</td>
+  <td>获取 API 版本</td>
+  <td>0</td>
+</tr>
+
+</tr>
+  <td>0x01</td>
+  <td>激活</td>
+  <td>0</td>
+</tr>
+
+<tr>
+  <td rowspan="6">0x01<br>控制命令类 </td>
+  <td>0x00</td>
+  <td>请求获得控制权</td>
+  <td>2</td>
+</tr>
+
+<tr>
+  <td>0x01</td>
+  <td>切换飞行状态</td>
+  <td>2</td>
+</tr>
+<tr>
+  <td>0x02</td>
+  <td>查询飞行状态切换结果</td>
+  <td>2</td>
+</tr>
+
+<tr>
+  <td>0x03</td>
+  <td>姿态控制</td>
+  <td>2</td>
+</tr>
+
+<tr>
+  <td>0x0A</td>
+  <td>云台角速度控制</td>
+  <td>1</td>
+</tr>
+
+<tr>
+  <td>0x0B</td>
+  <td>云台角度控制</td>
+  <td>1</td>
+</tr>
+
+<tr>
+  <td rowspan="2">0x02<br>推送数据类</td>
+  <td>0x00</td>
+  <td>推送数据</td>
+  <td>0</td>
+</tr>
+
+<tr>
+  <td>0x01</td>
+  <td>失去控制权</td>
+  <td>0</td>
+</tr>
+</table>
+
+
+## 命令数据说明
+
+### 命令集 0x00 激活验证类 
+
+#### 命令码 0x00 获取 API 版本
 
 <table>
 <tr>
-  <th>Data Type</th>
-  <th>Offset</th>
-  <th>Size</th>
-  <th>Description</th>
+  <th>数据类型</th>
+  <th>偏移（字节）</th>
+  <th>大小（字节）</th>
+  <th>说明</th>
+</tr>
+
+<tr> 
+  <td>请求数据</td>
+  <td>0</td>
+  <td>1</td>
+  <td>保留</td>
 </tr>
 
 <tr>
-  <td>Request Data</td>
-  <td>1</td>
-  <td>1</td>
-  <td>Arbitrary number</td>
-</tr>
-
-<tr>
-  <td rowspan="3">Return Data</td>
+  <td rowspan="3">应答数据</td>
   <td>0</td>
   <td>2</td>
-  <td>Return Code</td>
+  <td>返回码<ul>
+    <li>0x0000：激活成功</li>
+    <li>0xFF00：命令不支持</li>
+    <li>0xFF01：机载设备无授权</li>
+    <li>0xFF02：机载设备权限不足</li></ul>
 </tr>
 
 <tr>
   <td>2</td>
   <td>4</td>
-  <td>The CRC code of version string</td>
+  <td>API版本号校验值</td>
 </tr>
 
 <tr>
   <td>6</td>
   <td>32</td>
-  <td>SDK version string</td>
+  <td>API版本号</td>
 </tr>
 </table>
 
 
-Recommended receiving C/C++ struct
-
-~~~c
-typedef struct {
-  unsigned short version_ack;
-  unsigned int varsion_crc;
-  signed char version_number[32];
-} version_query_data_t;
-~~~
-
-Set the callback function of getting API version be:
-
-~~~c
-void print_sdk_version(const void* p_data, unsigned int n_size) {
-  version_quesry_data_t* p_version = (version_query_data_t*)p_data;
-  if (p_version->version_ack == 0) {
-    printf("%s\n",p_version->version_name);
-  }
-}
-~~~
-
-To send getting API version package, we can use the following code:
-
-~~~c
-unsigned char cmd_buf[3];
-cmd_buf[0] = 0x00; //command set
-cmd_buf[1] = 0x00; //command id
-cmd+buf[2] = 0x00; //command data, an arbitrary number as said above
-Linklayer_Send(SESSION_MODE3,
-                cmd_buf,
-                3,
-                0,
-                200.
-                3,
-                print_sdk_version
-};
-~~~
-
-Session Mode 3 is used to get API version. After the autopilot receives request and responses, function print\_sdk\_version will executed and print the version information:
-
-    SDK vX.X XXXX
-
-##### Command ID 0x01: Activate API
+#### 命令码 0x01 激活
 
 <table>
 <tr>
-  <th>Data Type</th>
-  <th>Offset</th>
-  <th>Size</th>
-  <th>Description</th>
+  <th>数据类型</th>
+  <th>偏移（字节）</th>
+  <th>大小（字节）</th>
+  <th>说明</th>
 </tr>
 
 <tr>
-  <td rowspan="4">Request Data</td>
+  <td rowspan="4">请求数据</td>
   <td>0</td>
   <td>4</td>
-  <td>app_id, a number obtained when user registers as a developer</td>
+  <td>app_id, 服务器注册时候生成的内容</td>
 </tr>
 
 <tr>
   <td>4</td>
   <td>4</td>
-  <td>api_level, authorization level</td>
+  <td>api_level，API 权限级别</td>
 </tr>
 
 <tr>
   <td>8</td>
   <td>4</td>
-  <td>app_ver, the version of onboard application</td>
+  <td>固定值，0x02030A00</td>
 </tr>
 
 <tr>
   <td>12</td>
   <td>32</td>
-  <td>bundle_id, the name of the application, set by developer</td>
+  <td>保留</td>
 </tr>
 
 <tr>
-  <td>Return Data</td>
+  <td>应答数据</td>
   <td>0</td>
   <td>2</td>
-  <td>Return code: <ol start="0"><li>Success</li><li>Invalid parameters</li><li>Cannot recognize encrypted package</li><li>Attempt to activate</li><li>DJI Pilot APP no response</li><li>DJI Pilot APP no Internet</li><li>Server rejected activation attempt</li><li>Insufficient authority level</li></ol></td>
+  <td>返回码：<ul>
+    <li>0x0000：成功</li>
+    <li>0x0001：参数非法</li>
+    <li>0x0002：数据包加密，未能正确识别</li>
+    <li>0x0003：没有激活过的设备，尝试激活</li>
+    <li>0x0004：DJI GO 没有响应 </li>
+    <li>0x0005：DJI GO 没有联网</li>
+    <li>0x0006：服务器拒绝，激活失败</li>
+    <li>0x0007：权限级别不够</li>
+    <li>0x0008：SDK版本错误</li>
+    </ul></td>
 </tr>
 
 </table>
 
-Recommended sending C/C++ struct
+### 命令集 0x01 控制命令类 
 
-~~~c
-typedef __attribute_((__packed__)) struct { //1 byte aligned
-  unsigned int app_id;
-  unsigned int ap_api_level;
-  unsigned int app_ver;
-  unsigned char app_bundle_id[32];
-} activation_data_t;
-~~~
-
-**Note: All the structs in the document requires 1 byte alignment (for example using `typedef __attribute__((__packed__))` struct. Developers must make sure their structs are 1-byte aligned.**
-
-Recommended receive C/C++ enum data:
-
-~~~c
-enum ErrorCodeForActivatie {
-  errActivateSuccess,
-  errActivateInvalidParamLength,
-  errActivateDataIsEncrypted,
-  errActivateNewDevice,
-  errActivateDJIAppNotConnected.
-  errActivateDJIAppNoInternet,
-  errActivateDJIServerReject,
-  errActivateLevelError
-};
-~~~
-
-Let the API activation callback function be
-
-~~~c
-void activation_callback(const void* p_data, unsigned int n_size) {
-
-}
-~~~
-
-To send API activation package, we can use following code piece:
-
-~~~c
-unsigned char com_buf[46];
-activation_data_t activation_request_data;
-//USER TODO...
-//activation_request_data.app_id        =0x00;
-//activation_request_data.app_api_level =0x00;
-//activation_request_data.app_ver       =0x00;
-//memset(activation_request_data.app_bundle_id,0,32)
-cmd_buf[0] = 0x00; //command set
-cmd_buf[1] = 0x01; //command id
-memcpy((void*)&cmd_buf[2], (void*)&activation_request_data),sizeof(activation_data_t));
-Linklayer_Send(SESSION_MODE3,
-                cmd_buf,
-                46,
-                0,
-                200,
-                3,
-                activation_callback
-  );
-~~~
-
-Session Mode 3 is used to activate API. After the autopilot receives request and responses, function `activation_callback` will be executed, in which developers can check whether API activation is successful or not.
-
-##### Command ID 0xFE Data Transparent Transmission (from airborne equipment to mobile device)
-
-The downstream bandwidth from airborne equipment to mobile device is around 8KB/s
-
-|Data Type|Offset|Size|Description|
-|---------|------|----|-----------|
-|Request Data|0|1~100|User defined data|
-|Return Data|0|2|Return code 0: success|
-
-~~~c
-char cmd_buf[10];
-cmd_buf[0] = 0x00;
-cmd_buf[1] = 0xFE;
-memcpy(&cmd_buf[2], "Hello!", 7);
-Linklayer_Send(SESSION_MODE3,
-                cmd_buf,
-                9,
-                0,
-                200,
-                3,
-                0
-);
-~~~
-
-#### Control Command: Set 0x01
-
-##### Command ID 0x00: Control Authority Request
-
-|Data Type|Offset|Size|Description|
-|---------|------|----|-----------|
-|Request Data|0|1|<ul><li>1 = request to get control authority</li><li>0 = request to release control authority</li></ul>|
-|Return Data|0|2|Return Code <ul><li>0x0001 = successfully released control authority</li><li>0x0002 = successfully obtained control authority</li><li>0x0003 = control authority failed to change</li></ul>
-
-There are three types of control devices:
-1. Remote Controller
-2. Mobile Device
-3. Onboard Device
-
-The control priority is `Remote Controller > Mobile Device > Onboard Device`. Mobile devices connects to MATRICE via mobile API. A similar control authority request command exists in the mobile API command set. Therefore it is possible that when onboard device request control authority through serial API, control authority is already been granted to the mobile application. So according to the priority list, mobile device will fail to obtain control. Besides, mobile API control request can interrupt ongoing onboard API control.
-
-In the current  version, **hybrid control (using both mobile API and onboard API) is not fully supported.** Developer should take care of the priority issue when developing hybrid control application. A monitoring data `CTRL_DEVICE` can be used to check the control authority (see `Monitor Command Set 0x02`).
-
-0x0003 happens when the mode selection bar of the remote controller is not in F position or control authority is already obtained by mobile application.
-
-Set the callback function for obtaining control authority is:
-
-~~~c
-void get_control_callback(const void* p_data, unsigned int n_size) {
-
-}
-~~~
-
-To send control request package, we can use following code piece
-
-~~~c
-unsigned char cmd_buf[46];
-cmd_buf[0] = 0x01; //command set
-cmd_buf[1] = 0x00; //command id
-cmd_buf[2] = 0x01; //get control
-Linklayer_send(SESSION_MODE3,
-                cmd_buf,
-                3,
-                1,
-                200,
-                3,
-                get_control_callback
-);
-~~~
-
-Session Mode 3 is used to obtain control. After the autopilot receives request and responses, function `get_control_callback` will be executed, in which developer can check whether control authority is successfully changed or not.
-
-##### Command ID 0x01-0x02 Flight Mode Control
-
-To control the flight mode of MATRICE 100, onboard device should use two commands to make sure the mode changing control works properly.
-
-Firstly, the command 0x01 should be sent to trigger the mode changing logic:
+#### 命令码 0x00 请求获得控制权
 
 <table>
 <tr>
-  <th>Data Type</th>
-  <th>Offset</th>
-  <th>Size</th>
-  <th>Description</th>
+  <th>数据类型</th>
+  <th>偏移（字节）</th>
+  <th>大小（字节）</th>
+  <th>说明</th>
 </tr>
 
 <tr>
-  <td rowspan="2">Request Data</td>
+  <td >请求数据</td>
   <td>0</td>
   <td>1</td>
-  <td>Command Sequence Number</td>
+  <td>请求命令<ul>
+    <li>0x01 ： 请求获得控制权</li>
+    <li>0x00 ： 请求释放控制权</li>
+    </ul></td>
 </tr>
 
 <tr>
-  <td>1</td>
-  <td>1</td>
-  <td>Request mode<ui><li>1 = request go home</li><li>4 = request auto take off</li><li>6 = request auto landing</li></ui></td>
-</tr>
-
-<tr>
-  <td>Return Data</td>
+ <td >应答数据</td>
   <td>0</td>
-  <td>1</td>
-  <td>Return code<ui><li>0x0001 = the command is received but rejected</li><li>0x0002 = start to execute the command</li></ui></td>
+  <td>2</td>
+  <td>返回码 <ul>
+    <li>0x0001：成功释放控制权</li>
+    <li>0x0002：成功获得控制权</li>
+    <li>0x0003：正在获取控制权</li>
+    </ul></td>
 </tr>
 
 </table>
 
-Once MATRICE 100 receive command 0x01, an immediate ACK package contains either `0x0001` "reject" or `0x0002` "start to execute" will be sent. If the autopilot is already executing a flight mode command, a "reject" command is sent. In normal case, after sending the "start to execute" package, the autopilot will try to change its flight mode and making sure the changing is firmly done. The execution result will be saved.
+飞行器可以接受三种设备的控制输入：遥控器、移动设备、机载设备而。三种设备的控制输入的优先级最大是遥控器，其次是移动设备，优先级最低是机载设备。假设请求获得控制权命令的回调函数为：
 
-The second command is a query from the onboard device to obtain the execution result.
-
-|Data Type|Offset|Size|Description|
-|---------|------|----|-----------|
-|Request Data|0|1|Command Sequence Number|
-|Return Data|0|1|Return code<ui><li>0x0001 = query failed, current command is not the query command</li><li>0x0003 = command is executing</li><li>0x0004 = command failed</li><li>0x0005 = command succeed</li></ui>
-
-These two commands, together with the "session mechanism", can guarantee the flight control command is executed and its execution result reaches the onboard device reliably.
-
-##### Command ID 0x03 Movement Control
-
-**Please read the instructions carefully before sending commands.**
+#### 命令码 0x01 切换飞行状态
 
 <table>
 <tr>
-  <th>Data Type</th>
-  <th>Offset</th>
-  <th>Size</th>
-  <th>Description</th>
+  <th>数据类型</th>
+  <th>偏移（字节）</th>
+  <th>大小（字节）</th>
+  <th>说明</th>
 </tr>
 
 <tr>
-  <td rowspan="5">Request Data</td>
+  <td rowspan="2">请求数据</td>
   <td>0</td>
   <td>1</td>
-  <td>Control mode flag (detailed description in `Additional Explanation for Flight Control`)</td>
+  <td>指令序列号</td>
+</tr>
+
+<tr>
+  <td>1</td>
+  <td>1</td>
+  <td>控制命令<ul>
+    <li>0x01 ： 请求进入自动返航</li>
+    <li>0x04 ： 请求自动起飞</li>
+    <li>0x06 ： 请求自动降落</li>
+    </ul></td>
+</tr>
+
+<tr>
+  <td>应答数据</td>
+  <td>0</td>
+  <td>2</td>
+  <td>返回码<ul>
+    <li>0x0001：执行失败</li>
+    <li>0x0002：开始执行</li>
+    </ul></td>
+</tr>
+
+</table>
+
+#### 命令码 0x02 查询飞行状态切换结果
+<table>
+<tr>
+  <th>数据类型</th>
+  <th>偏移（字节）</th>
+  <th>大小（字节）</th>
+  <th>说明</th>
+</tr>
+
+<tr>
+  <td >请求数据</td>
+  <td>0</td>
+  <td>2</td>
+  <td>指令序列号</td>
+</tr>
+
+
+<tr>
+  <td>应答数据</td>
+  <td>0</td>
+  <td>1</td>
+  <td>返回码<ul>
+    <li>0x0001：执行失败（指令序列号不是当前执行的指令）</li>
+    <li>0x0003：指令正在执行</li>
+    <li>0x0004：指令执行失败</li>
+    <li>0x0005：指令执行成功</li>
+    </ul></td>
+</tr>
+
+</table>
+
+#### 命令码 0x03 姿态控制\*
+<table>
+<tr>
+  <th>数据类型</th>
+  <th>偏移（字节）</th>
+  <th>大小（字节）</th>
+  <th>说明</th>
+</tr>
+
+<tr>
+  <td rowspan="5">请求数据</td>
+  <td>0</td>
+  <td>1</td>
+  <td>模式标志位</td>
 </tr>
 
 <tr>
   <td>1</td>
   <td>4</td>
-  <td>Roll control value or X-axis control value</td>
+  <td>roll 方向控制量或 X 轴控制量</td>
 </tr>
 
 <tr>
   <td>5</td>
   <td>4</td>
-  <td>Pitch control value or Y-axis control value</td>
+  <td>pitch 方向控制量或 Y 轴控制量</td>
 </tr>
 
 <tr>
   <td>9</td>
   <td>4</td>
-  <td>Yaw control value</td>
+  <td>yaw 方向控制量（偏航）</td>
 </tr>
 
 <tr>
   <td>13</td>
   <td>4</td>
-  <td>Vertical control value or Z-axis control value</td>
+  <td>throttle 方向控制量或 Z 轴控制量</td>
 </tr>
 
 <tr>
-  <td>Return Data</td>
-  <td>0</td>
-  <td></td>
-  <td>No ACK</td>
+  <td>应答数据</td>
+  <td>---</td>
+  <td>---</td>
+  <td>无应答数据</td>
 </tr>
 
 </table>
 
-Recommend sending structure in C/C++
+*\*有关姿态控制的具体内容请参阅XXXXXX*  
 
-~~~c
-typedef __attribute__((__packed__)) struct { // 1 byte aligned
-  unsigned char ctrl_flag;
-  float roll_or_x;
-  float pitch_or_y;
-  float yaw;
-  float throttle_or_z;
-} control_input;
-~~~
+**注意！非常重要：控制模式有进入条件限制：**
 
-**Note: All the structs in the document requires 1 byte alignment (for example using `typedef __attribute__((__packed__))` struct. Developers must make sure their structs are 1-byte aligned.**
+- 当且仅当GPS信号正常（health\_flag >=3）时，才可以使用水平**位置**控制（HORI_POS）相关的控制指令
+- 当GPS信号正常（health\_flag >=3），或者Gudiance系统正常工作（连接安装正确）时，可以使用水平**速度**控制（HORI_VEL）相关的控制指令
 
-Notice that depending on the value of ctrl\_flag, the four control inputs can have different meanings and represent control inputs in either body frame or ground frame. In the "Additional Explanation for Flight Control", body frame, ground frame and ctrl\_flag are elaborated.
+**关于GPS信号健康度的获取，请参考“命令码 0x00 标准数据包”**
+**关于位置控制和速度控制相关的指令，请参考附述章节**
 
-**CAUTION！VERY IMPORTANT：control mode has entering conditions：**
 
-- Only when GPS signal is good (health\_flag >=3)，horizontal **position** control (HORI_POS) related control modes can be used.
-- Only when GPS signal is good (health\_flag >=3)，or when Gudiance system is working properly (right connection and power provided)，horizontal **velocity** control（HORI_VEL）related control modes can be used.
-
-**About the gps health flag, please read "Command ID 0x00 Message Package"**
-**About control modes that contains position and velocity control，please read "Additional Explanation for Flight Control"**
-
-#### Monitor Command Set: 0x02
-
-##### Command ID 0x00 Message Package
-
-Message Package content and frequency can be configured by DJI N1 assistant software. Each data item in the message package has individual frequency. The maximum message frequency is equal to the message's highest data item update frequency.
-
+#### 命令码 0x0A 云台角速度控制
 <table>
 <tr>
-  <th>Data Type</th>
-  <th>Offset</th>
-  <th>Size</th>
-  <th>Description</th>
+  <th>数据类型</th>
+  <th>偏移（字节）</th>
+  <th>大小（字节）</th>
+  <th>说明</th>
 </tr>
 
 <tr>
-  <td rowspan="13">Request Data</td>
+  <td rowspan="4">请求数据</td>
   <td>0</td>
   <td>2</td>
-  <td>Item presence flag<br>bit 0: flag of time stamp<br>bit 1: flag of attitude quaternion<br>bit 2:flag of linear acceleration in ground frame<br>bit 3:flag of linear velocity in ground frame<br>bit 4: flag of angular velocity in body frame<br>bit 5: flag of GPS location, altitude and healthiness<br>bit 6: flag of magnetometer<br>bit 7: flag of remote controller data<br>bit 8: flag of gimbal yaw,pitch,roll<br>bit 9: flag of flight status<br>bit 10:flag of battery info<br>bit 11: flag of control device<br>bit[12:15]: reserved<br><br>Bit with value 1 means the message package contains corresponding data item</td>
+  <td>Yaw轴角速度</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td>2</td>
+  <td>Roll轴角速度</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td>2</td>
+  <td>Pitch轴角速度</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td>1</td>
+  <td>固定值，0x80</td>
+</tr>
+
+<tr>
+  <td>应答数据</td>
+  <td>---</td>
+  <td>---</td>
+  <td>无应答数据</td>
+</tr>
+
+</table>
+
+
+<table>
+<tr>
+  <th>数据名称</th>
+  <th>数据类型</th>
+  <th>说明</th>
+</tr>
+
+<tr>
+  <td>Yaw轴角速度</td>
+  <td>int16_t</td>
+  <td>单位0.1度/s，输入范围（[-1800,+1800]）</td>
+</tr>
+
+<tr>
+  <td>Roll轴角速度</td>
+  <td>int16_t</td>
+  <td>单位0.1度/s，输入范围[-1800,+1800]</td>
+</tr>
+
+<tr>
+  <td>Pitch轴角速度</td>
+  <td>int16_t</td>
+  <td>单位0.1度/s，输入范围[-1800,+1800]</td>
+</tr>
+</table>
+
+#### 命令码 0x0B 云台角度控制
+<table>
+<tr>
+  <th>数据类型</th>
+  <th>偏移（字节）</th>
+  <th>大小（字节）</th>
+  <th>说明</th>
+</tr>
+
+<tr>
+  <td rowspan="5">请求数据</td>
+  <td>0</td>
+  <td>2</td>
+  <td>Yaw轴角度</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td>2</td>
+  <td>Roll轴角度</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td>2</td>
+  <td>Pitch轴角度</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td>1</td>
+  <td>属性控制字节<ul>
+    <li>bit 0：控制模式选择位</li>
+        <ul>0 ： 增量控制，角度基准为当前云台所处位置</ul>
+        <ul>1 ： 绝对控制，角度基准为东北地坐标系</ul>
+    <li>bit 1：Yaw轴命令控制失效位 
+        <ul>0 ： 云台Yaw角度运动到命令位置 </ul>
+        <ul>1 ： 云台Yaw将维持上一时刻状态 </ul>
+    <li>bit 2：Roll轴命令控制失效位，同bit[1]描述</li>
+    <li>bit 3：Pitch轴命令控制失效位，同bit[1]描述</li>
+    <li>bit [4:7]：保留，必须为0</li>
+    </ul></td>
+
+<tr>
+  <td>7</td>
+  <td>1</td>
+  <td>命令完成时间</td>
+</tr>
+</tr>
+
+<tr>
+  <td>应答数据</td>
+  <td>---</td>
+  <td>---</td>
+  <td>无应答数据</td>
+</tr>
+</table>
+
+<table>
+<tr>
+  <th>数据名称</th>
+  <th>数据类型</th>
+  <th>说明</th>
+</tr>
+
+<tr>
+  <td>Yaw轴角度</td>
+  <td>int16_t</td>
+  <td>单位0.1度，输入范围 [-3200~+3200]</td>
+</tr>
+
+<tr>
+  <td>Roll轴角度</td>
+  <td>int16_t</td>
+  <td>单位0.1度，输入范围 [-350~+350]</td>
+</tr>
+
+<tr>
+  <td>Pitch轴角度</td>
+  <td>int16_t</td>
+  <td>单位0.1度，输入范围 [-900~+300]</td>
+</tr>
+
+<tr>
+  <td>命令完成时间</td>
+  <td>uint8_t</td>
+  <td>单位0.1s，例如20代表云台在2s内匀速转动至命令位置<br>建议用户控制速度不超过400度/秒</td>
+</tr>
+</table>
+
+### 命令集 0x02 推送数据类
+
+#### 命令码 0x00 推送数据
+
+飞控外发的状态数据包可以通过 DJI N1 PC 调参软件配置。可以配置状态包是否发送及发送的频率。  
+
+<table>
+<tr>
+  <th>数据类型</th>
+  <th>偏移（字节）*</th>
+  <th>大小（字节）</th>
+  <th>说明</th>
+</tr>
+
+<tr>
+  <td rowspan="13">推送数据</td>
+  <td>0</td>
+  <td>2</td>
+  <td>状态包存在标志位，标志位为 1 表示标准数据包中存在该状态包<ul>
+    <li>bit 0：时间戳包存在标</li>
+    <li>bit 1：姿态四元素包存在标志</li>
+    <li>bit 2：Ground 坐标系下的加速度包存在标志</li>
+    <li>bit 3：Ground 坐标系下的速度包存在标志</li>
+    <li>bit 4：Body 坐标系的角速度包存在标志</li>
+    <li>bit 5：GPS 位置、海拔（气压计数值）、相对地面高度、健康度包存在标志</li>
+    <li>bit 6：磁感计数值包存在标志</li>
+    <li>bit 7：遥控器通道值包存在标志</li>
+    <li>bit 8：云台 roll、pitch、yaw 数据包存在标志</li>
+    <li>bit 9：飞行状态包存在标志</li>
+    <li>bit 10：剩余电池百分比包存在标志</li>
+    <li>bit 11：控制设备包存在标志</li>
+    <li>bit [12:15]：保留不用</li>
+    </td>></ul>
 </tr>
 
 <tr>
   <td>2</td>
   <td>4</td>
-  <td>Time stamp</td>
+  <td>时间戳</td>
 </tr>
 
 <tr>
   <td>6</td>
   <td>16</td>
-  <td>Attitude quaternion item</td>
+  <td>姿态四元数</td>
 </tr>
 
 <tr>
   <td>22</td>
   <td>12</td>
-  <td>Linear acceleration item</td>
+  <td>Ground 坐标系下的加速度</td>
 </tr>
 
 <tr>
   <td>34</td>
   <td>12</td>
-  <td>Linear velocity item</td>
+  <td>Ground 坐标系下的速度</td>
 </tr>
 
 <tr>
   <td>46</td>
   <td>12</td>
-  <td>Angular velocity item</td>
+  <td>Body 坐标系的角速度</td>
 </tr>
 
 <tr>
   <td>58</td>
   <td>24</td>
-  <td>GPS position, altitude, height and healthiness</td>
+  <td>GPS 位置, 海拔（气压计数值）, 相对地面高度</td>
 </tr>
 
 <tr>
   <td>82</td>
   <td>12</td>
-  <td>Magnetometer data</td>
+  <td>磁感计数值</td>
 </tr>
 
 <tr>
   <td>94</td>
   <td>10</td>
-  <td>Remote controller channels</td>
+  <td>遥控器通道值</td>
 </tr>
 
 <tr>
   <td>104</td>
   <td>12</td>
-  <td>Gimbal yaw, pitch, roll</td>
+  <td>云台姿态</td>
 </tr>
 
 <tr>
   <td>116</td>
   <td>1</td>
-  <td>Flight status</td>
+  <td>飞行状态</td>
 </tr>
 
 <tr>
   <td>117</td>
   <td>1</td>
-  <td>Battery percentage</td>
+  <td>剩余电池百分比</td>
 </tr>
 
 <tr>
   <td>118</td>
   <td>1</td>
-  <td>Control device</td>
-</tr>
-
-<tr>
-  <td>Return Data</td>
-  <td>0</td>
-  <td></td>
-  <td>No return data</td>
+  <td>控制设备</td>
 </tr>
 </table>
 
-**Note: The first data item is time stamp. Following data items may or may not present in the message packages, so their offsets are *not fixed*. Here we only list the offsets when all data items are sent.**
+*\*偏移（字节）：表格中偏移（字节）为推送数据中存在所有状态包的情况。*
 
-Each data item in the message package is explained below:
+ 实际数据在推送数据中的偏移需要根据状态包存在标志位确定存在的状态包，然后根据各状态包大小计算出状态包的实际偏移大小。
+ 
+**数据包中各个状态包的数据段含义**
 
 <table>
 <tr>
-  <td colspan="5" align="middle"> Data Item List</td>
-</tr>
-<tr>
-  <td>Item Name</td>
-  <td>Variables</td>
-  <td>Type</td>
-  <td>Description</td>
-  <td>Default Frequency</td>
+  <td>状态包</td>
+  <td>状态包字段</td>
+  <td>数据段类型</td>
+  <td>说明</td>
+  <td>单位</td>
+  <td>默认频率</td>
 </tr>
 
 <tr>
-  <td>Time</td>
-  <td>time_stamp</td>
-  <td>uint32_t</td>
-  <td>Time in tick (tick interval 1/600s)</td>
+  <td>时间戳</td>
+  <td>time</td>
+  <td>unsigned int</td>
+  <td>时间戳</td>
+  <td>时间间隔1/600s</td>>
   <td>100Hz</td>
 </tr>
 <tr>
-  <td rowspan="4">Q</td>
+  <td rowspan="4">姿态四元数</td>
   <td>q0</td>
   <td>float32</td>
-  <td rowspan="4">Attitude quaternion (From ground to body frame)</td>
+  <td rowspan="4">姿态四元数<br>从 Ground 坐标系转到 Body 坐标系变换*</td>
+  <td rowspan="4">---</td>
   <td rowspan="4">100Hz</td>
 </tr>
 <tr>
@@ -767,10 +871,11 @@ Each data item in the message package is explained below:
 </tr>
 
 <tr>
-  <td rowspan="3">ACC</td>
+  <td rowspan="3">加速度</td>
   <td>agx</td>
   <td>float32</td>
-  <td rowspan="3">Linear acceleration in ground frame</td>
+  <td rowspan="3">飞行器在 Ground 坐标系下加速度</td>
+  <td rowspan="3">m/s<sup>2</sup> </td>
   <td rowspan="3">100Hz</td>
 </tr>
 <tr>
@@ -783,10 +888,11 @@ Each data item in the message package is explained below:
 </tr>
 
 <tr>
-  <td rowspan="3">VEL</td>
+  <td rowspan="3">速度</td>
   <td>vgx</td>
   <td>float32</td>
-  <td rowspan="3">Linear velocity in ground frame</td>
+  <td rowspan="3">飞行器在 Ground 坐标系下速度</td>
+  <td rowspan="3">m/s</td>
   <td rowspan="3">100Hz</td>
 </tr>
 <tr>
@@ -799,10 +905,11 @@ Each data item in the message package is explained below:
 </tr>
 
 <tr>
-  <td rowspan="3">W</td>
+  <td rowspan="3">角速度</td>
   <td>wx</td>
   <td>float32</td>
-  <td rowspan="3">Angular velocity in body frame</td>
+  <td rowspan="3">飞行器在 Body 坐标系下角速度 </td>
+  <td rowspan="3">rad/s</td>
   <td rowspan="3">100Hz</td>
 </tr>
 <tr>
@@ -815,10 +922,11 @@ Each data item in the message package is explained below:
 </tr>
 
 <tr>
-  <td rowspan="5">POS</td>
+  <td rowspan="5">GPS及高度</td>
   <td>longti</td>
   <td>double</td>
-  <td rowspan="2">GPS location</td>
+  <td rowspan="2">GPS 位置</td>
+  <td rowspan="2">rad</td>
   <td rowspan="5">100Hz</td>
 </tr>
 <tr>
@@ -828,218 +936,147 @@ Each data item in the message package is explained below:
 <tr>
   <td>alti</td>
   <td>float32</td>
-  <td>Altitude (measured by barometer)</td>
+  <td>海拔</td>
+  <td>气压值</td>
 </tr>
 <tr>
   <td>height</td>
   <td>float32</td>
-  <td>Height to ground (measured by barometer, may fuse with ultrasonic if sensor added)</td>
+  <td>相对地面高度**</td>
+  <td>m</td>
 </tr>
 <tr>
   <td>health_flag</td>
   <td>uint8_t</td>
-  <td>GPS healthiness (0-5, 5 is the best condition)</td>
+  <td>GPS 健康度 </td>
+  <td>0-5, 5 为最好</td>
 </tr>
 
 <tr>
-  <td rowspan="3">MAG</td>
+  <td rowspan="3">磁感计</td>
   <td>mx</td>
-  <td>float32</td>
-  <td rowspan="3">Magnetometer readings</td>
+  <td>int16_t</td>
+  <td rowspan="3">磁感计数值</td>
+  <td rowspan="3">磁感计数值</td>
   <td rowspan="3">0Hz</td>
 </tr>
 <tr>
   <td>my</td>
-  <td>float32</td>
+  <td>int16_t</td>
 </tr>
 <tr>
   <td>mz</td>
-  <td>float32</td>
+  <td>int16_t</td>
 </tr>
 
 <tr>
-  <td rowspan="6">RC</td>
+  <td rowspan="6">遥控器*</td>
   <td>roll</td>
   <td>int16_t</td>
-  <td>Remote controller roll channel</td>
+  <td>遥控通道 roll 数据</td>
+  <td rowspan="6">---</td>
   <td rowspan="6">50Hz</td>
 </tr>
 <tr>
   <td>pitch</td>
   <td>int16_t</td>
-  <td>Remote controller pitch channel</td>
+  <td>遥控通道 pitch 数据</td>
 </tr>
 <tr>
   <td>yaw</td>
   <td>int16_t</td>
-  <td>Remote controller yaw channel</td>
+  <td>遥控通道 yaw 数据</td>
 </tr>
 <tr>
   <td>throttle</td>
   <td>int16_t</td>
-  <td>Remote controller throttle channel</td>
+  <td>遥控通道 throttle 数据</td>
 </tr>
 <tr>
   <td>mode</td>
   <td>int16_t</td>
-  <td>Remote controller mode channel</td>
+  <td>遥控通道 mode 数据（模式选择开关）</td>
 </tr>
 <tr>
   <td>gear</td>
   <td>int16_t</td>
-  <td>Remote controller gear channel</td>
+  <td>遥控通道 gear 数据（正面的圆形拨杆）</td>
 </tr>
 
 <tr>
-  <td rowspan="3">GIMBAL</td>
+  <td rowspan="3">云台姿态</td>
   <td>roll</td>
   <td>float32</td>
-  <td>Gimbal roll data</td>
+  <td rowspan="3">云台在Ground 坐标系下姿态</td>
+  <td rowspan="3">度</td>
   <td rowspan="3">50Hz</td>
 </tr>
 <tr>
   <td>pitch</td>
   <td>float32</td>
-  <td>Gimbal pitch data</td>
 </tr>
 <tr>
   <td>yaw</td>
   <td>float32</td>
-  <td>Gimbal yaw data</td>
 </tr>
 
 <tr>
-  <td>FLIGHT_STATUS</td>
+  <td>飞行状态*</td>
   <td>status</td>
   <td>uint8_t</td>
-  <td>Flight status</td>
+  <td>飞行状态</td>
+  <td>---</td>
   <td>10Hz</td>
 </tr>
 
 <tr>
-  <td>BATTERY</td>
-  <td>status</td>
+  <td>电量</td>
+  <td>battery</td>
   <td>uint8_t</td>
-  <td>Battery percentage</td>
+  <td>剩余电量百分比</td>
+  <td>剩余电量百分比</td>
   <td>1Hz</td>
 </tr>
 
 <tr>
-  <td>CTRL_DEVICE</td>
+  <td>控制信号源</td>
   <td>status</td>
   <td>uint8_t</td>
-  <td>Current Control Device<br>0->RC<br>1->APP<br>2->onboard device</td>
+  <td>控制设备<ul>
+     <li>0x00 ： 遥控器</li>
+     <li>0x01 ： 移动设备</li>
+     <li>0x02 ： 机载设备</li>
+     </ul></td>
+  <td>---</td>
   <td>0Hz</td>
 </tr>
 </table>
+*\*Ground 坐标系、Body 坐标系、遥控器及飞行状态相关详细说明请参阅XXXXXX*  
+*\*\*相对地面高度是超声波、气压计和IMU融合的结果。如果飞行器上没有安装Guidance，或者安装Guidance但是相对地面的距离超过3米，相对地面高度则由气压计气压计计算得出。由于室内无法准确获取气压值，此数据将不可靠。*
 
-Onboard device can use following code to receive the standard message package sent by the autopilot:
 
-~~~c
-typedef struct {
-  float q0;
-  float q1;
-  float q2;
-  float q3;
-}sdk_q_data_t;
+#### 命令码 0x01 失去控制权
+失去控制权数据包会在机载控制权被夺去的时由飞控主动推送。  
+机载设备的控制权优先级最低，其控制权可能在任何时候被夺去。
 
-typedef struct {
-  float x;
-  float y;
-  float z;
-}sdk_common_data_t;
+<table>
+<tr>
+  <th>数据类型</th>
+  <th>偏移（字节）</th>
+  <th>大小（字节）</th>
+  <th>说明</th>
+</tr>
 
-typedef struct {
-  double lati;
-  double longti;
-  float alti;
-  float height;
-  short health_flag;
-}sdk_gps_height_data_t;
+<tr>
+  <td >推送数据</td>
+  <td>0</td>
+  <td>1</td>
+  <td>固定值，0x04</td>
+</tr>
 
-typedef struct {
-  signed short roll;
-  signed short pitch;
-  signed short yaw;
-  signed short throttle;
-  signed short mode;
-  signed short gear;
-}sdk_rc_data_t;
 
-typedef struct {
-  signed short x;
-  signed short y;
-  signed short z;
-}sdk_mag_data_t;
+</table>
 
-typedef __attribute_((__packed__)) struct { //1 byte aligned
-  unsigned int time_stamp;
-  sdk_q_data_t          q;
-  sdk_common_data_t     a;
-  sdk_common_data_t     v;
-  sdk_common_data_t     w;
-  sdk_gps_height_data   pos;
-  sdk_mag_data_t        msg;
-  sdk_rc_data_t         rc;
-  sdk_common_data_t     gimbal;
-  unsigned char         status;
-  unsigned char         battery_remaining_capacity;
-  unsigned char         ctrl_device;
-}sdk_std_data_t;
 
-#define _recv_std_data(_flag, _enable, _data, _buf, _datalen) \
-    if(_flag * _enable) { \
-      memcpy ((unsigned char*) &(_data), (unsigned char*)(_buf)+(_datalen), sizeof(_data)); \
-      _datalen += sizeof(_data); \
-    }
+##Onboard API
 
-static sdk_std_data_t recv_sdk_std_data = {0};
-
-void recv_std_package (unsigned char* pbuf, unsigned int len) {
-  unsigned short *valid_flag = (unsigned short*) pbuf;
-  unsigned short data_len = 2;
-  
-  _recv_std_data(*valid_flag, 0x0001, recv_sdk_std_data.time_stamp,                 pbuf,data_len);
-  _recv_std_data(*valid_flag, 0x0002, recv_sdk_std_data.q,                          pbuf,data_len);
-  _recv_std_data(*valid_flag, 0x0004, recv_sdk_std_data.a,                          pbuf,data_len);
-  _recv_std_data(*valid_flag, 0x0008, recv_sdk_std_data.v,                          pbuf,data_len);
-  _recv_std_data(*valid_flag, 0x0010, recv_sdk_std_data.w,                          pbuf,data_len);
-  _recv_std_data(*valid_flag, 0x0020, recv_sdk_std_data.pos,                        pbuf,data_len);
-  _recv_std_data(*valid_flag, 0x0040, recv_sdk_std_data.mag,                        pbuf,data_len);
-  _recv_std_data(*valid_flag, 0x0001, recv_sdk_std_data.rc,                         pbuf,data_len);
-  _recv_std_data(*valid_flag, 0x0001, recv_sdk_std_data.gimbal,                     pbuf,data_len);
-  _recv_std_data(*valid_flag, 0x0001, recv_sdk_std_data.statis,                     pbuf,data_len);
-  _recv_std_data(*valid_flag, 0x0001, recv_sdk_std_data.battery_remaining_capacity, pbuf,data_len);
-  _recv_std_data(*valid_flag, 0x0001, recv_sdk_std_data.ctrl_device,                pbuf,data_len);
-}
-~~~
-
-**Note: All the structs in the document requires 1 byte alignment (for example using `typedef __attribute__((__packed__))` struct. Developers must make sure their structs are 1-byte aligned.**
-
-**Further Explanation to The Content**
-
-_alti_ is the result of barometer-IMU fusion in the unit of pressure. While _height_ fuses ultrasonic sensor, barometer and IMU, it means the relative distance in meter from Matrice 100 to the takeoff spot. If the Matrice 100 has no ultrasonic sensor (no Gudiance installed), or it has ultrasonic sensor but its distance to the ground is larger than 3 meters (the measurement of ultrasonic sensor will be unstable at this distance), than _height_ is supported by barometer and IMU only. So developers may notice that Matrice 100 will draft at height above 3 meters, because barometer is very inaccurate indoor. It is very important to remember if developer wants to do indoor flight control.
-
-Since _height_ is a relative distance, so it wouldn't refreash to meaningful value if Matrice does not takeoff after being powered on.
-
-The unit of _lati_, _longti_ in _GPS_ information is **radian**.
-
-The acceleration and angular velocity sent from IMU is processed by signal processing algorithm. We will add flags in the furture version to enable sending raw data out. 
-
-##### Command ID 0x01: Control Authority Change Notification
-
-Onboard device has the lowers control priority. Its control authority can be taken over by RC and mobile device at any time. Once the control authority changed, a notification message will be sent to the onboard device by the autopilot.
-
-|Data Type|Offset(byte)|Size(byte)|Description|
-|---------|------------|----------|-----------|
-|Request Data|0|1|Fixed number 0x04|
-|Return Data|0|0|No return data|
-
-##### Command ID 0x02: Data transparent transmission (from mobile device to airborne equipment)
-
-The upstream bandwidth from mobile device to airborne equipment is around 1KB/s
-
-|Data Type|Offset(byte)|Size(byte)|Description|
-|---------|------------|----------|-----------|
-|Request Data|0|1~100|User defined data|
-|Return Data|0|0|No return data|

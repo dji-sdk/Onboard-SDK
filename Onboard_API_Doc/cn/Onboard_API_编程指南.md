@@ -68,7 +68,7 @@ DJI 为开发者提供两种功能完善的飞行控制 API 帮助开发飞行�
 <tr>
   <td>RES0</td>
   <td>2</td>
-  <td>保留不用。固定值为 0x0</td>
+  <td>保留不用。固定值为 0</td>
 </tr>
 
 <tr>
@@ -91,7 +91,7 @@ DJI 为开发者提供两种功能完善的飞行控制 API 帮助开发飞行�
   <td>RES1</td>
   <td>5</td>
   <td>24</td>
-  <td>保留。固定值为 0x0</td>
+  <td>保留。固定值为 0</td>
 </tr>
 
 <tr>
@@ -119,7 +119,7 @@ DJI 为开发者提供两种功能完善的飞行控制 API 帮助开发飞行�
   <td>CRC32</td>
   <td>---</td>
   <td>32</td>
-  <td>帧 CRC32 校验值。字节索引由 DATA 长度决定。</td>
+  <td>帧 CRC32 校验值</td>
 </tr>
 </table>
 
@@ -159,8 +159,8 @@ DJI 为开发者提供两种功能完善的飞行控制 API 帮助开发飞行�
 
 |字段|字节索引|大小（单位 byte）|说明|
 |----|--------|-----------------|----|
-|COMMAND RETURN|0|2|命令执行的返回信息|
-|ACK DATA|2|与命令有关|应答数据|
+|COMMAND RETURN|0|2|返回码|
+|ACK DATA|2|与命令有关|返回数据|
 
 
 ##### 推送数据包
@@ -197,11 +197,6 @@ DJI 为开发者提供两种功能完善的飞行控制 API 帮助开发飞行�
 
 
 *备注：由于会话方式 3 是一种可靠会话方式，开发者在协议链路层实现中应考虑数据丢包后的重发机制，在设计链路层发送接口时应提供超时时间、重发次数等参数。*
-
-
-#### 加密机制
-
-协议使用了 AES 加密机制，以保证通讯数据在传输中的安全性
 
 ---
 
@@ -469,10 +464,10 @@ DJI 为开发者提供两种功能完善的飞行控制 API 帮助开发飞行�
 <tr>
   <td>应答数据</td>
   <td>0</td>
-  <td>1</td>
+  <td>2</td>
   <td>返回码<ul>
-    <li>0x01：执行失败</li>
-    <li>0x02：开始执行</li>
+    <li>0x0001：执行失败</li>
+    <li>0x0002：开始执行</li>
     </ul></td>
 </tr>
 
@@ -490,7 +485,7 @@ DJI 为开发者提供两种功能完善的飞行控制 API 帮助开发飞行�
 <tr>
   <td >请求数据</td>
   <td>0</td>
-  <td>1</td>
+  <td>2</td>
   <td>指令序列号</td>
 </tr>
 
@@ -498,12 +493,12 @@ DJI 为开发者提供两种功能完善的飞行控制 API 帮助开发飞行�
 <tr>
   <td>应答数据</td>
   <td>0</td>
-  <td>1</td>
+  <td>2</td>
   <td>返回码<ul>
-    <li>0x01：执行失败（指令序列号不是当前执行的指令）</li>
-    <li>0x03：指令正在执行</li>
-    <li>0x04：指令执行失败</li>
-    <li>0x05：指令执行成功</li>
+    <li>0x0001：执行失败（指令序列号不是当前执行的指令）</li>
+    <li>0x0003：指令正在执行</li>
+    <li>0x0004：指令执行失败</li>
+    <li>0x0005：指令执行成功</li>
     </ul></td>
 </tr>
 
@@ -522,7 +517,7 @@ DJI 为开发者提供两种功能完善的飞行控制 API 帮助开发飞行�
   <td rowspan="5">请求数据</td>
   <td>0</td>
   <td>1</td>
-  <td>模式标志位</td>
+  <td>模式标志字节</td>
 </tr>
 
 <tr>
@@ -859,7 +854,7 @@ DJI 为开发者提供两种功能完善的飞行控制 API 帮助开发飞行�
   <td rowspan="4">姿态四元数</td>
   <td>q0</td>
   <td>float32</td>
-  <td rowspan="4">姿态四元数<br>（从 Ground 坐标系转到 Body 坐标系）</td>
+  <td rowspan="4">姿态四元数<br>从 Ground 坐标系转到 Body 坐标系变换*</td>
   <td rowspan="4">---</td>
   <td rowspan="4">100Hz</td>
 </tr>
@@ -880,7 +875,7 @@ DJI 为开发者提供两种功能完善的飞行控制 API 帮助开发飞行�
   <td rowspan="3">加速度</td>
   <td>agx</td>
   <td>float32</td>
-  <td rowspan="3">在Ground 坐标系下</td>
+  <td rowspan="3">飞行器在 Ground 坐标系下加速度</td>
   <td rowspan="3">m/s<sup>2</sup> </td>
   <td rowspan="3">100Hz</td>
 </tr>
@@ -897,7 +892,7 @@ DJI 为开发者提供两种功能完善的飞行控制 API 帮助开发飞行�
   <td rowspan="3">速度</td>
   <td>vgx</td>
   <td>float32</td>
-  <td rowspan="3">在Ground 坐标系下</td>
+  <td rowspan="3">飞行器在 Ground 坐标系下速度</td>
   <td rowspan="3">m/s</td>
   <td rowspan="3">100Hz</td>
 </tr>
@@ -914,8 +909,8 @@ DJI 为开发者提供两种功能完善的飞行控制 API 帮助开发飞行�
   <td rowspan="3">角速度</td>
   <td>wx</td>
   <td>float32</td>
-  <td rowspan="3">在Body 坐标系下 </td>
-  <td rowspan="3">rad/s</td>
+  <td rowspan="3">飞行器在 Body 坐标系下角速度 </td>
+  <td rowspan="3">度/s</td>
   <td rowspan="3">100Hz</td>
 </tr>
 <tr>
@@ -948,7 +943,7 @@ DJI 为开发者提供两种功能完善的飞行控制 API 帮助开发飞行�
 <tr>
   <td>height</td>
   <td>float32</td>
-  <td>相对地面高度*</td>
+  <td>相对地面高度**</td>
   <td>m</td>
 </tr>
 <tr>
@@ -976,7 +971,7 @@ DJI 为开发者提供两种功能完善的飞行控制 API 帮助开发飞行�
 </tr>
 
 <tr>
-  <td rowspan="6">遥控器</td>
+  <td rowspan="6">遥控器*</td>
   <td>roll</td>
   <td>int16_t</td>
   <td>遥控通道 roll 数据</td>
@@ -1013,7 +1008,7 @@ DJI 为开发者提供两种功能完善的飞行控制 API 帮助开发飞行�
   <td rowspan="3">云台姿态</td>
   <td>roll</td>
   <td>float32</td>
-  <td rowspan="3">在Ground 坐标系下</td>
+  <td rowspan="3">云台在Ground 坐标系下姿态</td>
   <td rowspan="3">度</td>
   <td rowspan="3">50Hz</td>
 </tr>
@@ -1027,11 +1022,11 @@ DJI 为开发者提供两种功能完善的飞行控制 API 帮助开发飞行�
 </tr>
 
 <tr>
-  <td>飞行状态</td>
+  <td>飞行状态*</td>
   <td>status</td>
   <td>uint8_t</td>
   <td>飞行状态</td>
-  <td>飞行状态</td>
+  <td>---</td>
   <td>10Hz</td>
 </tr>
 
@@ -1040,7 +1035,7 @@ DJI 为开发者提供两种功能完善的飞行控制 API 帮助开发飞行�
   <td>battery</td>
   <td>uint8_t</td>
   <td>剩余电量百分比</td>
-  <td>剩余电量百分比</td>
+  <td>%</td>
   <td>1Hz</td>
 </tr>
 
@@ -1057,8 +1052,8 @@ DJI 为开发者提供两种功能完善的飞行控制 API 帮助开发飞行�
   <td>0Hz</td>
 </tr>
 </table>
-
-*\*相对地面高度是超声波、气压计和IMU融合的结果。如果飞行器上没有安装Guidance，或者安装Guidance但是相对地面的距离超过3米，相对地面高度则由气压计气压计计算得出。由于室内无法准确获取气压值，此数据将不可靠。*
+*\*Ground 坐标系、Body 坐标系、遥控器及飞行状态相关详细说明请参阅XXXXXX*  
+*\*\*相对地面高度是超声波、气压计和IMU融合的结果。如果飞行器上没有安装Guidance，或者安装Guidance但是相对地面的距离超过3米，相对地面高度则由气压计气压计计算得出。由于室内无法准确获取气压值，此数据将不可靠。*
 
 
 #### 命令码 0x01 失去控制权
@@ -1074,7 +1069,7 @@ DJI 为开发者提供两种功能完善的飞行控制 API 帮助开发飞行�
 </tr>
 
 <tr>
-  <td >请求数据</td>
+  <td >推送数据</td>
   <td>0</td>
   <td>1</td>
   <td>固定值，0x04</td>
@@ -1086,3 +1081,4 @@ DJI 为开发者提供两种功能完善的飞行控制 API 帮助开发飞行�
 
 ##Onboard API
 
+TODO
