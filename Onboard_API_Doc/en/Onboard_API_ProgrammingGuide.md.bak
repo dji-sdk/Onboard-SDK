@@ -316,7 +316,7 @@ Linklayer_Send(SESSION_MODE3,
                 200.
                 3,
                 print_sdk_version
-};
+);
 ~~~
 
 Session Mode 3 is used to get API version. After the autopilot receives request and responses, function print\_sdk\_version will executed and print the version information:
