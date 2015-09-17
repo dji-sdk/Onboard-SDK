@@ -11,7 +11,7 @@
 ## 协议帧格式
 
    ```
-   |<--------------Protocol Frame Header-------------———--->|<--Protocol Frame Data-->|<--Protocol Frame Checksum-->|
+   |<--------------Protocol Frame Header------------------>|<--Protocol Frame Data-->|<--Protocol Frame Checksum-->|
    |SOF|LEN|VER|SESSION|ACK|RES0|PADDING|ENC|RES1|SEQ|CRC16|          DATA           |            CRC32            |
    ```
 
