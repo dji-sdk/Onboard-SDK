@@ -20,9 +20,11 @@ English version:
 
 [Onboard API 快速入门](Onboard_API_Doc/cn/Onboard_API_快速入门.md)　
 
-[Onboard API 编程指南](Onboard_API_Doc/cn/Onboard_API_编程指南.md)
+[Onboard API 编程指南](Onboard_API_Doc/cn/Onboard_SDK 开放协议说明.md)
 
 [数据透传说明文档](Onboard_API_Doc/cn/数据透传说明文档.md)
+
+[飞行控制附加说明](Onboard_API_Doc/cn/飞行控制附加说明.md)
 
 Usage
 =========
