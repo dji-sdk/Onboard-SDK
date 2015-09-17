@@ -285,19 +285,19 @@ Each Command Set contains some Command ID to achieve different functions
 
 <tr>
   <td>0x20</td>
-  <td>相机拍照</td>
+  <td>Take Photo</td>
   <td>1</td>
 </tr>
 
 <tr>
   <td>0x21</td>
-  <td>相机开始录像</td>
+  <td>Start Record</td>
   <td>1</td>
 </tr>
 
 <tr>
   <td>0x22</td>
-  <td>相机停止录像</td>
+  <td>Stop Record</td>
   <td>1</td>
 </tr>
 
@@ -572,16 +572,7 @@ The control priority is Remote Controller > Mobile Device > Onboard Device
 
 </table>
 
-*\*有关Movement Control的具体内容请参阅XXXXXX*  
-
-**注意！非常重要：控制模式有进入条件限制：**
-
-- 当且仅当GPS信号正常（health\_flag >=3）时，才可以使用水平**位置**控制（HORI_POS）相关的控制指令
-- 当GPS信号正常（health\_flag >=3），或者Gudiance系统正常工作（连接安装正确）时，可以使用水平**速度**控制（HORI_VEL）相关的控制指令
-
-**关于GPS信号健康度的获取，请参考“Command ID 0x00 标准数据包”**
-**关于位置控制和速度控制相关的指令，请参考附述章节**
-
+*\*被控量为平动或转动由模式标志字节决定，有关姿态控制的具体内容请参阅[飞行控制附加说明][0]*  
 
 #### Command ID 0x0A Gimbal Control in Rate
 <table>
@@ -596,17 +587,17 @@ The control priority is Remote Controller > Mobile Device > Onboard Device
   <td rowspan="4">Request Data</td>
   <td>0</td>
   <td>2</td>
-  <td>Yaw轴角速度</td>
+  <td>rate in Yaw</td>
 </tr>
 <tr>
   <td>2</td>
   <td>2</td>
-  <td>Roll轴角速度</td>
+  <td>rate in Roll</td>
 </tr>
 <tr>
   <td>4</td>
   <td>2</td>
-  <td>Pitch轴角速度</td>
+  <td>rate in Pitch</td>
 </tr>
 <tr>
   <td>6</td>
@@ -626,27 +617,27 @@ The control priority is Remote Controller > Mobile Device > Onboard Device
 
 <table>
 <tr>
-  <th>数据名称</th>
+  <th>Data Name</th>
   <th>Data Type</th>
   <th>Description</th>
 </tr>
 
 <tr>
-  <td>Yaw轴角速度</td>
+  <td>rate in Yaw</td>
   <td>int16_t</td>
-  <td>单位0.1度/s，输入范围（[-1800,+1800]）</td>
+  <td>unit 0.1度/s，输入范围（[-1800,+1800]）</td>
 </tr>
 
 <tr>
-  <td>Roll轴角速度</td>
+  <td>rate in Roll</td>
   <td>int16_t</td>
-  <td>单位0.1度/s，输入范围[-1800,+1800]</td>
+  <td>unit 0.1度/s，输入范围[-1800,+1800]</td>
 </tr>
 
 <tr>
-  <td>Pitch轴角速度</td>
+  <td>rate in Pitch</td>
   <td>int16_t</td>
-  <td>单位0.1度/s，输入范围[-1800,+1800]</td>
+  <td>unit 0.1度/s，输入范围[-1800,+1800]</td>
 </tr>
 </table>
 
@@ -707,7 +698,7 @@ The control priority is Remote Controller > Mobile Device > Onboard Device
 
 <table>
 <tr>
-  <th>数据名称</th>
+  <th>Data Name</th>
   <th>Data Type</th>
   <th>Description</th>
 </tr>
@@ -715,29 +706,29 @@ The control priority is Remote Controller > Mobile Device > Onboard Device
 <tr>
   <td>Yaw轴角度</td>
   <td>int16_t</td>
-  <td>单位0.1度，输入范围 [-3200~+3200]</td>
+  <td>unit 0.1度，输入范围 [-3200~+3200]</td>
 </tr>
 
 <tr>
   <td>Roll轴角度</td>
   <td>int16_t</td>
-  <td>单位0.1度，输入范围 [-350~+350]</td>
+  <td>unit 0.1度，输入范围 [-350~+350]</td>
 </tr>
 
 <tr>
   <td>Pitch轴角度</td>
   <td>int16_t</td>
-  <td>单位0.1度，输入范围 [-900~+300]</td>
+  <td>unit 0.1度，输入范围 [-900~+300]</td>
 </tr>
 
 <tr>
   <td>命令完成时间</td>
   <td>uint8_t</td>
-  <td>单位0.1s，例如20代表云台在2s内匀速转动至命令位置<br>建议用户控制速度不超过400度/秒</td>
+  <td>unit 0.1s，例如20代表云台在2s内匀速转动至命令位置<br>建议用户控制速度不超过400度/秒</td>
 </tr>
 </table>
 
-#### 命令码 0x20 相机拍照
+#### 命令码 0x20 Take Photo
 
 <table>
 <tr>
@@ -761,7 +752,7 @@ The control priority is Remote Controller > Mobile Device > Onboard Device
   <td>无应答数据</td>
 </tr>
 </table>
-#### 命令码 0x21 相机开始录像
+#### 命令码 0x21 Start Record
 
 <table>
 <tr>
@@ -786,7 +777,7 @@ The control priority is Remote Controller > Mobile Device > Onboard Device
 </tr>
 
 </table>
-#### 命令码 0x22 相机停止录像
+#### 命令码 0x22 Stop Record
 
 <table>
 <tr>
@@ -926,20 +917,20 @@ The control priority is Remote Controller > Mobile Device > Onboard Device
 
 <table>
 <tr>
-  <td>状态包</td>
-  <td>状态包字段</td>
-  <td>数据段类型</td>
+  <td>Item Name</td>
+  <td>Variables</td>
+  <td>Type</td>
   <td>Description</td>
-  <td>单位</td>
-  <td>默认频率</td>
+  <td>Unit</td>
+  <td>Default Frequency</td>
 </tr>
 
 <tr>
-  <td>时间戳</td>
+  <td>Time Stamp</td>
   <td>time</td>
   <td>unsigned int</td>
-  <td>时间戳</td>
-  <td>时间间隔1/600s</td>>
+  <td>time_stamp</td>
+  <td>Time in tick (tick interval 1/600s)</td>
   <td>100Hz</td>
 </tr>
 <tr>
