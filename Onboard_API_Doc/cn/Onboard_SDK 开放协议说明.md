@@ -547,13 +547,13 @@
 <tr>
   <td>9</td>
   <td>4</td>
-  <td>Yaw 轴向控制量（偏航）</td>
+  <td>Throttle 或 Z 轴控制量</td>
 </tr>
 
 <tr>
   <td>13</td>
   <td>4</td>
-  <td>Throttle（油门） 或 Z 轴控制量</td>
+  <td>Yaw 轴向控制量</td>
 </tr>
 
 <tr>
@@ -671,7 +671,7 @@
         <ul>1 ： 云台Yaw将维持上一时刻状态 </ul>
     <li>bit 2：Roll轴命令控制失效位，同bit[1]描述</li>
     <li>bit 3：Pitch轴命令控制失效位，同bit[1]描述</li>
-    <li>bit [4:7]：保留，必须为0</li>
+    <li>bit 4:7：保留，必须为0</li>
     </ul></td>
 
 <tr>
@@ -816,9 +816,9 @@
   <td>状态包存在标志位，标志位为 1 表示标准数据包中存在该状态包<ul>
     <li>bit 0：时间戳包存在标</li>
     <li>bit 1：姿态四元素包存在标志</li>
-    <li>bit 2：Ground 坐标系下的加速度包存在标志</li>
-    <li>bit 3：Ground 坐标系下的速度包存在标志</li>
-    <li>bit 4：Body 坐标系的角速度包存在标志</li>
+    <li>bit 2：加速度包存在标志</li>
+    <li>bit 3：速度包存在标志</li>
+    <li>bit 4：角速度包存在标志</li>
     <li>bit 5：GPS 位置、海拔（气压计数值）、相对地面高度、健康度包存在标志</li>
     <li>bit 6：磁感计数值包存在标志</li>
     <li>bit 7：遥控器通道值包存在标志</li>
@@ -826,8 +826,8 @@
     <li>bit 9：飞行状态包存在标志</li>
     <li>bit 10：剩余电池百分比包存在标志</li>
     <li>bit 11：控制设备包存在标志</li>
-    <li>bit [12:15]：保留不用</li>
-    </ul></td>
+    <li>bit 12:15：保留不用</li>
+    </td>></ul>
 </tr>
 
 <tr>
@@ -845,59 +845,59 @@
 <tr>
   <td>22</td>
   <td>12</td>
-  <td>Ground 坐标系下的加速度</td>
+  <td>加速度</td>
 </tr>
 
 <tr>
   <td>34</td>
-  <td>12</td>
-  <td>Ground 坐标系下的速度</td>
+  <td>13</td>
+  <td>速度</td>
 </tr>
 
 <tr>
-  <td>46</td>
+  <td>47</td>
   <td>12</td>
-  <td>Body 坐标系的角速度</td>
+  <td>角速度</td>
 </tr>
 
 <tr>
-  <td>58</td>
+  <td>59</td>
   <td>24</td>
   <td>GPS 位置, 海拔高度, 相对地面高度</td>
 </tr>
 
 <tr>
-  <td>82</td>
+  <td>83</td>
   <td>12</td>
   <td>磁感计数值</td>
 </tr>
 
 <tr>
-  <td>94</td>
+  <td>95</td>
   <td>10</td>
   <td>遥控器通道值</td>
 </tr>
 
 <tr>
-  <td>104</td>
+  <td>105</td>
   <td>12</td>
   <td>云台姿态</td>
 </tr>
 
 <tr>
-  <td>116</td>
+  <td>117</td>
   <td>1</td>
   <td>飞行状态</td>
 </tr>
 
 <tr>
-  <td>117</td>
+  <td>118</t8d>
   <td>1</td>
   <td>剩余电池百分比</td>
 </tr>
 
 <tr>
-  <td>118</td>
+  <td>119</td>
   <td>1</td>
   <td>控制设备</td>
 </tr>
@@ -924,7 +924,7 @@
   <td>time</td>
   <td>uint32_t</td>
   <td>时间戳</td>
-  <td>时间间隔1/600s</td>
+  <td>时间间隔1/600s</td>>
   <td>100Hz</td>
 </tr>
 <tr>
@@ -952,7 +952,7 @@
   <td rowspan="3">加速度</td>
   <td>agx</td>
   <td>float32</td>
-  <td rowspan="3">飞行器在 Ground 坐标系下加速度</td>
+  <td rowspan="3">加速度</td>
   <td rowspan="3">m/s<sup>2</sup> </td>
   <td rowspan="3">100Hz</td>
 </tr>
@@ -966,12 +966,12 @@
 </tr>
 
 <tr>
-  <td rowspan="3">速度</td>
+  <td rowspan="4">速度</td>
   <td>vgx</td>
   <td>float32</td>
-  <td rowspan="3">飞行器在 Ground 坐标系下速度</td>
+  <td rowspan="3">速度</td>
   <td rowspan="3">m/s</td>
-  <td rowspan="3">100Hz</td>
+  <td rowspan="4">100Hz</td>
 </tr>
 <tr>
   <td>vgy</td>
@@ -983,10 +983,27 @@
 </tr>
 
 <tr>
+  <td>vgstatus</td>
+  <td>uint8_t</td>
+  <td>速度信息状态字节<ul>
+  <li>bit 0：数据有效位</li>
+    <ul>0：速度数据无效</ul>
+    <ul>1：速度数据有效</ul>
+  <li>bit 1:4 ：数据来源</li>
+    <ul>0b011：GPS</ul>
+    <ul>0b110：单目摄像头识别</ul>
+    <ul>0b111：双目摄像头识别</ul>
+  <li>bit 5:7 ：保留</li>
+  </ul></td>
+  <td>---</td>
+</tr>
+
+
+<tr>
   <td rowspan="3">角速度</td>
   <td>wx</td>
   <td>float32</td>
-  <td rowspan="3">飞行器在 Body 坐标系下角速度 </td>
+  <td rowspan="3">角速度 </td>
   <td rowspan="3">度/s</td>
   <td rowspan="3">100Hz</td>
 </tr>
@@ -1099,10 +1116,10 @@
 </tr>
 
 <tr>
-  <td>飞行状态*</td>
+  <td>飞行状态</td>
   <td>status</td>
   <td>uint8_t</td>
-  <td>飞行状态</td>
+  <td>保留</td>
   <td>---</td>
   <td>10Hz</td>
 </tr>
@@ -1121,14 +1138,20 @@
   <td>status</td>
   <td>uint8_t</td>
   <td>控制设备<ul>
-     <li>0x00 ： 遥控器</li>
-     <li>0x01 ： 移动设备</li>
-     <li>0x02 ： 机载设备</li>
-     </ul></td>
+     <li>bit 0:2 ：控制设备</li>
+     <ul>0b000 ：遥控器</ul>
+     <ul>0b001 ：移动设备</ul>
+     <ul>0b010 ：机载设备</ul>
+     <li>bit 3 ：机载设备控制请求标志位</li>
+     <ul>0：未请求</ul>
+     <ul>1：已请求</ul>
+     <li>bit 4:7 ：保留</li>
+  </ul></td>
   <td>---</td>
   <td>0Hz</td>
 </tr>
 </table>
+
 **Ground 坐标系、Body 坐标系、遥控器及飞行状态相关详细说明请参阅[飞行控制附加说明][0]*  
 ***相对地面高度是超声波、气压计和IMU融合的结果。如果飞行器上没有安装Guidance，或者安装Guidance但是相对地面的距离超过3米，相对地面高度则由气压计气压计计算得出。室内无法准确获取气压值，此数据将不可靠。*
 
