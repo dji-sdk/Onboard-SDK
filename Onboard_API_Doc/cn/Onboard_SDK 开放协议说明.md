@@ -1116,7 +1116,7 @@
   <td>飞行状态</td>
   <td>status</td>
   <td>uint8_t</td>
-  <td>保留</td>
+  <td>飞行状态*</td>
   <td>---</td>
   <td>10Hz</td>
 </tr>
