@@ -921,7 +921,7 @@
   <td>time</td>
   <td>uint32_t</td>
   <td>时间戳</td>
-  <td>时间间隔1/600s</td>>
+  <td>时间间隔1/600s</td>
   <td>100Hz</td>
 </tr>
 <tr>
