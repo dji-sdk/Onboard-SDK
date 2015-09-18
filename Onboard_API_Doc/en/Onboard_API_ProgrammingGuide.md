@@ -175,7 +175,7 @@ All serial packages exchanged between MATRICE 100 and the onboard device can be 
 |COMMAND ID|1|1|
 |COMMAND DATA*|2|depends on the exact command|
 
-*\*COMMAND DATA in Message Packageis able to be configured in N1-Assistant*
+**COMMAND DATA in Message Packageis able to be configured in N1-Assistant*
 
 ---
 
@@ -192,7 +192,7 @@ All serial packages exchanged between MATRICE 100 and the onboard device can be 
 |Mode 2|1|Sender need acknowledgement, but can tolerate ACK package loss.|
 |Mode 3|2-31|Sender wants to make sure the ACK is reliably sent.*|
 
-*\*For these sessions, Receiver saves the sequence number in the command package and send an  ACK package upon receiving it. If ACK package loss happened, Sender may request Receiver again using the same command package with the same sequence number.*
+**For these sessions, Receiver saves the sequence number in the command package and send an  ACK package upon receiving it. If ACK package loss happened, Sender may request Receiver again using the same command package with the same sequence number.*
 
 
 *Note: Here a dummy link layer send interface is defined for demonstration purpose. Since Session Mode 3 is reliable, the communication function interface should contain parameters such as length of timeout and number of resending times.*
@@ -523,7 +523,7 @@ The control priority is Remote Controller > Mobile Device > Onboard Device
 
 </table>
 
-#### Command ID 0x03 Movement Control\*
+#### Command ID 0x03 Movement Control*
 <table>
 <tr>
   <th>Data Type</th>
@@ -572,7 +572,7 @@ The control priority is Remote Controller > Mobile Device > Onboard Device
 
 </table>
 
-*\*被控量为平动或转动由模式标志字节决定，有关姿态控制的具体内容请参阅[飞行控制附加说明][0]*  
+**被控量为平动或转动由模式标志字节决定，有关姿态控制的具体内容请参阅[飞行控制附加说明][0]*  
 
 #### Command ID 0x0A Gimbal Control in Rate
 <table>
@@ -909,7 +909,7 @@ The control priority is Remote Controller > Mobile Device > Onboard Device
 </tr>
 </table>
 
-*\*Offset(byte)：表格中Offset(byte)为Message Package中存在所有状态包的情况。*
+**Offset(byte)：表格中Offset(byte)为Message Package中存在所有状态包的情况。*
 
  实际数据在Message Package中的偏移需要根据状态包存在标志位确定存在的状态包，然后根据各状态包大小计算出状态包的实际偏移大小。
  
@@ -934,7 +934,7 @@ The control priority is Remote Controller > Mobile Device > Onboard Device
   <td>100Hz</td>
 </tr>
 <tr>
-  <td rowspan="4">姿态四元数</td>
+  <td rowspan="4">Quarternion</td>
   <td>q0</td>
   <td>float32</td>
   <td rowspan="4">姿态四元数<br>从 Ground 坐标系转到 Body 坐标系变换*</td>
@@ -1021,7 +1021,7 @@ The control priority is Remote Controller > Mobile Device > Onboard Device
   <td>alti</td>
   <td>float32</td>
   <td>海拔</td>
-  <td>气压值</td>
+  <td>m</td>
 </tr>
 <tr>
   <td>height</td>
@@ -1135,8 +1135,8 @@ The control priority is Remote Controller > Mobile Device > Onboard Device
   <td>0Hz</td>
 </tr>
 </table>
-*\*Ground 坐标系、Body 坐标系、遥控器及飞行状态相关详细Description请参阅XXXXXX*  
-*\*\*相对地面高度是超声波、气压计和IMU融合的结果。如果飞行器上没有安装Guidance，或者安装Guidance但是相对地面的距离超过3米，相对地面高度则由气压计气压计计算得出。由于室内无法准确获取气压值，此数据将不可靠。*
+**Ground 坐标系、Body 坐标系、遥控器及飞行状态相关详细Description请参阅XXXXXX*  
+***相对地面高度是超声波、气压计和IMU融合的结果。如果飞行器上没有安装Guidance，或者安装Guidance但是相对地面的距离超过3米，相对地面高度则由气压计气压计计算得出。由于室内无法准确获取气压值，此数据将不可靠。*
 
 
 #### Command ID 0x01 Control Authority Change Notification
