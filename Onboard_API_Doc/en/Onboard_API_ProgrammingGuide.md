@@ -833,7 +833,7 @@ The control priority is Remote Controller > Mobile Device > Onboard Device
     <li>bit 10：剩余电池百分比包存在标志</li>
     <li>bit 11：控制设备包存在标志</li>
     <li>bit [12:15]：保留不用</li>
-    </td>></ul>
+    </td></ul>
 </tr>
 
 <tr>
