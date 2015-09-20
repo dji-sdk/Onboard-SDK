@@ -1,6 +1,5 @@
 (TODO: Mengqi, please fill this with our new quickstart in the gitlab. Thanks.)
 (TODO: The M100 & Onboard SDK FAQ will be a seperate doc apart from the quickstart version in the gitlab. Thanks.)
 (TODO: The activation article from the forum needs to be put back into the doc file)
-(TODO: The activation article from the forum needs to be put back into the doc file)
 (TODO: Communicate with Ben for two things:(1)the author of the activation article in the forum (2)The time which the new forum will be in place.)
 [Onboard SDK 开放协议说明](Onboard_API_Doc/cn/Onboard_SDK 开放协议说明.md)
