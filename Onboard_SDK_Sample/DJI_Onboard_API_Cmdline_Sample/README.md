@@ -1,23 +1,26 @@
 #DJI_Onboard_API_Cmdline_Sample
 ##Directory Structure
-* src: source code
-* src/DJI_LIB: DJI Onboard API Library
 * cmake: makefile and temporary files
-* output: executable files
+* src: source code
+* src/DJI_LIB: DJI Onboard API Library (Experimental)
+* output: executables
 
-##Development Environment
+##Development & Running Environment
 Operating System: Ubuntu 12.04
 g++ version: 4.6.3
 
-
 ## Hardware Installation
-In order to communicate with the N1 Autopilot, a physical connection between your computer and N1 Autopilot is required with a USB to TTL Serial cable(SOLD Seperately).
+In order to communicate with the N1 Autopilot via the DJI OPEN protocal, a physical connection between your computer and N1 Autopilot is required with a USB to TTL Serial cable(SOLD Seperately).
 
-##Configuration
-* Enter the following info *APP ID*,*App Level* and *Communication Key* into *./output/config.xml.*  
-* Enter your *uart device name?* and *baudrate* in *./output/config.xml*.
+##Configs
+* Enter the following info into *./output/config.xml.*
+*APP ID*
+*App Level*
+*Communication Key*
+*uart device name?*
+*baudrate*.
 
->Note:Developers need tp ensure that the baudrate set in "config.xml" is consistent with the one of UAV set in DJI N1 PC assistant software.
+>Note: the 'baudrate' set in 'config.xml' needs to be consistent with the one set in the DJI N1 PC assistant.
 
 ##Compile
 ~~~bash
@@ -25,22 +28,21 @@ cd cmake
 make
 ~~~
 
-Now, if the compilation is successful, you can locate the Linuc executable file in the *output* directory.
+If the compilation is completed, an Linux executable called 'DJI_Onboard_API_Cmdline_Test' will be sitted in the *output* directory.
 
 ##Run
 
-For beginners, we recommand running this demo in DJI PC Simulator.
+For beginners, we recommand running this demo along with the DJI PC Simulator.
 
-Ensure that the current account has acess privilege to the serial device. Assume that the serial device is named as */dev/ttyUSB0*, use the following command to gain access privilege for the serial device.
+Note: Please make sure that you have READ/WRITE/ACCESS(?) privilege to the Linux serial ports(?). Assume your serial device is called */dev/ttyUSB0*, enter the following command to gain access privilege(?).
 
 ~~~bash
 sudo chmod 777 /dev/ttyUSB0??
 ~~~
 
-
-Using the following command to launch the testing program
+Run the program by entering the following command
 ~~~bash
 ./DJI_Onboard_API_Cmdline_Test
 ~~~
-Then there should be a menu display on screen.
-Follow tips on screen and control the UAV.
+
+ENJOY the demo!
