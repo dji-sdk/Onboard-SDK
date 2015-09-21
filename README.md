@@ -2,7 +2,7 @@
 
 [Chinese Version](README_CN.md)  
 
-[FAQ](Onboard_API_Doc/en/FAQ.md)  
+[FAQ](Onboard_API_Doc/en/FAQ_en.md)  
 [Glossary](Onboard_API_Doc/en/Glossary.md)  
 
 ---

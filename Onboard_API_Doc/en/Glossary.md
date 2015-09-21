@@ -6,6 +6,7 @@
 ### Onboard Hardwares
 ### Onboard External Equipments
 ### Onboard Device
+>Onboard Device is the device which is connected to N1 Autopilot through UART interface.
 ### Mobile Device
 ### third party sensors
 ### SDK
