@@ -1,15 +1,15 @@
 #DJI_Onboard_API_Cmdline_Sample
 ##Intro
-* This example aims to help you understand the following basic flight procedures including:
-(1) The activation
-(2) The flight control obtainment
-(3) The flight control release
-(4) The take off procedure
-(5) The landing procedure
-(6) The go home procedure
-(7) The attitude control
-(8) The gimbal control
-(9) The flight control info obtainment
+This example aims to help you understand the following basic flight procedures including:
+* The activation
+* The flight control obtainment
+* The flight control release
+* The take off procedure
+* The landing procedure
+* The go home procedure
+* The attitude control
+* The gimbal control
+* The flight control info obtainment
 
 ##Directory Structure
 * cmake: makefile and temporary files
@@ -27,7 +27,7 @@ g++ version: 4.6.3
 In order to communicate with the N1 Autopilot via the DJI OPEN protocal, a physical connection between your computer and N1 Autopilot is required with a USB to TTL Serial cable(SOLD Seperately).
 
 ##Configs
-* Enter the following info into *./output/config.xml.*
+Enter the following info into *./output/config.xml.*
 * APP ID
 * App Level
 * Communication Key
