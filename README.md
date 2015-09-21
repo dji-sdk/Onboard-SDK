@@ -1,9 +1,11 @@
 # DJI Onboard SDK
 
 [Chinese Version](README_CN.md)  
+  
+[Open Protocol][0]  
+[FlightControl Explain][1]  
+[Transparent Transport][2] 
 
-[FAQ](Onboard_API_Doc/en/FAQ_en.md)  
-[Glossary](Onboard_API_Doc/en/Glossary.md)  
 
 ---
 
@@ -140,18 +142,27 @@ Please comply with the local regulations during the development process and flig
 [Linux Command Line](https://github.com/dji-sdk/Onboard-SDK/tree/master/Onboard_SDK_Sample/DJI_Onboard_API_Cmdline_Sample/doc)(Chinese)
 
 ### API References Section:
-[Onboard API References](https://github.com/dji-sdk/Onboard-SDK/tree/master/Onboard_API_Doc/en/1)(English)
+[Open Protocol][0]  
 
-[Data Transparent Transmission](https://github.com/dji-sdk/Onboard-SDK/tree/master/Onboard_API_Doc/en/2)(English)
+[FlightControl Explain][1]  
 
-[Onboard SDK Flight Control Explain](https://github.com/dji-sdk/Onboard-SDK/tree/master/Onboard_API_Doc/en/3)(English)
+[Transparent Transport][2] 
 
 ### Articles contributed by Onboard SDK external developers:
 [Onboard Device Selection Tips](http://bbs.dji.com/forum.php?mod=viewthread&tid=21106&extra=page%3D1%26filter%3Ddigest%26digest%3D1)(Chinese)
 
 [Use STM32 to take control of M100](http://bbs.dji.com/forum.php?mod=viewthread&tid=19754&extra=page%3D1%26filter%3Ddigest%26digest%3D1)(Chinese)
 
+
+[0]:Onboard_API_Doc/en/OpenProtocol.md  
+[1]:Onboard_API_Doc/en/FlightControlExplain.md  
+[2]:Onboard_API_Doc/en/TransparentTransport.md   
+
+
+
 (TODO: The M100 & Onboard SDK FAQ will be a seperate doc apart from the quickstart version in the gitlab. Thanks.)
 (TODO: The activation article from the forum needs to be put back into the doc file)
 (TODO: Communicate with Ben for two things:(1)the author of the activation article in the forum (2)The time which the new forum will be in place.)
 
+[FAQ](Onboard_API_Doc/en/FAQ_en.md)  
+[Glossary](Onboard_API_Doc/en/Glossary.md)  

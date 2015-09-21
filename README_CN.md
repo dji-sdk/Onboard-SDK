@@ -2,9 +2,9 @@
 
 [English Version](README.md)   
 
-[FAQ](Onboard_API_Doc/cn/FAQ_cn.md)  
-[术语](Onboard_API_Doc/cn/术语.md)  
-[Onboard SDK 开放协议说明](Onboard_API_Doc/cn/Onboard_SDK 开放协议说明.md)  
+[开放协议说明][0]  
+[飞行控制附加说明][1]  
+[数据透传说明文档][2]  
 
 ---
 
@@ -126,25 +126,23 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 
 ###安全声明:
 
-飞行过程中请遵循当地法律法规。更多信息请访问http://flysafe.dji.com/cn
+飞行过程中请遵循当地法律法规。更多信息请访问 [http://flysafe.dji.com/cn](http://flysafe.dji.com/cn)
 
 ### 编译及运行部分:
 
-[Linux + ROS example](https://github.com/dji-sdk/Onboard-SDK/tree/master/Onboard_SDK_Sample/DJI_Onboard_API_ROS_Sample/doc)(中文)
+[Linux + ROS example](Onboard_SDK_Sample/DJI_Onboard_API_ROS_Sample/)(中文)
 
-[Windows QT example](https://github.com/dji-sdk/Onboard-SDK/tree/master/Onboard_SDK_Sample/DJI_Onboard_API_Windows_QT_Sample/doc)(中文)
+[Windows QT example](Onboard_SDK_Sample/DJI_Onboard_API_Windows_QT_Sample/)(中文)
 
-[Linux Command Line](https://github.com/dji-sdk/Onboard-SDK/tree/master/Onboard_SDK_Sample/DJI_Onboard_API_Cmdline_Sample/doc)(中文)
+[Linux Command Line](Onboard_SDK_Sample/DJI_Onboard_API_Cmdline_Sample/)(中文)
 
 ### 步骤式教程部分:
 
 ### API参考部分:
 
-[Onboard API References](https://github.com/dji-sdk/Onboard-SDK/*)(中文)
-
-[Data Transparent Transmission](https://github.com/dji-sdk/Onboard-SDK/*)(中文)
-
-[Onboard SDK Flight Control Explain](https://github.com/dji-sdk/Onboard-SDK/*)(中文)
+[开放协议说明][0]  
+[飞行控制附加说明][1]  
+[数据透传说明文档][2]  
 
 ### 由外部开发者提供的非官方文档:
 
@@ -152,3 +150,9 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 
 [Use STM32 to take control of the M100](http://bbs.dji.com/forum.php?mod=viewthread&tid=19754&extra=page%3D1%26filter%3Ddigest%26digest%3D1)(中文)
 
+[FAQ](Onboard_API_Doc/cn/FAQ_cn.md)  
+[术语](Onboard_API_Doc/cn/术语.md)
+
+[0]:Onboard_API_Doc/cn/开放协议说明.md  
+[1]:Onboard_API_Doc/cn/飞行控制附加说明.md  
+[2]:Onboard_API_Doc/cn/数据透传说明文档.md   
