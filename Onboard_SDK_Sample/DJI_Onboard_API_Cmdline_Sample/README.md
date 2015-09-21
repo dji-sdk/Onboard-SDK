@@ -9,7 +9,8 @@ This example aims to help you understand the following basic flight procedures i
 * The go home procedure
 * The attitude control
 * The gimbal control
-* The flight control info obtainment
+* The flight control info obtainment  
+
 Developers can play with this example via the command line interaction in Linux. 
 
 ##Directory Structure
@@ -61,3 +62,5 @@ Run the example by entering the following
 * You can see the flight control simulations on screen. Otherwise, real flight happens:)
 * You can see the actual 'gimbal and camera' movement
 * You can see the image/video you capture from you mobile device
+
+Have FUN!
