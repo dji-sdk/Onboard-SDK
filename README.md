@@ -5,7 +5,8 @@
 [Open Protocol][0]  
 [FlightControl Explain][1]  
 [Transparent Transport][2] 
-
+[FAQ](Onboard_API_Doc/en/FAQ_en.md)  
+[Glossary](Onboard_API_Doc/en/Glossary.md)  
 
 ---
 
@@ -154,7 +155,7 @@ Please comply with the local regulations during the development process and flig
 [Use STM32 to take control of M100](http://bbs.dji.com/forum.php?mod=viewthread&tid=19754&extra=page%3D1%26filter%3Ddigest%26digest%3D1)(Chinese)
 
 
-[0]:Onboard_API_Doc/en/OpenProtocol.md  
+[0]:Onboard_API_Doc/en/OPENProtocol.md  
 [1]:Onboard_API_Doc/en/FlightControlExplain.md  
 [2]:Onboard_API_Doc/en/TransparentTransport.md   
 
@@ -164,5 +165,3 @@ Please comply with the local regulations during the development process and flig
 (TODO: The activation article from the forum needs to be put back into the doc file)
 (TODO: Communicate with Ben for two things:(1)the author of the activation article in the forum (2)The time which the new forum will be in place.)
 
-[FAQ](Onboard_API_Doc/en/FAQ_en.md)  
-[Glossary](Onboard_API_Doc/en/Glossary.md)  

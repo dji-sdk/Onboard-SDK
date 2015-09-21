@@ -5,7 +5,8 @@
 [开放协议说明][0]  
 [飞行控制附加说明][1]  
 [数据透传说明文档][2]  
-
+[FAQ](Onboard_API_Doc/cn/FAQ_cn.md)  
+[术语](Onboard_API_Doc/cn/术语.md)
 ---
 
 ## 欢迎,Onboard SDK开发者！
@@ -150,8 +151,7 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 
 [Use STM32 to take control of the M100](http://bbs.dji.com/forum.php?mod=viewthread&tid=19754&extra=page%3D1%26filter%3Ddigest%26digest%3D1)(中文)
 
-[FAQ](Onboard_API_Doc/cn/FAQ_cn.md)  
-[术语](Onboard_API_Doc/cn/术语.md)
+
 
 [0]:Onboard_API_Doc/cn/开放协议说明.md  
 [1]:Onboard_API_Doc/cn/飞行控制附加说明.md  
