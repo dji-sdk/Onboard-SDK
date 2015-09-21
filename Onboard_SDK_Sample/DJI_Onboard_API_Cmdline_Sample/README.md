@@ -22,11 +22,12 @@ Developers can play with this example via the command line interaction in Linux.
 * README.md: this file
 
 ##Compile & Run Environment
-Operating System: Ubuntu 12.04
-g++ version: 4.6.3
+* Operating System: Ubuntu 12.04
+* g++ version: 4.6.3
 
 ## Hardware Installation
-In order to communicate with the N1 Autopilot via the DJI OPEN protocal, a physical connection between your computer and N1 Autopilot is required with a USB to TTL Serial cable(SOLD Seperately).
+* In order to communicate with the N1 Autopilot via the DJI OPEN protocal, a physical connection between your Onboard Device and the N1 Autopilot is required with a USB to TTL Serial cable(SOLD Seperately).
+* In order to monitor & control the flight, a remote controller connects to the mobile device(with the DJI GO APP running) is needed.
 
 ##Configs
 Enter the following info into *./output/config.xml.*
@@ -58,9 +59,9 @@ Run the example by entering the following
 ./DJI_Onboard_API_Cmdline_Test
 ~~~
 
-##What you will expect
-* You can see the flight control simulations on screen. Otherwise, real flight happens:)
+##What you can expect
+* You can see the flight control simulations on screen if you are using the PC simulator. Otherwise, real flight happens.
 * You can see the actual 'gimbal and camera' movement
 * You can see the image/video you capture from you mobile device
 
-Have FUN!
+ENJOY your flight!
