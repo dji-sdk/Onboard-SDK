@@ -10,6 +10,7 @@ This example aims to help you understand the following basic flight procedures i
 * The attitude control
 * The gimbal control
 * The flight control info obtainment
+Developers can play with this example via the command line interaction in Linux. 
 
 ##Directory Structure
 * cmake: makefile and temporary files
@@ -45,12 +46,10 @@ make
 If the compilation is completed, an Linux executable called 'DJI_Onboard_API_Cmdline_Test' will be sitted in the *output* dir.
 
 ##Run
-For beginners, we recommand running this demo along with the DJI PC Simulator for better user experience.
-
-Note: Please be aware that you will need READ/WRITE/ACCESS(?) rights to the program specifc Linux serial port(?). Assume your linux serial communication device for this program is */dev/ttyUSB0*, enter the following command to gain access privilege(?).
+We recommand running this demo along with the DJI PC Simulator and Mobile Device for better user experience. Also, please be aware that you will need sudo privilege to manipulate the Linux serial port. Assume your linux serial communication device of this program is */dev/ttyUSB0*, enter the following command to gain access privilege.
 
 ~~~bash
-sudo chmod 777 /dev/ttyUSB0(? Or we do NOT need to tell them how to do it and they will google it)
+sudo chmod 777 /dev/ttyUSB0
 ~~~
 
 Run the example by entering the following
@@ -59,4 +58,6 @@ Run the example by entering the following
 ~~~
 
 ##What you will expect
-(needs to be filled)
+* You can see the flight control simulations on screen. Otherwise, real flight happens:)
+* You can see the actual 'gimbal and camera' movement
+* You can see the image/video you capture from you mobile device
