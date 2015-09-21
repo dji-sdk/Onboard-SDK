@@ -1,7 +1,10 @@
-# DJI Onboard SDK
-[FAQ](Onboard_API_Doc/cn/FAQ.md)
-[Glossary](Onboard_API_Doc/cn/Glossary.md)
-[Onboard SDK 开放协议说明](Onboard_API_Doc/cn/Onboard_SDK 开放协议说明.md)
+# DJI Onboard   
+
+[Chinese Version](README_CN.md)   
+ 
+[FAQ](Onboard_API_Doc/cn/FAQ.md)  
+[术语](Onboard_API_Doc/cn/术语.md)  
+[Onboard SDK 开放协议说明](Onboard_API_Doc/cn/Onboard_SDK 开放协议说明.md)  
 
 ---
 

@@ -1,9 +1,9 @@
 # DJI Onboard SDK
 
-[Chinese Version](README_CN.md)
+[Chinese Version](README_CN.md)  
 
-[FAQ](Onboard_API_Doc/en/FAQ.md)
-[Glossary](Onboard_API_Doc/en/Glossary.md)
+[FAQ](Onboard_API_Doc/en/FAQ.md)  
+[Glossary](Onboard_API_Doc/en/Glossary.md)  
 
 ---
 
