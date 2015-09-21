@@ -11,7 +11,7 @@ This example aims to help you understand and play with the basic flight procedur
 * The gimbal control
 * The flight control info obtainment  
 
-Developers can play with this example via the command line interaction in Linux. 
+Developers can play with this example via the command line interaction in Linux.
 
 ##Directory Structure
 * cmake: makefile and temporary files
