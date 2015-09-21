@@ -7,6 +7,7 @@
 ### Onboard External Equipments
 ### Onboard Device  
 >Onboard Device is the device which is connected to N1 Autopilot through UART interface.  
+
 ### Mobile Device
 ### third party sensors
 ### SDK
@@ -24,6 +25,8 @@
 ### Flight Platform Activation
 ### DJI N1 PC assistant software
 >The DJI N1 PC assistant software can perform operations for N1 Autopilot such as (1)Serial port configurations and (2)Firmware upgrades.  
+
 ### DJI PC Sumulator
 >A visualization and flight status monitoring tool for the DJI UAVs.  
+
 ### DJI GO APP
