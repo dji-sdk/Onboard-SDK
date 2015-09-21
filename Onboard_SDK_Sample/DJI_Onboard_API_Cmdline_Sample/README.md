@@ -1,6 +1,15 @@
-#DJI_Onboard_API_Cmdline_Sample(? rename)
+#DJI_Onboard_API_Cmdline_Sample
 ##Intro
-* (Needed to be filled including purpose, features and what you can learn)
+* This example aims to help you understand the following basic flight procedures including:
+(1) The activation
+(2) The flight control obtainment
+(3) The flight control release
+(4) The take off procedure
+(5) The landing procedure
+(6) The go home procedure
+(7) The attitude control
+(8) The gimbal control
+(9) The flight control info obtainment
 
 ##Directory Structure
 * cmake: makefile and temporary files
@@ -19,11 +28,11 @@ In order to communicate with the N1 Autopilot via the DJI OPEN protocal, a physi
 
 ##Configs
 * Enter the following info into *./output/config.xml.*
-*APP ID*
-*App Level*
-*Communication Key*
-*uart device name?*
-*baudrate*.
+* APP ID
+* App Level
+* Communication Key
+* uart device name
+* baudrate
 
 >Note: the 'baudrate' set in the 'config.xml' needs to be consistent with the setting in the DJI N1 PC assistant.
 
