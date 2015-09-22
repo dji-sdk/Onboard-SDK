@@ -1149,5 +1149,4 @@ Onboard Device has the lowerest control priority. Its control authorization can 
 </table>
 
 [0]: FlightControlExplain.md
-**Note: The 'Data Transparent Transmission' is NOT included in this document.**
-
+Note: The 'Data Transparent Transmission' is NOT included in this document.
