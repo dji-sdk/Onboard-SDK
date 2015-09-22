@@ -180,7 +180,7 @@ The CMDs have three different sets
 
 Each CMD Set contains some CMD IDs for different operations.
 
-*The execution of different CMDs needs an corresponding Authorization Level. A CMD will not be executed when the current Authorization Level granted is lower.*
+The execution of different CMDs needs an corresponding Authorization Level. A CMD will not be executed when the current Authorization Level granted is lower.
 
 |Levels|Description|
 |:--------:|----------|
