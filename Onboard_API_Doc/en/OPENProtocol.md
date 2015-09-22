@@ -1,7 +1,7 @@
-# DJI Onboard OPEN Protocol  
+# Onboard SDK OPEN Protocol  
 ---
 
-**This documention does not contain Transparent Transport with Mobile SDK part.**
+**The 'Data Transparent Transmission' is NOT included in this document.**
 
 ## Protocol Frame Format
 
@@ -10,7 +10,7 @@
    |SOF|LEN|VER|SESSION|ACK|RES0|PADDING|ENC|RES1|SEQ|CRC16|          DATA           |            CRC32            |
    ```
 
-### Protocol Frame Explanation
+### Protocol Frame Detail
 
 <table>
 <tr>
@@ -24,55 +24,55 @@
   <td>SOF</td>
   <td>0</td>
   <td>8</td>
-  <td>Frame start byte, fixed to be 0xAA</td>
+  <td>starting byte, fixed to be 0xAA</td>
 </tr>
 
 <tr>
   <td>LEN</td>
   <td rowspan="2">1</td>
   <td>10</td>
-  <td>Frame length, maximum length is 1023 (12+1007+4) bytes</td>
+  <td>len of frame, max length set to be 1023 (12+1007+4) bytes</td>
 </tr>
 
 <tr>
   <td>VER</td>
   <td>6</td>
-  <td>Version of the protocol</td>
+  <td>version of the protocol</td>
 </tr>
 
 <tr>
   <td>SESSION</td>
   <td rowspan="3">3</td>
   <td>5</td>
-  <td>The session ID used during communication</td>
+  <td>session ID</td>
 </tr>
 
 <tr>
   <td>ACK</td>
   <td>1</td>
-  <td>Frame Type<ul>
-    <li>0 ： data</li>
-    <li>1 ： acknowlegement</li>
+  <td>frame type<ul>
+    <li>0：data</li>
+    <li>1：acknowlegement</li>
     </ul></td>
 </tr>
 
 <tr>
   <td>RES0</td>
   <td>2</td>
-  <td>Reserved bits, fixed to be 0</td>
+  <td>reserved bits, fixed to be 0</td>
 </tr>
 
 <tr>
   <td>PADDING</td>
   <td rowspan="2">4</td>
   <td>5</td>
-  <td>The length of additional data added in link layer. It comes from the encryption process</td>
+  <td>len of padding data used by encryption</td>
 </tr>
 
 <tr>
   <td>ENC</td>
   <td>3</td>
-  <td>Frame data encryption type<ul>
+  <td>encryption type<ul>
     <li>0 ： no encryption</li>
     <li>1 ： AES encryption</li>
     </ul></td>
@@ -82,51 +82,49 @@
   <td>RES1</td>
   <td>5</td>
   <td>24</td>
-  <td>Reserved bits, fixed to be 0</td>
+  <td>reserved bits, fixed to be 0</td>
 </tr>
 
 <tr>
   <td>SEQ</td>
   <td>8</td>
   <td>16</td>
-  <td>Frame sequence number</td>
+  <td>frame sequence num</td>
 </tr>
 
 <tr>
   <td>CRC16</td>
   <td>10</td>
   <td>16</td>
-  <td>Frame header CRC16 checksum</td>
+  <td>CRC16 checksum of frame header</td>
 </tr>
 
 <tr>
   <td>DATA</td>
   <td>12</td>
   <td>---</td>
-  <td>Frame data, maximum length 1007 bytes</td>
+  <td>frame data, max len to be 1007 bytes</td>
 </tr>
 
 <tr>
   <td>CRC32</td>
   <td>---</td>
   <td>32</td>
-  <td>Frame CRC32 checksum</td>
+  <td>CRC32 checksum of whole frame</td>
 </tr>
 </table>
 
+### Protocol Frame Data
 
+The data packages(?) between N1 Autopilot and the Onboard Device can be classified into the following three types.
 
-### Protocol Data Field
-
-All serial packages exchanged between MATRICE 100 and the onboard device can be classified into three types
-
-|Packages Types|Transmission direction|Transmission Content|
+|Data Types|Direction|Content|
 |------------|:----------:|---------------|
-|command package|Onboard Device==>MATRICE 100|control commands|
-|ACK package|MATRICE 100==>Onboard Device|control results|
-|message package|MATRICE 100==>Onboard Device|status|
+|Commands Data|Onboard Device==>N1 Autopilot|commands|
+|Acks Data|N1 Autopilot==>Onboard Device|returning results|
+|Push Data|N1 Autopilot==>Onboard Device|(?)|
 
-#### Command Package
+#### Commands Data
 
 ```
 |<-------Protocol Frame Data------->|
@@ -137,24 +135,23 @@ All serial packages exchanged between MATRICE 100 and the onboard device can be 
 |----|--------|-----------------|
 |COMMAND SET|0|1|
 |COMMAND ID|1|1|
-|COMMAND DATA|2|depends on the exact command|
+|COMMAND DATA|2|vary by different commands|
 
-#### ACK package
-*ACK in header of an ACK package is set*
+#### ACKs Data
 
 ```
 |<-Protocol Frame Data->|
 |COMMAND RETURN|ACK DATA|
 ```
 
-
 |Data Field|Byte Index|Size(byte)|
 |----|--------|-----------------|
 |COMMAND RETURN|0|2|
 |ACK DATA|2|depends on the exact command|return data|
 
+*the ACK bit of the frame header is set*
 
-#### Message Package
+#### Push Data
 
 ```
 |<-------Protocol Frame Data------->|
@@ -165,9 +162,9 @@ All serial packages exchanged between MATRICE 100 and the onboard device can be 
 |----|--------|-----------------|
 |COMMAND SET|0|1|
 |COMMAND ID|1|1|
-|COMMAND DATA*|2|depends on the exact command|
+|COMMAND DATA*|2|vary by different commands|
 
-**COMMAND DATA in Message Packageis able to be configured in N1-Assistant*
+**COMMAND DATA in Push Data is able to be configured in N1-Assistant*
 
 ---
 
@@ -200,7 +197,7 @@ All serial packages exchanged between MATRICE 100 and the onboard device can be 
 |Category|Command Set ID|Description|
 |--------|-----------|--------------|
 |Activation related|0x00|All commands used to activate API|
-|Control related|0x01|Commands to control MATRICE 100|
+|Control related|0x01|Commands to control N1 Autopilot|
 |Monitoring related|0x02|Commands that contains autopilot status data|
 
 ### Command ID
