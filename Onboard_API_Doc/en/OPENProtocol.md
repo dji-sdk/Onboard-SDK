@@ -404,8 +404,8 @@ Each CMD Set contains some CMD IDs for different purposes
   <td>0</td>
   <td>2</td>
   <td>Return Code <ul>
-    <li>0x0001：successfully released control authority</li>
-    <li>0x0002：successfully obtained control authority</li>
+    <li>0x0001：successfully released control authorization</li>
+    <li>0x0002：successfully obtained control authorization</li>
     <li>0x0003：in progress</li>
     </ul></td>
 </tr>
@@ -573,6 +573,7 @@ Each CMD Set contains some CMD IDs for different purposes
 
 </table>
 
+**Data Type Description**
 
 <table>
 <tr>
@@ -584,19 +585,19 @@ Each CMD Set contains some CMD IDs for different purposes
 <tr>
   <td>rate in Yaw</td>
   <td>int16_t</td>
-  <td>unit 0.1º/s, Input Range[-1800,+1800]</td>
+  <td>unit 0.1º/s, input range[-1800,1800]</td>
 </tr>
 
 <tr>
   <td>rate in Roll</td>
   <td>int16_t</td>
-  <td>unit 0.1º/s, Input Range[-1800,+1800]</td>
+  <td>unit 0.1º/s, input range[-1800,1800]</td>
 </tr>
 
 <tr>
   <td>rate in Pitch</td>
   <td>int16_t</td>
-  <td>unit 0.1º/s, Input Range[-1800,+1800]</td>
+  <td>unit 0.1º/s, input range[-1800,1800]</td>
 </tr>
 </table>
 
@@ -613,32 +614,34 @@ Each CMD Set contains some CMD IDs for different purposes
   <td rowspan="5">CMD Val</td>
   <td>0</td>
   <td>2</td>
-  <td>Yaw axis angle</td>
+  <td>Yaw angle</td>
 </tr>
 <tr>
   <td>2</td>
   <td>2</td>
-  <td>Roll axis angle</td>
+  <td>Roll angle</td>
 </tr>
 <tr>
   <td>4</td>
   <td>2</td>
-  <td>Pitch axis angle</td>
+  <td>Pitch angle</td>
 </tr>
 <tr>
   <td>6</td>
   <td>1</td>
-  <td>Control flag byte<ul>
-    <li>bit 0：Mode flag bit</li>
-        <ul>0 ： Incremental control, the angle reference for the current Gimbal location</ul>
-        <ul>1 ： Absolute control, the angle reference coordinate system to the Northeast</ul>
+  <td>control flag byte<ul>
+    <li>bit 0：mode flag bit</li>
+        <ul>0 ： Incremental control, the angle reference is the current Gimbal location</ul>
+        <ul>1 ： Absolute control, the angle reference is coordinate system to the Northeast</ul>
     <li>bit 1：Yaw invaild bit 
         <ul>0 ： Gimble will follow the command in Yaw </ul>
         <ul>1 ： Gimble will maintain position in Yaw  </ul>
     <li>bit 2：Roll invaild bit, the same as bit[1]</li>
     <li>bit 3：Pitch invaild bit, the same as bit[1]</li>
-    <li>bit [4:7]：reserved, should be 0</li>
+    <li>bit [4:7]：reserved, set to be 0</li>
     </ul></td>
+    
+    TODO:Related to Gimble mode setting in APP
 
 <tr>
   <td>7</td>
@@ -655,6 +658,8 @@ Each CMD Set contains some CMD IDs for different purposes
 </tr>
 </table>
 
+**Data Type Description**
+
 <table>
 <tr>
   <th>Data Name</th>
@@ -663,27 +668,27 @@ Each CMD Set contains some CMD IDs for different purposes
 </tr>
 
 <tr>
-  <td>Yaw axis angle</td>
+  <td>Yaw angle</td>
   <td>int16_t</td>
-  <td>unit 0.1º, Input Range [-3200,+3200]</td>
+  <td>unit 0.1º, input range [-3200,3200]</td>
 </tr>
 
 <tr>
-  <td>Roll axis angle</td>
+  <td>Roll angle</td>
   <td>int16_t</td>
-  <td>unit 0.1º, Input Range [-350,+350]</td>
+  <td>unit 0.1º, input range [-350,350]</td>
 </tr>
 
 <tr>
-  <td>Pitch axis angle</td>
+  <td>Pitch angle</td>
   <td>int16_t</td>
-  <td>unit 0.1º, Input Range [-900,+300]</td>
+  <td>unit 0.1º, input range [-900,300]</td>
 </tr>
 
 <tr>
   <td>Command completion time</td>
   <td>uint8_t</td>
-  <td>unit 0.1s, for example 20 means gimble will reach the pose given by command in 2 seconds<br>recommand do not let gambil rotate rate over 400º/s</td>
+  <td>unit 0.1s, for example 20 means gimble will reach the commended postition in 2 seconds<br>rotate rate beyond 400º/s is not recommand</td>
 </tr>
 </table>
 
@@ -700,7 +705,7 @@ Each CMD Set contains some CMD IDs for different purposes
   <td>CMD Val</td>
   <td>0</td>
   <td>1</td>
-  <td>Arbitrary number</td>
+  <td>arbitrary number</td>
 </tr>
 
 <tr>
@@ -710,7 +715,7 @@ Each CMD Set contains some CMD IDs for different purposes
   <td>N/A</td>
 </tr>
 </table>
-#### CMD ID 0x21 Start Record
+#### CMD ID 0x21 Start Video Recording
 
 <table>
 <tr>
@@ -724,7 +729,7 @@ Each CMD Set contains some CMD IDs for different purposes
   <td>CMD Val</td>
   <td>0</td>
   <td>1</td>
-  <td>Arbitrary number</td>
+  <td>arbitrary number</td>
 </tr>
 
 <tr>
@@ -735,7 +740,7 @@ Each CMD Set contains some CMD IDs for different purposes
 </tr>
 
 </table>
-#### CMD ID 0x22 Stop Record
+#### CMD ID 0x22 Stop Video Recording
 
 <table>
 <tr>
@@ -749,7 +754,7 @@ Each CMD Set contains some CMD IDs for different purposes
   <td>CMD Val</td>
   <td>0</td>
   <td>1</td>
-  <td>Arbitrary number</td>
+  <td>arbitrary number</td>
 </tr>
 
 <tr>
@@ -777,7 +782,7 @@ The push data from the N1 Autopilot can be configured by the DJI N1 assistant so
   <td rowspan="13">CMD Val</td>
   <td>0</td>
   <td>2</td>
-  <td>Item presence byte, Bit with value 1 means the message package contains corresponding data item<ul>
+  <td>Item present byte, Bit with value 1 means this push data contains corresponding data item<ul>
     <li>bit 0：flag of time stamp</li>
     <li>bit 1：flag of attitude quaternion</li>
     <li>bit 2：flag of linear acceleration</li>
@@ -786,7 +791,7 @@ The push data from the N1 Autopilot can be configured by the DJI N1 assistant so
     <li>bit 5：flag of GPS location, altitude and healthiness</li>
     <li>bit 6：flag of magnetometer</li>
     <li>bit 7：flag of remote controller data</li>
-    <li>bit 8：flag of gimbal yaw,pitch and roll</li>
+    <li>bit 8：flag of roll,pitch and yaw of gimbal </li>
     <li>bit 9：flag of flight status</li>
     <li>bit 10：flag of battery info</li>
     <li>bit 11：flag of control device</li>
@@ -845,7 +850,7 @@ The push data from the N1 Autopilot can be configured by the DJI N1 assistant so
 <tr>
   <td>105</td>
   <td>12</td>
-  <td>Gimbal roll, pitch and yaw</td>
+  <td>Roll, pitch and yaw of Gimbal </td>
 </tr>
 
 <tr>
@@ -867,17 +872,17 @@ The push data from the N1 Autopilot can be configured by the DJI N1 assistant so
 </tr>
 </table>
 
-**Offset(byte)：Offset(byte) in this table is in the case that all items exist in one Message Package*
+**Offset(byte)：Offset(byte) in this table is in the case that all items exist in one push data.*
 
-Actual Offset in Message Package is calculated by flags in 'item presence byte'.
+Actual Offset in push data is calculated by flags in 'item presence byte'.
  
-**The meaning of each data item in the message package**
+**The meaning of each data item**
 
 <table>
 <tr>
   <td>Item Name</td>
   <td>Variables</td>
-  <td>Type</td>
+  <td>Data Type</td>
   <td>Description</td>
   <td>Unit</td>
   <td>Default Frequency</td>
@@ -886,9 +891,9 @@ Actual Offset in Message Package is calculated by flags in 'item presence byte'.
 <tr>
   <td>Time Stamp</td>
   <td>time</td>
-  <td>unsigned int</td>
-  <td>time_stamp</td>
-  <td>Time in tick (tick interval 1/600s)</td>
+  <td>uint32_t</td>
+  <td>time stamp</td>
+  <td>1/600s</td>
   <td>100Hz</td>
 </tr>
 <tr>
@@ -949,7 +954,7 @@ Actual Offset in Message Package is calculated by flags in 'item presence byte'.
 <tr>
   <td>vgstatus</td>
   <td>uint8_t</td>
-  <td>Byte of linear velocity status<ul>
+  <td>Status byte of linear velocity<ul>
   <li>bit 0：data valid flag</li>
     <ul>0：invalid</ul>
     <ul>1：valid</ul>
@@ -967,7 +972,7 @@ Actual Offset in Message Package is calculated by flags in 'item presence byte'.
   <td>wx</td>
   <td>float32</td>
   <td rowspan="3">Angular velocity </td>
-  <td rowspan="3">rad/s</td>
+  <td rowspan="3">º/s</td>
   <td rowspan="3">100Hz</td>
 </tr>
 <tr>
@@ -1000,7 +1005,7 @@ Actual Offset in Message Package is calculated by flags in 'item presence byte'.
 <tr>
   <td>height</td>
   <td>float32</td>
-  <td>Height to ground**</td>
+  <td>Height relatively to ground**</td>
   <td>m</td>
 </tr>
 <tr>
@@ -1038,34 +1043,34 @@ Actual Offset in Message Package is calculated by flags in 'item presence byte'.
 <tr>
   <td>pitch</td>
   <td>int16_t</td>
-  <td>Remote controller pitch channel</td>
+  <td>pitch channel</td>
 </tr>
 <tr>
   <td>yaw</td>
   <td>int16_t</td>
-  <td>Remote controller wya channel</td>
+  <td>yaw channel</td>
 </tr>
 <tr>
   <td>throttle</td>
   <td>int16_t</td>
-  <td>Remote controller throttle channel</td>
+  <td>throttle channel</td>
 </tr>
 <tr>
   <td>mode</td>
   <td>int16_t</td>
-  <td>Remote controller mode channel</td>
+  <td>mode channel</td>
 </tr>
 <tr>
   <td>gear</td>
   <td>int16_t</td>
-  <td>Remote controller gear channel</td>
+  <td>gear channel</td>
 </tr>
 
 <tr>
   <td rowspan="3">Gimbal</td>
   <td>roll</td>
   <td>float32</td>
-  <td rowspan="3">Gimbal roll, pitch and yaw in ground frame</td>
+  <td rowspan="3">roll, pitch and yaw of ground frame</td>
   <td rowspan="3">º</td>
   <td rowspan="3">50Hz</td>
 </tr>
@@ -1089,49 +1094,37 @@ Actual Offset in Message Package is calculated by flags in 'item presence byte'.
 
 <tr>
   <td>Battery</td>
-  <td>battery</td>
+  <td>status</td>
   <td>uint8_t</td>
   <td>Battery percentage</td>
-  <td>Battery percentage</td>
+  <td>%</td>
   <td>1Hz</td>
 </tr>
 
 <tr>
-  <td>Control device</td>
+  <td>Source of Control</td>
   <td>status</td>
   <td>uint8_t</td>
   <td>Control device<ul>
      <li>bit 0:2 ：Control device</li>
-     <ul>0b000 ：RC</ul>
-     <ul>0b001 ：APP</ul>
-     <ul>0b010 ：Onboard device</ul>
-     <li>bit 3 ：Flag of Onboard Device control authority Request </li>
+     <ul>0b000 ：Remote Controller</ul>
+     <ul>0b001 ：Mobile Device</ul>
+     <ul>0b010 ：Onboard Device</ul>
+     <li>bit 3 ：Flag of Onboard Device control authorization request signature </li>
      <ul>0：No request</ul>
-     <ul>1：Have requested</ul>
+     <ul>1：Been requested</ul>
      <li>bit 4:7 ：reserved</li>
   </ul></td>
   <td>---</td>
   <td>0Hz</td>
 </tr>
-<tr>
-  <td>Control device</td>
-  <td>status</td>
-  <td>uint8_t</td>
-  <td>Control device<ul>
-     <li>0x00 ： RC</li>
-     <li>0x01 ： APP</li>
-     <li>0x02 ： Onboard device</li>
-     </ul></td>
-  <td>---</td>
-  <td>0Hz</td>
-</tr>
-</table>
-**More info about Ground frame、Body frame、Remote controller and Flight status please refer [Additional Explanation for Flight Control][0]*  
-***alti is the result of barometer-IMU fusion in the unit of pressure. If the Matrice 100 has no ultrasonic sensor (no Gudiance installed), or it has ultrasonic sensor but its distance to the ground is larger than 3 meters (the measurement of ultrasonic sensor will be unstable at this distance), than height is supported by barometer and IMU only. Because barometer is very inaccurate indoor, alti is unreliable.*
 
+</table>
+**For more please refer to [Additional Explanation for Flight Control][0]*  
+***Height is the fusion result of barometer, IMU and ultrasonic sensor. If the flight plantform has no ultrasonic sensor, or its distance to the ground is higher than 3 meters, the height is supported by barometer and IMU only. Since the barometer is very inaccurate indoor, height is unreliable.*
 
 #### CMD ID 0x01 Lost of Flight Control
-Onboard Device has the lowerest control priority. Its control authority can be taken over by remote controller and Mobile Device. Once the flight control is lost from the Onboard Device, a push data will be sent by the N1 Autopilot.
+Onboard Device has the lowerest control priority. Its control authorization can be taken over by remote controller and Mobile Device. Once the flight control is lost from the Onboard Device, a push data will be sent by the N1 Autopilot.
 
 <table>
 <tr>
