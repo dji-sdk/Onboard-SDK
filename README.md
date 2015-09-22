@@ -159,9 +159,3 @@ Please comply with the local regulations during the development process and flig
 [1]:Onboard_API_Doc/en/FlightControlExplain.md  
 [2]:Onboard_API_Doc/en/TransparentTransport.md   
 
-
-
-(TODO: The M100 & Onboard SDK FAQ will be a seperate doc apart from the quickstart version in the gitlab. Thanks.)
-(TODO: The activation article from the forum needs to be put back into the doc file)
-(TODO: Communicate with Ben for two things:(1)the author of the activation article in the forum (2)The time which the new forum will be in place.)
-
