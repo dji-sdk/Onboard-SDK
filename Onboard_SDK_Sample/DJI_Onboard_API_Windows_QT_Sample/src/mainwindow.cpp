@@ -103,6 +103,7 @@ void MainWindow::on_BtnActivation_clicked()
     user_act_data.app_id = ui->AppID->text().toInt();
     user_act_data.app_api_level = ui->AppLevel->currentText().toInt();
     user_act_data.app_ver = SDK_VERSION;
+    user_act_data.app_bundle_id[0] = user_act_data.app_bundle_id[1] = 0x12;
     *keybuf = ui->AppKey->text().toLocal8Bit();
     user_act_data.app_key = keybuf->data();
     Save_Setting();
@@ -327,5 +328,49 @@ void MainWindow::on_btn_atti_ctrl_clicked()
     }
     if(QMessageBox::Cancel == ret)
     {
+    }
+}
+
+void MainWindow::on_btn_capture_clicked()
+{
+    DJI_Sample_Camera_Shot();
+    printf("Take a picture\n");
+}
+
+void MainWindow::on_btn_start_video_clicked()
+{
+    DJI_Sample_Camera_Video_Start();
+    ui->btn_start_video->setDown(true);
+    printf("Start video\n");
+}
+
+void MainWindow::on_btn_stop_video_clicked()
+{
+    DJI_Sample_Camera_Video_Stop();
+    ui->btn_start_video->setDown(false);
+    printf("Stop video\n");
+}
+
+void MainWindow::on_btn_draw_circle_clicked()
+{
+    if(DJI_Sample_Funny_Ctrl(DRAW_CIRCLE_SAMPLE) < 0)
+    {
+        QMessageBox::warning(this,tr("Warning"),tr("Please waiting current sample finish"),QMessageBox::Ok);
+    }
+    else
+    {
+        printf("Start to draw circle\n");
+    }
+}
+
+void MainWindow::on_btn_draw_square_clicked()
+{
+    if(DJI_Sample_Funny_Ctrl(DRAW_SQUARE_SAMPLE) < 0 )
+    {
+        QMessageBox::warning(this,tr("Warning"),tr("Please waiting current sample finish"),QMessageBox::Ok);
+    }
+    else
+    {
+        printf("Start to draw square\n");
     }
 }

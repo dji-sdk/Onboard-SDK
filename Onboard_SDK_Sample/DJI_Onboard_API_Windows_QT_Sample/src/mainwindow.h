@@ -57,6 +57,16 @@ private slots:
 
     void on_btn_atti_ctrl_clicked();
 
+    void on_btn_capture_clicked();
+
+    void on_btn_start_video_clicked();
+
+    void on_btn_stop_video_clicked();
+
+    void on_btn_draw_circle_clicked();
+
+    void on_btn_draw_square_clicked();
+
 private:
     Ui::MainWindow *ui;
     QTimer *time;

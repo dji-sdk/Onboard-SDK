@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>372</width>
-    <height>389</height>
+    <width>539</width>
+    <height>391</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,63 +23,38 @@
       <x>190</x>
       <y>0</y>
       <width>161</width>
-      <height>271</height>
+      <height>81</height>
      </rect>
     </property>
     <property name="title">
-     <string>Commands</string>
+     <string>Activation</string>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
-      <widget class="QPushButton" name="BtnActivation">
-       <property name="text">
-        <string>Activation</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="btn_nav_open_close">
-       <property name="text">
-        <string>Obtain Control</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="btn_Takeoff">
-       <property name="text">
-        <string>Takeoff</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="btn_Landing">
-       <property name="text">
-        <string>Landing</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="btn_GoHome">
-       <property name="text">
-        <string>Go Home</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="btn_atti_ctrl">
-       <property name="text">
-        <string>Attitude Ctrl Sample</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="btn_gimbal_ctrl">
-       <property name="text">
-        <string>Gimbal Ctrl Sample</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
+    <widget class="QPushButton" name="BtnActivation">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>22</y>
+       <width>141</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Activate</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_nav_open_close">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>51</y>
+       <width>141</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Obtain Control</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QGroupBox" name="groupBox_2">
     <property name="geometry">
@@ -234,7 +209,7 @@
      <rect>
       <x>10</x>
       <y>270</y>
-      <width>341</width>
+      <width>511</width>
       <height>61</height>
      </rect>
     </property>
@@ -308,17 +283,175 @@
      </layout>
     </widget>
    </widget>
+   <widget class="QGroupBox" name="groupBox_5">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>90</y>
+      <width>161</width>
+      <height>171</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Gimbal/Camera</string>
+    </property>
+    <widget class="QPushButton" name="btn_gimbal_ctrl">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>141</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Gimbal Ctrl Sample</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_capture">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>60</y>
+       <width>141</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Take a Picture</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_start_video">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>100</y>
+       <width>141</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Start Video</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_stop_video">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>140</y>
+       <width>141</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Stop Video</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_6">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>0</y>
+      <width>161</width>
+      <height>261</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Aircraft</string>
+    </property>
+    <widget class="QPushButton" name="btn_atti_ctrl">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>140</y>
+       <width>141</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Attitude Ctrl Sample</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_Takeoff">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>141</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Takeoff</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_GoHome">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>100</y>
+       <width>141</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Go Home</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_Landing">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>60</y>
+       <width>141</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Landing</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_draw_circle">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>180</y>
+       <width>141</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Draw Circle Sample</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_draw_square">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>220</y>
+       <width>141</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Draw Square Sample</string>
+     </property>
+    </widget>
+   </widget>
    <zorder>groupBox_3</zorder>
    <zorder>groupBox_2</zorder>
    <zorder>groupBox</zorder>
    <zorder>groupBox_4</zorder>
+   <zorder>groupBox_5</zorder>
+   <zorder>groupBox_6</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>372</width>
+     <width>539</width>
      <height>23</height>
     </rect>
    </property>
