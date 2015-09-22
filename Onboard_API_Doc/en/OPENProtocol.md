@@ -1,7 +1,5 @@
 # Onboard SDK OPEN Protocol  
 ---
-**Note: The 'Data Transparent Transmission' is NOT included in this document.**
-
 ## Protocol Frame
 The Protocal Frame is the smallest unit for transmission. It contains the Header, Data and the Tail as follows:
    ```
@@ -1151,4 +1149,5 @@ Onboard Device has the lowerest control priority. Its control authorization can 
 </table>
 
 [0]: FlightControlExplain.md
+**Note: The 'Data Transparent Transmission' is NOT included in this document.**
 
