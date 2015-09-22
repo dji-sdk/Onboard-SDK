@@ -544,17 +544,17 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
   <td rowspan="4">CMD Val</td>
   <td>0</td>
   <td>2</td>
-  <td>Yaw in Rate</td>
+  <td>Yaw in rate</td>
 </tr>
 <tr>
   <td>2</td>
   <td>2</td>
-  <td>Roll in Rate</td>
+  <td>Roll in rate</td>
 </tr>
 <tr>
   <td>4</td>
   <td>2</td>
-  <td>Pitch in Rate</td>
+  <td>Pitch in rate</td>
 </tr>
 <tr>
   <td>6</td>
