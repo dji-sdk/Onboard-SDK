@@ -2,11 +2,6 @@
 
 [English Version](README.md)   
 
-[开放协议说明][0]  
-[飞行控制附加说明][1]  
-[数据透传说明文档][2]  
-[FAQ](Onboard_API_Doc/cn/FAQ_cn.md)  
-[术语](Onboard_API_Doc/cn/术语.md)
 ---
 
 ## 欢迎,Onboard SDK开发者！
