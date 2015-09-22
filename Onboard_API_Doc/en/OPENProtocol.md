@@ -261,13 +261,13 @@ Each Command Set contains some Command ID to achieve different functions
 </tr>
 
 <tr>
-  <td>0x0A</td>
+  <td>0x1A</td>
   <td>Gimbal Control in Rate</td>
   <td>1</td>
 </tr>
 
 <tr>
-  <td>0x0B</td>
+  <td>0x1B</td>
   <td>Gimbal Control in Position</td>
   <td>1</td>
 </tr>
@@ -563,7 +563,7 @@ The control priority is Remote Controller > Mobile Device > Onboard Device
 
 **The amount charged for the translation or rotation is determined by the mode flag byte , the specific content related to movement control refer to [Additional Explanation for Flight Control][0]*  
 
-#### Command ID 0x0A Gimbal Control in Rate
+#### Command ID 0x1A Gimbal Control in Rate
 <table>
 <tr>
   <th>Data Type</th>
@@ -630,7 +630,7 @@ The control priority is Remote Controller > Mobile Device > Onboard Device
 </tr>
 </table>
 
-#### Command ID 0x0B Gimbal Control in Position
+#### Command ID 0x1B Gimbal Control in Position
 <table>
 <tr>
   <th>Data Type</th>
