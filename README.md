@@ -1,6 +1,6 @@
 # DJI Onboard SDK
 
-[Chinese Version](README_CN.md)  
+[中文](README_CN.md)
   
 
 ---
