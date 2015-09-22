@@ -162,7 +162,7 @@ Note: Type 1 and Type 2 can ONLY be applied to the CMDs which have ACKs.
 |1|1|Sender needs ACKs but can be tolerated.|
 |2|2-31|Sender needs ACKs.*|
 
-*Since type 3 is a reliable communication method. Developers should implement the package loss & resending mechinism based on the SEQ and SESSION. When package loss found from the sender, the sender should send the CMD frame with the same SEQ and SESSION lost previously.
+*Since type 2 is reliable. Developers should implement the package loss & resending mechinism based on the current SEQ and SESSION fields. When package loss is found from the sender, the sender can send the CMD frame again with the same SEQ and SESSION lost previously to retrieve back the ACK.
 
 ---
 
@@ -180,9 +180,9 @@ The CMDs have three different sets
 
 ### CMD ID
 
-Each CMD Set contains some CMD IDs for different purposes
+Each CMD Set contains some CMD IDs for different operations.
 
-*The execution of different CMDs needs an corresponding Authorization Level. A CMD will not be executed when the current Authorization Level of the N1 Autopilot is lower.*
+*The execution of different CMDs needs an corresponding Authorization Level. A CMD will not be executed when the current Authorization Level granted is lower.*
 
 |Levels|Description|
 |:--------:|----------|
@@ -190,7 +190,7 @@ Each CMD Set contains some CMD IDs for different purposes
 |1|Gimbal and Camera control related|
 |2|Flight Control related|
 
-*The Authorization Level of the N1 Autopilot can be changed by 'Activation' CMD. The default level is set to be 0.*
+*The Authorization Level of the N1 Autopilot can be changed by the 'Activation' CMD. The init level is set to be 0.*
 
 **Function Index**
 <table>
