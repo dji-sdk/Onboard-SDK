@@ -26,7 +26,7 @@ You will see a model of the Matrice 100 on the simulator screen as shown below.
 
 ![Configure the Baud](Images/simulatorUI2.jpg)
 
-Note that you need to restart the simulation if the aircraft is disconnected from your PC.
+>Note: that you need to restart the simulation if the aircraft is disconnected from your PC.
 
 ## 5.	Connect Your Mobile Device
 Ensure your Android or iOS mobile device has an internet connection, and connect it to the remote controller. Launch the DJI GO or DJI Pilot app.
