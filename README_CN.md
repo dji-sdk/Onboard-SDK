@@ -91,7 +91,7 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 
 #### Step2: 
 
-关于激活飞行器的更多内容，请关注(http://bbs.dji.com/thread-21892-1-1.html)
+关于激活飞行器的更多内容，请访问[激活指南][Activation]
 
 ### 三种控制信号源的优先级
 
@@ -151,5 +151,5 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 [2]:Onboard_API_Doc/cn/数据透传说明文档.md  
 
 [3]:Onboard_API_Doc/cn/术语.md
-
+[Activation]:[Onboard_API_Doc/cn/激活指南.md]
 [FAQ]:Onboard_API_Doc/cn/FAQ_cn.md
