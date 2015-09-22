@@ -313,11 +313,7 @@ static void * DJI_Sample_Gimbal_Ctrl_Thread_Func(void * arg)
         usleep(100000);
     }
     DJI_Sample_Gimbal_AngelCtrl(0, 0, 0, 10);
-<<<<<<< HEAD
     gimbal_ctrl_sample_flag = -1;
-=======
-    gimbal_ctrl_sample_flag = 0;
->>>>>>> 4e77daf32c84e40ab1d880c668e74b9f2bf35217
     printf("Gimbal test end.\r\n");
     return (void*)NULL;
 }
