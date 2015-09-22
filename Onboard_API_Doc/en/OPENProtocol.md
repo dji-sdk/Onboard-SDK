@@ -118,10 +118,10 @@ There are two types of frames.
 
 |Frame Type|Data Type|Transmission Direction|Content|
 |------------|:----------:|----------:|---------------|
-|CMD frame|CMD frame data|Onboard Device <=> N1 Autopilot|flight control related data|
-|ACK frame|ACk frame data|N1 Autopilot <=> Onboard Device|ACK related data|
+|CMD frame|CMD frame data|Onboard Device <=> N1 Autopilot|flight control related CMDs|
+|ACK frame|ACK frame data|N1 Autopilot <=> Onboard Device|ACK related data|
 
-#### CMD frame 
+#### CMD frame data
 ```
 |<-------CMD frame data------->|
 |CMD SET|CMD ID|CMD VAL|
@@ -131,9 +131,9 @@ There are two types of frames.
 |----|--------|-----------------|
 |CMD SET|0|1|
 |CMD ID|1|1|
-|CMD VAL|2|vary by different CMDs|
+|CMD VAL|2|vary by CMDs|
 
-#### ACK frame
+#### ACK frame data
 
 ```
 |<-ACK frame data->|
@@ -142,9 +142,9 @@ There are two types of frames.
 
 |Data Field|Byte Index|Size(byte)|
 |----|--------|-----------------|
-|ACK VALUE|0|varied|
+|ACK VALUE|0|variable size|
 
-Developers can use the SEQ field of the ACK frame to match the corresponding CMD frame. 
+SEQ field in ACK frame is the same as the one in corresponding CMD frame. Developers can use the SEQ field of the ACK frame to match the corresponding CMD frame. 
 
 ---
 
@@ -154,15 +154,15 @@ Developers can use the SEQ field of the ACK frame to match the corresponding CMD
 
 The session mechanism has been used in order to prevent the exceptions such as package loss and 3 kinds of session types can be seen as follows:
 
-Note: Type 0 and Type 1 can ONLY be applied to the CMDs which have ACKs.
+Note: Type 1 and Type 2 can ONLY be applied to the CMDs which have ACKs.
 
 |Type|SESSION|Description|
 |------------|-------|-----------|
 |0|0|Sender doesn't need ACKs.|
-|1|1|Sender needs ACKs but can also be tolerated.|
+|1|1|Sender needs ACKs but can be tolerated.|
 |2|2-31|Sender needs ACKs.*|
 
-*Since type 3 is a reliable communication method. Developers should implement the package loss & resending mechinism based on the SEQ and SESSION.
+*Since type 3 is a reliable communication method. Developers should implement the package loss & resending mechinism based on the SEQ and SESSION. When package loss found from the sender, the sender should send the CMD frame with the same SEQ and SESSION lost previously.
 
 ---
 
