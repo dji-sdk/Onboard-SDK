@@ -321,7 +321,7 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
 </tr>
 </table>
 
-#### CMD ID: 0x01 Activation
+#### CMD ID 0x01: Activation
 
 <table>
 <tr>
