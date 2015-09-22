@@ -188,7 +188,7 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
 |1|Gimbal and Camera control related|
 |2|Flight Control related|
 
-*The Authorization Level of the N1 Autopilot can be changed by the 'Activation' CMD. The init level is set to be 0.*
+*Note: The Authorization Level of the N1 Autopilot can be changed by the 'Activation' CMD. The init level is set to be 0.*
 
 **Function Index**
 <table>
