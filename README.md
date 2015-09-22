@@ -128,11 +128,11 @@ If you encounter any questions during the development, take a look at our [FAQ s
 Please comply with the local regulations during the development process and flight. Please refer to http://flysafe.dji.com/ for more.
 
 ### Compile & Run Sections:
-[Linux Command Line](Onboard_SDK_Sample\DJI_Onboard_API_Cmdline_Sample)
+[Linux Command Line](Onboard_SDK_Sample/DJI_Onboard_API_Cmdline_Sample)
 
-[Linux + ROS example](Onboard_SDK_Sample\DJI_Onboard_API_ROS_Sample)
+[Linux + ROS example](Onboard_SDK_Sample/DJI_Onboard_API_ROS_Sample)
 
-[Windows QT example](Onboard_SDK_Sample\DJI_Onboard_API_Windows_QT_Sample)
+[Windows QT example](Onboard_SDK_Sample/DJI_Onboard_API_Windows_QT_Sample)
 
 ### Step by Step Tutorial Section:
 
