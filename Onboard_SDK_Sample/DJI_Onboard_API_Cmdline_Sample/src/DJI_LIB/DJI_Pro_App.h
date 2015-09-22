@@ -41,6 +41,27 @@
 #define API_INFO_QUERY          0x02
 #define	API_SIM_ECHO            0xFF
 
+#define API_CAMERA_SHOT         0x20
+#define API_CAMERA_VIDEO_START  0x21
+#define API_CAMERA_VIDEO_STOP   0X22
+
+#define HORIZ_ATT               0x00
+#define HORIZ_VEL               0x40
+#define HORIZ_POS               0x80
+
+#define VERT_VEL                0x00
+#define VERT_POS                0x10
+#define VERT_TRU                0x20
+
+#define YAW_ANG                 0x00
+#define YAW_RATE                0x08
+
+#define HORIZ_GND               0x00
+#define HORIZ_BODY              0x02
+
+#define YAW_GND                 0x00
+#define YAW_BODY                0x01
+
 #define MAKE_VERSION(a,b,c,d) (((a << 24)&0xff000000) | ((b << 16)&0x00ff0000) | ((c << 8)&0x0000ff00) | (d&0x000000ff))
 #define SDK_VERSION           (MAKE_VERSION(2,3,10,0))
 
@@ -68,6 +89,10 @@ typedef double	fp64;
 
 #pragma  pack(1)
 
+/*
+ *struct of gimbal contorl
+ */
+
 typedef struct
 {
     signed short yaw_angle;
@@ -92,18 +117,13 @@ typedef struct
     struct
     {
         unsigned char reserve : 7;
-        unsigned char ctrl_switch : 1;
+        unsigned char ctrl_switch : 1;//decide increment mode or absolute mode
     }ctrl_byte;
 }gimbal_custom_speed_t;
 
-typedef struct
-{
-	unsigned char ctrl_flag;
-    fp32 roll_or_x;
-    fp32 pitch_or_y;
-    fp32 thr_z;
-    fp32 yaw;
-}api_ctrl_without_sensor_data_t;
+/*
+ *struct of api contrl
+ */
 
 typedef struct
 {
@@ -120,6 +140,10 @@ typedef struct
     fp32 z;
 }api_common_data_t;
 
+/*
+ *struct of vellocity data
+ */
+
 typedef struct
 {
     fp32 x;
@@ -128,7 +152,7 @@ typedef struct
     unsigned char health_flag         :1;
     unsigned char feedback_sensor_id  :4;
     unsigned char reserve             :3;
-}api_vo_data_t;
+}api_vel_data_t;
 
 typedef struct
 {
@@ -168,7 +192,7 @@ typedef struct
     unsigned int time_stamp;
     api_quaternion_data_t q;
     api_common_data_t a;
-    api_vo_data_t v;
+    api_vel_data_t v;
     api_common_data_t w;
     api_pos_data_t pos;
     api_mag_data_t mag;
@@ -177,7 +201,7 @@ typedef struct
     unsigned char status;
     unsigned char battery_remaining_capacity;
     api_ctrl_info_data_t ctrl_info;
-}uplink_data_t,sdk_std_msg_t;
+}sdk_std_msg_t;
 
 #pragma  pack()
 
@@ -206,6 +230,10 @@ typedef struct
 #define STATUS_CMD_EXECUTING		0x0003
 #define STATUS_CMD_EXE_FAIL         0x0004
 #define STATUS_CMD_EXE_SUCCESS		0x0005
+
+/*
+ *struct of cmd agency data
+ */
 
 typedef struct
 {
@@ -245,6 +273,11 @@ typedef struct
     }
 
 #pragma  pack(1)
+
+/*
+ *struct of activate data
+ */
+
 typedef struct
 {
     unsigned int	app_id;
@@ -254,12 +287,20 @@ typedef struct
     char *app_key;
 }activate_data_t;
 
+/*
+ *struct of version query data
+ */
+
 typedef struct
 {
     unsigned short	version_ack;
     unsigned int	version_crc;
     char     	version_name[32];
 }version_query_data_t;
+
+/*
+ *struct of attitude data
+ */
 
 typedef struct
 {
@@ -285,7 +326,6 @@ int DJI_Pro_Status_Ctrl(unsigned char cmd,Command_Result_Notify user_notice_entr
 int DJI_Pro_Get_API_Version(Get_API_Version_Notify user_notice_entrance);
 int DJI_Pro_Activate_API(activate_data_t *p_user_data,
                          Command_Result_Notify user_notice_entrance);
-void DJI_Pro_Test_Activate(void);
 int DJI_Pro_Send_To_Mobile_Device(unsigned char *data,unsigned char len,
                                   Command_Result_Notify user_notice_entrance);
 int DJI_Pro_Control_Management(unsigned char cmd,
@@ -293,12 +333,13 @@ int DJI_Pro_Control_Management(unsigned char cmd,
 int DJI_Pro_Attitude_Control(attitude_data_t *p_user_data);
 int DJI_Pro_Gimbal_Angle_Control(gimbal_custom_control_angle_t *p_user_data);
 int DJI_Pro_Gimbal_Speed_Control(gimbal_custom_speed_t *p_user_data);
+int DJI_Pro_Camera_Control(unsigned char camera_cmd);
 unsigned char DJI_Pro_Get_CmdSet_Id(ProHeader *header);
 unsigned char DJI_Pro_Get_CmdCode_Id(ProHeader *header);
 int DJI_Pro_Get_Bat_Capacity(unsigned char *data);
 int DJI_Pro_Get_Quaternion(api_quaternion_data_t *p_user_buf);
 int DJI_Pro_Get_GroundAcc(api_common_data_t *p_user_buf);
-int DJI_Pro_Get_GroundVo(api_vo_data_t *p_user_buf);
+int DJI_Pro_Get_GroundVo(api_vel_data_t *p_user_buf);
 int DJI_Pro_Get_CtrlInfo(api_ctrl_info_data_t *p_user_buf);
 //TODO...
 int DJI_Pro_Setup(User_Handler_Func user_cmd_handler_entrance);

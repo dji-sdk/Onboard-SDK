@@ -1,5 +1,5 @@
 /*
- * DJI_Pro_Test.cpp
+ * DJI_Pro_Sample.cpp
  *
  *  Created on: Aug 24, 2015
  *  Author: wuyuwei
@@ -23,12 +23,10 @@ using namespace tinyxml2;
 using namespace std;
 #endif
 
+static int atti_ctrl_sample_flag = -1;
 /*
  * attitude control sample
  */
-
-static int atti_ctrl_sample_flag = 0;
-
 static int DJI_Sample_Create_Thread(void *(* func)(void *), void *arg)
 {
     pthread_t A_ARR;
@@ -40,6 +38,9 @@ static int DJI_Sample_Create_Thread(void *(* func)(void *), void *arg)
     return 0;
 }
 
+/*
+ * This method is responsible for testing atttitude
+ */
 static void * DJI_Sample_Atti_Ctrl_Thread_Func(void *arg)
 {
     int i;
@@ -48,125 +49,147 @@ static void * DJI_Sample_Atti_Ctrl_Thread_Func(void *arg)
     /* takeoff */
     DJI_Pro_Status_Ctrl(4,0);
     sleep(8);
-    /* attitude control */
-
-    for(i = 0; i < 10; i ++)
+    /* attitude control, go up */
+    for(i = 0; i < 100; i ++)
     {
-        user_ctrl_data.ctrl_flag = 0x0A;
+        user_ctrl_data.ctrl_flag = 0x40;
         user_ctrl_data.roll_or_x = 0;
         user_ctrl_data.pitch_or_y = 0;
-        user_ctrl_data.thr_z = 1.5;
+        if(i < 90)
+            user_ctrl_data.thr_z = 2.0;
+        else
+            user_ctrl_data.thr_z = 0.0;
         user_ctrl_data.yaw = 0;
         DJI_Pro_Attitude_Control(&user_ctrl_data);
-        usleep(200000);
+        usleep(20000);
     }
     sleep(1);
-    /* sample 1:ground frame*/
-    for(i = 0; i < 20; i ++)
+    for(i = 0; i < 200; i ++)
     {
-        user_ctrl_data.ctrl_flag = 0x0A;
-        user_ctrl_data.roll_or_x = 2;
-        user_ctrl_data.pitch_or_y = 0;
-        user_ctrl_data.thr_z = 0;
-        user_ctrl_data.yaw = 0;
-        DJI_Pro_Attitude_Control(&user_ctrl_data);
-        usleep(200000);
-    }
-    sleep(1);
-    for(i = 0; i < 20; i ++)
-    {
-        user_ctrl_data.ctrl_flag = 0x0A;
-        user_ctrl_data.roll_or_x = -2;
+        user_ctrl_data.ctrl_flag = 0x40;
+        if(i < 180)
+            user_ctrl_data.roll_or_x = 2;
+        else
+            user_ctrl_data.roll_or_x = 0;
         user_ctrl_data.pitch_or_y = 0;
         user_ctrl_data.thr_z = 0;
         user_ctrl_data.yaw = 0;
         DJI_Pro_Attitude_Control(&user_ctrl_data);
-        usleep(200000);
+        usleep(20000);
     }
     sleep(1);
-    for(i = 0; i < 20; i ++)
+    for(i = 0; i < 200; i ++)
     {
-        user_ctrl_data.ctrl_flag = 0x0A;
-        user_ctrl_data.roll_or_x = 0;
-        user_ctrl_data.pitch_or_y = 2;
+        user_ctrl_data.ctrl_flag = 0x40;
+        if(i < 180)
+            user_ctrl_data.roll_or_x = -2;
+        else
+            user_ctrl_data.roll_or_x = 0;
+        user_ctrl_data.pitch_or_y = 0;
         user_ctrl_data.thr_z = 0;
         user_ctrl_data.yaw = 0;
         DJI_Pro_Attitude_Control(&user_ctrl_data);
-        usleep(200000);
+        usleep(20000);
     }
     sleep(1);
-    for(i = 0; i < 20; i ++)
+    for(i = 0; i < 200; i ++)
     {
-        user_ctrl_data.ctrl_flag = 0x0A;
+        user_ctrl_data.ctrl_flag = 0x40;
         user_ctrl_data.roll_or_x = 0;
-        user_ctrl_data.pitch_or_y = -2;
+        if(i < 180)
+            user_ctrl_data.pitch_or_y = 2;
+        else
+            user_ctrl_data.pitch_or_y = 0;
         user_ctrl_data.thr_z = 0;
         user_ctrl_data.yaw = 0;
         DJI_Pro_Attitude_Control(&user_ctrl_data);
-        usleep(200000);
+        usleep(20000);
     }
     sleep(1);
-    for(i = 0; i < 20; i ++)
+    for(i = 0; i < 200; i ++)
     {
-        user_ctrl_data.ctrl_flag = 0x0A;
+        user_ctrl_data.ctrl_flag = 0x40;
         user_ctrl_data.roll_or_x = 0;
-        user_ctrl_data.pitch_or_y = 0;
-        user_ctrl_data.thr_z = 0.5;
+        if(i < 180)
+            user_ctrl_data.pitch_or_y = -2;
+        else
+            user_ctrl_data.pitch_or_y = 0;
+        user_ctrl_data.thr_z = 0;
         user_ctrl_data.yaw = 0;
         DJI_Pro_Attitude_Control(&user_ctrl_data);
-        usleep(200000);
+        usleep(20000);
     }
     sleep(1);
-    for(i = 0; i < 20; i ++)
+    for(i = 0; i < 200; i ++)
     {
-        user_ctrl_data.ctrl_flag = 0x0A;
+        user_ctrl_data.ctrl_flag = 0x40;
         user_ctrl_data.roll_or_x = 0;
         user_ctrl_data.pitch_or_y = 0;
-        user_ctrl_data.thr_z = -0.5;
+        if(i < 180)
+            user_ctrl_data.thr_z = 0.5;
+        else
+            user_ctrl_data.thr_z = 0;
         user_ctrl_data.yaw = 0;
         DJI_Pro_Attitude_Control(&user_ctrl_data);
-        usleep(200000);
+        usleep(20000);
     }
     sleep(1);
-    for(i = 0; i < 20; i ++)
+    for(i = 0; i < 200; i ++)
     {
-        user_ctrl_data.ctrl_flag = 0x0A;
+        user_ctrl_data.ctrl_flag = 0x40;
+        user_ctrl_data.roll_or_x = 0;
+        user_ctrl_data.pitch_or_y = 0;
+        if(i < 180)
+            user_ctrl_data.thr_z = -0.5;
+        else
+            user_ctrl_data.thr_z = 0;
+        user_ctrl_data.yaw = 0;
+        DJI_Pro_Attitude_Control(&user_ctrl_data);
+        usleep(20000);
+    }
+    sleep(1);
+    for(i = 0; i < 200; i ++)
+    {
+        user_ctrl_data.ctrl_flag = 0xA;
         user_ctrl_data.roll_or_x = 0;
         user_ctrl_data.pitch_or_y = 0;
         user_ctrl_data.thr_z = 0;
-        user_ctrl_data.yaw = 90;
+        if(i < 180)
+            user_ctrl_data.yaw = 90;
+        else
+            user_ctrl_data.yaw = 0;
         DJI_Pro_Attitude_Control(&user_ctrl_data);
-        usleep(200000);
+        usleep(20000);
     }
     sleep(1);
-    for(i = 0; i < 20; i ++)
+    for(i = 0; i < 200; i ++)
     {
-        user_ctrl_data.ctrl_flag = 0x0A;
+        user_ctrl_data.ctrl_flag = 0xA;
         user_ctrl_data.roll_or_x = 0;
         user_ctrl_data.pitch_or_y = 0;
         user_ctrl_data.thr_z = 0;
-        user_ctrl_data.yaw = -90;
+        if(i < 180)
+            user_ctrl_data.yaw = -90;
+        else
+            user_ctrl_data.yaw = 0;
         DJI_Pro_Attitude_Control(&user_ctrl_data);
-        usleep(200000);
+        usleep(20000);
     }
     sleep(1);
-
-    /* sample 2:body frame*/
-    //TODO...
     /* gohome */
     DJI_Pro_Status_Ctrl(1,0);
 
-    atti_ctrl_sample_flag = 0;
+    atti_ctrl_sample_flag = -1;
     return (void*)NULL;
 }
 
 int DJI_Sample_Atti_Ctrl(void)
 {
-    if(atti_ctrl_sample_flag)
+    if(atti_ctrl_sample_flag == 0)
     {
         return -1;
     }
-    atti_ctrl_sample_flag = 1;
+    atti_ctrl_sample_flag = 0;
 
     if(DJI_Sample_Create_Thread(DJI_Sample_Atti_Ctrl_Thread_Func,NULL) != 0)
     {
@@ -178,7 +201,7 @@ int DJI_Sample_Atti_Ctrl(void)
 /*
  * gimbal control sample
  */
-static int gimbal_ctrl_sample_flag = 0;
+static int gimbal_ctrl_sample_flag = -1;
 static void DJI_Sample_Gimbal_SpeedCtrl(signed short yaw_angle_rate,
                        signed short roll_angle_rate,
                        signed short pitch_angle_rate)
@@ -230,6 +253,9 @@ static void DJI_Sample_Gimbal_AngelCtrl(int16_t yaw_angle,
 
 }
 
+/*
+ * This method is responsible for testing gimbal
+ */
 static void * DJI_Sample_Gimbal_Ctrl_Thread_Func(void * arg)
 {
     int i = 0;
@@ -287,20 +313,189 @@ static void * DJI_Sample_Gimbal_Ctrl_Thread_Func(void * arg)
         usleep(100000);
     }
     DJI_Sample_Gimbal_AngelCtrl(0, 0, 0, 10);
-    gimbal_ctrl_sample_flag = 0;
+    gimbal_ctrl_sample_flag = -1;
     printf("Gimbal test end.\r\n");
     return (void*)NULL;
 }
 
 int DJI_Sample_Gimbal_Ctrl(void)
 {
-    if(gimbal_ctrl_sample_flag)
+    if(gimbal_ctrl_sample_flag == 0)
     {
         return -1;
     }
-    gimbal_ctrl_sample_flag = 1;
+    gimbal_ctrl_sample_flag = 0;
 
     if(DJI_Sample_Create_Thread(DJI_Sample_Gimbal_Ctrl_Thread_Func,NULL) != 0)
+    {
+        return -1;
+    }
+    return 0;
+}
+
+/*
+ * This method is responsible for camera shotting
+ */
+void DJI_Sample_Camera_Shot()
+{
+    DJI_Pro_Camera_Control(API_CAMERA_SHOT);
+}
+
+/*
+ *This method is responsible for starting camera video
+ */
+void DJI_Sample_Camera_Video_Start()
+{
+    DJI_Pro_Camera_Control(API_CAMERA_VIDEO_START);
+}
+
+/*
+ * This method is responsible for stoping camera video
+ */
+void DJI_Sample_Camera_Video_Stop()
+{
+    DJI_Pro_Camera_Control(API_CAMERA_VIDEO_STOP);
+}
+
+/*
+ *This method is responsible for sending data to mobile device
+ */
+void DJI_Sample_Send_To_Mobile_Device()
+{
+    unsigned char send_data[100] = "hello world!";
+    DJI_Pro_Send_To_Mobile_Device(send_data,sizeof(send_data),NULL);
+}
+
+/*
+ * This method is responsible for flying a circle controled by position
+ */
+void DJI_Sample_Circle_By_Pos()
+{
+    attitude_data_t user_ctrl_data;
+
+    static float time = 0;
+    static float R = 2;
+    static float V = 2;
+    static float vx;
+    static float vy;
+    int i;
+
+    /* start to draw circle */
+    for(i = 0; i < 300; i ++)
+    {
+        vx = V * sin((V/R)*time/50.0f);
+        vy = V * cos((V/R)*time/50.0f);
+        user_ctrl_data.ctrl_flag = HORIZ_POS|VERT_VEL|YAW_ANG|HORIZ_BODY|YAW_BODY;
+        user_ctrl_data.roll_or_x = vx;
+        user_ctrl_data.pitch_or_y = vy;
+        user_ctrl_data.thr_z = 0;
+        user_ctrl_data.yaw = 0;
+        DJI_Pro_Attitude_Control(&user_ctrl_data);
+        usleep(20000);
+        time++;
+    }
+}
+
+/*
+ * This method is responsible for flying a square controled by position
+ */
+void DJI_Sample_Square_By_Pos()
+{
+    attitude_data_t user_ctrl_data;
+    int i;
+    for(i = 0;i < 60;i++)
+    {
+        user_ctrl_data.ctrl_flag = HORIZ_POS|VERT_VEL|YAW_ANG|HORIZ_BODY|YAW_BODY;
+        user_ctrl_data.roll_or_x = 3;
+        user_ctrl_data.pitch_or_y = 0;
+        user_ctrl_data.thr_z = 0;
+        user_ctrl_data.yaw = 0;
+        DJI_Pro_Attitude_Control(&user_ctrl_data);
+        usleep(20000);
+    }
+    for(i = 0;i < 60;i++)
+    {
+        user_ctrl_data.ctrl_flag = HORIZ_POS|VERT_VEL|YAW_ANG|HORIZ_BODY|YAW_BODY;
+        user_ctrl_data.roll_or_x = 0;
+        user_ctrl_data.pitch_or_y = 3;
+        user_ctrl_data.thr_z = 0;
+        user_ctrl_data.yaw = 0;
+        DJI_Pro_Attitude_Control(&user_ctrl_data);
+        usleep(20000);
+    }
+    for(i = 0;i < 60;i++)
+    {
+        user_ctrl_data.ctrl_flag = HORIZ_POS|VERT_VEL|YAW_ANG|HORIZ_BODY|YAW_BODY;
+        user_ctrl_data.roll_or_x = -3;
+        user_ctrl_data.pitch_or_y = 0;
+        user_ctrl_data.thr_z = 0;
+        user_ctrl_data.yaw = 0;
+        DJI_Pro_Attitude_Control(&user_ctrl_data);
+        usleep(20000);
+    }
+    for(i = 0;i < 60;i++)
+    {
+        user_ctrl_data.ctrl_flag = HORIZ_POS|VERT_VEL|YAW_ANG|HORIZ_BODY|YAW_BODY;
+        user_ctrl_data.roll_or_x = 0;
+        user_ctrl_data.pitch_or_y = -3;
+        user_ctrl_data.thr_z = 0;
+        user_ctrl_data.yaw = 0;
+        DJI_Pro_Attitude_Control(&user_ctrl_data);
+        usleep(20000);
+    }
+}
+
+static void * DJI_Sample_Funny_Ctrl_Thread_Func(void *arg)
+{
+    char *param = (char *)arg;
+    int i;
+    attitude_data_t user_ctrl_data;
+    /* takeoff */
+    DJI_Pro_Status_Ctrl(4,0);
+    sleep(8);
+    /* attitude control, go up */
+    for(i = 0; i < 100; i ++)
+    {
+        user_ctrl_data.ctrl_flag = 0x40;
+        user_ctrl_data.roll_or_x = 0;
+        user_ctrl_data.pitch_or_y = 0;
+        if(i < 90)
+            user_ctrl_data.thr_z = 2.0;
+        else
+            user_ctrl_data.thr_z = 0.0;
+        user_ctrl_data.yaw = 0;
+        DJI_Pro_Attitude_Control(&user_ctrl_data);
+        usleep(20000);
+    }
+    sleep(2);
+    /* do funny behavior*/
+    switch(*param)
+    {
+    case DRAW_CIRCLE_SAMPLE:
+        DJI_Sample_Circle_By_Pos();
+        break;
+    case DRAW_SQUARE_SAMPLE:
+        DJI_Sample_Square_By_Pos();
+        break;
+    }
+    /* landing */
+    sleep(2);
+    DJI_Pro_Status_Ctrl(6,0);
+    atti_ctrl_sample_flag = -1;
+}
+
+int DJI_Sample_Funny_Ctrl(char cmd)
+{
+    static char s_type = 0;
+    if(atti_ctrl_sample_flag == 0)
+    {
+        return -1;
+    }
+    atti_ctrl_sample_flag = 0;
+
+    s_type = cmd;
+
+    if(DJI_Sample_Create_Thread(DJI_Sample_Funny_Ctrl_Thread_Func,&s_type) != 0)
     {
         return -1;
     }
@@ -372,4 +567,3 @@ int DJI_Sample_Setup(void)
     DJI_Pro_Setup(NULL);
 	return 0;
 }
-

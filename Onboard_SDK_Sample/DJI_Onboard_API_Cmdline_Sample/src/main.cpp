@@ -25,8 +25,13 @@ static void Display_Main_Menu(void)
 	printf("[e]  Landing\n");
 	printf("[f]  Go home\n");
 	printf("[g]  Attitude control sample\n");
-	printf("[h]  Gimbal control sample\n");
-	printf("[i]  Query UAV current status\n");
+	printf("[h]  Draw circle sample\n");
+	printf("[i]  Draw square sample\n");
+	printf("[j]  Gimbal control sample\n");
+	printf("[k]  Take a picture\n");
+	printf("[l]  Start video\n");
+	printf("[m]  Stop video\n");
+	printf("[n]  Query UAV current status\n");
 
 	printf("\ninput a/b/c etc..then press enter key\r\n");
 	printf("---------------------------------------\r\n");
@@ -78,7 +83,7 @@ int main(int argc,char **argv)
 		temp32 = getchar();
 		if(temp32 != 10)
 		{
-			if(temp32 >= 'a' && temp32 <= 'i' && valid_flag == false)
+			if(temp32 >= 'a' && temp32 <= 'n' && valid_flag == false)
 			{
 				main_operate_code = temp32;
 				valid_flag = true;
@@ -129,17 +134,41 @@ int main(int argc,char **argv)
 		case 'g':
 			/* attitude ctrl */
 			if(DJI_Sample_Atti_Ctrl()< 0)
-    			{
+    		{
         			printf("Please waiting current sample finish\n");
    			}
 			break;
 		case 'h':
-			if(DJI_Sample_Gimbal_Ctrl()< 0)
-    			{
+			/* draw circle */
+			if(DJI_Sample_Funny_Ctrl(DRAW_CIRCLE_SAMPLE)< 0)
+    		{
         			printf("Please waiting current sample finish\n");
    			}
 			break;
 		case 'i':
+			/* draw circle */
+			if(DJI_Sample_Funny_Ctrl(DRAW_SQUARE_SAMPLE)< 0)
+    		{
+        			printf("Please waiting current sample finish\n");
+   			}
+			break;
+		case 'j':
+			if(DJI_Sample_Gimbal_Ctrl()< 0)
+    		{
+        			printf("Please waiting current sample finish\n");
+   			}
+			break;
+
+		case 'k':
+			DJI_Sample_Camera_Shot();
+			break;
+		case 'l':
+			DJI_Sample_Camera_Video_Start();
+			break;
+		case 'm':
+			DJI_Sample_Camera_Video_Stop();
+			break;
+		case 'n':
 			/* status query */
 			DJI_Sample_Drone_Status_Query();
 			break;

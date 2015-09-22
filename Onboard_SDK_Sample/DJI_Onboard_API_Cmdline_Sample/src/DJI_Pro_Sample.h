@@ -15,6 +15,9 @@
 #include "DJI_LIB/DJI_Pro_Config.h"
 #include "DJI_LIB/DJI_Pro_Rmu.h"
 
+#define DRAW_CIRCLE_SAMPLE  0
+#define DRAW_SQUARE_SAMPLE  1
+
 /* external functions */
 #if (defined(PLATFORM_LINUX) && defined(TINYXML_CFG))
 int DJI_Pro_Get_Cfg(int *baud, char *dev,unsigned int *app_id,
@@ -24,6 +27,12 @@ void DJI_Sample_Drone_Status_Query(void);
 int DJI_Sample_Atti_Ctrl(void);
 int DJI_Sample_Gimbal_Ctrl(void);
 int DJI_Sample_Setup(void);
+void DJI_Sample_Camera_Shot(void);
+void DJI_Sample_Camera_Video_Start(void);
+void DJI_Sample_Camera_Video_Stop(void);
+void DJI_Sample_Send_To_Mobile_Device(void);
+void DJI_Sample_Circle_By_Pos(void);
+void DJI_Sample_Square_By_Pos(void);
+int DJI_Sample_Funny_Ctrl(char cmd);
 
 #endif /* DJI_PRO_TEST_H_ */
-
