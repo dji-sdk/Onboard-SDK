@@ -150,7 +150,7 @@ SEQ field in ACK frame is the same as the one in corresponding CMD frame. Develo
 
 ### Session
 
-The session mechanism has been used in order to prevent the exceptions such as package loss and 3 kinds of session types can be seen as follows:
+The session mechanism has been used in order to prevent the exceptions such as package loss. 3 kinds of session have been introduced:
 
 Note: Type 1 and Type 2 can ONLY be applied to the CMDs which have ACKs.
 
