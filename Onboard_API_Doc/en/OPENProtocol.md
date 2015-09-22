@@ -160,7 +160,7 @@ Note: Type 1 and Type 2 can ONLY be applied to the CMDs which have ACKs.
 |1|1|Sender needs ACKs but can be tolerated.|
 |2|2-31|Sender needs ACKs.*|
 
-*Since type 2 is designed to be reliable. Developers should implement the package loss & resending mechinism based on the current SEQ and SESSION fields. When package loss is found from the sender, the sender can send the CMD frame again with the same SEQ and SESSION lost previously to retrieve back the ACK.
+*Since type 2 is designed to be reliable. Developers should implement the package loss & resending mechinism based on the current SEQ and SESSION fields. When package loss is found from the sender, the sender can send the CMD frame again with the same SEQ and SESSION lost previously to retrieve back the ACK frame.
 
 ---
 
