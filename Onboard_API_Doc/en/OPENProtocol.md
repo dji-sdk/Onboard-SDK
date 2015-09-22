@@ -581,19 +581,19 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
 </tr>
 
 <tr>
-  <td>rate in Yaw</td>
+  <td>Yaw in rate</td>
   <td>int16_t</td>
   <td>unit 0.1º/s, input range[-1800,1800]</td>
 </tr>
 
 <tr>
-  <td>rate in Roll</td>
+  <td>Roll in rate</td>
   <td>int16_t</td>
   <td>unit 0.1º/s, input range[-1800,1800]</td>
 </tr>
 
 <tr>
-  <td>rate in Pitch</td>
+  <td>Pitch in rate</td>
   <td>int16_t</td>
   <td>unit 0.1º/s, input range[-1800,1800]</td>
 </tr>
