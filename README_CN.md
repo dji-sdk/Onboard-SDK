@@ -124,11 +124,11 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 
 ### 编译及运行部分:
 
-[Linux Command Line](Onboard_SDK_Sample\DJI_Onboard_API_Cmdline_Sample)
+[Linux Command Line](Onboard_SDK_Sample/DJI_Onboard_API_Cmdline_Sample)
 
-[Linux + ROS example](Onboard_SDK_Sample\DJI_Onboard_API_ROS_Sample)
+[Linux + ROS example](Onboard_SDK_Sample/DJI_Onboard_API_ROS_Sample)
 
-[Windows QT example](Onboard_SDK_Sample\DJI_Onboard_API_Windows_QT_Sample)
+[Windows QT example](Onboard_SDK_Sample/DJI_Onboard_API_Windows_QT_Sample)
 
 ### 步骤式教程部分:
 
