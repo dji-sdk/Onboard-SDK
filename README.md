@@ -18,7 +18,7 @@
 - Some basic flight control knowledge like the concepts of Pitch, Roll and Yaw
 - One complete set of UAV* flight platform and one USB-TTL serial cable (SOLD seperately)
 
-> Note: For now, ONLY M100 flight platform is supported.
+> Note: *For now, ONLY M100 flight platform is supported.*
 
 ---
 
@@ -29,7 +29,7 @@ The Onboard SDK allows developers to communicate with the N1 Autopilot* from any
 - Write their own Flight APPs on top of the Onboard Device in his/her favourite programming languages
 - Dispatch the 'flight' job to the N1 Autopilot following the DJI Onboard OPEN protocal
 
->Note: *N1 Autopilot is the flight controller of the M100 filght platform*
+>Note: *N1 Autopilot is the flight controller of the M100 filght platform.*
 
 ### Key Features
 
@@ -48,7 +48,7 @@ The Onboard SDK allows developers to communicate with the N1 Autopilot* from any
 ### System Architecture & Recommended Development Paradigm
 Two core components of the system architecture are the N1 Autopilot and an Onboard Device. They are physically connected via the serial(UART) interface. 
 
-Since the Onboard OPEN protocal is designed to be opened thoroughly, experienced developers can directly write some low-level logics inside their APPs to (1) Contruct the underlying communication bit sequence;(2) Handle the package loss & resending mechanisms with the benifit of enjoying complete freedom. While for beginners, they can just comfortably use our 'official but EXPERIMENTAL' Onboard SDK Library to communicate with the N1 Autopilot, all they need to do is to call our powerful APIs.
+Since the Onboard OPEN protocal is designed to be opened thoroughly, experienced developers can directly write some low-level logics inside their APPs to (1) Contruct the underlying communication bit sequence;(2) Handle the package loss & resending mechanisms with the benifit of enjoying complete freedom. While for beginners, they can just comfortably use our Onboard SDK Library to communicate with the N1 Autopilot, all they need to do is to call our powerful APIs.
 
 
 ---
@@ -121,25 +121,24 @@ Here, we list all the avaliable document pointers for your reference and we reco
 2. Follow some tutorials in our 'Step by Step Section'
 3. Start building your own app
 
-If you encounter any questions during the development, take a look at our FAQ section. After that, feel free to contact us.
+If you encounter any questions during the development, take a look at our [FAQ section][FAQ]. After that, feel free to contact us.
 
 ### Safety Warnings:
 
 Please comply with the local regulations during the development process and flight. Please refer to http://flysafe.dji.com/ for more.
 
 ### Compile & Run Sections:
+[Linux Command Line](Onboard_SDK_Sample\DJI_Onboard_API_Cmdline_Sample)
 
-[Linux + ROS example]
+[Linux + ROS example](Onboard_SDK_Sample\DJI_Onboard_API_ROS_Sample)
 
-[Linux Command Line]
-
-[Windows QT example]
+[Windows QT example](Onboard_SDK_Sample\DJI_Onboard_API_Windows_QT_Sample)
 
 ### Step by Step Tutorial Section:
 
 
 ### API References Section:
-[Open Protocol]
+[Open Protocol][0]
 
 
 ### Articles contributed by Onboard SDK external developers:
@@ -151,4 +150,6 @@ Please comply with the local regulations during the development process and flig
 [0]:Onboard_API_Doc/en/OPENProtocol.md  
 [1]:Onboard_API_Doc/en/FlightControlExplain.md  
 [2]:Onboard_API_Doc/en/TransparentTransport.md   
+[3]:Onboard_API_Doc/en/Glossary.md   
+[FAQ]:Onboard_API_Doc/en/FAQ_en.md   
 

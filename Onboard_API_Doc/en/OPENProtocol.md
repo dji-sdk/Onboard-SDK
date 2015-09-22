@@ -1,16 +1,15 @@
 # Onboard SDK OPEN Protocol  
 ---
-
 **The 'Data Transparent Transmission' is NOT included in this document.**
 
-## Protocol Frame Format
-
+## Protocol Frame
+The Protocal Frame is the smallest transmission unit during communication. It contains the Header, Data and the Tail as follows:
    ```
-   |<--------------Protocol Frame Header---------------->|<--Protocol Frame Data-->|<--Protocol Frame Checksum-->|
+   |<--------------Header---------------->|<--Data-->|<--Tail-->|
    |SOF|LEN|VER|SESSION|ACK|RES0|PADDING|ENC|RES1|SEQ|CRC16|          DATA           |            CRC32            |
    ```
 
-### Protocol Frame Detail
+### Frame Format
 
 <table>
 <tr>
@@ -31,13 +30,13 @@
   <td>LEN</td>
   <td rowspan="2">1</td>
   <td>10</td>
-  <td>len of frame, max length set to be 1023 (12+1007+4) bytes</td>
+  <td>len of frame</td>
 </tr>
 
 <tr>
   <td>VER</td>
   <td>6</td>
-  <td>version of the protocol</td>
+  <td>version of the frame header, fixed to be 0</td>
 </tr>
 
 <tr>
@@ -51,15 +50,15 @@
   <td>ACK</td>
   <td>1</td>
   <td>frame type<ul>
-    <li>0：data</li>
-    <li>1：acknowlegement</li>
+    <li>0：CMD</li>
+    <li>1：ACK</li>
     </ul></td>
 </tr>
 
 <tr>
   <td>RES0</td>
   <td>2</td>
-  <td>reserved bits, fixed to be 0</td>
+  <td>reserved, fixed to be 0</td>
 </tr>
 
 <tr>
@@ -73,8 +72,8 @@
   <td>ENC</td>
   <td>3</td>
   <td>encryption type<ul>
-    <li>0 ： no encryption</li>
-    <li>1 ： AES encryption</li>
+    <li>0：no encryption</li>
+    <li>1：AES encryption</li>
     </ul></td>
 </tr>
 
@@ -82,7 +81,7 @@
   <td>RES1</td>
   <td>5</td>
   <td>24</td>
-  <td>reserved bits, fixed to be 0</td>
+  <td>reserved, fixed to be 0</td>
 </tr>
 
 <tr>
@@ -103,7 +102,7 @@
   <td>DATA</td>
   <td>12</td>
   <td>---</td>
-  <td>frame data, max len to be 1007 bytes</td>
+  <td>frame data</td>
 </tr>
 
 <tr>
@@ -114,119 +113,102 @@
 </tr>
 </table>
 
-### Protocol Frame Data
+### Frame Type
 
-The data packages(?) between N1 Autopilot and the Onboard Device can be classified into the following three types.
+Based on the ACK field, there are two types of frame as follows:
 
-|Data Types|Direction|Content|
+|Frame Type|Data Type|Transmission Direction|Content|
 |------------|:----------:|---------------|
-|Commands Data|Onboard Device==>N1 Autopilot|commands|
-|Acks Data|N1 Autopilot==>Onboard Device|returning results|
-|Push Data|N1 Autopilot==>Onboard Device|(?)|
+|CMD frame|CMD frame data|Onboard Device <=> N1 Autopilot|flight control CMDs
+|ACK frame|ACk frame data|N1 Autopilot <=> Onboard Device|results of the flight control CMDs
 
-#### Commands Data
-
-```
-|<-------Protocol Frame Data------->|
-|COMMAND SET|COMMAND ID|COMMAND DATA|
-```
-
-|Data Field|Byte Index|Size(byte)|
-|----|--------|-----------------|
-|COMMAND SET|0|1|
-|COMMAND ID|1|1|
-|COMMAND DATA|2|vary by different commands|
-
-#### ACKs Data
+#### CMD frame
 
 ```
-|<-Protocol Frame Data->|
-|COMMAND RETURN|ACK DATA|
+|<-------CMD frame data------->|
+|CMD SET|CMD ID|CMD VAL|
 ```
 
 |Data Field|Byte Index|Size(byte)|
 |----|--------|-----------------|
-|COMMAND RETURN|0|2|
-|ACK DATA|2|depends on the exact command|return data|
+|CMD SET|0|1|
+|CMD ID|1|1|
+|CMD VAL|2|vary by different CMDs|
 
-*the ACK bit of the frame header is set*
-
-#### Push Data
+#### ACK frame
 
 ```
-|<-------Protocol Frame Data------->|
-|COMMAND SET|COMMAND ID|COMMAND DATA|
+|<-ACK frame data->|
+|ACK VALUE|
 ```
 
 |Data Field|Byte Index|Size(byte)|
 |----|--------|-----------------|
-|COMMAND SET|0|1|
-|COMMAND ID|1|1|
-|COMMAND DATA*|2|vary by different commands|
+|ACK VALUE|0|varied|
 
-**COMMAND DATA in Push Data is able to be configured in N1-Assistant*
+当接收到应答帧时，应答帧帧头部分中包含相应的命令帧中的 帧序列号 (SEQ)， 开发者可通过其进行应答帧与命令帧的匹配。
 
 ---
 
-## 协议通信机制
-
+## Protocal Transmission Mechanism
 
 ### Session
 
 协议设计使用了会话机制, 以保证命令数据和Return Data不会因为丢包而出现通信双方异常。通信双方在向对方发起通信会话时, 可以根据需要通过设置协议的 SESSION 字段来选择会话方式。协议中设计了三种会话方式。
 
-|Session Mode|SESSION|Description|
+会话类型1及类型2仅适用于具有应答值的命令
+
+|Session Type|SESSION|Description|
 |------------|-------|-----------|
-|Mode 1|0|Sender do not need acknowledgement.|
-|Mode 2|1|Sender need acknowledgement, but can tolerate ACK package loss.|
-|Mode 3|2-31|Sender wants to make sure the ACK is reliably sent.*|
+|Type 0|0|Sender doesn't need ACKs.|
+|Type 1|1|Sender needs ACKs but can be tolerated.|
+|Type 2|2-31|Sender needs ACKs.*|
+
+*发送端使用这些 SESSION 发送命令数据包时，应答帧中包含该命令帧中的 帧序列号 (SEQ) 和 通信过程中的会话 ID (SESSION)。如果通信过程中，发送端没有正确收到应答包，可以重新发送包含相同SESSION和SEQ的命令数据包。由于会话方式 3 是一种可靠会话方式，开发者在协议实现中应考虑并实现数据丢包后的重发机制。
 
 **For these sessions, Receiver saves the sequence number in the command package and send an  ACK package upon receiving it. If ACK package loss happened, Sender may request Receiver again using the same command package with the same sequence number.*
-
 
 *Note: Here a dummy link layer send interface is defined for demonstration purpose. Since Session Mode 3 is reliable, the communication function interface should contain parameters such as length of timeout and number of resending times.*
 
 ---
 
-## Command Set and Command ID
+## CMD Set & CMD ID
 
-### Command Set
+### CMD Set
 
-**The DJI onboard API has three sets or categories of commands:**  
+The CMDs have three sets  
 
-|Category|Command Set ID|Description|
+|CMD Set|CMD ID|Description|
 |--------|-----------|--------------|
-|Activation related|0x00|All commands used to activate API|
-|Control related|0x01|Commands to control N1 Autopilot|
-|Monitoring related|0x02|Commands that contains autopilot status data|
+|Activation|0x00|activation related|
+|Flight Control|0x01|flight control related|
+|Push Data|0x02|flight data related|
 
-### Command ID
+### CMD ID
 
-Each Command Set contains some Command ID to achieve different functions
+Each CMD Set contains some CMD IDs for different functions
 
-*All Command needs to be performed at an Authorization Level. A command will not be performed when this command needs a higher lever than the level which autopilot has, while an autopilot is able to receive a command with lower level.*
+*All CMDs needs to be performed at an Authorization Level. A CMD will not be executed when this CMD require a higher lever than the current level the N1 autopilot has, while an N1 autopilot is able to receive a CMD with lower level.*
 
-|API Levels|Brief Plan|
+|Levels|Description|
 |:--------:|----------|
-|0|API activation commands|
-|1|Camera and gimbal control commands|
-|2|Flight control commands|
+|0|Activation related|
+|1|Gimbal and Camera control related|
+|2|Flight Control CMDs|
 
-*The Authorization Level of a autopilot can be changed by command 'Activate API'. The default of Authorization Level is 0.*
+*The Authorization Level of the N1 autopilot can be changed by the related Activate API. The default of level is set to be 0.*
 
-
-
-**Onboard API Function Index**
+**Function Index**
 <table>
 <tr>
-  <th>Command Set</th>
-  <th>Command ID</th>
+  <th>CMD Set</th>
+  <th>CMD ID</th>
   <th>Function</th>
-  <th>Authorization Level</th>
+  <th>Level Required</th>
 </tr>
-  <td rowspan="2">0x00<br>Activation Command Set</td>
+  <td rowspan="2">0x00<br>Activation CMD Set</td>
   <td>0x00</td>
-  <td>Get API version</td>
+  <td>Get protocal version</td>
   <td>0</td>
 </tr>
 
@@ -239,7 +221,7 @@ Each Command Set contains some Command ID to achieve different functions
 <tr>
   <td rowspan="9">0x01<br>Control Command Set</td>
   <td>0x00</td>
-  <td>Control Authority Request</td>
+  <td>Request/Release the flight control</td>
   <td>2</td>
 </tr>
 
@@ -262,13 +244,13 @@ Each Command Set contains some Command ID to achieve different functions
 
 <tr>
   <td>0x1A</td>
-  <td>Gimbal Control in Rate</td>
+  <td>Gimbal Control by Rate</td>
   <td>1</td>
 </tr>
 
 <tr>
   <td>0x1B</td>
-  <td>Gimbal Control in Position</td>
+  <td>Gimbal Control by Position</td>
   <td>1</td>
 </tr>
 
@@ -280,36 +262,36 @@ Each Command Set contains some Command ID to achieve different functions
 
 <tr>
   <td>0x21</td>
-  <td>Start Record</td>
+  <td>Start Recording Video</td>
   <td>1</td>
 </tr>
 
 <tr>
   <td>0x22</td>
-  <td>Stop Record</td>
+  <td>Stop Recording Video</td>
   <td>1</td>
 </tr>
 
 <tr>
-  <td rowspan="2">0x02<br>Monitor Command Set</td>
+  <td rowspan="2">0x02<br>Push Data CMD Set</td>
   <td>0x00</td>
-  <td>Message Package</td>
+  <td>Push Data</td>
   <td>0</td>
 </tr>
 
 <tr>
   <td>0x01</td>
-  <td>Control Authority Change Notification</td>
+  <td>Lost of Flight Control</td>
   <td>0</td>
 </tr>
 </table>
 
 
-## Command Data
+## CMD Val
 
-### Activation Command Set: 0x00 
+### Activation CMD Set: 0x00 
 
-#### Command ID 0x00: Get API version
+#### CMD ID 0x00: Get protocal version
 
 <table>
 <tr>
@@ -320,14 +302,14 @@ Each Command Set contains some Command ID to achieve different functions
 </tr>
 
 <tr> 
-  <td>Request Data</td>
+  <td>CMD Val</td>
   <td>0</td>
   <td>1</td>
-  <td>Arbitrary number</td>
+  <td>random num</td>
 </tr>
 
 <tr>
-  <td rowspan="3">Return Data</td>
+  <td rowspan="3">ACK Val</td>
   <td>0</td>
   <td>2</td>
   <td>Return Code<ul>
@@ -349,7 +331,7 @@ Each Command Set contains some Command ID to achieve different functions
 </table>
 
 
-#### Command ID: 0x01 Activation
+#### CMD ID: 0x01 Activation
 
 <table>
 <tr>
@@ -360,7 +342,7 @@ Each Command Set contains some Command ID to achieve different functions
 </tr>
 
 <tr>
-  <td rowspan="4">Request Data</td>
+  <td rowspan="4">CMD Val</td>
   <td>0</td>
   <td>4</td>
   <td>app_id, a number obtained when user registers as a developer</td>
@@ -385,7 +367,7 @@ Each Command Set contains some Command ID to achieve different functions
 </tr>
 
 <tr>
-  <td>Return Data</td>
+  <td>ACK Val</td>
   <td>0</td>
   <td>2</td>
   <td>Return Code：<ul>
@@ -403,9 +385,9 @@ Each Command Set contains some Command ID to achieve different functions
 
 </table>
 
-### Command Set 0x01 Control Command 
+### CMD Set 0x01 Control Command 
 
-#### Command ID 0x00: Control Authority Request
+#### CMD ID 0x00: Control Authority Request
 
 <table>
 <tr>
@@ -416,7 +398,7 @@ Each Command Set contains some Command ID to achieve different functions
 </tr>
 
 <tr>
-  <td >Request Data</td>
+  <td >CMD Val</td>
   <td>0</td>
   <td>1</td>
   <td>Request Code<ul>
@@ -426,7 +408,7 @@ Each Command Set contains some Command ID to achieve different functions
 </tr>
 
 <tr>
- <td >Return Data</td>
+ <td >ACK Val</td>
   <td>0</td>
   <td>2</td>
   <td>Return Code <ul>
@@ -442,7 +424,7 @@ There are three types of control devices: 1. Remote Controller 2. Mobile Device 
 
 The control priority is Remote Controller > Mobile Device > Onboard Device
 
-#### Command ID 0x01 Switch Flight Mode
+#### CMD ID 0x01 Switch Flight Mode
 
 <table>
 <tr>
@@ -453,7 +435,7 @@ The control priority is Remote Controller > Mobile Device > Onboard Device
 </tr>
 
 <tr>
-  <td rowspan="2">Request Data</td>
+  <td rowspan="2">CMD Val</td>
   <td>0</td>
   <td>1</td>
   <td>Command Sequence Number</td>
@@ -470,7 +452,7 @@ The control priority is Remote Controller > Mobile Device > Onboard Device
 </tr>
 
 <tr>
-  <td>Return Data</td>
+  <td>ACK Val</td>
   <td>0</td>
   <td>2</td>
   <td>Return Code<ul>
@@ -481,7 +463,7 @@ The control priority is Remote Controller > Mobile Device > Onboard Device
 
 </table>
 
-#### Command ID 0x02 Request Flight Mode
+#### CMD ID 0x02 Request Flight Mode
 <table>
 <tr>
   <th>Data Type</th>
@@ -491,15 +473,14 @@ The control priority is Remote Controller > Mobile Device > Onboard Device
 </tr>
 
 <tr>
-  <td >Request Data</td>
+  <td >CMD Val</td>
   <td>0</td>
   <td>2</td>
   <td>Command Sequence Number</td>
 </tr>
 
-
 <tr>
-  <td>Return Data</td>
+  <td>ACK Val</td>
   <td>0</td>
   <td>1</td>
   <td>Return Code<ul>
@@ -512,7 +493,7 @@ The control priority is Remote Controller > Mobile Device > Onboard Device
 
 </table>
 
-#### Command ID 0x03 Movement Control*
+#### CMD ID 0x03 Movement Control*
 <table>
 <tr>
   <th>Data Type</th>
@@ -522,7 +503,7 @@ The control priority is Remote Controller > Mobile Device > Onboard Device
 </tr>
 
 <tr>
-  <td rowspan="5">Request Data</td>
+  <td rowspan="5">CMD Val</td>
   <td>0</td>
   <td>1</td>
   <td>Control mode byte</td>
@@ -553,7 +534,7 @@ The control priority is Remote Controller > Mobile Device > Onboard Device
 </tr>
 
 <tr>
-  <td>Return Data</td>
+  <td>ACK Val</td>
   <td>---</td>
   <td>---</td>
   <td>NO ACK</td>
@@ -563,7 +544,7 @@ The control priority is Remote Controller > Mobile Device > Onboard Device
 
 **The amount charged for the translation or rotation is determined by the mode flag byte , the specific content related to movement control refer to [Additional Explanation for Flight Control][0]*  
 
-#### Command ID 0x1A Gimbal Control in Rate
+#### CMD ID 0x1A Gimbal Control in Rate
 <table>
 <tr>
   <th>Data Type</th>
@@ -573,7 +554,7 @@ The control priority is Remote Controller > Mobile Device > Onboard Device
 </tr>
 
 <tr>
-  <td rowspan="4">Request Data</td>
+  <td rowspan="4">CMD Val</td>
   <td>0</td>
   <td>2</td>
   <td>Rate in Yaw</td>
@@ -595,7 +576,7 @@ The control priority is Remote Controller > Mobile Device > Onboard Device
 </tr>
 
 <tr>
-  <td>Return Data</td>
+  <td>ACK Val</td>
   <td>---</td>
   <td>---</td>
   <td>NO ACK</td>
@@ -630,7 +611,7 @@ The control priority is Remote Controller > Mobile Device > Onboard Device
 </tr>
 </table>
 
-#### Command ID 0x1B Gimbal Control in Position
+#### CMD ID 0x1B Gimbal Control in Position
 <table>
 <tr>
   <th>Data Type</th>
@@ -640,7 +621,7 @@ The control priority is Remote Controller > Mobile Device > Onboard Device
 </tr>
 
 <tr>
-  <td rowspan="5">Request Data</td>
+  <td rowspan="5">CMD Val</td>
   <td>0</td>
   <td>2</td>
   <td>Yaw axis angle</td>
@@ -678,7 +659,7 @@ The control priority is Remote Controller > Mobile Device > Onboard Device
 </tr>
 
 <tr>
-  <td>Return Data</td>
+  <td>ACK Val</td>
   <td>---</td>
   <td>---</td>
   <td>NO ACK</td>
@@ -717,7 +698,7 @@ The control priority is Remote Controller > Mobile Device > Onboard Device
 </tr>
 </table>
 
-#### Command ID 0x20 Take Photo
+#### CMD ID 0x20 Take Photo
 <table>
 <tr>
   <th>Data Type</th>
@@ -727,45 +708,20 @@ The control priority is Remote Controller > Mobile Device > Onboard Device
 </tr>
 
 <tr> 
-  <td>Request Data</td>
+  <td>CMD Val</td>
   <td>0</td>
   <td>1</td>
   <td>Arbitrary number</td>
 </tr>
 
 <tr>
-  <td>Return Data</td>
+  <td>ACK Val</td>
   <td>---</td>
   <td>---</td>
   <td>NO ACK</td>
 </tr>
 </table>
-#### Command ID 0x21 Start Record
-
-<table>
-<tr>
-  <th>Data Type</th>
-  <th>Offset(byte)</th>
-  <th>Size(byte)</th>
-  <th>Description</th>
-</tr>
-
-<tr> 
-  <td>Request Data</td>
-  <td>0</td>
-  <td>1</td>
-  <td>Arbitrary number</td>
-</tr>
-
-<tr>
-  <td>Return Data</td>
-  <td>---</td>
-  <td>---</td>
-  <td>NO ACK</td>
-</tr>
-
-</table>
-#### Command ID 0x22 Stop Record
+#### CMD ID 0x21 Start Record
 
 <table>
 <tr>
@@ -776,24 +732,49 @@ The control priority is Remote Controller > Mobile Device > Onboard Device
 </tr>
 
 <tr> 
-  <td>Request Data</td>
+  <td>CMD Val</td>
   <td>0</td>
   <td>1</td>
   <td>Arbitrary number</td>
 </tr>
 
 <tr>
-  <td>Return Data</td>
+  <td>ACK Val</td>
+  <td>---</td>
+  <td>---</td>
+  <td>NO ACK</td>
+</tr>
+
+</table>
+#### CMD ID 0x22 Stop Record
+
+<table>
+<tr>
+  <th>Data Type</th>
+  <th>Offset(byte)</th>
+  <th>Size(byte)</th>
+  <th>Description</th>
+</tr>
+
+<tr> 
+  <td>CMD Val</td>
+  <td>0</td>
+  <td>1</td>
+  <td>Arbitrary number</td>
+</tr>
+
+<tr>
+  <td>ACK Val</td>
   <td>---</td>
   <td>---</td>
   <td>NO ACK</td>
 </tr>
 </table>
-### Command Set 0x02 Monitor Command Set
+### CMD Set 0x02 Push Data CMD Set
 
-#### Command ID 0x00 Message Package
+#### CMD ID 0x00 Push Data
 
-Message Package content and frequency can be configured by DJI N1 assistant software. Each data item in the message package has individual frequency. The maximum message frequency is equal to the message's highest data item update frequency.
+The push data from the N1 Autopilot can be configured by the DJI N1 assistant software.
 
 <table>
 <tr>
@@ -804,7 +785,7 @@ Message Package content and frequency can be configured by DJI N1 assistant soft
 </tr>
 
 <tr>
-  <td rowspan="13">Message Package</td>
+  <td rowspan="13">CMD Val</td>
   <td>0</td>
   <td>2</td>
   <td>Item presence byte, Bit with value 1 means the message package contains corresponding data item<ul>
@@ -1160,8 +1141,8 @@ Actual Offset in Message Package is calculated by flags in 'item presence byte'.
 ***alti is the result of barometer-IMU fusion in the unit of pressure. If the Matrice 100 has no ultrasonic sensor (no Gudiance installed), or it has ultrasonic sensor but its distance to the ground is larger than 3 meters (the measurement of ultrasonic sensor will be unstable at this distance), than height is supported by barometer and IMU only. Because barometer is very inaccurate indoor, alti is unreliable.*
 
 
-#### Command ID 0x01 Control Authority Change Notification
-Onboard device has the lowers control priority. Its control authority can be taken over by RC and mobile device at any time. Once the control authority changed, a notification message will be sent to the onboard device by the autopilot.
+#### CMD ID 0x01 Lost of Flight Control
+Onboard Device has the lowerest control priority. Its control authority can be taken over by remote controller and Mobile Device. Once the flight control is lost from the Onboard Device, a push data will be sent by the N1 Autopilot.
 
 <table>
 <tr>
@@ -1172,12 +1153,18 @@ Onboard device has the lowers control priority. Its control authority can be tak
 </tr>
 
 <tr>
-  <td >Message Package</td>
+  <td >CMD Val</td>
   <td>0</td>
   <td>1</td>
-  <td>Fixed value, 0x04</td>
+  <td>Fixed value, set to be 0x04</td>
 </tr>
 
+<tr>
+  <td >ACK Val</td>
+  <td>---</td>
+  <td>---</td>
+  <td>N/A</td>
+</tr>
 
 </table>
 

@@ -48,8 +48,7 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 
 两个系统的重要组成部分是N1飞控和机载设备，它们通过串口进行物理连接并遵循DJI OPEN Protocal以通讯。 
 
-因为N1飞控与机载设备间的通讯协议是完全开放的，有经验的开发者在享受完全自由的同时，也需要在飞行应用中加入底层逻辑以实现(1)通讯数据比特流的构建 (2)丢包重发机制的实现等。而对于普通开发者，DJI则提供了功能强大的Onboard SDK库*，开发者仅需要调用相应API函数，即可完成与飞控之间的通讯，藉由飞控完成对无人机的飞行控制，以此简化开发流程和步骤。
-
+因为N1飞控与机载设备间的通讯协议是完全开放的，有经验的开发者在享受完全自由的同时，也需要在飞行应用中加入底层逻辑以实现(1)通讯数据比特流的构建 (2)丢包重发机制的实现等。而对于普通开发者，DJI则提供了功能强大的Onboard SDK库，开发者仅需要调用相应API函数，即可完成与飞控之间的通讯，藉由飞控完成对无人机的飞行控制，以此简化开发流程和步骤。
 
 ---
 
@@ -117,7 +116,7 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 2. 认真阅读我们的步骤式教程
 3. 创建您自己专属的飞行应用
 
-如您在开发过程中有任何疑问，请首先参阅我们的Onboard SDK FAQ部分，然后再与我们取得联系。
+如您在开发过程中有任何疑问，请首先参阅我们的[Onboard SDK FAQ][FAQ]部分，然后再与我们取得联系。
 
 ###安全声明:
 
@@ -125,17 +124,18 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 
 ### 编译及运行部分:
 
-[Linux + ROS example]
+[Linux Command Line](Onboard_SDK_Sample\DJI_Onboard_API_Cmdline_Sample)
 
-[Windows QT example]
+[Linux + ROS example](Onboard_SDK_Sample\DJI_Onboard_API_ROS_Sample)
 
-[Linux Command Line]
+[Windows QT example](Onboard_SDK_Sample\DJI_Onboard_API_Windows_QT_Sample)
 
 ### 步骤式教程部分:
 
 ### API参考部分:
 
-[开放协议说明]
+[开放协议说明][0]
+
 
 
 ### 由外部开发者提供的非官方文档:
@@ -148,4 +148,8 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 
 [0]:Onboard_API_Doc/cn/开放协议说明.md  
 [1]:Onboard_API_Doc/cn/飞行控制附加说明.md  
-[2]:Onboard_API_Doc/cn/数据透传说明文档.md   
+[2]:Onboard_API_Doc/cn/数据透传说明文档.md  
+
+[3]:Onboard_API_Doc/cn/术语.md
+
+[FAQ]:Onboard_API_Doc/cn/FAQ_cn.md

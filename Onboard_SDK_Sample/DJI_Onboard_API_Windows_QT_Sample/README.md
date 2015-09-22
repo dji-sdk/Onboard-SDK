@@ -1,6 +1,7 @@
 #DJI Onboard SDK Windows QT Sample
 ##Intro
 This example aims to help you understand and play with the basic flight procedures including:
+
 * The activation
 * The flight control obtainment
 * The flight control release
@@ -17,7 +18,7 @@ Developers can play with this example via the GUI interaction in Windows.
 * doc: (this section will be decrypted SHORTLY)
 * exe: executables. Running time dependent files are also included.
 * src: source code files
-* src/DJI_LIB: the DJI Onboard SDK API Library (Experimental version included)
+* src/DJI_LIB: the DJI Onboard SDK API Library
 * README.md: this file
 
 ##Compile & Run Environment
@@ -30,16 +31,19 @@ Developers can play with this example via the GUI interaction in Windows.
 * In order to monitor & control the flight, a remote controller connects to the mobile device(with the DJI GO APP running) is needed.
 
 ##Configs
-Open *DJI_Onboard_API_Windows_QT_Sample.pro* locates at *src* sub-directory in the *DJI_Onboard_API_Windows_QT_Sample*;
+Open *DJI_Onboard_API_Windows_QT_Sample.pro* locates at *src* sub-directory in the *DJI_Onboard_API_Windows_QT_Sample*;  
+
 Select the *Desktop Qt 5.3 MinGW 32bit* kit and click *Configure Project* to proceed;
+
 During the initialization, config the following info into the GUI interface including:
+
 * APP ID
 * App Level
 * Communication Key
 * uart device name(e.g. COM1,COM2)
 * baudrate
 
->Note: the 'baudrate' set in the 'config.xml' needs to be consistent with the setting in the DJI N1 PC assistant.
+>Note: the 'baudrate' needs to be consistent with the setting in the DJI N1 PC assistant.
 
 ##Compile
 Click the hammer icon on the bottom left corner in the Qt Creator 3.3.1 IDE to start compiling.

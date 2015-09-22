@@ -1,6 +1,7 @@
 #DJI Onboard SDK Command Line Example
 ##Intro
 This example aims to help you understand and play with the basic flight procedures including:
+
 * The activation
 * The flight control obtainment
 * The flight control release
@@ -31,10 +32,11 @@ Developers can play with this example via the command line interaction in Linux.
 
 ##Configs
 Enter the following info into *./output/config.xml.*
+
 * APP ID
 * App Level
 * Communication Key
-* uart device name(e.g. "/dev/ttyUSB0","/dev/ttyS0")
+* uart device name (e.g. /dev/ttyUSB0)
 * baudrate
 
 >Note: the 'baudrate' set in the 'config.xml' needs to be consistent with the setting in the DJI N1 PC assistant.
