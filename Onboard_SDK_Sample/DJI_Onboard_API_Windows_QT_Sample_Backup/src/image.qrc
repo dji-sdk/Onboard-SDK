@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/icon">
+        <file>Images/DJI.png</file>
+        <file>Images/err.png</file>
+        <file>Images/ok.png</file>
+    </qresource>
+</RCC>
