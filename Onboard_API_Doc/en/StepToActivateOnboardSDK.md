@@ -20,11 +20,11 @@ For QT Sample, the baud rate is 115200. After you have finished, close the N1 As
 ## 4.	Start the PC Simulator
 Use PC as the onboard device, Restart your aircraft while keeping it connected to the PC. Launch the DJI PC Simulator, click “Display Simulator” and then click “Start Simulation”. We recommend enabling “Auto Executing UI” so that next time the simulator will be displayed automatically. 
 
-![simulatorUI1](Images/simulatorUI1.jpg)
+![Configure the Baud](Images/simulatorUI1.jpg)
 
 You will see a model of the Matrice 100 on the simulator screen as shown below.   
 
-![simulatorUI2](Images/simulatorUI2.jpg)
+![Configure the Baud](Images/simulatorUI2.jpg)
 
 Note that you need to restart the simulation if the aircraft is disconnected from your PC.
 
