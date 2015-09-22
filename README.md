@@ -94,7 +94,7 @@ For Onboard APP Registration, please go to (https://developer.dji.com/register/)
 
 #### Step2: 
 
-For Flight Platform Activation, please go to (http://bbs.dji.com/thread-21892-1-1.html)
+For Flight Platform Activation, please go to [Step To Activate Onboard SDK](Onboard_API_Doc/en/StepToActivateOnboardSDK.md)
 
 
 ### The prioritization sequence for different control sources
