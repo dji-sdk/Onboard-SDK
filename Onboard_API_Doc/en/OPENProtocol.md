@@ -1121,7 +1121,7 @@ The actual offset of each item in the push data should be calculated by flags of
 
 </table>
 **For more please refer to [Additional Explanation for Flight Control][0]*  
-***Height is the fusion result of barometer, IMU and ultrasonic sensor. If the flight plantform has no ultrasonic sensor, or its distance to the ground is higher than 3 meters, the height is supported by barometer and IMU only. Since the barometer is very inaccurate indoor, height is unreliable.*
+***Height is the fusion result of barometer, IMU and ultrasonic sensor. If the flight plantform has no ultrasonic sensor, or its distance to the ground is higher than 3 meters, the height is supported by barometer and IMU only. Since the barometer is inaccurate being used indoor, height is unreliable in this case.*
 
 #### CMD ID 0x01 Lost of Flight Control
 Onboard Device has the lowerest control priority. Its control authorization can be taken over by remote controller and Mobile Device. Once the flight control is lost from the Onboard Device, a push data will be sent by the N1 Autopilot.
