@@ -1,9 +1,9 @@
 # Onboard SDK OPEN Protocol  
 ---
-**The 'Data Transparent Transmission' is NOT included in this document.**
+**Note: The 'Data Transparent Transmission' is NOT included in this document.**
 
 ## Protocol Frame
-The Protocal Frame is the smallest transmission unit during communication. It contains the Header, Data and the Tail as follows:
+The Protocal Frame is the smallest unit for transmission. It contains the Header, Data and the Tail as follows:
    ```
    |<--------------Header---------------->|<--Data-->|<--Tail-->|
    |SOF|LEN|VER|SESSION|ACK|RES0|PADDING|ENC|RES1|SEQ|CRC16|          DATA           |            CRC32            |
@@ -36,7 +36,7 @@ The Protocal Frame is the smallest transmission unit during communication. It co
 <tr>
   <td>VER</td>
   <td>6</td>
-  <td>version of the frame header, fixed to be 0</td>
+  <td>version of the frame header, set to be 0</td>
 </tr>
 
 <tr>
@@ -95,7 +95,7 @@ The Protocal Frame is the smallest transmission unit during communication. It co
   <td>CRC16</td>
   <td>10</td>
   <td>16</td>
-  <td>CRC16 checksum of frame header</td>
+  <td>CRC16 frame header checksum</td>
 </tr>
 
 <tr>
@@ -109,21 +109,19 @@ The Protocal Frame is the smallest transmission unit during communication. It co
   <td>CRC32</td>
   <td>---</td>
   <td>32</td>
-  <td>CRC32 checksum of whole frame</td>
+  <td>CRC32 whole frame checksum</td>
 </tr>
 </table>
 
 ### Frame Type
-
-Based on the ACK field, there are two types of frame as follows:
+There are two types of frames.
 
 |Frame Type|Data Type|Transmission Direction|Content|
-|------------|:----------:|---------------|
-|CMD frame|CMD frame data|Onboard Device <=> N1 Autopilot|flight control CMDs
-|ACK frame|ACk frame data|N1 Autopilot <=> Onboard Device|results of the flight control CMDs
+|------------|:----------:|----------:|---------------|
+|CMD frame|CMD frame data|Onboard Device <=> N1 Autopilot|flight control related data|
+|ACK frame|ACk frame data|N1 Autopilot <=> Onboard Device|ACK related data|
 
-#### CMD frame
-
+#### CMD frame 
 ```
 |<-------CMD frame data------->|
 |CMD SET|CMD ID|CMD VAL|
@@ -146,7 +144,7 @@ Based on the ACK field, there are two types of frame as follows:
 |----|--------|-----------------|
 |ACK VALUE|0|varied|
 
-当接收到应答帧时，应答帧帧头部分中包含相应的命令帧中的 帧序列号 (SEQ)， 开发者可通过其进行应答帧与命令帧的匹配。
+Developers can use the SEQ field of the ACK frame to match the corresponding CMD frame. 
 
 ---
 
@@ -154,21 +152,17 @@ Based on the ACK field, there are two types of frame as follows:
 
 ### Session
 
-协议设计使用了会话机制, 以保证命令数据和Return Data不会因为丢包而出现通信双方异常。通信双方在向对方发起通信会话时, 可以根据需要通过设置协议的 SESSION 字段来选择会话方式。协议中设计了三种会话方式。
+The session mechanism has been used in order to prevent the exceptions such as package loss and 3 kinds of session types can be seen as follows:
 
-会话类型1及类型2仅适用于具有应答值的命令
+Note: Type 0 and Type 1 can ONLY be applied to the CMDs which have ACKs.
 
-|Session Type|SESSION|Description|
+|Type|SESSION|Description|
 |------------|-------|-----------|
-|Type 0|0|Sender doesn't need ACKs.|
-|Type 1|1|Sender needs ACKs but can be tolerated.|
-|Type 2|2-31|Sender needs ACKs.*|
+|0|0|Sender doesn't need ACKs.|
+|1|1|Sender needs ACKs but can also be tolerated.|
+|2|2-31|Sender needs ACKs.*|
 
-*发送端使用这些 SESSION 发送命令数据包时，应答帧中包含该命令帧中的 帧序列号 (SEQ) 和 通信过程中的会话 ID (SESSION)。如果通信过程中，发送端没有正确收到应答包，可以重新发送包含相同SESSION和SEQ的命令数据包。由于会话方式 3 是一种可靠会话方式，开发者在协议实现中应考虑并实现数据丢包后的重发机制。
-
-**For these sessions, Receiver saves the sequence number in the command package and send an  ACK package upon receiving it. If ACK package loss happened, Sender may request Receiver again using the same command package with the same sequence number.*
-
-*Note: Here a dummy link layer send interface is defined for demonstration purpose. Since Session Mode 3 is reliable, the communication function interface should contain parameters such as length of timeout and number of resending times.*
+*Since type 3 is a reliable communication method. Developers should implement the package loss & resending mechinism based on the SEQ and SESSION.
 
 ---
 
@@ -176,19 +170,19 @@ Based on the ACK field, there are two types of frame as follows:
 
 ### CMD Set
 
-The CMDs have three sets  
+The CMDs have three different sets  
 
 |CMD Set|CMD ID|Description|
 |--------|-----------|--------------|
-|Activation|0x00|activation related|
-|Flight Control|0x01|flight control related|
-|Push Data|0x02|flight data related|
+|Activation|0x00|activation related CMDs|
+|Flight Control|0x01|flight control related CMDs|
+|Push Data|0x02|flight data related CMDs|
 
 ### CMD ID
 
-Each CMD Set contains some CMD IDs for different functions
+Each CMD Set contains some CMD IDs for different purposes
 
-*All CMDs needs to be performed at an Authorization Level. A CMD will not be executed when this CMD require a higher lever than the current level the N1 autopilot has, while an N1 autopilot is able to receive a CMD with lower level.*
+*The execution of different CMDs needs an corresponding Authorization Level. A CMD will not be executed when the current authorization level of the Onboard Device is lower.*
 
 |Levels|Description|
 |:--------:|----------|
@@ -196,7 +190,7 @@ Each CMD Set contains some CMD IDs for different functions
 |1|Gimbal and Camera control related|
 |2|Flight Control CMDs|
 
-*The Authorization Level of the N1 autopilot can be changed by the related Activate API. The default of level is set to be 0.*
+*The Authorization Level of the N1 autopilot can be changed by the related Activate API. The default level is set to be 0.*
 
 **Function Index**
 <table>
@@ -219,7 +213,7 @@ Each CMD Set contains some CMD IDs for different functions
 </tr>
 
 <tr>
-  <td rowspan="9">0x01<br>Control Command Set</td>
+  <td rowspan="9">0x01<br>Control CMD Set</td>
   <td>0x00</td>
   <td>Request/Release the flight control</td>
   <td>2</td>
@@ -286,12 +280,11 @@ Each CMD Set contains some CMD IDs for different functions
 </tr>
 </table>
 
-
 ## CMD Val
 
 ### Activation CMD Set: 0x00 
 
-#### CMD ID 0x00: Get protocal version
+#### CMD ID 0x00: Get Protocal Version
 
 <table>
 <tr>
@@ -305,7 +298,7 @@ Each CMD Set contains some CMD IDs for different functions
   <td>CMD Val</td>
   <td>0</td>
   <td>1</td>
-  <td>random num</td>
+  <td>arbitrary num</td>
 </tr>
 
 <tr>
@@ -320,16 +313,15 @@ Each CMD Set contains some CMD IDs for different functions
 <tr>
   <td>2</td>
   <td>4</td>
-  <td>The CRC code of API version string</td>
+  <td>The CRC val of the protocal</td>
 </tr>
 
 <tr>
   <td>6</td>
   <td>32</td>
-  <td>API version string</td>
+  <td>protocal version</td>
 </tr>
 </table>
-
 
 #### CMD ID: 0x01 Activation
 
@@ -345,13 +337,13 @@ Each CMD Set contains some CMD IDs for different functions
   <td rowspan="4">CMD Val</td>
   <td>0</td>
   <td>4</td>
-  <td>app_id, a number obtained when user registers as a developer</td>
+  <td>app_id, app unique identifer</td>
 </tr>
 
 <tr>
   <td>4</td>
   <td>4</td>
-  <td>api_level, Authorization Level</td>
+  <td>api_level, authorization level</td>
 </tr>
 
 <tr>
@@ -385,7 +377,7 @@ Each CMD Set contains some CMD IDs for different functions
 
 </table>
 
-### CMD Set 0x01 Control Command 
+### CMD Set 0x01 Control CMDs
 
 #### CMD ID 0x00: Control Authority Request
 
@@ -401,10 +393,10 @@ Each CMD Set contains some CMD IDs for different functions
   <td >CMD Val</td>
   <td>0</td>
   <td>1</td>
-  <td>Request Code<ul>
-    <li>0x01 ： request to get control authority</li>
-    <li>0x00 ： request to release control authority</li>
-    </ul></td>
+  <td>
+    0x01：request to get control authority</br>
+    0x00：request to release control authority</br>
+  </td>
 </tr>
 
 <tr>
@@ -420,9 +412,7 @@ Each CMD Set contains some CMD IDs for different functions
 
 </table>
 
-There are three types of control devices: 1. Remote Controller 2. Mobile Device 3. Onboard Device
-
-The control priority is Remote Controller > Mobile Device > Onboard Device
+Note: The control priority is set to be remote controller > Mobile Device > Onboard Device
 
 #### CMD ID 0x01 Switch Flight Mode
 
@@ -438,17 +428,17 @@ The control priority is Remote Controller > Mobile Device > Onboard Device
   <td rowspan="2">CMD Val</td>
   <td>0</td>
   <td>1</td>
-  <td>Command Sequence Number</td>
+  <td>CMD Sequence Number</td>
 </tr>
 
 <tr>
   <td>1</td>
   <td>1</td>
-  <td>Request mode<ul>
-    <li>0x01 ： request return to home(RTH)</li>
-    <li>0x04 ： request auto take off</li>
-    <li>0x06 ： request auto landing</li>
-    </ul></td>
+  <td>
+    0x01 ： request return to home(RTH)</br>
+    0x04 ： request auto take off</br>
+    0x06 ： request auto landing</br>
+  </td>
 </tr>
 
 <tr>
@@ -476,7 +466,7 @@ The control priority is Remote Controller > Mobile Device > Onboard Device
   <td >CMD Val</td>
   <td>0</td>
   <td>2</td>
-  <td>Command Sequence Number</td>
+  <td>CMD Sequence Number</td>
 </tr>
 
 <tr>
@@ -537,7 +527,7 @@ The control priority is Remote Controller > Mobile Device > Onboard Device
   <td>ACK Val</td>
   <td>---</td>
   <td>---</td>
-  <td>NO ACK</td>
+  <td>N/A</td>
 </tr>
 
 </table>
@@ -557,17 +547,17 @@ The control priority is Remote Controller > Mobile Device > Onboard Device
   <td rowspan="4">CMD Val</td>
   <td>0</td>
   <td>2</td>
-  <td>Rate in Yaw</td>
+  <td>Yaw in Rate</td>
 </tr>
 <tr>
   <td>2</td>
   <td>2</td>
-  <td>Rate in Roll</td>
+  <td>Roll in Rate</td>
 </tr>
 <tr>
   <td>4</td>
   <td>2</td>
-  <td>Rate in Pitch</td>
+  <td>Pitch in Rate</td>
 </tr>
 <tr>
   <td>6</td>
@@ -579,7 +569,7 @@ The control priority is Remote Controller > Mobile Device > Onboard Device
   <td>ACK Val</td>
   <td>---</td>
   <td>---</td>
-  <td>NO ACK</td>
+  <td>N/A</td>
 </tr>
 
 </table>
@@ -662,7 +652,7 @@ The control priority is Remote Controller > Mobile Device > Onboard Device
   <td>ACK Val</td>
   <td>---</td>
   <td>---</td>
-  <td>NO ACK</td>
+  <td>N/A</td>
 </tr>
 </table>
 
@@ -718,7 +708,7 @@ The control priority is Remote Controller > Mobile Device > Onboard Device
   <td>ACK Val</td>
   <td>---</td>
   <td>---</td>
-  <td>NO ACK</td>
+  <td>N/A</td>
 </tr>
 </table>
 #### CMD ID 0x21 Start Record
@@ -742,7 +732,7 @@ The control priority is Remote Controller > Mobile Device > Onboard Device
   <td>ACK Val</td>
   <td>---</td>
   <td>---</td>
-  <td>NO ACK</td>
+  <td>N/A</td>
 </tr>
 
 </table>
@@ -767,7 +757,7 @@ The control priority is Remote Controller > Mobile Device > Onboard Device
   <td>ACK Val</td>
   <td>---</td>
   <td>---</td>
-  <td>NO ACK</td>
+  <td>N/A</td>
 </tr>
 </table>
 ### CMD Set 0x02 Push Data CMD Set
