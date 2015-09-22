@@ -38,6 +38,8 @@ Connect your onboard devices to the aircraft’s UART ports.
 ## 7.	Activation
 Take “DJI_Onboard_API_Windows_QT_Sample” as an example:
 * Connect the aircraft to your PC using a UART-to-USB cable.
-* Launch QT Sample on your PC , configure the Baud rate on your PC so that it matches the rates of the aircraft (refer to step 3), and check the aircraft data under UAV Info.
+* Launch QT Sample on your PC , configure the Baud rate on your PC so that it matches the rates of the aircraft (refer to step 3).
+* Open Serial Port and check the aircraft data under UAV Info.
+* Click 'Activation' button to activate N1 Autopilot.
 
 ![QT](Images/QtExample.png)
