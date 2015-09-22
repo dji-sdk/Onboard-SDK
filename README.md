@@ -131,18 +131,16 @@ Please comply with the local regulations during the development process and flig
 
 [Linux + ROS example]
 
+[Linux Command Line]
+
 [Windows QT example]
 
 ### Step by Step Tutorial Section:
 
-[Linux Command Line]
 
 ### API References Section:
-[Open Protocol][0]  
+[Open Protocol]
 
-[FlightControl Explain][1]  
-
-[Transparent Transport][2] 
 
 ### Articles contributed by Onboard SDK external developers:
 [Onboard Device Selection Tips](http://bbs.dji.com/forum.php?mod=viewthread&tid=21106&extra=page%3D1%26filter%3Ddigest%26digest%3D1)(Chinese)
