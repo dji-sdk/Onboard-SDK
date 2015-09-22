@@ -2,11 +2,6 @@
 
 [Chinese Version](README_CN.md)  
   
-[Open Protocol][0]  
-[FlightControl Explain][1]  
-[Transparent Transport][2] 
-[FAQ](Onboard_API_Doc/en/FAQ_en.md)  
-[Glossary](Onboard_API_Doc/en/Glossary.md)  
 
 ---
 
