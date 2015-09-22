@@ -1,0 +1,12 @@
+<launch>
+	<node pkg="dji_ros" type="dji_ros" name="dji_ros" output="screen" launch-prefix="gdb -ex run --args">
+		<!-- node parameters -->
+		<param name="serial_name" type="string" value="/dev/ttyTHS1"/>
+		<param name="baud_rate" type="int" value="230400"/>
+		<param name="app_id" type="int" value="1022384"/>
+		<param name="app_api_level" type="int" value="2"/>
+		<param name="app_version" type="int" value="1"/>
+		<param name="app_bundle_id" type="string" value="Welcome to use dji-sdk"/>
+		<param name="enc_key" type="string" value="e7bad64696529559318bb35d0a8c6050d3b88e791e1808cfe8f7802150ee6f0d"/>
+	</node>
+</launch>
