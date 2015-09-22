@@ -182,15 +182,15 @@ The CMDs have three different sets
 
 Each CMD Set contains some CMD IDs for different purposes
 
-*The execution of different CMDs needs an corresponding Authorization Level. A CMD will not be executed when the current authorization level of the Onboard Device is lower.*
+*The execution of different CMDs needs an corresponding Authorization Level. A CMD will not be executed when the current Authorization Level of the N1 Autopilot is lower.*
 
 |Levels|Description|
 |:--------:|----------|
 |0|Activation related|
 |1|Gimbal and Camera control related|
-|2|Flight Control CMDs|
+|2|Flight Control related|
 
-*The Authorization Level of the N1 autopilot can be changed by the related Activate API. The default level is set to be 0.*
+*The Authorization Level of the N1 Autopilot can be changed by 'Activation' CMD. The default level is set to be 0.*
 
 **Function Index**
 <table>
@@ -226,7 +226,7 @@ Each CMD Set contains some CMD IDs for different purposes
 </tr>
 <tr>
   <td>0x02</td>
-  <td>Request Flight Mode</td>
+  <td>Request switch result</td>
   <td>2</td>
 </tr>
 
@@ -238,13 +238,13 @@ Each CMD Set contains some CMD IDs for different purposes
 
 <tr>
   <td>0x1A</td>
-  <td>Gimbal Control by Rate</td>
+  <td>Gimbal Control in Rate</td>
   <td>1</td>
 </tr>
 
 <tr>
   <td>0x1B</td>
-  <td>Gimbal Control by Position</td>
+  <td>Gimbal Control in Position</td>
   <td>1</td>
 </tr>
 
@@ -306,14 +306,14 @@ Each CMD Set contains some CMD IDs for different purposes
   <td>0</td>
   <td>2</td>
   <td>Return Code<ul>
-    <li>0x0000：Autopilot Activation</li>
-    <li>0xFF01：Autopilot No Activation</li>
+    <li>0x0000：N1 Autopilot is activated</li>
+    <li>0xFF01：N1 Autopilot is NOT activated</li>
 </tr>
 
 <tr>
   <td>2</td>
   <td>4</td>
-  <td>The CRC val of the protocal</td>
+  <td>The CRC val of the protocal version</td>
 </tr>
 
 <tr>
@@ -365,12 +365,12 @@ Each CMD Set contains some CMD IDs for different purposes
   <td>Return Code：<ul>
     <li>0x0000：Success</li>
     <li>0x0001：Invalid parameters</li>
-    <li>0x0002：Cannot recognize encrypted package</li>
-    <li>0x0003：No activate, Attempt to activate</li>
-    <li>0x0004：DJI GO APP no response </li>
-    <li>0x0005：DJI GO APP no Internet</li>
-    <li>0x0006：Server rejected activation attempt</li>
-    <li>0x0007：Insufficient authority level</li>
+    <li>0x0002：Cannot recognize the encrypted package</li>
+    <li>0x0003：New APP ID, attempt to activate</li>
+    <li>0x0004：No response from DJI GO APP </li>
+    <li>0x0005：No Internet from DJI GO APP </li>
+    <li>0x0006：Server rejected</li>
+    <li>0x0007：Authorization level insufficient</li>
     <li>0x0008：Wrong SDK version</li>
     </ul></td>
 </tr>
@@ -379,7 +379,7 @@ Each CMD Set contains some CMD IDs for different purposes
 
 ### CMD Set 0x01 Control CMDs
 
-#### CMD ID 0x00: Control Authority Request
+#### CMD ID 0x00: Request/Release the flight control
 
 <table>
 <tr>
@@ -394,8 +394,8 @@ Each CMD Set contains some CMD IDs for different purposes
   <td>0</td>
   <td>1</td>
   <td>
-    0x01：request to get control authority</br>
-    0x00：request to release control authority</br>
+    0x01：request to obtain control authorization</br>
+    0x00：request to release control authorization</br>
   </td>
 </tr>
 
@@ -406,13 +406,12 @@ Each CMD Set contains some CMD IDs for different purposes
   <td>Return Code <ul>
     <li>0x0001：successfully released control authority</li>
     <li>0x0002：successfully obtained control authority</li>
-    <li>0x0003：control authority failed to change</li>
+    <li>0x0003：in progress</li>
     </ul></td>
 </tr>
 
 </table>
 
-Note: The control priority is set to be remote controller > Mobile Device > Onboard Device
 
 #### CMD ID 0x01 Switch Flight Mode
 
@@ -435,9 +434,9 @@ Note: The control priority is set to be remote controller > Mobile Device > Onbo
   <td>1</td>
   <td>1</td>
   <td>
-    0x01 ： request return to home(RTH)</br>
-    0x04 ： request auto take off</br>
-    0x06 ： request auto landing</br>
+    0x01 ： return to home(RTH)</br>
+    0x04 ： auto take off</br>
+    0x06 ： auto landing</br>
   </td>
 </tr>
 
@@ -446,14 +445,14 @@ Note: The control priority is set to be remote controller > Mobile Device > Onbo
   <td>0</td>
   <td>2</td>
   <td>Return Code<ul>
-    <li>0x0001：the command is received but rejected</li>
-    <li>0x0002：start to execute the command</li>
+    <li>0x0001：execution fail</li>
+    <li>0x0002：start executing</li>
     </ul></td>
 </tr>
 
 </table>
 
-#### CMD ID 0x02 Request Flight Mode
+#### CMD ID 0x02 Switch Flight Mode
 <table>
 <tr>
   <th>Data Type</th>
@@ -465,19 +464,19 @@ Note: The control priority is set to be remote controller > Mobile Device > Onbo
 <tr>
   <td >CMD Val</td>
   <td>0</td>
-  <td>2</td>
+  <td>1</td>
   <td>CMD Sequence Number</td>
 </tr>
 
 <tr>
   <td>ACK Val</td>
   <td>0</td>
-  <td>1</td>
+  <td>2</td>
   <td>Return Code<ul>
-    <li>0x0001：query failed, current command is not the query command</li>
-    <li>0x0003：command is executing</li>
-    <li>0x0004：command failed</li>
-    <li>0x0005：command succeed</li>
+    <li>0x0001：wrong CMD Sequence Number</li>
+    <li>0x0003：switching in progress</li>
+    <li>0x0004：switching failed</li>
+    <li>0x0005：switching succeed</li>
     </ul></td>
 </tr>
 
@@ -502,25 +501,25 @@ Note: The control priority is set to be remote controller > Mobile Device > Onbo
 <tr>
   <td>1</td>
   <td>4</td>
-  <td>Roll control value or X-axis control value</td>
+  <td>Roll or X-axis control value</td>
 </tr>
 
 <tr>
   <td>5</td>
   <td>4</td>
-  <td>Pitch control value or Y-axis control value</td>
+  <td>Pitch or Y-axis control value</td>
 </tr>
 
 <tr>
   <td>9</td>
   <td>4</td>
-  <td>Yaw control value</td>
+  <td>Throttle or Z-axis control value</td>
 </tr>
 
 <tr>
   <td>13</td>
   <td>4</td>
-  <td>Vertical control value or Z-axis control value</td>
+  <td>Yaw control value</td>
 </tr>
 
 <tr>
@@ -532,7 +531,7 @@ Note: The control priority is set to be remote controller > Mobile Device > Onbo
 
 </table>
 
-**The amount charged for the translation or rotation is determined by the mode flag byte , the specific content related to movement control refer to [Additional Explanation for Flight Control][0]*  
+**For more please refer to [Additional Explanation for Flight Control][0]*  
 
 #### CMD ID 0x1A Gimbal Control in Rate
 <table>
