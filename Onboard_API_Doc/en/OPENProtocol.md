@@ -5,8 +5,8 @@
 ## Protocol Frame
 The Protocal Frame is the smallest unit for transmission. It contains the Header, Data and the Tail as follows:
    ```
-   |<--------------Header---------------->|<--Data-->|<--Tail-->|
-   |SOF|LEN|VER|SESSION|ACK|RES0|PADDING|ENC|RES1|SEQ|CRC16|          DATA           |            CRC32            |
+   |<---------------------Header-------------------------->|<--Data-->|<--Tail-->|
+   |SOF|LEN|VER|SESSION|ACK|RES0|PADDING|ENC|RES1|SEQ|CRC16|   DATA   |  CRC32   |
    ```
 
 ### Frame Format
@@ -65,7 +65,7 @@ The Protocal Frame is the smallest unit for transmission. It contains the Header
   <td>PADDING</td>
   <td rowspan="2">4</td>
   <td>5</td>
-  <td>len of padding data used by encryption</td>
+  <td>len of padding data used by the whole frame encryption</td>
 </tr>
 
 <tr>
@@ -100,14 +100,14 @@ The Protocal Frame is the smallest unit for transmission. It contains the Header
 
 <tr>
   <td>DATA</td>
-  <td>12</td>
-  <td>---</td>
+  <td>26</td>
+  <td>variable size</td>
   <td>frame data</td>
 </tr>
 
 <tr>
   <td>CRC32</td>
-  <td>---</td>
+  <td>variable size</td>
   <td>32</td>
   <td>CRC32 whole frame checksum</td>
 </tr>
