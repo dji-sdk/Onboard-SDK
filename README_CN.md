@@ -126,19 +126,18 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 
 ### 编译及运行部分:
 
-[Linux + ROS example](Onboard_SDK_Sample/DJI_Onboard_API_ROS_Sample/)(中文)
+[Linux + ROS example]
 
-[Windows QT example](Onboard_SDK_Sample/DJI_Onboard_API_Windows_QT_Sample/)(中文)
+[Windows QT example]
 
-[Linux Command Line](Onboard_SDK_Sample/DJI_Onboard_API_Cmdline_Sample/)(中文)
+[Linux Command Line]
 
 ### 步骤式教程部分:
 
 ### API参考部分:
 
-[开放协议说明][0]  
-[飞行控制附加说明][1]  
-[数据透传说明文档][2]  
+[开放协议说明]
+
 
 ### 由外部开发者提供的非官方文档:
 
