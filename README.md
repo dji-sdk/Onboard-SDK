@@ -129,13 +129,13 @@ Please comply with the local regulations during the development process and flig
 
 ### Compile & Run Sections:
 
-[Linux + ROS example](https://github.com/dji-sdk/Onboard-SDK/tree/master/Onboard_SDK_Sample/DJI_Onboard_API_ROS_Sample/doc)(Chinese)
+[Linux + ROS example]
 
-[Windows QT example](https://github.com/dji-sdk/Onboard-SDK/tree/master/Onboard_SDK_Sample/DJI_Onboard_API_Windows_QT_Sample/doc)(Chinese)
+[Windows QT example]
 
 ### Step by Step Tutorial Section:
 
-[Linux Command Line](https://github.com/dji-sdk/Onboard-SDK/tree/master/Onboard_SDK_Sample/DJI_Onboard_API_Cmdline_Sample/doc)(Chinese)
+[Linux Command Line]
 
 ### API References Section:
 [Open Protocol][0]  
