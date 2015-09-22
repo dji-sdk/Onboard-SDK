@@ -18,7 +18,7 @@ Developers can play with this example via the command line interaction in Linux.
 * doc: (this section will be decrypted SHORTLY)
 * output: executables
 * src: source code
-* src/DJI_LIB: the core DJI Onboard SDK API Library (Experimental version included)
+* src/DJI_LIB: the core DJI Onboard SDK API Library
 * README.md: this file
 
 ##Compile & Run Environment
@@ -34,7 +34,7 @@ Enter the following info into *./output/config.xml.*
 * APP ID
 * App Level
 * Communication Key
-* uart device name
+* uart device name(e.g. "/dev/ttyUSB0","/dev/ttyS0")
 * baudrate
 
 >Note: the 'baudrate' set in the 'config.xml' needs to be consistent with the setting in the DJI N1 PC assistant.
@@ -50,13 +50,11 @@ If the compilation is completed, an Linux executable called 'DJI_Onboard_API_Cmd
 ##Run
 We recommend you first run this example in the simulator then move to the real flight test. Also, please be aware that you will need sudo privilege to manipulate the Linux serial port. You may need to enter the following command to gain the access privilege.
 
-~~~bash
-sudo chmod 777 /dev/ttyUSB0
-~~~
+Please make sure that 'config.xml' file is sitted in the *output* folder.
 
 Run the example by entering the following command
 ~~~bash
-./DJI_Onboard_API_Cmdline_Test
+sudo ./DJI_Onboard_API_Cmdline_Test
 ~~~
 
 ##What You Can Expect

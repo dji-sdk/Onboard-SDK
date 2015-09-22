@@ -23,7 +23,7 @@ Developers can play with this example via the GUI interaction in Windows.
 ##Compile & Run Environment
 * Operating System: Windows 7 64Bit  
 * Integrated Development Environment(IDE): Qt Creator 3.3.1  
-* Qt Ver: Qt 5.4.1 MinGV 32bit  
+* Qt Ver: Qt 5.3.2 MinGW 32bit  
 
 ## Hardware Installation
 * In order to communicate with the N1 Autopilot via the DJI OPEN protocal, a physical connection between your Onboard Device and the N1 Autopilot is required with a USB to TTL Serial cable(SOLD Seperately).
@@ -36,7 +36,7 @@ During the initialization, config the following info into the GUI interface incl
 * APP ID
 * App Level
 * Communication Key
-* uart device name
+* uart device name(e.g. COM1,COM2)
 * baudrate
 
 >Note: the 'baudrate' set in the 'config.xml' needs to be consistent with the setting in the DJI N1 PC assistant.
