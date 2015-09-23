@@ -278,7 +278,7 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
 </tr>
 </table>
 
-## CMD Val
+## CMD Val & ACK Val
 
 ### Activation CMD Set: 0x00 
 
