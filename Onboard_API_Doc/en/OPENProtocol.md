@@ -115,7 +115,7 @@ The Protocal Frame is the smallest unit for transmission. It contains the Header
 There are two types of frames.
 
 |Frame Type|Data Type|Transmission Direction|Content|
-|------------|:----------:|----------:|---------------|
+|------------|----------|:----------:|---------------|
 |CMD frame|CMD frame data|Onboard Device <=> N1 Autopilot|flight control related CMDs|
 |ACK frame|ACK frame data|N1 Autopilot <=> Onboard Device|ACK related data|
 
@@ -170,11 +170,11 @@ Note: Type 1 and Type 2 can ONLY be applied to the CMDs which have ACKs.
 
 The CMDs have three different sets  
 
-|CMD Set|CMD ID|Description|
-|--------|-----------|--------------|
-|Activation|0x00|activation related CMDs|
-|Flight Control|0x01|flight control related CMDs|
-|Push Data|0x02|flight data related CMDs|
+|CMD Set|CMD ID|Transmission Direction|Description|
+|-------|------|----------------------|-----------|
+|Activation|0x00|Onboard Device ==> N1 Autopilot|activation related CMDs|
+|Flight Control|0x01|Onboard Device ==> N1 Autopilot|flight control related CMDs|
+|Push Data|0x02|N1 Autopilot ==> Onboard Device|push data related CMDs|
 
 ### CMD ID
 
@@ -267,7 +267,7 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
 <tr>
   <td rowspan="2">0x02<br>Push Data CMD Set</td>
   <td>0x00</td>
-  <td>Push Data</td>
+  <td>Flight Data</td>
   <td>0</td>
 </tr>
 
@@ -764,9 +764,9 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
 </table>
 ### CMD Set 0x02 Push Data CMD Set
 
-#### CMD ID 0x00 Push Data
+#### CMD ID 0x00 Flight Data
 
-The push data from the N1 Autopilot can be configured by the DJI N1 assistant software.
+The flight data from the N1 Autopilot can be configured by the DJI N1 assistant software.
 
 <table>
 <tr>
@@ -780,7 +780,7 @@ The push data from the N1 Autopilot can be configured by the DJI N1 assistant so
   <td rowspan="13">CMD Val</td>
   <td>0</td>
   <td>2</td>
-  <td>item presence byte, Bit with value 1 means this push data contains corresponding data item<ul>
+  <td>item presence byte, Bit with value 1 means this flight data contains corresponding data item<ul>
     <li>bit 0：flag of time stamp</li>
     <li>bit 1：flag of attitude quaternion</li>
     <li>bit 2：flag of linear acceleration</li>
@@ -870,7 +870,7 @@ The push data from the N1 Autopilot can be configured by the DJI N1 assistant so
 </tr>
 </table>
 
-**The offset in the above table is with the assumption that all data items exist. The actual offset of data item in the push data should be calculated by the flags of 'item presence byte'. *
+**The offset in the above table is with the assumption that all data items exist. The actual offset of data item in the flight data should be calculated by the flags of 'item presence byte'. *
  
 **Data Item Index**
 
