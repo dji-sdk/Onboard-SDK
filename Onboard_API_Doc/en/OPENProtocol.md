@@ -780,7 +780,7 @@ The push data from the N1 Autopilot can be configured by the DJI N1 assistant so
   <td rowspan="13">CMD Val</td>
   <td>0</td>
   <td>2</td>
-  <td>Item present byte, Bit with value 1 means this push data contains corresponding data item<ul>
+  <td>item presence byte, Bit with value 1 means this push data contains corresponding data item<ul>
     <li>bit 0：flag of time stamp</li>
     <li>bit 1：flag of attitude quaternion</li>
     <li>bit 2：flag of linear acceleration</li>
