@@ -1,10 +1,10 @@
-#ifdef PLATFORM_LINUX
 /*
  * DJI_Pro_Hw.cpp
  *
  *  Created on: Aug 24, 2015
  *  Author: wuyuwei
  */
+#if defined(PLATFORM_LINUX) || defined(__linux)
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/types.h>

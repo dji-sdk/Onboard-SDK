@@ -33,7 +33,7 @@ void DJI_Pro_App_Send_Data(unsigned char session_mode, unsigned char is_enc, uns
     param.retry_time = retry_time;
 
 	param.ack_timeout = timeout; 
-	param.need_encrypt = is_enc;
+    param.need_encrypt = is_enc;
 	
 	Pro_Send_Interface(&param);
 }
@@ -67,7 +67,7 @@ static int DJI_Pro_Create_Thread(void *(* func)(void *), void *arg)
  *  interface: drone status control
  */
 
-static pthread_mutex_t status_ctrl_lock = PTHREAD_MUTEX_INITIALIZER;
+static int status_ctrl_lock = -1;
 static Command_Result_Notify p_status_ctrl_interface = 0;
 static unsigned short status_ctrl_return_code = SDK_ERR_NO_RESPONSE;
 static cmd_agency_data_t status_ctrl_cmd_data = {0,0};
@@ -140,6 +140,7 @@ static void * Status_Ctrl_Thread_Func(void * arg)
                 ack_data = Get_Status_Ctrl_Return_Code();
                 if(ack_data == 0x0003)
                 {
+                    printf("%s,line %d,Command is running\n",__func__,__LINE__);
                     continue;
                 }
                 else
@@ -173,30 +174,35 @@ static void * Status_Ctrl_Thread_Func(void * arg)
             break;
         }
     }
-    pthread_mutex_unlock(&status_ctrl_lock);
+    status_ctrl_lock = -1;
     return (void*) NULL;
 }
 
 /*
- * cmd: 0->go home;4->take-off;6->landing
+ * cmd: 1->go home;4->take-off;6->landing
  * return:-1->parameter error or previous cmd is not finish,otherwise 0
  */
 
 int DJI_Pro_Status_Ctrl(unsigned char cmd,Command_Result_Notify user_notice_entrance)
 {
     static unsigned char cur_cmd = 0;
+
+    if(status_ctrl_lock == 0)
+    {
+        return -1;
+    }
+    status_ctrl_lock = 0;
+
     if(cmd != 1 && cmd != 4 && cmd != 6)
     {
         return -1;
     }
-
-    pthread_mutex_lock(&status_ctrl_lock);
     p_status_ctrl_interface = user_notice_entrance ? user_notice_entrance : 0;
     cur_cmd = cmd;
 
     if(DJI_Pro_Create_Thread(Status_Ctrl_Thread_Func,&cur_cmd) != 0)
     {
-        pthread_mutex_unlock(&status_ctrl_lock);
+        status_ctrl_lock = 0;
         return -1;
     }
     return 0;
@@ -206,7 +212,7 @@ int DJI_Pro_Status_Ctrl(unsigned char cmd,Command_Result_Notify user_notice_entr
 /*
  *  interface: get api version
  */
-static pthread_mutex_t get_api_ver_lock = PTHREAD_MUTEX_INITIALIZER;
+static int get_api_ver_lock = -1;
 static Get_API_Version_Notify p_get_api_ver_interface = 0;
 static version_query_data_t to_user_version_data;
 
@@ -263,13 +269,18 @@ static void * Get_API_Version_Thread_Func(void * arg)
         p_get_api_ver_interface(p_version_data);
     }
 
-    pthread_mutex_unlock(&get_api_ver_lock);
+    get_api_ver_lock = -1;
     return (void*)NULL;
 }
 
 int DJI_Pro_Get_API_Version(Get_API_Version_Notify user_notice_entrance)
 {
-    pthread_mutex_lock(&get_api_ver_lock);
+    if(get_api_ver_lock == 0)
+    {
+        return -1;
+    }
+    get_api_ver_lock = 0;
+
     p_get_api_ver_interface = user_notice_entrance ? user_notice_entrance : 0;
     to_user_version_data.version_ack = 0xFFFF;
     to_user_version_data.version_crc = 0x0;
@@ -277,7 +288,7 @@ int DJI_Pro_Get_API_Version(Get_API_Version_Notify user_notice_entrance)
 
     if(DJI_Pro_Create_Thread(Get_API_Version_Thread_Func,&to_user_version_data) != 0)
     {
-        pthread_mutex_unlock(&status_ctrl_lock);
+        get_api_ver_lock = -1;
         return -1;
     }
     return 0;
@@ -287,7 +298,7 @@ int DJI_Pro_Get_API_Version(Get_API_Version_Notify user_notice_entrance)
  *  interface: activation interface
  */
 
-static pthread_mutex_t activate_api_lock = PTHREAD_MUTEX_INITIALIZER;
+static int activate_api_lock = -1;
 static Command_Result_Notify p_activate_api_interface = 0;
 static activate_data_t from_user_account_data;
 static unsigned short to_user_activation_result;
@@ -318,7 +329,7 @@ static void DJI_Pro_Activate_API_CallBack(ProHeader *header)
             {
                 p_activate_api_interface(ack_data);
             }
-            pthread_mutex_unlock(&activate_api_lock);
+            activate_api_lock = -1;
         }
 
     }
@@ -326,7 +337,7 @@ static void DJI_Pro_Activate_API_CallBack(ProHeader *header)
     {
         printf("%s,line %d:ERROR,ACK is exception,seesion id %d,sequence %d\n",
                __func__,__LINE__,header->session_id,header->sequence_number);
-        pthread_mutex_unlock(&activate_api_lock);
+        activate_api_lock = -1;
     }
 }
 
@@ -351,7 +362,7 @@ static void * Activate_API_Thread_Func(void * arg)
             {
                 p_activate_api_interface(SDK_ERR_NO_RESPONSE);
             }
-            pthread_mutex_unlock(&activate_api_lock);
+            activate_api_lock = -1;
             break;
         }
         else if(to_user_activation_result == SDK_ACTIVATE_NEW_DEVICE)
@@ -369,7 +380,7 @@ static void * Activate_API_Thread_Func(void * arg)
                 {
                     p_activate_api_interface(SDK_ERR_NO_RESPONSE);
                 }
-                pthread_mutex_unlock(&activate_api_lock);
+                activate_api_lock = -1;
                 break;
             }
         }
@@ -384,13 +395,17 @@ static void * Activate_API_Thread_Func(void * arg)
 int DJI_Pro_Activate_API(activate_data_t *p_user_data,
                          Command_Result_Notify user_notice_entrance)
 {
-    pthread_mutex_lock(&activate_api_lock);
+    if(activate_api_lock == 0)
+    {
+        return -1;
+    }
+    activate_api_lock = 0;
     p_activate_api_interface = user_notice_entrance ? user_notice_entrance : 0;
     to_user_activation_result = SDK_ERR_NO_RESPONSE;
     if(DJI_Pro_Create_Thread(Activate_API_Thread_Func,p_user_data) != 0)
     {
         printf("%s,line %d,ERROR\n",__func__,__LINE__);
-        pthread_mutex_unlock(&activate_api_lock);
+        activate_api_lock = -1;
         return -1;
     }
     return 0;
@@ -399,17 +414,6 @@ int DJI_Pro_Activate_API(activate_data_t *p_user_data,
 static void DJI_Pro_User_Activate_Callback(unsigned short ack)
 {
     printf("%s,ack=0x%X\n",__func__,ack);
-}
-
-void DJI_Pro_Test_Activate(void)
-{
-    static activate_data_t test_act_data;
-    test_act_data.app_id = 10086;
-    test_act_data.app_api_level = 2;
-    test_act_data.app_ver = SDK_VERSION;
-    test_act_data.app_key = "c89031fb6d700486f5b935df3cc64510dd9e74febe60400192e0b8608593828e";
-    /* call activation interface */
-    DJI_Pro_Activate_API(&test_act_data,DJI_Pro_User_Activate_Callback);
 }
 
 /*
@@ -535,6 +539,26 @@ int DJI_Pro_Gimbal_Speed_Control(gimbal_custom_speed_t *p_user_data)
 }
 
 /*
+ *  interface: camera control
+ */
+int DJI_Pro_Camera_Control(unsigned char camera_cmd)
+{
+    unsigned char send_data = 0;
+
+    if(camera_cmd != API_CAMERA_SHOT && camera_cmd != API_CAMERA_VIDEO_START
+            && camera_cmd != API_CAMERA_VIDEO_STOP)
+    {
+        printf("%s,line %d,Param ERROR\n",__func__,__LINE__);
+        return -1;
+    }
+
+    DJI_Pro_App_Send_Data(0,1, MY_CTRL_CMD_SET, camera_cmd,
+               (unsigned char*)&send_data,sizeof(send_data),0,0,0);
+
+    return 0;
+}
+
+/*
  * interface: get cmd set id
  */
 unsigned char DJI_Pro_Get_CmdSet_Id(ProHeader *header)
@@ -561,6 +585,13 @@ static unsigned short std_msg_flag = 0;
  * interface: get broadcast data
  */
 
+int DJI_Pro_Get_Broadcast_Data(sdk_std_msg_t *p_user_buf) {
+	pthread_mutex_lock(&std_msg_lock); 	
+	*p_user_buf = std_broadcast_data; 	
+	pthread_mutex_unlock(&std_msg_lock); 	
+	return 0; 	
+}
+
 int DJI_Pro_Get_Bat_Capacity(unsigned char *p_user_buf)
 {
     pthread_mutex_lock(&std_msg_lock);
@@ -585,7 +616,7 @@ int DJI_Pro_Get_GroundAcc(api_common_data_t *p_user_buf)
     return 0;
 }
 
-int DJI_Pro_Get_GroundVo(api_vo_data_t *p_user_buf)
+int DJI_Pro_Get_GroundVo(api_vel_data_t *p_user_buf)
 {
     pthread_mutex_lock(&std_msg_lock);
     *p_user_buf = std_broadcast_data.v;
@@ -631,9 +662,11 @@ static void DJI_Pro_Parse_Broadcast_Data(ProHeader *header)
  * interface: protocol initialization
  */
 static User_Handler_Func p_user_handler_func = 0;
+static Transparent_Transmission_Func p_user_rec_func = 0;
 static void DJI_Pro_App_Recv_Req_Data(ProHeader *header)
 {
-    unsigned char buf[2] = {0,0};
+    unsigned char buf[100] = {0,0};
+    unsigned char len = 0;
     switch(header->session_id)
     {
     case 0:
@@ -641,6 +674,17 @@ static void DJI_Pro_App_Recv_Req_Data(ProHeader *header)
                 && DJI_Pro_Get_CmdCode_Id(header) == API_STD_DATA)
         {
             DJI_Pro_Parse_Broadcast_Data(header);
+        }
+        else if(DJI_Pro_Get_CmdSet_Id(header) == MY_BROADCAST_CMD_SET
+                && DJI_Pro_Get_CmdCode_Id(header) == API_TRANSPARENT_DATA_TO_OBOARD)
+        {
+            if(p_user_rec_func)
+            {
+                len = (header->length - EXC_DATA_SIZE -2) > 100 ? 100 :
+                          (header->length - EXC_DATA_SIZE -2);
+                memcpy(buf,(unsigned char*)&header->magic + 2,len);
+                p_user_rec_func(buf,len);
+            }
         }
         else
         {
@@ -663,16 +707,23 @@ static void DJI_Pro_App_Recv_Req_Data(ProHeader *header)
                     __func__,header->session_id,header->sequence_number);
             if(header->session_id > 0)
             {
+                buf[0] = buf[1] = 0;
                 param.session_id = header->session_id;
                 param.seq_num = header->sequence_number;
                 param.need_encrypt = header->enc_type;
                 param.buf = buf;
-                param.length = sizeof(buf);
+                param.length = 2;
                 Pro_Ack_Interface(&param);
             }
         }
         break;
     }
+}
+
+int DJI_Pro_Register_Transparent_Transmission_Callback(Transparent_Transmission_Func user_rec_handler_entrance)
+{
+    p_user_rec_func = user_rec_handler_entrance;
+    return 0;
 }
 
 int DJI_Pro_Setup(User_Handler_Func user_cmd_handler_entrance)

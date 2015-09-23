@@ -39,6 +39,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(time, SIGNAL(timeout()), this, SLOT(Timeout_handle()));
     connect(TakeoffDelay, SIGNAL(timeout()), this, SLOT(TakeoffDelay_handle()));
     connect(ui->actionAbout, SIGNAL(triggered()),this, SLOT(btn_About()));
+    connect(this,SIGNAL(recv_data_signal(QByteArray)),this,SLOT(recv_data(QByteArray)));
     time->start(50);
 
     QFile *f = new QFile("Setting.ini");
@@ -61,6 +62,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     Read_Setting();
 
+    DJI_Pro_Register_Transparent_Transmission_Callback(MainWindow_Transparent_Transmission_Callback);
+
 }
 
 MainWindow::~MainWindow()
@@ -81,6 +84,7 @@ MainWindow* MainWindow::Get_Instance(void)
 {
     return Create_Instance();
 }
+
 
 void MainWindow::MainWindow_Activate_Callback(unsigned short res)
 {
@@ -103,6 +107,7 @@ void MainWindow::on_BtnActivation_clicked()
     user_act_data.app_id = ui->AppID->text().toInt();
     user_act_data.app_api_level = ui->AppLevel->currentText().toInt();
     user_act_data.app_ver = SDK_VERSION;
+    user_act_data.app_bundle_id[0] = user_act_data.app_bundle_id[1] = 0x12;
     *keybuf = ui->AppKey->text().toLocal8Bit();
     user_act_data.app_key = keybuf->data();
     Save_Setting();
@@ -329,3 +334,80 @@ void MainWindow::on_btn_atti_ctrl_clicked()
     {
     }
 }
+
+void MainWindow::on_btn_capture_clicked()
+{
+    DJI_Sample_Camera_Shot();
+    printf("Take a picture\n");
+}
+
+void MainWindow::on_btn_start_video_clicked()
+{
+    DJI_Sample_Camera_Video_Start();
+    ui->btn_start_video->setDown(true);
+    printf("Start video\n");
+}
+
+void MainWindow::on_btn_stop_video_clicked()
+{
+    DJI_Sample_Camera_Video_Stop();
+    ui->btn_start_video->setDown(false);
+    printf("Stop video\n");
+}
+
+void MainWindow::on_btn_draw_circle_clicked()
+{
+    if(DJI_Sample_Funny_Ctrl(DRAW_CIRCLE_SAMPLE) < 0)
+    {
+        QMessageBox::warning(this,tr("Warning"),tr("Please waiting current sample finish"),QMessageBox::Ok);
+    }
+    else
+    {
+        printf("Start to draw circle\n");
+    }
+}
+
+void MainWindow::on_btn_draw_square_clicked()
+{
+    if(DJI_Sample_Funny_Ctrl(DRAW_SQUARE_SAMPLE) < 0 )
+    {
+        QMessageBox::warning(this,tr("Warning"),tr("Please waiting current sample finish"),QMessageBox::Ok);
+    }
+    else
+    {
+        printf("Start to draw square\n");
+    }
+}
+
+void MainWindow::recv_data(QByteArray data)
+{
+    ui->TB_Recv->insertPlainText(data);
+}
+
+void MainWindow::MainWindow_Transparent_Transmission_Callback(unsigned char *buf,unsigned char len)
+{
+    QByteArray byte_array;
+    byte_array.append((const char*)buf,len);
+    emit MainWindow::Get_Instance()->recv_data_signal(byte_array);
+}
+
+void MainWindow::on_btn_Send_clicked()
+{
+    QString string =  ui->plainTextEdit_Send->toPlainText();
+
+    unsigned char *data;
+    QByteArray byte_array;
+
+    byte_array = string.toLatin1();
+
+    data = (unsigned char*)byte_array.data();
+
+    DJI_Pro_Send_To_Mobile_Device(data,byte_array.length(),0);
+}
+
+void MainWindow::on_btn_Clear_clicked()
+{
+    ui->TB_Recv->clear();
+    ui->plainTextEdit_Send->clear();
+}
+

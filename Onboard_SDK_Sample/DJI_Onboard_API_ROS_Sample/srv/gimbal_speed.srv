@@ -1,0 +1,5 @@
+int16 yaw_rate
+int16 x_rate
+int16 y_rate
+---
+bool result 
