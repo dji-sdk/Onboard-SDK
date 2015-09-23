@@ -1,5 +1,6 @@
 # Glossary:
 ---
+## FROM Quickstart
 ### API
 ### API Control Mode
 ### Remote Controller (RC)
@@ -30,3 +31,9 @@
 >A visualization and flight status monitoring tool for the DJI UAVs.  
 
 ### DJI GO APP
+
+## FROM Onboard SDK OPEN Protocol
+### Protocol Frame
+### Authorization Level
+
+
