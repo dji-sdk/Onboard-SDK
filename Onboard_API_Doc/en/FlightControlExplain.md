@@ -44,8 +44,7 @@ The flag can be divided into 8 bits:
   <td>bit[0]</td>
   <td>0b0: yaw frame is ground frame<br>0b1: yaw frame is body frame</td>
 </tr>
-<table>
-
+</table>
 
 ###Control mode  
 
