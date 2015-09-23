@@ -1,4 +1,4 @@
-# Data Transparent Transmission between Mobile and Onboard Device
+# Data Transparent Transmission
 
 ## Intro
 
