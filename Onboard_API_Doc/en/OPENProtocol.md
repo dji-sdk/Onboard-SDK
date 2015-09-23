@@ -1032,7 +1032,7 @@ The push data from the N1 Autopilot can be configured by the DJI N1 assistant so
   <td rowspan="6">Remote controller*</td>
   <td>roll</td>
   <td>int16_t</td>
-  <td>Remote controller roll channel</td>
+  <td>roll channel</td>
   <td rowspan="6">---</td>
   <td rowspan="6">50Hz</td>
 </tr>
