@@ -13,35 +13,35 @@
 
 In general, in the ground frame, a general definition for the UAV orientation is North = 0 degree, East = 90 degree, West = -90 degree and South can be either 180 degree or -180 degree.
 
-**The direction of ground frame is NOT natural for height control. So we adjust the direction of vertical control with the hope to make height and vertical velocity to be positive upwards. In other words, positive velocity makes the UAV ascend. This adjustment does not effect the directions and the orders of the other two axis.*
+**The direction of ground frame is NOT natural for the presentation of height. For this, we adjust the direction of vertical control in order to make the height or vertical velocity to be positive upwards. In other words, given a positive velocity will make the UAV ascend. This adjustment does not effect the directions and the orders of the other two axis.*
 
 ## Control mode byte
 
 ### Control mode byte
 
-To control the movement of the UAV, control inputs can be divided into 3 parts including horizontal control, vertical control and yaw control. Each part has several sub modules.
+3 parts of control inputs can be used to control the movement of the UAV including horizontal control, vertical control and yaw control. Each part has several sub modules.
 
 The flag can be divided into 8 bits:
 <table>
 <tr>
   <td rowspan="5">Control mode byte</td>
-  <td>bit[7:6]</td>
+  <td>bit 7:6</td>
   <td>0b00: HORI_ATTI_TILT_ANG<br>0b01: HORI_VEL<br>0b10: HORI_POS</td>
 </tr>
 <tr>
-  <td>bit[5:4]</td>
+  <td>bit 5:4</td>
   <td>0b00: VERT_VEL<br>0b01: VERT_POS<br>0b10: VERT_THRUST</td>
 </tr>
 <tr>
-  <td>bit[3]</td>
+  <td>bit 3</td>
   <td>0b0: YAW_ANG<br>0b1: YAW_RATE</td>
 </tr>
 <tr>
-  <td>bit[2:1]</td>
+  <td>bit 2:1 </td>
   <td>0b00: horizontal frame is ground frame<br>0b01: horizontal frame is body frame</td>
 </tr>
 <tr>
-  <td>bit[0]</td>
+  <td>bit 0 </td>
   <td>0b0: yaw frame is ground frame<br>0b1: yaw frame is body frame</td>
 </tr>
 </table>
