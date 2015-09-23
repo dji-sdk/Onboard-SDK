@@ -1080,7 +1080,7 @@ The push data from the N1 Autopilot can be configured by the DJI N1 assistant so
 </tr>
 
 <tr>
-  <td>Flight status*</td>
+  <td>Flight status</td>
   <td>status</td>
   <td>uint8_t</td>
   <td>Flight status</td>
