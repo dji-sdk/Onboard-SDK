@@ -16,7 +16,9 @@ In general, in the ground frame, a general definition for the UAV orientation is
 **The direction of ground frame is NOT natural for height control. So we adjust the direction of vertical control with the hope to make height and vertical velocity to be positive upwards. In other words, positive velocity makes the UAV ascend. This adjustment does not effect the directions and the orders of the other two axis.*
 
 ## Control mode byte explanation
+
 ### Control mode byte
+
 To control the movement of the UAV, control inputs can be divided into 3 parts including horizontal control, vertical control and yaw control. Each part has several sub modules.
 
 The flag can be divided into 8 bits:
@@ -104,6 +106,7 @@ We suggest developers do not use VERT_POS control mode indoor when your UAV does
 <div align="center">
 <img src="Images/HORI_ATTI_TILT_ANG.jpg" alt="HORI_ATTI_TILT_ANG" width="540">
 </div> -->
+
 
 ***The input of HORI_POS is a position offset instead of an actual position. This design aims to take both GPS flight and vision-based flight into consideration. If the developer wants to use GPS navigation, the GPS information sent by the UAV can be used to calculate position offset. While in vision-based flight application, developers should have their own positioning device (along with Gudiance or GPS to provide velocity measurement) to do position control. For example, [xuhao1 SDK package](https://github.com/xuhao1/dji_sdk/blob/master/src/modules/dji_services.cpp) realizes a GPS-based position control where target position can be passed as GPS coordinate.*
 
