@@ -15,7 +15,7 @@ In general, in the ground frame, a general definition for the UAV orientation is
 
 **The direction of ground frame is NOT natural for height control. So we adjust the direction of vertical control with the hope to make height and vertical velocity to be positive upwards. In other words, positive velocity makes the UAV ascend. This adjustment does not effect the directions and the orders of the other two axis.*
 
-## Control mode byte explanation
+## Control mode byte
 
 ### Control mode byte
 
@@ -112,6 +112,7 @@ We suggest developers do not use VERT_POS control mode indoor when your UAV does
 
 
 
+### Combinations  
 
 By specifying the `control_mode_byte`, 14 control modes can be constructed (`control_mode_byte` is represented as an 8-bit binary number here. The bit position with X means that this certain mode doesn't depend on the bit of this position, it can be either 0 or 1. Here "0b" means we represent the flag with binary number, the last 8 bits constructs a 0-255 integer):
 
@@ -133,20 +134,20 @@ By specifying the `control_mode_byte`, 14 control modes can be constructed (`con
 |14|VERT_THRUST<br>HORI_ATTI_TILT_ANG<br>YAW_RATE|10 ~ 100 (use with precaution)<br>-30 degree ~ 30 degree<br>-100 degree/s ~ 100 degree/s|0b00101xxy|
 
 
-**模式标识位低3位决定水平方向及偏航坐标系，部分模式下可根据开发者需要决定使用哪种坐标系。*  
-*xx表示水平方向坐标系的控制位，00表示Ground 系，01表示Body 系*  
-*y表示偏航坐标系的控制位，0表示Ground 系，1表示Body 系*
+**Low 3 bits in control_mode_byte decides the horizontal frame and yaw frame in some combinations.*  
+*xx presents horizontal frame，00 means ground frame，01 means body frame.*  
+*y presents yaw frame，0 means ground frame，1 means body frame*
 
-***在该模式下，若输入姿态控制指令为0，飞行器会进入刹车悬停，实现位置增稳，具有一定的抗风能力。*
+***In this combination，if all input data is '0', the UAV will brake, which can also keep its balance in air.*
 
-## 飞行状态说明
-### 飞行状态
-|飞行状态|状态名称|说明| 
+## Flight status
+### Flight status
+|Flight status|status name|description| 
 |-------|-------|---|
-|1|standby|飞行器待机|
-|2|take_off|飞行器起飞|
-|3|in_air|飞行器在空中|
-|4|landing|飞行器降落|
-|5|post_landing|飞行器降落完成|
+|1|standby|UAV standby|
+|2|take_off|UAV take off|
+|3|in_air|UAV in air|
+|4|landing|UAV landing|
+|5|post_landing|UAV landing finish|
 
-*备注：我们建议开发者使用传感器数据作为飞行器状态的判断标准。*
+*Note: We recommend use sensors' data to control UAV, instead of just flight status.*
