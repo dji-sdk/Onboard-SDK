@@ -1,4 +1,4 @@
-# Activation of the M100 flight platform
+# Activation Steps of the M100 flight platform
 This document aims to help developers to understand and quickly activate the M100 flight platform.
 
 >Note: Please remove the propellers from your M100 platform when following the steps.
