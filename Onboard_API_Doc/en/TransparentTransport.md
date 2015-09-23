@@ -11,34 +11,33 @@ Please be aware that the current upstream bandwidth (Mobile to Onboard Device) i
 
 ### Problem Motivation
 
-DJI provides two types of APIs for developers to create their own applications: Mobile API and Onboard API. Mobile API allows developers to monitor and control the UAV from a mobile device running iOS or Android with the remote controller connected. Onboard API allows developers to monitor and control the UAV from any system directly connected to the UAV through a serial port (the UART interface).
+DJI provides two types of APIs for developers to create their own applications: Mobile API and Onboard API. Mobile API allows developers to monitor and control the UAV from a mobile device running iOS or Android with the remote controller connected. Onboard API allows developers to monitor and control the UAV from any system directly connected to the UAV through a serial(UART) port interface.
 
-Mobile API can be used without any other devices and allows developers to monitor the flight status easily. However, this configuration has some obvious limitations such as: a relatively low computing power, limited wireless bandwidth and unacceptable time latency for real-time or complex control.
+Mobile API can be used without any other devices and allows developers to monitor the flight status easily. However, this configuration has some obvious limitations such as: a relatively low computing power, limited wireless bandwidth and unacceptable time latency for real-time or complex control operations.
 
-Onboard API is implemented through the Onboard Device which is mounted on the UAV. Communication with the UAV is done directly through their serial ports. It provides sufficient computing power and stability for developers to run complex and demanding applications. Since the Onboard Device is mounted on the UAV, developers are not able to monitor the flight status from their programs. If program crashes, developers will have to manually control the UAV with the remote controller.
+Onboard API is implemented through the Onboard Device which is mounted on the UAV. Communication with the UAV is done directly through their serial ports. It provides sufficient computing power and stability for developers to run complex and demanding applications. Since the Onboard Device is mounted directly on the UAV, developers are not been able to monitor the flight status from their programs easily. If program crashes, developers will have to manually control the UAV with the remote controller and the valuable debugging log data during the run is hard to retrive.
 
-Data Transparent Transmission was developed to combine the benefits of these two APIs by establishing a connection between the Mobile Device and the Onboard Device. With this method, developers are able to send data from their mobile devices to the Onboard Devices to control over the program running on the Onboard Device. The Onboard Device can also send data to the mobile device for flight status monitoring and other functions.
+'Data Transparent Transmission' was developed to combine the benefits of these two APIs by establishing a connection between an Mobile Device and an Onboard Device. Using the 'Data Transparent Transmission', developers are able to send data from their Mobile Device to Onboard Device to control over the program while receiving computing results, log data, flight status and external sensor data etc.
 
-In short, Data Transparent Transmission serves as a linkage between Mobile API and Onboard API, granting developers a greater flexibility in creating their applications.
+In short, Data Transparent Transmission serves as a linkage between Mobile API and Onboard API, granting developers a greater flexibility in creating their own flight APPs.
 
 ![streamFrame](Images/streamFrame.png)
 
-## USAGE - Onboard to Mobile
+## USAGE - from Onboard to Mobile Device
 
-### Onboard Device to UAV
+### Step1: Onboard Device to UAV
 
-The Onboard SDK OPEN protocol between an Onboard Device and an UAV is introduced in another document. This section explains it in more detail.
-
-The communication protocol is described as below:
+The following CMD set and CMD ID is compatible with the Onboard SDK OPEN protocol.
 
     CMD set: 0x00
     CMD ID: 0xFE
 
 |Data Type|Offset|Size|Description|
 |---------|------|----|-----------|
-|CMD Val|0|0~100|Data needs to be sent to Mobile Device|
-|Ack Val|0|2| Return code 0: Success|
+|CMD Val|0|0~100|Actual Data needed to be sent to the Mobile Device|
+|ACK Val|0|2| Return code 0: Success|
 
+The following code snippet shows you the construction of the CMD data(including CMD set, ID and Val) in C.
 ~~~c
 char cmd_buf[10];
 cmd_buf[0] = 0x00;
@@ -54,17 +53,9 @@ Linklayer_Send(SESSION_MODE3,
 );
 ~~~
 
-### UAV to Mobile Device
+### Step2: UAV to Mobile Device
 
-This section use the Android system as an example. Users can enter the DJI-SDK-DEMO application to monitor the UAV status through relevant functions and use the Data Transparent Transmission function on the Controller State page.
-
-**Note: For now, ONLY the DJI M100 flight platform supports this functionality.**
-
-![SDK1](Images/SDKDemoMain.png)
-![SDK2](Images/SDKDemoRelative.png)
-![SDK3](Images/SDKDemoTTI.png)
-
-The relative sample codes are shown as below:
+The following code snippet shows you how to receive data sent from UAV on different mobile platforms including iOS and Android.
 
 - iOS
 
@@ -72,7 +63,7 @@ The relative sample codes are shown as below:
 //Setting Delegation
 inspireMC.mcDelegate = self;
   
-//The legation function is called when receiving data
+//The delegation function is called when the data comes
 (void)mainController:(DJIMainController*)mc didReceivedDataFromExternalDevice:(NSData*)data {
 //Here is the receiving data
 NSLog(@"%@",data);
@@ -82,7 +73,7 @@ NSLog(@"%@",data);
 - Android
 
 ~~~java
-//Receiving the data callback interface sent from UAV
+//Init the data callback interface
 DJIMainControllerExternalDeviceRecvDataCallBack mExtDevReceiveDataCallBack = null;
   
 //Instantiate callback interface
@@ -97,11 +88,11 @@ public void onResult(byte[] data) {
 DJIDrone.getDjiMC().setExternalDeviceRecvDataCallBack(mExtDevReceiveDataCallBack);
 ~~~
 
-## USAGE - Mobile to Onboard
+## USAGE - from Mobile to Onboard Device
 
 ### Mobile Device to UAV
 
-The relevant sample code are shown as below:
+The following code snippet shows you how to send data to UAV on different mobile platforms including iOS and Android.
 
 #### iOS
 
@@ -154,12 +145,11 @@ DJIInspireMainController* inspireMC = (DJIInspireMainController*)drone.mainContr
 
 ### UAV to Onboard Device
 
-Use this function with the same method mentioned previously. The communication protocol is described as below:
-
+The Onboard Device can receive the data sent from the Mobile Device via the CMD sent from the N1 Autopilot. The detail CMD Set, ID and Val are as follows:
     CMD Set: 0x02
     CMD ID: 0x02
 
 |Data Type|Offset|Size|Description|
 |---------|------|----|-----------|
-|Request Data|0|1~100|User defined data|
-|Return Data|0|0|No return data|
+|CMD Val|0|1~100|User defined data|
+|ACK Val|---|---|N/A|
