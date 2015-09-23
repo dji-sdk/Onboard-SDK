@@ -150,4 +150,4 @@ By specifying the `control_mode_byte`, 14 control modes can be constructed :
 |4|landing|UAV landing|
 |5|post_landing|UAV landing finish|
 
-*Note: We recommend use sensors data to monitor UAV's state, instead of flight status.*
+*Note: We recommend use sensors data instead of flight status to monitor UAV,.*
