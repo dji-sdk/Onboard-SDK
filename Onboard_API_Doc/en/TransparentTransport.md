@@ -151,5 +151,5 @@ The Onboard Device can receive the data sent from the Mobile Device via the CMD 
 
 |Data Type|Offset|Size|Description|
 |---------|------|----|-----------|
-|CMD Val|0|1~100|User defined data|
+|CMD Val|0|1~100|User Data|
 |ACK Val|---|---|N/A|
