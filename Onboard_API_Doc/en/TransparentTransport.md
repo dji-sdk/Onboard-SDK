@@ -121,6 +121,7 @@ DJIInspireMainController* inspireMC = (DJIInspireMainController*)drone.mainContr
 ~~~
 
 The Onboard Device can receive the data sent from the Mobile Device by means of a CMD from N1 Autopilot with the CMD Set, ID and Val to be:
+
     CMD Set: 0x02
     CMD ID: 0x02
 
