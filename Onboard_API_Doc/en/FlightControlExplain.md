@@ -134,7 +134,7 @@ By specifying the `control_mode_byte`, 14 control modes can be constructed :
 |14|VERT_THRUST<br>HORI_ATTI_TILT_ANG<br>YAW_RATE|10 ~ 100 (use with precaution)<br>-30 degree ~ 30 degree<br>-100 degree/s ~ 100 degree/s|0b00101xxy|
 
 
-**Low 3 bits in control_mode_byte decides the horizontal frame and yaw frame in some combinations.*  
+**Low 3 bits in control_mode_byte decide the horizontal frame and yaw frame in some combinations.*  
 *xx presents horizontal frame，00 means ground frame，01 means body frame.*  
 *y presents yaw frame，0 means ground frame，1 means body frame*
 
@@ -150,4 +150,4 @@ By specifying the `control_mode_byte`, 14 control modes can be constructed :
 |4|landing|UAV landing|
 |5|post_landing|UAV landing finish|
 
-*Note: We recommend use sensors data instead of flight status to monitor UAV,.*
+*Note: We recommend use sensors data instead of flight status to monitor UAV.*
