@@ -1138,14 +1138,14 @@ Onboard Device has the lowerest control priority. Its control authorization can 
 </tr>
 
 <tr>
-  <td >CMD Val</td>
+  <td>CMD Val</td>
   <td>0</td>
   <td>1</td>
   <td>Fixed value, set to be 0x04</td>
 </tr>
 
 <tr>
-  <td >ACK Val</td>
+  <td>ACK Val</td>
   <td>---</td>
   <td>---</td>
   <td>N/A</td>
