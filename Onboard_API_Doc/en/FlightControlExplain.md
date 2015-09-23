@@ -114,7 +114,7 @@ We suggest developers do not use VERT_POS control mode indoor when your UAV does
 
 ### Combinations  
 
-By specifying the `control_mode_byte`, 14 control modes can be constructed (`control_mode_byte` is represented as an 8-bit binary number here. The bit position with X means that this certain mode doesn't depend on the bit of this position, it can be either 0 or 1. Here "0b" means we represent the flag with binary number, the last 8 bits constructs a 0-255 integer):
+By specifying the `control_mode_byte`, 14 control modes can be constructed :
 
 |Index|Combinations|Input Data Range<br>(throttle/pitch&roll/yaw)|control_mode_byte*|
 |---|------------|---------------------------------------------|--------------|
