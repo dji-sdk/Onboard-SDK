@@ -14,7 +14,7 @@ Mobile API can be used without any other devices and allows developers to monito
 
 Onboard API is implemented through the computing device which is mounted on the UAV. Communication with the UAV is done directly through their serial ports. It provides sufficient computing power and stability for developers to run complex and demanding applications. But due to the computing device is mounted on the UAV, developers are not able to monitor the flight status. If the program crashes, developers will have to manually control the UAV with remote controller.
 
-Data Transparent Transmission was developed to combine the benefits of these two APIs by establishing a connection between the Mobile Device and the Onboard Device. With this method, developers are able to send data from their mobile devices to the onboard devices to control over the program running on the onboard device. The onboard device can also send data to the mobile device for flight status monitoring and other functions.
+Data Transparent Transmission was developed to combine the benefits of these two APIs by establishing a connection between the Mobile Device and the Onboard Device. With this method, developers are able to send data from their mobile devices to the Onboard Devices to control over the program running on the Onboard Device. The Onboard Device can also send data to the mobile device for flight status monitoring and other functions.
 
 In short, Data Transparent Transmission serves as a linkage between Mobile API and Onboard API, granting developers a greater flexibility in creating their applications.
 
