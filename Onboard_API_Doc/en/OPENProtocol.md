@@ -868,6 +868,13 @@ The flight data from the N1 Autopilot can be configured by the DJI N1 assistant 
   <td>1</td>
   <td>Control device</td>
 </tr>
+
+<tr>
+  <td >ACK Val</td>
+  <td>---</td>
+  <td>---</td>
+  <td>N/A</td>
+</tr>
 </table>
 
 **The offset in the above table is with the assumption that all data items exist. The actual offset of data item in the flight data should be calculated by the flags of 'item presence byte'. *
