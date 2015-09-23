@@ -224,7 +224,7 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
 </tr>
 <tr>
   <td>0x02</td>
-  <td>Request switch result</td>
+  <td>Request Switch Result</td>
   <td>2</td>
 </tr>
 
