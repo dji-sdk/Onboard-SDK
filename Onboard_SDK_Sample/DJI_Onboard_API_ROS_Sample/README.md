@@ -32,9 +32,9 @@ Developers can play with this example via the ROS interaction.
 * In order to monitor & control the flight, a remote controller connects to the mobile device(with the DJI GO APP running) is needed.
 
 ##Configs
-Enter the following info into *launch/sdk_demo.launch* when using `roslaunch` or "src/djiMain.cpp" when using `rosrun` directly.
+Enter the following info into *launch/sdk_demo.launch* when using `roslaunch` OR "src/djiMain.cpp" when using `rosrun` directly.
 * APP ID
-* App Level
+* APP Level
 * Communication Key
 * uart device name
 * baudrate
@@ -43,7 +43,7 @@ Enter the following info into *launch/sdk_demo.launch* when using `roslaunch` or
 
 ##Compile
 Catkin workspace is required in order to compile and run this ROS example.
-Please refer to [ROS catkin tutorial](http://wiki.ros.org/catkin/Tutorials) if you haven't used it before.
+Please refer to [ROS catkin tutorial](http://wiki.ros.org/catkin/Tutorials) if you haven't been with it before.
 
 ~~~bash
 cd `your catkin workspace`
@@ -51,7 +51,7 @@ catkin_make
 ~~~
 
 ##Run
-We recommend you first run this example in the simulator then move to the real flight test. Also, please be aware that you will need sudo privilege to manipulate the Linux serial port. You may need to enter the following command to gain the access privilege.
+We recommend you first run this example in the simulator then move to the real flight test. Also, please be aware that you will need sudo privilege to manipulate the linux serial port. You may need to enter the following command to gain the access privilege.
 
 ~~~bash
 sudo -s
@@ -71,22 +71,22 @@ roscore
 rosrun dji_ros dji_ros
 ~~~
 
-Note: The command selection depends on in which way you store the activation infomation.
+Note: The above command selection depends on the way you store the activation infomation.
 
-The ROS server node will first check your activation data. Then it will start running and able to accept commands if the checking of your activation information is successful.
+The ROS server node will first check your activation data. If the check of your activation information is successful, it will start running and been able to accept commands.
 
 ---
-Please make sure you have started the server node already and then run the example client node by entering the following commands.
+Please make sure you have started the server node and then run the example client node by entering the following command.
 
 ~~~bash
 rosrun dji_ros dji_ros_client
 ~~~
 
-There is a menu with serveral functional choices you can try on your drone in the client node.
+You can now try the different functions shown in the menu in the client node.
 
 ---
 
-The drone's status are published following our message type together with the [odometry](http://docs.ros.org/api/nav_msgs/html/msg/Odometry.html) message type. 
+The status of the UAV are published following our message type together with the [odometry](http://docs.ros.org/api/nav_msgs/html/msg/Odometry.html) message type. 
 
 You can find the topic you want by `rostopic list` and query the data inside using either `rostopic echo [topic name]` or subscribe to the topic by your own ROS node.
 
