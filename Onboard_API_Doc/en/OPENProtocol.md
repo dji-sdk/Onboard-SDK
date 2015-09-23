@@ -200,7 +200,7 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
 </tr>
   <td rowspan="2">0x00<br>Activation CMD Set</td>
   <td>0x00</td>
-  <td>Get protocal version</td>
+  <td>Get Protocal Version</td>
   <td>0</td>
 </tr>
 
@@ -213,7 +213,7 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
 <tr>
   <td rowspan="9">0x01<br>Control CMD Set</td>
   <td>0x00</td>
-  <td>Request/Release the flight control</td>
+  <td>Request/Release Control Authorization</td>
   <td>2</td>
 </tr>
 
@@ -377,7 +377,7 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
 
 ### CMD Set 0x01 Control CMDs
 
-#### CMD ID 0x00: Request/Release the flight control
+#### CMD ID 0x00: Request/Release Control Authorization
 
 <table>
 <tr>
@@ -450,7 +450,7 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
 
 </table>
 
-#### CMD ID 0x02 Switch Flight Mode
+#### CMD ID 0x02 Request Switch Result
 <table>
 <tr>
   <th>Data Type</th>
