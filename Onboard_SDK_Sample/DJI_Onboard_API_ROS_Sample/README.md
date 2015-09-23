@@ -82,7 +82,7 @@ Please make sure you have started the server node and then run the example clien
 rosrun dji_ros dji_ros_client
 ~~~
 
-You can now try the different functions shown in the menu in the client node.
+You can now try the different functions shown in the menu of the client node.
 
 ---
 
