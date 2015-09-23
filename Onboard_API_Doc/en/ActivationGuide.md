@@ -40,4 +40,5 @@ The following are using the “DJI_Onboard_SDK_Windows_QT_Sample” as an demons
 * Launch the Windows QT Sample on your PC , configure the Baud rate on your PC so that it matches the rates of the UAV (For detail, please refer to step 3).
 * Open the Serial Port and check the UAV info under the UAV Info Section on screen.
 * Click the 'Activation' button to activate the N1 Autopilot.
+
 ![QT](Images/QtExample.png)
