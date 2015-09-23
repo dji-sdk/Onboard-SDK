@@ -896,7 +896,7 @@ The push data from the N1 Autopilot can be configured by the DJI N1 assistant so
   <td rowspan="4">Quarternion</td>
   <td>q0</td>
   <td>float32</td>
-  <td rowspan="4">Attitude quaternion<br>From ground to body frame*</td>
+  <td rowspan="4">Attitude quaternion<br>From ground frame to body frame*</td>
   <td rowspan="4">---</td>
   <td rowspan="4">100Hz</td>
 </tr>
