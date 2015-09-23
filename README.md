@@ -127,12 +127,11 @@ Please comply with the local regulations during the development process and flig
 
 [Windows QT example](Onboard_SDK_Sample/DJI_Onboard_API_Windows_QT_Sample)
 
-### Step by Step Tutorial Section:
-
-
 ### API References Section:
-[Open Protocol][0]
 
+[Open Protocol][0]
+[Flight Control Explain][1]
+[Data Transparent Transmission][2]
 
 ### Articles contributed by Onboard SDK external developers:
 [Onboard Device Selection Tips](http://bbs.dji.com/forum.php?mod=viewthread&tid=21106&extra=page%3D1%26filter%3Ddigest%26digest%3D1)(Chinese)
@@ -142,7 +141,7 @@ Please comply with the local regulations during the development process and flig
 
 [0]:Onboard_API_Doc/en/OPENProtocol.md  
 [1]:Onboard_API_Doc/en/FlightControlExplain.md  
-[2]:Onboard_API_Doc/en/TransparentTransport.md   
+[2]:Onboard_API_Doc/en/DataTransparentTransmission.md   
 [3]:Onboard_API_Doc/en/Glossary.md   
 [FAQ]:Onboard_API_Doc/en/FAQ_en.md   
 [Activation]:Onboard_API_Doc/en/ActivationGuide.md
@@ -277,6 +276,7 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 ### API参考部分:
 
 [开放协议说明][cn0]
+[飞行控制附加说明][cn1]
 [数据透传说明][cn2]
 
 
