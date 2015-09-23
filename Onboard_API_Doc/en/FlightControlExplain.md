@@ -1,8 +1,6 @@
 # Additional Explanation for Flight Control 
 
-*If you come across any mistakes or bugs in this tutorial, please let us know using a Github issue, a post on the DJI forum, or email. Please feel free to send us Github pull request and help us fix any issues.*
-
-## Explanation of Coordinate Frames
+## Coordinate Frames
 
 1. Body Frame
 
@@ -13,13 +11,13 @@
   + East - y axis
   + Down - z axis
 
-Therefore, in the ground frame, a general definition for craft orientation is North = 0 degree, East = 90 degree, West = -90 degree and South can be either 180 degree or -180 degree.
+In general, in the ground frame, a general definition for the UAV orientation is North = 0 degree, East = 90 degree, West = -90 degree and South can be either 180 degree or -180 degree.
 
-**Note: The direction of ground frame is not natural for height control. So we adjust the direction of vertical control in order to make height and vertical velocity to be positive upwards, in other words, positive velocity makes MATRICE 100 ascend. This adjustment does not change the direction and the order of the other two axis.**
+**Note: The direction of ground frame is NOT natural for height control. So we adjust the direction of vertical control with the hope to make height and vertical velocity to be positive upwards. In other words, positive velocity makes the UAV ascend. This adjustment does not effect the directions and the orders of the other two axis.**
 
-## Explanation of ctrl mode flag
+## Ctrl Mode Flag
 
-To control the spatial movement of MATRICE 100, we split control inputs into three parts: horizontal control, vertical control and yaw control. Each part has several sub modules.
+To control the movement of the UAV, control inputs can be divided into 3 parts including horizontal control, vertical control and yaw control. Each part has several sub modules.
 
 <table>
 <tr>
