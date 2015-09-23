@@ -21,7 +21,7 @@ static Req_Callback_Func APP_Recv_Hook = 0;
 static void Send_Pro_Data(unsigned char *buf)
 {
 	ProHeader *pHeader = (ProHeader *)buf;
-#ifdef __linux
+#ifdef PLATFORM_LINUX
     Pro_Hw_Send(buf,pHeader->length);
 #endif
 #ifdef PLATFORM_QT
@@ -292,6 +292,7 @@ int Pro_Send_Interface(ProSendParameter *parameter)
 		if(ret == 0)
 		{
 			printf("%s:%d:encrypt ERROR\n",__func__,__LINE__);
+            Free_CMD_Session(cmd_session);
 			Free_Memory_Lock();
 			return -1;
 		}
@@ -318,6 +319,7 @@ int Pro_Send_Interface(ProSendParameter *parameter)
 		if(ret == 0)
 		{
 			printf("%s:%d:encrypt ERROR\n",__func__,__LINE__);
+            Free_CMD_Session(cmd_session);
 			Free_Memory_Lock();
 			return -1;
 		}
@@ -351,6 +353,7 @@ int Pro_Send_Interface(ProSendParameter *parameter)
 		if(ret == 0)
 		{
 			printf("%s:%d:encrypt ERROR\n",__func__,__LINE__);
+            Free_CMD_Session(cmd_session);
 			Free_Memory_Lock();
 			return -1;
 		}

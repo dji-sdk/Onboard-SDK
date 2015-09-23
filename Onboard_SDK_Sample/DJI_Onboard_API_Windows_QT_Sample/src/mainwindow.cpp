@@ -39,6 +39,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(time, SIGNAL(timeout()), this, SLOT(Timeout_handle()));
     connect(TakeoffDelay, SIGNAL(timeout()), this, SLOT(TakeoffDelay_handle()));
     connect(ui->actionAbout, SIGNAL(triggered()),this, SLOT(btn_About()));
+    connect(this,SIGNAL(recv_data_signal(QByteArray)),this,SLOT(recv_data(QByteArray)));
     time->start(50);
 
     QFile *f = new QFile("Setting.ini");
@@ -61,6 +62,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     Read_Setting();
 
+    DJI_Pro_Register_Transparent_Transmission_Callback(MainWindow_Transparent_Transmission_Callback);
+
 }
 
 MainWindow::~MainWindow()
@@ -81,6 +84,7 @@ MainWindow* MainWindow::Get_Instance(void)
 {
     return Create_Instance();
 }
+
 
 void MainWindow::MainWindow_Activate_Callback(unsigned short res)
 {
@@ -374,3 +378,36 @@ void MainWindow::on_btn_draw_square_clicked()
         printf("Start to draw square\n");
     }
 }
+
+void MainWindow::recv_data(QByteArray data)
+{
+    ui->TB_Recv->insertPlainText(data);
+}
+
+void MainWindow::MainWindow_Transparent_Transmission_Callback(unsigned char *buf,unsigned char len)
+{
+    QByteArray byte_array;
+    byte_array.append((const char*)buf,len);
+    emit MainWindow::Get_Instance()->recv_data_signal(byte_array);
+}
+
+void MainWindow::on_btn_Send_clicked()
+{
+    QString string =  ui->plainTextEdit_Send->toPlainText();
+
+    unsigned char *data;
+    QByteArray byte_array;
+
+    byte_array = string.toLatin1();
+
+    data = (unsigned char*)byte_array.data();
+
+    DJI_Pro_Send_To_Mobile_Device(data,byte_array.length(),0);
+}
+
+void MainWindow::on_btn_Clear_clicked()
+{
+    ui->TB_Recv->clear();
+    ui->plainTextEdit_Send->clear();
+}
+

@@ -67,6 +67,13 @@ private slots:
 
     void on_btn_draw_square_clicked();
 
+    void on_btn_Send_clicked();
+
+    void on_btn_Clear_clicked();
+
+    void recv_data(QByteArray data);
+signals:
+    void recv_data_signal(QByteArray data);
 private:
     Ui::MainWindow *ui;
     QTimer *time;
@@ -77,7 +84,8 @@ private:
     int Get_Check(QSettings *set);
     void Read_Setting();
     void Save_Setting();
-    static void MainWindow_Activate_Callback(unsigned short res);
+    static void MainWindow_Activate_Callback(unsigned short res);   
+    static void MainWindow_Transparent_Transmission_Callback(unsigned char *buf,unsigned char len);
 public:
     static MainWindow *mainwindow_object;
     static MainWindow* Create_Instance(void);

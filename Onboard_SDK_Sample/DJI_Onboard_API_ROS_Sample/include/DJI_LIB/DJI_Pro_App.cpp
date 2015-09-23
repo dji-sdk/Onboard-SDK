@@ -584,12 +584,7 @@ static unsigned short std_msg_flag = 0;
 /*
  * interface: get broadcast data
  */
-int DJI_Pro_Get_Broadcast_Data(sdk_std_msg_t *p_user_buf) {
-    pthread_mutex_lock(&std_msg_lock);
-    *p_user_buf = std_broadcast_data;
-    pthread_mutex_unlock(&std_msg_lock);
-    return 0;
-}
+
 int DJI_Pro_Get_Bat_Capacity(unsigned char *p_user_buf)
 {
     pthread_mutex_lock(&std_msg_lock);
@@ -660,9 +655,11 @@ static void DJI_Pro_Parse_Broadcast_Data(ProHeader *header)
  * interface: protocol initialization
  */
 static User_Handler_Func p_user_handler_func = 0;
+static Transparent_Transmission_Func p_user_rec_func = 0;
 static void DJI_Pro_App_Recv_Req_Data(ProHeader *header)
 {
-    unsigned char buf[2] = {0,0};
+    unsigned char buf[100] = {0,0};
+    unsigned char len = 0;
     switch(header->session_id)
     {
     case 0:
@@ -670,6 +667,17 @@ static void DJI_Pro_App_Recv_Req_Data(ProHeader *header)
                 && DJI_Pro_Get_CmdCode_Id(header) == API_STD_DATA)
         {
             DJI_Pro_Parse_Broadcast_Data(header);
+        }
+        else if(DJI_Pro_Get_CmdSet_Id(header) == MY_BROADCAST_CMD_SET
+                && DJI_Pro_Get_CmdCode_Id(header) == API_TRANSPARENT_DATA_TO_OBOARD)
+        {
+            if(p_user_rec_func)
+            {
+                len = (header->length - EXC_DATA_SIZE -2) > 100 ? 100 :
+                          (header->length - EXC_DATA_SIZE -2);
+                memcpy(buf,(unsigned char*)&header->magic + 2,len);
+                p_user_rec_func(buf,len);
+            }
         }
         else
         {
@@ -692,16 +700,23 @@ static void DJI_Pro_App_Recv_Req_Data(ProHeader *header)
                     __func__,header->session_id,header->sequence_number);
             if(header->session_id > 0)
             {
+                buf[0] = buf[1] = 0;
                 param.session_id = header->session_id;
                 param.seq_num = header->sequence_number;
                 param.need_encrypt = header->enc_type;
                 param.buf = buf;
-                param.length = sizeof(buf);
+                param.length = 2;
                 Pro_Ack_Interface(&param);
             }
         }
         break;
     }
+}
+
+int DJI_Pro_Register_Transparent_Transmission_Callback(Transparent_Transmission_Func user_rec_handler_entrance)
+{
+    p_user_rec_func = user_rec_handler_entrance;
+    return 0;
 }
 
 int DJI_Pro_Setup(User_Handler_Func user_cmd_handler_entrance)
