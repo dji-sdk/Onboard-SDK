@@ -121,8 +121,8 @@ There are two types of frames.
 
 #### CMD frame data
 ```
-|<-------CMD frame data------->|
-|CMD SET|CMD ID|CMD VAL|
+|<------CMD frame data------>|
+| CMD SET | CMD ID | CMD VAL |
 ```
 
 |Data Field|Byte Index|Size(byte)|
@@ -135,7 +135,7 @@ There are two types of frames.
 
 ```
 |<-ACK frame data->|
-|ACK VAL|
+|      ACK VAL     |
 ```
 
 |Data Field|Byte Index|Size(byte)|
