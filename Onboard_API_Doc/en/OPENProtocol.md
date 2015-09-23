@@ -870,9 +870,7 @@ The push data from the N1 Autopilot can be configured by the DJI N1 assistant so
 </tr>
 </table>
 
-**Offset(byte)：Offset(byte) in this table is in the case that all items exist in one push data.*
-
-The actual offset of each item in the push data should be calculated by flags of 'item presence byte'.
+**The offset in the above table is with the assumption that all data items exist. The actual offset of data item in the push data should be calculated by the flags of 'item presence byte'. *
  
 **Data Item Index**
 
