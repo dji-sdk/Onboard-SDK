@@ -46,7 +46,8 @@ The flag can be divided into 8 bits:
 </tr>
 <table>
 
-###Control mode
+
+###Control mode  
 
 We suggest developers do not use VERT_POS control mode indoor when your UAV does not have Guidance installed or the flight height is larget than 3 meters. Since in indoor environment, barometer can be inaccurate, the vertical controller may fail to keep the height of the UAV. 
 
