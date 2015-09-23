@@ -29,7 +29,7 @@ The CMD set and ID used here is compatible with the Onboard SDK OPEN protocol as
     CMD set: 0x00
     CMD ID: 0xFE
 
-|Data Type|Offset|Size|Description|
+|Data Type|Offset(byte)|Size(byte)|Description|
 |---------|------|----|-----------|
 |CMD Val|0|0~100|User Data|
 |ACK Val|0|2| Return code 0: Success|
@@ -140,7 +140,7 @@ The Onboard Device can receive the data sent from the Mobile Device by means of 
     CMD Set: 0x02
     CMD ID: 0x02
 
-|Data Type|Offset|Size(byte)|Description|
+|Data Type|Offset(byte)|Size(byte)|Description|
 |---------|------|----|-----------|
 |CMD Val|0|1~100|User Data|
 |ACK Val|---|---|N/A|
