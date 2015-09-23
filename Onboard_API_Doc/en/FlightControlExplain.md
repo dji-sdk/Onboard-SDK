@@ -99,11 +99,11 @@ We suggest developers do not use VERT_POS control mode indoor when your UAV does
 </tr>
 </table>
 
-<!-- **HORI_ATTI_TILT_ANG模式控制量如下图，DJI飞控采用水平面直接进行整个平面旋转。其中平面旋转角度为Θ,旋转方向与x轴或roll轴方向角度为γ。输入参量Θx=Θ*cos(γ),Θy=Θ*sin(γ)。(当采用Ground坐标系时γ为飞行方向与正北方向夹角，此时飞行器飞行状态与IOC模式相似；当采用Body坐标系时γ为飞行方向与飞行器机头方向夹角，此时飞行器飞行状态与遥控器下的姿态模式相似)* 
+**HORI_ATTI_TILT_ANG模式控制量如下图，DJI飞控采用水平面直接进行整个平面旋转。其中平面旋转角度为Θ,旋转方向与x轴或roll轴方向角度为γ。输入参量Θx=Θ*cos(γ),Θy=Θ*sin(γ)。(当采用Ground坐标系时γ为飞行方向与正北方向夹角，此时飞行器飞行状态与IOC模式相似；当采用Body坐标系时γ为飞行方向与飞行器机头方向夹角，此时飞行器飞行状态与遥控器下的姿态模式相似)* 
 
 <div align="center">
 <img src="Images/HORI_ATTI_TILT_ANG.jpg" alt="HORI_ATTI_TILT_ANG" width="540">
-</div> -->
+</div>
 
 ***The input of HORI_POS is a position offset instead of an actual position. This design aims to take both GPS flight and vision-based flight into consideration. If the developer wants to use GPS navigation, the GPS information sent by the UAV can be used to calculate position offset. While in vision-based flight application, developers should have their own positioning device (along with Gudiance or GPS to provide velocity measurement) to do position control. For example, [xuhao1 SDK package](https://github.com/xuhao1/dji_sdk/blob/master/src/modules/dji_services.cpp) realizes a GPS-based position control where target position can be passed as GPS coordinate.*
 
@@ -130,7 +130,7 @@ By specifying the `control_mode_byte`, 14 control modes can be constructed (`con
 |14|VERT_THRUST<br>HORI_ATTI_TILT_ANG<br>YAW_RATE|10 ~ 100 (use with precaution)<br>-30 degree ~ 30 degree<br>-100 degree/s ~ 100 degree/s|0b00101xxy|
 
 
-<!-- **模式标识位低3位决定水平方向及偏航坐标系，部分模式下可根据开发者需要决定使用哪种坐标系。*  
+**模式标识位低3位决定水平方向及偏航坐标系，部分模式下可根据开发者需要决定使用哪种坐标系。*  
 *xx表示水平方向坐标系的控制位，00表示Ground 系，01表示Body 系*  
 *y表示偏航坐标系的控制位，0表示Ground 系，1表示Body 系*
 
@@ -146,4 +146,4 @@ By specifying the `control_mode_byte`, 14 control modes can be constructed (`con
 |4|landing|飞行器降落|
 |5|post_landing|飞行器降落完成|
 
-*备注：我们建议开发者使用传感器数据作为飞行器状态的判断标准。* -->
+*备注：我们建议开发者使用传感器数据作为飞行器状态的判断标准。*

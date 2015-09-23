@@ -149,7 +149,6 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 [0]:Onboard_API_Doc/cn/开放协议说明.md  
 [1]:Onboard_API_Doc/cn/飞行控制附加说明.md  
 [2]:Onboard_API_Doc/cn/数据透传说明文档.md  
-
 [3]:Onboard_API_Doc/cn/术语.md
 [Activation]:Onboard_API_Doc/cn/激活指南.md
 [FAQ]:Onboard_API_Doc/cn/FAQ_cn.md
