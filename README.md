@@ -1,6 +1,6 @@
 # DJI Onboard SDK
 
-[English Version](#english-version)    [中文版本](#中文版本)
+[English Version](#english-version)                 [中文版本](#中文版本)
 
 #English Version
 ## Welcome, Onboard SDK developers! 
@@ -129,9 +129,9 @@ Please comply with the local regulations during the development process and flig
 
 ### API References Section:
 
-[Open Protocol][0]
-[Flight Control Explain][1]
-[Data Transparent Transmission][2]
+[Open Protocol][0]  
+[Flight Control Explain][1]  
+[Data Transparent Transmission][2]  
 
 ### Articles contributed by Onboard SDK external developers:
 [Onboard Device Selection Tips](http://bbs.dji.com/forum.php?mod=viewthread&tid=21106&extra=page%3D1%26filter%3Ddigest%26digest%3D1)(Chinese)
@@ -275,9 +275,9 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 
 ### API参考部分:
 
-[开放协议说明][cn0]
-[飞行控制附加说明][cn1]
-[数据透传说明][cn2]
+[开放协议说明][cn0]  
+[飞行控制附加说明][cn1]  
+[数据透传说明][cn2]  
 
 
 ### 由外部开发者提供的非官方文档:
