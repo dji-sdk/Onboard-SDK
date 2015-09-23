@@ -21,7 +21,6 @@ In general, in the ground frame, a general definition for the UAV orientation is
 
 3 parts of control inputs can be used to control the movement of the UAV including horizontal control, vertical control and yaw control. Each part has several sub modules.
 
-The flag can be divided into 8 bits:
 <table>
 <tr>
   <td rowspan="5">Control mode byte</td>
@@ -48,12 +47,12 @@ The flag can be divided into 8 bits:
 
 ###Control mode  
 
-We suggest developers do not use VERT_POS control mode indoor when your UAV does not have Guidance installed or the flight height is larget than 3 meters. Since in indoor environment, barometer can be inaccurate, the vertical controller may fail to keep the height of the UAV. 
+We suggest developers do not use VERT_POS control mode indoor when your UAV does not have Guidance installed or the flight height is larger than 3 meters. Since in indoor environment, barometer can be inaccurate, the vertical controller may fail to keep the height of the UAV. 
 
 > Please note that if the following conditions are met that the control mode is functional:
 > 
 * Only when the GPS signal is good (health\_flag >=3)，horizontal position control (HORI_POS) related control modes can be used.
-* Only when GPS signal is good (health\_flag >=3)，or when Gudiance system is working properly (right connection and power provided)，horizontal velocity control（HORI_VEL）related control modes can be used.
+* Only when GPS signal is good (health\_flag >=3)，or when Gudiance system is working properly with N1 Autopilot，horizontal velocity control（HORI_VEL）related control modes can be used.
 
 
 <table>
@@ -87,7 +86,7 @@ We suggest developers do not use VERT_POS control mode indoor when your UAV does
 </tr>
 <tr>
   <td>HORI_VEL</td>
-  <td>Velocities on pitches & roll directions, need to be referenced to either the ground or body frame</td>
+  <td>Velocities on pitch & roll directions, need to be referenced to either the ground or body frame</td>
 </tr>
 
 <tr>
@@ -108,7 +107,7 @@ We suggest developers do not use VERT_POS control mode indoor when your UAV does
 </div> -->
 
 
-***The input of HORI_POS is a position offset instead of an actual position. This design aims to take both GPS flight and vision-based flight into consideration. If the developer wants to use GPS navigation, the GPS information sent by the UAV can be used to calculate position offset. While in vision-based flight application, developers should have their own positioning device (along with Gudiance or GPS to provide velocity measurement) to do position control. For example, [xuhao1 SDK package](https://github.com/xuhao1/dji_sdk/blob/master/src/modules/dji_services.cpp) realizes a GPS-based position control where target position can be passed as GPS coordinate.*
+***The input of HORI_POS is a position offset instead of an actual position. This design aims to take both GPS flight and vision-based flight into consideration. If the developer wants to use GPS navigation, the GPS information sent by the UAV can be used to calculate position offset. While in vision-based flight application, developers should have their own positioning device (along with Gudiance or GPS to provide velocity measurement) to do position control. For example, [xuhao1 SDK package](https://github.com/xuhao1/dji_sdk/blob/master/src/modules/dji_services.cpp) implements a GPS-based position control where target position can be passed as GPS coordinate.*
 
 
 
@@ -134,20 +133,20 @@ By specifying the `control_mode_byte`, 14 control modes can be constructed :
 |14|VERT_THRUST<br>HORI_ATTI_TILT_ANG<br>YAW_RATE|10 ~ 100 (use with precaution)<br>-30 degree ~ 30 degree<br>-100 degree/s ~ 100 degree/s|0b00101xxy|
 
 
-**Low 3 bits in control_mode_byte decide the horizontal frame and yaw frame in some combinations.*  
+**the lowest 3 bits in control_mode_byte decide the horizontal frame and yaw frame.*  
 *xx presents horizontal frame，00 means ground frame，01 means body frame.*  
 *y presents yaw frame，0 means ground frame，1 means body frame*
 
-***In this combination，if all input data is '0', the UAV will brake, which can also keep its balance in air.*
+***In this combination，if all input data is '0', the UAV will brake and hold in a self-balance status at a fixed  position.*
 
 ## Flight status
 ### Flight status
-|Flight status|status name|description| 
-|-------|-------|---|
-|1|standby|UAV standby|
-|2|take_off|UAV take off|
-|3|in_air|UAV in air|
-|4|landing|UAV landing|
-|5|post_landing|UAV landing finish|
+|Flight status val|status name| 
+|-------|-------|
+|1|standby|
+|2|take_off|
+|3|in_air|
+|4|landing|
+|5|finish_landing|
 
-*Note: We recommend use sensors data instead of flight status to monitor UAV.*
+*Note: We recommend using the sensor data of UAV instead of the above flight status in your development.*
