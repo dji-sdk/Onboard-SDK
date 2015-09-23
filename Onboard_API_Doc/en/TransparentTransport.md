@@ -149,7 +149,7 @@ The Onboard Device can receive the data sent from the Mobile Device via the CMD 
     CMD Set: 0x02
     CMD ID: 0x02
 
-|Data Type|Offset|Size|Description|
+|Data Type|Offset|Size(byte)|Description|
 |---------|------|----|-----------|
 |CMD Val|0|1~100|User Data|
 |ACK Val|---|---|N/A|
