@@ -92,7 +92,7 @@ You can find the topic you want by `rostopic list` and query the data inside usi
 
 ##What You Can Expect
 * You can learn how to use ROS to wrap the DJI SDK API Library and use it as a ROS service
-* You can see the flight control simulations on screen if you are using the DJI PC simulator. Otherwise, real flight happens
+* You can see the flight control simulation on screen if you are using the DJI PC simulator. Otherwise, real flight happens
 * You can see the actual 'gimbal and camera' movement
 * You can see the image/video you capture from you mobile device
 
