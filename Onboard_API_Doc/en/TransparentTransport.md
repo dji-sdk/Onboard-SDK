@@ -2,19 +2,22 @@
 
 ## Intro
 
-The purpose of this document is to give an introduction of the 'Data Transparent Transmission' between the Onboard and Mobile Device. Topics include Problem Motivation, Usage and some sample codes.
+The purpose of this document is to give an overview of the 'Data Transparent Transmission' between an Onboard Device and an Mobile Device. The rest of this document is organized as followed:
+* Problem Motivation
+* Usage Scenarios
+* Sample Codes for implementation
 
-The current upstream bandwidth (Mobile to Onboard Device) is around _1KB/s_ while the downstream bandwidth (Onboard to Mobile Device) is around _8KB/s_.
+Please be aware that the current upstream bandwidth (Mobile to Onboard Device) is around _1KB/s_ while the downstream bandwidth (Onboard to Mobile Device) is around _8KB/s_.
 
 ### Problem Motivation
 
-DJI provides two types of APIs for developers to create their own applications: Mobile API and Onboard API. Mobile API allows developers to monitor and control the UAV from a mobile device running iOS or Android, which is connected with the remote controller. Onboard API allows developers to monitor and control the UAV from any system directly connected to the UAV through serial port (UART).
+DJI provides two types of APIs for developers to create their own applications: Mobile API and Onboard API. Mobile API allows developers to monitor and control the UAV from a mobile device running iOS or Android with the remote controller connected. Onboard API allows developers to monitor and control the UAV from any system directly connected to the UAV through a serial port (the UART interface).
 
-Mobile API can be used without any other devices and allows developers to monitor the flight status easily. However, this configuration has a relatively low computing power and the wireless connection between the mobile device and UAV restricts the bandwidth for real-time or complex control.
+Mobile API can be used without any other devices and allows developers to monitor the flight status easily. However, this configuration has some obvious limitations such as: a relatively low computing power, limited wireless bandwidth and unacceptable time latency for real-time or complex control.
 
-Onboard API is implemented through the computing device which is mounted on the UAV. Communication with the UAV is done directly through their serial ports. It provides sufficient computing power and stability for developers to run complex and demanding applications. But due to the computing device is mounted on the UAV, developers are not able to monitor the flight status. If the program crashes, developers will have to manually control the UAV with remote controller.
+Onboard API is implemented through the Onboard Device which is mounted on the UAV. Communication with the UAV is done directly through their serial ports. It provides sufficient computing power and stability for developers to run complex and demanding applications. Since the Onboard Device is mounted on the UAV, developers are not able to monitor the flight status from their programs. If program crashes, developers will have to manually control the UAV with the remote controller.
 
-Data Transparent Transmission was developed to combine the benefits of these two APIs by establishing a connection between the Mobile Device and the Onboard Device. With this method, developers are able to send data from their mobile devices to the onboard devices to control over the program running on the onboard device. The onboard device can also send data to the mobile device for flight status monitoring and other functions.
+Data Transparent Transmission was developed to combine the benefits of these two APIs by establishing a connection between the Mobile Device and the Onboard Device. With this method, developers are able to send data from their mobile devices to the Onboard Devices to control over the program running on the Onboard Device. The Onboard Device can also send data to the mobile device for flight status monitoring and other functions.
 
 In short, Data Transparent Transmission serves as a linkage between Mobile API and Onboard API, granting developers a greater flexibility in creating their applications.
 
@@ -28,8 +31,8 @@ The Onboard SDK OPEN protocol between an Onboard Device and an UAV is introduced
 
 The communication protocol is described as below:
 
-    Command set: 0x00
-    Command ID: 0xFE
+    CMD set: 0x00
+    CMD ID: 0xFE
 
 |Data Type|Offset|Size|Description|
 |---------|------|----|-----------|
@@ -153,8 +156,8 @@ DJIInspireMainController* inspireMC = (DJIInspireMainController*)drone.mainContr
 
 Use this function with the same method mentioned previously. The communication protocol is described as below:
 
-    Command Set: 0x02
-    Command ID: 0x02
+    CMD Set: 0x02
+    CMD ID: 0x02
 
 |Data Type|Offset|Size|Description|
 |---------|------|----|-----------|
