@@ -135,6 +135,7 @@ Please comply with the local regulations during the development process and flig
 
 [Data Transparent Transmission][2]  
 
+[FAQ][FAQ]
 
 ### Articles contributed by Onboard SDK external developers:
 [Onboard Device Selection Tips](http://bbs.dji.com/forum.php?mod=viewthread&tid=21106&extra=page%3D1%26filter%3Ddigest%26digest%3D1)(Chinese)
@@ -281,6 +282,8 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 [飞行控制附加说明][cn1]  
 
 [数据透传说明][cn2]  
+
+[FAQ][cnFAQ]
 
 
 ### 由外部开发者提供的非官方文档:
