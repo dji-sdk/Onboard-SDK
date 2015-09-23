@@ -23,7 +23,7 @@ In short, Data Transparent Transmission serves as a linkage between Mobile API a
 
 ![streamFrame](Images/streamFrame.png)
 
-## USAGE - from Onboard to Mobile Device
+## USAGE Scenario 1 - downstream from Onboard to Mobile Device
 
 ### Step1: Onboard Device to UAV
 
@@ -88,7 +88,7 @@ public void onResult(byte[] data) {
 DJIDrone.getDjiMC().setExternalDeviceRecvDataCallBack(mExtDevReceiveDataCallBack);
 ~~~
 
-## USAGE - from Mobile to Onboard Device
+## USAGE Scenario 2 - upstream from Mobile to Onboard Device
 
 ### Mobile Device to UAV
 
