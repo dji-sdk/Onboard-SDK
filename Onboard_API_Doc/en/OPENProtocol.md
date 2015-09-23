@@ -364,7 +364,7 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
     <li>0x0000：Success</li>
     <li>0x0001：Invalid parameters</li>
     <li>0x0002：Cannot recognize the encrypted package</li>
-    <li>0x0003：New APP ID, attempt to activate</li>
+    <li>0x0003：New APP ID, activation in progress</li>
     <li>0x0004：No response from DJI GO APP </li>
     <li>0x0005：No Internet from DJI GO APP </li>
     <li>0x0006：Server rejected</li>
