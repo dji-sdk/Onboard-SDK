@@ -135,12 +135,12 @@ There are two types of frames.
 
 ```
 |<-ACK frame data->|
-|ACK VALUE|
+|ACK VAL|
 ```
 
 |Data Field|Byte Index|Size(byte)|
 |----|--------|-----------------|
-|ACK VALUE|0|vary by ACKs|
+|ACK VAL|0|vary by ACKs|
 
 SEQ field in ACK frame is the same as the one in corresponding CMD frame. Developers can use the SEQ field of the ACK frame to match the corresponding CMD frame. 
 
