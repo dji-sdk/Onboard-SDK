@@ -335,6 +335,7 @@ int DJI_Pro_Attitude_Control(attitude_data_t *p_user_data);
 int DJI_Pro_Gimbal_Angle_Control(gimbal_custom_control_angle_t *p_user_data);
 int DJI_Pro_Gimbal_Speed_Control(gimbal_custom_speed_t *p_user_data);
 int DJI_Pro_Camera_Control(unsigned char camera_cmd);
+int DJI_Pro_Get_Broadcast_Data(sdk_std_msg_t *p_user_buf);
 unsigned char DJI_Pro_Get_CmdSet_Id(ProHeader *header);
 unsigned char DJI_Pro_Get_CmdCode_Id(ProHeader *header);
 int DJI_Pro_Get_Bat_Capacity(unsigned char *data);

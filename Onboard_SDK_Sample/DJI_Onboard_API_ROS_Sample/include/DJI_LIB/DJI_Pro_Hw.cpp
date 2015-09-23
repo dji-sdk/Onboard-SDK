@@ -4,7 +4,7 @@
  *  Created on: Aug 24, 2015
  *  Author: wuyuwei
  */
-#ifdef __linux
+#if defined(PLATFORM_LINUX) || defined(__linux)
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/types.h>

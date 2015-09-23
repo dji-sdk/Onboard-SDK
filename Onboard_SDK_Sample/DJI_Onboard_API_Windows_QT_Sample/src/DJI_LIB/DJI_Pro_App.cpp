@@ -585,6 +585,13 @@ static unsigned short std_msg_flag = 0;
  * interface: get broadcast data
  */
 
+int DJI_Pro_Get_Broadcast_Data(sdk_std_msg_t *p_user_buf) {
+	pthread_mutex_lock(&std_msg_lock); 	
+	*p_user_buf = std_broadcast_data; 	
+	pthread_mutex_unlock(&std_msg_lock); 	
+	return 0; 	
+}
+
 int DJI_Pro_Get_Bat_Capacity(unsigned char *p_user_buf)
 {
     pthread_mutex_lock(&std_msg_lock);
