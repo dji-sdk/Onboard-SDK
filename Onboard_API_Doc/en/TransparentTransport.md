@@ -32,23 +32,7 @@ The CMD set and ID used here is compatible with the Onboard SDK OPEN protocol as
 |Data Type|Offset(byte)|Size(byte)|Description|
 |---------|------|----|-----------|
 |CMD Val|0|0~100|User Data|
-|ACK Val|0|2| Return code 0: Success|
-
-The following code snippet shows you how to send User Data by means of constructing the CMD set, ID and Val in C.
-~~~c
-char cmd_buf[10];
-cmd_buf[0] = 0x00;
-cmd_buf[1] = 0xFE;
-memcpy(&cd_buf[2], "Hello!", 7);
-Linklayer_Send(SESSION_MODE3,
-                cmd_buf,
-                9,
-                0,
-                200,
-                3,
-                0
-);
-~~~
+|ACK Val|---|---| N/A|
 
 The following code snippet shows you how to receive the data on different mobile platforms including iOS and Android.
 
