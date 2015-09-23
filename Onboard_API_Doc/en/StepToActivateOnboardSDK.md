@@ -1,45 +1,43 @@
-# Step to Activate Onboard SDK
+# Activation of the M100 flight platform
+This document aims to help developers to understand and quickly activate the M100 flight platform.
 
-To help DJI Developers get rolling with the Onboard SDK, we’ve listed seven key steps to quickly set up your programs and devices – so listen up!
+>Note: Please remove the propellers from your M100 platform when following the steps.
 
->Note: Remove the propellers from your aircraft before you begin.
-
-## 1.	Apply for a DJI Developer Account
-Go to https://dev.dji.com/en/products/sdk/onboard-sdk and apply for a DJI developer account with SDK level 2 access. You will receive your App ID and Key once your application gets approved.
+## 1.	Become a DJI Developer
+Please go to https://developer.dji.com/register/ and apply for an Onboard SDK level 2 access. You will receive your APP ID and Key once your application is approved.
 
 ## 2.	Enable API Control
-Connect the aircraft to your PC with a USB cable. Launch the DJI N1 Assistant and check the box next to "Enable API control”.
+Connect your UAV to your PC via a USB-to-MicroUSB cable. Launch the DJI N1 Assistant and check the box next to "Enable API control”.
 
 ![Enable API Control](Images/N1UI.jpg)
 
 ## 3.	Configure the Baud Rate
-For QT Sample, the baud rate is 115200. After you have finished, close the N1 Assistant.
+In case of the QT Sample, the baud rate is set to be 115200. Close the N1 Assistant after finish.
 
 ![Configure the Baud](Images/baudrate.jpg)
 
 ## 4.	Start the PC Simulator
-Use PC as the Onboard Device, Restart your aircraft while keeping it connected to the PC. Launch the DJI PC Simulator, click “Display Simulator” and then click “Start Simulation”. We recommend enabling “Auto Executing UI” so that next time the simulator will be displayed automatically. 
+Assume that you are using your PC as the Onboard Device, restart your UAV while keeping it connected to the PC. Launch the DJI PC Simulator, click “Display Simulator” and then click “Start Simulation”. We recommend enabling “Auto Executing UI” so that the simulator will be displayed automatically next time when run.
 
 ![Configure the Baud](Images/simulatorUI1.jpg)
 
-You will see a model of the Matrice 100 on the simulator screen as shown below.   
+You will see a model of your UAV(if recognized) on the simulator screen shown below.   
 
 ![Configure the Baud](Images/simulatorUI2.jpg)
 
->Note: that you need to restart the simulation if the aircraft is disconnected from your PC.
+>Note: You may need to restart the simulation if your UAV is disconnected from your PC.
 
 ## 5.	Connect Your Mobile Device
-Ensure your Android or iOS mobile device has an internet connection, and connect it to the remote controller. Launch the DJI GO app.
+Ensure your Android or iOS mobile device has the internet connection ready, and connect it to the remote controller. Afterthat, launch the DJI GO app.
 
 ## 6.	Connect Your Onboard Devices
-Connect your Onboard Devices to the N1 Autopilot’s UART ports.
+Connect your Onboard Devices to the N1 Autopilot’s UART port.
 ![Connecter](Images/Connecter.jpg)
 
 ## 7.	Activation
-Take “DJI_Onboard_API_Windows_QT_Sample” as an example:
+The following are using the “DJI_Onboard_SDK_Windows_QT_Sample” as an demonstration:
 * Connect the N1 Autopilot to your PC using a UART-to-USB cable.
-* Launch QT Sample on your PC , configure the Baud rate on your PC so that it matches the rates of the aircraft (refer to step 3).
-* Open Serial Port and check the aircraft data under UAV Info.
-* Click 'Activation' button to activate N1 Autopilot.
-
+* Launch the Windows QT Sample on your PC , configure the Baud rate on your PC so that it matches the rates of the UAV (For detail, please refer to step 3).
+* Open the Serial Port and check the UAV info under the UAV Info Section on screen.
+* Click the 'Activation' button to activate the N1 Autopilot.
 ![QT](Images/QtExample.png)
