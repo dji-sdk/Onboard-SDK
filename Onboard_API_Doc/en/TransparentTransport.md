@@ -2,11 +2,11 @@
 
 ## Intro
 
-The purpose of this document is to give an introduction of the 'Data Transparent Transmission' between the Onboard and Mobile Device. Topics include development purpose, methods of use and sample codes.
+The purpose of this document is to give an introduction of the 'Data Transparent Transmission' between the Onboard and Mobile Device. Topics include Problem Motivation, Usage and some sample codes.
 
-**Note that the upstream bandwidth (Mobile Device to Onboard Device) is around _1KB/s_ while the downstream bandwidth (Onboard Device to Mobile Device) is around _8KB/s_.**
+The current upstream bandwidth (Mobile to Onboard Device) is around _1KB/s_ while the downstream bandwidth (Onboard to Mobile Device) is around _8KB/s_.
 
-### Development Purpose
+### Problem Motivation
 
 DJI provides two types of APIs for developers to create their own applications: Mobile API and Onboard API. Mobile API allows developers to monitor and control the UAV from a mobile device running iOS or Android, which is connected with the remote controller. Onboard API allows developers to monitor and control the UAV from any system directly connected to the UAV through serial port (UART),
 
