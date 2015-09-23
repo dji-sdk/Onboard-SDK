@@ -8,7 +8,7 @@ The current upstream bandwidth (Mobile to Onboard Device) is around _1KB/s_ whil
 
 ### Problem Motivation
 
-DJI provides two types of APIs for developers to create their own applications: Mobile API and Onboard API. Mobile API allows developers to monitor and control the UAV from a mobile device running iOS or Android, which is connected with the remote controller. Onboard API allows developers to monitor and control the UAV from any system directly connected to the UAV through serial port (UART),
+DJI provides two types of APIs for developers to create their own applications: Mobile API and Onboard API. Mobile API allows developers to monitor and control the UAV from a mobile device running iOS or Android, which is connected with the remote controller. Onboard API allows developers to monitor and control the UAV from any system directly connected to the UAV through serial port (UART).
 
 Mobile API can be used without any other devices and allows developers to monitor the flight status easily. However, this configuration has a relatively low computing power and the wireless connection between the mobile device and UAV restricts the bandwidth for real-time or complex control.
 
