@@ -22,6 +22,7 @@ Developers can play with this example via the GUI interaction in Windows.
 * README.md: this file
 
 ##Compile & Run Environment
+The below environment is tested.
 * Operating System: Windows 7 64Bit  
 * Integrated Development Environment(IDE): Qt Creator 3.3.1  
 * Qt Ver: Qt 5.3.2 MinGW 32bit  
