@@ -50,7 +50,7 @@ make
 If the compilation is completed, an Linux executable called 'DJI_Onboard_API_Cmdline_Test' will be generated in the *output* dir.
 
 ##Run
-We recommend you first run this example in the simulator then move to the real flight test. Also, please be aware that you will need sudo privilege to manipulate the Linux serial port. You may need to enter the following command to gain the access privilege.
+We recommend you first run this example in the simulator then move to the real flight test. Also, please be aware that you will need sudo privilege to manipulate the linux serial port. You may need to enter the following command to gain the access privilege.
 
 Please make sure that 'config.xml' file is sitted in the *output* folder.
 
