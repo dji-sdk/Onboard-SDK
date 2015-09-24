@@ -45,8 +45,10 @@ The Onboard SDK allows developers to communicate with the N1 Autopilot* from any
 Two core components of the system architecture are the N1 Autopilot and an Onboard Device. They are physically connected via the serial(UART) interface. 
 
 Since the Onboard OPEN protocal is designed to be opened thoroughly, experienced developers can directly
-1. Write some low-level logics inside their APPs to contruct the underlying communication bit sequence. 
-2. Handle the package loss & resending mechanisms with the benifit of enjoying complete freedom. 
+
+1. Write some low-level logics inside their APPs to contruct the underlying communication bit sequence.   
+2. Handle the package loss & resending mechanisms with the benifit of enjoying complete freedom.   
+
 While for beginners, they can just comfortably use our Onboard SDK Library to communicate with the N1 Autopilot, all they need to do is to call our APIs.
 
 
@@ -109,7 +111,7 @@ Once the above conditions are met, developers can call the related 'flight contr
 
 ## Closing Remarks
 
-### Dear Onboard SDK developers! You are all set now.
+### Dear Onboard SDK developers, You are all set now!
 
 Here, we list all the avaliable document pointers for your reference and we recommend you the following development steps.
 
@@ -257,7 +259,7 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 
 ## 结语
 
-### 尊敬的Onboard SDK开发者！您已经准备好并可以投入到应用的实际开发中了。
+### 尊敬的Onboard SDK开发者，您已经准备好并可以投入到应用的实际开发中了！
 在这里，我们列出所有我们建议可供您参考的文档。通过阅读这些文档，能使您的开发之路更为顺畅。以下是我们推荐您的开发步骤：
 
 1. 编译并运行Onboard SDK提供的一些示例
