@@ -67,7 +67,7 @@ In order to develop your Apps via the Onboard SDK, you need to download the foll
 2. DJI PC Simulator
 3. DJI GO APP
      
->Note: 
+>Note:   
 >For 1 & 2, please download them from: https://developer.dji.com/onboard-sdk/downloads/  
 >For 3, download & install them from the iOS/Android APP STORE.
 
@@ -217,8 +217,8 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 3. DJI GO APP
 
 >备注:  
->1 & 2, 可以在https://developer.dji.com/onboard-sdk/downloads/ 下载并安装  
->3, 可以在iOS/Android APP STORE中下载并安装.
+>1 & 2, 可以在https://developer.dji.com/onboard-sdk/downloads/ 下载并安装。
+>3, 可以在iOS/Android APP STORE中下载并安装。
 
 ### 硬件安装
 
