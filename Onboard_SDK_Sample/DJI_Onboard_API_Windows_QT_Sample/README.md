@@ -10,6 +10,7 @@ This example aims to help you understand and play with the basic flight procedur
 * The go home procedure
 * The attitude control
 * The gimbal control
+
 <!-- * The flight control info obtainment -->  
 
 Developers can play with this example via the GUI interaction in Windows.
