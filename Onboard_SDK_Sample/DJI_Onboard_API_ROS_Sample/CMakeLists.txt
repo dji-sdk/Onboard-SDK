@@ -51,11 +51,13 @@ set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 add_message_files(
    FILES
 	acc.msg
+	attitude_quad.msg
+	compass.msg
+	ctrl_info.msg
 	gimbal.msg
+	global_position.msg
 	local_position.msg
 	velocity.msg
-	attitude_quad.msg
-	global_position.msg
 	rc_channels.msg
 )
 
