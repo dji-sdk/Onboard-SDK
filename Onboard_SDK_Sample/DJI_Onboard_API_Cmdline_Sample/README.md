@@ -27,7 +27,7 @@ The below environment has been tested.
 * g++ version: 4.6.3
 
 ## Hardware Installation
-* In order to communicate with the N1 Autopilot via the DJI OPEN protocal, a physical connection between your Onboard Device and the N1 Autopilot is required with a USB to TTL Serial cable(SOLD Seperately).
+* In order to communicate with the N1 Autopilot via the DJI OPEN protocal, a physical connection between your Onboard Device and the N1 Autopilot is required with a USB to TTL Serial cable (SOLD Seperately).
 * In order to monitor & control the flight, a remote controller connects to the mobile device(with the DJI GO APP running) is needed.
 
 ##Configs
