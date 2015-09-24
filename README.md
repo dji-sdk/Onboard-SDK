@@ -19,7 +19,7 @@
 
 ## Introduction
 
-The Onboard SDK allows developers to communicate with the N1 Autopilot* from any Onboard Devices through the serial, specifically the UART interface. Via the communication between the Onboard Device*(SOLD seperately) and the N1 Autopilot, developers can easily
+The Onboard SDK allows developers to communicate with the N1 Autopilot* from any Onboard Devices through the serial, specifically the UART interface. Via the communication between the Onboard Device (SOLD seperately) and the N1 Autopilot, developers can easily
 
 - Write their own Flight APPs on top of the Onboard Device in his/her favourite programming languages
 - Dispatch the 'flight' job to the N1 Autopilot following the DJI Onboard OPEN protocal
@@ -110,7 +110,7 @@ Once the above conditions are met, developers can call the related 'flight contr
 
 ## Closing Remarks
 
-### Dear Onboard SDK developers, You are all set now!
+### Dear Onboard SDK developers, you are all set now!
 
 Here, we list all the avaliable document pointers for your reference and we recommend you the following development steps.
 
