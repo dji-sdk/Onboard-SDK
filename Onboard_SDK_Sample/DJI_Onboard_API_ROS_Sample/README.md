@@ -29,7 +29,7 @@ The below environment has been tested.
 * ROS version: ROS Indigo
 
 ## Hardware Installation
-* In order to communicate with the N1 Autopilot via the DJI OPEN protocal, a physical connection between your Onboard Device and the N1 Autopilot is required with a USB to TTL Serial cable(SOLD Seperately).
+* In order to communicate with the N1 Autopilot via the DJI OPEN protocal, a physical connection between your Onboard Device and the N1 Autopilot is required with a USB to TTL Serial cable (SOLD Seperately).
 * In order to monitor & control the flight, a remote controller connects to the mobile device(with the DJI GO APP running) is needed.
 
 ##Configs
@@ -92,9 +92,9 @@ The status of the UAV are published following our message type together with the
 You can find the topic you want by `rostopic list` and query the data inside using either `rostopic echo [topic name]` or subscribe to the topic by your own ROS node.
 
 ##What You Can Expect
-* You can learn how to use ROS to wrap the DJI SDK API Library and use it as a ROS service
-* You can see the flight control simulation on screen if you are using the DJI PC simulator. Otherwise, real flight happens
-* You can see the actual 'gimbal and camera' movement
-* You can see the image/video you capture from you mobile device
+* You can learn how to use ROS to wrap the DJI SDK API Library and use it as a ROS service.
+* You can see the flight control simulation on screen if you are using the DJI PC simulator. Otherwise, real flight happens.
+* You can see the actual 'gimbal and camera' movement.
+* You can see the image/video you capture from you mobile device.
 
 ENJOY your flight!
