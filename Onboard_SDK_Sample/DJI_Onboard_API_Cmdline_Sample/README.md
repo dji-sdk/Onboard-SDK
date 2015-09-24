@@ -60,6 +60,6 @@ sudo ./DJI_Onboard_API_Cmdline_Test
 ##What You Can Expect
 * You can see the flight control simulations on screen if you are using the DJI PC simulator. Otherwise, real flight happens.
 * You can see the actual 'gimbal and camera' movement.
-* You can see the image/video you capture from you mobile device.
+* You can see the image/video you capture from your mobile device.
 
 ENJOY your flight!
