@@ -16,7 +16,6 @@ Developers can play with this example via the command line interaction in Linux.
 
 ##Directory Structure
 * cmake: makefile and temporary files
-* doc: (this section will be decrypted SHORTLY)
 * output: executables
 * src: source code
 * src/DJI_LIB: the core DJI Onboard SDK API Library
