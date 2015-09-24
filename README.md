@@ -98,9 +98,9 @@ For Flight Platform Activation, please go to [Activation Guide][Activation]
 
 For now, the UAV can be controlled by (1) Remote Controller (2) Mobile Device and (3) Onboard Device. The prioritization sequence is set to be (1) > (2) > (3).
 
->The remote controller (RC for short below) always enjoys the top priority for the control of the UAV. The N1 Autopilot can enter the API Control Mode (Programmable Mode) if the following 3 conditions are met:
+The remote controller (RC for short below) always enjoys the top priority for the control of the UAV. The N1 Autopilot can enter the API Control Mode (Programmable Mode) if the following 3 conditions are met:
 
->* The 'enable API control' box is checked in the N1 assistant software.
+* The 'enable API control' box is checked in the N1 assistant software.
 * The IOC mode inside the DJI GO App is off.
 * The mode selection bar of the remote controller is placed at the F position.
 
