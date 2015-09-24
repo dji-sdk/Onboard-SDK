@@ -7,7 +7,7 @@ Yes.
 Yes.
 
 ### 3. Are there any no-fly zones for M100?  
-Yes, please comply with local regulations. For more, please refer to http://flysafe.dji.com/.
+Yes, please comply with local regulations. For more, please refer to http://flysafe.dji.com/
 
 ### 4. Can M100 be used for aerial photography?  
 Yes. M100 is compatible with third party ‘Gimbal and Camera’ and the DJI Zenmuse X series.
@@ -31,7 +31,7 @@ Timestamp of the flight controller, Quaternion and Acceleration etc. Please refe
 For now, Onboard Device can only communicate with N1 flight controller via the UART port.
 
 ### 11. Do M100 support third party video capturing devices? Can I use the M100 built-in ‘Lightbridge’ functionality?  
-Yes, M100 support third party video capturing device. If you want to use the M100 built-in ‘Lightbridge’ functionality, all you need is the ‘N1 Video Encoder’.http://store.dji.com/product/n1-video-encoder
+Yes, M100 support third party video capturing device. If you want to use the M100 built-in ‘Lightbridge’ functionality, all you need is the ‘N1 Video Encoder’. http://store.dji.com/product/n1-video-encoder
 
 ### 12. What is the data output frequency of N1?  
 The data output frequency of N1 can be set via the N1 assistant software with a range [0, 100Hz].
