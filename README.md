@@ -6,30 +6,30 @@
 
 ### Via this document, you can:
 - Get a general understanding of the Onboard SDK in a short time
-- Understand the Onboard SDK application development paradigm
+- Understand the Onboard SDK UAV APPs development paradigm
 - Get some best practice tips while getting your hands dirty
 
 ### However, we assume you having the following basic requirements already:
 - You are passionated to be an UAV APP developer
 - Some basic programming experience in C/C++ 
 - Some basic flight control knowledge like the concepts of Pitch, Roll and Yaw
-- One complete set of UAV flight platform* and one USB-TTL serial cable (SOLD seperately)
+- One complete set of DJI developer flight platform* and one USB-TTL serial cable (SOLD seperately)
 
-> Note: *For now, ONLY M100 flight platform is supported.*
+> Note: *For now, ONLY DJI M100 flight platform is supported.*
 
 ## Introduction
 
 The Onboard SDK allows developers to communicate with the N1 Autopilot* from any Onboard Devices through the serial port interface. Via the communication between the Onboard Device (SOLD seperately) and the N1 Autopilot, developers can easily
 
-- Write their own Flight APPs on top of the Onboard Device in his/her favourite programming languages
+- Write their own UAV APPs on top of the Onboard Device in his/her favourite programming languages
 - Dispatch the 'flight' job to the N1 Autopilot following the DJI Onboard OPEN protocal
 
->Note: *N1 Autopilot is the flight controller of the M100 filght platform.*
+>Note: *N1 Autopilot is the built-in flight controller of the M100 filght platform.*
 
 ### Key Features
 
 - Flexible Flight Control
-  Different flight control modes such as position, velocity and attitude are included.
+  Different flight control modes such as position, velocity and attitude.
   
 - Diverse Monitoring Data
   Flight data are diverse and can be obtained easily.
@@ -38,7 +38,7 @@ The Onboard SDK allows developers to communicate with the N1 Autopilot* from any
   Flight mode control and flight data are designed to aid autonomous flight control & navigation.
 
 - Data Trasparent Transmission
-  The computing results of your Onboard Device can be transmitted to your Mobile Device in real time.
+  The computing results of your Onboard Device can be transmitted to your Mobile Device in real time and vice versa.
 
 ### System Architecture & Recommended Development Paradigm
 Two core components of the system architecture are the N1 Autopilot and an Onboard Device. They are physically connected via the serial port interface. 
@@ -46,7 +46,7 @@ Two core components of the system architecture are the N1 Autopilot and an Onboa
 Since the Onboard OPEN protocal is designed to be opened thoroughly, experienced developers can directly:
 
 1. Write some low-level logics inside their APPs to contruct the underlying communication bit sequence;
-2. Handle the package loss & resending mechanisms with the benifit of enjoying complete freedom.   
+2. Handle the package loss & resending mechanisms with the benifit of enjoying complete freedom.
 
 While for beginners, they can just comfortably use our Onboard SDK API Library to communicate with the N1 Autopilot, all they need to do is to call our APIs.
 
@@ -57,19 +57,19 @@ While for beginners, they can just comfortably use our Onboard SDK API Library t
 
 #### Step1:
 
-If you want to use our Onboard SDK API Library, you can download it from Github.
+If you want to use our Onboard SDK API Library(with examples), you can download it from Github.
 
 #### Step2: 
 
 In order to develop your Apps via the Onboard SDK, you need to download the following DJI specific tools: 
 
-1. DJI N1 PC assistant software and the corresponding N1 Driver
+1. DJI N1 PC assistant software and the related N1 Driver
 2. DJI PC Simulator
 3. DJI GO APP
      
 >Note:   
 >For 1 & 2, please download them from: https://developer.dji.com/onboard-sdk/downloads/    
->For 3, download & install them from the iOS/Android APP STORE.
+>For 3, download & install them from the iOS/Android APP STORE
 
 ### Hardware Installation
 
@@ -98,10 +98,10 @@ For Flight Platform Activation, please go to [Activation Guide][Activation]
 
 For now, the UAV can be controlled by (1) Remote Controller (2) Mobile Device and (3) Onboard Device. The prioritization sequence is set to be (1) > (2) > (3).
 
-The remote controller always enjoys the top priority for the control of the UAV. The N1 Autopilot can enter the API Control Mode (Programmable Mode) if the following 3 conditions are met:
+The remote controller always enjoys the top priority for the UAV control. The N1 Autopilot can enter the API Control Mode (Programmable Mode) if the following 3 conditions are met:
 
 * The 'enable API control' box is checked in the N1 assistant software.
-* The IOC mode inside the DJI GO App is off.
+* The IOC mode inside the DJI GO APP is off.
 * The mode selection bar of the remote controller is placed at the F position.
 
 Once the above conditions are met, developers can call the related 'flight control request function' to request the flight control of UAV.
@@ -114,13 +114,13 @@ Once the above conditions are met, developers can call the related 'flight contr
 Here, we list all the avaliable document pointers for your reference and we recommend you the following development steps.
 
 1. Try some examples in our 'Compile and Run Example Section'
-2. Start building your own app
+2. Start building your own UAV APPs
 
 If you encounter any questions during the development, take a look at our [FAQ][FAQ]. After that, feel free to contact us.
 
 ### Safety Warnings:
 
-Please comply with the local regulations during the development process and flight. Please refer to http://flysafe.dji.com/ for more.
+Please comply with the local regulations during the development process and the flight. Please refer to http://flysafe.dji.com/ for more.
 
 ### Compile & Run Example Section:
 - [Linux Command Line example](Onboard_SDK_Sample/DJI_Onboard_API_Cmdline_Sample)
