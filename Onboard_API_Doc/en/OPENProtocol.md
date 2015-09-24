@@ -125,7 +125,7 @@ There are two types of frames.
 | CMD SET | CMD ID | CMD VAL |
 ```
 
-|Data Field|Byte Index|Size(byte)|
+|Field|Index (byte)|Size (byte)|
 |----|--------|-----------------|
 |CMD SET|0|1|
 |CMD ID|1|1|
@@ -138,7 +138,7 @@ There are two types of frames.
 |      ACK VAL     |
 ```
 
-|Data Field|Byte Index|Size(byte)|
+|Field|Index (byte)|Size (byte)|
 |----|--------|-----------------|
 |ACK VAL|0|vary by ACKs|
 
@@ -288,8 +288,8 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
 <table>
 <tr>
   <th>Data Type</th>
-  <th>Offset(byte)</th>
-  <th>Size(byte)</th>
+  <th>Offset (byte)</th>
+  <th>Size (byte)</th>
   <th>Description</th>
 </tr>
 
@@ -327,8 +327,8 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
 <table>
 <tr>
   <th>Data Type</th>
-  <th>Offset(byte)</th>
-  <th>Size(byte)</th>
+  <th>Offset (byte)</th>
+  <th>Size (byte)</th>
   <th>Description</th>
 </tr>
 
@@ -383,8 +383,8 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
 <table>
 <tr>
   <th>Data Type</th>
-  <th>Offset(byte)</th>
-  <th>Size(byte)</th>
+  <th>Offset (byte)</th>
+  <th>Size (byte)</th>
   <th>Description</th>
 </tr>
 
@@ -417,8 +417,8 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
 <table>
 <tr>
   <th>Data Type</th>
-  <th>Offset(byte)</th>
-  <th>Size(byte)</th>
+  <th>Offset (byte)</th>
+  <th>Size (byte)</th>
   <th>Description</th>
 </tr>
 
@@ -455,8 +455,8 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
 <table>
 <tr>
   <th>Data Type</th>
-  <th>Offset(byte)</th>
-  <th>Size(byte)</th>
+  <th>Offset (byte)</th>
+  <th>Size (byte)</th>
   <th>Description</th>
 </tr>
 
@@ -485,8 +485,8 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
 <table>
 <tr>
   <th>Data Type</th>
-  <th>Offset(byte)</th>
-  <th>Size(byte)</th>
+  <th>Offset (byte)</th>
+  <th>Size (byte)</th>
   <th>Description</th>
 </tr>
 
@@ -530,14 +530,14 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
 
 </table>
 
-**For more please refer to [Appendix](Appendix.md#control-mode-byte)*  
+>Note: **For more please refer to [Appendix](Appendix.md#control-mode-byte)*  
 
 #### CMD ID 0x1A Gimbal Control in Rate
 <table>
 <tr>
   <th>Data Type</th>
-  <th>Offset(byte)</th>
-  <th>Size(byte)</th>
+  <th>Offset (byte)</th>
+  <th>Size (byte)</th>
   <th>Description</th>
 </tr>
 
@@ -604,8 +604,8 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
 <table>
 <tr>
   <th>Data Type</th>
-  <th>Offset(byte)</th>
-  <th>Size(byte)</th>
+  <th>Offset (byte)</th>
+  <th>Size (byte)</th>
   <th>Description</th>
 </tr>
 
@@ -695,8 +695,8 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
 <table>
 <tr>
   <th>Data Type</th>
-  <th>Offset(byte)</th>
-  <th>Size(byte)</th>
+  <th>Offset (byte)</th>
+  <th>Size (byte)</th>
   <th>Description</th>
 </tr>
 
@@ -719,8 +719,8 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
 <table>
 <tr>
   <th>Data Type</th>
-  <th>Offset(byte)</th>
-  <th>Size(byte)</th>
+  <th>Offset (byte)</th>
+  <th>Size (byte)</th>
   <th>Description</th>
 </tr>
 
@@ -744,8 +744,8 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
 <table>
 <tr>
   <th>Data Type</th>
-  <th>Offset(byte)</th>
-  <th>Size(byte)</th>
+  <th>Offset (byte)</th>
+  <th>Size (byte)</th>
   <th>Description</th>
 </tr>
 
@@ -772,8 +772,8 @@ The flight data from the N1 Autopilot can be configured by the DJI N1 assistant 
 <table>
 <tr>
   <th>Data Type</th>
-  <th>Offset(byte)*</th>
-  <th>Size(byte)</th>
+  <th>Offset (byte)*</th>
+  <th>Size (byte)</th>
   <th>Description</th>
 </tr>
 
@@ -878,18 +878,18 @@ The flight data from the N1 Autopilot can be configured by the DJI N1 assistant 
 </tr>
 </table>
 
-**The offset in the above table is with the assumption that all data items exist. The actual offset of data item in the flight data should be calculated by the flags of 'item presence byte'. *
+>Note: **The offset in the above table is with the assumption that all data items exist. The actual offset of data item in the flight data should be calculated by the flags of 'item presence byte'. *
  
 **Data Item Index**
 
 <table>
 <tr>
-  <td>Item Name</td>
-  <td>Variables</td>
-  <td>Data Type</td>
-  <td>Description</td>
-  <td>Unit</td>
-  <td>Default Frequency</td>
+  <th>Item Name</th>
+  <th>Variables</th>
+  <th>Data Type</th>
+  <th>Description</th>
+  <th>Unit</th>
+  <th>Default Frequency</th>
 </tr>
 
 <tr>
@@ -1124,8 +1124,9 @@ The flight data from the N1 Autopilot can be configured by the DJI N1 assistant 
 </tr>
 
 </table>
-**For more please refer to [Appendix][0]*  
-***Height is the fusion result of barometer, IMU and ultrasonic sensor. If the flight plantform has no ultrasonic sensor, or its distance to the ground is higher than 3 meters, the height is supported by barometer and IMU only. Since the barometer is inaccurate being used indoor, height is unreliable in this case.*
+>Note:
+>**For more please refer to [Appendix][0]*  
+>***Height is the fusion result of barometer, IMU and ultrasonic sensor. If the flight plantform has no ultrasonic sensor, or its distance to the ground is higher than 3 meters, the height is supported by barometer and IMU only. Since the barometer is inaccurate being used indoor, height is unreliable in this case.*
 
 #### CMD ID 0x01 Lost of Flight Control
 Onboard Device has the lowerest control priority. Its control authorization can be taken over by remote controller and Mobile Device. Once the flight control is lost from the Onboard Device, a push data will be sent by the N1 Autopilot.
@@ -1133,8 +1134,8 @@ Onboard Device has the lowerest control priority. Its control authorization can 
 <table>
 <tr>
   <th>Data Type</th>
-  <th>Offset(byte)</th>
-  <th>Size(byte)</th>
+  <th>Offset (byte)</th>
+  <th>Size (byte)</th>
   <th>Description</th>
 </tr>
 
