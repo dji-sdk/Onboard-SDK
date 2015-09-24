@@ -44,7 +44,10 @@ The Onboard SDK allows developers to communicate with the N1 Autopilot* from any
 ### System Architecture & Recommended Development Paradigm
 Two core components of the system architecture are the N1 Autopilot and an Onboard Device. They are physically connected via the serial(UART) interface. 
 
-Since the Onboard OPEN protocal is designed to be opened thoroughly, experienced developers can directly write some low-level logics inside their APPs to contruct the underlying communication bit sequence; Handle the package loss & resending mechanisms with the benifit of enjoying complete freedom. While for beginners, they can just comfortably use our Onboard SDK Library to communicate with the N1 Autopilot, all they need to do is to call our APIs.
+Since the Onboard OPEN protocal is designed to be opened thoroughly, experienced developers can directly
+1. Write some low-level logics inside their APPs to contruct the underlying communication bit sequence. 
+2. Handle the package loss & resending mechanisms with the benifit of enjoying complete freedom. 
+While for beginners, they can just comfortably use our Onboard SDK Library to communicate with the N1 Autopilot, all they need to do is to call our APIs.
 
 
 ## Environment Setup
