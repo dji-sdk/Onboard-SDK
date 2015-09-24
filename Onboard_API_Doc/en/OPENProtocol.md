@@ -1124,7 +1124,7 @@ The flight data from the N1 Autopilot can be configured by the DJI N1 assistant 
 </tr>
 
 </table>
->Note:
+>Note:  
 >**For more please refer to [Appendix][0]*  
 >***Height is the fusion result of barometer, IMU and ultrasonic sensor. If the flight plantform has no ultrasonic sensor, or its distance to the ground is higher than 3 meters, the height is supported by barometer and IMU only. Since the barometer is inaccurate being used indoor, height is unreliable in this case.*
 
