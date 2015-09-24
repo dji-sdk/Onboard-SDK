@@ -1,4 +1,4 @@
-# DJI Onboard SDK Main Page
+# DJI Onboard SDK Main Page | 主页
 
 [English](#welcome-onboard-sdk-developers) | [中文](#欢迎onboard-sdk开发者)
 
