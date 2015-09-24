@@ -41,7 +41,7 @@ Enter the following info into *./output/config.xml.*
 
 >Note: the 'baudrate' set in the 'config.xml' needs to be consistent with the setting in the DJI N1 PC assistant.
 
-##Compile
+## Compile
 ~~~bash
 cd cmake
 make
