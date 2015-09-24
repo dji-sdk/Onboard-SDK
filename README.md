@@ -1,6 +1,6 @@
 # DJI Onboard SDK
 
-[English Version](#english-version)                 [中文版本](#中文版本)
+[English](#english-version)                 [中文](#中文版本)
 
 #English Version
 ## Welcome, Onboard SDK developers! 
