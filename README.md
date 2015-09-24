@@ -114,28 +114,26 @@ Here, we list all the avaliable document pointers for your reference and we reco
 2. Follow some tutorials in our 'Step by Step Section'
 3. Start building your own app
 
-If you encounter any questions during the development, take a look at our [FAQ section][FAQ]. After that, feel free to contact us.
+If you encounter any questions during the development, take a look at our [FAQ][FAQ]. After that, feel free to contact us.
 
 ### Safety Warnings:
 
 Please comply with the local regulations during the development process and flight. Please refer to http://flysafe.dji.com/ for more.
 
-### Compile & Run Sections:
-[Linux Command Line](Onboard_SDK_Sample/DJI_Onboard_API_Cmdline_Sample)
+### Compile & Run Example Section:
+- [Linux Command Line example](Onboard_SDK_Sample/DJI_Onboard_API_Cmdline_Sample)
 
-[Linux + ROS example](Onboard_SDK_Sample/DJI_Onboard_API_ROS_Sample)
+- [Linux ROS example](Onboard_SDK_Sample/DJI_Onboard_API_ROS_Sample)
 
-[Windows QT example](Onboard_SDK_Sample/DJI_Onboard_API_Windows_QT_Sample)
+- [Windows QT example](Onboard_SDK_Sample/DJI_Onboard_API_Windows_QT_Sample)
 
 ### References Section:
 
-[Open Protocol][0]  
+- [OPEN Protocol][0] & [Appendix][1] 
 
-[Appendix][1]  
+- [Data Transparent Transmission][2]  
 
-[Data Transparent Transmission][2]  
-
-[FAQ][FAQ]
+- [FAQ][FAQ]
 
 ### Articles contributed by Onboard SDK external developers:
 [Onboard Device Selection Tips](http://bbs.dji.com/forum.php?mod=viewthread&tid=21106&extra=page%3D1%26filter%3Ddigest%26digest%3D1)(Chinese)
@@ -269,21 +267,19 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 
 ### 编译及运行部分:
 
-[Linux Command Line](Onboard_SDK_Sample/DJI_Onboard_API_Cmdline_Sample)
+- [Linux Command Line example](Onboard_SDK_Sample/DJI_Onboard_API_Cmdline_Sample)
 
-[Linux + ROS example](Onboard_SDK_Sample/DJI_Onboard_API_ROS_Sample)
+- [Linux ROS example](Onboard_SDK_Sample/DJI_Onboard_API_ROS_Sample)
 
-[Windows QT example](Onboard_SDK_Sample/DJI_Onboard_API_Windows_QT_Sample)
+- [Windows QT example](Onboard_SDK_Sample/DJI_Onboard_API_Windows_QT_Sample)
 
 ### 参考部分:
 
-[开放协议说明][cn0]  
+- [开放协议说明][cn0] & [附录][cn1]  
 
-[附录][cn1]  
+- [数据透传说明][cn2]  
 
-[数据透传说明][cn2]  
-
-[FAQ][cnFAQ]
+- [FAQ][cnFAQ]
 
 
 ### 由外部开发者提供的非官方文档:
