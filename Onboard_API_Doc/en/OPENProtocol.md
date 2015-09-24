@@ -152,13 +152,14 @@ SEQ field in ACK frame is the same as the one in corresponding CMD frame. Develo
 
 The session mechanism has been used in order to prevent the exceptions such as package loss. 3 kinds of session have been introduced:
 
-Note: Type 1 and Type 2 can ONLY be applied to the CMDs which have ACKs.
-
 |Type|SESSION|Description|
 |------------|-------|-----------|
 |0|0|Sender doesn't need ACKs.|
 |1|1|Sender needs ACKs but can be tolerated.|
 |2|2-31|Sender needs ACKs.*|
+
+>Note: *Type 1 and Type 2 can ONLY be applied to the CMDs which have ACKs.*
+
 
 *Since type 2 is designed to be reliable. Developers should implement the package loss & resending mechinism based on the current SEQ and SESSION fields. When package loss is found from the sender, the sender can send the CMD frame again with the same SEQ and SESSION lost previously to retrieve back the ACK frame.
 
@@ -188,7 +189,7 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
 |1|Gimbal and Camera control related|
 |2|Flight Control related|
 
-*Note: The Authorization Level of the N1 Autopilot can be changed by the 'Activation' CMD. The init level is set to be 0.*
+>Note: *The Authorization Level of the N1 Autopilot can be changed by the 'Activation' CMD. The init level is set to be 0.*
 
 **Function Index**
 <table>
@@ -1154,4 +1155,4 @@ Onboard Device has the lowerest control priority. Its control authorization can 
 </table>
 
 [0]: Appendix.md
-Note: The 'Data Transparent Transmission' is NOT included in this document.
+>Note: *The 'Data Transparent Transmission' is NOT included in this document.*
