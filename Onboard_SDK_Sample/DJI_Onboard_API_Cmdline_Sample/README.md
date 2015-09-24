@@ -47,7 +47,7 @@ cd cmake
 make
 ~~~
 
-If the compilation is completed, an Linux executable called 'DJI_Onboard_API_Cmdline_Test' will be sitted in the *output* dir.
+If the compilation is completed, an Linux executable called 'DJI_Onboard_API_Cmdline_Test' will be generated in the *output* dir.
 
 ##Run
 We recommend you first run this example in the simulator then move to the real flight test. Also, please be aware that you will need sudo privilege to manipulate the Linux serial port. You may need to enter the following command to gain the access privilege.
