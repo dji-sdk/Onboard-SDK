@@ -131,7 +131,7 @@ Please comply with the local regulations during the development process and flig
 
 [Open Protocol][0]  
 
-[Flight Control Explain][1]  
+[Appendix][1]  
 
 [Data Transparent Transmission][2]  
 
@@ -144,7 +144,7 @@ Please comply with the local regulations during the development process and flig
 
 
 [0]:Onboard_API_Doc/en/OPENProtocol.md  
-[1]:Onboard_API_Doc/en/FlightControlExplain.md  
+[1]:Onboard_API_Doc/en/Appendix.md  
 [2]:Onboard_API_Doc/en/DataTransparentTransmission.md   
 [3]:Onboard_API_Doc/en/Glossary.md   
 [FAQ]:Onboard_API_Doc/en/FAQ_en.md   
@@ -279,7 +279,7 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 
 [开放协议说明][cn0]  
 
-[飞行控制附加说明][cn1]  
+[附录][cn1]  
 
 [数据透传说明][cn2]  
 
@@ -288,14 +288,14 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 
 ### 由外部开发者提供的非官方文档:
 
-[Onboard Device Selection Tips](http://bbs.dji.com/forum.php?mod=viewthread&tid=21106&extra=page%3D1%26filter%3Ddigest%26digest%3D1)(中文)
+[可以在M100上使用的板载处理器及无线设备](http://bbs.dji.com/forum.php?mod=viewthread&tid=21106&extra=page%3D1%26filter%3Ddigest%26digest%3D1)(中文)
 
-[Use STM32 to take control of the M100](http://bbs.dji.com/forum.php?mod=viewthread&tid=19754&extra=page%3D1%26filter%3Ddigest%26digest%3D1)(中文)
+[Onboard SDK移植到STM32 成功控制M100飞行](http://bbs.dji.com/forum.php?mod=viewthread&tid=19754&extra=page%3D1%26filter%3Ddigest%26digest%3D1)(中文)
 
 
-[cn0]:Onboard_API_Doc/cn/开放协议说明.md  
-[cn1]:Onboard_API_Doc/cn/飞行控制附加说明.md  
-[cn2]:Onboard_API_Doc/cn/数据透传说明文档.md
+[cn0]:Onboard_API_Doc/cn/开放协议.md  
+[cn1]:Onboard_API_Doc/cn/附录.md  
+[cn2]:Onboard_API_Doc/cn/数据透传.md
 [cn3]:Onboard_API_Doc/cn/术语.md
 [cnActivation]:Onboard_API_Doc/cn/激活指南.md
 [cnFAQ]:Onboard_API_Doc/cn/FAQ_cn.md

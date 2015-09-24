@@ -1,4 +1,4 @@
-# Additional Explanation for Flight Control 
+# Appendix
 
 ## Coordinate Frames
 

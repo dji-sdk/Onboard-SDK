@@ -480,7 +480,7 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
 
 </table>
 
-#### CMD ID 0x03 Movement Control*
+#### CMD ID 0x03 Movement Control
 <table>
 <tr>
   <th>Data Type</th>
@@ -493,7 +493,7 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
   <td rowspan="5">CMD Val</td>
   <td>0</td>
   <td>1</td>
-  <td>Control mode byte</td>
+  <td>Control mode byte*</td>
 </tr>
 
 <tr>
@@ -529,7 +529,7 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
 
 </table>
 
-**For more please refer to [Additional Explanation for Flight Control][0]*  
+**For more please refer to [Appendix](Appendix.md#control-mode-byte)*  
 
 #### CMD ID 0x1A Gimbal Control in Rate
 <table>
@@ -1123,7 +1123,7 @@ The flight data from the N1 Autopilot can be configured by the DJI N1 assistant 
 </tr>
 
 </table>
-**For more please refer to [Additional Explanation for Flight Control][0]*  
+**For more please refer to [Appendix][0]*  
 ***Height is the fusion result of barometer, IMU and ultrasonic sensor. If the flight plantform has no ultrasonic sensor, or its distance to the ground is higher than 3 meters, the height is supported by barometer and IMU only. Since the barometer is inaccurate being used indoor, height is unreliable in this case.*
 
 #### CMD ID 0x01 Lost of Flight Control
@@ -1153,5 +1153,5 @@ Onboard Device has the lowerest control priority. Its control authorization can 
 
 </table>
 
-[0]: FlightControlExplain.md
+[0]: Appendix.md
 Note: The 'Data Transparent Transmission' is NOT included in this document.
