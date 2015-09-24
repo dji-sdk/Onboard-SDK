@@ -13,7 +13,7 @@
 - You are passionated to be an UAV APP developer
 - Some basic programming experience in C/C++ 
 - Some basic flight control knowledge like the concepts of Pitch, Roll and Yaw
-- One complete set of UAV* flight platform and one USB-TTL serial cable (SOLD seperately)
+- One complete set of UAV flight platform* and one USB-TTL serial cable (SOLD seperately)
 
 > Note: *For now, ONLY M100 flight platform is supported.*
 
@@ -68,9 +68,8 @@ In order to develop your Apps via the Onboard SDK, you need to download the foll
 3. DJI GO APP
      
 >Note: 
->For 1 & 2, please download them from: https://developer.dji.com/onboard-sdk/downloads/
->
-For 3, download & install them from the iOS/Android APP STORE.
+>For 1 & 2, please download them from: https://developer.dji.com/onboard-sdk/downloads/  
+>For 3, download & install them from the iOS/Android APP STORE.
 
 ### Hardware Installation
 
@@ -168,14 +167,14 @@ Please comply with the local regulations during the development process and flig
 * 对无人机应用开发富有热情
 * 具有一些基础的C/C++编程经验
 * 了解基础的飞行控制知识如横滚 (Roll)、俯仰 (Pitch)和偏航 (Yaw)
-* 拥有一套M100飞行平台和一条USB-TTL串口线（需另购）
+* 拥有一套飞行平台*和一条USB-TTL串口线（需另购）
 
->备注: *N1飞控目前仅支持M100飞行平台*
+>备注: *目前仅支持M100飞行平台*
 
 
 ## 简介
 
-Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）与N1飞控通过异步串行端口（UART）进行通讯。开发者能够容易的：
+Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）与N1飞控*通过异步串行端口（UART）进行通讯。开发者能够容易的：
 
 - 在机载设备上使用任意编程语言设计并实现自己的飞行应用
 - 将底层飞行控制交由飞控完成，使开发者只需关注应用本身的逻辑
@@ -190,10 +189,10 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
     包括姿态、速度等十余种飞行数据
 - 可编程的设计  
     通过编程方式实现自主飞行、导航等
-- 透明的数据传输*  
+- 透明的数据传输（下简称数据透传）
     机载设备及外部设备的数据可通过某特定链路回传至移动设备
 
->备注:*下简称数据透传*
+
 
 ### 系统架构及推荐开发流程
 
@@ -217,7 +216,7 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 2. DJI PC模拟器
 3. DJI GO APP
 
->备注: 
+>备注:  
 >1 & 2, 可以在https://developer.dji.com/onboard-sdk/downloads/ 下载并安装  
 >3, 可以在iOS/Android APP STORE中下载并安装.
 
