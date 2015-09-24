@@ -1,8 +1,8 @@
-# DJI Onboard SDK UNOFFICIAL Main Page
+# DJI Onboard SDK Main Page
 
 [English](#english-version)                 [中文](#中文版本)
 
-#English Version
+#English Version  
 ## Welcome, Onboard SDK developers! 
 
 ### Via this document, you can:
