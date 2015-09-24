@@ -234,8 +234,8 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 
 用一条USB-TTL串口线缆（需另购）连接您的电脑与N1飞控，以使用Onboard开放协议进行通讯。
 
-### 注册和激活APP
-因为Onboard SDK允许开发者开发超视距无人机应用，所以DJI对注册APP及飞行器激活有更为严格的规定。
+### 注册APP和激活飞行平台
+因为Onboard SDK允许开发者开发超视距无人机应用，所以DJI对注册APP和激活飞行平台有更为严格的规定。
 
 #### Step1: 
 
@@ -266,13 +266,13 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 2. 认真阅读我们的步骤式教程
 3. 创建您自己专属的飞行应用
 
-如您在开发过程中有任何疑问，请首先参阅我们的[Onboard SDK FAQ][cnFAQ]部分，然后再与我们取得联系。
+如您在开发过程中有任何疑问，请首先参阅我们的[FAQ][cnFAQ]部分，然后再与我们取得联系。
 
 ###安全声明:
 
 飞行过程中请遵循当地法律法规。更多信息请访问(http://flysafe.dji.com/cn)
 
-### 编译及运行部分:
+### 编译与运行:
 
 - [Linux Command Line example](Onboard_SDK_Sample/DJI_Onboard_API_Cmdline_Sample)
 
@@ -289,7 +289,7 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 - [FAQ][cnFAQ]
 
 
-### 由外部开发者提供的非官方文档:
+### 由外部开发者提供的文档:
 
 - [可以在M100上使用的板载处理器及无线设备](http://bbs.dji.com/forum.php?mod=viewthread&tid=21106&extra=page%3D1%26filter%3Ddigest%26digest%3D1)
 
