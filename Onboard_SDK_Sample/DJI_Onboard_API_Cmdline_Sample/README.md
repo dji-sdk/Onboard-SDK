@@ -18,7 +18,7 @@ Developers can play with this example via the command line interaction in Linux.
 * cmake: makefile and temporary files
 * output: executables
 * src: source code
-* src/DJI_LIB: the core DJI Onboard SDK API Library
+* src/DJI_LIB: the DJI Onboard SDK API Library
 * README.md: this file
 
 ##Compile & Run Environment
