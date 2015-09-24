@@ -24,7 +24,7 @@ Developers can play with this example via the ROS interaction.
 * README.md: this file
 
 ##Compile & Run Environment
-The below environment is tested.
+The below environment has been tested.
 * Operating System: Ubuntu 14.04
 * ROS version: ROS Indigo
 
