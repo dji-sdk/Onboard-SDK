@@ -213,7 +213,7 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
 <tr>
   <td rowspan="9">0x01<br>Control CMD Set</td>
   <td>0x00</td>
-  <td>Request/Release Control Authorization</td>
+  <td>Obtain/Release Control Authorization</td>
   <td>2</td>
 </tr>
 
@@ -377,7 +377,7 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
 
 ### CMD Set 0x01 Control CMDs
 
-#### CMD ID 0x00: Request/Release Control Authorization
+#### CMD ID 0x00: Obtain/Release Control Authorization
 
 <table>
 <tr>
