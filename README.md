@@ -141,11 +141,11 @@ Please comply with the local regulations during the development process and flig
 - [FAQ][FAQ]
 
 ### Articles contributed by external developers:
-- [Onboard Device Selection Tips](http://bbs.dji.com/forum.php?mod=viewthread&tid=21106&extra=page%3D1%26filter%3Ddigest%26digest%3D1)(Chinese)
+- [Onboard Device Selection Tips](http://bbs.dji.com/forum.php?mod=viewthread&tid=21106&extra=page%3D1%26filter%3Ddigest%26digest%3D1) (Chinese)
 
-- [Use STM32 to take control of M100](http://bbs.dji.com/forum.php?mod=viewthread&tid=19754&extra=page%3D1%26filter%3Ddigest%26digest%3D1)(Chinese)
+- [Use STM32 to take control of M100](http://bbs.dji.com/forum.php?mod=viewthread&tid=19754&extra=page%3D1%26filter%3Ddigest%26digest%3D1) (Chinese)
 
-- [Onboard SDK FAQ (Unofficial)](http://bbs.dji.com/forum.php?mod=viewthread&tid=15991&extra=page%3D1%26filter%3Ddigest%26digest%3D1%26typeid%3D182)(Chinese)
+- [Onboard SDK FAQ (Unofficial)](http://bbs.dji.com/forum.php?mod=viewthread&tid=15991&extra=page%3D1%26filter%3Ddigest%26digest%3D1%26typeid%3D182) (Chinese)
 
 
 [0]:Onboard_API_Doc/en/OPENProtocol.md  
@@ -159,7 +159,7 @@ Please comply with the local regulations during the development process and flig
 
 # 中文版本
 
-## 欢迎,Onboard SDK开发者！
+## 欢迎，Onboard SDK开发者！
 
 ### 通过阅读本文档，您将能够：
 
