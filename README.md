@@ -1,8 +1,7 @@
 # DJI Onboard SDK Main Page
 
-[English](#english-version)                 [中文](#中文版本)
+[English](#welcome-onboard-sdk-developers)|[中文](#欢迎，Onboard SDK开发者！)
 
-#English Version  
 ## Welcome, Onboard SDK developers! 
 
 ### Via this document, you can:
@@ -156,8 +155,6 @@ Please comply with the local regulations during the development process and flig
 [Activation]:Onboard_API_Doc/en/ActivationGuide.md
 
 ---
-
-# 中文版本
 
 ## 欢迎，Onboard SDK开发者！
 
