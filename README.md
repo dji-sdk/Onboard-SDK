@@ -19,7 +19,7 @@
 
 ## Introduction
 
-The Onboard SDK allows developers to communicate with the N1 Autopilot* from any Onboard Devices through the serial, specifically the UART interface. Via the communication between the Onboard Device (SOLD seperately) and the N1 Autopilot, developers can easily
+The Onboard SDK allows developers to communicate with the N1 Autopilot* from any Onboard Devices through the serial, specifically the serial port interface. Via the communication between the Onboard Device (SOLD seperately) and the N1 Autopilot, developers can easily
 
 - Write their own Flight APPs on top of the Onboard Device in his/her favourite programming languages
 - Dispatch the 'flight' job to the N1 Autopilot following the DJI Onboard OPEN protocal
@@ -41,7 +41,7 @@ The Onboard SDK allows developers to communicate with the N1 Autopilot* from any
   The computing results of your Onboard Device can be transmitted to your Mobile Device in real time.
 
 ### System Architecture & Recommended Development Paradigm
-Two core components of the system architecture are the N1 Autopilot and an Onboard Device. They are physically connected via the serial(UART) interface. 
+Two core components of the system architecture are the N1 Autopilot and an Onboard Device. They are physically connected via the serial port interface. 
 
 Since the Onboard OPEN protocal is designed to be opened thoroughly, experienced developers can directly:
 
@@ -79,7 +79,7 @@ In order to use the DJI PC Simulator & DJI N1 PC assistant, a physical connectio
 
 #### Step2: 
 
-In order to communicate with the N1 Autopilot via the Onboard OPEN protocal, a physical connection between your computer and N1 Autopilot is required with a USB to TTL Serial cable(SOLD Seperately).
+In order to communicate with the N1 Autopilot via the Onboard OPEN protocal, a physical connection between your computer and N1 Autopilot is required with a USB to TTL serial cable (SOLD Seperately).
 
 ### Onboard APP Registration & Flight Platform Activation
 
@@ -98,7 +98,7 @@ For Flight Platform Activation, please go to [Activation Guide][Activation]
 
 For now, the UAV can be controlled by (1) Remote Controller (2) Mobile Device and (3) Onboard Device. The prioritization sequence is set to be (1) > (2) > (3).
 
->The remote controller(RC for short below) always enjoys the top priority for the control of the UAV. The N1 Autopilot can enter the API Control Mode(Programmable Mode) if the following 3 conditions are met:
+>The remote controller (RC for short below) always enjoys the top priority for the control of the UAV. The N1 Autopilot can enter the API Control Mode (Programmable Mode) if the following 3 conditions are met:
 
 >* The 'enable API control' box is checked in the N1 assistant software.
 * The IOC mode inside the DJI GO App is off.
@@ -174,7 +174,7 @@ Please comply with the local regulations during the development process and flig
 
 ## 简介
 
-Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）与N1飞控*通过异步串行端口（UART）进行通讯。开发者能够容易的：
+Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）与N1飞控*通过串行端口进行通讯。开发者能够容易的：
 
 - 在机载设备上使用任意编程语言设计并实现自己的飞行应用
 - 将底层飞行控制交由飞控完成，使开发者只需关注应用本身的逻辑
