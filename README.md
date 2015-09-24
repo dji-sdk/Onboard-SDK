@@ -295,7 +295,7 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 
 - [Onboard SDK移植到STM32 成功控制M100飞行](http://bbs.dji.com/forum.php?mod=viewthread&tid=19754&extra=page%3D1%26filter%3Ddigest%26digest%3D1)(中文)
 
-- [关于Onboard SDK的问题FAQ(非官方)](http://bbs.dji.com/forum.php?mod=viewthread&tid=15991&extra=page%3D1%26filter%3Ddigest%26digest%3D1%26typeid%3D182)
+- [关于Onboard SDK的问题FAQ(非官方)](http://bbs.dji.com/forum.php?mod=viewthread&tid=15991&extra=page%3D1%26filter%3Ddigest%26digest%3D1%26typeid%3D182) (中文)
 
 [cn0]:Onboard_API_Doc/cn/开放协议.md  
 [cn1]:Onboard_API_Doc/cn/附录.md  
