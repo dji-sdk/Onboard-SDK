@@ -12,8 +12,8 @@ The Protocal Frame is the smallest unit for transmission. It contains the Header
 <table>
 <tr>
   <th>Field</th>
-  <th>Byte Index</th>
-  <th>Size(bit)</th>
+  <th>Index (byte)</th>
+  <th>Size (bit)</th>
   <th>Description</th>
 </tr>
 
