@@ -33,8 +33,10 @@ The below environment has been tested.
 * In order to monitor & control the flight, a remote controller connects to the mobile device (with the DJI GO APP running) is needed.
 
 ##Configs
-1. Open *DJI_Onboard_API_Windows_QT_Sample.pro* locates at *src* sub-directory in the DJI_Onboard_API_Windows_QT_Sample*;  
-2. Select the *Desktop Qt 5.3 MinGW 32bit* kit and click *Configure Project* to proceed;
+1. Open *DJI_Onboard_API_Windows_QT_Sample.pro* locates at *src* sub-directory in the DJI_Onboard_API_Windows_QT_Sample*.
+
+2. Select the *Desktop Qt 5.3 MinGW 32bit* kit and click *Configure Project* to proceed.
+
 3. During the initialization, enter the following info into the GUI interface including:
 
 * APP ID
