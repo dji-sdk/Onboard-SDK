@@ -22,7 +22,7 @@ Developers can play with this example via the command line interaction in Linux.
 * README.md: this file
 
 ##Compile & Run Environment
-The below environment is tested.
+The below environment has been tested.
 * Operating System: Ubuntu 12.04
 * g++ version: 4.6.3
 
