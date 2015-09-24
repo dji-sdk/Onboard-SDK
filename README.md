@@ -135,7 +135,7 @@ Please comply with the local regulations during the development process and flig
 
 - [FAQ][FAQ]
 
-### Articles contributed by Onboard SDK external developers:
+### Articles contributed by external developers:
 [Onboard Device Selection Tips](http://bbs.dji.com/forum.php?mod=viewthread&tid=21106&extra=page%3D1%26filter%3Ddigest%26digest%3D1)(Chinese)
 
 [Use STM32 to take control of M100](http://bbs.dji.com/forum.php?mod=viewthread&tid=19754&extra=page%3D1%26filter%3Ddigest%26digest%3D1)(Chinese)
