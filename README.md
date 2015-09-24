@@ -44,7 +44,7 @@ The Onboard SDK allows developers to communicate with the N1 Autopilot* from any
 ### System Architecture & Recommended Development Paradigm
 Two core components of the system architecture are the N1 Autopilot and an Onboard Device. They are physically connected via the serial(UART) interface. 
 
-Since the Onboard OPEN protocal is designed to be opened thoroughly, experienced developers can directly write some low-level logics inside their APPs to (1) Contruct the underlying communication bit sequence;(2) Handle the package loss & resending mechanisms with the benifit of enjoying complete freedom. While for beginners, they can just comfortably use our Onboard SDK Library to communicate with the N1 Autopilot, all they need to do is to call our powerful APIs.
+Since the Onboard OPEN protocal is designed to be opened thoroughly, experienced developers can directly write some low-level logics inside their APPs to contruct the underlying communication bit sequence; Handle the package loss & resending mechanisms with the benifit of enjoying complete freedom. While for beginners, they can just comfortably use our Onboard SDK Library to communicate with the N1 Autopilot, all they need to do is to call our APIs.
 
 
 ## Environment Setup
@@ -84,11 +84,11 @@ Since the Onboard SDK allows developers to develop programmable UAV APPs beyond 
 
 #### Step1: 
 
-For Onboard APP Registration, please go to (https://developer.dji.com/register/)
+For Onboard APP Registration, please go to https://developer.dji.com/register/
 
 #### Step2: 
 
-For Flight Platform Activation, please go to [Step To Activate Onboard SDK][Activation]
+For Flight Platform Activation, please go to [Activation Guide][Activation]
 
 
 ### The prioritization sequence for different control sources
@@ -106,7 +106,7 @@ Once the above conditions are met, developers can call the related 'flight contr
 
 ## Closing Remarks
 
-### Welcome again Onboard SDK developers! You are all set now.
+### Dear Onboard SDK developers! You are all set now.
 
 Here, we list all the avaliable document pointers for your reference and we recommend you the following development steps.
 
@@ -136,11 +136,11 @@ Please comply with the local regulations during the development process and flig
 - [FAQ][FAQ]
 
 ### Articles contributed by external developers:
-[Onboard Device Selection Tips](http://bbs.dji.com/forum.php?mod=viewthread&tid=21106&extra=page%3D1%26filter%3Ddigest%26digest%3D1)(Chinese)
+- [Onboard Device Selection Tips](http://bbs.dji.com/forum.php?mod=viewthread&tid=21106&extra=page%3D1%26filter%3Ddigest%26digest%3D1)(Chinese)
 
-[Use STM32 to take control of M100](http://bbs.dji.com/forum.php?mod=viewthread&tid=19754&extra=page%3D1%26filter%3Ddigest%26digest%3D1)(Chinese)
+- [Use STM32 to take control of M100](http://bbs.dji.com/forum.php?mod=viewthread&tid=19754&extra=page%3D1%26filter%3Ddigest%26digest%3D1)(Chinese)
 
-[Onboard SDK FAQ (Unofficial)](http://bbs.dji.com/forum.php?mod=viewthread&tid=15991&extra=page%3D1%26filter%3Ddigest%26digest%3D1%26typeid%3D182)(Chinese)
+- [Onboard SDK FAQ (Unofficial)](http://bbs.dji.com/forum.php?mod=viewthread&tid=15991&extra=page%3D1%26filter%3Ddigest%26digest%3D1%26typeid%3D182)(Chinese)
 
 
 [0]:Onboard_API_Doc/en/OPENProtocol.md  
@@ -197,7 +197,7 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 
 两个系统的重要组成部分是N1飞控和机载设备，它们通过串口进行物理连接并遵循DJI OPEN Protocal以通讯。 
 
-因为N1飞控与机载设备间的通讯协议是完全开放的，有经验的开发者在享受完全自由的同时，也需要在飞行应用中加入底层逻辑以实现(1)通讯数据比特流的构建 (2)丢包重发机制的实现等。而对于普通开发者，DJI则提供了功能强大的Onboard SDK库，开发者仅需要调用相应API函数，即可完成与飞控之间的通讯，藉由飞控完成对无人机的飞行控制，以此简化开发流程和步骤。
+因为N1飞控与机载设备间的通讯协议是完全开放的，有经验的开发者在享受完全自由的同时，也需要在飞行应用中加入底层逻辑以实现通讯数据比特流的构建;丢包重发机制的实现等。而对于普通开发者，DJI则提供了的Onboard SDK库，开发者仅需要调用相应API函数，即可完成与飞控之间的通讯，藉由飞控完成对无人机的飞行控制，以此简化开发流程和步骤。
 
 ##环境设置
 
@@ -234,7 +234,7 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 
 #### Step1: 
 
-关于注册APP的更多内容，请关注(https://developer.dji.com/register/)
+关于注册APP的更多内容，请关注 https://developer.dji.com/register/
 
 #### Step2: 
 
@@ -254,7 +254,7 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 
 ## 结语
 
-### 再次欢迎您，Onboard SDK开发者！您已经准备好并可以投入到应用的实际开发中了。
+### 尊敬的Onboard SDK开发者！您已经准备好并可以投入到应用的实际开发中了。
 在这里，我们列出所有我们建议可供您参考的文档。通过阅读这些文档，能使您的开发之路更为顺畅。以下是我们推荐您的开发步骤：
 
 1. 编译并运行Onboard SDK提供的一些示例
@@ -286,11 +286,11 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 
 ### 由外部开发者提供的非官方文档:
 
-[可以在M100上使用的板载处理器及无线设备](http://bbs.dji.com/forum.php?mod=viewthread&tid=21106&extra=page%3D1%26filter%3Ddigest%26digest%3D1)(中文)
+- [可以在M100上使用的板载处理器及无线设备](http://bbs.dji.com/forum.php?mod=viewthread&tid=21106&extra=page%3D1%26filter%3Ddigest%26digest%3D1)(中文)
 
-[Onboard SDK移植到STM32 成功控制M100飞行](http://bbs.dji.com/forum.php?mod=viewthread&tid=19754&extra=page%3D1%26filter%3Ddigest%26digest%3D1)(中文)
+- [Onboard SDK移植到STM32 成功控制M100飞行](http://bbs.dji.com/forum.php?mod=viewthread&tid=19754&extra=page%3D1%26filter%3Ddigest%26digest%3D1)(中文)
 
-[关于Onboard SDK的问题FAQ(非官方)](http://bbs.dji.com/forum.php?mod=viewthread&tid=15991&extra=page%3D1%26filter%3Ddigest%26digest%3D1%26typeid%3D182)
+- [关于Onboard SDK的问题FAQ(非官方)](http://bbs.dji.com/forum.php?mod=viewthread&tid=15991&extra=page%3D1%26filter%3Ddigest%26digest%3D1%26typeid%3D182)
 
 [cn0]:Onboard_API_Doc/cn/开放协议.md  
 [cn1]:Onboard_API_Doc/cn/附录.md  
