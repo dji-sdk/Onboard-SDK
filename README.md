@@ -43,9 +43,9 @@ The Onboard SDK allows developers to communicate with the N1 Autopilot* from any
 ### System Architecture & Recommended Development Paradigm
 Two core components of the system architecture are the N1 Autopilot and an Onboard Device. They are physically connected via the serial(UART) interface. 
 
-Since the Onboard OPEN protocal is designed to be opened thoroughly, experienced developers can directly
+Since the Onboard OPEN protocal is designed to be opened thoroughly, experienced developers can directly:
 
-1. Write some low-level logics inside their APPs to contruct the underlying communication bit sequence.   
+1. Write some low-level logics inside their APPs to contruct the underlying communication bit sequence;
 2. Handle the package loss & resending mechanisms with the benifit of enjoying complete freedom.   
 
 While for beginners, they can just comfortably use our Onboard SDK Library to communicate with the N1 Autopilot, all they need to do is to call our APIs.
@@ -57,7 +57,7 @@ While for beginners, they can just comfortably use our Onboard SDK Library to co
 
 #### Step1:
 
-If you want to use our Onboard SDK API Library, you can download it from Github
+If you want to use our Onboard SDK API Library, you can download it from Github.
 
 #### Step2: 
 
@@ -70,7 +70,7 @@ In order to develop your Apps via the Onboard SDK, you need to download the foll
 >Note: 
 >For 1 & 2, please download them from: https://developer.dji.com/onboard-sdk/downloads/
 >
-For 3, download & install them from the iOS/Android APP STORE.*
+For 3, download & install them from the iOS/Android APP STORE.
 
 ### Hardware Installation
 
@@ -167,15 +167,15 @@ Please comply with the local regulations during the development process and flig
 ### 在这里，我们认为您：
 * 对无人机应用开发富有热情
 * 具有一些基础的C/C++编程经验
-* 了解基础的飞行控制知识如横滚(Roll)、俯仰(Pitch)和偏航(Yaw)
+* 了解基础的飞行控制知识如横滚 (Roll)、俯仰 (Pitch)和偏航 (Yaw)
 * 拥有一套M100飞行平台和一条USB-TTL串口线（需另购）
 
->备注:*N1飞控目前仅支持M100飞行平台*
+>备注: *N1飞控目前仅支持M100飞行平台*
 
 
 ## 简介
 
-Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）与N1飞控*通过异步串行端口（UART）进行通讯。开发者能够容易的：
+Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）与N1飞控通过异步串行端口（UART）进行通讯。开发者能够容易的：
 
 - 在机载设备上使用任意编程语言设计并实现自己的飞行应用
 - 将底层飞行控制交由飞控完成，使开发者只需关注应用本身的逻辑
@@ -219,7 +219,7 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 
 >备注: 
 >1 & 2, 可以在https://developer.dji.com/onboard-sdk/downloads/ 下载并安装  
->3, 可以在iOS/Android APP STORE中下载并安装.*
+>3, 可以在iOS/Android APP STORE中下载并安装.
 
 ### 硬件安装
 
