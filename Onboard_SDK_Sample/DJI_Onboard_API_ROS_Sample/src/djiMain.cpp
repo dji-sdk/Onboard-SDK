@@ -168,9 +168,9 @@ void spin_callback(const ros::TimerEvent &)
 		unsigned char bat = 0;
 		
 		
-		//update is_flying
+		//update flight_status 
 		msg.data = (float) recv_sdk_std_msgs.status;
-		publishers::is_flying_pub.publish(msg);
+		publishers::flight_status_pub.publish(msg);
 
 		//update battery msg
 		DJI_Pro_Get_Bat_Capacity(&bat);

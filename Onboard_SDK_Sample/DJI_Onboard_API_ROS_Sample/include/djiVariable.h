@@ -28,7 +28,7 @@ namespace dji_variable
 	extern dji_ros::compass compass_info;
 	extern dji_ros::gimbal gimbal_info;
 	extern float battery;
-	extern uint8_t is_flying;
+	extern uint8_t flight_status;
 	extern dji_ros::ctrl_info ctrl_info;
 	extern nav_msgs::Odometry odem;
 	extern bool opened;

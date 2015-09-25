@@ -5,7 +5,7 @@
 namespace publishers
 {
 	extern ros::Publisher battery_pub, ctrl_info_pub,
-			 is_flying_pub, acc_pub;
+			 flight_status_pub, acc_pub;
 	extern ros::Publisher gps_pub, att_quad_pub, compass_pub,
 			 vel_pub, local_pos_pub, gimbal_info_pub;
 	extern ros::Publisher rc_channels_pub,odem_publisher;
