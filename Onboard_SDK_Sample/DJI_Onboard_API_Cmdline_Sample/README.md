@@ -12,7 +12,7 @@ This example aims to help you understand and play with the basic flight procedur
 * The gimbal control
 * The flight control info obtainment  
 
-Developers can play with this example via the command line interaction in Linux.
+Developers can play with this example via the command line interaction interface in linux.
 
 ##Directory Structure
 * cmake: makefile and temporary files
@@ -28,10 +28,10 @@ The below environment has been tested.
 
 ## Hardware Installation
 * In order to communicate with the N1 Autopilot via the DJI OPEN protocal, a physical connection between your Onboard Device and the N1 Autopilot is required with a USB to TTL Serial cable (SOLD Seperately).
-* In order to monitor & control the flight, a remote controller connects to the mobile device(with the DJI GO APP running) is needed.
+* In order to monitor & control the flight, a remote controller connects to the mobile device (with the DJI GO APP running) is needed.
 
 ##Configs
-Enter the following info into *./output/config.xml.*
+Enter the following info into *./output/config.xml:*
 
 * APP ID
 * App Level
@@ -47,19 +47,19 @@ cd cmake
 make
 ~~~
 
-If the compilation is completed, an Linux executable called 'DJI_Onboard_API_Cmdline_Test' will be generated in the *output* dir.
+If the compilation is completed, a linux executable file called 'DJI_Onboard_API_Cmdline_Test' will be generated in the *output* dir.
 
 ##Run
-We recommend you first run this example in the simulator then move to the real flight test. Also, please be aware that you will need sudo privilege to manipulate the linux serial port. You may need to enter the following command to gain the access privilege.
+We recommend you first run this example in the simulator then move to the real flight test. Also, please be aware that you will need sudo privilege to manipulate the linux serial port. You may need to gain the sudo access privilege.
 
-Please make sure that 'config.xml' file is sitted in the *output* folder before running. Then run the example by entering the following command
+Please make sure that 'config.xml' file is sitted in the *output* folder before running. Then run the example by entering the following command:
 ~~~bash
 sudo ./DJI_Onboard_API_Cmdline_Test
 ~~~
 
 ##What You Can Expect
-* You can see the flight control simulations on screen if you are using the DJI PC simulator. Otherwise, real flight happens.
+* You can see the flight simulations on screen if you are using the DJI PC simulator. Otherwise, real flight happens.
 * You can see the actual 'gimbal and camera' movement.
-* You can see the image/video you capture from your mobile device.
+* You can see the image/video you capture from your Mobile Device.
 
 ENJOY your flight!
