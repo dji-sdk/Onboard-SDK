@@ -6,7 +6,7 @@
 
 ### Via this document, you can:
 - Get a general understanding of the Onboard SDK in a short time
-- Understand the Onboard SDK UAV APPs development paradigm
+- Understand the Onboard SDK APPs development paradigm
 - Get some best practice tips while getting your hands dirty
 
 ### However, we assume you having the following basic requirements already:
@@ -29,16 +29,20 @@ The Onboard SDK allows developers to communicate with the N1 Autopilot* from any
 ### Key Features
 
 - Flexible Flight Control
+
   Different flight control modes such as position, velocity and attitude.
   
 - Diverse Monitoring Data
+
   Flight data are diverse and can be obtained easily.
   
 - Programmable Design
+
   Flight mode control and flight data are designed to aid autonomous flight control & navigation.
 
 - Data Trasparent Transmission
-  The computing results of your Onboard Device can be transmitted to your Mobile Device in real time and vice versa.
+
+  The data of Onboard Device can be transmitted to your Mobile Device in real time and vice versa.
 
 ### System Architecture & Recommended Development Paradigm
 Two core components of the system architecture are the N1 Autopilot and an Onboard Device. They are physically connected via the serial port interface. 
@@ -57,15 +61,15 @@ While for beginners, they can just comfortably use our Onboard SDK API Library t
 
 #### Step1:
 
-If you want to use our Onboard SDK API Library(with examples), you can download it from Github.
+If you want to use our Onboard SDK API Library which have been used in our examples, you can download it from Github.
 
 #### Step2: 
 
-In order to develop your Apps via the Onboard SDK, you need to download the following DJI specific tools: 
+In order to develop your Apps via the Onboard SDK, you need to download the following DJI specific latest tools: 
 
-1. DJI N1 PC assistant software and the related N1 Driver
-2. DJI PC Simulator
-3. DJI GO APP
+1. the DJI N1 PC assistant software and the related N1 Driver
+2. the DJI PC Simulator
+3. the DJI GO APP
      
 >Note:   
 >For 1 & 2, please download them from: https://developer.dji.com/onboard-sdk/downloads/    
@@ -114,7 +118,7 @@ Once the above conditions are met, developers can call the related 'flight contr
 Here, we list all the avaliable document pointers for your reference and we recommend you the following development steps.
 
 1. Try some examples in our 'Compile and Run Example Section'
-2. Start building your own UAV APPs
+2. Learn from those examples and start building your own UAV APPs
 
 If you encounter any questions during the development, take a look at our [FAQ][FAQ]. After that, feel free to contact us.
 
@@ -140,9 +144,9 @@ Please comply with the local regulations during the development process and the 
 ### Articles contributed by external developers:
 - [Onboard Device Selection Tips](http://bbs.dji.com/forum.php?mod=viewthread&tid=21106&extra=page%3D1%26filter%3Ddigest%26digest%3D1) (Chinese)
 
-- [Use STM32 to take control of M100](http://bbs.dji.com/forum.php?mod=viewthread&tid=19754&extra=page%3D1%26filter%3Ddigest%26digest%3D1) (Chinese)
+- [Migrate the Onboard SDK API Library to STM32 and use STM32 to control M100](http://bbs.dji.com/forum.php?mod=viewthread&tid=19754&extra=page%3D1%26filter%3Ddigest%26digest%3D1) (Chinese)
 
-- [Onboard SDK FAQ (Unofficial)](http://bbs.dji.com/forum.php?mod=viewthread&tid=15991&extra=page%3D1%26filter%3Ddigest%26digest%3D1%26typeid%3D182) (Chinese)
+- [Onboard SDK & M100 FAQ (Unofficial)](http://bbs.dji.com/forum.php?mod=viewthread&tid=15991&extra=page%3D1%26filter%3Ddigest%26digest%3D1%26typeid%3D182) (Chinese)
 
 
 [0]:Onboard_API_Doc/en/OPENProtocol.md  
