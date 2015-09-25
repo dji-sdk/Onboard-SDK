@@ -13,7 +13,7 @@ This example aims to help you understand and play with the basic flight procedur
 
 <!-- * The flight control info obtainment -->  
 
-Developers can play with this example via the GUI interface in Windows.
+Developers can play with this example via the GUI interaction interface in Windows.
 
 ##Directory Structure
 * exe: executables, dependent files are also included
@@ -36,7 +36,7 @@ The below environment has been tested.
 
 2. Select the *Desktop Qt 5.3 MinGW 32bit* kit and click *Configure Project* to proceed.
 
-3. During the initialization, enter the following info into the GUI interface including:
+3. During the init process, enter the following info into the GUI interface including:
 
 * APP ID
 * App Level
