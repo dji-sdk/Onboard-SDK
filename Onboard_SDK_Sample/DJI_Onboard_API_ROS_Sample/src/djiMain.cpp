@@ -33,6 +33,8 @@ void update_ros_vars() {
 	auto current_time = ros::Time::now();
 
 	//update attitude msg
+	attitude_quad.header.frame_id = "/world";
+	attitude_quad.header.stamp = current_time;
 	attitude_quad.q0 = recv_sdk_std_msgs.q.q0;
 	attitude_quad.q1 = recv_sdk_std_msgs.q.q1;
 	attitude_quad.q2 = recv_sdk_std_msgs.q.q2;
@@ -44,6 +46,8 @@ void update_ros_vars() {
 	publishers::att_quad_pub.publish(attitude_quad);
 
 	//update global_position msg
+	global_position.header.frame_id = "/world";
+	global_position.header.stamp = current_time;
 	global_position.ts = recv_sdk_std_msgs.time_stamp;
 	global_position.latitude = recv_sdk_std_msgs.pos.lati;
 	global_position.longitude = recv_sdk_std_msgs.pos.longti;
@@ -63,7 +67,10 @@ void update_ros_vars() {
 		seted = 1;
 	}
 
+
 	//update velocity msg
+	velocity.header.frame_id = "/world";
+	velocity.header.stamp = current_time;
 	velocity.ts = recv_sdk_std_msgs.time_stamp;
 	velocity.velx = recv_sdk_std_msgs.v.x;
 	velocity.vely = recv_sdk_std_msgs.v.y;
@@ -71,13 +78,26 @@ void update_ros_vars() {
 	publishers::vel_pub.publish(velocity);
 
 	//update accelration msg
+	acc.header.frame_id = "/world";
+	acc.header.stamp = current_time;
 	acc.ts = recv_sdk_std_msgs.time_stamp;
 	acc.ax = recv_sdk_std_msgs.a.x;
 	acc.ay = recv_sdk_std_msgs.a.y;
 	acc.az = recv_sdk_std_msgs.a.z;
 	publishers::acc_pub.publish(acc);
 
+	//update gimbal msg
+	gimbal_info.header.frame_id = "/gimbal";
+	gimbal_info.header.stamp= current_time;
+	gimbal_info.ts = recv_sdk_std_msgs.time_stamp;
+	gimbal_info.roll = recv_sdk_std_msgs.gimbal.x;
+	gimbal_info.pitch = recv_sdk_std_msgs.gimbal.y;
+	gimbal_info.yaw = recv_sdk_std_msgs.gimbal.z;
+	publishers::gimbal_info_pub.publish(gimbal_info);
+
 	//update local_position msg
+	local_position.header.frame_id = "/world";
+	local_position.header.stamp = current_time;
 	dji_variable::gps_convert_ned(
 			local_position.x,
 			local_position.y,
@@ -92,7 +112,7 @@ void update_ros_vars() {
 	publishers::local_pos_pub.publish(local_position);
 
 	//update odem msg
-	odem.header.frame_id = "dji_sys_0";
+	odem.header.frame_id = "/world";
 	odem.header.stamp = current_time;
 	odem.pose.pose.position.x = local_position.x;
 	odem.pose.pose.position.y = local_position.y;
@@ -110,6 +130,8 @@ void update_ros_vars() {
 	publishers::odem_publisher.publish(odem);
 
 	//update rc_channel msg
+	rc_channels.header.frame_id = "/rc";
+	rc_channels.header.stamp = current_time;
 	rc_channels.ts = recv_sdk_std_msgs.time_stamp;
 	rc_channels.pitch = recv_sdk_std_msgs.rc.pitch;
 	rc_channels.roll = recv_sdk_std_msgs.rc.roll;
@@ -120,6 +142,8 @@ void update_ros_vars() {
 	publishers::rc_channels_pub.publish(rc_channels);
 
 	//update compass msg
+	compass_info.header.frame_id = "/world";
+	compass_info.header.stamp = current_time;
 	compass_info.ts = recv_sdk_std_msgs.time_stamp;
 	compass_info.x = recv_sdk_std_msgs.mag.x;
 	compass_info.y = recv_sdk_std_msgs.mag.y;
