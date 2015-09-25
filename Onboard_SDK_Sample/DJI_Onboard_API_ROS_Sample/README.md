@@ -12,7 +12,7 @@ This example aims to help you understand and play with the basic flight procedur
 * The photo taking procedure
 * The start/stop video recording procedure
 
-Developers can play with this example via the ROS interaction.
+Developers can play with this example via the ROS interaction interface.
 
 ##Directory Structure
 * include: header files
@@ -89,7 +89,7 @@ You can now try the different functions shown in the menu of the client node.
 
 The status of the UAV are published following our message type together with the [odometry](http://docs.ros.org/api/nav_msgs/html/msg/Odometry.html) message type. 
 
-You can find the topic you want by `rostopic list` and query the data inside using either `rostopic echo [topic name]` or subscribe to the topic by your own ROS node.
+You can find the topic you want by `rostopic list` and query the data inside using either `rostopic echo [topic name]` OR subscribe to the topic by your own ROS node.
 
 ##What You Can Expect
 * You can learn how to use ROS to wrap the DJI SDK API Library and use it as a ROS service.
