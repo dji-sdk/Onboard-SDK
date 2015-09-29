@@ -25,9 +25,11 @@ namespace dji_variable
 	extern dji_ros::global_position global_position;
 	extern dji_ros::global_position global_position_degree;
 	extern dji_ros::local_position local_position;
+	extern dji_ros::compass compass_info;
+	extern dji_ros::gimbal gimbal_info;
 	extern float battery;
 	extern uint8_t flight_status;
-	extern api_ctrl_info_data_t ctrl_info;
+	extern dji_ros::ctrl_info ctrl_info;
 	extern nav_msgs::Odometry odem;
 	extern bool opened;
 	extern bool activated;

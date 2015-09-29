@@ -14,6 +14,9 @@
 #include <dji_ros/local_position.h>
 #include <dji_ros/rc_channels.h>
 #include <dji_ros/velocity.h>
+#include <dji_ros/compass.h>
+#include <dji_ros/ctrl_info.h>
+
 
 //srvs
 #include <dji_ros/action.h>

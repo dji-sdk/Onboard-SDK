@@ -15,9 +15,11 @@ namespace dji_variable
 	dji_ros::global_position global_position;
 	dji_ros::global_position global_position_degree;
 	dji_ros::local_position local_position;
+	dji_ros::compass compass_info;
+	dji_ros::gimbal gimbal_info;
 	nav_msgs::Odometry odem;
 	uint8_t flight_status;
-	api_ctrl_info_data_t ctrl_info;
+	dji_ros::ctrl_info ctrl_info;
 	float battery = 0;
 	bool opened = false;
 	bool activated = false;
