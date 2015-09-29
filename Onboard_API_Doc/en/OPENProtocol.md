@@ -63,7 +63,7 @@ The Protocal Frame is the smallest unit for transmission. It contains the Header
   <td>PADDING</td>
   <td rowspan="2">4</td>
   <td>5</td>
-  <td>len of padding data used by the whole frame encryption</td>
+  <td>len of padding data used by the Data encryption</td>
 </tr>
 
 <tr>
