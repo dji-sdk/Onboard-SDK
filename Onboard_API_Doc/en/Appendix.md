@@ -92,7 +92,7 @@ We suggest developers do not use VERT_POS control mode indoor when your UAV does
 <tr>
   <td rowspan="2">Yaw</td>
   <td>YAW_ANG</td>
-  <td>Yaw angle is referenced to the ground frame</td>
+  <td>Yaw angle is referenced to the ground frame. In this control mode, Ground frame is enforeced in N1 Autopilot</td>
 </tr>
 <tr>
   <td>YAW_RATE</td>
