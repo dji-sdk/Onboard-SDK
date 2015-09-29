@@ -63,7 +63,7 @@ The Protocal Frame is the smallest unit for transmission. It contains the Header
   <td>PADDING</td>
   <td rowspan="2">4</td>
   <td>5</td>
-  <td>len of padding data used by the whole frame encryption</td>
+  <td>len of padding data used by the Data encryption</td>
 </tr>
 
 <tr>
@@ -110,7 +110,7 @@ The Protocal Frame is the smallest unit for transmission. It contains the Header
   <td>CRC32 whole frame checksum</td>
 </tr>
 </table>
-
+<!-- >备注：如果协议帧需要AES加密，应先对数据段进行加密，该过程会改变数据长度，需要更新帧头中*PADDING*字段及*LEN*字段。再对帧头部分进行CRC16校验，获得校验值后再对整个协议帧进行CRC32校验 -->
 ### Frame Type
 There are two types of frames.
 
