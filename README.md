@@ -238,7 +238,7 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 >备注：N1飞控的串口电平为3.3 V。
 
 ### 注册Onboard SDK APP和激活飞行平台
-因为Onboard SDK允许开发者开发超视距无人机应用，因此DJI对注册Onboard SDK APP和激活飞行平台有更为严格的规定。
+因为Onboard SDK允许开发者开发无人机飞行应用，因此DJI对注册Onboard SDK APP和激活飞行平台有更为严格的规定。
 
 #### Step1: 
 
