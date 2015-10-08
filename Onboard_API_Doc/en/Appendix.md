@@ -135,7 +135,7 @@ By specifying the `control_mode_byte`, 14 control modes can be constructed :
 
 **the lowest 3 bits in control_mode_byte decide the horizontal frame and yaw frame.*  
 *xx presents horizontal frame，00 means ground frame，01 means body frame.*  
-*y presents yaw frame，0 means ground frame，1 means body frame*
+*y presents yaw frame，0 means ground frame，1 means body frame.*
 
 ***In this combination，if all input data is '0', the UAV will brake and hold in a self-balance status at a fixed  position.*
 
@@ -149,4 +149,62 @@ By specifying the `control_mode_byte`, 14 control modes can be constructed :
 |4|landing|
 |5|finish_landing|
 
-*Note: We recommend using the sensor data of UAV instead of the above flight status in your development.*
+>flight status will enter the 'standby' state after 2s in 'finish_landing state'.
+>flight status will immediately enter 'in_air' state when UAV leave the ground.
+
+<!-- ## 遥控器通道说明
+### 遥控器通道
+|遥控器通道|数值范围|说明|  
+|-------|-------|---|
+|roll|[-10000,10000]|左: -10000<br>右: 10000|
+|pitch|[-10000,10000]|下: -10000<br>上: 10000|
+|yaw|[-10000,10000]|左: -10000<br>右: 10000|
+|throttle|[-10000,10000]|下: -10000<br>上: 10000|
+|mode|-8000, 0, 8000|P: -8000<br>A: 0<br>F: 8000|
+|gear|-10000, -4545|放下起落架: -4545<br>收起起落架: -10000| -->
+
+<!-- ## 原始值/融合值说明
+
+<table>
+<tr>
+  <th>数据类型</th>
+  <th>原始值/融合值</th>
+  <th>说明</td>
+</tr>
+<tr>
+  <td rowspan="2">加速度</td>
+  <td>原始值</td>
+  <td>sss</td>
+</tr>
+<tr>
+  <td>融合值</td>
+  <td>sss</td>
+</tr>
+<tr>
+  <td rowspan="2">角速度</td>
+  <td>原始值</td>
+  <td>sss</td>
+</tr>
+<tr>
+  <td>融合值</td>
+  <td>sss</td>
+</tr>
+<tr>
+  <td rowspan="2">气压高度</td>
+  <td>原始值</td>
+  <td>sss</td>
+</tr>
+<tr>
+  <td>融合值</td>
+  <td>sss</td>
+</tr>
+<tr>
+  <td rowspan="2">对地高度</td>
+  <td>原始值</td>
+  <td>sss</td>
+</tr>
+<tr>
+  <td>融合值</td>
+  <td>sss</td>
+</tr>
+</table> -->

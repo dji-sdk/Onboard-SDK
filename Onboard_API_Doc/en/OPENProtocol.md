@@ -925,7 +925,7 @@ The flight data from the N1 Autopilot can be configured by the DJI N1 assistant 
   <td rowspan="3">Linear acceleration</td>
   <td>agx</td>
   <td>float32</td>
-  <td rowspan="3">Linear acceleration</td>
+  <td rowspan="3">Linear acceleration (Raw/Fusion)</td>
   <td rowspan="3">m/s<sup>2</sup> </td>
   <td rowspan="3">100Hz</td>
 </tr>
@@ -975,7 +975,7 @@ The flight data from the N1 Autopilot can be configured by the DJI N1 assistant 
   <td rowspan="3">Angular velocity</td>
   <td>wx</td>
   <td>float32</td>
-  <td rowspan="3">Angular velocity </td>
+  <td rowspan="3">Angular velocity (Raw/Fusion)</td>
   <td rowspan="3">º/s</td>
   <td rowspan="3">100Hz</td>
 </tr>
@@ -1003,13 +1003,13 @@ The flight data from the N1 Autopilot can be configured by the DJI N1 assistant 
 <tr>
   <td>alti</td>
   <td>float32</td>
-  <td>Altitude</td>
+  <td>Altitude (Raw/Fusion)</td>
   <td>m</td>
 </tr>
 <tr>
   <td>height</td>
   <td>float32</td>
-  <td>Height relatively to ground**</td>
+  <td>Height relatively to ground (Raw/Fusion)</td>
   <td>m</td>
 </tr>
 <tr>

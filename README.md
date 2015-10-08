@@ -89,7 +89,7 @@ In order to communicate with the N1 Autopilot via the Onboard OPEN protocal, a p
 
 ### Onboard SDK APP Registration & Flight Platform Activation
 
-Since the Onboard SDK allows developers to develop programmable UAV APPs beyond line-of-sight, a more serious Onboard SDK APP registration and Flight Platform Activation has been introduced.
+Since the Onboard SDK allows developers to develop programmable UAV APPs, a more serious Onboard SDK APP registration and Flight Platform Activation has been introduced.
 
 #### Step1: 
 
@@ -240,11 +240,11 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 ### 注册Onboard SDK APP和激活飞行平台
 因为Onboard SDK允许开发者开发无人机飞行应用，因此DJI对注册Onboard SDK APP和激活飞行平台有更为严格的规定。
 
-#### Step1: 
+#### 步骤1： 
 
 关于APP注册的更多内容，请访问 https://developer.dji.com/register/
 
-#### Step2: 
+#### 步骤2： 
 
 关于激活飞行平台的更多内容，请访问[激活指南][cnActivation]
 
