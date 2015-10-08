@@ -135,7 +135,7 @@ Please comply with the local regulations during the development process and the 
 
 - [Windows QT example](Onboard_SDK_Sample/DJI_Onboard_API_Windows_QT_Sample)
 
-### References Section:
+### References Document:
 
 - [OPEN Protocol][0] & [Appendix][1] 
 
@@ -282,12 +282,11 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 
 - [Windows QT example](Onboard_SDK_Sample/DJI_Onboard_API_Windows_QT_Sample)
 
-### 参考部分:
+### 参考文档:
 
 - [开放协议][cn0] & [附录][cn1]  
-
-- [数据透传][cn2]  
-
+- [数据透传][cn2]   
+- [编程指南][cn3]  
 - [FAQ][cnFAQ]
 
 
@@ -302,6 +301,6 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 [cn0]:Onboard_API_Doc/cn/开放协议.md  
 [cn1]:Onboard_API_Doc/cn/附录.md  
 [cn2]:Onboard_API_Doc/cn/数据透传.md
-[cn3]:Onboard_API_Doc/cn/术语.md
+[cn3]:Onboard_API_Doc/cn/编程指南.md
 [cnActivation]:Onboard_API_Doc/cn/激活指南.md
 [cnFAQ]:Onboard_API_Doc/cn/FAQ_cn.md

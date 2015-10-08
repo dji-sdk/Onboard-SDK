@@ -482,11 +482,15 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
 </table>
 
 #### CMD ID 0x03 Movement Control
+
+For more info about Movement Control, please refer to [Control mode byte part in Appendix](Appendix.md#control-mode-byte).
+
 <table>
 <tr>
   <th>Data Type</th>
   <th>Offset (byte)</th>
   <th>Size (byte)</th>
+  <th>Data Type</th>
   <th>Description</th>
 </tr>
 
@@ -494,30 +498,35 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
   <td rowspan="5">CMD Val</td>
   <td>0</td>
   <td>1</td>
-  <td>Control mode byte*</td>
+  <td>---</td>
+  <td>Control mode byte</td>
 </tr>
 
 <tr>
   <td>1</td>
   <td>4</td>
+  <td>float32</td>
   <td>Roll or X-axis control value</td>
 </tr>
 
 <tr>
   <td>5</td>
   <td>4</td>
+  <td>float32</td>
   <td>Pitch or Y-axis control value</td>
 </tr>
 
 <tr>
   <td>9</td>
   <td>4</td>
+  <td>float32</td>
   <td>Throttle or Z-axis control value</td>
 </tr>
 
 <tr>
   <td>13</td>
   <td>4</td>
+  <td>float32</td>
   <td>Yaw control value</td>
 </tr>
 
@@ -525,12 +534,13 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
   <td>ACK Val</td>
   <td>---</td>
   <td>---</td>
+  <td>---</td>
   <td>N/A</td>
 </tr>
 
 </table>
 
->Note: **For more please refer to [Appendix](Appendix.md#control-mode-byte)*  
+
 
 #### CMD ID 0x1A Gimbal Control in Rate
 <table>
@@ -538,6 +548,7 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
   <th>Data Type</th>
   <th>Offset (byte)</th>
   <th>Size (byte)</th>
+  <th>Data Type</th>
   <th>Description</th>
 </tr>
 
@@ -545,21 +556,25 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
   <td rowspan="4">CMD Val</td>
   <td>0</td>
   <td>2</td>
-  <td>Yaw in rate</td>
+  <td>int16_t</td>
+  <td>Yaw in rate<br>unit 0.1º/s, input range[-1800,1800]</td>
 </tr>
 <tr>
   <td>2</td>
   <td>2</td>
-  <td>Roll in rate</td>
+  <td>int16_t</td>
+  <td>Roll in rate<br>unit 0.1º/s, input range[-1800,1800]</td>
 </tr>
 <tr>
   <td>4</td>
   <td>2</td>
-  <td>Pitch in rate</td>
+  <td>int16_t</td>
+  <td>Pitch in rate<br>unit 0.1º/s, input range[-1800,1800]</td>
 </tr>
 <tr>
   <td>6</td>
   <td>1</td>
+  <td>---</td>
   <td>Fixed value, 0x80</td>
 </tr>
 
@@ -567,36 +582,8 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
   <td>ACK Val</td>
   <td>---</td>
   <td>---</td>
+  <td>---</td>
   <td>N/A</td>
-</tr>
-
-</table>
-
-**Data Type Description**
-
-<table>
-<tr>
-  <th>Data Name</th>
-  <th>Data Type</th>
-  <th>Description</th>
-</tr>
-
-<tr>
-  <td>Yaw in rate</td>
-  <td>int16_t</td>
-  <td>unit 0.1º/s, input range[-1800,1800]</td>
-</tr>
-
-<tr>
-  <td>Roll in rate</td>
-  <td>int16_t</td>
-  <td>unit 0.1º/s, input range[-1800,1800]</td>
-</tr>
-
-<tr>
-  <td>Pitch in rate</td>
-  <td>int16_t</td>
-  <td>unit 0.1º/s, input range[-1800,1800]</td>
 </tr>
 </table>
 
@@ -606,6 +593,7 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
   <th>Data Type</th>
   <th>Offset (byte)</th>
   <th>Size (byte)</th>
+  <th>Data Type</th>
   <th>Description</th>
 </tr>
 
@@ -613,21 +601,25 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
   <td rowspan="5">CMD Val</td>
   <td>0</td>
   <td>2</td>
-  <td>Yaw angle</td>
+  <td>int16_t</td>
+  <td>Yaw angle<br>unit 0.1º, input range [-3200,3200]</td>
 </tr>
 <tr>
   <td>2</td>
   <td>2</td>
-  <td>Roll angle</td>
+  <td>int16_t</td>
+  <td>Roll angle<br>unit 0.1º, input range [-350,350]</td>
 </tr>
 <tr>
   <td>4</td>
   <td>2</td>
-  <td>Pitch angle</td>
+  <td>int16_t</td>
+  <td>Pitch angle<br>unit 0.1º, input range [-900,300]</td>
 </tr>
 <tr>
   <td>6</td>
   <td>1</td>
+  <td>---</td>
   <td>control flag byte<ul>
     <li>bit 0：mode flag bit</li>
         <ul>0 ： Incremental control, the angle reference is the current Gimbal location</ul>
@@ -639,13 +631,11 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
     <li>bit 3：Pitch invaild bit, the same as bit[1]</li>
     <li>bit [4:7]：reserved, set to be 0</li>
     </ul></td>
-    
-    <!-- TODO:Related to Gimbal mode setting in APP -->
-
 <tr>
   <td>7</td>
   <td>1</td>
-  <td>Command completion time</td>
+  <td>uint8_t</td>
+  <td>Command completion time<br>unit 0.1s, for example 20 means gimbal will reach the commended postition in 2 seconds<br>rotate rate beyond 400º/s is not recommand</td>
 </tr>
 </tr>
 
@@ -653,43 +643,13 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
   <td>ACK Val</td>
   <td>---</td>
   <td>---</td>
+  <td>---</td>
   <td>N/A</td>
 </tr>
 </table>
 
-**Data Type Description**
+>Note：*Yaw is defined by Gimbal Operation Mode which is configured by DJI GO App. In Follow Mode, yaw is the angle between gimbal's orientation and the direction of UAV's nose; In FPV Mode, yaw is the angle between gimbal's orientation and the direction of the North. 
 
-<table>
-<tr>
-  <th>Data Name</th>
-  <th>Data Type</th>
-  <th>Description</th>
-</tr>
-
-<tr>
-  <td>Yaw angle</td>
-  <td>int16_t</td>
-  <td>unit 0.1º, input range [-3200,3200]</td>
-</tr>
-
-<tr>
-  <td>Roll angle</td>
-  <td>int16_t</td>
-  <td>unit 0.1º, input range [-350,350]</td>
-</tr>
-
-<tr>
-  <td>Pitch angle</td>
-  <td>int16_t</td>
-  <td>unit 0.1º, input range [-900,300]</td>
-</tr>
-
-<tr>
-  <td>Command completion time</td>
-  <td>uint8_t</td>
-  <td>unit 0.1s, for example 20 means gimbal will reach the commended postition in 2 seconds<br>rotate rate beyond 400º/s is not recommand</td>
-</tr>
-</table>
 
 #### CMD ID 0x20 Take Photo
 <table>
@@ -768,7 +728,7 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
 #### CMD ID 0x00 Flight Data
 
 The flight data from the N1 Autopilot can be configured by the DJI N1 assistant software.
-
+More info about Flight Data, please refer to [Flight Data part in Appendix](Appendix.md#flight-data) .
 <table>
 <tr>
   <th>Data Type</th>
@@ -878,255 +838,10 @@ The flight data from the N1 Autopilot can be configured by the DJI N1 assistant 
 </tr>
 </table>
 
->Note: **The offset in the above table is with the assumption that all data items exist. The actual offset of data item in the flight data should be calculated by the flags of 'item presence byte'. *
+>Note: 
+  The offset in the above table is with the assumption that all data items exist. The actual offset of data item in the flight data should be calculated by the flags of 'item presence byte'. 
  
-**Data Item Index**
 
-<table>
-<tr>
-  <th>Item Name</th>
-  <th>Variables</th>
-  <th>Data Type</th>
-  <th>Description</th>
-  <th>Unit</th>
-  <th>Default Frequency</th>
-</tr>
-
-<tr>
-  <td>Time Stamp</td>
-  <td>time</td>
-  <td>uint32_t</td>
-  <td>time stamp</td>
-  <td>1/600s</td>
-  <td>100Hz</td>
-</tr>
-<tr>
-  <td rowspan="4">Quarternion</td>
-  <td>q0</td>
-  <td>float32</td>
-  <td rowspan="4">Attitude quaternion<br>From ground frame to body frame*</td>
-  <td rowspan="4">---</td>
-  <td rowspan="4">100Hz</td>
-</tr>
-<tr>
-  <td>q1</td>
-  <td>float32</td>
-</tr>
-<tr>
-  <td>q2</td>
-  <td>float32</td>
-</tr>
-<tr>
-  <td>q3</td>
-  <td>float32</td>
-</tr>
-
-<tr>
-  <td rowspan="3">Linear acceleration</td>
-  <td>agx</td>
-  <td>float32</td>
-  <td rowspan="3">Linear acceleration (Raw/Fusion)</td>
-  <td rowspan="3">m/s<sup>2</sup> </td>
-  <td rowspan="3">100Hz</td>
-</tr>
-<tr>
-  <td>agy</td>
-  <td>float32</td>
-</tr>
-<tr>
-  <td>agz</td>
-  <td>float32</td>
-</tr>
-
-<tr>
-  <td rowspan="4">Linear velocity</td>
-  <td>vgx</td>
-  <td>float32</td>
-  <td rowspan="3">Linear velocity</td>
-  <td rowspan="3">m/s</td>
-  <td rowspan="4">100Hz</td>
-</tr>
-<tr>
-  <td>vgy</td>
-  <td>float32</td>
-</tr>
-<tr>
-  <td>vgz</td>
-  <td>float32</td>
-</tr>
-
-<tr>
-  <td>vgstatus</td>
-  <td>uint8_t</td>
-  <td>Status byte of linear velocity<ul>
-  <li>bit 0：data valid flag</li>
-    <ul>0：invalid</ul>
-    <ul>1：valid</ul>
-  <li>bit 1:4 ：data source</li>
-    <ul>0b011：GPS</ul>
-    <ul>0b110：MVO (Mono Video Odometer)</ul>
-    <ul>0b111：SVO (Stereo Video Odometer)</ul>
-  <li>bit 5:7 ：reserved</li>
-  </ul></td>
-  <td>---</td>
-</tr>
-
-<tr>
-  <td rowspan="3">Angular velocity</td>
-  <td>wx</td>
-  <td>float32</td>
-  <td rowspan="3">Angular velocity (Raw/Fusion)</td>
-  <td rowspan="3">º/s</td>
-  <td rowspan="3">100Hz</td>
-</tr>
-<tr>
-  <td>wy</td>
-  <td>float32</td>
-</tr>
-<tr>
-  <td>wz</td>
-  <td>float32</td>
-</tr>
-
-<tr>
-  <td rowspan="5">GPS and altitude</td>
-  <td>longti</td>
-  <td>double</td>
-  <td rowspan="2">GPS location</td>
-  <td rowspan="2">rad</td>
-  <td rowspan="5">100Hz</td>
-</tr>
-<tr>
-  <td>lati</td>
-  <td>double</td>
-</tr>
-<tr>
-  <td>alti</td>
-  <td>float32</td>
-  <td>Altitude (Raw/Fusion)</td>
-  <td>m</td>
-</tr>
-<tr>
-  <td>height</td>
-  <td>float32</td>
-  <td>Height relatively to ground (Raw/Fusion)</td>
-  <td>m</td>
-</tr>
-<tr>
-  <td>health_flag</td>
-  <td>uint8_t</td>
-  <td>GPS healthiness </td>
-  <td>0-5, 5 is the best condition</td>
-</tr>
-
-<tr>
-  <td rowspan="3">Magnetometer</td>
-  <td>mx</td>
-  <td>int16_t</td>
-  <td rowspan="3">Magnetometer data</td>
-  <td rowspan="3">Magnetometer data</td>
-  <td rowspan="3">0Hz</td>
-</tr>
-<tr>
-  <td>my</td>
-  <td>int16_t</td>
-</tr>
-<tr>
-  <td>mz</td>
-  <td>int16_t</td>
-</tr>
-
-<tr>
-  <td rowspan="6">Remote controller*</td>
-  <td>roll</td>
-  <td>int16_t</td>
-  <td>roll channel</td>
-  <td rowspan="6">---</td>
-  <td rowspan="6">50Hz</td>
-</tr>
-<tr>
-  <td>pitch</td>
-  <td>int16_t</td>
-  <td>pitch channel</td>
-</tr>
-<tr>
-  <td>yaw</td>
-  <td>int16_t</td>
-  <td>yaw channel</td>
-</tr>
-<tr>
-  <td>throttle</td>
-  <td>int16_t</td>
-  <td>throttle channel</td>
-</tr>
-<tr>
-  <td>mode</td>
-  <td>int16_t</td>
-  <td>mode channel</td>
-</tr>
-<tr>
-  <td>gear</td>
-  <td>int16_t</td>
-  <td>gear channel</td>
-</tr>
-
-<tr>
-  <td rowspan="3">Gimbal</td>
-  <td>roll</td>
-  <td>float32</td>
-  <td rowspan="3">roll, pitch and yaw of ground frame</td>
-  <td rowspan="3">º</td>
-  <td rowspan="3">50Hz</td>
-</tr>
-<tr>
-  <td>pitch</td>
-  <td>float32</td>
-</tr>
-<tr>
-  <td>yaw</td>
-  <td>float32</td>
-</tr>
-
-<tr>
-  <td>Flight status</td>
-  <td>status</td>
-  <td>uint8_t</td>
-  <td>Flight status</td>
-  <td>---</td>
-  <td>10Hz</td>
-</tr>
-
-<tr>
-  <td>Battery</td>
-  <td>status</td>
-  <td>uint8_t</td>
-  <td>Battery percentage</td>
-  <td>%</td>
-  <td>1Hz</td>
-</tr>
-
-<tr>
-  <td>Source of Control</td>
-  <td>status</td>
-  <td>uint8_t</td>
-  <td>Control device<ul>
-     <li>bit 0:2 ：Control device</li>
-     <ul>0b000 ：Remote Controller</ul>
-     <ul>0b001 ：Mobile Device</ul>
-     <ul>0b010 ：Onboard Device</ul>
-     <li>bit 3 ：Flag of Onboard Device control authorization request signature </li>
-     <ul>0：No request</ul>
-     <ul>1：Been requested</ul>
-     <li>bit 4:7 ：reserved</li>
-  </ul></td>
-  <td>---</td>
-  <td>0Hz</td>
-</tr>
-
-</table>
->Note:  
->**For more please refer to [Appendix][0]*  
->***Height is the fusion result of barometer, IMU and ultrasonic sensor. If the flight plantform has no ultrasonic sensor, or its distance to the ground is higher than 3 meters, the height is supported by barometer and IMU only. Since the barometer is inaccurate being used indoor, height is unreliable in this case.*
 
 #### CMD ID 0x01 Lost of Flight Control
 Onboard Device has the lowerest control priority. Its control authorization can be taken over by remote controller and Mobile Device. Once the flight control is lost from the Onboard Device, a push data will be sent by the N1 Autopilot.
@@ -1156,4 +871,3 @@ Onboard Device has the lowerest control priority. Its control authorization can 
 </table>
 
 [0]: Appendix.md
->Note: *The 'Data Transparent Transmission' is NOT included in this document.*
