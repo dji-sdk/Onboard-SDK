@@ -61,7 +61,7 @@ static void * DJI_Sample_Atti_Ctrl_Thread_Func(void *arg)
             user_ctrl_data.thr_z = 0.0;
         user_ctrl_data.yaw = 0;
         DJI_Pro_Attitude_Control(&user_ctrl_data);
-        usleep(20000);
+        usleep(20000);    
     }
     sleep(1);
     for(i = 0; i < 200; i ++)

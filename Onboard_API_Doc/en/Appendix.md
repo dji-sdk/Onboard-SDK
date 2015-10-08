@@ -7,6 +7,7 @@
   ![bFrame](Images/axis.png)
 
 2. Ground Frame
+  
   + North - x axis
   + East - y axis
   + Down - z axis*
@@ -92,7 +93,7 @@ We suggest developers do not use VERT_POS control mode indoor when your UAV does
 <tr>
   <td rowspan="2">Yaw</td>
   <td>YAW_ANG</td>
-  <td>Yaw angle is referenced to the ground frame</td>
+  <td>Yaw angle is referenced to the ground frame. In this control mode, Ground frame is enforeced in N1 Autopilot</td>
 </tr>
 <tr>
   <td>YAW_RATE</td>
@@ -100,7 +101,7 @@ We suggest developers do not use VERT_POS control mode indoor when your UAV does
 </tr>
 </table>
 
-<!-- **HORI_ATTI_TILT_ANG模式控制量如下图，DJI飞控采用水平面直接进行整个平面旋转。其中平面旋转角度为Θ,旋转方向与x轴或roll轴方向角度为γ。输入参量Θx=Θ*cos(γ),Θy=Θ*sin(γ)。(当采用Ground坐标系时γ为飞行方向与正北方向夹角，此时飞行器飞行状态与IOC模式相似；当采用Body坐标系时γ为飞行方向与飞行器机头方向夹角，此时飞行器飞行状态与遥控器下的姿态模式相似)* 
+<!-- **HORI_ATTI_TILT_ANG模式控制量如Down图，DJI飞控采用水平面直接进行整个平面旋转。其中平面旋转角度为Θ,旋转方向与x轴或roll轴方向角度为γ。输入参量Θx=Θ*cos(γ),Θy=Θ*sin(γ)。(当采用Ground坐标系时γ为飞行方向与正北方向夹角，此时飞行器飞行状态与IOC模式相似；当采用Body坐标系时γ为飞行方向与飞行器机头方向夹角，此时飞行器飞行状态与遥控器Down的姿态模式相似)* 
 
 <div align="center">
 <img src="Images/HORI_ATTI_TILT_ANG.jpg" alt="HORI_ATTI_TILT_ANG" width="540">
@@ -133,13 +134,324 @@ By specifying the `control_mode_byte`, 14 control modes can be constructed :
 |14|VERT_THRUST<br>HORI_ATTI_TILT_ANG<br>YAW_RATE|10 ~ 100 (use with precaution)<br>-30 degree ~ 30 degree<br>-100 degree/s ~ 100 degree/s|0b00101xxy|
 
 
-**the lowest 3 bits in control_mode_byte decide the horizontal frame and yaw frame.*  
-*xx presents horizontal frame，00 means ground frame，01 means body frame.*  
-*y presents yaw frame，0 means ground frame，1 means body frame*
+>*the lowest 3 bits in control_mode_byte decide the horizontal frame and yaw frame.  
+>xx presents horizontal frame，00 means ground frame，01 means body frame.  
+>y presents yaw frame，0 means ground frame，1 means body frame.  
+>**In this combination，if all input data is '0', the UAV will brake and hold in a self-balance status at a fixed  position.
 
-***In this combination，if all input data is '0', the UAV will brake and hold in a self-balance status at a fixed  position.*
 
-## Flight status
+## Flight Data
+
+### Flight Data
+
+<table>
+<tr>
+  <th>Item Name</th>
+  <th>Variables</th>
+  <th>Data Type</th>
+  <th>Description</th>
+  <th>Unit</th>
+  <th>Default Frequency</th>
+</tr>
+
+<tr>
+  <td>Time Stamp</td>
+  <td>time</td>
+  <td>uint32_t</td>
+  <td>time stamp</td>
+  <td>1/600s</td>
+  <td>100Hz</td>
+</tr>
+<tr>
+  <td rowspan="4">Quarternion</td>
+  <td>q0</td>
+  <td>float32</td>
+  <td rowspan="4">Attitude quaternion<br>From ground frame to body frame</td>
+  <td rowspan="4">---</td>
+  <td rowspan="4">100Hz</td>
+</tr>
+<tr>
+  <td>q1</td>
+  <td>float32</td>
+</tr>
+<tr>
+  <td>q2</td>
+  <td>float32</td>
+</tr>
+<tr>
+  <td>q3</td>
+  <td>float32</td>
+</tr>
+
+<tr>
+  <td rowspan="3">Linear acceleration</td>
+  <td>agx</td>
+  <td>float32</td>
+  <td rowspan="3">Linear acceleration (Raw/Fusion)</td>
+  <td rowspan="3">Ground: m/s<sup>2</sup><br>Body: G</td>
+  <td rowspan="3">100Hz</td>
+</tr>
+<tr>
+  <td>agy</td>
+  <td>float32</td>
+</tr>
+<tr>
+  <td>agz</td>
+  <td>float32</td>
+</tr>
+
+<tr>
+  <td rowspan="4">Linear velocity</td>
+  <td>vgx</td>
+  <td>float32</td>
+  <td rowspan="3">Linear velocity</td>
+  <td rowspan="3">m/s</td>
+  <td rowspan="4">100Hz</td>
+</tr>
+<tr>
+  <td>vgy</td>
+  <td>float32</td>
+</tr>
+<tr>
+  <td>vgz</td>
+  <td>float32</td>
+</tr>
+
+<tr>
+  <td>vgstatus</td>
+  <td>uint8_t</td>
+  <td>Status byte of linear velocity<ul>
+  <li>bit 0：data valid flag</li>
+    <ul>0：invalid</ul>
+    <ul>1：valid</ul>
+  <li>bit 1:4 ：data source</li>
+    <ul>0b011：GPS</ul>
+    <ul>0b110：MVO (Mono Video Odometer)</ul>
+    <ul>0b111：SVO (Stereo Video Odometer)</ul>
+  <li>bit 5:7 ：reserved</li>
+  </ul></td>
+  <td>---</td>
+</tr>
+
+<tr>
+  <td rowspan="3">Angular velocity</td>
+  <td>wx</td>
+  <td>float32</td>
+  <td rowspan="3">Angular velocity (Raw/Fusion)</td>
+  <td rowspan="3">rad/s</td>
+  <td rowspan="3">100Hz</td>
+</tr>
+<tr>
+  <td>wy</td>
+  <td>float32</td>
+</tr>
+<tr>
+  <td>wz</td>
+  <td>float32</td>
+</tr>
+
+<tr>
+  <td rowspan="5">GPS and altitude</td>
+  <td>longti</td>
+  <td>double</td>
+  <td rowspan="2">GPS location</td>
+  <td rowspan="2">rad</td>
+  <td rowspan="5">100Hz</td>
+</tr>
+<tr>
+  <td>lati</td>
+  <td>double</td>
+</tr>
+<tr>
+  <td>alti</td>
+  <td>float32</td>
+  <td>Altitude (Raw/Fusion)</td>
+  <td>m</td>
+</tr>
+<tr>
+  <td>height</td>
+  <td>float32</td>
+  <td>Height relatively to ground (Raw/Fusion)</td>
+  <td>m</td>
+</tr>
+<tr>
+  <td>health_flag</td>
+  <td>uint8_t</td>
+  <td>GPS healthiness </td>
+  <td>0-5, 5 is the best condition</td>
+</tr>
+
+<tr>
+  <td rowspan="3">Magnetometer</td>
+  <td>mx</td>
+  <td>int16_t</td>
+  <td rowspan="3">Magnetometer data</td>
+  <td rowspan="3">Magnetometer data</td>
+  <td rowspan="3">0Hz</td>
+</tr>
+<tr>
+  <td>my</td>
+  <td>int16_t</td>
+</tr>
+<tr>
+  <td>mz</td>
+  <td>int16_t</td>
+</tr>
+
+<tr>
+  <td rowspan="6">Remote controller channel</td>
+  <td>roll</td>
+  <td>int16_t</td>
+  <td>roll channel</td>
+  <td rowspan="6">---</td>
+  <td rowspan="6">50Hz</td>
+</tr>
+<tr>
+  <td>pitch</td>
+  <td>int16_t</td>
+  <td>pitch channel</td>
+</tr>
+<tr>
+  <td>yaw</td>
+  <td>int16_t</td>
+  <td>yaw channel</td>
+</tr>
+<tr>
+  <td>throttle</td>
+  <td>int16_t</td>
+  <td>throttle channel</td>
+</tr>
+<tr>
+  <td>mode</td>
+  <td>int16_t</td>
+  <td>mode channel</td>
+</tr>
+<tr>
+  <td>gear</td>
+  <td>int16_t</td>
+  <td>gear channel</td>
+</tr>
+
+<tr>
+  <td rowspan="3">Gimbal</td>
+  <td>roll</td>
+  <td>float32</td>
+  <td rowspan="3">roll, pitch and yaw of ground frame</td>
+  <td rowspan="3">º</td>
+  <td rowspan="3">50Hz</td>
+</tr>
+<tr>
+  <td>pitch</td>
+  <td>float32</td>
+</tr>
+<tr>
+  <td>yaw</td>
+  <td>float32</td>
+</tr>
+
+<tr>
+  <td>Flight status</td>
+  <td>status</td>
+  <td>uint8_t</td>
+  <td>Flight status</td>
+  <td>---</td>
+  <td>10Hz</td>
+</tr>
+
+<tr>
+  <td>Battery</td>
+  <td>status</td>
+  <td>uint8_t</td>
+  <td>Battery percentage</td>
+  <td>%</td>
+  <td>1Hz</td>
+</tr>
+
+<tr>
+  <td>Source of Control</td>
+  <td>status</td>
+  <td>uint8_t</td>
+  <td>Control device<ul>
+     <li>bit 0:2 ：Control device</li>
+     <ul>0b000 ：Remote Controller</ul>
+     <ul>0b001 ：Mobile Device</ul>
+     <ul>0b010 ：Onboard Device</ul>
+     <li>bit 3 ：Flag of Onboard Device control authorization request signature </li>
+     <ul>0：No request</ul>
+     <ul>1：Been requested</ul>
+     <li>bit 4:7 ：reserved</li>
+  </ul></td>
+  <td>---</td>
+  <td>0Hz</td>
+</tr>
+
+</table>
+
+
+### Raw/Fusion
+
+Raw/Fusion can be chosen by DJI N1 assistant software.  
+
+Because raw data is generated from actual sensor on UAV, this kind of data will not be available in simulator. Please choose Fusion when you use DJI simulator.  
+<table>
+<tr>
+  <th>Item Name</th>
+  <th>Raw/Fusion</th>
+  <th>Description</td>
+  <th>Unit</td>
+</tr>
+<tr>
+  <td rowspan="3">Linear acceleration</td>
+  <td>Fusion(Ground)</td>
+  <td>Fusion data</td>
+  <td>m/s<sup>2</sup></td>
+</tr>
+<tr>
+  <td>Fusion(Body)</td>
+  <td>Fusion data</td>
+  <td>G</td>
+</tr>
+<tr>
+  <td>Raw(Body)</td>
+  <td>Accelerometer data</td>
+  <td>G</td>
+</tr>
+<tr>
+  <td rowspan="2">Angular velocity</td>
+  <td>Fusion(Body)</td>
+  <td>Fusion data</td>
+  <td rowspan="2">rad/s</td>
+</tr>
+<tr>
+  <td>Raw(Body)</td>
+  <td>Gyro data</td>
+
+</tr>
+<tr>
+  <td rowspan="2">Altitude</td>
+  <td>Fusion</td>
+  <td>Barometer & IMU </td>
+  <td rowspan="2">m</td>
+</tr>
+<tr>
+  <td>Raw</td>
+  <td>Barometer data</td>
+</tr>
+<tr>
+  <td rowspan="2">Height*</td>
+  <td>Fusion</td>
+  <td>Barometer、IMU & Ultrasound</td>
+  <td rowspan="2">m</td>
+</tr>
+<tr>
+  <td>Raw</td>
+  <td>Ultrasound data（within three meters vaild）</td>
+
+</tr>
+</table>
+
+>If the flight plantform has no ultrasonic sensor, or its distance to the ground is higher than 3 meters, the height is supported by barometer and IMU only. Since the barometer is inaccurate being used indoor, height is unreliable in this case.
+
 ### Flight status
 |Flight status val|status name| 
 |-------|-------|
@@ -149,4 +461,15 @@ By specifying the `control_mode_byte`, 14 control modes can be constructed :
 |4|landing|
 |5|finish_landing|
 
-*Note: We recommend using the sensor data of UAV instead of the above flight status in your development.*
+>flight status will enter the 'standby' state after 2s in 'finish_landing state'.
+>flight status will immediately enter 'in_air' state when UAV leave the ground.
+
+### Remote controller channel
+|Channel|Range|Description|  
+|-------|-------|---|
+|roll|[-10000,10000]|Left: -10000<br>Right: 10000|
+|pitch|[-10000,10000]|Down: -10000<br>Up: 10000|
+|yaw|[-10000,10000]|Left: -10000<br>Right: 10000|
+|throttle|[-10000,10000]|Down: -10000<br>Up: 10000|
+|mode|-8000, 0, 8000|P: -8000<br>A: 0<br>F: 8000|
+|gear|-10000, -4545|Gear down: -4545<br>Gear up: -10000|

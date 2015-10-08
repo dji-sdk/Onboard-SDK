@@ -89,7 +89,7 @@ In order to communicate with the N1 Autopilot via the Onboard OPEN protocal, a p
 
 ### Onboard SDK APP Registration & Flight Platform Activation
 
-Since the Onboard SDK allows developers to develop programmable UAV APPs beyond line-of-sight, a more serious Onboard SDK APP registration and Flight Platform Activation has been introduced.
+Since the Onboard SDK allows developers to develop programmable UAV APPs, a more serious Onboard SDK APP registration and Flight Platform Activation has been introduced.
 
 #### Step1: 
 
@@ -135,7 +135,7 @@ Please comply with the local regulations during the development process and the 
 
 - [Windows QT example](Onboard_SDK_Sample/DJI_Onboard_API_Windows_QT_Sample)
 
-### References Section:
+### References Document:
 
 - [OPEN Protocol][0] & [Appendix][1] 
 
@@ -238,13 +238,13 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 >备注：N1飞控的串口电平为3.3 V。
 
 ### 注册Onboard SDK APP和激活飞行平台
-因为Onboard SDK允许开发者开发超视距无人机应用，因此DJI对注册Onboard SDK APP和激活飞行平台有更为严格的规定。
+因为Onboard SDK允许开发者开发无人机飞行应用，因此DJI对注册Onboard SDK APP和激活飞行平台有更为严格的规定。
 
-#### Step1: 
+#### 步骤1： 
 
 关于APP注册的更多内容，请访问 https://developer.dji.com/register/
 
-#### Step2: 
+#### 步骤2： 
 
 关于激活飞行平台的更多内容，请访问[激活指南][cnActivation]
 
@@ -282,12 +282,11 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 
 - [Windows QT example](Onboard_SDK_Sample/DJI_Onboard_API_Windows_QT_Sample)
 
-### 参考部分:
+### 参考文档:
 
 - [开放协议][cn0] & [附录][cn1]  
-
-- [数据透传][cn2]  
-
+- [数据透传][cn2]   
+- [编程指南][cn3]  
 - [FAQ][cnFAQ]
 
 
@@ -302,6 +301,6 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 [cn0]:Onboard_API_Doc/cn/开放协议.md  
 [cn1]:Onboard_API_Doc/cn/附录.md  
 [cn2]:Onboard_API_Doc/cn/数据透传.md
-[cn3]:Onboard_API_Doc/cn/术语.md
+[cn3]:Onboard_API_Doc/cn/编程指南.md
 [cnActivation]:Onboard_API_Doc/cn/激活指南.md
 [cnFAQ]:Onboard_API_Doc/cn/FAQ_cn.md
