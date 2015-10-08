@@ -83,10 +83,12 @@ In order to use the DJI PC Simulator & DJI N1 PC assistant, a physical connectio
 
 #### Step2: 
 
-In order to communicate with the N1 Autopilot via the Onboard OPEN protocal, a physical connection between your computer and N1 Autopilot is required with a USB to TTL serial cable (SOLD Seperately).
+In order to communicate with the N1 Autopilot via the Onboard OPEN protocal, a physical connection between your computer and N1 Autopilot is required with a USB to TTL full-duplex serial cable (SOLD Seperately).
 
->Note: The serial level of N1 Autopilot should be 3.3 V.
-
+>Note:   
+*  The serial level of N1 Autopilot should be 3.3 V.
+*  Serial communication requires the use of full-duplex mode.
+   
 ### Onboard SDK APP Registration & Flight Platform Activation
 
 Since the Onboard SDK allows developers to develop programmable UAV APPs, a more serious Onboard SDK APP registration and Flight Platform Activation has been introduced.
@@ -233,9 +235,11 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 
 #### 步骤2：
 
-用一条USB-TTL串口线缆（需另购）连接您的电脑与N1飞控，以通过Onboard SDK开放协议进行通讯。
+用一条USB-TTL全双工串口线缆（需另购）连接您的电脑与N1飞控，以通过Onboard SDK开放协议进行通讯。
 
->备注：N1飞控的串口电平为3.3 V。
+>备注：  
+* N1飞控的串口电平为3.3 V。  
+* 串口需采用全双工方式通讯。  
 
 ### 注册Onboard SDK APP和激活飞行平台
 因为Onboard SDK允许开发者开发无人机飞行应用，因此DJI对注册Onboard SDK APP和激活飞行平台有更为严格的规定。
@@ -285,8 +289,11 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 ### 参考文档:
 
 - [开放协议][cn0] & [附录][cn1]  
+  
 - [数据透传][cn2]   
+  
 - [编程指南][cn3]  
+  
 - [FAQ][cnFAQ]
 
 
