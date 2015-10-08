@@ -98,7 +98,7 @@ The Protocal Frame is the smallest unit for transmission. It contains the Header
 
 <tr>
   <td>DATA</td>
-  <td>26</td>
+  <td>12</td>
   <td>variable size</td>
   <td>frame data</td>
 </tr>
@@ -633,14 +633,14 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
         <ul>0 ： Incremental control, the angle reference is the current Gimbal location</ul>
         <ul>1 ： Absolute control, the angle reference is coordinate system to the Northeast</ul>
     <li>bit 1：Yaw invaild bit 
-        <ul>0 ： Gimble will follow the command in Yaw </ul>
-        <ul>1 ： Gimble will maintain position in Yaw  </ul>
+        <ul>0 ： Gimbal will follow the command in Yaw </ul>
+        <ul>1 ： Gimbal will maintain position in Yaw  </ul>
     <li>bit 2：Roll invaild bit, the same as bit[1]</li>
     <li>bit 3：Pitch invaild bit, the same as bit[1]</li>
     <li>bit [4:7]：reserved, set to be 0</li>
     </ul></td>
     
-    TODO:Related to Gimble mode setting in APP
+    <!-- TODO:Related to Gimbal mode setting in APP -->
 
 <tr>
   <td>7</td>
@@ -687,7 +687,7 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
 <tr>
   <td>Command completion time</td>
   <td>uint8_t</td>
-  <td>unit 0.1s, for example 20 means gimble will reach the commended postition in 2 seconds<br>rotate rate beyond 400º/s is not recommand</td>
+  <td>unit 0.1s, for example 20 means gimbal will reach the commended postition in 2 seconds<br>rotate rate beyond 400º/s is not recommand</td>
 </tr>
 </table>
 
