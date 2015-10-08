@@ -188,7 +188,7 @@ By specifying the `control_mode_byte`, 14 control modes can be constructed :
   <td>agx</td>
   <td>float32</td>
   <td rowspan="3">Linear acceleration (Raw/Fusion)</td>
-  <td rowspan="3">G</td>
+  <td rowspan="3">Ground: m/s<sup>2</sup><br>Body: G</td>
   <td rowspan="3">100Hz</td>
 </tr>
 <tr>
@@ -390,7 +390,9 @@ By specifying the `control_mode_byte`, 14 control modes can be constructed :
 
 ### Raw/Fusion
 
-Raw/Fusion can be chosen by DJI N1 assistant software.
+Raw/Fusion can be chosen by DJI N1 assistant software.  
+
+Because raw data is generated from actual sensor on UAV, this kind of data will not be available in simulator. Please choose Fusion when you use DJI simulator.  
 <table>
 <tr>
   <th>Item Name</th>
@@ -399,44 +401,52 @@ Raw/Fusion can be chosen by DJI N1 assistant software.
   <th>Unit</td>
 </tr>
 <tr>
-  <td rowspan="2">Linear acceleration</td>
-  <td>Raw</td>
-  <td>Accelerometer data</td>
-  <td rowspan="2">G</td>
+  <td rowspan="3">Linear acceleration</td>
+  <td>Fusion(Ground)</td>
+  <td>Fusion data</td>
+  <td>m/s<sup>2</sup></td>
 </tr>
 <tr>
-  <td>Fusion</td>
+  <td>Fusion(Body)</td>
   <td>Fusion data</td>
+  <td>G</td>
+</tr>
+<tr>
+  <td>Raw(Body)</td>
+  <td>Accelerometer data</td>
+  <td>G</td>
 </tr>
 <tr>
   <td rowspan="2">Angular velocity</td>
-  <td>Raw</td>
-  <td>Gyro data</td>
+  <td>Fusion(Body)</td>
+  <td>Fusion data</td>
   <td rowspan="2">rad/s</td>
 </tr>
 <tr>
-  <td>Fusion</td>
-  <td>Fusion data</td>
+  <td>Raw(Body)</td>
+  <td>Gyro data</td>
+
 </tr>
 <tr>
   <td rowspan="2">Altitude</td>
-  <td>Raw</td>
-  <td>Barometer data</td>
+  <td>Fusion</td>
+  <td>Barometer & IMU </td>
   <td rowspan="2">m</td>
 </tr>
 <tr>
-  <td>Fusion</td>
-  <td>Barometer & IMU </td>
+  <td>Raw</td>
+  <td>Barometer data</td>
 </tr>
 <tr>
   <td rowspan="2">Height*</td>
-  <td>Raw</td>
-  <td>Ultrasound data（within three meters vaild）</td>
+  <td>Fusion</td>
+  <td>Barometer、IMU & Ultrasound</td>
   <td rowspan="2">m</td>
 </tr>
 <tr>
-  <td>Fusion</td>
-  <td>Barometer、IMU & Ultrasound</td>
+  <td>Raw</td>
+  <td>Ultrasound data（within three meters vaild）</td>
+
 </tr>
 </table>
 
