@@ -461,7 +461,7 @@ Because raw data is generated from actual sensor on UAV, this kind of data will 
 |4|landing|
 |5|finish_landing|
 
->flight status will enter the 'standby' state after 2s in 'finish_landing state'.
+>flight status will enter the 'standby' state after 2s in 'finish_landing state'.   
 >flight status will immediately enter 'in_air' state when UAV leave the ground.
 
 ### Remote controller channel
