@@ -75,7 +75,7 @@ We recommend developers to send yours Movement Control commands in 50Hz frequenc
 
 In Movement Control, specific meanings of arguements are decided by control mode byte. For more info about Movement Control, please refer to [Control mode byte part in Appendix](Appendix.md#control-mode-byte).
 
-We recommend developers to use `HORI_POS` mode in horizontal movement. More details are shown in [Position Control](ProgrammingGuide.md#position-control) in this document. In this mode, speed and attitude are controlled by autopilot, thus developers do not concern about that.
+We recommend developers to use `HORI_POS` mode in horizontal movement. More details are shown in [Position Control](ProgrammingGuide.md#position-controlhori_pos) in this document. In this mode, speed and attitude are controlled by autopilot, thus developers do not concern about that.
     
 > Please note that if the following conditions are met that the control mode is functional:
 > 
