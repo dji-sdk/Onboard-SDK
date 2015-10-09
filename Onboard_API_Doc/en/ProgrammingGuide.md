@@ -24,7 +24,7 @@ void cb_user_notice(unsigned short result)
 DJI_Pro_Activate_API(&user_act_data, cb_user_notice);
 ~~~
 
-3.The meaning of return values(result) is explained in each commands in [OPEN Protocol](OPENProtocol.md#OPENProtocol.md#cmd-val--ack-val).
+3.The meaning of return values(result) is explained in each commands in [OPEN Protocol](OPENProtocol.md#cmd-val--ack-val).
 
 ## Activation
 
