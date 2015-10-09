@@ -46,6 +46,7 @@ int main(int argc,char **argv)
 	bool err_flag = false;
 	activate_data_t user_act_data; 
 	char temp_buf[65];
+	char app_bundle_id[32] = "1234567890";
 
 	if(argc == 2 && strcmp(argv[1],"-v") == 0)
 	{
@@ -62,6 +63,7 @@ int main(int argc,char **argv)
 
 	user_act_data.app_key = temp_buf;
 	user_act_data.app_ver = SDK_VERSION;
+	strcpy((char*)user_act_data.app_bundle_id, app_bundle_id);
     	if(DJI_Pro_Get_Cfg(NULL,NULL,&user_act_data.app_id,&user_act_data.app_api_level,user_act_data.app_key) == 0)
 	{
 		/* user setting */
