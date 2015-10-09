@@ -1,3 +1,6 @@
+#takePicture: 0
+#startRecord: 1
+#stopRecord:  2
 uint8 camera_action
 ---
 bool result

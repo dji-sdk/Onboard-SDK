@@ -1,7 +1,7 @@
 #ifndef __DJI_PRO_HW_H__
 #define __DJI_PRO_HW_H__
 
-#if defined(PLATFORM_LINUX) || defined(__linux)
+#ifndef PLATFORM_QT
 int Pro_Hw_Send(unsigned char *buf, int len);
 int Pro_Hw_Recv(unsigned char *buf, int len);
 int Pro_Hw_Setup(const char *device,int baudrate);

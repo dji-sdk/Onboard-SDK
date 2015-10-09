@@ -1,3 +1,6 @@
+#takeoff: 4
+#landing: 6
+#gohome:  1
 uint8 action
 ---
 bool result

@@ -30,12 +30,10 @@ namespace dji_variable
 			double gps_r_lat
 			)
 	{
-		//TODO :
-		//fix bug with ellipsoid
 		double d_lon = gps_t_lon - gps_r_lon;
 		double d_lat = gps_t_lat - gps_r_lat;
 		ned_x = d_lat * C_EARTH;
-		ned_y = d_lon * C_EARTH * cos((gps_r_lat + gps_t_lat) / 2 * M_PI / 180.0f);
+		ned_y = d_lon * C_EARTH * cos((gps_t_lat));
 		return;
 	}
 	dji_ros::local_position gps_convert_ned(dji_ros::global_position loc)
@@ -49,7 +47,7 @@ namespace dji_variable
 				global_position_ref.longitude,
 				global_position_ref.latitude
 				);
-		local.height = global_position.height;
+		local.z = global_position.height;
 		return local;
 	}
 };

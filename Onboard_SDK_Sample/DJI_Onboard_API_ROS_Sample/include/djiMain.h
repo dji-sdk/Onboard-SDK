@@ -5,6 +5,7 @@
 #include "djiVariable.h"
 #include "djiPublisher.h"
 #include "djiService.h"
+#include "djiAction.h"
 
 std::string serial_name;
 int	baud_rate;

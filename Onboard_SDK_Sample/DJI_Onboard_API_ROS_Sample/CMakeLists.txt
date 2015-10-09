@@ -11,6 +11,8 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
+  actionlib_msgs 
+  actionlib
 )
 
 ## System dependencies are found with CMake's conventions
@@ -59,13 +61,15 @@ add_message_files(
 	local_position.msg
 	velocity.msg
 	rc_channels.msg
+	waypoint.msg
+	waypointList.msg
 )
 
 ## Generate services in the 'srv' folder
 add_service_files(
    FILES
-	control_manager.srv
 	action.srv
+	control_manager.srv
 	attitude.srv
 	camera_action.srv
 	gimbal_angle.srv
@@ -73,16 +77,18 @@ add_service_files(
 )
 
 ## Generate actions in the 'action' folder
-# add_action_files(
-#   FILES
-#   Action1.action
-#   Action2.action
-# )
+add_action_files(
+   FILES
+	task.action
+	local_navigation.action
+	gps_navigation.action
+	waypoint_navigation.action
+)
 
 ## Generate added messages and services with any dependencies listed here
 generate_messages(
    DEPENDENCIES
-   geometry_msgs   nav_msgs   std_msgs
+   geometry_msgs   nav_msgs   std_msgs		actionlib_msgs
 )
 
 ###################################
@@ -119,7 +125,7 @@ include_directories(
 # )
 
 ## Declare a cpp executable
-add_executable(dji_ros src/djiMain.cpp src/modules/djiVariable.cpp src/modules/djiPublisher.cpp src/modules/djiService.cpp include/DJI_LIB/DJI_Pro_App.cpp include/DJI_LIB/DJI_Pro_Codec.cpp include/DJI_LIB/DJI_Pro_Hw.cpp include/DJI_LIB/DJI_Pro_Link.cpp include/DJI_LIB/DJI_Pro_Rmu.cpp)
+add_executable(dji_ros src/djiMain.cpp src/modules/djiVariable.cpp src/modules/djiPublisher.cpp src/modules/djiService.cpp src/modules/djiAction.cpp include/DJI_LIB/DJI_Pro_App.cpp include/DJI_LIB/DJI_Pro_Codec.cpp include/DJI_LIB/DJI_Pro_Hw.cpp include/DJI_LIB/DJI_Pro_Link.cpp include/DJI_LIB/DJI_Pro_Rmu.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
@@ -138,6 +144,12 @@ target_link_libraries(dji_ros_client
    ${catkin_LIBRARIES}
 )
 add_dependencies(dji_ros_client dji_ros_generate_messages_cpp)
+
+add_executable(dji_ros_wp_client src/wp_client.cpp)
+target_link_libraries(dji_ros_wp_client
+   ${catkin_LIBRARIES}
+)
+add_dependencies(dji_ros_wp_client dji_ros_generate_messages_cpp)
 # all install targets should use catkin DESTINATION variables
 # See http://ros.org/doc/api/catkin/html/adv_user_guide/variables.html
 

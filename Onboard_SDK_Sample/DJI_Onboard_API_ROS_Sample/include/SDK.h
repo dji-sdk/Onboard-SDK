@@ -1,3 +1,5 @@
+#ifndef SDK_LIBRARY_H
+#define SDK_LIBRARY_H
 //SDK library
 #include "DJI_LIB/DJI_Pro_App.h" 
 #include "DJI_LIB/DJI_Pro_Codec.h" 
@@ -16,14 +18,20 @@
 #include <dji_ros/velocity.h>
 #include <dji_ros/compass.h>
 #include <dji_ros/ctrl_info.h>
-
+#include <dji_ros/waypoint.h>
+#include <dji_ros/waypointList.h>
 
 //srvs
-#include <dji_ros/action.h>
 #include <dji_ros/attitude.h>
+#include <dji_ros/action.h>
 #include <dji_ros/camera_action.h>
 #include <dji_ros/control_manager.h>
 #include <dji_ros/gimbal_speed.h>
 #include <dji_ros/gimbal_angle.h>
 
-
+//action
+#include <dji_ros/taskAction.h>
+#include <dji_ros/local_navigationAction.h>
+#include <dji_ros/gps_navigationAction.h>
+#include <dji_ros/waypoint_navigationAction.h>
+#endif

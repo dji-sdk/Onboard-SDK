@@ -101,10 +101,12 @@ int main(int argc, char **argv)
 				/* take off */
 				srv_action.request.action=4;
 				drone_action_client.call(srv_action);
+				drone_action_client.call(srv_action);
 				break;
 			case 'd':
 				/* landing*/
 				srv_action.request.action=6;
+				drone_action_client.call(srv_action);
 				drone_action_client.call(srv_action);
 				break;
 			case 'e':
@@ -399,20 +401,11 @@ int main(int argc, char **argv)
 				}
 				break;
 			case 'i':
+				/*draw square sample*/
 				for(int i = 0;i < 60;i++)
 				{
 					srv_attitude.request.flag = HORIZ_POS|VERT_VEL|YAW_ANG|HORIZ_BODY|YAW_BODY;
 					srv_attitude.request.x = 3;
-					srv_attitude.request.y = 0;
-					srv_attitude.request.z = 0;
-					srv_attitude.request.yaw = 0;
-					drone_attitude_client.call(srv_attitude);
-					usleep(20000);
-				}
-				for(int i = 0;i < 60;i++)
-				{
-					srv_attitude.request.flag = HORIZ_POS|VERT_VEL|YAW_ANG|HORIZ_BODY|YAW_BODY;
-					srv_attitude.request.x = 0;
 					srv_attitude.request.y = 3;
 					srv_attitude.request.z = 0;
 					srv_attitude.request.yaw = 0;
@@ -423,7 +416,7 @@ int main(int argc, char **argv)
 				{
 					srv_attitude.request.flag = HORIZ_POS|VERT_VEL|YAW_ANG|HORIZ_BODY|YAW_BODY;
 					srv_attitude.request.x = -3;
-					srv_attitude.request.y = 0;
+					srv_attitude.request.y = 3;
 					srv_attitude.request.z = 0;
 					srv_attitude.request.yaw = 0;
 					drone_attitude_client.call(srv_attitude);
@@ -432,14 +425,23 @@ int main(int argc, char **argv)
 				for(int i = 0;i < 60;i++)
 				{
 					srv_attitude.request.flag = HORIZ_POS|VERT_VEL|YAW_ANG|HORIZ_BODY|YAW_BODY;
-					srv_attitude.request.x = 0;
+					srv_attitude.request.x = -3;
 					srv_attitude.request.y = -3;
 					srv_attitude.request.z = 0;
 					srv_attitude.request.yaw = 0;
 					drone_attitude_client.call(srv_attitude);
 					usleep(20000);
 				}
-				/*draw square sample*/
+				for(int i = 0;i < 60;i++)
+				{
+					srv_attitude.request.flag = HORIZ_POS|VERT_VEL|YAW_ANG|HORIZ_BODY|YAW_BODY;
+					srv_attitude.request.x = 3;
+					srv_attitude.request.y = -3;
+					srv_attitude.request.z = 0;
+					srv_attitude.request.yaw = 0;
+					drone_attitude_client.call(srv_attitude);
+					usleep(20000);
+				}
 				break;
 			case 'j':
 				/*take a picture*/

@@ -21,11 +21,11 @@ static Req_Callback_Func APP_Recv_Hook = 0;
 static void Send_Pro_Data(unsigned char *buf)
 {
 	ProHeader *pHeader = (ProHeader *)buf;
-#if defined(PLATFORM_LINUX) || defined(__linux)
-    Pro_Hw_Send(buf,pHeader->length);
-#endif
+
 #ifdef PLATFORM_QT
     DJI_Pro_Hw::Pro_Hw_Get_Instance()->Pro_Hw_Send(buf,pHeader->length);
+#else
+    Pro_Hw_Send(buf,pHeader->length);
 #endif
 }
 

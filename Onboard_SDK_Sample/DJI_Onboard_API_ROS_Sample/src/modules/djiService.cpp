@@ -1,20 +1,19 @@
 #include "djiService.h"
 
-
 namespace service_handler
 {
-	bool control_callback(
+    bool control_callback(
 			dji_ros::control_manager::Request& request,
 			dji_ros::control_manager::Response& response
 			)
 	{
 		if (request.control_ability== 1) {
 			printf("Request Control");
-			DJI_Pro_Control_Management(1,NULL);
-			response.result= true;
+            DJI_Pro_Control_Management(1,NULL);
+            response.result= true;
 		}
 		else if (request.control_ability== 0) {
-			printf("Response Control");
+			printf("Release Control");
 			DJI_Pro_Control_Management(0,NULL);
 			response.result = true;
 		}
@@ -127,7 +126,68 @@ namespace service_handler
 
 	}
 
-	ros::ServiceServer control_service, action_service, camera_service, gimbal_angle_service, gimbal_speed_service, attitude_service;
+/*
+	bool local_navigation_callback(
+			dji_ros::local_navigation::Request& request,
+			dji_ros::local_navigation::Response& response
+			)
+	{
+		//actually, this is the same as attitude service, but with HORI_POS and VERT_POS in ground frame i.e. 0b1001x00x
+		float dst_x = request.x;
+		float dst_y = request.y;
+		float dst_z = request.z;
+
+		attitude_data_t user_ctrl_data;
+		user_ctrl_data.ctrl_flag = 0x90;
+		user_ctrl_data.thr_z = dst_z;
+		user_ctrl_data.yaw = 0;
+
+
+		while (sqrt(pow(dst_x - dji_variable::local_position.x,2) + pow(dst_y - dji_variable::local_position.y,2) + pow(dst_z - dji_variable::local_position.height,2)) > 0.5) {
+
+			user_ctrl_data.roll_or_x = dst_x - dji_variable::local_position.x;
+			user_ctrl_data.pitch_or_y = dst_y - dji_variable::local_position.y;
+
+			DJI_Pro_Attitude_Control(&user_ctrl_data);
+			usleep(20000);
+
+		}
+
+		response.result = true;
+		return true;
+	}
+
+	bool gps_navigation_callback(
+			dji_ros::gps_navigation::Request& request,
+			dji_ros::gps_navigation::Response& response
+			)
+	{
+		//after convert det(GPS) into distance, this is the same as local_navigation
+			
+		return true;
+	}
+
+
+	bool waypoints_callback(
+			dji_ros::waypoints_navigation::Request& request,
+			dji_ros::waypoints_navigation::Response& response
+			)
+	{
+		//waypointList[] waypoints;
+		//an example(not sure correct or not) of using an msg, which contains an array of another custom msgs as a custom srv request
+		 *
+		 *for (int i = 0; i < waypointList -> size; i++):
+		 *		dji_ros::waypoint wpData = waypointList -> waypoint [i]
+		 *
+		//separate out each waypoint, then work is the same as gps_navigation 
+		//however, extra functions are necessary to handle stay time 
+		//as for yaw, 0x90 has already been the YAW_ANG mode(0bxxxx0xx0), just set (-180,180) is okay
+
+		return true;
+	}
+*/
+
+	ros::ServiceServer control_service, camera_service, gimbal_angle_service, gimbal_speed_service, attitude_service, action_service;
 	int init_services(ros::NodeHandle & n)
 	{
 		control_service = n.advertiseService(
@@ -160,7 +220,24 @@ namespace service_handler
 				attitude_callback
 				);
 
-		ROS_INFO("Init services\n");
+		/*
+		local_navigation_service = n.advertiseService(
+				"DJI_ROS/local_navigation_service",
+				local_navigation_callback
+				);
+
+		gps_navigation_service = n.advertiseService(
+				"DJI_ROS/gps_navigation_service",
+				gps_navigation_callback
+				);
+		
+		waypoints_navigation_service = n.advertiseService(
+				"DJI_ROS/waypoints_service",
+				waypoints_callback
+				);
+		*/
+
+		
 		return 0;
 	}
 }

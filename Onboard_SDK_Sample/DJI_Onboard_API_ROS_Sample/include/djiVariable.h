@@ -10,8 +10,8 @@
 #include <dji_ros/gimbal.h>
 #include <dji_ros/rc_channels.h>
 #include <nav_msgs/Odometry.h>
-#include <std_msgs/Float32.h>
 #include "SDK.h"
+#include "std_msgs/UInt8.h"
 
 namespace dji_variable
 {

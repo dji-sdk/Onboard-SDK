@@ -1,0 +1,11 @@
+#x,y,z are in meters
+float32 x
+float32 y
+float32 z
+---
+bool result
+---
+#progress is in percent
+uint8 x_progress 
+uint8 y_progress 
+uint8 z_progress 

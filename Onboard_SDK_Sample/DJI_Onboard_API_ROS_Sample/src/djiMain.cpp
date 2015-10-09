@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <thread>
+#include <DJI_LIB/DJI_Pro_App.h>
 #include "djiMain.h"
 
 
@@ -106,7 +107,7 @@ void update_ros_vars() {
 			dji_variable::global_position_ref.longitude,
 			dji_variable::global_position_ref.latitude
 			);
-	local_position.height = global_position.height;
+	local_position.z = global_position.height;
 	local_position.ts = global_position.ts;
 	dji_variable::local_position_ref = local_position;
 	publishers::local_pos_pub.publish(local_position);
@@ -116,7 +117,7 @@ void update_ros_vars() {
 	odem.header.stamp = current_time;
 	odem.pose.pose.position.x = local_position.x;
 	odem.pose.pose.position.y = local_position.y;
-	odem.pose.pose.position.z = local_position.height;
+	odem.pose.pose.position.z = local_position.z;
 	odem.pose.pose.orientation.w = attitude_quad.q0;
 	odem.pose.pose.orientation.x = attitude_quad.q1;
 	odem.pose.pose.orientation.y = attitude_quad.q2;
@@ -164,36 +165,45 @@ void spin_callback(const ros::TimerEvent &)
 	static unsigned int count = 0;
 	count++;
 	if (count % 50 == 0) {
-		std_msgs::Float32 msg;
-		unsigned char bat = 0;
-		
+		std_msgs::UInt8 msg;
+		//unsigned char bat = 0;
 		
 		//update flight_status 
-		msg.data = (float) recv_sdk_std_msgs.status;
+		flight_status = recv_sdk_std_msgs.status;
+		msg.data = flight_status;
 		publishers::flight_status_pub.publish(msg);
 
 		//update battery msg
-		DJI_Pro_Get_Bat_Capacity(&bat);
-		msg.data = (float)bat;
+		//DJI_Pro_Get_Bat_Capacity(&bat);
+		msg.data = recv_sdk_std_msgs.battery_remaining_capacity;
 		publishers::battery_pub.publish(msg);
 
 		//update ctrl_info
 		ctrl_info.cur_ctrl_dev_in_navi_mode = recv_sdk_std_msgs.ctrl_info.cur_ctrl_dev_in_navi_mode;
 		ctrl_info.serial_req_status = recv_sdk_std_msgs.ctrl_info.serial_req_status;
 		publishers::ctrl_info_pub.publish(ctrl_info);
+
+		//update obtaincontrol msg
+		msg.data = recv_sdk_std_msgs.obtained_control;
+		publishers::control_publisher.publish(msg);
+
+		//update activation msg
+		msg.data = recv_sdk_std_msgs.activation;
+		publishers::activation_publisher.publish(msg);
 	}
 }
 
 int main(int argc,char **argv) {
 
 	char temp_buf[65];
-
 	ros::init(argc, argv, "DJI_ROS");
+
 	ros::NodeHandle nh;
 	ros::NodeHandle nh_private("~");
 	
 	publishers::init_publishers(nh);
 	service_handler::init_services(nh);
+	action_handler::init_actions(nh);
 
 	nh_private.param("serial_name", serial_name, std::string("/dev/ttyTHS1"));
 	nh_private.param("baud_rate", baud_rate, 230400);
@@ -229,9 +239,8 @@ int main(int argc,char **argv) {
 	DJI_Pro_Activate_API(&user_act_data,NULL);
 	ros::Timer simple_task_timer = nh.createTimer(ros::Duration(1.0 / 50.0),  spin_callback);
 
-//just init the service here
-//create client in another file
-
-	ros::spin();
+	ros::AsyncSpinner spinner(4); // Use 4 threads
+	spinner.start();
+	ros::waitForShutdown();
 	return 0;
 }
