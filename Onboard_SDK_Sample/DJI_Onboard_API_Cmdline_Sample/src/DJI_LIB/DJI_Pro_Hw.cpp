@@ -4,7 +4,7 @@
  *  Created on: Aug 24, 2015
  *  Author: wuyuwei
  */
-#if defined(PLATFORM_LINUX) || defined(__linux)
+#ifndef PLATFORM_QT
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/types.h>
@@ -61,10 +61,7 @@ int SerialConfig(int baudrate,char data_bits,char parity_bits,char stop_bits)
 		B38400,
 		B57600,
 		B115200,
-		B230400,
-		B1000000,
-		B1152000,
-		B3000000,
+		B230400
 	};
 	int std_rate[]=
 	{
