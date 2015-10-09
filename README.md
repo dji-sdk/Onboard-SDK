@@ -143,6 +143,8 @@ Please comply with the local regulations during the development process and the 
 
 - [Data Transparent Transmission][2]  
 
+- [Programming Guide][3]
+
 - [FAQ][FAQ]
 
 ### Articles contributed by external developers:
@@ -156,7 +158,7 @@ Please comply with the local regulations during the development process and the 
 [0]:Onboard_API_Doc/en/OPENProtocol.md  
 [1]:Onboard_API_Doc/en/Appendix.md  
 [2]:Onboard_API_Doc/en/DataTransparentTransmission.md   
-[3]:Onboard_API_Doc/en/Glossary.md   
+[3]:Onboard_API_Doc/en/ProgrammingGuide.md   
 [FAQ]:Onboard_API_Doc/en/FAQ_en.md   
 [Activation]:Onboard_API_Doc/en/ActivationGuide.md
 
