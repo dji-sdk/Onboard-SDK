@@ -144,7 +144,7 @@ Convert quaternion to roll, pitch and yaw in radian in body coordinate.
     float yaw   = atan2(2.0 * (q.q3 * q.q0 + q.q1 * q.q2) , - 1.0 + 2.0 * (q.q0 * q.q0 + q.q1 * q.q1));
 ~~~
 
-## Position Control
+## Position Control(HORI_POS)
 The input horizatal arguements is the offset between current position and target position, when `HORI_POS` as the mode of horizatal movement control. The unit of offset is meter.
 
 For example, in ground frame, `target` is target position and `current` is UAV's current position. The coordinates of these positions are caculated by GPS, Guidance or other sensors. In most cases, GPS is a correct way to do this work.
