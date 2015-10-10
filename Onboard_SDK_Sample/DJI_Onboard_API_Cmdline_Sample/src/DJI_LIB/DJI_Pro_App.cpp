@@ -105,7 +105,7 @@ static void * Status_Ctrl_Thread_Func(void * arg)
     unsigned cmd_timeout = 100;    //unit is ms
     unsigned retry_time = 3;
     unsigned short ack_data = SDK_ERR_NO_RESPONSE;
-    static const char err[3][16] = {{"didn't get ack"},{"timeout"},{"cmd refuse"}};
+    static const char err[4][16] = {{"timeout"},{"cmd refused"},{"cmd not support"},{"didn't get ack"}};
 
     while(1)
     {
@@ -120,8 +120,10 @@ static void * Status_Ctrl_Thread_Func(void * arg)
         if(ack_data == SDK_ERR_NO_RESPONSE || ack_data == SDK_ERR_COMMAND_NOT_SUPPORTED
               || ack_data == REQ_TIME_OUT || ack_data == REQ_REFUSE)
         {
-            printf("%s,line %d,Status Ctrl %d %s,Return 0x%X\n",__func__,__LINE__,
-                   status_ctrl_cmd_data.cmd_data,&err[ack_data + 1][0],ack_data);
+            printf("%s,line %d,Status Ctrl %d: %s. Return error 0x%X\n",__func__,__LINE__,
+            status_ctrl_cmd_data.cmd_data, 
+				&err[((ack_data&0x100)>>7)|(ack_data&0x1)][0],	
+				ack_data);
             if(p_status_ctrl_interface)
             {
                 p_status_ctrl_interface(ack_data);

@@ -1,5 +1,5 @@
 <launch>
-	<node pkg="dji_ros" type="dji_ros" name="dji_ros" output="screen" launch-prefix="gdb -ex --args">
+	<node pkg="dji_ros" type="dji_ros" name="dji_ros" output="screen">
 		<!-- node parameters -->
 		<param name="serial_name" type="string" value="/dev/ttyTHS1"/>
 		<param name="baud_rate" type="int" value="230400"/>
