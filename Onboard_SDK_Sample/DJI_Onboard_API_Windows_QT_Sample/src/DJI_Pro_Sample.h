@@ -15,8 +15,10 @@
 #include "DJI_LIB/DJI_Pro_Config.h"
 #include "DJI_LIB/DJI_Pro_Rmu.h"
 
+
 #define DRAW_CIRCLE_SAMPLE  0
 #define DRAW_SQUARE_SAMPLE  1
+#define WAY_POINT_SAMPLE    2
 
 /* external functions */
 #if (defined(PLATFORM_LINUX) && defined(TINYXML_CFG))

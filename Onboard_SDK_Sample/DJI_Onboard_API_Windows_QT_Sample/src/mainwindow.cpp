@@ -379,6 +379,19 @@ void MainWindow::on_btn_draw_square_clicked()
     }
 }
 
+void MainWindow::on_btn_way_point_clicked()
+{
+    if(DJI_Sample_Funny_Ctrl(WAY_POINT_SAMPLE) < 0 )
+    {
+        QMessageBox::warning(this,tr("Warning"),tr("Please waiting current sample finish"),QMessageBox::Ok);
+    }
+    else
+    {
+        printf("Start to way point sample\n");
+    }
+}
+
+
 void MainWindow::recv_data(QByteArray data)
 {
     ui->TB_Recv->insertPlainText(data);
@@ -410,4 +423,5 @@ void MainWindow::on_btn_Clear_clicked()
     ui->TB_Recv->clear();
     ui->plainTextEdit_Send->clear();
 }
+
 

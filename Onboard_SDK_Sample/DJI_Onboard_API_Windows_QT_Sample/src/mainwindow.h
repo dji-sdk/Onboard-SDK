@@ -72,6 +72,9 @@ private slots:
     void on_btn_Clear_clicked();
 
     void recv_data(QByteArray data);
+
+    void on_btn_way_point_clicked();
+
 signals:
     void recv_data_signal(QByteArray data);
 private:

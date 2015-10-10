@@ -381,6 +381,13 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QPushButton" name="btn_way_point">
+       <property name="text">
+        <string>Way Point Sample</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </widget>
    <widget class="QGroupBox" name="groupBox_7">
