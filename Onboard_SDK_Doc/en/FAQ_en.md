@@ -25,7 +25,7 @@ We will provide ‘Onboard Device Selection Guides for M100’ shortly.
 Not necessarily but preferred. We recommend the combination with Ubuntu and ROS but even a simple STM32 MCU without an OS running on it works.
 
 ### 9. What flight control data of M100 can I get via the Onboard SDK?  
-Timestamp of the flight controller, Quaternion and Acceleration etc. Please refer to the ‘Onboard SDK API Reference’. https://github.com/dji-sdk/Onboard-SDK/tree/master/Onboard_API_Doc
+Timestamp of the flight controller, Quaternion and Acceleration etc. Please refer to the ‘Onboard SDK API Reference’.
 
 ### 10. What are the communication ports between an Onboard Device and an N1 flight controller?  
 For now, Onboard Device can only communicate with N1 flight controller via the UART port.
