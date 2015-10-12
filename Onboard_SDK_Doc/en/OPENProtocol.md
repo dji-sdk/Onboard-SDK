@@ -623,7 +623,7 @@ For more info about Movement Control, please refer to [Control mode byte part in
   <td>control flag byte<ul>
     <li>bit 0：mode flag bit</li>
         <ul>0 ： Incremental control, the angle reference is the current Gimbal location</ul>
-        <ul>1 ： Absolute control, the angle reference is coordinate system to the Northeast</ul>
+        <ul>1 ： Absolute control, the angle reference is related to configuration in DJI Go App</ul>
     <li>bit 1：Yaw invaild bit 
         <ul>0 ： Gimbal will follow the command in Yaw </ul>
         <ul>1 ： Gimbal will maintain position in Yaw  </ul>
@@ -648,7 +648,38 @@ For more info about Movement Control, please refer to [Control mode byte part in
 </tr>
 </table>
 
->Note：*Yaw is defined by Gimbal Operation Mode which is configured by DJI GO App. In Follow Mode, yaw is the angle between gimbal's orientation and the direction of UAV's nose; In FPV Mode, yaw is the angle between gimbal's orientation and the direction of the North. 
+**The relationship bewteen the angle reference in absolute control mode and gimbal mode configuration in DJI Go App**  
+
+<table>
+  <tr>
+    <th>Gimbal Mode</th>
+    <th>Roll</th>
+    <th>Pitch</th>
+    <th>Yaw</th>
+    <th>Gimbal Follow UAV's nose</th>
+  </tr>
+  <tr>
+    <td>Follow</td>
+    <td>Ground</td>
+    <td>Ground</td>
+    <td>Body</td>
+    <td align="center">Y</td>
+  </tr>
+  <tr>
+    <td>FPV</td>
+    <td>N/A</td>
+    <td>Ground</td>
+    <td>N/A</td>
+    <td align="center">Y</td>
+  </tr>
+  <tr>
+    <td>Free</td>
+    <td>Ground</td>
+    <td>Ground</td>
+    <td>Ground</td>
+    <td align="center">N</td>
+  </tr>
+</table>
 
 
 #### CMD ID 0x20 Take Photo
