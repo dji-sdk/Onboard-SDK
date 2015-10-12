@@ -23,6 +23,8 @@ Ensure your Android or iOS mobile device has the internet connection ready, and 
 Connect your Onboard Devices to the N1 Autopilot’s UART port.
 ![Connecter](Images/Connecter.jpg)
 
+**Note: Please connect the RX pin of Onboard device to N1's TX pin. Please connect the TX pin of Onboard device to N1's RX pin. Please the GND pin of Onboard device to N1's GND pin.**
+
 ## 6.	Activation
 The following are using the “DJI_Onboard_SDK_Windows_QT_Sample” as an demonstration:
 * Connect the N1 Autopilot to your PC using a UART-to-USB cable.
