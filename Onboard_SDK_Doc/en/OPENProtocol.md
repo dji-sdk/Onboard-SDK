@@ -163,6 +163,17 @@ The session mechanism has been used in order to prevent the exceptions such as p
 
 *Since type 2 is designed to be reliable. Developers should implement the package loss & resending mechinism based on the current SEQ and SESSION fields. When package loss is found from the sender, the sender can send the CMD frame again with the same SEQ and SESSION lost previously to retrieve back the ACK frame.
 
+
+### Encryption (optional)
+
+DJI designs encryption interface in communication between Onboard Device and autopilot, considering it is possible that developer implement the communication with unsafe channel, for example various types of wireless transparent transmission module.
+
+AES encrypting is designed only for data part of a frame. And developers can encrypt their own data with a key which is despatched when they register the APP ID, and encryption function in `DJI_LIB`.
+
+Due to encryption process, data need to be aligned into blocks and each one contains 16 bytes. 'PADDING' in frame header is the length of additional data generated in this progress. Also 'LEN' need to be caclulated again, and 'ENC' need to be set to '1'. For more details about encryption algorithm, please refer to `sdk_encrypt_interface` in `DJI_Pro_Codec.cpp` .
+
+On the other hand, there is no need to encrypt data, when developers use a serial cable to connect Onboard Device and autopilot. In this case, just set 'ENC' to '0'.
+
 ---
 
 ## CMD Set & CMD ID
