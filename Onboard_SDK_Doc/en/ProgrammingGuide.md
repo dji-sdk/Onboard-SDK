@@ -152,7 +152,7 @@ For example, in ground frame, `target` is target position and `current` is UAV's
 Because, to autopilot, the maximum frequency of receiving data is 50Hz, the frequency of caculating off set should be over 50Hz to ensure the controlling is vaild.  
 
 ~~~c
-/* Calculate offset */
+void update_offset()
 {
     offset_x = target_x - current_x;
     offset_y = target_y - current_y;
@@ -161,14 +161,20 @@ Because, to autopilot, the maximum frequency of receiving data is 50Hz, the freq
 
 /* Command thread */
 attitude_data_t user_ctrl_data;
+
+/* HORI_POS|VERT_VEL|YAW_RATE|HORI_GROUND_FRAME|YAW_GROUND_FRAME */
+user_ctrl_data.ctrl_flag = 0x88;
+user_ctrl_data.thr_z = 0;
+user_ctrl_data.yaw = 0;
+
 while(1)                                            
 {
-    /* HORI_POS|VERT_VEL|YAW_RATE|HORI_GROUND_FRAME|YAW_GROUND_FRAME */
-    user_ctrl_data.ctrl_flag = 0x88;
+    update_offset();
+    if (/*offset is small enough*/)
+        break;
     user_ctrl_data.roll_or_x = offset_x;
     user_ctrl_data.pitch_or_y = offset_y;
-    user_ctrl_data.thr_z = 0;
-    user_ctrl_data.yaw = 0;
+    
     DJI_Pro_Attitude_Control(&user_ctrl_data);
 
     usleep(20000);                                  /* 50 Hz */
