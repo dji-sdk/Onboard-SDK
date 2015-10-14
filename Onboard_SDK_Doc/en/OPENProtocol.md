@@ -692,6 +692,7 @@ For more info about Movement Control, please refer to [Control mode byte part in
   </tr>
 </table>
 
+**Note: Rotating 90 degree in `pitch` direction will cause gimbal lock problem, in which the value of `roll` and `yaw` are not reliable.**
 
 #### CMD ID 0x20 Take Photo
 <table>
