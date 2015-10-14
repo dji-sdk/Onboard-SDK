@@ -65,8 +65,7 @@ sudo -s
 Run the ROS server node by entering the following command
 
 ~~~bash
-cd `the launch file folder`
-roslauch sdk_demo.launch
+roslauch dji_sdk sdk_demo.launch
 ~~~
 
 OR 
@@ -92,6 +91,12 @@ also we have a navigation example client:
 ~~~bash
 rosrun dji_ros dji_ros_wp_client
 ~~~
+
+The server node handles the communication between onboard device and N1. It processes the data broadcasted from N1, reorganized and published the received stream into different topics. The server node also holds `srv` and `action`, which can be used by other nodes to control the movement and action of M100. Also, the activation procedure is processed in the server node when start running.
+
+The client node is a sample node communicating with server node, which allows user to run several funcions to control the drone.
+
+The wp_client is a special client node for navigation purpose, where user can ask the drone fly into a certain position or fly throught a given waypoint lists.
 
 You can now try the different functions shown in the menu of the client node.
 
