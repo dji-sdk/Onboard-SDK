@@ -14,6 +14,8 @@ This example aims to help you understand and play with the basic flight procedur
 * Example for local navigation (fly into a certain (X,Y,Z))
 * Example for GPS navigation (fly into a certain GPS coordinate)
 * Example for waypoint navigation (fly through a series of GPS coordinates)
+* Example of using MAVLink protocol and QGroundStation (TODO)
+* Example of using Websocket together with Google/Baidu Map for navigation purpose (TODO) 
 
 Developers can play with this example via the ROS interaction interface.
 
