@@ -101,6 +101,11 @@ namespace action_handler
 			y_progress = 100 - (int)det_y;
 			z_progress = 100 - (int)det_z;
 
+			//lazy evaluation
+			if (fabsf(dst_x - dji_variable::local_position.x) < 0.1) x_progress = 100;
+			if (fabsf(dst_y - dji_variable::local_position.y) < 0.1) y_progress = 100;
+			if (fabsf(dst_z - dji_variable::local_position.z) < 0.1) z_progress = 100;
+
 			local_navigation_feedback.x_progress = x_progress;
 			local_navigation_feedback.y_progress = y_progress;
 			local_navigation_feedback.z_progress = z_progress;
@@ -163,9 +168,10 @@ namespace action_handler
 			altitude_progress = 100 - (int)det_z;
 
 			//lazy evaluation
-			if (abs(dis_x) < 0.00001) latitude_progress = 100;
-			if (abs(dis_y) < 0.00001) longitude_progress = 100;
-			if (abs(dis_z) < 1) altitude_progress = 100;
+			if (fabs((dst_latitude - dji_variable::global_position.latitude)*180/C_PI) < 0.00001) latitude_progress = 100;
+			if (fabs((dst_longitude - dji_variable::global_position.longitude)*180/C_PI) < 0.00001) longitude_progress = 100;
+			if (fabsf(dst_altitude - dji_variable::global_position.altitude) < 0.1) altitude_progress = 100;
+
 
 			gps_navigation_feedback.latitude_progress = latitude_progress;
 			gps_navigation_feedback.longitude_progress = longitude_progress;
