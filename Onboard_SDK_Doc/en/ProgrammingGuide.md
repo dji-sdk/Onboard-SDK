@@ -26,11 +26,23 @@ DJI_Pro_Activate_API(&user_act_data, cb_user_notice);
 
 3.The meaning of return values(result) is explained in each commands in [OPEN Protocol](OPENProtocol.md#cmd-val--ack-val).
 
-## Activation
 
+## Initialization  (for linux)
 ~~~c
 {
-    activate_data_t user_act_data; 
+    int baudrate = 115200;
+    char uart_name[32] = {"/dev/ttyUSB0"};
+    Pro_Hw_Setup(uart_name,baudrate);
+    DJI_Pro_Setup(NULL);
+}
+~~~
+
+## Activation  
+
+~~~c
+activate_data_t user_act_data; 
+{
+    
 
     char key_buf[65] = "Input-your-app_key-here";   /* Input your app_key */
     char app_bundle_id[32] = "1234567890";
