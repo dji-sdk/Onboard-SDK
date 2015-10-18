@@ -110,6 +110,9 @@ The Protocal Frame is the smallest unit for transmission. It contains the Header
   <td>CRC32 whole frame checksum</td>
 </tr>
 </table>
+>Note: When encryption is enabled, the order of operation sequence should be `encrypt DATA field` -> `update LEN and PADDING fields in frame header` -> `calculate CRC16` -> `calculate CRC32`
+
+>Note2: The byte content inside field is in LSB at left order. i.e. an 3th byte(SESSION+ACK+RES0) with value 0b01000000, the first 5 bits 01000 means value 2. Don't get lost when you're trying to print out the raw data of protocol. 
 <!-- >备注：如果协议帧需要AES加密，应先对数据段进行加密，该过程会改变数据长度，需要更新帧头中*PADDING*字段及*LEN*字段。再对帧头部分进行CRC16校验，获得校验值后再对整个协议帧进行CRC32校验 -->
 ### Frame Type
 There are two types of frames.
