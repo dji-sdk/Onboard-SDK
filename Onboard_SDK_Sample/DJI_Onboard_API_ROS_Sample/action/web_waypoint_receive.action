@@ -1,0 +1,18 @@
+waypointList waypointList
+#task id
+uint64 tid
+---
+bool result
+---
+#progress is in percent
+uint8 latitude_progress
+uint8 longitude_progress
+uint8 altitude_progress
+uint8 index_progress
+#stage code:
+#  0: waiting for waypointList
+#  1: waiting for start
+#  2: in progress
+#  3: paused
+#  4: canceled
+uint8 stage
