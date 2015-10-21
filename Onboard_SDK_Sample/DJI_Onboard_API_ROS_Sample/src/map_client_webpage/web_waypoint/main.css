@@ -1,0 +1,42 @@
+
+body, html {
+	width: 100%;
+	height: 100%;
+	margin:0;
+	font-family:"微软雅黑";
+}
+
+#allmap {
+	height:500px; 
+	width: 100%;
+}
+
+#bottom {
+	width:100%;
+	height: 300px;
+	padding-left: 0px;
+}
+
+#control {
+	position:absolute; 
+	top:0; left:0; 
+	width:200px; 
+	height:100%;
+	float:left;
+}
+
+#monitor {
+	margin-left:auto; 
+	height:100%;
+	background-color:#0099FF;
+	width:200px;
+	float:left;
+}
+
+#state-update {
+	margin-left:auto; 
+	height:100%;
+	background-color:#0099FF;
+	width:200px;
+	float:left;
+}
