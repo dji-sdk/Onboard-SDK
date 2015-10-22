@@ -63,6 +63,7 @@ add_message_files(
 	rc_channels.msg
 	waypoint.msg
 	waypointList.msg
+	map_nav_srv_cmd.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -83,6 +84,7 @@ add_action_files(
 	local_navigation.action
 	gps_navigation.action
 	waypoint_navigation.action
+	web_waypoint_receive.action
 )
 
 ## Generate added messages and services with any dependencies listed here
@@ -135,6 +137,9 @@ add_dependencies(dji_ros dji_ros_generate_messages_cpp)
 target_link_libraries(dji_ros
    ${catkin_LIBRARIES}
 )
+
+add_executable(map_nav_srv src/map_nav_srv.cpp)
+target_link_libraries(map_nav_srv ${catkin_LIBRARIES})
 
 #############
 ## Install ##

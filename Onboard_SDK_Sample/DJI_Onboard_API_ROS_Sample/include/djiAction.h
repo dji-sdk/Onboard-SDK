@@ -19,7 +19,7 @@ namespace action_handler
 	extern gps_navigation_action_type* gps_navigation_action_ptr;
 	extern waypoint_navigation_action_type* waypoint_navigation_action_ptr;
 
-	void processWaypoint(dji_ros::waypoint newWaypoint);
+	bool processWaypoint(dji_ros::waypoint newWaypoint);
 	int init_actions(ros::NodeHandle &n);
 }
 #endif
