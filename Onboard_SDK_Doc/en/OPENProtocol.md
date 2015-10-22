@@ -394,6 +394,12 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
 
 #### CMD ID 0x00: Obtain/Release Control Authorization
 
+Please make sure the following conditions have been met:
+
+* The 'enable API control' box is checked in the N1 assistant software.
+* The IOC mode inside the DJI GO APP is off.
+* The mode selection bar of the remote controller is placed at the F position.
+
 <table>
 <tr>
   <th>Data Type</th>
@@ -417,9 +423,10 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
   <td>0</td>
   <td>2</td>
   <td>Return Code <ul>
-    <li>0x0001：successfully released control authorization</li>
-    <li>0x0002：successfully obtained control authorization</li>
-    <li>0x0003：in progress</li>
+    <li>0x0000:refuse to obtaine control authorization(conditions are not met)</li>
+    <li>0x0001:successfully released control authorization</li>
+    <li>0x0002:successfully obtained control authorization</li>
+    <li>0x0003:in progress</li>
     </ul></td>
 </tr>
 
