@@ -193,10 +193,16 @@ namespace action_handler
 		dji_ros::waypointList newWaypointList;
 		newWaypointList = goal->waypointList;
 
+		bool isSucceeded;
 		for (int i = 0; i < newWaypointList.waypointList.size(); i++) {
 			const dji_ros::waypoint newWaypoint = newWaypointList.waypointList[i];	
 			waypoint_navigation_feedback.index_progress = i;
-			processWaypoint(newWaypoint);
+			isSucceeded = processWaypoint(newWaypoint);
+			if(!isSucceeded) {
+				waypoint_navigation_result.result = false;
+				waypoint_navigation_action_ptr->setPreempted(waypoint_navigation_result);
+				return false;
+			}
 		}
 		
 		waypoint_navigation_result.result = true;
@@ -205,7 +211,7 @@ namespace action_handler
 		return true;
 	}
 
-	void processWaypoint(dji_ros::waypoint newWaypoint) {
+	bool processWaypoint(dji_ros::waypoint newWaypoint) {
 
 		double dst_latitude = newWaypoint.latitude*C_PI/180;
 		double dst_longitude = newWaypoint.longitude*C_PI/180;
@@ -235,6 +241,9 @@ namespace action_handler
 		int altitude_progress = 0; 
 
 		while (latitude_progress < 100 || longitude_progress < 100 || altitude_progress <100) {
+			if(waypoint_navigation_action_ptr->isPreemptRequested()) {
+				return false;
+			}
 
 			user_ctrl_data.roll_or_x = (dst_latitude - dji_variable::global_position.latitude)*C_EARTH;
 			user_ctrl_data.pitch_or_y = (dst_longitude - dji_variable::global_position.longitude)*C_EARTH*cos(dji_variable::global_position.latitude);
@@ -254,7 +263,7 @@ namespace action_handler
 			//need to find a better way
 			if (fabs((dst_latitude - dji_variable::global_position.latitude)*180/C_PI) < 0.00001) latitude_progress = 100;
 			if (fabs((dst_longitude - dji_variable::global_position.longitude)*180/C_PI) < 0.00001) longitude_progress = 100;
-			if (fabsf(dst_altitude - dji_variable::global_position.altitude) < 0.1) altitude_progress = 100;
+			if (fabsf(dst_altitude - dji_variable::global_position.altitude) < 0.12) altitude_progress = 100;
 
 			waypoint_navigation_feedback.latitude_progress = latitude_progress;
 			waypoint_navigation_feedback.longitude_progress = longitude_progress;
@@ -265,6 +274,7 @@ namespace action_handler
 
       }
 		ros::Duration(newWaypoint.staytime).sleep();
+		return true;
 
 	}
 

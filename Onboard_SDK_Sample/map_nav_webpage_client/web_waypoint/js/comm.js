@@ -225,6 +225,8 @@ var home_lat = 0;
 var home_lon = 0;
 var home_hei = 0;
 
+var isExecuted = false;
+
 
 function Communicator(socket) {
 
@@ -235,17 +237,25 @@ function Communicator(socket) {
 
     this.ros.on('connection', function(){
         console.log('Connected to websocket server.');
+        $( '<div>Connected to websocket server.</div>' ).appendTo("#monitor");
     });
     this.ros.on('error', function(){
         console.log('Error connecting to websocket server: ', error);
+        $( '<div>Error connecting to websocket server: '+error+'</div>' ).appendTo("#monitor");
     });
     this.ros.on('close', function(){
-        console.log('Connected to websocket server closed.');
+        console.log('Connection is closed!.');
+        $( '<div>Connection is closed!</div>' ).appendTo("#monitor");
     });
 
     this.tid = 0;
 
-    this.web_wp_client = 0;
+    //action client
+    this.web_wp_client = new ROSLIB.ActionClient({
+        ros : this.ros,
+        serverName : '/DJI_ROS/web_waypoint_receive_action',
+        actionName : 'dji_ros/web_waypoint_receiveAction'
+    });;
 
     //publisher
     this.ctrlTopic = new ROSLIB.Topic({
@@ -355,17 +365,21 @@ Communicator.prototype.stopNavigationMode = function() {
 
 Communicator.prototype.uploadWayline = function() {
 
+    isExecuted = false;
+
     if (my_planner.markerList.length < 2){
         alert("Please set 2 waypoints at least!");
         return;
     }
 
     // rosbridge config
-    this.web_wp_client = new ROSLIB.ActionClient({
-        ros : this.ros,
-        serverName : '/DJI_ROS/web_waypoint_receive_action',
-        actionName : 'dji_ros/web_waypoint_receiveAction'
+    this.tid = new Date().getTime();
+    var _msg = new ROSLIB.Message({
+        cmdCode : "n".charCodeAt(0),
+        tid : this.tid
     });
+    console.log('Upload new waypointLine');
+    this.cmdTopic.publish(_msg);
 
     var _waypointList = new Array();
     for(i = 0; i < my_planner.markerList.length; i++) {
@@ -376,17 +390,17 @@ Communicator.prototype.uploadWayline = function() {
             heading : 0,
             staytime : 0
         });
-        if(i == 0 && Math.abs(my_planner.markerList[0][2].alti - home_hei) < 0.15
+        //since waypoint_navigation_action has been updated, it is no need to do such judgement
+        /*if(i == 0 && Math.abs(my_planner.markerList[0][2].alti - home_hei) < 0.15
             && Math.abs(my_planner.markerList[0][1].point.lat - home_lat) < 0.00001 
             && Math.abs(my_planner.markerList[0][1].point.lng - home_lon) < 0.00001
         )
-            continue;
+            continue;*/
         _waypointList.push(_wp);
     }
     var goal_waypointList = {
         waypointList : _waypointList
     };
-    this.tid = new Date().getTime();
     var goal = new ROSLIB.Goal({
         actionClient : this.web_wp_client,
         goalMessage : {
@@ -426,8 +440,8 @@ Communicator.prototype.uploadWayline = function() {
             console.log('Execution Succeed!');
             alert('Execution Succeed!');
         } else {
-            console.log('Execution Fail!');
-            alert('Execution Fail!');
+            console.log('Last Execution Fail!');
+            if(isExecuted) alert('Last Execution Fail!');
         }
     });
 
@@ -488,6 +502,8 @@ Communicator.prototype.downloadWaypoint = function(index) {
 };
 
 Communicator.prototype.startWayline = function() {
+
+    isExecuted = true;
 
     var _msg = new ROSLIB.Message({
         cmdCode : "s".charCodeAt(0),

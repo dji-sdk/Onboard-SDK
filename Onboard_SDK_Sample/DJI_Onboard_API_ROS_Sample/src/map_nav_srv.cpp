@@ -40,6 +40,7 @@ void goalCB() {
     Feedback_t fb;
     Result_t rslt;
 
+    cmdCode_ = 0; //eliminate effect of last task
     Goal_t newGoal = *( asPtr_->acceptNewGoal() );
     ROS_INFO_STREAM( "Received goal: \n" << newGoal << "\n" );
 
@@ -73,17 +74,11 @@ void goalCB() {
 
     while(ros::ok()) {
         if(cmdCode_ == 'c') { //"c" for cancel
-            cmdCode_ = 0; //eliminate effect of next task
+            //cmdCode_ = 0; //eliminate effect of next task
             ROS_INFO("Cancel task with tid %llu", tid_);
             stage_ = 4;
             fb.stage = stage_;
             asPtr_->publishFeedback(fb);
-            stage_ = 0;
-            tid_ = 0;
-            rslt.result = false;
-            asPtr_->setAborted(rslt);
-            ROS_INFO("New waypoitList has been uploaded");
-            return;
         } else if(tid_ == cmdTid_){
             if(cmdCode_ == 's' && stage_ == 1) { //"s" for start
                 ROS_INFO("Start task with tid %llu", tid_);
@@ -106,6 +101,14 @@ void goalCB() {
                 asPtr_->publishFeedback(fb);
                 continue;
             }
+        } else {
+            if(cmdCode_ == 'n') { //"n" for newer waypointLine arrived
+                ROS_INFO("A latest task arrived.");
+                ROS_INFO("Set task(if any) with tid %llu preemted", newGoal.tid);
+                stage_ = 4;
+                fb.stage = stage_;
+                asPtr_->publishFeedback(fb);
+            }
         }
 
         /*ROS_INFO_ONCE("Stage: %d", stage_);
@@ -114,7 +117,7 @@ void goalCB() {
 
         bool isFinished; //flag for task result
         int cnt; //feedback count
-        dji_ros::waypoint_navigationGoal wpGoal; //to call waypoint_navigation_action
+        dji_ros::waypoint_navigationGoal wpGoal; //to call waypoint action
         switch(stage_) {
             case 0: //"0" for waiting for waypointList
                 rslt.result = false;
@@ -144,9 +147,9 @@ void goalCB() {
                     fb.altitude_progress = alt_p_;
                     fb.index_progress = idx_p_;
                     asPtr_->publishFeedback(fb);
-                    ROS_DEBUG_COND(cnt == 1199 ,"[DEBUG] cmdCode_: %c", cmdCode_);
+                    ROS_DEBUG_COND(cnt==1199, "[DEBUG] cmdCode_: %c", cmdCode_);
                     if(cmdCode_ == 'c') {
-                        cmdCode_ = 0; //eliminate effect of next task
+                        //cmdCode_ = 0; //eliminate effect of next task
                         rslt.result = false;
                         asPtr_->setAborted(rslt);
                         ROS_INFO("The task is canceled while executing.");
@@ -172,12 +175,12 @@ void goalCB() {
                 tid_ = 0;
                 return;
             case 4: //"4" for canceled
-                rslt.result = false;
-                asPtr_->setAborted(rslt);
                 ROS_INFO("The task is canceled.");
                 stage_ = 0;
                 tid_ = 0;
-                wpClientPtr_->cancelGoal();
+                rslt.result = false;
+                asPtr_->setPreempted(rslt);
+                wpClientPtr_->cancelAllGoals();
                 return;
         }
     }
@@ -185,6 +188,7 @@ void goalCB() {
 
 //TODO: preemptCB
 void preemptCB() {
+    ROS_INFO("Hey! I got preempt!");
 }
 
 void cmdCB(const dji_ros::map_nav_srv_cmdConstPtr& msg) {

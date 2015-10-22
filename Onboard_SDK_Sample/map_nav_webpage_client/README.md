@@ -46,8 +46,8 @@ Then create more waypoints by clicking on the map directly. You can also right c
 After that, you can click "Confirm Mission" to check the waypoint list data. If you want to do more modification, drag the markers or right click upon them. Or you can use "Reset Mission" to clean up current mission.
 
 #####c) Execution
-Before this, make sure the quadcopter has been turn on and the RC has been switched to "F" mode. What's more, the demo server should be fire up in onboard computer.
+Before this, make sure the quadcopter has been turn on and the RC has been switched to "F" mode. Remember to unlock the quadcopter using RC. What's more, the demo server should be fire up in onboard computer.
 Then click "Open Navigation Mode" to acquire control of the quadcopter.
 Next, click "Upload Mission" to upload the mission to onboard server.
 Finally, click"Start Mission" to execute.
-Pay attention please, so far the cancel of execution is not supported. Please double check before you click "Start Mission".
+During the execution, if you want to cancel the mission, click "Cancel Mission" and stop the quadcopter.
