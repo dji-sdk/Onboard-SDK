@@ -63,7 +63,7 @@ add_message_files(
 	rc_channels.msg
 	waypoint.msg
 	waypointList.msg
-	map_client_cmd.msg
+	map_nav_srv_cmd.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -138,8 +138,8 @@ target_link_libraries(dji_ros
    ${catkin_LIBRARIES}
 )
 
-add_executable(map_client src/map_client.cpp)
-target_link_libraries(map_client ${catkin_LIBRARIES})
+add_executable(map_nav_srv src/map_nav_srv.cpp)
+target_link_libraries(map_nav_srv ${catkin_LIBRARIES})
 
 #############
 ## Install ##

@@ -20,7 +20,7 @@
 #include <dji_ros/ctrl_info.h>
 #include <dji_ros/waypoint.h>
 #include <dji_ros/waypointList.h>
-#include <dji_ros/map_client_cmd.h>
+#include <dji_ros/map_nav_srv_cmd.h>
 
 //srvs
 #include <dji_ros/attitude.h>

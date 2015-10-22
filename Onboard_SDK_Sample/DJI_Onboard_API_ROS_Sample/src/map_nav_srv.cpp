@@ -187,7 +187,7 @@ void goalCB() {
 void preemptCB() {
 }
 
-void cmdCB(const dji_ros::map_client_cmdConstPtr& msg) {
+void cmdCB(const dji_ros::map_nav_srv_cmdConstPtr& msg) {
     ROS_INFO("Received command \"%c\" of tid %llu", msg->cmdCode, msg->tid);
     cmdCode_ = msg->cmdCode;
     cmdTid_ = msg->tid;
@@ -206,7 +206,7 @@ void ctrlCB(const std_msgs::Bool::ConstPtr& msg) {
 }
 
 int main(int argc, char* argv[]) {
-    ros::init(argc, argv, "map_client");
+    ros::init(argc, argv, "map_nav_srv");
     ros::NodeHandle nh;
 
     //drone control manager
@@ -229,8 +229,8 @@ int main(int argc, char* argv[]) {
     );
 
     //command subscribers
-    ros::Subscriber sub1 = nh.subscribe("/DJI_ROS/map_client/cmd", 1, cmdCB);
-    ros::Subscriber sub2 = nh.subscribe("/DJI_ROS/map_client/ctrl", 1, ctrlCB);
+    ros::Subscriber sub1 = nh.subscribe("/DJI_ROS/map_nav_srv/cmd", 1, cmdCB);
+    ros::Subscriber sub2 = nh.subscribe("/DJI_ROS/map_nav_srv/ctrl", 1, ctrlCB);
 
     asPtr_->registerGoalCallback(&goalCB);
     asPtr_->registerPreemptCallback(&preemptCB);

@@ -250,13 +250,13 @@ function Communicator(socket) {
     //publisher
     this.ctrlTopic = new ROSLIB.Topic({
         ros : this.ros,
-        name : '/DJI_ROS/map_client/ctrl',
+        name : '/DJI_ROS/map_nav_srv/ctrl',
         messageType : 'std_msgs/Bool'
     });
     this.cmdTopic = new ROSLIB.Topic({
         ros : this.ros,
-        name : '/DJI_ROS/map_client/cmd',
-        messageType : 'dji_ros/map_client_cmd'
+        name : '/DJI_ROS/map_nav_srv/cmd',
+        messageType : 'dji_ros/map_nav_srv_cmd'
     });
 
     //subscriber
