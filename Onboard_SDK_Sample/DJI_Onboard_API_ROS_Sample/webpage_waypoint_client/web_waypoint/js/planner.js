@@ -255,6 +255,7 @@ Planner.prototype.addMenuToMarker = function(marker) {
 		markerMenu.addSeparator();
 		markerMenu.addItem(new BMap.MenuItem('Set altitude: ' + me.markerList[me.findLabelIndex(marker.getTitle())][2].alti, setAltitude.bind(marker),opts));
 		markerMenu.addSeparator();
+		/*
 		markerMenu.addItem(new BMap.MenuItem('Set yaw angle: ' + me.markerList[me.findLabelIndex(marker.getTitle())][2].tgt_yaw, setYaw.bind(marker),opts));
 		markerMenu.addSeparator();
 		markerMenu.addItem(new BMap.MenuItem('Set damping dis: ' + me.markerList[me.findLabelIndex(marker.getTitle())][2].damping_dis, setDampDis.bind(marker),opts));
@@ -264,6 +265,7 @@ Planner.prototype.addMenuToMarker = function(marker) {
 		markerMenu.addItem(new BMap.MenuItem('Set turning mode: ' + me.markerList[me.findLabelIndex(marker.getTitle())][2].turn_mode, setTurnMode.bind(marker),opts));
 		markerMenu.addSeparator();
 		markerMenu.addItem(new BMap.MenuItem('Set action', setAction.bind(marker),opts));
+*/
 
 		marker.addContextMenu(markerMenu);
 	}

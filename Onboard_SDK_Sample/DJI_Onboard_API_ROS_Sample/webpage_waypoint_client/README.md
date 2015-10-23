@@ -51,3 +51,5 @@ Then click "Open Navigation Mode" to acquire control of the quadcopter.
 Next, click "Upload Mission" to upload the mission to onboard server.
 Finally, click"Start Mission" to execute.
 During the execution, if you want to cancel the mission, click "Cancel Mission" and stop the quadcopter.
+
+![webpageClient](../../../Onboard_SDK_Doc/en/Images/ROS.png)

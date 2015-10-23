@@ -42,6 +42,10 @@ $( document ).ready(function() {
 
 		//my_Communicator.getGlobalPosition();
 		console.log('Home position: ' + home_lon + ', ' + home_lat);
+		if(home_lon == 0 || home_lat == 0)
+			alert("Home Location Not Recorded!");
+			return;
+			
 		var drone_home = new BMap.Point(home_lon, home_lat);
 		map.setCenter(drone_home);
 

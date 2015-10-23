@@ -15,7 +15,7 @@ This example aims to help you understand and play with the basic flight procedur
 * Example for GPS navigation (fly into a certain GPS coordinate)
 * Example for waypoint navigation (fly through a series of GPS coordinates)
 * Example of using MAVLink protocol and QGroundStation (TODO)
-* Example of using Websocket together with Google/Baidu Map for navigation purpose (TODO) 
+* Example of using Websocket together with Google/Baidu Map for navigation purpose 
 
 Developers can play with this example via the ROS interaction interface.
 
@@ -100,7 +100,10 @@ The client node is a sample node communicating with server node, which allows us
 
 The wp_client is a special client node for navigation purpose, where user can ask the drone fly into a certain position or fly throught a given waypoint lists.
 
-You can now try the different functions shown in the menu of the client node.
+What's more, we also provides a webpage client node for navigation purpose. Users can draw the [webpage navigation part](webpage_waypoint_client/README.md) for more detail.
+
+![webpageClient](../../Onboard_SDK_Doc/en/Images/ROS.png)
+
 
 ---
 
