@@ -1,10 +1,10 @@
 ## Onboard SDK & M100 FAQ
 
 ### 1. Is M100 compatible with DJI GO?
-Yes.
+Yes. Use DJI Go to control M100 just like Phantom 3 and Inspire 1.
 
 ### 2. Is M100 compatible with Mobile SDK?  
-Yes.
+Yes. Developers can create Apps with Mobile SDK for M100. 
 
 ### 3. Are there any no-fly zones for M100?  
 Yes, please comply with local regulations. For more, please refer to http://flysafe.dji.com/
@@ -46,7 +46,7 @@ Yes. Please visit https://developer.dji.com/matrice-100/downloads/ for more.
 For now, no. The initial height is set to be about 1.2 meters.
 
 ### 16. What is the recommended transmission rate for N1 flight controller to receive external commands?  
-50Hz.
+50Hz. Low control frequency will casuse vibrations and even lost control.
 
 ### 17. For M100, what are the built-in wireless data transmission solutions?  
 For now, only 2. The ‘Data Transparent Transmission’ and the ‘Lightbridge’.
