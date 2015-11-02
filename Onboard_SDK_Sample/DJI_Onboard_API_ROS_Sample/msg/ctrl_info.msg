@@ -1,2 +1,0 @@
-int8 cur_ctrl_dev_in_navi_mode
-int8 serial_req_status

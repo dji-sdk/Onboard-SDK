@@ -1,5 +1,0 @@
-#requestControl: 1
-#releaseControl: 0
-uint8 control_ability 
----
-bool result
