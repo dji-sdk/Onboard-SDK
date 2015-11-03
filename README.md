@@ -9,8 +9,8 @@
 - Understand the Onboard SDK APPs development paradigm
 - Get some best practice tips while getting your hands dirty
 
-### However, we assume you having the following basic requirements already:
-- You are passionated to be an UAV APP developer
+### However, we assume you already have the following basic requirements:
+- You are passionate about being an UAV APP developer
 - Some basic programming experience in C/C++ 
 - Some basic flight control knowledge like the concepts of Pitch, Roll and Yaw
 - One complete set of DJI developer flight platform* and one USB-TTL serial cable (SOLD seperately)
@@ -47,9 +47,9 @@ The Onboard SDK allows developers to communicate with the N1 Autopilot* from any
 ### System Architecture & Recommended Development Paradigm
 Two core components of the system architecture are the N1 Autopilot and an Onboard Device. They are physically connected via the serial port interface. 
 
-Since the Onboard OPEN protocal is designed to be opened thoroughly, experienced developers can directly:
+Since the Onboard OPEN protocol is designed to be opened thoroughly, experienced developers can directly:
 
-1. Write some low-level logics inside their APPs to contruct the underlying communication bit sequence;
+1. Write some low-level logic inside their APPs to construct the underlying communication bit sequence;
 2. Handle the package loss & resending mechanisms with the benifit of enjoying complete freedom.
 
 While for beginners, they can just comfortably use our Onboard SDK API Library to communicate with the N1 Autopilot, all they need to do is to call our APIs.
@@ -61,7 +61,7 @@ While for beginners, they can just comfortably use our Onboard SDK API Library t
 
 #### Step1:
 
-If you want to use our Onboard SDK API Library which have been used in our examples, you can download it from Github.
+If you want to use our Onboard SDK API Library, which has been used in our examples, you can download it from GitHub.
 
 #### Step2: 
 
@@ -83,7 +83,7 @@ In order to use the DJI PC Simulator & DJI N1 PC assistant, a physical connectio
 
 #### Step2: 
 
-In order to communicate with the N1 Autopilot via the Onboard OPEN protocal, a physical connection between your computer and N1 Autopilot is required with a USB to TTL full-duplex serial cable (SOLD Seperately).
+In order to communicate with the N1 Autopilot via the Onboard OPEN protocol, a physical connection between your computer and N1 Autopilot is required with a USB to TTL full-duplex serial cable (SOLD Seperately).
 
 >Note:   
 *  The serial level of N1 Autopilot should be 3.3 V.
