@@ -398,7 +398,7 @@ Please make sure the following conditions have been met:
 
 * The 'enable API control' box is checked in the N1 assistant software.
 * The IOC mode inside the DJI GO APP is off.
-* The mode selection bar of the remote controller is placed at the F position.
+* The mode selection bar of the remote controller is placed at the F position. (After aircraft powered-up, switch the mode selector to A or P and then turn to F )
 
 <table>
 <tr>
