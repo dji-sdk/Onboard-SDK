@@ -110,7 +110,7 @@ The remote controller always enjoys the top priority for the UAV control. The N1
 
 * The 'enable API control' box is checked in the N1 assistant software.
 * The IOC mode inside the DJI GO APP is off.
-* The mode selection bar of the remote controller is placed at the F position.
+* The mode selection bar of the remote controller is placed at the F position. (After aircraft powered-up, switch the mode selector to A or P and then turn to F )
 
 Once the above conditions are met, developers can call the related 'flight control request function' to request the flight control of UAV.
 
@@ -262,7 +262,7 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 
 * 在PC N1 assistant调参软件中，“启用API控制”勾选框已被勾选
 * 在DJI GO App中，IOC模式已被关闭
-* 遥控器的模式选择开关已置于F档
+* 遥控器的模式选择开关已置于F档 (请在飞机上电后，将模式选择开关先拨到A或P档后再拨到F档)
 
 满足以上三个条件后，开发者即可用“获取控制权”的相关命令获取无人机的飞行控制权。
 
