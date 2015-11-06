@@ -137,6 +137,8 @@ Please comply with the local regulations during the development process and the 
 
 - [Windows QT example](Onboard_SDK_Sample/DJI_Onboard_API_Windows_QT_Sample)
 
+- [STM32 example](https://github.com/justwillim/FOS/tree/Development/Lib/DJISDK)
+
 ### References Document:
 
 - [OPEN Protocol][0] & [Appendix][1] 
@@ -287,6 +289,8 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 - [Linux ROS example](Onboard_SDK_Sample/DJI_Onboard_API_ROS_Sample)
 
 - [Windows QT example](Onboard_SDK_Sample/DJI_Onboard_API_Windows_QT_Sample)
+
+- [STM32 example](https://github.com/justwillim/FOS/tree/Development/Lib/DJISDK)
 
 ### 参考文档:
 
