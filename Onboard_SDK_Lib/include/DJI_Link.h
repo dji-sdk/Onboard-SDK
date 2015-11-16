@@ -3,6 +3,8 @@
  *
  *  Created on: Mar 12, 2015
  *      Author: wuyuwei
+ *  Modified on: Nov 11, 2015
+ *  by william.wu
  */
 
 #ifndef DJI_PRO_LINK_H_

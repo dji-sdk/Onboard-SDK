@@ -1,12 +1,6 @@
 #include "DJI_API.h"
 #include <string.h>
 #include <stdio.h>
-//#ifndef __func
-//#define __func__
-//#endif
-//#ifdef __LINE__
-//#define __LINE__
-//#endif
 
 DJI::onboardSDK::API *defaultAPI;
 

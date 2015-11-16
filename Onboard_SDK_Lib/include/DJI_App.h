@@ -3,6 +3,8 @@
  *
  *  Created on: Sep 8, 2015
  *      Author: wuyuwei
+ *  Modified on: Nov 11, 2015
+ *  by william.wu
  */
 #ifndef __DJI_PRO_APP_H__
 #define __DJI_PRO_APP_H__

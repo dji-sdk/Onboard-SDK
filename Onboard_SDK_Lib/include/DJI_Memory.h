@@ -2,7 +2,9 @@
  * DJI_Pro_Rmu.h
  *
  *  Created on: 24 Aug, 2015
- *      Author: wuyuwei
+ *      Author: wuyuwe
+ *  Modified on: Nov 11, 2015
+ *  by william.wu
  */
 
 #ifndef DJI_PRO_RMU_H_
