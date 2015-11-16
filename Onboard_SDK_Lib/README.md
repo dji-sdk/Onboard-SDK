@@ -27,7 +27,7 @@ This is an officially released DJI Onboard SDK libaray, which you can include an
 
 3. Create two life-long threads(or one, at least) running `sendPoll` and `readPoll` functions repeatedly. (**Note**: the frequency should be lower 100Hz)
 
-Please read the code in `include` and `source` for more detial.
+Please read the code in `include` and `source` for more detail.
 
 ---
 
