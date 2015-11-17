@@ -1,5 +1,7 @@
 #DJI Onboard SDK Command Line Example
+
 ##Introduction
+
 This example aims to help you understand and play with the basic flight procedures including:
 
 * The activation
@@ -16,6 +18,7 @@ This example aims to help you understand and play with the basic flight procedur
 Developers can play with this example via the command line interaction interface in linux.
 
 ##Directory Structure
+
 * cmake: makefile and temporary files
 * output: executables
 * src: source code
@@ -23,15 +26,19 @@ Developers can play with this example via the command line interaction interface
 * README.md: this file
 
 ##Compile & Run Environment
+
 The below environment has been tested.
+
 * Operating System: Ubuntu 12.04
 * g++ version: 4.6.3
 
 ## Hardware Installation
+
 * In order to communicate with the N1 Autopilot via the DJI OPEN protocal, a physical connection between your Onboard Device and the N1 Autopilot is required with a USB to TTL Serial cable (SOLD Seperately).
 * In order to monitor & control the flight, a remote controller connects to the mobile device (with the DJI GO APP running) is needed.
 
 ##Configs
+
 Enter the following info into `./output/config.xml`
 
 * APP ID
@@ -43,6 +50,7 @@ Enter the following info into `./output/config.xml`
 >Note: the 'baudrate' set in the `config.xml` needs to be consistent with the setting in the DJI N1 PC assistant.
 
 ## Compile
+
 ~~~bash
 cd cmake
 make
@@ -51,14 +59,17 @@ make
 If the compilation is completed, a linux executable file called 'DJI_Onboard_API_Cmdline_Test' will be generated in the `output` dir.
 
 ##Run
+
 We recommend you first run this example in the simulator then move to the real flight test. Also, please be aware that you will need sudo privilege to manipulate the linux serial port. You may need to gain the sudo access privilege.
 
 Please make sure that `config.xml` file is sitted in the `output` folder before running. Then run the example by entering the following command:
+
 ~~~bash
 sudo ./DJI_Onboard_API_Cmdline_Test
 ~~~
 
 ##What You Can Expect
+
 * You can see the flight simulations on screen if you are using the DJI PC simulator. Otherwise, real flight happens.
 * You can see the actual 'gimbal and camera' movement.
 * You can see the image/video you capture from your Mobile Device.
@@ -70,6 +81,7 @@ ENJOY your flight!
 #DJI Onboard SDK Linux 终端例程
 
 ##简介
+
 这是一份运行在Linux终端下的实例程序。开发者可以参考此程序来理解和实现对飞机的控制指令，例如：
 
 * 激活 Matrice100（以下简称 M100）
@@ -86,6 +98,7 @@ ENJOY your flight!
 开发者可以在 Linux 终端中运行程序，来测试上述功能。
 
 ##目录架构
+
 * cmake: Makefile文件与编译器生成文件
 * output：编译后得到的可执行文件
 * src：代码源文件
@@ -93,23 +106,28 @@ ENJOY your flight!
 * README.md：此说明文档
 
 ##编译和运行环境
+
 此例程在以下系统环境中进行了测试：
+
 * Ubuntu 12.04 操作系统
 * G++ 版本 4.6.3
 
 ##硬件安装
+
 * 开发者需要通过 USB 转 TTL 连接线（需另行购买）连接机载设备与 M100 来进行数据通信。
 * 为了更好的监控 M100 当前状态，开发者可以在移动设备上运行 DJI GO 来查看 M100 当前信息。
 
 ##程序配置
-将以下信息输入至 `./output/config.xml`
-* APP ID （在官网注册key后得到）
-* API Level （key对应的 API 权限等级）
-* Communication Key（在官网注册key后得到）
-* Uart Device Name（串口设备名称）
-* Baudrate（比特率）
 
-> 注意：比特率需要同 N1 调参中设置的比特率保持一致。
+将以下信息输入至 `./output/config.xml`
+
+	* APP ID （在官网注册key后得到）
+	* API Level （key对应的 API 权限等级）
+	* Communication Key（在官网注册key后得到）
+	* Uart Device Name（串口设备名称）
+	* Baudrate（比特率）
+
+	> 注意：比特率需要同 N1 调参中设置的比特率保持一致。
 
 ##编译
 
@@ -123,6 +141,7 @@ make
 ##运行
 
 确保 `config.xml` 文件中的配置信息无误后，在`output`文件夹中运行如下命令即可运行程序：
+
 ~~~bash
 sudo ./DJI_Onboard_API_Cmdline_Test
 ~~~
