@@ -1,6 +1,9 @@
 # Onboard SDK OPEN Protocol  
+
 ---
+
 ## Protocol Frame
+
 The Protocal Frame is the smallest unit for transmission. It contains the Header, Data and the Tail as follows:
    ```
    |<---------------------Header-------------------------->|<--Data-->|<--Tail-->|
@@ -110,11 +113,14 @@ The Protocal Frame is the smallest unit for transmission. It contains the Header
   <td>CRC32 whole frame checksum</td>
 </tr>
 </table>
+
 >Note: When encryption is enabled, the order of operation sequence should be `encrypt DATA field` -> `update LEN and PADDING fields in frame header` -> `calculate CRC16` -> `calculate CRC32`
 
 >Note2: The byte content inside field is in LSB at left order. i.e. an 3th byte(SESSION+ACK+RES0) with value 0b01000000, the first 5 bits 01000 means value 2. Don't get lost when you're trying to print out the raw data of protocol. 
-<!-- >备注：如果协议帧需要AES加密，应先对数据段进行加密，该过程会改变数据长度，需要更新帧头中*PADDING*字段及*LEN*字段。再对帧头部分进行CRC16校验，获得校验值后再对整个协议帧进行CRC32校验 -->
+
+
 ### Frame Type
+
 There are two types of frames.
 
 |Frame Type|Data Type|Transmission Direction|Content|
@@ -123,6 +129,7 @@ There are two types of frames.
 |ACK frame|ACK frame data|N1 Autopilot <=> Onboard Device|ACK related data|
 
 #### CMD frame data
+
 ```
 |<------CMD frame data------>|
 | CMD SET | CMD ID | CMD VAL |
@@ -206,6 +213,7 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
 >Note: *The Authorization Level of the N1 Autopilot can be changed by the 'Activation' CMD. The init level is set to be 0.*
 
 **Function Index**
+
 <table>
 <tr>
   <th>CMD Set</th>
@@ -473,6 +481,7 @@ Please make sure the following conditions have been met:
 </table>
 
 #### CMD ID 0x02 Request Switch Result
+
 <table>
 <tr>
   <th>Data Type</th>
@@ -564,6 +573,7 @@ For more info about Movement Control, please refer to [Control mode byte part in
 
 
 #### CMD ID 0x1A Gimbal Control in Rate
+
 <table>
 <tr>
   <th>Data Type</th>
@@ -609,6 +619,7 @@ For more info about Movement Control, please refer to [Control mode byte part in
 </table>
 
 #### CMD ID 0x1B Gimbal Control in Position
+
 <table>
 <tr>
   <th>Data Type</th>
@@ -705,6 +716,7 @@ For more info about Movement Control, please refer to [Control mode byte part in
 **Note: Rotating 90 degree in `pitch` direction will cause gimbal lock problem, in which the value of `roll` and `yaw` are not reliable.**
 
 #### CMD ID 0x20 Take Photo
+
 <table>
 <tr>
   <th>Data Type</th>
@@ -727,6 +739,7 @@ For more info about Movement Control, please refer to [Control mode byte part in
   <td>N/A</td>
 </tr>
 </table>
+
 #### CMD ID 0x21 Start Video Recording
 
 <table>
@@ -752,6 +765,7 @@ For more info about Movement Control, please refer to [Control mode byte part in
 </tr>
 
 </table>
+
 #### CMD ID 0x22 Stop Video Recording
 
 <table>
@@ -776,12 +790,15 @@ For more info about Movement Control, please refer to [Control mode byte part in
   <td>N/A</td>
 </tr>
 </table>
+
 ### CMD Set 0x02 Push Data CMD Set
 
 #### CMD ID 0x00 Flight Data
 
 The flight data from the N1 Autopilot can be configured by the DJI N1 assistant software.
+
 More info about Flight Data, please refer to [Flight Data part in Appendix](Appendix.md#flight-data) .
+
 <table>
 <tr>
   <th>Data Type</th>

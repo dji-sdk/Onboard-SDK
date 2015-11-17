@@ -77,6 +77,7 @@ DJI_Pro_Control_Management(0,NULL);
 ~~~
 
 ## Take off, Land and Return to home (RTH)
+
 The return value of this function please refer to [Request Switch Result](OPENProtocol.md#cmd-id-0x02-request-switch-result)(Below codes do not use callback function).  
 
 ~~~c
@@ -142,7 +143,9 @@ Get quaternion as an example:
 Other data types and functions to obtain the corresponding data sent outside from autopilot, please refer `DJI_Pro_App.h`.
 
 ## GPS to North-East Coordinate
+
 Convert GPS to North-East Coordinate. (GPS in radian，North-East Coordinate in meter)
+
 For example, `origin_longti` and `origin_lati` , as the longitude and latitude of original position，are decided by developers and the position of UAV taking off is recommended to be the original position. `longti` and `lati` are longitude and latitude of UAV's current posistion. `x` and `y` are offset to the original position in the North and the East directions. The unit of offset is meter.
 
 ~~~c
@@ -171,6 +174,7 @@ Convert quaternion to roll, pitch and yaw in radian in body coordinate.
 ~~~
 
 ## Position Control(HORI_POS)
+
 The input horizatal arguements is the offset between current position and target position, when `HORI_POS` as the mode of horizatal movement control. The unit of offset is meter.
 
 For example, in ground frame, `target` is target position and `current` is UAV's current position. The coordinates of these positions are caculated by GPS, Guidance or other sensors. In most cases, GPS is a correct way to do this work.

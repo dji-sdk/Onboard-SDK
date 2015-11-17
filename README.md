@@ -5,11 +5,13 @@
 ## Welcome, Onboard SDK developers! 
 
 ### Via this document, you can:
+
 - Get a general understanding of the Onboard SDK in a short time
 - Understand the Onboard SDK APPs development paradigm
 - Get some best practice tips while getting your hands dirty
 
 ### However, we assume you already have the following basic requirements:
+
 - You are passionate about being an UAV APP developer
 - Some basic programming experience in C/C++ 
 - Some basic flight control knowledge like the concepts of Pitch, Roll and Yaw
@@ -45,6 +47,7 @@ The Onboard SDK allows developers to communicate with the N1 Autopilot* from any
   The data of Onboard Device can be transmitted to your Mobile Device in real time and vice versa.
 
 ### System Architecture & Recommended Development Paradigm
+
 Two core components of the system architecture are the N1 Autopilot and an Onboard Device. They are physically connected via the serial port interface. 
 
 Since the Onboard OPEN protocol is designed to be opened thoroughly, experienced developers can directly:
@@ -131,6 +134,7 @@ If you encounter any questions during the development, take a look at our [FAQ][
 Please comply with the local regulations during the development process and the flight. Please refer to http://flysafe.dji.com/ for more.
 
 ### Compile & Run Example Section:
+
 - [Linux Command Line example](Onboard_SDK_Sample/DJI_Onboard_API_Cmdline_Sample)
 
 - [Linux ROS example](Onboard_SDK_Sample/DJI_Onboard_API_ROS_Sample)
@@ -150,9 +154,8 @@ Please comply with the local regulations during the development process and the 
 - [FAQ][FAQ]
 
 ### Articles contributed by external developers:
-- [Onboard Device Selection Tips](http://bbs.dji.com/forum.php?mod=viewthread&tid=21106&extra=page%3D1%26filter%3Ddigest%26digest%3D1) (Chinese)
 
-- [Migrate the Onboard SDK API Library to STM32 and use STM32 to control M100](http://bbs.dji.com/forum.php?mod=viewthread&tid=19754&extra=page%3D1%26filter%3Ddigest%26digest%3D1) (Chinese)
+- [Onboard Device Selection Tips](http://bbs.dji.com/forum.php?mod=viewthread&tid=21106&extra=page%3D1%26filter%3Ddigest%26digest%3D1) (Chinese)
 
 - [Onboard SDK & M100 FAQ (Unofficial)](http://bbs.dji.com/forum.php?mod=viewthread&tid=15991&extra=page%3D1%26filter%3Ddigest%26digest%3D1%26typeid%3D182) (Chinese)
 
@@ -175,6 +178,7 @@ Please comply with the local regulations during the development process and the 
 * 在进行Onboard SDK开发的同时获取有用的编程提示
 
 ### 在这里，我们认为您：
+
 * 对无人机应用开发富有热情
 * 具有一些基础的C/C++编程经验
 * 了解基础的飞行控制知识如横滚 (Roll)、俯仰 (Pitch)和偏航 (Yaw)
@@ -271,6 +275,7 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 ## 结语
 
 ### 尊敬的Onboard SDK开发者，您已经准备好并可以投入到飞行应用的实际开发中了！
+
 在这里，我们列出所有可供您参考的文档。通过阅读这些文档，能使您的开发之路更为顺畅。以下是我们推荐您的开发步骤：
 
 1. 编译并运行Onboard SDK提供的一些示例
@@ -306,8 +311,6 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 ### 由外部开发者提供的文档:
 
 - [可以在M100上使用的机载设备及机载外部设备](http://bbs.dji.com/forum.php?mod=viewthread&tid=21106&extra=page%3D1%26filter%3Ddigest%26digest%3D1)
-
-- [把Onboard SDK移植到STM32并用此芯片对M100进行控制](http://bbs.dji.com/forum.php?mod=viewthread&tid=19754&extra=page%3D1%26filter%3Ddigest%26digest%3D1)
 
 - [关于M100 & Onboard SDK的问题FAQ (非官方)](http://bbs.dji.com/forum.php?mod=viewthread&tid=15991&extra=page%3D1%26filter%3Ddigest%26digest%3D1%26typeid%3D182)
 

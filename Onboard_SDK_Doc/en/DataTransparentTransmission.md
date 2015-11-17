@@ -1,6 +1,6 @@
 # Data Transparent Transmission
 
-## Intro
+## Introduction
 
 The purpose of this document is to give an overview of the 'Data Transparent Transmission' between an Onboard Device and an Mobile Device. The rest of this document is organized as followed:
 * Problem Motivation
