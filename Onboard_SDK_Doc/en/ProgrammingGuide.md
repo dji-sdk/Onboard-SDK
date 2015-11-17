@@ -1,8 +1,11 @@
 # Onboard SDK Programming Guide
+
 ---
+
 All structures and functions are implemented in `DJI_Pro_App.cpp`. For more details, please refer source code.
 
 ---
+
 ## Callback mechanism
 
 For all commands which has return value mentioned in OPEN Protocol, developers can get the return value by callback functions.
@@ -28,6 +31,7 @@ DJI_Pro_Activate_API(&user_act_data, cb_user_notice);
 
 
 ## Initialization  (for linux)
+
 ~~~c
 {
     int baudrate = 115200;
@@ -71,8 +75,10 @@ DJI_Pro_Control_Management(1,NULL);
 /* Release controller */
 DJI_Pro_Control_Management(0,NULL);
 ~~~
+
 ## Take off, Land and Return to home (RTH)
 The return value of this function please refer to [Request Switch Result](OPENProtocol.md#cmd-id-0x02-request-switch-result)(Below codes do not use callback function).  
+
 ~~~c
 /* Take off */
 DJI_Pro_Status_Ctrl(4,NULL);
@@ -81,6 +87,7 @@ DJI_Pro_Status_Ctrl(6,NULL);
 /* Return to home */
 DJI_Pro_Status_Ctrl(1,NULL);
 ~~~
+
 ## Movement Control
 
 We recommend developers to send yours Movement Control commands in 50Hz frequency. Developers can implement that by `usleep(20000)`、`ros::Duration(1/50)` or other ways which depend on the develop environment.
@@ -111,18 +118,23 @@ We recommend developers to use `HORI_POS` mode in horizontal movement. More deta
     }
 }
 ~~~
+
 ## Receive Flight Data
+
 If developers want to get Flight Data, please check corresponding item in DJI N1 assistant software. And examine the coordinate of part data.
 
 Developers need to declare correct structure variables to save Flight Data.
 
 Get quaternion as an example:  
+
 1. Declare quaternion struction
+
 ~~~c
     api_quaternion_data_t quat;
 ~~~
 
-2、Get the quaternion
+2. Get the quaternion
+
 ~~~c
     DJI_Pro_Get_Quaternion(&quat);
 ~~~
@@ -146,7 +158,9 @@ For example, `origin_longti` and `origin_lati` , as the longitude and latitude o
 ~~~
 
 ## Quaternion to RPY
+
 Convert quaternion to roll, pitch and yaw in radian in body coordinate.
+
 ~~~c
     api_quaternion_data_t q;
     DJI_Pro_Get_Quaternion(&q);
@@ -192,8 +206,3 @@ while(1)
     usleep(20000);                                  /* 50 Hz */
 }
 ~~~
-
-<!-- ## 数据透传
-TODO -->
-
-
