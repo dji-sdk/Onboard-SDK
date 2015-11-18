@@ -21,11 +21,6 @@
 
 #include <string.h>
 #include <stdio.h>
-#ifdef __GNUC__
-#include <pthread.h>
-#include <sys/time.h>
-#include <unistd.h>
-#endif
 #include "DJI_App.h"
 #include "DJI_API.h"
 

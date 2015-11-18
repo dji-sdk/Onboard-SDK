@@ -29,16 +29,6 @@ public:
 
     virtual void lockMSG();
     virtual void freeMSG();
-
-    port_t getPort() const;
-    void setPort(const port_t &value);
-
-private:
-    mutex_t mmu_lock;
-    mutex_t std_msg_lock;
-
-protected:
-    port_t port;
 };
 }//namespace onboardSDK
 }//namespace DJI
