@@ -19,7 +19,6 @@ This is an officially released DJI Onboard SDK libaray, which you can include an
  
 
 ####How to use
-0. Modify the `typedef` of *thread mutex* and *serial port* in `DJI_Config.h` 
 
 1. Inheritance `HardDriver` class. Impllement the `lock` and `unlock` functions, together with several other virtual functions.  
 
@@ -58,8 +57,6 @@ Currently the Cmdline/ROS/QT sample programs are still running with the old vers
         ARMCC
  
 ####具体使用方法：
-
-0. 在DJI_Config.h 中修改线程锁和串口指针的typedef 原名。
 
 1. 将HardDriver类继承，实现其虚函数表中的全部函数以及线程锁的lock及unlock函数。
 
