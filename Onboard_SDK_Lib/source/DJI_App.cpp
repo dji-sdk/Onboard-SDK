@@ -26,161 +26,169 @@
 
 using namespace DJI::onboardSDK;
 
+inline void passData(uint16_t _flag, uint16_t _enable, void *_data,
+                     unsigned char *_buf, size_t _datalen)
+{
+    if ((_flag & _enable))
+    {
+        memcpy((unsigned char *)&(_data), (unsigned char *)(_buf) + (_datalen),
+               sizeof(_data));
+        _datalen += sizeof(_data);
+    }
+}
+
 unsigned char getCmdSet(Header *header)
 {
-    unsigned char *ptemp =((unsigned char *)header)+sizeof(Header);
+    unsigned char *ptemp = ((unsigned char *)header) + sizeof(Header);
     return *ptemp;
 }
 
 unsigned char getCmdCode(Header *header)
 {
-    unsigned char *ptemp = ((unsigned char *)header)+sizeof(Header);
-    ptemp ++;
+    unsigned char *ptemp = ((unsigned char *)header) + sizeof(Header);
+    ptemp++;
     return *ptemp;
 }
 
-void DJI::onboardSDK::API::getBroadcastData(BroadcastData_t *p_user_buf) const
+BroadcastData DJI::onboardSDK::API::getBroadcastData() const
 {
-    driver->lockMSG();
-    *p_user_buf = broadcastData;
-    driver->freeMSG();
+    return broadcastData;
 }
 
-void DJI::onboardSDK::API::getBatteryCapacity(unsigned char *data) const
+BatteryData DJI::onboardSDK::API::getBatteryCapacity() const
 {
-    driver->lockMSG();
-    *data = broadcastData.battery_remaining_capacity;
-    driver->freeMSG();
+    return broadcastData.capacity;
 }
 
-void DJI::onboardSDK::API::getQuaternion(QuaternionData_t *p_user_buf) const
+QuaternionData DJI::onboardSDK::API::getQuaternion() const
 {
-    driver->lockMSG();
-    *p_user_buf = broadcastData.q;
-    driver->freeMSG();
+    return broadcastData.q;
 }
 
-void DJI::onboardSDK::API::getGroundAcc(CommonData_t *p_user_buf) const
+CommonData DJI::onboardSDK::API::getGroundAcc() const
 {
-    driver->lockMSG();
-    *p_user_buf = broadcastData.a;
-    driver->freeMSG();
+    return broadcastData.a;
 }
 
-void DJI::onboardSDK::API::getGroundVo(api_vel_data_t *p_user_buf) const
+SpeedData DJI::onboardSDK::API::getGroundSpeed() const
 {
-    driver->lockMSG();
-    *p_user_buf = broadcastData.v;
-    driver->freeMSG();
+    return broadcastData.v;
 }
 
-void DJI::onboardSDK::API::getCtrlInfo(CtrlInfoData_t *p_user_buf) const
+CtrlInfoData DJI::onboardSDK::API::getCtrlInfo() const
 {
-    driver->lockMSG();
-    *p_user_buf = broadcastData.ctrl_info;
-    driver->freeMSG();
+    return broadcastData.ctrl_info;
 }
 
 void DJI::onboardSDK::API::broadcast(Header *header)
 {
-    unsigned char *pdata = ((unsigned char *)header)+sizeof(Header);
-    unsigned short *msg_enable_flag;
-    unsigned short data_len = MSG_ENABLE_FLAG_LEN;
+    unsigned char *pdata = ((unsigned char *)header) + sizeof(Header);
+    unsigned short *enableFlag;
+    unsigned short len = MSG_ENABLE_FLAG_LEN;
     driver->lockMSG();
     pdata += 2;
-    msg_enable_flag = (unsigned short *)pdata;
-    PARSE_STD_MSG( *msg_enable_flag, ENABLE_MSG_TIME,       broadcastData.time_stamp                   , pdata, data_len);
-    PARSE_STD_MSG( *msg_enable_flag, ENABLE_MSG_Q,          broadcastData.q                            , pdata, data_len);
-    PARSE_STD_MSG( *msg_enable_flag, ENABLE_MSG_A,          broadcastData.a                            , pdata, data_len);
-    PARSE_STD_MSG( *msg_enable_flag, ENABLE_MSG_V,          broadcastData.v                            , pdata, data_len);
-    PARSE_STD_MSG( *msg_enable_flag, ENABLE_MSG_W,          broadcastData.w                            , pdata, data_len);
-    PARSE_STD_MSG( *msg_enable_flag, ENABLE_MSG_POS,        broadcastData.pos                          , pdata, data_len);
-    PARSE_STD_MSG( *msg_enable_flag, ENABLE_MSG_MAG,        broadcastData.mag                          , pdata, data_len);
-    PARSE_STD_MSG( *msg_enable_flag, ENABLE_MSG_RC,         broadcastData.rc                           , pdata, data_len);
-    PARSE_STD_MSG( *msg_enable_flag, ENABLE_MSG_GIMBAL,     broadcastData.gimbal                       , pdata, data_len);
-    PARSE_STD_MSG( *msg_enable_flag, ENABLE_MSG_STATUS,     broadcastData.status                       , pdata, data_len);
-    PARSE_STD_MSG( *msg_enable_flag, ENABLE_MSG_BATTERY,    broadcastData.battery_remaining_capacity	, pdata, data_len);
-    PARSE_STD_MSG( *msg_enable_flag, ENABLE_MSG_DEVICE,     broadcastData.ctrl_info                    , pdata, data_len);
+    enableFlag = (unsigned short *)pdata;
+    passData(*enableFlag, ENABLE_MSG_TIME, &broadcastData.timeStamp, pdata,
+             len);
+    passData(*enableFlag, HAS_Q, &broadcastData.q, pdata, len);
+    passData(*enableFlag, HAS_A, &broadcastData.a, pdata, len);
+    passData(*enableFlag, HAS_V, &broadcastData.v, pdata, len);
+    passData(*enableFlag, HAS_W, &broadcastData.w, pdata, len);
+    passData(*enableFlag, HAS_POS, &broadcastData.pos, pdata, len);
+    passData(*enableFlag, HAS_MAG, &broadcastData.mag, pdata, len);
+    passData(*enableFlag, HAS_RC, &broadcastData.rc, pdata, len);
+    passData(*enableFlag, HAS_GIMBAL, &broadcastData.gimbal, pdata, len);
+    passData(*enableFlag, HAS_STATUS, &broadcastData.status, pdata, len);
+    passData(*enableFlag, HAS_BATTERY, &broadcastData.capacity, pdata, len);
+    passData(*enableFlag, HAS_DEVICE, &broadcastData.ctrl_info, pdata, len);
     driver->freeMSG();
 
     if (broadcastHandler)
         broadcastHandler();
 
-    if(broadcastData.time_stamp%500 == 0)
-        API_DEBUG("time: %d\n",broadcastData.time_stamp);
+    if (broadcastData.timeStamp % 500 == 0)
+        API_DEBUG("time: %d\n", broadcastData.timeStamp);
 }
 
 void DJI::onboardSDK::API::recvReqData(Header *header)
 {
-    unsigned char buf[100] = {0,0};
+    unsigned char buf[100] = { 0, 0 };
     unsigned char len = 0;
-    switch(header->session_id)
+    switch (header->session_id)
     {
-    case 0:
-        if(getCmdSet(header) == SET_BROADCAST)
-        {
-            switch(getCmdCode(header))
+        case 0:
+            if (getCmdSet(header) == SET_BROADCAST)
             {
-            case CODE_BROADCAST:
-                broadcast(header);
-                break;
-            case CODE_FROMMOBILE:
-                if(transparentHandler)
+                switch (getCmdCode(header))
                 {
-                    len = (header->length - EXC_DATA_SIZE -2) > 100 ? 100 : (header->length - EXC_DATA_SIZE -2);
-                    memcpy(buf,((unsigned char *)header)+sizeof(Header) + 2,len);
-                    transparentHandler(buf,len);
+                    case CODE_BROADCAST:
+                        broadcast(header);
+                        break;
+                    case CODE_FROMMOBILE:
+                        if (transparentHandler)
+                        {
+                            len = (header->length - EXC_DATA_SIZE - 2) > 100
+                                      ? 100
+                                      : (header->length - EXC_DATA_SIZE - 2);
+                            memcpy(buf, ((unsigned char *)header) +
+                                            sizeof(Header) + 2,
+                                   len);
+                            transparentHandler(buf, len);
+                        }
+                        break;
+                    case CODE_LOSTCTRL:
+                        API_STATUS("%s:onboardSDK lost contrl\n", __func__);
+                        break;
+                    default:
+                        API_STATUS(
+                            "error, unknown BROADCAST command code 0x%X\n",
+                            getCmdCode(header));
+                        break;
                 }
-                break;
-            case CODE_LOSTCTRL:
-                API_STATUS("%s:onboardSDK lost contrl\n",__func__);
-                break;
-            default:
-                API_STATUS("error, unknown BROADCAST command code 0x%X\n",getCmdCode(header));
-                break;
             }
-        }
-        else
-        {
-            API_DEBUG("%s:receive unknown command\n",__func__);
-            if(recvHandler)
+            else
+            {
+                API_DEBUG("%s:receive unknown command\n", __func__);
+                if (recvHandler)
+                {
+                    recvHandler(header);
+                }
+            }
+            break;
+        case 1:
+        case 2:
+            API_DEBUG("%s:Recv request,session id=%d,seq_num=%d\n", __func__,
+                      header->session_id, header->sequence_number);
+            if (recvHandler)
             {
                 recvHandler(header);
             }
-        }
-        break;
-    case 1:
-    case 2:
-        API_DEBUG("%s:Recv request,session id=%d,seq_num=%d\n",
-               __func__,header->session_id,header->sequence_number);
-        if(recvHandler)
-        {
-            recvHandler(header);
-        }
-        else
-        {
-            Ack param;
-            if(header->session_id > 0)
+            else
             {
-                buf[0] = buf[1] = 0;
-                param.session_id = header->session_id;
-                param.seq_num = header->sequence_number;
-                param.need_encrypt = header->enc_type;
-                param.buf = buf;
-                param.length = 2;
-                ackInterface(&param);
+                Ack param;
+                if (header->session_id > 0)
+                {
+                    buf[0] = buf[1] = 0;
+                    param.session_id = header->session_id;
+                    param.seq_num = header->sequence_number;
+                    param.need_encrypt = header->enc_type;
+                    param.buf = buf;
+                    param.length = 2;
+                    ackInterface(&param);
+                }
             }
-        }
-        break;
+            break;
     }
 }
 
-void DJI::onboardSDK::API::setTransparentTransmissionCallback(TransparentHandler transparentHandlerEntrance)
+void DJI::onboardSDK::API::setTransparentTransmissionCallback(
+    TransparentHandler transparentHandlerEntrance)
 {
     transparentHandler = transparentHandlerEntrance;
 }
 
-void DJI::onboardSDK::API::setBroadcastCallback(BroadcastHandler broadcastHandlerEntrance)
+void DJI::onboardSDK::API::setBroadcastCallback(
+    BroadcastHandler broadcastHandlerEntrance)
 {
     broadcastHandler = broadcastHandlerEntrance;
 }
