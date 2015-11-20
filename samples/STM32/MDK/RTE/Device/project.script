@@ -1,0 +1,4 @@
+load STM32F407ZETx 
+project name STCubeGenerated 
+project toolchain MDK-ARM V5 
+project path D:\git\Lib\DJISDK\MDK\RTE\Device\STM32F407ZETx\ 

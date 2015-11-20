@@ -1,3 +1,5 @@
 *.o
 *~
-Onboard_SDK_Sample/DJI_Onboard_API_Cmdline_Sample/output/DJI_Onboard_API_Cmdline_Test
+lib/build-DJI_onboardSDK-Desktop_Qt_5_4_2_MinGW_32bit-Debug
+samples/STM32/MDK/Objects/
+samples/STM32/MDK/Listings/
