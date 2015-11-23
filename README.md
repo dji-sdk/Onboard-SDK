@@ -160,12 +160,12 @@ Please comply with the local regulations during the development process and the 
 - [Onboard SDK & M100 FAQ (Unofficial)](http://bbs.dji.com/forum.php?mod=viewthread&tid=15991&extra=page%3D1%26filter%3Ddigest%26digest%3D1%26typeid%3D182) (Chinese)
 
 
-[0]:Onboard_SDK_Doc/en/OPENProtocol.md  
-[1]:Onboard_SDK_Doc/en/Appendix.md  
-[2]:Onboard_SDK_Doc/en/DataTransparentTransmission.md   
-[3]:Onboard_SDK_Doc/en/ProgrammingGuide.md   
-[FAQ]:Onboard_SDK_Doc/en/FAQ_en.md   
-[Activation]:Onboard_SDK_Doc/en/ActivationGuide.md
+[0]:doc/en/OPENProtocol.md  
+[1]:doc/en/Appendix.md  
+[2]:doc/en/DataTransparentTransmission.md   
+[3]:doc/en/ProgrammingGuide.md   
+[FAQ]:doc/en/FAQ_en.md   
+[Activation]:doc/en/ActivationGuide.md
 
 ---
 
@@ -314,9 +314,9 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 
 - [关于M100 & Onboard SDK的问题FAQ (非官方)](http://bbs.dji.com/forum.php?mod=viewthread&tid=15991&extra=page%3D1%26filter%3Ddigest%26digest%3D1%26typeid%3D182)
 
-[cn0]:Onboard_SDK_Doc/cn/开放协议.md  
-[cn1]:Onboard_SDK_Doc/cn/附录.md  
-[cn2]:Onboard_SDK_Doc/cn/数据透传.md
-[cn3]:Onboard_SDK_Doc/cn/编程指南.md
-[cnActivation]:Onboard_SDK_Doc/cn/激活指南.md
-[cnFAQ]:Onboard_SDK_Doc/cn/FAQ_cn.md
+[cn0]:doc/cn/开放协议.md  
+[cn1]:doc/cn/附录.md  
+[cn2]:doc/cn/数据透传.md
+[cn3]:doc/cn/编程指南.md
+[cnActivation]:doc/cn/激活指南.md
+[cnFAQ]:doc/cn/FAQ_cn.md
