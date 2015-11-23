@@ -31,6 +31,7 @@ class Flight;
 class Camera;
 class Mission;
 class Swarm;
+class VirtualRC;
 
 enum TASK
 {
@@ -122,8 +123,8 @@ class CoreAPI
      *  @todo move to a new class
      */
     void setAttitude(AttitudeData_t *p_user_data);
-    void setGimbalAngle(GimbalAngleData_t *p_user_data);
-    void setGimbalSpeed(GimbalSpeedData_t *p_user_data);
+    void setGimbalAngle(GimbalAngleData *p_user_data);
+    void setGimbalSpeed(GimbalSpeedData *p_user_data);
     void setCamera(CAMERA camera_cmd);
 
     QuaternionData getQuaternion() const;
@@ -220,6 +221,52 @@ class CoreAPI
   private:
     HardDriver *driver;
 };
+
+class Flight
+{
+public:
+    Flight(CoreAPI* ContorlAPI);
+private:
+    Flight();
+    CoreAPI* api;
+};
+
+class Camera
+{
+public:
+    Camera(CoreAPI* ContorlAPI);
+private:
+    Camera();
+    CoreAPI* api;
+};
+
+class Mission
+{
+public:
+    Mission(CoreAPI* ContorlAPI);
+private:
+    Mission();
+    CoreAPI* api;
+};
+
+class Swarm
+{
+public:
+    Swarm(CoreAPI* ContorlAPI);
+private:
+    Swarm();
+    CoreAPI* api;
+};
+
+class VirtualRC
+{
+public:
+    VirtualRC(CoreAPI* ContorlAPI);
+private:
+    VirtualRC();
+    CoreAPI* api;
+};
+
 } // namespace onboardSDK
 } // namespace DJI
 

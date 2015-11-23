@@ -133,16 +133,16 @@ void DJI::onboardSDK::CoreAPI::setAttitude(AttitudeData_t *p_user_data)
          sizeof(AttitudeData_t), 0, 0, 1);
 }
 
-void DJI::onboardSDK::CoreAPI::setGimbalAngle(GimbalAngleData_t *p_user_data)
+void DJI::onboardSDK::CoreAPI::setGimbalAngle(GimbalAngleData *p_user_data)
 {
     send(0, 1, SET_CONTROL, API_GIMBAL_CTRL_ANGLE_REQUEST,
-         (unsigned char *)p_user_data, sizeof(GimbalAngleData_t), 0, 0, 1);
+         (unsigned char *)p_user_data, sizeof(GimbalAngleData), 0, 0, 1);
 }
 
-void DJI::onboardSDK::CoreAPI::setGimbalSpeed(GimbalSpeedData_t *p_user_data)
+void DJI::onboardSDK::CoreAPI::setGimbalSpeed(GimbalSpeedData *p_user_data)
 {
     send(0, 1, SET_CONTROL, API_GIMBAL_CTRL_SPEED_REQUEST,
-         (unsigned char *)p_user_data, sizeof(GimbalSpeedData_t), 0, 0, 1);
+         (unsigned char *)p_user_data, sizeof(GimbalSpeedData), 0, 0, 1);
 }
 
 void DJI::onboardSDK::CoreAPI::setCamera(DJI::onboardSDK::CAMERA camera_cmd)

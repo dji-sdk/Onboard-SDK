@@ -35,7 +35,7 @@ namespace onboardSDK
 const size_t SESSION_TABLE_NUM = 32;
 class CoreAPI;
 
-typedef struct
+typedef struct Header
 {
     unsigned int sof : 8;
     unsigned int length : 10;
@@ -55,7 +55,7 @@ typedef struct
 
 typedef void (*CallBack)(DJI::onboardSDK::CoreAPI *, Header *);
 
-typedef struct
+typedef struct Command
 {
     unsigned short session_mode : 2;
     unsigned short need_encrypt : 1;
@@ -66,7 +66,7 @@ typedef struct
     CallBack callback;
 } Command;
 
-typedef struct
+typedef struct SDKFilter
 {
     unsigned short reuse_index;
     unsigned short reuse_count;
@@ -85,7 +85,7 @@ typedef struct MMU_Tab
     unsigned char *pmem;
 } MMU_Tab;
 
-typedef struct
+typedef struct CMDSession
 {
     unsigned int sessionID : 5;
     unsigned int usageFlag : 1;
@@ -98,7 +98,7 @@ typedef struct
     unsigned int pre_timestamp;
 } CMDSession;
 
-typedef struct
+typedef struct ACKSession
 {
     unsigned int sessionID : 5;
     unsigned int session_status : 2;
@@ -118,7 +118,7 @@ typedef struct Ack
 typedef uint8_t BatteryData;
 #pragma pack(1)
 
-typedef struct
+typedef struct GimbalAngleData
 {
     signed short yaw_angle;
     signed short roll_angle;
@@ -132,24 +132,24 @@ typedef struct
         unsigned char reserve : 4;
     } ctrl_byte;
     unsigned char duration;
-} GimbalAngleData_t;
+} GimbalAngleData;
 
-typedef struct
+typedef struct GimbalSpeedData
 {
     signed short yaw_angle_rate;
     signed short roll_angle_rate;
     signed short pitch_angle_rate;
-    struct
+    struct ControlByte
     {
         unsigned char reserve : 7;
         unsigned char ctrl_switch : 1; // decide increment mode or absolute mode
     } ctrl_byte;
-} GimbalSpeedData_t;
+} GimbalSpeedData;
 
 typedef float float32_t;
 typedef double float64_t;
 
-typedef struct
+typedef struct QuaternionData
 {
     float32_t q0;
     float32_t q1;
@@ -164,7 +164,7 @@ typedef struct
     float32_t z;
 } CommonData;
 
-typedef struct
+typedef struct SpeedData
 {
     float32_t x;
     float32_t y;
