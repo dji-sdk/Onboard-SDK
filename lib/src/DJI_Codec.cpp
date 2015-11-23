@@ -610,7 +610,7 @@ void encodeData(SDKFilter *p_filter, Header *p_head,
             p_head->length - p_head->padding; // minus padding length;
 }
 
-void DJI::onboardSDK::API::callApp(SDKFilter *p_filter)
+void DJI::onboardSDK::CoreAPI::callApp(SDKFilter *p_filter)
 {
     // pass current data to handler
     Header *p_head = (Header *)p_filter->comm_recv_buf;
@@ -689,7 +689,7 @@ void sdk_stream_update_reuse_part_lambda(SDKFilter *p_filter)
     p_filter->reuse_count++;
 }
 
-void DJI::onboardSDK::API::verifyData(SDKFilter *p_filter)
+void DJI::onboardSDK::CoreAPI::verifyData(SDKFilter *p_filter)
 {
     Header *p_head = (Header *)(p_filter->comm_recv_buf);
     if (_SDK_CALC_CRC_TAIL(p_head, p_head->length) == 0)
@@ -703,7 +703,7 @@ void DJI::onboardSDK::API::verifyData(SDKFilter *p_filter)
     }
 }
 
-void DJI::onboardSDK::API::verifyHead(SDKFilter *p_filter)
+void DJI::onboardSDK::CoreAPI::verifyHead(SDKFilter *p_filter)
 {
     Header *p_head = (Header *)(p_filter->comm_recv_buf);
 
@@ -724,7 +724,7 @@ void DJI::onboardSDK::API::verifyHead(SDKFilter *p_filter)
     }
 }
 
-void DJI::onboardSDK::API::checkStream(SDKFilter *p_filter)
+void DJI::onboardSDK::CoreAPI::checkStream(SDKFilter *p_filter)
 {
     Header *p_head = (Header *)(p_filter->comm_recv_buf);
 
@@ -744,14 +744,14 @@ void DJI::onboardSDK::API::checkStream(SDKFilter *p_filter)
     }
 }
 
-void DJI::onboardSDK::API::streamHandler(SDKFilter *p_filter,
+void DJI::onboardSDK::CoreAPI::streamHandler(SDKFilter *p_filter,
                                          unsigned char in_data)
 {
     storeData(p_filter, in_data);
     checkStream(p_filter);
 }
 
-void DJI::onboardSDK::API::byteHandler(const uint8_t in_data)
+void DJI::onboardSDK::CoreAPI::byteHandler(const uint8_t in_data)
 {
     filter.reuse_count = 0;
     filter.reuse_index = _SDK_MAX_RECV_SIZE;
@@ -838,7 +838,7 @@ void transformTwoByte(const char *pstr, unsigned char *pdata)
     }
 }
 
-unsigned short DJI::onboardSDK::API::encrypt(
+unsigned short DJI::onboardSDK::CoreAPI::encrypt(
     unsigned char *pdest, const unsigned char *psrc, unsigned short w_len,
     unsigned char is_ack, unsigned char is_enc, unsigned char session_id,
     unsigned short seq_num)

@@ -33,7 +33,7 @@ namespace DJI
 namespace onboardSDK
 {
 const size_t SESSION_TABLE_NUM = 32;
-class API;
+class CoreAPI;
 
 typedef struct
 {
@@ -53,7 +53,7 @@ typedef struct
     unsigned int head_crc : 16;
 } Header;
 
-typedef void (*CallBack)(DJI::onboardSDK::API *, Header *);
+typedef void (*CallBack)(DJI::onboardSDK::CoreAPI *, Header *);
 
 typedef struct
 {

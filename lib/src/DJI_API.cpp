@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 
-DJI::onboardSDK::API::API(DJI::onboardSDK::HardDriver *Driver,
+DJI::onboardSDK::CoreAPI::CoreAPI(DJI::onboardSDK::HardDriver *Driver,
                           ReceiveHandler user_cmd_handler_entrance)
 {
     driver = Driver;
@@ -20,7 +20,7 @@ DJI::onboardSDK::API::API(DJI::onboardSDK::HardDriver *Driver,
     setup();
 }
 
-void DJI::onboardSDK::API::send(unsigned char session_mode,
+void DJI::onboardSDK::CoreAPI::send(unsigned char session_mode,
                                 unsigned char is_enc, CMD_SET cmd_set,
                                 unsigned char cmd_id, unsigned char *pdata,
                                 int len, CallBack ack_callback, int timeout,
@@ -45,12 +45,12 @@ void DJI::onboardSDK::API::send(unsigned char session_mode,
     sendInterface(&param);
 }
 
-void DJI::onboardSDK::API::send(Command *parameter)
+void DJI::onboardSDK::CoreAPI::send(Command *parameter)
 {
     sendInterface(parameter);
 }
 
-void DJI::onboardSDK::API::ack(req_id_t req_id, unsigned char *ackdata, int len)
+void DJI::onboardSDK::CoreAPI::ack(req_id_t req_id, unsigned char *ackdata, int len)
 {
     Ack param;
 
@@ -65,7 +65,7 @@ void DJI::onboardSDK::API::ack(req_id_t req_id, unsigned char *ackdata, int len)
     this->ackInterface(&param);
 }
 
-void DJI::onboardSDK::API::task(TASK taskname,
+void DJI::onboardSDK::CoreAPI::task(TASK taskname,
                                 CommandResult user_notice_entrance)
 {
     unsigned char cur_cmd = 0;
@@ -76,10 +76,10 @@ void DJI::onboardSDK::API::task(TASK taskname,
     taskData.cmd_sequence++;
 
     send(2, 1, SET_CONTROL, API_CMD_REQUEST, (unsigned char *)&taskData,
-         sizeof(taskData), DJI::onboardSDK::API::taskCallback, 100, 3);
+         sizeof(taskData), DJI::onboardSDK::CoreAPI::taskCallback, 100, 3);
 }
 
-void DJI::onboardSDK::API::getVersion(
+void DJI::onboardSDK::CoreAPI::getVersion(
     Get_API_Version_Notify user_notice_entrance)
 {
     versionData.version_ack = 0xFFFF;
@@ -91,10 +91,10 @@ void DJI::onboardSDK::API::getVersion(
     unsigned char cmd_data = 0;
 
     send(2, 1, SET_ACTIVATION, API_VER_QUERY, (unsigned char *)&cmd_data, 1,
-         DJI::onboardSDK::API::getVersionCallback, cmd_timeout, retry_time);
+         DJI::onboardSDK::CoreAPI::getVersionCallback, cmd_timeout, retry_time);
 }
 
-void DJI::onboardSDK::API::activate(ActivateData_t *p_user_data,
+void DJI::onboardSDK::CoreAPI::activate(ActivateData_t *p_user_data,
                                     CommandResult user_notice_entrance)
 {
     activateResult = user_notice_entrance ? user_notice_entrance : 0;
@@ -102,10 +102,10 @@ void DJI::onboardSDK::API::activate(ActivateData_t *p_user_data,
 
     send(2, 0, SET_ACTIVATION, API_USER_ACTIVATION,
          (unsigned char *)&accountData, sizeof(accountData) - sizeof(char *),
-         DJI::onboardSDK::API::activateCallback, 1000, 3);
+         DJI::onboardSDK::CoreAPI::activateCallback, 1000, 3);
 }
 
-void DJI::onboardSDK::API::sendToMobile(unsigned char *data, unsigned char len,
+void DJI::onboardSDK::CoreAPI::sendToMobile(unsigned char *data, unsigned char len,
                                         CommandResult user_notice_entrance)
 {
     if (len > 100)
@@ -115,51 +115,51 @@ void DJI::onboardSDK::API::sendToMobile(unsigned char *data, unsigned char len,
     }
     toMobileResult = user_notice_entrance ? user_notice_entrance : 0;
     send(2, 0, SET_ACTIVATION, API_TRANSPARENT_DATA_TO_MOBILE, data, len,
-         DJI::onboardSDK::API::sendToMobileCallback, 500, 2);
+         DJI::onboardSDK::CoreAPI::sendToMobileCallback, 500, 2);
 }
 
-void DJI::onboardSDK::API::setControl(unsigned char cmd,
+void DJI::onboardSDK::CoreAPI::setControl(unsigned char cmd,
                                       CommandResult user_notice_entrance)
 {
     unsigned char data = cmd & 0x1;
     setControlResult = user_notice_entrance ? user_notice_entrance : 0;
     send(2, 1, SET_CONTROL, API_CTRL_MANAGEMENT, &data, 1,
-         DJI::onboardSDK::API::setControlCallback, 500, 1);
+         DJI::onboardSDK::CoreAPI::setControlCallback, 500, 1);
 }
 
-void DJI::onboardSDK::API::setAttitude(AttitudeData_t *p_user_data)
+void DJI::onboardSDK::CoreAPI::setAttitude(AttitudeData_t *p_user_data)
 {
     send(0, 1, SET_CONTROL, API_CTRL_REQUEST, (unsigned char *)p_user_data,
          sizeof(AttitudeData_t), 0, 0, 1);
 }
 
-void DJI::onboardSDK::API::setGimbalAngle(GimbalAngleData_t *p_user_data)
+void DJI::onboardSDK::CoreAPI::setGimbalAngle(GimbalAngleData_t *p_user_data)
 {
     send(0, 1, SET_CONTROL, API_GIMBAL_CTRL_ANGLE_REQUEST,
          (unsigned char *)p_user_data, sizeof(GimbalAngleData_t), 0, 0, 1);
 }
 
-void DJI::onboardSDK::API::setGimbalSpeed(GimbalSpeedData_t *p_user_data)
+void DJI::onboardSDK::CoreAPI::setGimbalSpeed(GimbalSpeedData_t *p_user_data)
 {
     send(0, 1, SET_CONTROL, API_GIMBAL_CTRL_SPEED_REQUEST,
          (unsigned char *)p_user_data, sizeof(GimbalSpeedData_t), 0, 0, 1);
 }
 
-void DJI::onboardSDK::API::setCamera(DJI::onboardSDK::CAMERA camera_cmd)
+void DJI::onboardSDK::CoreAPI::setCamera(DJI::onboardSDK::CAMERA camera_cmd)
 {
     unsigned char send_data = 0;
     send(0, 1, SET_CONTROL, camera_cmd, (unsigned char *)&send_data,
          sizeof(send_data), 0, 0, 0);
 }
 
-DJI::onboardSDK::HardDriver *DJI::onboardSDK::API::getDriver() const
+DJI::onboardSDK::HardDriver *DJI::onboardSDK::CoreAPI::getDriver() const
 {
     return driver;
 }
 
-void DJI::onboardSDK::API::setDriver(HardDriver *value) { driver = value; }
+void DJI::onboardSDK::CoreAPI::setDriver(HardDriver *value) { driver = value; }
 
-void DJI::onboardSDK::API::taskCallback(DJI::onboardSDK::API *This,
+void DJI::onboardSDK::CoreAPI::taskCallback(DJI::onboardSDK::CoreAPI *This,
                                         Header *header)
 {
     unsigned short ack_data;
@@ -181,7 +181,7 @@ void DJI::onboardSDK::API::taskCallback(DJI::onboardSDK::API *This,
     }
 }
 
-void DJI::onboardSDK::API::getVersionCallback(DJI::onboardSDK::API *This,
+void DJI::onboardSDK::CoreAPI::getVersionCallback(DJI::onboardSDK::CoreAPI *This,
                                               Header *header)
 {
     unsigned char *ptemp = ((unsigned char *)header) + sizeof(Header);
@@ -208,7 +208,7 @@ void DJI::onboardSDK::API::getVersionCallback(DJI::onboardSDK::API *This,
     API_STATUS("version name=%s\n", p_version_data->version_name);
 }
 
-void DJI::onboardSDK::API::activateCallback(DJI::onboardSDK::API *This,
+void DJI::onboardSDK::CoreAPI::activateCallback(DJI::onboardSDK::CoreAPI *This,
                                             Header *header)
 {
     volatile unsigned short ack_data;
@@ -255,7 +255,7 @@ void DJI::onboardSDK::API::activateCallback(DJI::onboardSDK::API *This,
     }
 }
 
-void DJI::onboardSDK::API::sendToMobileCallback(DJI::onboardSDK::API *This,
+void DJI::onboardSDK::CoreAPI::sendToMobileCallback(DJI::onboardSDK::CoreAPI *This,
                                                 Header *header)
 {
     unsigned short ack_data = 0xFFFF;
@@ -272,7 +272,7 @@ void DJI::onboardSDK::API::sendToMobileCallback(DJI::onboardSDK::API *This,
                   header->sessionID, header->sequence_number);
 }
 
-void DJI::onboardSDK::API::setControlCallback(API *This, Header *header)
+void DJI::onboardSDK::CoreAPI::setControlCallback(CoreAPI *This, Header *header)
 {
     unsigned short ack_data = 0xFFFF;
     if (header->length - EXC_DATA_SIZE <= 2)

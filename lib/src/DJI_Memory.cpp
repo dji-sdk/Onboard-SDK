@@ -27,7 +27,7 @@
 
 using namespace DJI::onboardSDK;
 
-void DJI::onboardSDK::API::setupMMU()
+void DJI::onboardSDK::CoreAPI::setupMMU()
 {
     unsigned int i;
     MMU[0].tab_index = 0;
@@ -58,7 +58,7 @@ void freeMemory(MMU_Tab *mmu_tab)
     mmu_tab->usage_flag = 0;
 }
 
-MMU_Tab *DJI::onboardSDK::API::allocMemory(unsigned short size)
+MMU_Tab *DJI::onboardSDK::CoreAPI::allocMemory(unsigned short size)
 {
     unsigned int mem_used = 0;
     unsigned char i;
@@ -183,7 +183,7 @@ MMU_Tab *DJI::onboardSDK::API::allocMemory(unsigned short size)
     return (MMU_Tab *)0;
 }
 
-void DJI::onboardSDK::API::setupSession()
+void DJI::onboardSDK::CoreAPI::setupSession()
 {
     unsigned int i;
     for (i = 0; i < SESSION_TABLE_NUM; i++)
@@ -208,7 +208,7 @@ void DJI::onboardSDK::API::setupSession()
  *  a idle session id between 2~31.
  */
 
-CMDSession *DJI::onboardSDK::API::allocSession(unsigned short session_id,
+CMDSession *DJI::onboardSDK::CoreAPI::allocSession(unsigned short session_id,
                                                unsigned short size)
 {
     unsigned int i;
@@ -254,7 +254,7 @@ CMDSession *DJI::onboardSDK::API::allocSession(unsigned short session_id,
     return NULL;
 }
 
-void DJI::onboardSDK::API::freeSession(CMDSession *session)
+void DJI::onboardSDK::CoreAPI::freeSession(CMDSession *session)
 {
     if (session->usageFlag == 1)
     {
@@ -264,7 +264,7 @@ void DJI::onboardSDK::API::freeSession(CMDSession *session)
     }
 }
 
-ACKSession *DJI::onboardSDK::API::allocACK(unsigned short session_id,
+ACKSession *DJI::onboardSDK::CoreAPI::allocACK(unsigned short session_id,
                                            unsigned short size)
 {
     MMU_Tab *mmu = NULL;
@@ -287,7 +287,7 @@ ACKSession *DJI::onboardSDK::API::allocACK(unsigned short session_id,
     return NULL;
 }
 
-void DJI::onboardSDK::API::freeACK(ACKSession *session)
+void DJI::onboardSDK::CoreAPI::freeACK(ACKSession *session)
 {
     freeMemory(session->mmu);
 }

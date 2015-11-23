@@ -34,13 +34,13 @@
 
 using namespace DJI::onboardSDK;
 
-void DJI::onboardSDK::API::sendData(unsigned char *buf)
+void DJI::onboardSDK::CoreAPI::sendData(unsigned char *buf)
 {
     Header *pHeader = (Header *)buf;
     driver->send(buf, pHeader->length);
 }
 
-void DJI::onboardSDK::API::appHandler(Header *header)
+void DJI::onboardSDK::CoreAPI::appHandler(Header *header)
 {
     Header *p2header;
     CallBack callBack = 0;
@@ -127,7 +127,7 @@ void DJI::onboardSDK::API::appHandler(Header *header)
     }
 }
 
-void DJI::onboardSDK::API::sendPoll()
+void DJI::onboardSDK::CoreAPI::sendPoll()
 {
     unsigned char i;
     unsigned int cur_timestamp;
@@ -169,7 +169,7 @@ void DJI::onboardSDK::API::sendPoll()
     }
 }
 
-void DJI::onboardSDK::API::readPoll()
+void DJI::onboardSDK::CoreAPI::readPoll()
 {
     int read_len;
     uint8_t buf[BUFFER_SIZE];
@@ -177,13 +177,13 @@ void DJI::onboardSDK::API::readPoll()
     for (int i = 0; i < read_len; i++) byteHandler(buf[i]);
 }
 
-void DJI::onboardSDK::API::setup()
+void DJI::onboardSDK::CoreAPI::setup()
 {
     setupMMU();
     setupSession();
 }
 
-void DJI::onboardSDK::API::setKey(const char *key)
+void DJI::onboardSDK::CoreAPI::setKey(const char *key)
 {
     transformTwoByte(key, filter.comm_key);
     filter.enc_enabled = 1;
@@ -199,7 +199,7 @@ unsigned short calculateLength(unsigned short size, unsigned short encrypt_flag)
     return len;
 }
 
-int DJI::onboardSDK::API::ackInterface(Ack *parameter)
+int DJI::onboardSDK::CoreAPI::ackInterface(Ack *parameter)
 {
     unsigned short ret = 0;
     ACKSession *ack_session = (ACKSession *)NULL;
@@ -247,7 +247,7 @@ int DJI::onboardSDK::API::ackInterface(Ack *parameter)
     return -1;
 }
 
-int DJI::onboardSDK::API::sendInterface(Command *parameter)
+int DJI::onboardSDK::CoreAPI::sendInterface(Command *parameter)
 {
     unsigned short ret = 0;
     CMDSession *cmd_session = (CMDSession *)NULL;

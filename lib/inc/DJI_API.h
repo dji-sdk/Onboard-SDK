@@ -26,6 +26,12 @@ namespace DJI
 {
 namespace onboardSDK
 {
+class CoreAPI;
+class Flight;
+class Camera;
+class Mission;
+class Swarm;
+
 enum TASK
 {
     TASK_GOHOME = 1,
@@ -77,7 +83,7 @@ enum CAMERA
     CAMERA_VIDEO_STOP = 0x22
 };
 
-class API
+class CoreAPI
 {
     /*! @brief
      *  API is running on two poll thead
@@ -97,7 +103,7 @@ class API
 
   public:
     /*! @code API*/
-    API(HardDriver *Driver, ReceiveHandler user_cmd_handler_entrance = 0);
+    CoreAPI(HardDriver *Driver, ReceiveHandler user_cmd_handler_entrance = 0);
     void send(unsigned char session_mode, unsigned char is_enc, CMD_SET cmd_set,
               unsigned char cmd_id, unsigned char *pdata, int len,
               CallBack ack_callback, int timeout, int retry_time);
@@ -158,11 +164,11 @@ class API
     SDKFilter filter;
 
   private:
-    static void taskCallback(API *This, Header *header);
-    static void activateCallback(API *This, Header *header);
-    static void getVersionCallback(API *This, Header *header);
-    static void setControlCallback(API *This, Header *header);
-    static void sendToMobileCallback(API *This, Header *header);
+    static void taskCallback(CoreAPI *This, Header *header);
+    static void activateCallback(CoreAPI *This, Header *header);
+    static void getVersionCallback(CoreAPI *This, Header *header);
+    static void setControlCallback(CoreAPI *This, Header *header);
+    static void sendToMobileCallback(CoreAPI *This, Header *header);
 
   private:
     void recvReqData(Header *header);

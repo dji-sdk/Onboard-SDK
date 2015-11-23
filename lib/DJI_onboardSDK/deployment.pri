@@ -190,10 +190,11 @@ export (QMAKE_EXTRA_TARGETS)
 }
 
 SOURCES += \
-    $$PWD/../source/DJI_API.cpp \
-    $$PWD/../source/DJI_App.cpp \
-    $$PWD/../source/DJI_Codec.cpp \
-    $$PWD/../source/DJI_HardDriver.cpp \
-    $$PWD/../source/DJI_Link.cpp \
-    $$PWD/../source/DJI_Memory.cpp
+    $$PWD/../src/DJI_API.cpp \
+    $$PWD/../src/DJI_App.cpp \
+    $$PWD/../src/DJI_Codec.cpp \
+    $$PWD/../src/DJI_HardDriver.cpp \
+    $$PWD/../src/DJI_Link.cpp \
+    $$PWD/../src/DJI_Memory.cpp \
+    $$PWD/../src/DJI_FlightContorl.cpp
 

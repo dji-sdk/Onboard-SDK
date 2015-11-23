@@ -189,6 +189,6 @@ typedef void (*ReceiveHandler)(DJI::onboardSDK::Header *pHeader);
 typedef void (*BroadcastHandler)(void);
 typedef void (*TransparentHandler)(unsigned char *buf, unsigned char len);
 
-typedef void (*ResultCallback)(DJI::onboardSDK::API *);
+typedef void (*ResultCallback)(DJI::onboardSDK::CoreAPI *);
 
 #endif

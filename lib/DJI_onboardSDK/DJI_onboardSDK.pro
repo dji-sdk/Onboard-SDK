@@ -9,14 +9,16 @@ include(deployment.pri)
 qtcAddDeployment()
 
 HEADERS += \
-    ../include/DJI_API.h \
-    ../include/DJI_App.h \
-    ../include/DJI_Codec.h \
-    ../include/DJI_Config.h \
-    ../include/DJI_HardDriver.h \
-    ../include/DJI_Link.h \
-    ../include/DJI_Memory.h \
-    ../include/DJI_Type.h
+    ../inc/DJI_API.h \
+    ../inc/DJI_App.h \
+    ../inc/DJI_Codec.h \
+    ../inc/DJI_Config.h \
+    ../inc/DJI_HardDriver.h \
+    ../inc/DJI_Link.h \
+    ../inc/DJI_Memory.h \
+    ../inc/DJI_Type.h \
+    ../inc/DJI_FlightContorl.h
 
 INCLUDEPATH +=\
-    ../include
+    ../inc
+

@@ -50,37 +50,37 @@ unsigned char getCmdCode(Header *header)
     return *ptemp;
 }
 
-BroadcastData DJI::onboardSDK::API::getBroadcastData() const
+BroadcastData DJI::onboardSDK::CoreAPI::getBroadcastData() const
 {
     return broadcastData;
 }
 
-BatteryData DJI::onboardSDK::API::getBatteryCapacity() const
+BatteryData DJI::onboardSDK::CoreAPI::getBatteryCapacity() const
 {
     return broadcastData.capacity;
 }
 
-QuaternionData DJI::onboardSDK::API::getQuaternion() const
+QuaternionData DJI::onboardSDK::CoreAPI::getQuaternion() const
 {
     return broadcastData.q;
 }
 
-CommonData DJI::onboardSDK::API::getGroundAcc() const
+CommonData DJI::onboardSDK::CoreAPI::getGroundAcc() const
 {
     return broadcastData.a;
 }
 
-SpeedData DJI::onboardSDK::API::getGroundSpeed() const
+SpeedData DJI::onboardSDK::CoreAPI::getGroundSpeed() const
 {
     return broadcastData.v;
 }
 
-CtrlInfoData DJI::onboardSDK::API::getCtrlInfo() const
+CtrlInfoData DJI::onboardSDK::CoreAPI::getCtrlInfo() const
 {
     return broadcastData.ctrl_info;
 }
 
-void DJI::onboardSDK::API::broadcast(Header *header)
+void DJI::onboardSDK::CoreAPI::broadcast(Header *header)
 {
     unsigned char *pdata = ((unsigned char *)header) + sizeof(Header);
     unsigned short *enableFlag;
@@ -110,7 +110,7 @@ void DJI::onboardSDK::API::broadcast(Header *header)
         API_DEBUG("time: %d\n", broadcastData.timeStamp);
 }
 
-void DJI::onboardSDK::API::recvReqData(Header *header)
+void DJI::onboardSDK::CoreAPI::recvReqData(Header *header)
 {
     unsigned char buf[100] = { 0, 0 };
     unsigned char len = 0;
@@ -181,13 +181,13 @@ void DJI::onboardSDK::API::recvReqData(Header *header)
     }
 }
 
-void DJI::onboardSDK::API::setTransparentTransmissionCallback(
+void DJI::onboardSDK::CoreAPI::setTransparentTransmissionCallback(
     TransparentHandler transparentHandlerEntrance)
 {
     transparentHandler = transparentHandlerEntrance;
 }
 
-void DJI::onboardSDK::API::setBroadcastCallback(
+void DJI::onboardSDK::CoreAPI::setBroadcastCallback(
     BroadcastHandler broadcastHandlerEntrance)
 {
     broadcastHandler = broadcastHandlerEntrance;
