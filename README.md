@@ -135,11 +135,11 @@ Please comply with the local regulations during the development process and the 
 
 ### Compile & Run Example Section:
 
-- [Linux Command Line example](Onboard_SDK_Sample/DJI_Onboard_API_Cmdline_Sample)
+- [Linux Command Line example](sample/Linux-Cmdline)
 
-- [Linux ROS example](Onboard_SDK_Sample/DJI_Onboard_API_ROS_Sample)
+- [Linux ROS example](https://github.com/dji-sdk/Onboard-SDK-ROS)
 
-- [Windows QT example](Onboard_SDK_Sample/DJI_Onboard_API_Windows_QT_Sample)
+- [Windows QT example](sample/Windows-QT)
 
 - [STM32 example](https://github.com/justwillim/FOS/tree/Development/Lib/DJISDK)
 
@@ -289,11 +289,11 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 
 ### 编译与运行示例:
 
-- [Linux Command Line example](Onboard_SDK_Sample/DJI_Onboard_API_Cmdline_Sample)
+- [Linux Command Line example](sample/Linux-Cmdline)
 
-- [Linux ROS example](Onboard_SDK_Sample/DJI_Onboard_API_ROS_Sample)
+- [Linux ROS example](https://github.com/dji-sdk/Onboard-SDK-ROS)
 
-- [Windows QT example](Onboard_SDK_Sample/DJI_Onboard_API_Windows_QT_Sample)
+- [Windows QT example](sample/Windows-QT)
 
 - [STM32 example](https://github.com/justwillim/FOS/tree/Development/Lib/DJISDK)
 
