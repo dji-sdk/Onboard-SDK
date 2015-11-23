@@ -1,5 +1,10 @@
 *.o
 *~
+<<<<<<< HEAD
 lib/build-DJI_onboardSDK-Desktop_Qt_5_4_2_MinGW_32bit-Debug
-samples/STM32/MDK/Objects/
-samples/STM32/MDK/Listings/
+sample/STM32/MDK/Objects/
+sample/STM32/MDK/Listings/
+sample/Windows/Windows12/DJIonboardSDK/DJIonboardSDK/Debug
+=======
+sample/Linux-Cmdline/output/DJI_Onboard_API_Cmdline_Test
+>>>>>>> origin/master

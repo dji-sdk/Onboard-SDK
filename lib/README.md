@@ -37,6 +37,8 @@ Currently the Cmdline/ROS/QT sample programs are still running with the old vers
 
 ---
 
+DJI SDK 官方库文件
+
 ####特性：
 2. 启用命名空间（namespace）DJI和，命名空间DJI::onboardSDK
  
@@ -52,7 +54,7 @@ Currently the Cmdline/ROS/QT sample programs are still running with the old vers
     包括但不限于：
 
         MinGW   //已经完成测试
-        QT             //已经完成测试
+        QT      //已经完成测试
         MSVC
         ARMCC
  
@@ -64,3 +66,8 @@ Currently the Cmdline/ROS/QT sample programs are still running with the old vers
 
 3. 创建两个线程（或者一个），在while(1)函数体中枚举API实例中的sendPoll 和readPoll接口。
  
+---
+
+注：当前的 Cmdline/ROS/QT 例程仍然在使用旧版库文件，暂未升级到此新版本库。
+
+新库的迭代和旧例程的升级正在同步进行中，我们暂时推荐仍然使用旧版本的库文件（在例程中）进行开发。

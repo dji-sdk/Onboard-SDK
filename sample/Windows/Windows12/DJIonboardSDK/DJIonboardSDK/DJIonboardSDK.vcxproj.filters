@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="DJIonboardSDKLib">
+      <UniqueIdentifier>{ab108626-3e30-4984-90d0-c4c9a9bad558}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DJIonboardSDKLib\src">
+      <UniqueIdentifier>{be805ef1-de12-4131-bcc0-3434b0d6516e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DJIonboardSDKLib\inc">
+      <UniqueIdentifier>{ad6157e7-0371-45a0-891f-fbed2937412d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowsHardDriver.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\lib\include\DJI_API.h">
+      <Filter>DJIonboardSDKLib\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\lib\include\DJI_App.h">
+      <Filter>DJIonboardSDKLib\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\lib\include\DJI_Codec.h">
+      <Filter>DJIonboardSDKLib\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\lib\include\DJI_Config.h">
+      <Filter>DJIonboardSDKLib\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\lib\include\DJI_HardDriver.h">
+      <Filter>DJIonboardSDKLib\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\lib\include\DJI_Link.h">
+      <Filter>DJIonboardSDKLib\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\lib\include\DJI_Memory.h">
+      <Filter>DJIonboardSDKLib\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\lib\include\DJI_Type.h">
+      <Filter>DJIonboardSDKLib\inc</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DJIonboardSDK.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowsHardDriver.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\lib\source\DJI_API.cpp">
+      <Filter>DJIonboardSDKLib\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\lib\source\DJI_App.cpp">
+      <Filter>DJIonboardSDKLib\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\lib\source\DJI_Codec.cpp">
+      <Filter>DJIonboardSDKLib\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\lib\source\DJI_HardDriver.cpp">
+      <Filter>DJIonboardSDKLib\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\lib\source\DJI_Link.cpp">
+      <Filter>DJIonboardSDKLib\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\lib\source\DJI_Memory.cpp">
+      <Filter>DJIonboardSDKLib\src</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
