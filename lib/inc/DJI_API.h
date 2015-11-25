@@ -231,6 +231,7 @@ class Flight
 
     void task(TASK taskname, CommandResult TaskResult);
     void setFlight(FlightData *p_user_data);
+    void setArm();
 
     CoreAPI *getApi() const;
     void setApi(CoreAPI *value);

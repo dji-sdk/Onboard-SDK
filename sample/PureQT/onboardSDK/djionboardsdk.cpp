@@ -43,6 +43,15 @@ DJIonboardSDK::DJIonboardSDK(QWidget *parent)
     on_btg_flight_CL(ui->btg_flightCL->checkedButton());
     on_btg_flight_SM(ui->btg_flightSM->checkedButton());
 
+    flightx = 0;
+    flighty = 0;
+    flightz = 0;
+    flightyaw = 0;
+    updateFlightX();
+    updateFlightY();
+    updateFlightZ();
+    updateFlightYaw();
+
     QFile f("settings.ini");
     if (!f.open(QIODevice::ReadOnly | QIODevice::Text))
         qDebug() << "fail to open";
@@ -255,4 +264,45 @@ void DJIonboardSDK::on_btg_flight_SM(QAbstractButton *button)
     updateFlightFlag();
 }
 
+void DJIonboardSDK::updateFlightX()
+{
+    ui->lineEdit_flight_X->setText(QString::number(flightx));
+}
+
+void DJIonboardSDK::updateFlightY()
+{
+    ui->lineEdit_flight_Y->setText(QString::number(flighty));
+}
+
+void DJIonboardSDK::updateFlightZ()
+{
+    ui->lineEdit_flight_Z->setText(QString::number(flightz));
+}
+
+void DJIonboardSDK::updateFlightYaw()
+{
+    ui->lineEdit_flight_Yaw->setText(QString::number(flightyaw));
+}
+
 void DJIonboardSDK::on_btn_camera_up_clicked() { qDebug() << "!"; }
+
+void DJIonboardSDK::on_btn_flight_frount_pressed()
+{
+    flightx += 0.1f;
+    updateFlightX();
+}
+
+void DJIonboardSDK::on_btn_flight_back_pressed()
+{
+    flightx -= 0.1f;
+    updateFlightX();
+}
+
+void DJIonboardSDK::on_btn_flight_send_clicked()
+{;
+}
+
+void DJIonboardSDK::on_btn_flight_arm_clicked()
+{
+
+}

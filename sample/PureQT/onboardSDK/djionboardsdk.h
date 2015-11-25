@@ -20,13 +20,18 @@ class DJIonboardSDK : public QMainWindow
     explicit DJIonboardSDK(QWidget *parent = 0);
     ~DJIonboardSDK();
 
-    void updateFlightFlag();
 private:
     void setBaudrate();
     void setPort();
     void openPort();
     void closePort();
     void refreshPort();
+
+    void updateFlightFlag();
+    void updateFlightX();
+    void updateFlightY();
+    void updateFlightZ();
+    void updateFlightYaw();
 
   protected:
     void closeEvent(QCloseEvent *);
@@ -51,6 +56,14 @@ private:
 
     void on_btn_camera_up_clicked();
 
+    void on_btn_flight_frount_pressed();
+
+    void on_btn_flight_back_pressed();
+
+    void on_btn_flight_send_clicked();
+
+    void on_btn_flight_arm_clicked();
+
 private:
     Ui::DJIonboardSDK *ui;
     CoreAPI *api;
@@ -63,6 +76,11 @@ private:
     QByteArray *key;
 
     uint8_t flightFlag;
+
+    float32_t flightx;
+    float32_t flighty;
+    float32_t flightz;
+    float32_t flightyaw;
 };
 
 #endif // DJIONBOARDSDK_H
