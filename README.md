@@ -141,7 +141,7 @@ Please comply with the local regulations during the development process and the 
 
 - [Windows QT example](sample/Windows-QT)
 
-- [STM32 example](https://github.com/justwillim/FOS/tree/Development/Lib/DJISDK)
+- [STM32 example](sample/STM32)
 
 ### References Document:
 
@@ -295,7 +295,7 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 
 - [Windows QT example](sample/Windows-QT)
 
-- [STM32 example](https://github.com/justwillim/FOS/tree/Development/Lib/DJISDK)
+- [STM32 example](sample/STM32)
 
 ### 参考文档:
 
