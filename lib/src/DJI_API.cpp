@@ -74,10 +74,10 @@ void DJI::onboardSDK::CoreAPI::ack(req_id_t req_id, unsigned char *ackdata,
 }
 
 void DJI::onboardSDK::CoreAPI::task(TASK taskname,
-                                    CommandResult user_notice_entrance)
+                                    CommandResult TaskResult)
 {
     unsigned char cur_cmd = 0;
-    taskResult = user_notice_entrance;
+    taskResult = TaskResult;
     cur_cmd = taskname;
 
     taskData.cmd_data = cur_cmd;
@@ -98,7 +98,7 @@ void DJI::onboardSDK::CoreAPI::getVersion(
     unsigned retry_time = 3;
     unsigned char cmd_data = 0;
 
-    send(2, 0, SET_ACTIVATION, API_VER_QUERY, (unsigned char *)&cmd_data, 1,
+    send(2, 0, SET_ACTIVATION, CODE_GETVERSION, (unsigned char *)&cmd_data, 1,
          DJI::onboardSDK::CoreAPI::getVersionCallback, cmd_timeout, retry_time);
 }
 
@@ -108,21 +108,21 @@ void DJI::onboardSDK::CoreAPI::activate(ActivateData *data,
     activateResult = ActivationResult ? ActivationResult : 0;
     accountData = *data;
 
-    send(2, 0, SET_ACTIVATION, API_USER_ACTIVATION,
-         (unsigned char *)&accountData, sizeof(accountData) - sizeof(char *),
+    send(2, 0, SET_ACTIVATION, CODE_ACTIVATE, (unsigned char *)&accountData,
+         sizeof(accountData) - sizeof(char *),
          DJI::onboardSDK::CoreAPI::activateCallback, 1000, 3);
 }
 
 void DJI::onboardSDK::CoreAPI::sendToMobile(uint8_t *data, uint8_t len,
-                                            CommandResult ToMobileResult)
+                                            CommandResult MobileResult)
 {
     if (len > 100)
     {
         API_ERROR("Too much data to send");
         return;
     }
-    toMobileResult = ToMobileResult ? ToMobileResult : 0;
-    send(2, 0, SET_ACTIVATION, API_TRANSPARENT_DATA_TO_MOBILE, data, len,
+    toMobileResult = MobileResult ? MobileResult : 0;
+    send(2, 0, SET_ACTIVATION, CODE_TOMOBILE, data, len,
          DJI::onboardSDK::CoreAPI::sendToMobileCallback, 500, 2);
 }
 
@@ -135,10 +135,10 @@ void DJI::onboardSDK::CoreAPI::setControl(unsigned char cmd,
          DJI::onboardSDK::CoreAPI::setControlCallback, 500, 1);
 }
 
-void DJI::onboardSDK::CoreAPI::setAttitude(AttitudeData_t *p_user_data)
+void DJI::onboardSDK::CoreAPI::setFlight(FlightData *p_user_data)
 {
     send(0, 1, SET_CONTROL, API_CTRL_REQUEST, (unsigned char *)p_user_data,
-         sizeof(AttitudeData_t), 0, 0, 1);
+         sizeof(FlightData), 0, 0, 1);
 }
 
 void DJI::onboardSDK::CoreAPI::setGimbalAngle(GimbalAngleData *p_user_data)
@@ -310,11 +310,23 @@ void DJI::onboardSDK::CoreAPI::setControlCallback(CoreAPI *This, Header *header)
         case 0x0003:
             API_STATUS("obtain control running\n");
             break;
-        case 0x0004:
-            API_STATUS("control request already done");
+        case 0x00C9:
+            API_STATUS("IOC mode opening can not obtain control\n");
             break;
         default:
             API_STATUS("there is unkown error,ack=0x%X\n", ack_data);
             break;
     }
 }
+
+CoreAPI *Flight::getApi() const { return api; }
+
+void Flight::setApi(CoreAPI *value) { api = value; }
+
+CoreAPI *Camera::getApi() const { return api; }
+
+void Camera::setApi(CoreAPI *value) { api = value; }
+
+CoreAPI *Mission::getApi() const { return api; }
+
+void Mission::setApi(CoreAPI *value) { api = value; }

@@ -26,6 +26,23 @@ DJIonboardSDK::DJIonboardSDK(QWidget *parent)
     send->start();
     read->start();
 
+    connect(ui->btg_flightHL, SIGNAL(buttonClicked(QAbstractButton *)), this,
+            SLOT(on_btg_flight_HL(QAbstractButton *)));
+    connect(ui->btg_flightVL, SIGNAL(buttonClicked(QAbstractButton *)), this,
+            SLOT(on_btg_flight_VL(QAbstractButton *)));
+    connect(ui->btg_flightYL, SIGNAL(buttonClicked(QAbstractButton *)), this,
+            SLOT(on_btg_flight_YL(QAbstractButton *)));
+    connect(ui->btg_flightCL, SIGNAL(buttonClicked(QAbstractButton *)), this,
+            SLOT(on_btg_flight_CL(QAbstractButton *)));
+    connect(ui->btg_flightSM, SIGNAL(buttonClicked(QAbstractButton *)), this,
+            SLOT(on_btg_flight_SM(QAbstractButton *)));
+
+    on_btg_flight_HL(ui->btg_flightHL->checkedButton());
+    on_btg_flight_VL(ui->btg_flightVL->checkedButton());
+    on_btg_flight_YL(ui->btg_flightYL->checkedButton());
+    on_btg_flight_CL(ui->btg_flightCL->checkedButton());
+    on_btg_flight_SM(ui->btg_flightSM->checkedButton());
+
     QFile f("settings.ini");
     if (!f.open(QIODevice::ReadOnly | QIODevice::Text))
         qDebug() << "fail to open";
@@ -172,3 +189,70 @@ void DJIonboardSDK::on_btn_VRC_resetRight_clicked()
     ui->slider_VRC_RH->setValue(1024);
     ui->slider_VRC_RV->setValue(1024);
 }
+
+void DJIonboardSDK::updateFlightFlag()
+{
+    ui->lineEdit_flightFlag->clear();
+    ui->lineEdit_flightFlag->setText(QString::number(flightFlag, 16));
+}
+
+void DJIonboardSDK::on_btg_flight_HL(QAbstractButton *button)
+{
+    QString name = button->text();
+    flightFlag &= 0x3F;
+    if (name == "Angle")
+        flightFlag |= 0x00;
+    else if (name == "Velocity")
+        flightFlag |= 0x40;
+    else if (name == "Possition")
+        flightFlag |= 0x80;
+    updateFlightFlag();
+}
+
+void DJIonboardSDK::on_btg_flight_VL(QAbstractButton *button)
+{
+    QString name = button->text();
+    flightFlag &= 0xCF;
+    if (name == "Thrust")
+        flightFlag |= 0x20;
+    else if (name == "Velocity")
+        flightFlag |= 0x00;
+    else if (name == "Possition")
+        flightFlag |= 0x10;
+    updateFlightFlag();
+}
+
+void DJIonboardSDK::on_btg_flight_YL(QAbstractButton *button)
+{
+    QString name = button->text();
+    flightFlag &= 0xF7;
+    if (name == "Angle")
+        flightFlag |= 0x00;
+    else
+        flightFlag |= 0x08;
+    updateFlightFlag();
+}
+
+void DJIonboardSDK::on_btg_flight_CL(QAbstractButton *button)
+{
+    QString name = button->text();
+    flightFlag &= 0xF9;
+    if (name == "Ground")
+        flightFlag |= 0x00;
+    else
+        flightFlag |= 0x02;
+    updateFlightFlag();
+}
+void DJIonboardSDK::on_btg_flight_SM(QAbstractButton *button)
+{
+
+    QString name = button->text();
+    flightFlag &= 0xFE;
+    if (name == "Disable")
+        flightFlag |= 0x00;
+    else
+        flightFlag |= 0x01;
+    updateFlightFlag();
+}
+
+void DJIonboardSDK::on_btn_camera_up_clicked() { qDebug() << "!"; }

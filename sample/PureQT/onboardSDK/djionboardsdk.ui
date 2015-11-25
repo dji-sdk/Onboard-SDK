@@ -74,7 +74,7 @@
          <item>
           <widget class="QLineEdit" name="lineEdit_portBaudrate">
            <property name="text">
-            <string>230400</string>
+            <string>921600</string>
            </property>
           </widget>
          </item>
@@ -119,10 +119,10 @@
    <widget class="QGroupBox" name="groupBox_2">
     <property name="geometry">
      <rect>
-      <x>200</x>
-      <y>280</y>
+      <x>10</x>
+      <y>460</y>
       <width>181</width>
-      <height>202</height>
+      <height>121</height>
      </rect>
     </property>
     <property name="title">
@@ -149,27 +149,6 @@
         <widget class="QPushButton" name="btn_coreSetControl">
          <property name="text">
           <string>Obtain Contorl</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="btn_coreSetArm">
-         <property name="text">
-          <string>Arm</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="btn_coreTask">
-         <property name="text">
-          <string>Take Off</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="btn_coreGohome">
-         <property name="text">
-          <string>Go Home</string>
          </property>
         </widget>
        </item>
@@ -228,7 +207,7 @@
         <number>0</number>
        </property>
        <item row="0" column="2">
-        <widget class="QPushButton" name="pushButton_10">
+        <widget class="QPushButton" name="btn_camera_up">
          <property name="minimumSize">
           <size>
            <width>80</width>
@@ -245,6 +224,9 @@
           <enum>Qt::LeftToRight</enum>
          </property>
          <property name="text">
+          <string>8</string>
+         </property>
+         <property name="shortcut">
           <string>8</string>
          </property>
         </widget>
@@ -457,8 +439,8 @@
    <widget class="QGroupBox" name="groupBox_5">
     <property name="geometry">
      <rect>
-      <x>380</x>
-      <y>540</y>
+      <x>490</x>
+      <y>550</y>
       <width>201</width>
       <height>171</height>
      </rect>
@@ -470,8 +452,8 @@
    <widget class="QGroupBox" name="groupBox_6">
     <property name="geometry">
      <rect>
-      <x>110</x>
-      <y>570</y>
+      <x>740</x>
+      <y>610</y>
       <width>201</width>
       <height>80</height>
      </rect>
@@ -483,10 +465,10 @@
    <widget class="QGroupBox" name="groupBox_7">
     <property name="geometry">
      <rect>
-      <x>880</x>
-      <y>0</y>
+      <x>870</x>
+      <y>310</y>
       <width>141</width>
-      <height>711</height>
+      <height>381</height>
      </rect>
     </property>
     <property name="title">
@@ -496,8 +478,8 @@
    <widget class="QGroupBox" name="groupBox_9">
     <property name="geometry">
      <rect>
-      <x>390</x>
-      <y>370</y>
+      <x>490</x>
+      <y>310</y>
       <width>181</width>
       <height>80</height>
      </rect>
@@ -509,9 +491,9 @@
    <widget class="QGroupBox" name="groupBox_8">
     <property name="geometry">
      <rect>
-      <x>390</x>
+      <x>470</x>
       <y>0</y>
-      <width>481</width>
+      <width>541</width>
       <height>304</height>
      </rect>
     </property>
@@ -1022,8 +1004,8 @@
      <rect>
       <x>200</x>
       <y>0</y>
-      <width>184</width>
-      <height>274</height>
+      <width>272</width>
+      <height>694</height>
      </rect>
     </property>
     <property name="title">
@@ -1033,31 +1015,86 @@
      <item>
       <layout class="QVBoxLayout" name="verticalLayout_16">
        <item>
-        <widget class="QPushButton" name="btn_cameraAngle_3">
-         <property name="text">
-          <string>Pos</string>
-         </property>
-        </widget>
+        <layout class="QHBoxLayout" name="horizontalLayout_12">
+         <item>
+          <widget class="QPushButton" name="btn_cameraAngle_3">
+           <property name="text">
+            <string>Send</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="checkBox">
+           <property name="text">
+            <string>Auto send</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
        <item>
         <widget class="QPushButton" name="btn_cameraSpeed_3">
          <property name="text">
-          <string>Speed</string>
+          <string>Arm</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="btn_cameraRecord_3">
-         <property name="text">
-          <string>Angle</string>
+        <widget class="QGroupBox" name="">
+         <property name="title">
+          <string>TAsk</string>
          </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="btn_cameraShoot_6">
-         <property name="text">
-          <string>Take a picture</string>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
          </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_6">
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_19">
+            <item>
+             <widget class="QRadioButton" name="radioButton_4">
+              <property name="text">
+               <string>Take off</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="radioButton_7">
+              <property name="text">
+               <string>Landing</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="radioButton_8">
+              <property name="text">
+               <string>Go home</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_21">
+            <item>
+             <widget class="QPushButton" name="btn_cameraRecord_4">
+              <property name="text">
+               <string>Run Task</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btn_cameraShoot_6">
+              <property name="text">
+               <string>Check Status</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
         </widget>
        </item>
       </layout>
@@ -1067,7 +1104,33 @@
        <property name="spacing">
         <number>0</number>
        </property>
-       <item row="0" column="2">
+       <item row="1" column="5">
+        <spacer name="horizontalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="1" column="0">
+        <spacer name="horizontalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="0" column="3">
         <widget class="QPushButton" name="pushButton_25">
          <property name="minimumSize">
           <size>
@@ -1087,47 +1150,12 @@
          <property name="text">
           <string>I</string>
          </property>
-        </widget>
-       </item>
-       <item row="1" column="3">
-        <widget class="QPushButton" name="pushButton_29">
-         <property name="minimumSize">
-          <size>
-           <width>40</width>
-           <height>40</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>40</width>
-           <height>40</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>L</string>
+         <property name="shortcut">
+          <string>I</string>
          </property>
         </widget>
        </item>
-       <item row="2" column="2">
-        <widget class="QPushButton" name="pushButton_30">
-         <property name="minimumSize">
-          <size>
-           <width>80</width>
-           <height>40</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>80</width>
-           <height>40</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>K</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
+       <item row="1" column="1">
         <widget class="QPushButton" name="pushButton_6">
          <property name="minimumSize">
           <size>
@@ -1144,9 +1172,12 @@
          <property name="text">
           <string>J</string>
          </property>
+         <property name="shortcut">
+          <string>J</string>
+         </property>
         </widget>
        </item>
-       <item row="1" column="2">
+       <item row="1" column="3">
         <layout class="QHBoxLayout" name="horizontalLayout_10">
          <property name="spacing">
           <number>0</number>
@@ -1168,6 +1199,9 @@
            <property name="text">
             <string>U</string>
            </property>
+           <property name="shortcut">
+            <string>U</string>
+           </property>
           </widget>
          </item>
          <item>
@@ -1187,11 +1221,461 @@
            <property name="text">
             <string>O</string>
            </property>
+           <property name="shortcut">
+            <string>O</string>
+           </property>
           </widget>
          </item>
         </layout>
        </item>
+       <item row="1" column="4">
+        <widget class="QPushButton" name="pushButton_29">
+         <property name="minimumSize">
+          <size>
+           <width>40</width>
+           <height>40</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>40</width>
+           <height>40</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>L</string>
+         </property>
+         <property name="shortcut">
+          <string>L</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="3">
+        <widget class="QPushButton" name="pushButton_30">
+         <property name="minimumSize">
+          <size>
+           <width>80</width>
+           <height>40</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>80</width>
+           <height>40</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>K</string>
+         </property>
+         <property name="shortcut">
+          <string>K</string>
+         </property>
+        </widget>
+       </item>
       </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_13">
+       <item>
+        <widget class="QLabel" name="label_6">
+         <property name="text">
+          <string> X  Value:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_2"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_14">
+       <item>
+        <widget class="QLabel" name="label_7">
+         <property name="text">
+          <string> Y  Value:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_3"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_15">
+       <item>
+        <widget class="QLabel" name="label_9">
+         <property name="text">
+          <string> Z  Value:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_5"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_16">
+       <item>
+        <widget class="QLabel" name="label_8">
+         <property name="text">
+          <string>YAW Value:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_4"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="">
+       <property name="title">
+        <string>Control Flag</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_27">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_17">
+          <item>
+           <widget class="QGroupBox" name="">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>88</height>
+             </size>
+            </property>
+            <property name="title">
+             <string>Horizontal Logic</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_23">
+             <item>
+              <widget class="QRadioButton" name="btr_flight_HLA">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Angle</string>
+               </property>
+               <attribute name="buttonGroup">
+                <string notr="true">btg_flightHL</string>
+               </attribute>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="btr_flight_HLV">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Velocity</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+               <attribute name="buttonGroup">
+                <string notr="true">btg_flightHL</string>
+               </attribute>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="btr_flight_HLP">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Possition</string>
+               </property>
+               <attribute name="buttonGroup">
+                <string notr="true">btg_flightHL</string>
+               </attribute>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>88</height>
+             </size>
+            </property>
+            <property name="title">
+             <string>Vertical Logic</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_24">
+             <item>
+              <widget class="QRadioButton" name="btr_flight_VLV">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Velocity</string>
+               </property>
+               <attribute name="buttonGroup">
+                <string notr="true">btg_flightVL</string>
+               </attribute>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="btr_flight_VLP">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Possition</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+               <attribute name="buttonGroup">
+                <string notr="true">btg_flightVL</string>
+               </attribute>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="btr_flight_VLT">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Thrust</string>
+               </property>
+               <attribute name="buttonGroup">
+                <string notr="true">btg_flightVL</string>
+               </attribute>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_5">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_18">
+          <item>
+           <widget class="QGroupBox" name="">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>62</height>
+             </size>
+            </property>
+            <property name="title">
+             <string>Yaw Logic</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_25">
+             <item>
+              <widget class="QRadioButton" name="btr_flight_YLA">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Angle</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+               <attribute name="buttonGroup">
+                <string notr="true">btg_flightYL</string>
+               </attribute>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="btr_flight_YLP">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Palstance</string>
+               </property>
+               <attribute name="buttonGroup">
+                <string notr="true">btg_flightYL</string>
+               </attribute>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="groupBox">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>62</height>
+             </size>
+            </property>
+            <property name="title">
+             <string>Coordinate Logic</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_26">
+             <item>
+              <widget class="QRadioButton" name="btr_flight_CLG">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Ground</string>
+               </property>
+               <attribute name="buttonGroup">
+                <string notr="true">btg_flightCL</string>
+               </attribute>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="btr_flight_CLB">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Body</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+               <attribute name="buttonGroup">
+                <string notr="true">btg_flightCL</string>
+               </attribute>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="">
+          <property name="maximumSize">
+           <size>
+            <width>250</width>
+            <height>80</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>smooth mode</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_11">
+           <item>
+            <widget class="QRadioButton" name="btr_flight_SME">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>15</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Enable</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+             <attribute name="buttonGroup">
+              <string notr="true">btg_flightSM</string>
+             </attribute>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="btr_flight_SMD">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>15</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Disable</string>
+             </property>
+             <attribute name="buttonGroup">
+              <string notr="true">btg_flightSM</string>
+             </attribute>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_5">
+          <property name="text">
+           <string>Flag Data</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_flightFlag">
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </item>
     </layout>
    </widget>
@@ -1222,6 +1706,29 @@
    <zorder>pushButton_26</zorder>
    <zorder>btn_VRC_resetAll</zorder>
    <zorder>slider_VRC_LH</zorder>
+   <zorder>verticalLayoutWidget_6</zorder>
+   <zorder>btn_cameraRecord_4</zorder>
+   <zorder>btn_cameraShoot_6</zorder>
+   <zorder>btr_flight_HLA</zorder>
+   <zorder>btr_flight_HLV</zorder>
+   <zorder>btr_flight_HLP</zorder>
+   <zorder>btr_flight_VLV</zorder>
+   <zorder>btr_flight_VLP</zorder>
+   <zorder>btr_flight_VLT</zorder>
+   <zorder>btr_flight_YLA</zorder>
+   <zorder>btr_flight_YLP</zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>layoutWidget_2</zorder>
+   <zorder>checkBox</zorder>
+   <zorder>btn_cameraAngle_3</zorder>
+   <zorder>label_6</zorder>
+   <zorder>label_7</zorder>
+   <zorder>label_8</zorder>
+   <zorder>label_9</zorder>
+   <zorder>lineEdit_2</zorder>
+   <zorder>lineEdit_3</zorder>
+   <zorder>lineEdit_4</zorder>
+   <zorder>lineEdit_5</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -1261,4 +1768,11 @@
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
  <connections/>
+ <buttongroups>
+  <buttongroup name="btg_flightHL"/>
+  <buttongroup name="btg_flightVL"/>
+  <buttongroup name="btg_flightYL"/>
+  <buttongroup name="btg_flightCL"/>
+  <buttongroup name="btg_flightSM"/>
+ </buttongroups>
 </ui>

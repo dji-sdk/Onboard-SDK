@@ -160,8 +160,12 @@ void DJI::onboardSDK::CoreAPI::recvReqData(Header *header)
                         API_STATUS("onboardSDK lost contrl\n");
                         break;
                     case CODE_MISSION:
+                        //! @todo
+                        API_DEBUG("%x", *((unsigned char *)header +
+                                           sizeof(Header) + 2));
                         break;
                     case CODE_WAYPOINT:
+                        //! @todo
                         break;
                     default:
                         API_STATUS(

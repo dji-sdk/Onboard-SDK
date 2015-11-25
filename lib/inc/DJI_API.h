@@ -112,7 +112,6 @@ class CoreAPI
               unsigned char cmd_id, unsigned char *pdata, int len,
               CallBack ack_callback, int timeout, int retry_time);
     void send(Command *parameter);
-    void task(TASK taskname, CommandResult user_notice_entrance);
     void activate(ActivateData *data, CommandResult ActivationResult = 0);
     void setControl(unsigned char cmd, CommandResult user_notice_entrance);
     void getVersion(Get_API_Version_Notify user_notice_entrance);
@@ -123,7 +122,8 @@ class CoreAPI
      *  @note These functions is based on API functions above.
      *  @todo move to a new class
      */
-    void setAttitude(AttitudeData_t *p_user_data);
+    void task(TASK taskname, CommandResult TaskResult);
+    void setFlight(FlightData *p_user_data);
 
     void setGimbalAngle(GimbalAngleData *p_user_data);
     void setGimbalSpeed(GimbalSpeedData *p_user_data);
@@ -228,6 +228,10 @@ class Flight
 {
   public:
     Flight(CoreAPI *ContorlAPI = 0);
+
+    void task(TASK taskname, CommandResult TaskResult);
+    void setFlight(FlightData *p_user_data);
+
     CoreAPI *getApi() const;
     void setApi(CoreAPI *value);
 

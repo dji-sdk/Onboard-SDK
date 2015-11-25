@@ -174,7 +174,7 @@ typedef struct
     float pitch_or_y;
     float thr_z;
     float yaw;
-} AttitudeData_t;
+} FlightData;
 
 #pragma pack()
 
