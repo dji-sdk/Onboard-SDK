@@ -12,6 +12,7 @@
 #include <stdint.h>
 
 #include "DJI_Link.h"
+#include "DJI_Type.h"
 
 #define MY_DEV_ID 0x00
 
@@ -55,11 +56,6 @@
 
 #define YAW_GND 0x00
 #define YAW_BODY 0x01
-
-#define MAKE_VERSION(a, b, c, d)                                               \
-    (((a << 24) & 0xff000000) | ((b << 16) & 0x00ff0000) |                     \
-     ((c << 8) & 0x0000ff00) | (d & 0x000000ff))
-#define SDK_VERSION (MAKE_VERSION(2, 3, 10, 0))
 
 // data_type
 
@@ -141,7 +137,6 @@ typedef struct
 #define SDK_ACTIVATE_LEVEL_ERROR 0x0007
 #define SDK_ACTIVATE_SDK_VERSION_ERROR 0x0008
 
-
 #pragma pack(1)
 
 /*
@@ -155,7 +150,7 @@ typedef struct
     unsigned int app_ver;
     unsigned char app_bundle_id[32];
     char *app_key;
-} ActivateData_t;
+} ActivateData;
 
 /*
  *struct of version query data
@@ -190,5 +185,49 @@ typedef void (*BroadcastHandler)(void);
 typedef void (*TransparentHandler)(unsigned char *buf, unsigned char len);
 
 typedef void (*ResultCallback)(DJI::onboardSDK::CoreAPI *);
+using namespace DJI::onboardSDK;
+const uint8_t _broadcast0 = sizeof(TimeStampData);
+const uint8_t _broadcast1 = sizeof(TimeStampData) + sizeof(QuaternionData);
+const uint8_t _broadcast2 =
+    sizeof(TimeStampData) + sizeof(QuaternionData) + sizeof(CommonData);
+const uint8_t _broadcast3 = sizeof(TimeStampData) + sizeof(QuaternionData) +
+                            sizeof(CommonData) + sizeof(SpeedData);
+const uint8_t _broadcast4 = sizeof(TimeStampData) + sizeof(QuaternionData) +
+                            sizeof(CommonData) + sizeof(SpeedData) +
+                            sizeof(CommonData);
+const uint8_t _broadcast5 = sizeof(TimeStampData) + sizeof(QuaternionData) +
+                            sizeof(CommonData) + sizeof(SpeedData) +
+                            sizeof(CommonData) + sizeof(PositionData);
+const uint8_t _broadcast6 = sizeof(TimeStampData) + sizeof(QuaternionData) +
+                            sizeof(CommonData) + sizeof(SpeedData) +
+                            sizeof(CommonData) + sizeof(PositionData) +
+                            sizeof(MagnetData);
+const uint8_t _broadcast7 = sizeof(TimeStampData) + sizeof(QuaternionData) +
+                            sizeof(CommonData) + sizeof(SpeedData) +
+                            sizeof(CommonData) + sizeof(PositionData) +
+                            sizeof(MagnetData) + sizeof(RadioData);
+const uint8_t _broadcast8 =
+    sizeof(TimeStampData) + sizeof(QuaternionData) + sizeof(CommonData) +
+    sizeof(SpeedData) + sizeof(CommonData) + sizeof(PositionData) +
+    sizeof(MagnetData) + sizeof(RadioData) + sizeof(GimbalData);
+const uint8_t _broadcast9 = sizeof(TimeStampData) + sizeof(QuaternionData) +
+                            sizeof(CommonData) + sizeof(SpeedData) +
+                            sizeof(CommonData) + sizeof(PositionData) +
+                            sizeof(MagnetData) + sizeof(RadioData) +
+                            sizeof(GimbalData) + sizeof(uint8_t);
+const uint8_t _broadcast10 =
+    sizeof(TimeStampData) + sizeof(QuaternionData) + sizeof(CommonData) +
+    sizeof(SpeedData) + sizeof(CommonData) + sizeof(PositionData) +
+    sizeof(MagnetData) + sizeof(RadioData) + sizeof(GimbalData) +
+    sizeof(uint8_t) + sizeof(BatteryData);
+const uint8_t _broadcast11 =
+    sizeof(TimeStampData) + sizeof(QuaternionData) + sizeof(CommonData) +
+    sizeof(SpeedData) + sizeof(CommonData) + sizeof(PositionData) +
+    sizeof(MagnetData) + sizeof(RadioData) + sizeof(GimbalData) +
+    sizeof(uint8_t) + sizeof(BatteryData) + sizeof(CtrlInfoData);
+const uint8_t _broadcastLen[] = { _broadcast0, _broadcast1,  _broadcast2,
+                                  _broadcast3, _broadcast4,  _broadcast5,
+                                  _broadcast6, _broadcast7,  _broadcast8,
+                                  _broadcast9, _broadcast10, _broadcast11 };
 
 #endif

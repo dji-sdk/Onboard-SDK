@@ -114,14 +114,14 @@ void DJI::onboardSDK::CoreAPI::activate(ActivateData *data,
 }
 
 void DJI::onboardSDK::CoreAPI::sendToMobile(uint8_t *data, uint8_t len,
-                                            CommandResult ToMobileResult)
+                                            CommandResult MobileResult)
 {
     if (len > 100)
     {
         API_ERROR("Too much data to send");
         return;
     }
-    toMobileResult = ToMobileResult ? ToMobileResult : 0;
+    toMobileResult = MobileResult ? MobileResult : 0;
     send(2, 0, SET_ACTIVATION, API_TRANSPARENT_DATA_TO_MOBILE, data, len,
          DJI::onboardSDK::CoreAPI::sendToMobileCallback, 500, 2);
 }
@@ -317,4 +317,54 @@ void DJI::onboardSDK::CoreAPI::setControlCallback(CoreAPI *This, Header *header)
             API_STATUS("there is unkown error,ack=0x%X\n", ack_data);
             break;
     }
+}
+
+CoreAPI *Flight::getApi() const
+{
+    return api;
+}
+
+void Flight::setApi(CoreAPI *value)
+{
+    api = value;
+}
+
+CoreAPI *Camera::getApi() const
+{
+    return api;
+}
+
+void Camera::setApi(CoreAPI *value)
+{
+    api = value;
+}
+
+CoreAPI *Mission::getApi() const
+{
+    return api;
+}
+
+void Mission::setApi(CoreAPI *value)
+{
+    api = value;
+}
+
+CoreAPI *Swarm::getApi() const
+{
+    return api;
+}
+
+void Swarm::setApi(CoreAPI *value)
+{
+    api = value;
+}
+
+CoreAPI *VirtualRC::getApi() const
+{
+    return api;
+}
+
+void VirtualRC::setApi(CoreAPI *value)
+{
+    api = value;
 }

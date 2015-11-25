@@ -212,6 +212,7 @@ CMDSession *DJI::onboardSDK::CoreAPI::allocSession(unsigned short session_id,
                                                unsigned short size)
 {
     unsigned int i;
+    API_DEBUG("Alloc size %d",size);
     MMU_Tab *mmu = NULL;
 
     if (session_id == 0 || session_id == 1)

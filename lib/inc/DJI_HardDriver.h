@@ -11,16 +11,16 @@ namespace onboardSDK
 
 class HardDriver
 {
-public:
-    HardDriver();
+  public:
+    HardDriver() {}
 
-public:
+  public:
     virtual void init() = 0;
     virtual unsigned int getTimeStamp() = 0;
     virtual size_t send(const uint8_t *buf, size_t len) = 0;
     virtual size_t readall(uint8_t *buf, size_t maxlen) = 0;
 
-public:
+  public:
     virtual void lockMemory() = 0;
     virtual void freeMemory() = 0;
 

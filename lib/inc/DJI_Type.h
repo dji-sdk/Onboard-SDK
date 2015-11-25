@@ -6,24 +6,30 @@
 #ifdef WIN32
 #define __func__ __FUNCTION__
 #endif
+#ifdef QT
+#define APIprintf qDebug
+#include <QDebug>
+#else
+#define APIprintf printf
+#endif
 
 #ifdef API_DEBUG_DATA
 #define API_DEBUG(format, ...)                                                 \
-    printf("DEBUG %s,line %d: " format, __func__, __LINE__, ##__VA_ARGS__)
+    APIprintf("DEBUG %s,line %d: " format, __func__, __LINE__, ##__VA_ARGS__)
 #else
 #define API_DEBUG(format, ...) 0
 #endif
 
 #ifdef API_ERROR_DATA
 #define API_ERROR(format, ...)                                                 \
-    printf("Error %s,line %d: " format, __func__, __LINE__, ##__VA_ARGS__)
+    APIprintf("Error %s,line %d: " format, __func__, __LINE__, ##__VA_ARGS__)
 #else
 #define API_ERROR(format, ...) 0
 #endif
 
 #ifdef API_STATUS_DATA
 #define API_STATUS(format, ...)                                                \
-    printf("MSG %s,line %d: " format, __func__, __LINE__, ##__VA_ARGS__)
+    APIprintf("Status %s,line %d: " format, __func__, __LINE__, ##__VA_ARGS__)
 #else
 #define API_STATUS(format, ...) 0
 #endif
@@ -115,8 +121,8 @@ typedef struct Ack
     unsigned char *buf;
 } Ack;
 
-typedef uint8_t BatteryData;
 #pragma pack(1)
+typedef uint8_t BatteryData;
 
 typedef struct GimbalAngleData
 {
@@ -169,9 +175,9 @@ typedef struct SpeedData
     float32_t x;
     float32_t y;
     float32_t z;
-    unsigned char health_flag : 1;
-    unsigned char feedback_sensor_id : 4;
-    unsigned char reserve : 3;
+    uint8_t health_flag : 1;
+    uint8_t feedback_sensor_id : 4;
+    uint8_t reserve : 3;
 } SpeedData;
 
 typedef struct
@@ -180,8 +186,8 @@ typedef struct
     float64_t longti;
     float32_t alti;
     float32_t height;
-    unsigned char health_flag;
-} PositionData_t;
+    uint8_t health_flag;
+} PositionData;
 
 typedef struct
 {
@@ -191,14 +197,14 @@ typedef struct
     signed short throttle;
     signed short mode;
     signed short gear;
-} RadioData_t;
+} RadioData;
 
 typedef struct
 {
     signed short x;
     signed short y;
     signed short z;
-} api_mag_data_t;
+} MagnetData;
 
 typedef struct
 {
@@ -209,15 +215,33 @@ typedef struct
 
 typedef struct
 {
-    unsigned int timeStamp;
+    uint32_t time;
+    uint32_t asr_ts;
+    uint8_t sync_flag;
+} TimeStampData;
+
+typedef struct
+{
+    float32_t roll;
+    float32_t pitch;
+    float32_t yaw;
+    unsigned char is_pitch_limit : 1;
+    unsigned char is_roll_limit : 1;
+    unsigned char is_yaw_limit : 1;
+    unsigned char reserved : 5;
+} GimbalData;
+
+typedef struct BroadcastData
+{
+    TimeStampData timeStamp;
     QuaternionData q;
     CommonData a;
     SpeedData v;
     CommonData w;
-    PositionData_t pos;
-    api_mag_data_t mag;
-    RadioData_t rc;
-    CommonData gimbal;
+    PositionData pos;
+    MagnetData mag;
+    RadioData rc;
+    GimbalData gimbal;
     unsigned char status;
     BatteryData capacity;
     CtrlInfoData ctrl_info;

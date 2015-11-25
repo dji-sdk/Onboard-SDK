@@ -36,8 +36,11 @@ using namespace DJI::onboardSDK;
 
 void DJI::onboardSDK::CoreAPI::sendData(unsigned char *buf)
 {
+    size_t ans;
     Header *pHeader = (Header *)buf;
-    driver->send(buf, pHeader->length);
+    ans = driver->send(buf, pHeader->length);
+    if (ans == 0)
+        API_ERROR("Port closed");
 }
 
 void DJI::onboardSDK::CoreAPI::appHandler(Header *header)
@@ -69,7 +72,7 @@ void DJI::onboardSDK::CoreAPI::appHandler(Header *header)
     }
     else
     {
-        // TODO,is a request package
+        //! @todo request package
 
         switch (header->sessionID)
         {
@@ -174,7 +177,10 @@ void DJI::onboardSDK::CoreAPI::readPoll()
     int read_len;
     uint8_t buf[BUFFER_SIZE];
     read_len = driver->readall(buf, BUFFER_SIZE);
-    for (int i = 0; i < read_len; i++) byteHandler(buf[i]);
+    for (int i = 0; i < read_len; i++)
+    {
+        byteHandler(buf[i]);
+    }
 }
 
 void DJI::onboardSDK::CoreAPI::setup()
@@ -335,13 +341,16 @@ int DJI::onboardSDK::CoreAPI::sendInterface(Command *parameter)
                 return -1;
             }
             if (seq_num == cmd_session->pre_seq_num)
+            {
                 seq_num++;
+            }
             ret = encrypt(cmd_session->mmu->pmem, parameter->buf,
                           parameter->length, 0, parameter->need_encrypt,
                           cmd_session->sessionID, seq_num);
+
             if (ret == 0)
             {
-                API_ERROR("encrypt ERROR\n");
+                API_ERROR("encrypt ERROR");
                 freeSession(cmd_session);
                 driver->freeMemory();
                 return -1;

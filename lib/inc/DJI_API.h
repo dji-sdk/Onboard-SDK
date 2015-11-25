@@ -30,8 +30,8 @@ class CoreAPI;
 class Flight;
 class Camera;
 class Mission;
-class Swarm;
 class VirtualRC;
+class Swarm;
 
 enum TASK
 {
@@ -71,7 +71,9 @@ enum BROADCAST_CODE
 {
     CODE_BROADCAST = 0x00,
     CODE_LOSTCTRL = 0x01,
-    CODE_FROMMOBILE = 0x02
+    CODE_FROMMOBILE = 0x02,
+    CODE_MISSION = 0x03,
+    CODE_WAYPOINT = 0x04
 };
 
 /*! @note overdefined in CONTROL_CODE
@@ -103,26 +105,26 @@ class CoreAPI
     void byteHandler(const uint8_t in_data);
 
   public:
-    /*! @code API*/
+    /*! @code CoreAPI*/
     CoreAPI(HardDriver *Driver, ReceiveHandler user_cmd_handler_entrance = 0);
+    void ack(req_id_t req_id, unsigned char *ackdata, int len);
     void send(unsigned char session_mode, unsigned char is_enc, CMD_SET cmd_set,
               unsigned char cmd_id, unsigned char *pdata, int len,
               CallBack ack_callback, int timeout, int retry_time);
     void send(Command *parameter);
-    void ack(req_id_t req_id, unsigned char *ackdata, int len);
-    void getVersion(Get_API_Version_Notify user_notice_entrance);
     void task(TASK taskname, CommandResult user_notice_entrance);
-    void activate(ActivateData_t *p_user_data,
-                  CommandResult user_notice_entrance);
-    void sendToMobile(unsigned char *data, unsigned char len,
-                      CommandResult user_notice_entrance);
+    void activate(ActivateData *data, CommandResult ActivationResult = 0);
     void setControl(unsigned char cmd, CommandResult user_notice_entrance);
+    void getVersion(Get_API_Version_Notify user_notice_entrance);
+    void sendToMobile(uint8_t *data, uint8_t len,
+                      CommandResult MobileResult = 0);
 
     /*! @code Flight contorl
      *  @note These functions is based on API functions above.
      *  @todo move to a new class
      */
     void setAttitude(AttitudeData_t *p_user_data);
+
     void setGimbalAngle(GimbalAngleData *p_user_data);
     void setGimbalSpeed(GimbalSpeedData *p_user_data);
     void setCamera(CAMERA camera_cmd);
@@ -158,7 +160,7 @@ class CoreAPI
 
     TaskData_t taskData;
     VersionData_t versionData;
-    ActivateData_t accountData;
+    ActivateData accountData;
 
     unsigned short seq_num;
 
@@ -224,47 +226,57 @@ class CoreAPI
 
 class Flight
 {
-public:
-    Flight(CoreAPI* ContorlAPI);
-private:
-    Flight();
-    CoreAPI* api;
+  public:
+    Flight(CoreAPI *ContorlAPI = 0);
+    CoreAPI *getApi() const;
+    void setApi(CoreAPI *value);
+
+  private:
+    CoreAPI *api;
 };
 
 class Camera
 {
-public:
-    Camera(CoreAPI* ContorlAPI);
-private:
-    Camera();
-    CoreAPI* api;
+  public:
+    Camera(CoreAPI *ContorlAPI = 0);
+    CoreAPI *getApi() const;
+    void setApi(CoreAPI *value);
+
+  private:
+    CoreAPI *api;
 };
 
 class Mission
 {
-public:
-    Mission(CoreAPI* ContorlAPI);
-private:
-    Mission();
-    CoreAPI* api;
+  public:
+    Mission(CoreAPI *ContorlAPI = 0);
+    CoreAPI *getApi() const;
+    void setApi(CoreAPI *value);
+
+  private:
+    CoreAPI *api;
 };
 
 class Swarm
 {
-public:
-    Swarm(CoreAPI* ContorlAPI);
-private:
-    Swarm();
-    CoreAPI* api;
+  public:
+    Swarm(CoreAPI *ContorlAPI = 0);
+    CoreAPI *getApi() const;
+    void setApi(CoreAPI *value);
+
+  private:
+    CoreAPI *api;
 };
 
 class VirtualRC
 {
-public:
-    VirtualRC(CoreAPI* ContorlAPI);
-private:
-    VirtualRC();
-    CoreAPI* api;
+  public:
+    VirtualRC(CoreAPI *ContorlAPI = 0);
+    CoreAPI *getApi() const;
+    void setApi(CoreAPI *value);
+
+  private:
+    CoreAPI *api;
 };
 
 } // namespace onboardSDK

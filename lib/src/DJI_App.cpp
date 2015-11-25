@@ -26,14 +26,13 @@
 
 using namespace DJI::onboardSDK;
 
-inline void passData(uint16_t _flag, uint16_t _enable, void *_data,
-                     unsigned char *_buf, size_t _datalen)
+inline void passData(uint16_t flag, uint16_t enable, void *data,
+                     unsigned char *buf, size_t datalen, size_t &offset)
 {
-    if ((_flag & _enable))
+    if ((flag & enable))
     {
-        memcpy((unsigned char *)&(_data), (unsigned char *)(_buf) + (_datalen),
-               sizeof(_data));
-        _datalen += sizeof(_data);
+        memcpy((unsigned char *)data, (unsigned char *)buf + offset, datalen);
+        offset += datalen;
     }
 }
 
@@ -84,30 +83,51 @@ void DJI::onboardSDK::CoreAPI::broadcast(Header *header)
 {
     unsigned char *pdata = ((unsigned char *)header) + sizeof(Header);
     unsigned short *enableFlag;
-    unsigned short len = MSG_ENABLE_FLAG_LEN;
     driver->lockMSG();
     pdata += 2;
     enableFlag = (unsigned short *)pdata;
+    size_t len = MSG_ENABLE_FLAG_LEN;
+
     passData(*enableFlag, ENABLE_MSG_TIME, &broadcastData.timeStamp, pdata,
+             sizeof(TimeStampData), len);
+    passData(*enableFlag, HAS_Q, &broadcastData.q, pdata,
+             sizeof(QuaternionData), len);
+    passData(*enableFlag, HAS_A, &broadcastData.a, pdata, sizeof(CommonData),
              len);
-    passData(*enableFlag, HAS_Q, &broadcastData.q, pdata, len);
-    passData(*enableFlag, HAS_A, &broadcastData.a, pdata, len);
-    passData(*enableFlag, HAS_V, &broadcastData.v, pdata, len);
-    passData(*enableFlag, HAS_W, &broadcastData.w, pdata, len);
-    passData(*enableFlag, HAS_POS, &broadcastData.pos, pdata, len);
-    passData(*enableFlag, HAS_MAG, &broadcastData.mag, pdata, len);
-    passData(*enableFlag, HAS_RC, &broadcastData.rc, pdata, len);
-    passData(*enableFlag, HAS_GIMBAL, &broadcastData.gimbal, pdata, len);
-    passData(*enableFlag, HAS_STATUS, &broadcastData.status, pdata, len);
-    passData(*enableFlag, HAS_BATTERY, &broadcastData.capacity, pdata, len);
-    passData(*enableFlag, HAS_DEVICE, &broadcastData.ctrl_info, pdata, len);
+    passData(*enableFlag, HAS_V, &broadcastData.v, pdata, sizeof(SpeedData),
+             len);
+    passData(*enableFlag, HAS_W, &broadcastData.w, pdata, sizeof(CommonData),
+             len);
+    passData(*enableFlag, HAS_POS, &broadcastData.pos, pdata,
+             sizeof(PositionData), len);
+    passData(*enableFlag, HAS_MAG, &broadcastData.mag, pdata,
+             sizeof(MagnetData), len);
+    passData(*enableFlag, HAS_RC, &broadcastData.rc, pdata, sizeof(RadioData),
+             len);
+    passData(*enableFlag, HAS_GIMBAL, &broadcastData.gimbal, pdata,
+             sizeof(GimbalData), len);
+    passData(*enableFlag, HAS_STATUS, &broadcastData.status, pdata,
+             sizeof(uint8_t), len);
+    passData(*enableFlag, HAS_BATTERY, &broadcastData.capacity, pdata,
+             sizeof(BatteryData), len);
+    passData(*enableFlag, HAS_DEVICE, &broadcastData.ctrl_info, pdata,
+             sizeof(CtrlInfoData), len);
+
     driver->freeMSG();
 
     if (broadcastHandler)
         broadcastHandler();
 
-    if (broadcastData.timeStamp % 600 == 0)
-        API_DEBUG("time: %d\n", broadcastData.timeStamp);
+    if (broadcastData.timeStamp.time % 400 == 0)
+        API_DEBUG("\ntime: %d %u %x, data flag %x, length %d \n"
+                  "Quaternion:   %f %f %f %f\n"
+                  "Acceleration: %f %f %f \n"
+                  "Battery: %d \n",
+                  broadcastData.timeStamp.time, broadcastData.timeStamp.asr_ts,
+                  broadcastData.timeStamp.sync_flag, *enableFlag,
+                  header->length, broadcastData.q.q0, broadcastData.q.q1,
+                  broadcastData.q.q2, broadcastData.q.q3, broadcastData.a.x,
+                  broadcastData.a.y, broadcastData.a.z, broadcastData.capacity);
 }
 
 void DJI::onboardSDK::CoreAPI::recvReqData(Header *header)
@@ -138,6 +158,10 @@ void DJI::onboardSDK::CoreAPI::recvReqData(Header *header)
                         break;
                     case CODE_LOSTCTRL:
                         API_STATUS("onboardSDK lost contrl\n");
+                        break;
+                    case CODE_MISSION:
+                        break;
+                    case CODE_WAYPOINT:
                         break;
                     default:
                         API_STATUS(

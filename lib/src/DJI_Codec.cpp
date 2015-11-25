@@ -642,7 +642,7 @@ void storeData(SDKFilter *p_filter, unsigned char in_data)
     }
     else
     {
-        // Error, buffer overflow! Just clear and continue.
+        API_ERROR("buffer overflow");
         memset(p_filter->comm_recv_buf, 0, p_filter->recv_index);
         p_filter->recv_index = 0;
     }
@@ -745,7 +745,7 @@ void DJI::onboardSDK::CoreAPI::checkStream(SDKFilter *p_filter)
 }
 
 void DJI::onboardSDK::CoreAPI::streamHandler(SDKFilter *p_filter,
-                                         unsigned char in_data)
+                                             unsigned char in_data)
 {
     storeData(p_filter, in_data);
     checkStream(p_filter);
@@ -851,8 +851,10 @@ unsigned short DJI::onboardSDK::CoreAPI::encrypt(
         return 0;
 
     if (filter.enc_enabled == 0 && is_enc)
+    {
+        API_ERROR("Can not send encode data, no available key");
         return 0;
-
+    }
     if (w_len == 0 || psrc == 0)
         data_len = (unsigned short)sizeof(Header);
     else
@@ -860,6 +862,8 @@ unsigned short DJI::onboardSDK::CoreAPI::encrypt(
 
     if (is_enc)
         data_len = data_len + (16 - w_len % 16);
+
+    API_DEBUG("data len: %d\n", data_len);
 
     p_head->sof = _SDK_SOF;
     p_head->length = data_len;
