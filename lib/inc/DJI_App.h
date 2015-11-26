@@ -111,7 +111,7 @@ typedef struct
 {
     unsigned char cmd_sequence;
     unsigned char cmd_data;
-} TaskData_t;
+} TaskData;
 
 //----------------------------------------------------------------------
 // for activation
@@ -161,7 +161,7 @@ typedef struct
     unsigned short version_ack;
     unsigned int version_crc;
     char version_name[32];
-} VersionData_t;
+} VersionData;
 
 /*
  *struct of attitude data
@@ -179,12 +179,12 @@ typedef struct
 #pragma pack()
 
 typedef void (*CommandResult)(unsigned short result);
-typedef void (*Get_API_Version_Notify)(VersionData_t *);
+typedef void (*Get_API_Version_Notify)(VersionData *);
 typedef void (*ReceiveHandler)(DJI::onboardSDK::Header *pHeader);
 typedef void (*BroadcastHandler)(void);
 typedef void (*TransparentHandler)(unsigned char *buf, unsigned char len);
-
 typedef void (*ResultCallback)(DJI::onboardSDK::CoreAPI *);
+
 using namespace DJI::onboardSDK;
 const uint8_t _broadcast0 = sizeof(TimeStampData);
 const uint8_t _broadcast1 = sizeof(TimeStampData) + sizeof(QuaternionData);

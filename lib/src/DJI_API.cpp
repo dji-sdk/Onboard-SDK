@@ -195,7 +195,7 @@ void DJI::onboardSDK::CoreAPI::getVersionCallback(
     unsigned char *ptemp = ((unsigned char *)header) + sizeof(Header);
     char *ptemp2;
     int count = 31;
-    VersionData_t *p_version_data = &This->versionData;
+    VersionData *p_version_data = &This->versionData;
 
     p_version_data->version_ack = ptemp[0] + (ptemp[1] << 8);
     ptemp += 2;

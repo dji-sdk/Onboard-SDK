@@ -93,7 +93,7 @@ void APIThread::run()
             api->sendPoll();
         else if (type == 2)
             api->readPoll();
-        msleep(5);
+        msleep(1);
     }
 }
 

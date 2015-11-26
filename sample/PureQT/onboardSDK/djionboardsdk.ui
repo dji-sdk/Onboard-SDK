@@ -494,9 +494,9 @@
    <widget class="QGroupBox" name="groupBox_8">
     <property name="geometry">
      <rect>
-      <x>470</x>
+      <x>480</x>
       <y>0</y>
-      <width>541</width>
+      <width>531</width>
       <height>304</height>
      </rect>
     </property>
@@ -1027,6 +1027,9 @@
            <property name="text">
             <string>Send (P)</string>
            </property>
+           <property name="shortcut">
+            <string>P</string>
+           </property>
           </widget>
          </item>
          <item>
@@ -1042,6 +1045,9 @@
         <widget class="QPushButton" name="btn_flight_arm">
          <property name="text">
           <string>Arm</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -1094,7 +1100,7 @@
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_21">
             <item>
-             <widget class="QPushButton" name="btn_cameraRecord_4">
+             <widget class="QPushButton" name="btn_flight_runTask">
               <property name="text">
                <string>Run Task</string>
               </property>
@@ -1306,7 +1312,7 @@
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QPushButton" name="btn_flight_up_2">
+        <widget class="QPushButton" name="btn_flight_dataReset">
          <property name="minimumSize">
           <size>
            <width>40</width>
@@ -1320,10 +1326,10 @@
           </size>
          </property>
          <property name="text">
-          <string>P</string>
+          <string>;</string>
          </property>
          <property name="shortcut">
-          <string>P</string>
+          <string>;</string>
          </property>
         </widget>
        </item>

@@ -20,7 +20,9 @@ class DJIonboardSDK : public QMainWindow
     explicit DJIonboardSDK(QWidget *parent = 0);
     ~DJIonboardSDK();
 
-private:
+    void resetFlightData();
+
+  private:
     void setBaudrate();
     void setPort();
     void openPort();
@@ -48,24 +50,42 @@ private:
     void on_btn_VRC_resetLeft_clicked();
     void on_btn_VRC_resetRight_clicked();
 
-    void on_btg_flight_HL(QAbstractButton* button);
-    void on_btg_flight_VL(QAbstractButton* button);
-    void on_btg_flight_YL(QAbstractButton* button);
-    void on_btg_flight_CL(QAbstractButton* button);
-    void on_btg_flight_SM(QAbstractButton* button);
+    void on_btg_flight_HL(QAbstractButton *button);
+    void on_btg_flight_VL(QAbstractButton *button);
+    void on_btg_flight_YL(QAbstractButton *button);
+    void on_btg_flight_CL(QAbstractButton *button);
+    void on_btg_flight_SM(QAbstractButton *button);
 
     void on_btn_camera_up_clicked();
 
     void on_btn_flight_frount_pressed();
-
     void on_btn_flight_back_pressed();
-
     void on_btn_flight_send_clicked();
+    void on_btn_flight_runTask_clicked();
+    void on_btn_flight_arm_clicked(bool checked);
+    void on_btn_flight_up_pressed();
+    void on_btn_flight_left_pressed();
+    void on_btn_flight_right_pressed();
+    void on_pushButton_down_pressed();
+    void on_btn_flight_leftYaw_pressed();
+    void on_btn_flight_rightYaw_pressed();
 
-    void on_btn_flight_arm_clicked();
+
+    void on_btn_flight_dataReset_clicked();
+
+    void on_lineEdit_flight_X_returnPressed();
+
+    void on_lineEdit_flight_Y_returnPressed();
+
+    void on_lineEdit_flight_Z_returnPressed();
+
+    void on_lineEdit_flight_Yaw_returnPressed();
+
+    void on_cb_flight_autoSend_clicked(bool checked);
 
 private:
     Ui::DJIonboardSDK *ui;
+    Flight *flight;
     CoreAPI *api;
     QHardDriver *driver;
     QSerialPort *port;

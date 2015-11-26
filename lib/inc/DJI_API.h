@@ -60,6 +60,7 @@ enum CONTROL_CODE
     CODE_TASK = 1,
     CODE_STATUS = 2,
     CODE_CONTORL = 3,
+    CODE_SETARM = 5,
     CODE_GIMBAL_SPEED = 0x1A,
     CODE_GIMBAL_ANGLE = 0x1B,
     CODE_CAMERA_SHOT = 0x20,
@@ -122,8 +123,8 @@ class CoreAPI
      *  @note These functions is based on API functions above.
      *  @todo move to a new class
      */
-    void task(TASK taskname, CommandResult TaskResult);
-    void setFlight(FlightData *p_user_data);
+    void task(TASK taskname, CommandResult TaskResult); //! @note moved
+    void setFlight(FlightData *p_user_data);			//! @note moved
 
     void setGimbalAngle(GimbalAngleData *p_user_data);
     void setGimbalSpeed(GimbalSpeedData *p_user_data);
@@ -149,7 +150,7 @@ class CoreAPI
     unsigned char encodeSendData[BUFFER_SIZE];
     unsigned char encodeACK[ACK_SIZE];
 
-    CommandResult taskResult;
+    CommandResult taskResult;//! @note moved
     CommandResult activateResult;
     CommandResult toMobileResult;
     CommandResult setControlResult;
@@ -158,8 +159,8 @@ class CoreAPI
     BroadcastHandler broadcastHandler;
     TransparentHandler transparentHandler;
 
-    TaskData_t taskData;
-    VersionData_t versionData;
+    TaskData taskData;//! @note moved
+    VersionData versionData;
     ActivateData accountData;
 
     unsigned short seq_num;
@@ -167,7 +168,7 @@ class CoreAPI
     SDKFilter filter;
 
   private:
-    static void taskCallback(CoreAPI *This, Header *header);
+    static void taskCallback(CoreAPI *This, Header *header); //! @note moved
     static void activateCallback(CoreAPI *This, Header *header);
     static void getVersionCallback(CoreAPI *This, Header *header);
     static void setControlCallback(CoreAPI *This, Header *header);
@@ -229,15 +230,21 @@ class Flight
   public:
     Flight(CoreAPI *ContorlAPI = 0);
 
-    void task(TASK taskname, CommandResult TaskResult);
-    void setFlight(FlightData *p_user_data);
-    void setArm();
+    void task(TASK taskname, CallBack TaskCallback = 0);
+    void setArm(bool enable,CallBack ArmCallback = 0);
+    void setFlight(FlightData *data);
 
+  public: //! @note callbacks
+    static void armCallback(CoreAPI *This, Header *header);
+    static void taskCallback(CoreAPI *This, Header *header);
+
+  public: //! @note Access method
     CoreAPI *getApi() const;
     void setApi(CoreAPI *value);
 
   private:
     CoreAPI *api;
+    TaskData taskData;
 };
 
 class Camera

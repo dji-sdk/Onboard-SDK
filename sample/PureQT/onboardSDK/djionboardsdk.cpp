@@ -3,6 +3,18 @@
 
 #include <QFile>
 
+void DJIonboardSDK::resetFlightData()
+{
+    flightx = 0;
+    flighty = 0;
+    flightz = 0;
+    flightyaw = 0;
+    updateFlightX();
+    updateFlightY();
+    updateFlightZ();
+    updateFlightYaw();
+}
+
 DJIonboardSDK::DJIonboardSDK(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::DJIonboardSDK)
 {
@@ -17,6 +29,8 @@ DJIonboardSDK::DJIonboardSDK(QWidget *parent)
     read = new APIThread(api, 2);
 
     key = new QByteArray;
+
+    flight = new Flight(api);
 
     refreshPort();
     setPort();
@@ -43,14 +57,7 @@ DJIonboardSDK::DJIonboardSDK(QWidget *parent)
     on_btg_flight_CL(ui->btg_flightCL->checkedButton());
     on_btg_flight_SM(ui->btg_flightSM->checkedButton());
 
-    flightx = 0;
-    flighty = 0;
-    flightz = 0;
-    flightyaw = 0;
-    updateFlightX();
-    updateFlightY();
-    updateFlightZ();
-    updateFlightYaw();
+    resetFlightData();
 
     QFile f("settings.ini");
     if (!f.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -284,7 +291,11 @@ void DJIonboardSDK::updateFlightYaw()
     ui->lineEdit_flight_Yaw->setText(QString::number(flightyaw));
 }
 
-void DJIonboardSDK::on_btn_camera_up_clicked() { qDebug() << "!"; }
+void DJIonboardSDK::on_btn_camera_up_clicked()
+{
+    //! @ todo
+    qDebug() << "!";
+}
 
 void DJIonboardSDK::on_btn_flight_frount_pressed()
 {
@@ -299,10 +310,93 @@ void DJIonboardSDK::on_btn_flight_back_pressed()
 }
 
 void DJIonboardSDK::on_btn_flight_send_clicked()
-{;
+{
+    qDebug() << "send";
+    FlightData data;
+    data.ctrl_flag = flightFlag;
+    data.roll_or_x = flightx;
+    data.pitch_or_y = flighty;
+    data.thr_z = flightz;
+    data.yaw = flightyaw;
+    flight->setFlight(&data);
 }
 
-void DJIonboardSDK::on_btn_flight_arm_clicked()
+void DJIonboardSDK::on_btn_flight_runTask_clicked()
+{
+    QString name = ui->btg_flightTask->checkedButton()->text();
+    TASK type = TASK_GOHOME;
+    if (name == "Take off")
+        type = TASK_TAKEOFF;
+    else if (name == "Landing")
+        type = TASK_LANDING;
+
+    flight->task(type);
+}
+
+void DJIonboardSDK::on_btn_flight_arm_clicked(bool checked)
+{
+    flight->setArm(checked);
+}
+
+void DJIonboardSDK::on_btn_flight_left_pressed()
+{
+    flighty += 0.1f;
+    updateFlightY();
+}
+
+void DJIonboardSDK::on_btn_flight_right_pressed()
+{
+    flighty -= 0.1f;
+    updateFlightY();
+}
+
+void DJIonboardSDK::on_pushButton_down_pressed()
+{
+    flightz -= 0.1f;
+    updateFlightZ();
+}
+
+void DJIonboardSDK::on_btn_flight_up_pressed()
+{
+    flightz += 0.1f;
+    updateFlightZ();
+}
+
+void DJIonboardSDK::on_btn_flight_leftYaw_pressed()
+{
+    flightyaw += 1.0f;
+    updateFlightYaw();
+}
+
+void DJIonboardSDK::on_btn_flight_rightYaw_pressed()
+{
+    flightyaw -= 1.0f;
+    updateFlightYaw();
+}
+
+void DJIonboardSDK::on_btn_flight_dataReset_clicked() { resetFlightData(); }
+
+void DJIonboardSDK::on_lineEdit_flight_X_returnPressed()
+{
+    flightx = ui->lineEdit_flight_X->text().toFloat();
+}
+
+void DJIonboardSDK::on_lineEdit_flight_Y_returnPressed()
+{
+    flighty = ui->lineEdit_flight_Y->text().toFloat();
+}
+
+void DJIonboardSDK::on_lineEdit_flight_Z_returnPressed()
+{
+    flightz = ui->lineEdit_flight_Z->text().toFloat();
+}
+
+void DJIonboardSDK::on_lineEdit_flight_Yaw_returnPressed()
+{
+    flightyaw = ui->lineEdit_flight_Yaw->text().toFloat();
+}
+
+void DJIonboardSDK::on_cb_flight_autoSend_clicked(bool checked)
 {
 
 }
