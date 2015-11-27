@@ -632,7 +632,7 @@ void sdk_stream_shift_data_lambda(SDKFilter *p_filter)
     }
 }
 
-// push data to filter buffer
+//! @note push data to filter buffer
 void storeData(SDKFilter *p_filter, unsigned char in_data)
 {
     if (p_filter->recv_index < _SDK_MAX_RECV_SIZE)
@@ -698,7 +698,7 @@ void DJI::onboardSDK::CoreAPI::verifyData(SDKFilter *p_filter)
     }
     else
     {
-        // data crc fail, re-use the data part
+        //! @note data crc fail, re-use the data part
         sdk_stream_update_reuse_part_lambda(p_filter);
     }
 }

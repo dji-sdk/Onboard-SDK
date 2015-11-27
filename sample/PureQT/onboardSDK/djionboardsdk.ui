@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1024</width>
+    <width>1440</width>
     <height>820</height>
    </rect>
   </property>
@@ -21,9 +21,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>280</y>
-      <width>181</width>
-      <height>174</height>
+      <y>0</y>
+      <width>261</width>
+      <height>118</height>
      </rect>
     </property>
     <property name="title">
@@ -36,13 +36,13 @@
         <widget class="QPushButton" name="btn_portOpen">
          <property name="minimumSize">
           <size>
-           <width>120</width>
+           <width>0</width>
            <height>25</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-           <width>200</width>
+           <width>500</width>
            <height>16777215</height>
           </size>
          </property>
@@ -83,38 +83,6 @@
          </item>
         </layout>
        </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_3">
-         <item>
-          <widget class="QLabel" name="label_2">
-           <property name="text">
-            <string>I D:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="lineEdit_ID"/>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_4">
-         <item>
-          <widget class="QLabel" name="label_3">
-           <property name="text">
-            <string>Key:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="lineEdit_Key">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
       </layout>
      </item>
     </layout>
@@ -122,16 +90,48 @@
    <widget class="QGroupBox" name="groupBox_2">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>460</y>
-      <width>181</width>
-      <height>121</height>
+      <x>560</x>
+      <y>0</y>
+      <width>251</width>
+      <height>552</height>
      </rect>
     </property>
     <property name="title">
      <string>Core API</string>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_5">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <item>
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>I D:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_ID"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_4">
+       <item>
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>Key:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_Key">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
      <item>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
@@ -157,15 +157,646 @@
        </item>
       </layout>
      </item>
+     <item>
+      <widget class="QGroupBox" name="">
+       <property name="title">
+        <string>Broadcast Data</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_33">
+        <item>
+         <widget class="QPushButton" name="pushButton">
+          <property name="text">
+           <string>Set</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_25">
+          <item>
+           <widget class="QLabel" name="label_15">
+            <property name="text">
+             <string>Time stamp</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="comboBox">
+            <property name="currentText">
+             <string>Hold</string>
+            </property>
+            <property name="currentIndex">
+             <number>5</number>
+            </property>
+            <item>
+             <property name="text">
+              <string>0Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>1Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>10Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>50Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>100Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Hold</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_26">
+          <item>
+           <widget class="QLabel" name="label_16">
+            <property name="text">
+             <string>Quaternion</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="comboBox_2">
+            <property name="currentText">
+             <string>Hold</string>
+            </property>
+            <property name="currentIndex">
+             <number>5</number>
+            </property>
+            <item>
+             <property name="text">
+              <string>0Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>1Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>10Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>50Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>100Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Hold</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_27">
+          <item>
+           <widget class="QLabel" name="label_17">
+            <property name="text">
+             <string>Acceleration</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="comboBox_3">
+            <property name="currentText">
+             <string>Hold</string>
+            </property>
+            <property name="currentIndex">
+             <number>5</number>
+            </property>
+            <item>
+             <property name="text">
+              <string>0Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>1Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>10Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>50Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>100Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Hold</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_28">
+          <item>
+           <widget class="QLabel" name="label_18">
+            <property name="text">
+             <string>Velocity</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="comboBox_4">
+            <property name="currentText">
+             <string>Hold</string>
+            </property>
+            <property name="currentIndex">
+             <number>5</number>
+            </property>
+            <item>
+             <property name="text">
+              <string>0Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>1Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>10Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>50Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>100Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Hold</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_29">
+          <item>
+           <widget class="QLabel" name="label_19">
+            <property name="text">
+             <string>Palstance</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="comboBox_5">
+            <property name="currentText">
+             <string>Hold</string>
+            </property>
+            <property name="currentIndex">
+             <number>5</number>
+            </property>
+            <item>
+             <property name="text">
+              <string>0Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>1Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>10Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>50Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>100Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Hold</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_30">
+          <item>
+           <widget class="QLabel" name="label_20">
+            <property name="text">
+             <string>Possition</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="comboBox_6">
+            <property name="currentText">
+             <string>Hold</string>
+            </property>
+            <property name="currentIndex">
+             <number>5</number>
+            </property>
+            <item>
+             <property name="text">
+              <string>0Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>1Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>10Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>50Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>100Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Hold</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_31">
+          <item>
+           <widget class="QLabel" name="label_21">
+            <property name="text">
+             <string>Magnet</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="comboBox_7">
+            <property name="currentText">
+             <string>Hold</string>
+            </property>
+            <property name="currentIndex">
+             <number>5</number>
+            </property>
+            <item>
+             <property name="text">
+              <string>0Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>1Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>10Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>50Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>100Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Hold</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_32">
+          <item>
+           <widget class="QLabel" name="label_22">
+            <property name="text">
+             <string>Radio Control</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="comboBox_8">
+            <property name="currentText">
+             <string>Hold</string>
+            </property>
+            <property name="currentIndex">
+             <number>5</number>
+            </property>
+            <item>
+             <property name="text">
+              <string>0Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>1Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>10Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>50Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>100Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Hold</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_33">
+          <item>
+           <widget class="QLabel" name="label_23">
+            <property name="text">
+             <string>Gimbal</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="comboBox_9">
+            <property name="currentText">
+             <string>Hold</string>
+            </property>
+            <property name="currentIndex">
+             <number>5</number>
+            </property>
+            <item>
+             <property name="text">
+              <string>0Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>1Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>10Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>50Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>100Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Hold</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_34">
+          <item>
+           <widget class="QLabel" name="label_24">
+            <property name="text">
+             <string>Status</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="comboBox_10">
+            <property name="currentText">
+             <string>Hold</string>
+            </property>
+            <property name="currentIndex">
+             <number>5</number>
+            </property>
+            <item>
+             <property name="text">
+              <string>0Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>1Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>10Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>50Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>100Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Hold</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_35">
+          <item>
+           <widget class="QLabel" name="label_25">
+            <property name="text">
+             <string>Battery</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="comboBox_11">
+            <property name="currentText">
+             <string>Hold</string>
+            </property>
+            <property name="currentIndex">
+             <number>5</number>
+            </property>
+            <item>
+             <property name="text">
+              <string>0Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>1Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>10Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>50Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>100Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Hold</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_36">
+          <item>
+           <widget class="QLabel" name="label_26">
+            <property name="text">
+             <string>Control Info</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="comboBox_12">
+            <property name="currentText">
+             <string>Hold</string>
+            </property>
+            <property name="currentIndex">
+             <number>5</number>
+            </property>
+            <item>
+             <property name="text">
+              <string>0Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>1Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>10Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>50Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>100Hz</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Hold</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </item>
     </layout>
    </widget>
    <widget class="QGroupBox" name="groupBox_3">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>0</y>
-      <width>184</width>
-      <height>274</height>
+      <y>120</y>
+      <width>261</width>
+      <height>641</height>
      </rect>
     </property>
     <property name="title">
@@ -174,20 +805,6 @@
     <layout class="QVBoxLayout" name="verticalLayout_6">
      <item>
       <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <widget class="QPushButton" name="btn_cameraAngle">
-         <property name="text">
-          <string>Angle</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="btn_cameraSpeed">
-         <property name="text">
-          <string>Speed</string>
-         </property>
-        </widget>
-       </item>
        <item>
         <widget class="QPushButton" name="btn_cameraRecord">
          <property name="text">
@@ -209,7 +826,77 @@
        <property name="spacing">
         <number>0</number>
        </property>
-       <item row="0" column="2">
+       <item row="1" column="0">
+        <spacer name="horizontalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="2" column="3">
+        <widget class="QPushButton" name="pushButton_12">
+         <property name="minimumSize">
+          <size>
+           <width>80</width>
+           <height>40</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>80</width>
+           <height>40</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>2</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QPushButton" name="pushButton_5">
+         <property name="minimumSize">
+          <size>
+           <width>40</width>
+           <height>40</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>40</width>
+           <height>40</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>4</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="4">
+        <widget class="QPushButton" name="pushButton_11">
+         <property name="minimumSize">
+          <size>
+           <width>40</width>
+           <height>40</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>40</width>
+           <height>40</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>6</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="3">
         <widget class="QPushButton" name="btn_camera_up">
          <property name="minimumSize">
           <size>
@@ -235,63 +922,6 @@
         </widget>
        </item>
        <item row="1" column="3">
-        <widget class="QPushButton" name="pushButton_11">
-         <property name="minimumSize">
-          <size>
-           <width>40</width>
-           <height>40</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>40</width>
-           <height>40</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>6</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="2">
-        <widget class="QPushButton" name="pushButton_12">
-         <property name="minimumSize">
-          <size>
-           <width>80</width>
-           <height>40</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>80</width>
-           <height>40</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>2</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QPushButton" name="pushButton_5">
-         <property name="minimumSize">
-          <size>
-           <width>40</width>
-           <height>40</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>40</width>
-           <height>40</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>4</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="2">
         <layout class="QHBoxLayout" name="horizontalLayout_8">
          <property name="spacing">
           <number>0</number>
@@ -336,15 +966,369 @@
          </item>
         </layout>
        </item>
+       <item row="1" column="5">
+        <spacer name="horizontalSpacer_5">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
       </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_24">
+       <item>
+        <widget class="QGroupBox" name="groupBox_15">
+         <property name="title">
+          <string>Mode</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_31">
+          <item>
+           <widget class="QRadioButton" name="btr_camera_9">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Speed</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="btr_camera_10">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Angle</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="">
+         <property name="title">
+          <string>Send</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_32">
+          <item>
+           <widget class="QPushButton" name="btn_camera_send">
+            <property name="text">
+             <string>send</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checkBox">
+            <property name="text">
+             <string>Auto send</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_19">
+       <item>
+        <widget class="QLabel" name="label_11">
+         <property name="text">
+          <string>  Yaw Value:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QSlider" name="hs_camera_yaw">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="invertedAppearance">
+          <bool>false</bool>
+         </property>
+         <property name="invertedControls">
+          <bool>false</bool>
+         </property>
+         <property name="tickPosition">
+          <enum>QSlider::NoTicks</enum>
+         </property>
+         <property name="tickInterval">
+          <number>0</number>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_20">
+       <item>
+        <widget class="QLabel" name="label_12">
+         <property name="text">
+          <string> Roll Value:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QSlider" name="hs_camera_roll">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_21">
+       <item>
+        <widget class="QLabel" name="label_13">
+         <property name="text">
+          <string>Pitch Value:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QSlider" name="hs_camera_pitch">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="">
+       <property name="title">
+        <string>Speed Control Flag</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_30">
+        <property name="leftMargin">
+         <number>9</number>
+        </property>
+        <property name="topMargin">
+         <number>9</number>
+        </property>
+        <property name="rightMargin">
+         <number>9</number>
+        </property>
+        <property name="bottomMargin">
+         <number>9</number>
+        </property>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_22">
+          <item>
+           <widget class="QGroupBox" name="">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="title">
+             <string>Mode</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_12">
+             <item>
+              <widget class="QRadioButton" name="btr_camera">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Incremental</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="btr_camera_2">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Absolute</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="groupBox_12">
+            <property name="title">
+             <string>Yaw</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_15">
+             <item>
+              <widget class="QRadioButton" name="btr_camera_3">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Enable</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="btr_camera_4">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Disable</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_23">
+          <item>
+           <widget class="QGroupBox" name="groupBox_13">
+            <property name="title">
+             <string>Roll</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_28">
+             <item>
+              <widget class="QRadioButton" name="btr_camera_5">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Enable</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="btr_camera_6">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Disable</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="groupBox_14">
+            <property name="title">
+             <string>Pitch</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_29">
+             <item>
+              <widget class="QRadioButton" name="btr_camera_7">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Enable</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="btr_camera_8">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Disable</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_14">
+          <property name="text">
+           <string>Flag Data</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_flightFlag_2">
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </item>
     </layout>
    </widget>
    <widget class="QGroupBox" name="groupBox_4">
     <property name="geometry">
      <rect>
-      <x>690</x>
-      <y>310</y>
+      <x>830</x>
+      <y>440</y>
       <width>181</width>
       <height>261</height>
      </rect>
@@ -442,8 +1426,8 @@
    <widget class="QGroupBox" name="groupBox_5">
     <property name="geometry">
      <rect>
-      <x>490</x>
-      <y>550</y>
+      <x>1030</x>
+      <y>540</y>
       <width>201</width>
       <height>171</height>
      </rect>
@@ -455,8 +1439,8 @@
    <widget class="QGroupBox" name="groupBox_6">
     <property name="geometry">
      <rect>
-      <x>740</x>
-      <y>610</y>
+      <x>940</x>
+      <y>320</y>
       <width>201</width>
       <height>80</height>
      </rect>
@@ -468,8 +1452,8 @@
    <widget class="QGroupBox" name="groupBox_7">
     <property name="geometry">
      <rect>
-      <x>870</x>
-      <y>310</y>
+      <x>1280</x>
+      <y>340</y>
       <width>141</width>
       <height>381</height>
      </rect>
@@ -481,8 +1465,8 @@
    <widget class="QGroupBox" name="groupBox_9">
     <property name="geometry">
      <rect>
-      <x>490</x>
-      <y>310</y>
+      <x>1030</x>
+      <y>440</y>
       <width>181</width>
       <height>80</height>
      </rect>
@@ -494,7 +1478,7 @@
    <widget class="QGroupBox" name="groupBox_8">
     <property name="geometry">
      <rect>
-      <x>480</x>
+      <x>820</x>
       <y>0</y>
       <width>531</width>
       <height>304</height>
@@ -1005,10 +1989,10 @@
    <widget class="QGroupBox" name="groupBox_10">
     <property name="geometry">
      <rect>
-      <x>200</x>
+      <x>280</x>
       <y>0</y>
       <width>272</width>
-      <height>758</height>
+      <height>761</height>
      </rect>
     </property>
     <property name="focusPolicy">
@@ -1649,6 +2633,9 @@
                <property name="text">
                 <string>Velocity</string>
                </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
                <attribute name="buttonGroup">
                 <string notr="true">btg_flightVL</string>
                </attribute>
@@ -1666,7 +2653,7 @@
                 <string>Possition</string>
                </property>
                <property name="checked">
-                <bool>true</bool>
+                <bool>false</bool>
                </property>
                <attribute name="buttonGroup">
                 <string notr="true">btg_flightVL</string>
@@ -1780,13 +2767,39 @@
    <zorder>groupBox_8</zorder>
    <zorder>groupBox_10</zorder>
    <zorder>groupBox</zorder>
+   <zorder>btr_camera</zorder>
+   <zorder>btr_camera_2</zorder>
+   <zorder>groupBox_12</zorder>
+   <zorder>groupBox_13</zorder>
+   <zorder>groupBox_14</zorder>
+   <zorder>btr_camera</zorder>
+   <zorder>btr_camera</zorder>
+   <zorder>label_14</zorder>
+   <zorder>lineEdit_flightFlag_2</zorder>
+   <zorder>checkBox</zorder>
+   <zorder>btn_camera_send</zorder>
+   <zorder>comboBox</zorder>
+   <zorder>label_15</zorder>
+   <zorder>label_15</zorder>
+   <zorder>layoutWidget_4</zorder>
+   <zorder>layoutWidget_5</zorder>
+   <zorder>layoutWidget_6</zorder>
+   <zorder>layoutWidget_7</zorder>
+   <zorder>layoutWidget_8</zorder>
+   <zorder>layoutWidget_9</zorder>
+   <zorder>layoutWidget_10</zorder>
+   <zorder>layoutWidget_11</zorder>
+   <zorder>layoutWidget_12</zorder>
+   <zorder>layoutWidget_13</zorder>
+   <zorder>layoutWidget_14</zorder>
+   <zorder>pushButton</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1024</width>
+     <width>1440</width>
      <height>23</height>
     </rect>
    </property>

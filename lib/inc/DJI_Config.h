@@ -2,7 +2,7 @@
 #define __DJI_CONFIG_H__
 
 #include <stdint.h>
-#define MEMORY_SIZE 1000 // unit is byte
+#define MEMORY_SIZE 1024 // unit is byte
 #define BUFFER_SIZE 1024
 #define ACK_SIZE 10
 

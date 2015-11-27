@@ -38,6 +38,7 @@ class QHardDriver : public HardDriver
     QSerialPort *port;
     QMutex memory;
     QMutex msg;
+    QMutex sendlock;
 };
 
 class APIThread : public QThread
@@ -46,7 +47,7 @@ class APIThread : public QThread
 
   public:
     APIThread();
-    APIThread(CoreAPI *API, int Type);
+    APIThread(CoreAPI *API, int Type,QObject *parent = 0);
 
     void run();
 

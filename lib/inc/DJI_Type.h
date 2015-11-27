@@ -170,7 +170,7 @@ typedef struct
     float32_t z;
 } CommonData;
 
-typedef struct SpeedData
+typedef struct VelocityData
 {
     float32_t x;
     float32_t y;
@@ -178,7 +178,7 @@ typedef struct SpeedData
     uint8_t health_flag : 1;
     uint8_t feedback_sensor_id : 4;
     uint8_t reserve : 3;
-} SpeedData;
+} VelocityData;
 
 typedef struct
 {
@@ -187,7 +187,7 @@ typedef struct
     float32_t alti;
     float32_t height;
     uint8_t health_flag;
-} PositionData;
+} PossitionData;
 
 typedef struct
 {
@@ -208,6 +208,8 @@ typedef struct
 
 typedef struct
 {
+    //! @todo mode remote
+    uint8_t data;
     unsigned char cur_ctrl_dev_in_navi_mode : 3; /*0->rc  1->app  2->serial*/
     unsigned char serial_req_status : 1;		 /*1->opensd  0->close*/
     unsigned char reserved : 4;
@@ -236,9 +238,9 @@ typedef struct BroadcastData
     TimeStampData timeStamp;
     QuaternionData q;
     CommonData a;
-    SpeedData v;
+    VelocityData v;
     CommonData w;
-    PositionData pos;
+    PossitionData pos;
     MagnetData mag;
     RadioData rc;
     GimbalData gimbal;

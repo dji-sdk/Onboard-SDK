@@ -21,12 +21,12 @@ DJIonboardSDK::DJIonboardSDK(QWidget *parent)
 
     ui->setupUi(this);
 
-    port = new QSerialPort();
+    port = new QSerialPort(this);
     driver = new QHardDriver(port);
     api = new CoreAPI(driver);
 
-    send = new APIThread(api, 1);
-    read = new APIThread(api, 2);
+    send = new APIThread(api, 1,this);
+    read = new APIThread(api, 2,this);
 
     key = new QByteArray;
 
@@ -58,6 +58,11 @@ DJIonboardSDK::DJIonboardSDK(QWidget *parent)
     on_btg_flight_SM(ui->btg_flightSM->checkedButton());
 
     resetFlightData();
+
+    autoSend = new QTimer();
+    autoSend->setInterval(50);
+
+    connect(autoSend, SIGNAL(timeout()), this, SLOT(autosend()));
 
     QFile f("settings.ini");
     if (!f.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -309,9 +314,8 @@ void DJIonboardSDK::on_btn_flight_back_pressed()
     updateFlightX();
 }
 
-void DJIonboardSDK::on_btn_flight_send_clicked()
+void DJIonboardSDK::flightSend()
 {
-    qDebug() << "send";
     FlightData data;
     data.ctrl_flag = flightFlag;
     data.roll_or_x = flightx;
@@ -320,6 +324,9 @@ void DJIonboardSDK::on_btn_flight_send_clicked()
     data.yaw = flightyaw;
     flight->setFlight(&data);
 }
+
+void DJIonboardSDK::on_btn_flight_send_clicked() { flightSend(); }
+void DJIonboardSDK::autosend() { flightSend(); }
 
 void DJIonboardSDK::on_btn_flight_runTask_clicked()
 {
@@ -398,5 +405,8 @@ void DJIonboardSDK::on_lineEdit_flight_Yaw_returnPressed()
 
 void DJIonboardSDK::on_cb_flight_autoSend_clicked(bool checked)
 {
-
+    if (checked)
+        autoSend->start();
+    else
+        autoSend->stop();
 }

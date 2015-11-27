@@ -191,38 +191,38 @@ const uint8_t _broadcast1 = sizeof(TimeStampData) + sizeof(QuaternionData);
 const uint8_t _broadcast2 =
     sizeof(TimeStampData) + sizeof(QuaternionData) + sizeof(CommonData);
 const uint8_t _broadcast3 = sizeof(TimeStampData) + sizeof(QuaternionData) +
-                            sizeof(CommonData) + sizeof(SpeedData);
+                            sizeof(CommonData) + sizeof(VelocityData);
 const uint8_t _broadcast4 = sizeof(TimeStampData) + sizeof(QuaternionData) +
-                            sizeof(CommonData) + sizeof(SpeedData) +
+                            sizeof(CommonData) + sizeof(VelocityData) +
                             sizeof(CommonData);
 const uint8_t _broadcast5 = sizeof(TimeStampData) + sizeof(QuaternionData) +
-                            sizeof(CommonData) + sizeof(SpeedData) +
-                            sizeof(CommonData) + sizeof(PositionData);
+                            sizeof(CommonData) + sizeof(VelocityData) +
+                            sizeof(CommonData) + sizeof(PossitionData);
 const uint8_t _broadcast6 = sizeof(TimeStampData) + sizeof(QuaternionData) +
-                            sizeof(CommonData) + sizeof(SpeedData) +
-                            sizeof(CommonData) + sizeof(PositionData) +
+                            sizeof(CommonData) + sizeof(VelocityData) +
+                            sizeof(CommonData) + sizeof(PossitionData) +
                             sizeof(MagnetData);
 const uint8_t _broadcast7 = sizeof(TimeStampData) + sizeof(QuaternionData) +
-                            sizeof(CommonData) + sizeof(SpeedData) +
-                            sizeof(CommonData) + sizeof(PositionData) +
+                            sizeof(CommonData) + sizeof(VelocityData) +
+                            sizeof(CommonData) + sizeof(PossitionData) +
                             sizeof(MagnetData) + sizeof(RadioData);
 const uint8_t _broadcast8 =
     sizeof(TimeStampData) + sizeof(QuaternionData) + sizeof(CommonData) +
-    sizeof(SpeedData) + sizeof(CommonData) + sizeof(PositionData) +
+    sizeof(VelocityData) + sizeof(CommonData) + sizeof(PossitionData) +
     sizeof(MagnetData) + sizeof(RadioData) + sizeof(GimbalData);
 const uint8_t _broadcast9 = sizeof(TimeStampData) + sizeof(QuaternionData) +
-                            sizeof(CommonData) + sizeof(SpeedData) +
-                            sizeof(CommonData) + sizeof(PositionData) +
+                            sizeof(CommonData) + sizeof(VelocityData) +
+                            sizeof(CommonData) + sizeof(PossitionData) +
                             sizeof(MagnetData) + sizeof(RadioData) +
                             sizeof(GimbalData) + sizeof(uint8_t);
 const uint8_t _broadcast10 =
     sizeof(TimeStampData) + sizeof(QuaternionData) + sizeof(CommonData) +
-    sizeof(SpeedData) + sizeof(CommonData) + sizeof(PositionData) +
+    sizeof(VelocityData) + sizeof(CommonData) + sizeof(PossitionData) +
     sizeof(MagnetData) + sizeof(RadioData) + sizeof(GimbalData) +
     sizeof(uint8_t) + sizeof(BatteryData);
 const uint8_t _broadcast11 =
     sizeof(TimeStampData) + sizeof(QuaternionData) + sizeof(CommonData) +
-    sizeof(SpeedData) + sizeof(CommonData) + sizeof(PositionData) +
+    sizeof(VelocityData) + sizeof(CommonData) + sizeof(PossitionData) +
     sizeof(MagnetData) + sizeof(RadioData) + sizeof(GimbalData) +
     sizeof(uint8_t) + sizeof(BatteryData) + sizeof(CtrlInfoData);
 const uint8_t _broadcastLen[] = { _broadcast0, _broadcast1,  _broadcast2,

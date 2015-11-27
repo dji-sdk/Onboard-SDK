@@ -135,7 +135,7 @@ class CoreAPI
     CtrlInfoData getCtrlInfo() const;
     BatteryData getBatteryCapacity() const;
     CommonData getGroundAcc() const;
-    SpeedData getGroundSpeed() const;
+    VelocityData getGroundSpeed() const;
 
     /*! @code user functions entrance*/
     void setTransparentTransmissionCallback(

@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QAbstractButton>
+#include <QTimer>
 #include "QonboardSDK.h"
 
 using namespace DJI::onboardSDK;
@@ -22,7 +23,8 @@ class DJIonboardSDK : public QMainWindow
 
     void resetFlightData();
 
-  private:
+    void flightSend();
+private:
     void setBaudrate();
     void setPort();
     void openPort();
@@ -70,37 +72,34 @@ class DJIonboardSDK : public QMainWindow
     void on_btn_flight_leftYaw_pressed();
     void on_btn_flight_rightYaw_pressed();
 
-
     void on_btn_flight_dataReset_clicked();
-
     void on_lineEdit_flight_X_returnPressed();
-
     void on_lineEdit_flight_Y_returnPressed();
-
     void on_lineEdit_flight_Z_returnPressed();
-
     void on_lineEdit_flight_Yaw_returnPressed();
-
     void on_cb_flight_autoSend_clicked(bool checked);
+
+    void autosend();
 
 private:
     Ui::DJIonboardSDK *ui;
-    Flight *flight;
+
     CoreAPI *api;
     QHardDriver *driver;
     QSerialPort *port;
-
     APIThread *send;
     APIThread *read;
-
     QByteArray *key;
 
+    Flight *flight;
     uint8_t flightFlag;
-
     float32_t flightx;
     float32_t flighty;
     float32_t flightz;
     float32_t flightyaw;
+    QTimer *autoSend;
 };
+
+
 
 #endif // DJIONBOARDSDK_H

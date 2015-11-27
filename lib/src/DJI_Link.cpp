@@ -80,6 +80,7 @@ void DJI::onboardSDK::CoreAPI::appHandler(Header *header)
                 recvReqData(header);
                 break;
             case 1:
+            //! @todo
             default:
                 if (ACKSessionTab[header->sessionID - 1].session_status ==
                     ACK_SESSION_PROCESS)
@@ -95,6 +96,7 @@ void DJI::onboardSDK::CoreAPI::appHandler(Header *header)
                         ACKSessionTab[header->sessionID - 1].session_status =
                             ACK_SESSION_PROCESS;
                     recvReqData(header);
+
                 }
                 else if (ACKSessionTab[header->sessionID - 1].session_status ==
                          ACK_SESSION_USING)
@@ -244,6 +246,7 @@ int DJI::onboardSDK::CoreAPI::ackInterface(Ack *parameter)
             return -1;
         }
 
+        API_DEBUG("Sending data!");
         sendData(ack_session->mmu->pmem);
         driver->freeMemory();
         ack_session->session_status = ACK_SESSION_USING;

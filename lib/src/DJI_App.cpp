@@ -69,7 +69,7 @@ CommonData DJI::onboardSDK::CoreAPI::getGroundAcc() const
     return broadcastData.a;
 }
 
-SpeedData DJI::onboardSDK::CoreAPI::getGroundSpeed() const
+VelocityData DJI::onboardSDK::CoreAPI::getGroundSpeed() const
 {
     return broadcastData.v;
 }
@@ -94,12 +94,12 @@ void DJI::onboardSDK::CoreAPI::broadcast(Header *header)
              sizeof(QuaternionData), len);
     passData(*enableFlag, HAS_A, &broadcastData.a, pdata, sizeof(CommonData),
              len);
-    passData(*enableFlag, HAS_V, &broadcastData.v, pdata, sizeof(SpeedData),
+    passData(*enableFlag, HAS_V, &broadcastData.v, pdata, sizeof(VelocityData),
              len);
     passData(*enableFlag, HAS_W, &broadcastData.w, pdata, sizeof(CommonData),
              len);
     passData(*enableFlag, HAS_POS, &broadcastData.pos, pdata,
-             sizeof(PositionData), len);
+             sizeof(PossitionData), len);
     passData(*enableFlag, HAS_MAG, &broadcastData.mag, pdata,
              sizeof(MagnetData), len);
     passData(*enableFlag, HAS_RC, &broadcastData.rc, pdata, sizeof(RadioData),
@@ -119,6 +119,7 @@ void DJI::onboardSDK::CoreAPI::broadcast(Header *header)
         broadcastHandler();
 
     if (broadcastData.timeStamp.time % 400 == 0)
+    {
         API_DEBUG("\ntime: %d %u %x, data flag %x, length %d \n"
                   "Quaternion:   %f %f %f %f\n"
                   "Acceleration: %f %f %f \n"
@@ -128,71 +129,36 @@ void DJI::onboardSDK::CoreAPI::broadcast(Header *header)
                   header->length, broadcastData.q.q0, broadcastData.q.q1,
                   broadcastData.q.q2, broadcastData.q.q3, broadcastData.a.x,
                   broadcastData.a.y, broadcastData.a.z, broadcastData.capacity);
+         API_STATUS("\n %d \n",
+         broadcastData.ctrl_info.cur_ctrl_dev_in_navi_mode);
+    }
 }
 
 void DJI::onboardSDK::CoreAPI::recvReqData(Header *header)
 {
     unsigned char buf[100] = { 0, 0 };
     unsigned char len = 0;
-    switch (header->sessionID)
+
+    if (getCmdSet(header) == SET_BROADCAST)
     {
-        case 0:
-            if (getCmdSet(header) == SET_BROADCAST)
-            {
-                switch (getCmdCode(header))
+        switch (getCmdCode(header))
+        {
+            case CODE_BROADCAST:
+                broadcast(header);
+                break;
+            case CODE_FROMMOBILE:
+                if (transparentHandler)
                 {
-                    case CODE_BROADCAST:
-                        broadcast(header);
-                        break;
-                    case CODE_FROMMOBILE:
-                        if (transparentHandler)
-                        {
-                            len = (header->length - EXC_DATA_SIZE - 2) > 100
-                                      ? 100
-                                      : (header->length - EXC_DATA_SIZE - 2);
-                            memcpy(buf, ((unsigned char *)header) +
-                                            sizeof(Header) + 2,
-                                   len);
-                            transparentHandler(buf, len);
-                        }
-                        break;
-                    case CODE_LOSTCTRL:
-                        API_STATUS("onboardSDK lost contrl\n");
-                        break;
-                    case CODE_MISSION:
-                        //! @todo
-                        API_DEBUG("%x", *((unsigned char *)header +
-                                           sizeof(Header) + 2));
-                        break;
-                    case CODE_WAYPOINT:
-                        //! @todo
-                        break;
-                    default:
-                        API_STATUS(
-                            "error, unknown BROADCAST command code 0x%X\n",
-                            getCmdCode(header));
-                        break;
+                    len = (header->length - EXC_DATA_SIZE - 2) > 100
+                              ? 100
+                              : (header->length - EXC_DATA_SIZE - 2);
+                    memcpy(buf, ((unsigned char *)header) + sizeof(Header) + 2,
+                           len);
+                    transparentHandler(buf, len);
                 }
-            }
-            else
-            {
-                API_DEBUG("receive unknown command\n");
-                if (recvHandler)
-                {
-                    recvHandler(header);
-                }
-            }
-            break;
-        case 1:
-        case 2:
-            API_DEBUG("Recv request,session id=%d,seq_num=%d\n",
-                      header->sessionID, header->sequence_number);
-            if (recvHandler)
-            {
-                recvHandler(header);
-            }
-            else
-            {
+                break;
+            case CODE_LOSTCTRL:
+                API_STATUS("onboardSDK lost contrl\n");
                 Ack param;
                 if (header->sessionID > 0)
                 {
@@ -204,8 +170,27 @@ void DJI::onboardSDK::CoreAPI::recvReqData(Header *header)
                     param.length = 2;
                     ackInterface(&param);
                 }
-            }
-            break;
+                break;
+            case CODE_MISSION:
+                //! @todo
+                API_DEBUG("%x",
+                          *((unsigned char *)header + sizeof(Header) + 2));
+                break;
+            case CODE_WAYPOINT:
+                //! @todo
+                break;
+            default:
+                API_STATUS("error, unknown BROADCAST command code\n");
+                break;
+        }
+    }
+    else
+    {
+        API_DEBUG("receive unknown command\n");
+        if (recvHandler)
+        {
+            recvHandler(header);
+        }
     }
 }
 
