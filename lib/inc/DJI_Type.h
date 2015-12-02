@@ -135,7 +135,7 @@ typedef struct GimbalAngleData
         unsigned char yaw_cmd_ignore : 1;
         unsigned char roll_cmd_ignore : 1;
         unsigned char pitch_cmd_ignore : 1;
-        unsigned char reserve : 4;
+        unsigned char reserved : 4;
     } ctrl_byte;
     unsigned char duration;
 } GimbalAngleData;
@@ -206,7 +206,7 @@ typedef struct
     signed short z;
 } MagnetData;
 
-typedef struct
+typedef struct CtrlInfoData
 {
     //! @todo mode remote
     uint8_t data;
@@ -215,14 +215,14 @@ typedef struct
     unsigned char reserved : 4;
 } CtrlInfoData;
 
-typedef struct
+typedef struct TimeStampData
 {
     uint32_t time;
     uint32_t asr_ts;
     uint8_t sync_flag;
 } TimeStampData;
 
-typedef struct
+typedef struct GimbalData
 {
     float32_t roll;
     float32_t pitch;
@@ -249,6 +249,33 @@ typedef struct BroadcastData
     CtrlInfoData ctrl_info;
     uint8_t activation;
 } BroadcastData;
+
+typedef struct VirtualRCSetting
+{
+    uint8_t enable : 1;
+    uint8_t cutoff : 1;
+    uint8_t reserved : 6;
+} VirtualRCSetting;
+
+typedef struct VirtualRCData
+{
+    uint32_t roll;
+    uint32_t pitch;
+    uint32_t throttle;
+    uint32_t yaw;
+    uint32_t mode;
+    uint32_t reserved;
+    uint32_t gear;
+    uint32_t Channel_07;
+    uint32_t Channel_08;
+    uint32_t Channel_09;
+    uint32_t Channel_10;
+    uint32_t Channel_11;
+    uint32_t Channel_12;
+    uint32_t Channel_13;
+    uint32_t Channel_14;
+    uint32_t Channel_15;
+}VirtualRCData;
 
 #pragma pack()
 } // namespace onboardSDK

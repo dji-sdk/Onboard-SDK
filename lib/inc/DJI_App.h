@@ -6,8 +6,8 @@
  *  Modified on: Nov 11, 2015
  *  by william.wu
  */
-#ifndef __DJI_PRO_APP_H__
-#define __DJI_PRO_APP_H__
+#ifndef __DJI_APP_H__
+#define __DJI_APP_H__
 
 #include <stdint.h>
 
@@ -57,14 +57,12 @@
 #define YAW_GND 0x00
 #define YAW_BODY 0x01
 
-// data_type
-
 //----------------------------------------------------------------------
 // uav std_msgs reciever
 //----------------------------------------------------------------------
 #define MSG_ENABLE_FLAG_LEN 2
 
-#define ENABLE_MSG_TIME 0x0001
+#define HAS_TIME 0x0001
 #define HAS_Q 0x0002
 #define HAS_A 0x0004
 #define HAS_V 0x0008
@@ -139,11 +137,7 @@ typedef struct
 
 #pragma pack(1)
 
-/*
- *struct of activate data
- */
-
-typedef struct
+typedef struct ActivateData
 {
     unsigned int app_id;
     unsigned int app_api_level;
@@ -152,22 +146,17 @@ typedef struct
     char *app_key;
 } ActivateData;
 
-/*
- *struct of version query data
- */
-
-typedef struct
+typedef struct VersionData
 {
     unsigned short version_ack;
     unsigned int version_crc;
+#ifdef SDK_VERSION_3_1
+    char version_ID[11];
+#endif //SDK_VERSION_3_1
     char version_name[32];
 } VersionData;
 
-/*
- *struct of attitude data
- */
-
-typedef struct
+typedef struct FlightData
 {
     unsigned char ctrl_flag;
     float roll_or_x;
@@ -179,55 +168,8 @@ typedef struct
 #pragma pack()
 
 typedef void (*CommandResult)(unsigned short result);
-typedef void (*Get_API_Version_Notify)(VersionData *);
 typedef void (*ReceiveHandler)(DJI::onboardSDK::Header *pHeader);
 typedef void (*BroadcastHandler)(void);
 typedef void (*TransparentHandler)(unsigned char *buf, unsigned char len);
-typedef void (*ResultCallback)(DJI::onboardSDK::CoreAPI *);
 
-using namespace DJI::onboardSDK;
-const uint8_t _broadcast0 = sizeof(TimeStampData);
-const uint8_t _broadcast1 = sizeof(TimeStampData) + sizeof(QuaternionData);
-const uint8_t _broadcast2 =
-    sizeof(TimeStampData) + sizeof(QuaternionData) + sizeof(CommonData);
-const uint8_t _broadcast3 = sizeof(TimeStampData) + sizeof(QuaternionData) +
-                            sizeof(CommonData) + sizeof(VelocityData);
-const uint8_t _broadcast4 = sizeof(TimeStampData) + sizeof(QuaternionData) +
-                            sizeof(CommonData) + sizeof(VelocityData) +
-                            sizeof(CommonData);
-const uint8_t _broadcast5 = sizeof(TimeStampData) + sizeof(QuaternionData) +
-                            sizeof(CommonData) + sizeof(VelocityData) +
-                            sizeof(CommonData) + sizeof(PossitionData);
-const uint8_t _broadcast6 = sizeof(TimeStampData) + sizeof(QuaternionData) +
-                            sizeof(CommonData) + sizeof(VelocityData) +
-                            sizeof(CommonData) + sizeof(PossitionData) +
-                            sizeof(MagnetData);
-const uint8_t _broadcast7 = sizeof(TimeStampData) + sizeof(QuaternionData) +
-                            sizeof(CommonData) + sizeof(VelocityData) +
-                            sizeof(CommonData) + sizeof(PossitionData) +
-                            sizeof(MagnetData) + sizeof(RadioData);
-const uint8_t _broadcast8 =
-    sizeof(TimeStampData) + sizeof(QuaternionData) + sizeof(CommonData) +
-    sizeof(VelocityData) + sizeof(CommonData) + sizeof(PossitionData) +
-    sizeof(MagnetData) + sizeof(RadioData) + sizeof(GimbalData);
-const uint8_t _broadcast9 = sizeof(TimeStampData) + sizeof(QuaternionData) +
-                            sizeof(CommonData) + sizeof(VelocityData) +
-                            sizeof(CommonData) + sizeof(PossitionData) +
-                            sizeof(MagnetData) + sizeof(RadioData) +
-                            sizeof(GimbalData) + sizeof(uint8_t);
-const uint8_t _broadcast10 =
-    sizeof(TimeStampData) + sizeof(QuaternionData) + sizeof(CommonData) +
-    sizeof(VelocityData) + sizeof(CommonData) + sizeof(PossitionData) +
-    sizeof(MagnetData) + sizeof(RadioData) + sizeof(GimbalData) +
-    sizeof(uint8_t) + sizeof(BatteryData);
-const uint8_t _broadcast11 =
-    sizeof(TimeStampData) + sizeof(QuaternionData) + sizeof(CommonData) +
-    sizeof(VelocityData) + sizeof(CommonData) + sizeof(PossitionData) +
-    sizeof(MagnetData) + sizeof(RadioData) + sizeof(GimbalData) +
-    sizeof(uint8_t) + sizeof(BatteryData) + sizeof(CtrlInfoData);
-const uint8_t _broadcastLen[] = { _broadcast0, _broadcast1,  _broadcast2,
-                                  _broadcast3, _broadcast4,  _broadcast5,
-                                  _broadcast6, _broadcast7,  _broadcast8,
-                                  _broadcast9, _broadcast10, _broadcast11 };
-
-#endif
+#endif //__DJI_APP_H__

@@ -30,9 +30,4 @@ class HardDriver
 } // namespace onboardSDK
 } // namespace DJI
 
-#ifdef V2_0
-extern void Get_Memory_Lock(void);
-extern void Free_Memory_Lock(void);
-#endif
-
 #endif // DJI_PRO_HW_H

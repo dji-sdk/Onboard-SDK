@@ -29,6 +29,7 @@ using namespace DJI::onboardSDK;
 inline void passData(uint16_t flag, uint16_t enable, void *data,
                      unsigned char *buf, size_t datalen, size_t &offset)
 {
+    //! @todo new agronomy
     if ((flag & enable))
     {
         memcpy((unsigned char *)data, (unsigned char *)buf + offset, datalen);
@@ -88,7 +89,7 @@ void DJI::onboardSDK::CoreAPI::broadcast(Header *header)
     enableFlag = (unsigned short *)pdata;
     size_t len = MSG_ENABLE_FLAG_LEN;
 
-    passData(*enableFlag, ENABLE_MSG_TIME, &broadcastData.timeStamp, pdata,
+    passData(*enableFlag, HAS_TIME, &broadcastData.timeStamp, pdata,
              sizeof(TimeStampData), len);
     passData(*enableFlag, HAS_Q, &broadcastData.q, pdata,
              sizeof(QuaternionData), len);
@@ -129,8 +130,8 @@ void DJI::onboardSDK::CoreAPI::broadcast(Header *header)
                   header->length, broadcastData.q.q0, broadcastData.q.q1,
                   broadcastData.q.q2, broadcastData.q.q3, broadcastData.a.x,
                   broadcastData.a.y, broadcastData.a.z, broadcastData.capacity);
-         API_STATUS("\n %d \n",
-         broadcastData.ctrl_info.cur_ctrl_dev_in_navi_mode);
+        //         API_STATUS("\n %d \n",
+        //         broadcastData.ctrl_info.cur_ctrl_dev_in_navi_mode);
     }
 }
 

@@ -18,19 +18,22 @@ void DJIonboardSDK::resetFlightData()
 DJIonboardSDK::DJIonboardSDK(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::DJIonboardSDK)
 {
+    sdk = this;
 
     ui->setupUi(this);
 
+    //! @code init DJISDK
     port = new QSerialPort(this);
     driver = new QHardDriver(port);
     api = new CoreAPI(driver);
 
-    send = new APIThread(api, 1,this);
-    read = new APIThread(api, 2,this);
+    send = new APIThread(api, 1, this);
+    read = new APIThread(api, 2, this);
 
     key = new QByteArray;
 
     flight = new Flight(api);
+    vrc = new VirtualRC(api);
 
     refreshPort();
     setPort();
@@ -39,7 +42,9 @@ DJIonboardSDK::DJIonboardSDK(QWidget *parent)
 
     send->start();
     read->start();
+    //! @endcode init DJISDK
 
+    //! @code init flight
     connect(ui->btg_flightHL, SIGNAL(buttonClicked(QAbstractButton *)), this,
             SLOT(on_btg_flight_HL(QAbstractButton *)));
     connect(ui->btg_flightVL, SIGNAL(buttonClicked(QAbstractButton *)), this,
@@ -61,8 +66,15 @@ DJIonboardSDK::DJIonboardSDK(QWidget *parent)
 
     autoSend = new QTimer();
     autoSend->setInterval(50);
-
     connect(autoSend, SIGNAL(timeout()), this, SLOT(autosend()));
+    //! @endcode init flight
+
+    //! @code init virtual RC
+    vrcSend = new QTimer();
+    vrcSend->setInterval(10);
+    connect(vrcSend, SIGNAL(timeout()), this,
+            SLOT(on_tmr_virtualRC_autosend()));
+    //! @endcode init virtual RC
 
     QFile f("settings.ini");
     if (!f.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -113,6 +125,11 @@ void DJIonboardSDK::closeEvent(QCloseEvent *)
                     .toUtf8());
         f.close();
     }
+}
+
+void DJIonboardSDK::setControlCallback(CoreAPI *This, Header *header)
+{
+    sdk->ui->btn_coreSetControl->setText("Release Control");
 }
 
 void DJIonboardSDK::on_btn_portRefresh_clicked() { refreshPort(); }
@@ -184,14 +201,19 @@ void DJIonboardSDK::on_btn_coreActive_clicked()
     data.app_bundle_id[0] = data.app_bundle_id[1] = 0x12; // for ios
                                                           // verification
     *key = ui->lineEdit_Key->text().toLocal8Bit();
-    data.app_key = key->data();
-    api->activate(&data, 0);
+    data.app_key = key->data(); //! @todo memory leak fixme
+    api->activate(&data);
 }
 
-void DJIonboardSDK::on_btn_coreVersion_clicked() { api->getVersion(0); }
+void DJIonboardSDK::on_btn_coreVersion_clicked() { api->getVersion(); }
 
-void DJIonboardSDK::on_btn_coreSetControl_clicked() { api->setControl(1, 0); }
-
+void DJIonboardSDK::on_btn_coreSetControl_clicked()
+{
+    if (ui->btn_coreSetControl->text() == "Obtain Contorl")
+        api->setControl(true);
+    else
+        api->setControl(false);
+}
 void DJIonboardSDK::on_btn_VRC_resetAll_clicked()
 {
     on_btn_VRC_resetRight_clicked();
@@ -210,6 +232,8 @@ void DJIonboardSDK::on_btn_VRC_resetRight_clicked()
     ui->slider_VRC_RH->setValue(1024);
     ui->slider_VRC_RV->setValue(1024);
 }
+
+void DJIonboardSDK::on_tmr_virtualRC_autosend() { vrc->sendData(); }
 
 void DJIonboardSDK::updateFlightFlag()
 {
@@ -298,7 +322,7 @@ void DJIonboardSDK::updateFlightYaw()
 
 void DJIonboardSDK::on_btn_camera_up_clicked()
 {
-    //! @ todo
+    //! @todo
     qDebug() << "!";
 }
 
@@ -409,4 +433,37 @@ void DJIonboardSDK::on_cb_flight_autoSend_clicked(bool checked)
         autoSend->start();
     else
         autoSend->stop();
+}
+
+void DJIonboardSDK::on_btn_virtualRC_send_clicked()
+{
+    vrcSend->start();
+    vrc->sendData();
+}
+
+void DJIonboardSDK::on_btn_virtualRC_init_clicked()
+{
+    vrc->sentContorl(true, VirtualRC::CutOff_ToRealRC);
+}
+
+void DJIonboardSDK::on_btn_coreSet_clicked()
+{
+    uint8_t data[16];
+    data[0] = ui->comboBox_1->currentIndex();
+    data[1] = ui->comboBox_2->currentIndex();
+    data[2] = ui->comboBox_3->currentIndex();
+    data[3] = ui->comboBox_4->currentIndex();
+    data[4] = ui->comboBox_5->currentIndex();
+    data[5] = ui->comboBox_6->currentIndex();
+    data[6] = ui->comboBox_7->currentIndex();
+    data[7] = ui->comboBox_8->currentIndex();
+    data[8] = ui->comboBox_9->currentIndex();
+    data[9] = ui->comboBox_10->currentIndex();
+    data[10] = ui->comboBox_11->currentIndex();
+    data[11] = ui->comboBox_12->currentIndex();
+    data[12] = 0;
+    data[13] = 0;
+    data[14] = 0;
+    data[15] = 0;
+    api->setBroadcastFeq(data);
 }

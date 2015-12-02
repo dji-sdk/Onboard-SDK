@@ -73,7 +73,6 @@ void DJI::onboardSDK::CoreAPI::appHandler(Header *header)
     else
     {
         //! @todo request package
-
         switch (header->sessionID)
         {
             case 0:

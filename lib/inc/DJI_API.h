@@ -44,13 +44,15 @@ enum CMD_SET
 {
     SET_ACTIVATION = 0x00,
     SET_CONTROL = 0x01,
-    SET_BROADCAST = 0x02
+    SET_BROADCAST = 0x02,
+    SET_VIRTUALRC = 0x05
 };
 
 enum ACTIVATION_CODE
 {
     CODE_GETVERSION = 0,
     CODE_ACTIVATE = 1,
+    CODE_FREQUENCY = 0x10,
     CODE_TOMOBILE = 0xFE
 };
 
@@ -61,11 +63,6 @@ enum CONTROL_CODE
     CODE_STATUS = 2,
     CODE_CONTORL = 3,
     CODE_SETARM = 5,
-    CODE_GIMBAL_SPEED = 0x1A,
-    CODE_GIMBAL_ANGLE = 0x1B,
-    CODE_CAMERA_SHOT = 0x20,
-    CODE_CAMERA_VIDEO_START = 0x21,
-    CODE_CAMERA_VIDEO_STOP = 0x22
 };
 
 enum BROADCAST_CODE
@@ -77,14 +74,19 @@ enum BROADCAST_CODE
     CODE_WAYPOINT = 0x04
 };
 
-/*! @note overdefined in CONTROL_CODE
- * Just using for test
- * */
-enum CAMERA
+enum CAMERA_CODE
 {
-    CAMERA_SHOT = 0x20,
-    CAMERA_VIDEO_START = 0x21,
-    CAMERA_VIDEO_STOP = 0x22
+    CODE_GIMBAL_SPEED = 0x1A,
+    CODE_GIMBAL_ANGLE = 0x1B,
+    CODE_CAMERA_SHOT = 0x20,
+    CODE_CAMERA_VIDEO_START = 0x21,
+    CODE_CAMERA_VIDEO_STOP = 0x22
+};
+
+enum VIRTUALRC_CODE
+{
+    CODE_VIRTUALRC_SETTINGS,
+    CODE_VIRTUALRC_DATA
 };
 
 class CoreAPI
@@ -110,32 +112,31 @@ class CoreAPI
     CoreAPI(HardDriver *Driver, ReceiveHandler user_cmd_handler_entrance = 0);
     void ack(req_id_t req_id, unsigned char *ackdata, int len);
     void send(unsigned char session_mode, unsigned char is_enc, CMD_SET cmd_set,
-              unsigned char cmd_id, unsigned char *pdata, int len,
-              CallBack ack_callback, int timeout, int retry_time);
+              unsigned char cmd_id, void *pdata, int len,
+              CallBack ack_callback = 0, int timeout = 0, int retry_time = 1);
     void send(Command *parameter);
-    void activate(ActivateData *data, CommandResult ActivationResult = 0);
-    void setControl(unsigned char cmd, CommandResult user_notice_entrance);
-    void getVersion(Get_API_Version_Notify user_notice_entrance);
-    void sendToMobile(uint8_t *data, uint8_t len,
-                      CommandResult MobileResult = 0);
+
+    void activate(ActivateData *data, CallBack callback = 0);
+    void setControl(bool enable, CallBack callback = 0);
+    void getVersion(CallBack callback = 0);
+    void sendToMobile(uint8_t *data, uint8_t len, CallBack callback = 0);
+    void setBroadcastFeq(uint8_t *data, CallBack callback = 0);
 
     /*! @code Flight contorl
      *  @note These functions is based on API functions above.
      *  @todo move to a new class
      */
-    void task(TASK taskname, CommandResult TaskResult); //! @note moved
-    void setFlight(FlightData *p_user_data);			//! @note moved
 
     void setGimbalAngle(GimbalAngleData *p_user_data);
     void setGimbalSpeed(GimbalSpeedData *p_user_data);
-    void setCamera(CAMERA camera_cmd);
+    void setCamera(CAMERA_CODE camera_cmd);
 
     QuaternionData getQuaternion() const;
     BroadcastData getBroadcastData() const;
+    VelocityData getGroundSpeed() const;
     CtrlInfoData getCtrlInfo() const;
     BatteryData getBatteryCapacity() const;
     CommonData getGroundAcc() const;
-    VelocityData getGroundSpeed() const;
 
     /*! @code user functions entrance*/
     void setTransparentTransmissionCallback(
@@ -150,16 +151,10 @@ class CoreAPI
     unsigned char encodeSendData[BUFFER_SIZE];
     unsigned char encodeACK[ACK_SIZE];
 
-    CommandResult taskResult;//! @note moved
-    CommandResult activateResult;
-    CommandResult toMobileResult;
-    CommandResult setControlResult;
-
     ReceiveHandler recvHandler;
     BroadcastHandler broadcastHandler;
     TransparentHandler transparentHandler;
 
-    TaskData taskData;//! @note moved
     VersionData versionData;
     ActivateData accountData;
 
@@ -167,12 +162,12 @@ class CoreAPI
 
     SDKFilter filter;
 
-  private:
-    static void taskCallback(CoreAPI *This, Header *header); //! @note moved
+  public:
     static void activateCallback(CoreAPI *This, Header *header);
     static void getVersionCallback(CoreAPI *This, Header *header);
     static void setControlCallback(CoreAPI *This, Header *header);
     static void sendToMobileCallback(CoreAPI *This, Header *header);
+    static void setFrequencyCallback(CoreAPI *This, Header *header);
 
   private:
     void recvReqData(Header *header);
@@ -231,7 +226,7 @@ class Flight
     Flight(CoreAPI *ContorlAPI = 0);
 
     void task(TASK taskname, CallBack TaskCallback = 0);
-    void setArm(bool enable,CallBack ArmCallback = 0);
+    void setArm(bool enable, CallBack ArmCallback = 0);
     void setFlight(FlightData *data);
 
   public: //! @note callbacks
@@ -283,12 +278,27 @@ class Swarm
 class VirtualRC
 {
   public:
+    enum CutOff
+    {
+        CutOff_ToLogic = 0,
+        CutOff_ToRealRC = 1
+    };
+
+  public:
     VirtualRC(CoreAPI *ContorlAPI = 0);
+
+    void sentContorl(bool enable, CutOff cutoffType);
+    void sendData(VirtualRCData Data);
+    void sendData();
+    void resetData();
+
+  public:
     CoreAPI *getApi() const;
     void setApi(CoreAPI *value);
 
   private:
     CoreAPI *api;
+    VirtualRCData data;
 };
 
 } // namespace onboardSDK

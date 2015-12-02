@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     ../../../lib/src/DJI_Flight.cpp \
     ../../../lib/src/DJI_HardDriver.cpp \
     ../../../lib/src/DJI_Link.cpp \
-    ../../../lib/src/DJI_Memory.cpp
+    ../../../lib/src/DJI_Memory.cpp \
+    ../../../lib/src/DJI_VirtualRC.cpp
 
 HEADERS  += djionboardsdk.h \
     QonboardSDK.h \

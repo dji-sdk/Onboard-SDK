@@ -6,6 +6,8 @@
 
 int main(int argc, char *argv[])
 {
+    qDebug()<<sizeof(Header);
+
     QApplication a(argc, argv);
     DJIonboardSDK w;
     w.show();

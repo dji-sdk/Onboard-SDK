@@ -24,7 +24,8 @@ class DJIonboardSDK : public QMainWindow
     void resetFlightData();
 
     void flightSend();
-private:
+
+  private:
     void setBaudrate();
     void setPort();
     void openPort();
@@ -39,11 +40,19 @@ private:
 
   protected:
     void closeEvent(QCloseEvent *);
+
+    //! @note callback static class pointer and callback functions
+  public:
+    DJIonboardSDK *sdk;
+
+    void setControlCallback(CoreAPI *This, Header *header);
+
   private slots:
     void on_btn_portRefresh_clicked();
     void on_btn_portOpen_clicked();
     void on_comboBox_portName_currentIndexChanged(int index);
 
+    void on_btn_coreSet_clicked();
     void on_btn_coreActive_clicked();
     void on_btn_coreVersion_clicked();
     void on_btn_coreSetControl_clicked();
@@ -51,6 +60,9 @@ private:
     void on_btn_VRC_resetAll_clicked();
     void on_btn_VRC_resetLeft_clicked();
     void on_btn_VRC_resetRight_clicked();
+    void on_tmr_virtualRC_autosend();
+    void on_btn_virtualRC_send_clicked();
+    void on_btn_virtualRC_init_clicked();
 
     void on_btg_flight_HL(QAbstractButton *button);
     void on_btg_flight_VL(QAbstractButton *button);
@@ -98,8 +110,9 @@ private:
     float32_t flightz;
     float32_t flightyaw;
     QTimer *autoSend;
+
+    VirtualRC *vrc;
+    QTimer *vrcSend;
 };
-
-
 
 #endif // DJIONBOARDSDK_H

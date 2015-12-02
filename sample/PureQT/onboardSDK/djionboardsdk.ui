@@ -158,7 +158,7 @@
       </layout>
      </item>
      <item>
-      <widget class="QGroupBox" name="">
+      <widget class="QGroupBox" name="groupBox">
        <property name="title">
         <string>Broadcast Data</string>
        </property>
@@ -167,7 +167,7 @@
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_33">
         <item>
-         <widget class="QPushButton" name="pushButton">
+         <widget class="QPushButton" name="btn_coreSet">
           <property name="text">
            <string>Set</string>
           </property>
@@ -183,7 +183,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QComboBox" name="comboBox">
+           <widget class="QComboBox" name="comboBox_1">
             <property name="currentText">
              <string>Hold</string>
             </property>
@@ -1022,7 +1022,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="">
+        <widget class="QGroupBox" name="groupBox">
          <property name="title">
           <string>Send</string>
          </property>
@@ -1116,7 +1116,7 @@
       </layout>
      </item>
      <item>
-      <widget class="QGroupBox" name="">
+      <widget class="QGroupBox" name="groupBox">
        <property name="title">
         <string>Speed Control Flag</string>
        </property>
@@ -1139,7 +1139,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_22">
           <item>
-           <widget class="QGroupBox" name="">
+           <widget class="QGroupBox" name="groupBox">
             <property name="minimumSize">
              <size>
               <width>0</width>
@@ -1327,8 +1327,8 @@
    <widget class="QGroupBox" name="groupBox_4">
     <property name="geometry">
      <rect>
-      <x>830</x>
-      <y>440</y>
+      <x>820</x>
+      <y>480</y>
       <width>181</width>
       <height>261</height>
      </rect>
@@ -1493,152 +1493,8 @@
        <item>
         <widget class="QGroupBox" name="gridGroupBox_4">
          <layout class="QGridLayout" name="gridLayout_4">
-          <item row="2" column="1">
-           <widget class="QSlider" name="slider_VRC_LH">
-            <property name="minimum">
-             <number>364</number>
-            </property>
-            <property name="maximum">
-             <number>1684</number>
-            </property>
-            <property name="value">
-             <number>1024</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QSlider" name="slider_VRC_LV">
-            <property name="minimum">
-             <number>364</number>
-            </property>
-            <property name="maximum">
-             <number>1684</number>
-            </property>
-            <property name="value">
-             <number>1024</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <layout class="QGridLayout" name="gridLayout_3">
-            <item row="1" column="1">
-             <widget class="QPushButton" name="pushButton_16">
-              <property name="minimumSize">
-               <size>
-                <width>40</width>
-                <height>40</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>40</width>
-                <height>40</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>W</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0">
-             <widget class="QPushButton" name="pushButton_18">
-              <property name="minimumSize">
-               <size>
-                <width>40</width>
-                <height>40</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>40</width>
-                <height>40</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>A</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <widget class="QPushButton" name="btn_VRC_resetLeft">
-              <property name="minimumSize">
-               <size>
-                <width>40</width>
-                <height>40</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>40</width>
-                <height>40</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>R</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="2">
-             <widget class="QPushButton" name="pushButton_19">
-              <property name="minimumSize">
-               <size>
-                <width>40</width>
-                <height>40</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>40</width>
-                <height>40</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>D</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="1">
-             <widget class="QPushButton" name="pushButton_17">
-              <property name="minimumSize">
-               <size>
-                <width>40</width>
-                <height>40</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>40</width>
-                <height>40</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>S</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item row="3" column="1">
-           <spacer name="verticalSpacer">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>40</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="4" column="1">
-           <widget class="QPushButton" name="pushButton_27">
+          <item row="3" column="0">
+           <widget class="QPushButton" name="btn_virtualRC_init">
             <property name="minimumSize">
              <size>
               <width>80</width>
@@ -1656,7 +1512,7 @@
             </property>
            </widget>
           </item>
-          <item row="5" column="1">
+          <item row="4" column="0">
            <spacer name="verticalSpacer_3">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
@@ -1668,6 +1524,162 @@
              </size>
             </property>
            </spacer>
+          </item>
+          <item row="2" column="0">
+           <spacer name="verticalSpacer">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="1" column="0">
+           <widget class="QGroupBox" name="groupBox">
+            <property name="title">
+             <string>Left Joy Stick</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_9">
+             <item row="0" column="0">
+              <widget class="QSlider" name="slider_VRC_LV">
+               <property name="minimum">
+                <number>364</number>
+               </property>
+               <property name="maximum">
+                <number>1684</number>
+               </property>
+               <property name="value">
+                <number>1024</number>
+               </property>
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <layout class="QGridLayout" name="gridLayout_3">
+               <item row="2" column="0">
+                <widget class="QPushButton" name="pushButton_18">
+                 <property name="minimumSize">
+                  <size>
+                   <width>40</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>40</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>A</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QPushButton" name="pushButton_16">
+                 <property name="minimumSize">
+                  <size>
+                   <width>40</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>40</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>W</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QPushButton" name="btn_VRC_resetLeft">
+                 <property name="minimumSize">
+                  <size>
+                   <width>40</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>40</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>R</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="2">
+                <widget class="QPushButton" name="pushButton_19">
+                 <property name="minimumSize">
+                  <size>
+                   <width>40</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>40</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>D</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="1">
+                <widget class="QPushButton" name="pushButton_17">
+                 <property name="minimumSize">
+                  <size>
+                   <width>40</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>40</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>S</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="1" column="1">
+              <widget class="QSlider" name="slider_VRC_LH">
+               <property name="minimum">
+                <number>364</number>
+               </property>
+               <property name="maximum">
+                <number>1684</number>
+               </property>
+               <property name="value">
+                <number>1024</number>
+               </property>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -1803,139 +1815,8 @@
        <item>
         <widget class="QGroupBox" name="gridGroupBox_5">
          <layout class="QGridLayout" name="gridLayout_5">
-          <item row="0" column="1">
-           <widget class="QSlider" name="slider_VRC_RV">
-            <property name="minimum">
-             <number>364</number>
-            </property>
-            <property name="maximum">
-             <number>1684</number>
-            </property>
-            <property name="value">
-             <number>1024</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-           </widget>
-          </item>
           <item row="2" column="0">
-           <widget class="QSlider" name="slider_VRC_RH">
-            <property name="minimum">
-             <number>364</number>
-            </property>
-            <property name="maximum">
-             <number>1684</number>
-            </property>
-            <property name="sliderPosition">
-             <number>1024</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <layout class="QGridLayout" name="gridLayout_6">
-            <item row="0" column="1">
-             <widget class="QPushButton" name="pushButton_20">
-              <property name="minimumSize">
-               <size>
-                <width>40</width>
-                <height>40</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>40</width>
-                <height>40</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>↑</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QPushButton" name="pushButton_21">
-              <property name="minimumSize">
-               <size>
-                <width>40</width>
-                <height>40</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>40</width>
-                <height>40</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>←</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QPushButton" name="btn_VRC_resetRight">
-              <property name="minimumSize">
-               <size>
-                <width>40</width>
-                <height>40</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>40</width>
-                <height>40</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>R</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="2">
-             <widget class="QPushButton" name="pushButton_23">
-              <property name="minimumSize">
-               <size>
-                <width>40</width>
-                <height>40</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>40</width>
-                <height>40</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>→</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <widget class="QPushButton" name="pushButton_24">
-              <property name="minimumSize">
-               <size>
-                <width>40</width>
-                <height>40</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>40</width>
-                <height>40</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>↓</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item row="4" column="0">
-           <widget class="QPushButton" name="pushButton_26">
+           <widget class="QPushButton" name="btn_virtualRC_send">
             <property name="minimumSize">
              <size>
               <width>80</width>
@@ -1953,7 +1834,7 @@
             </property>
            </widget>
           </item>
-          <item row="3" column="0">
+          <item row="1" column="0">
            <spacer name="verticalSpacer_2">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
@@ -1966,7 +1847,7 @@
             </property>
            </spacer>
           </item>
-          <item row="5" column="0">
+          <item row="3" column="0">
            <spacer name="verticalSpacer_4">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
@@ -1978,6 +1859,149 @@
              </size>
             </property>
            </spacer>
+          </item>
+          <item row="0" column="0">
+           <widget class="QGroupBox" name="groupBox">
+            <property name="title">
+             <string>Right Joy Stick</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <layout class="QGridLayout" name="gridLayout">
+             <item row="0" column="0">
+              <layout class="QGridLayout" name="gridLayout_6">
+               <item row="0" column="1">
+                <widget class="QPushButton" name="pushButton_20">
+                 <property name="minimumSize">
+                  <size>
+                   <width>40</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>40</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>↑</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QPushButton" name="pushButton_21">
+                 <property name="minimumSize">
+                  <size>
+                   <width>40</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>40</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>←</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QPushButton" name="btn_VRC_resetRight">
+                 <property name="minimumSize">
+                  <size>
+                   <width>40</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>40</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>R</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="2">
+                <widget class="QPushButton" name="pushButton_23">
+                 <property name="minimumSize">
+                  <size>
+                   <width>40</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>40</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>→</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QPushButton" name="pushButton_24">
+                 <property name="minimumSize">
+                  <size>
+                   <width>40</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>40</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>↓</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="0" column="1">
+              <widget class="QSlider" name="slider_VRC_RV">
+               <property name="minimum">
+                <number>364</number>
+               </property>
+               <property name="maximum">
+                <number>1684</number>
+               </property>
+               <property name="value">
+                <number>1024</number>
+               </property>
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QSlider" name="slider_VRC_RH">
+               <property name="minimum">
+                <number>364</number>
+               </property>
+               <property name="maximum">
+                <number>1684</number>
+               </property>
+               <property name="sliderPosition">
+                <number>1024</number>
+               </property>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -2410,6 +2434,9 @@
          <property name="focusPolicy">
           <enum>Qt::ClickFocus</enum>
          </property>
+         <property name="text">
+          <string/>
+         </property>
         </widget>
        </item>
       </layout>
@@ -2756,9 +2783,6 @@
      </item>
     </layout>
    </widget>
-   <zorder>groupBox</zorder>
-   <zorder>groupBox_2</zorder>
-   <zorder>groupBox_3</zorder>
    <zorder>groupBox_4</zorder>
    <zorder>groupBox_5</zorder>
    <zorder>groupBox_6</zorder>
@@ -2767,32 +2791,8 @@
    <zorder>groupBox_8</zorder>
    <zorder>groupBox_10</zorder>
    <zorder>groupBox</zorder>
-   <zorder>btr_camera</zorder>
-   <zorder>btr_camera_2</zorder>
-   <zorder>groupBox_12</zorder>
-   <zorder>groupBox_13</zorder>
-   <zorder>groupBox_14</zorder>
-   <zorder>btr_camera</zorder>
-   <zorder>btr_camera</zorder>
-   <zorder>label_14</zorder>
-   <zorder>lineEdit_flightFlag_2</zorder>
-   <zorder>checkBox</zorder>
-   <zorder>btn_camera_send</zorder>
-   <zorder>comboBox</zorder>
-   <zorder>label_15</zorder>
-   <zorder>label_15</zorder>
-   <zorder>layoutWidget_4</zorder>
-   <zorder>layoutWidget_5</zorder>
-   <zorder>layoutWidget_6</zorder>
-   <zorder>layoutWidget_7</zorder>
-   <zorder>layoutWidget_8</zorder>
-   <zorder>layoutWidget_9</zorder>
-   <zorder>layoutWidget_10</zorder>
-   <zorder>layoutWidget_11</zorder>
-   <zorder>layoutWidget_12</zorder>
-   <zorder>layoutWidget_13</zorder>
-   <zorder>layoutWidget_14</zorder>
-   <zorder>pushButton</zorder>
+   <zorder>groupBox_2</zorder>
+   <zorder>groupBox_3</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -2833,11 +2833,11 @@
  <resources/>
  <connections/>
  <buttongroups>
+  <buttongroup name="btg_flightTask"/>
   <buttongroup name="btg_flightCL"/>
   <buttongroup name="btg_flightYL"/>
   <buttongroup name="btg_flightVL"/>
   <buttongroup name="btg_flightHL"/>
   <buttongroup name="btg_flightSM"/>
-  <buttongroup name="btg_flightTask"/>
  </buttongroups>
 </ui>

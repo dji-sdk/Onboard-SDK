@@ -4,24 +4,31 @@ using namespace DJI::onboardSDK;
 
 Flight::Flight(DJI::onboardSDK::CoreAPI *ContorlAPI) { api = ContorlAPI; }
 
+CoreAPI *Flight::getApi() const { return api; }
+
+void Flight::setApi(CoreAPI *value) { api = value; }
+
 void Flight::task(TASK taskname, CallBack TaskCallback)
 {
-    taskData.cmd_data = taskname;    taskData.cmd_sequence++;
+    taskData.cmd_data = taskname;
+    taskData.cmd_sequence++;
 
     api->send(2, 1, SET_CONTROL, API_CMD_REQUEST, (unsigned char *)&taskData,
-              sizeof(taskData), TaskCallback?TaskCallback:Flight::taskCallback, 100, 3);
+              sizeof(taskData),
+              TaskCallback ? TaskCallback : Flight::taskCallback, 100, 3);
 }
 
 void Flight::setArm(bool enable, CallBack ArmCallback)
 {
-    uint8_t data = enable?1:0;
-    api->send(2,1,SET_CONTROL,CODE_SETARM,&data,1,ArmCallback?ArmCallback:Flight::armCallback,0,1);
+    uint8_t data = enable ? 1 : 0;
+    api->send(2, 1, SET_CONTROL, CODE_SETARM, &data, 1,
+              ArmCallback ? ArmCallback : Flight::armCallback, 0, 1);
 }
 
 void Flight::setFlight(FlightData *data)
 {
     api->send(0, 1, SET_CONTROL, CODE_CONTORL, (unsigned char *)data,
-              sizeof(FlightData), 0, 0, 1);
+              sizeof(FlightData));
 }
 
 void Flight::armCallback(CoreAPI *This, Header *header)
