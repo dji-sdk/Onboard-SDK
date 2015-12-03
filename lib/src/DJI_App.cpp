@@ -29,7 +29,7 @@ using namespace DJI::onboardSDK;
 inline void passData(uint16_t flag, uint16_t enable, void *data,
                      unsigned char *buf, size_t datalen, size_t &offset)
 {
-    //! @todo new agronomy
+    //! @todo new algorithm
     if ((flag & enable))
     {
         memcpy((unsigned char *)data, (unsigned char *)buf + offset, datalen);
@@ -173,12 +173,12 @@ void DJI::onboardSDK::CoreAPI::recvReqData(Header *header)
                 }
                 break;
             case CODE_MISSION:
-                //! @todo
+                //! @todo add mission session decode
                 API_DEBUG("%x",
                           *((unsigned char *)header + sizeof(Header) + 2));
                 break;
             case CODE_WAYPOINT:
-                //! @todo
+                //! @todo add waypoint session decode
                 break;
             default:
                 API_STATUS("error, unknown BROADCAST command code\n");

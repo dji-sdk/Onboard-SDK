@@ -29,10 +29,13 @@ namespace onboardSDK
 class CoreAPI;
 class Flight;
 class Camera;
-class Mission;
 class VirtualRC;
 class Swarm;
+class WayPoint;
+class HotPoint;
+class FollowMe;
 
+//! @todo sort enum and move to a new file
 enum TASK
 {
     TASK_GOHOME = 1,
@@ -99,13 +102,15 @@ class CoreAPI
      *
      * @note
      * if you can read data in a interrupt, try to pass data through
-     *byteHandler();
+     * byteHandler();
      * */
   public:
     void sendPoll(void);
     void readPoll(void);
 
+    //! @todo modify to a new algorithm
     void byteHandler(const uint8_t in_data);
+    void byteStreamHandler(uint8_t* buffer,size_t size);
 
   public:
     /*! @code CoreAPI*/
@@ -147,7 +152,6 @@ class CoreAPI
     BroadcastData broadcastData;
 
   private:
-    //! @note reconstructed from DJI_Pro_App.cpp
     unsigned char encodeSendData[BUFFER_SIZE];
     unsigned char encodeACK[ACK_SIZE];
 

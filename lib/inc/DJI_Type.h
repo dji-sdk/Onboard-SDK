@@ -208,7 +208,7 @@ typedef struct
 
 typedef struct CtrlInfoData
 {
-    //! @todo mode remote
+    //! @todo mode remote to enums
     uint8_t data;
     unsigned char cur_ctrl_dev_in_navi_mode : 3; /*0->rc  1->app  2->serial*/
     unsigned char serial_req_status : 1;		 /*1->opensd  0->close*/
@@ -263,9 +263,9 @@ typedef struct VirtualRCData
     uint32_t pitch;
     uint32_t throttle;
     uint32_t yaw;
-    uint32_t mode;
-    uint32_t reserved;
     uint32_t gear;
+    uint32_t reserved;
+    uint32_t mode;
     uint32_t Channel_07;
     uint32_t Channel_08;
     uint32_t Channel_09;

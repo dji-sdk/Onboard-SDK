@@ -270,6 +270,12 @@ void CoreAPI::setControlCallback(CoreAPI *This, Header *header)
             This->send(2, 1, SET_CONTROL, API_CTRL_MANAGEMENT, &data, 1,
                        CoreAPI::setControlCallback, 500, 2);
             break;
+        case 0x0004:
+            API_STATUS("release control running\n");
+            data = 0;
+            This->send(2, 1, SET_CONTROL, API_CTRL_MANAGEMENT, &data, 1,
+                       CoreAPI::setControlCallback, 500, 2);
+            break;
         case 0x00C9:
             API_STATUS("IOC mode opening can not obtain control\n");
             break;

@@ -3,6 +3,8 @@
 
 #include <QFile>
 
+DJIonboardSDK *DJIonboardSDK::sdk = 0;
+
 void DJIonboardSDK::resetFlightData()
 {
     flightx = 0;
@@ -71,7 +73,7 @@ DJIonboardSDK::DJIonboardSDK(QWidget *parent)
 
     //! @code init virtual RC
     vrcSend = new QTimer();
-    vrcSend->setInterval(10);
+    vrcSend->setInterval(100); // 2Hz
     connect(vrcSend, SIGNAL(timeout()), this,
             SLOT(on_tmr_virtualRC_autosend()));
     //! @endcode init virtual RC
@@ -98,7 +100,7 @@ DJIonboardSDK::~DJIonboardSDK() { delete ui; }
 void DJIonboardSDK::refreshPort()
 {
     ui->comboBox_portName->clear();
-    auto ports = QSerialPortInfo::availablePorts();
+    QList<QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
     QStringList list;
     for (int i = 0; i < ports.length(); ++i)
     {
@@ -129,7 +131,52 @@ void DJIonboardSDK::closeEvent(QCloseEvent *)
 
 void DJIonboardSDK::setControlCallback(CoreAPI *This, Header *header)
 {
-    sdk->ui->btn_coreSetControl->setText("Release Control");
+    unsigned short ack_data = 0xFFFF;
+    unsigned char data = 0x1;
+
+    if (header->length - EXC_DATA_SIZE <= 2)
+    {
+        memcpy((unsigned char *)&ack_data,
+               ((unsigned char *)header) + sizeof(Header),
+               (header->length - EXC_DATA_SIZE));
+    }
+    else
+        API_ERROR("ACK is exception,seesion id %d,sequence %d\n",
+                  header->sessionID, header->sequence_number);
+
+    switch (ack_data)
+    {
+        case 0x0000:
+            if (sdk)
+                sdk->ui->btn_coreSetControl->setText("Swtich to mod F");
+            else
+                API_ERROR("known SDK pointer 0.");
+            break;
+        case 0x0001:
+            if (sdk)
+                sdk->ui->btn_coreSetControl->setText("Obtain Control");
+            else
+                API_ERROR("known SDK pointer 0.");
+            break;
+        case 0x0002:
+            if (sdk)
+                sdk->ui->btn_coreSetControl->setText("Release Control");
+            else
+                API_ERROR("known SDK pointer 0.");
+            break;
+        case 0x0003:
+            This->send(2, 1, SET_CONTROL, API_CTRL_MANAGEMENT, &data, 1,
+                       DJIonboardSDK::setControlCallback, 500, 2);
+            break;
+        case 0x0004:
+            data = 0;
+            This->send(2, 1, SET_CONTROL, API_CTRL_MANAGEMENT, &data, 1,
+                       DJIonboardSDK::setControlCallback, 500, 2);
+            break;
+    }
+    //! @note For debug, all functional print is moving to this function,
+    //! default API callback is not necessary.
+    //    CoreAPI::setControlCallback(This, header);
 }
 
 void DJIonboardSDK::on_btn_portRefresh_clicked() { refreshPort(); }
@@ -201,7 +248,7 @@ void DJIonboardSDK::on_btn_coreActive_clicked()
     data.app_bundle_id[0] = data.app_bundle_id[1] = 0x12; // for ios
                                                           // verification
     *key = ui->lineEdit_Key->text().toLocal8Bit();
-    data.app_key = key->data(); //! @todo memory leak fixme
+    data.app_key = key->data(); //! @warning memory leak fixme
     api->activate(&data);
 }
 
@@ -209,10 +256,10 @@ void DJIonboardSDK::on_btn_coreVersion_clicked() { api->getVersion(); }
 
 void DJIonboardSDK::on_btn_coreSetControl_clicked()
 {
-    if (ui->btn_coreSetControl->text() == "Obtain Contorl")
-        api->setControl(true);
+    if (ui->btn_coreSetControl->text() == "Release Control")
+        api->setControl(false, DJIonboardSDK::setControlCallback);
     else
-        api->setControl(false);
+        api->setControl(true, DJIonboardSDK::setControlCallback);
 }
 void DJIonboardSDK::on_btn_VRC_resetAll_clicked()
 {
@@ -233,7 +280,35 @@ void DJIonboardSDK::on_btn_VRC_resetRight_clicked()
     ui->slider_VRC_RV->setValue(1024);
 }
 
-void DJIonboardSDK::on_tmr_virtualRC_autosend() { vrc->sendData(); }
+void DJIonboardSDK::on_tmr_virtualRC_autosend()
+{
+    VirtualRCData data;
+    data.throttle = ui->slider_VRC_LV->value();
+    data.roll = ui->slider_VRC_RH->value();
+    data.pitch = ui->slider_VRC_RV->value();
+    data.yaw = ui->slider_VRC_LH->value();
+    if (ui->btg_vrcMode->checkedButton()->text() == "F")
+    {
+        data.mode = 496;
+        // qDebug() << "F mod";
+    }
+    else if (ui->btg_vrcMode->checkedButton()->text() == "A")
+    {
+        data.mode = 1024;
+        // qDebug() << "A mod";
+    }
+    else
+    {
+        data.mode = 1552;
+        // qDebug() << "P mod";
+    }
+    if (ui->btg_vrcGear->checkedButton()->text() == "Up")
+        data.gear = 1684;
+    else
+        data.gear = 1324;
+
+    vrc->sendData(data);
+}
 
 void DJIonboardSDK::updateFlightFlag()
 {
@@ -322,7 +397,7 @@ void DJIonboardSDK::updateFlightYaw()
 
 void DJIonboardSDK::on_btn_camera_up_clicked()
 {
-    //! @todo
+    //! @todo write camera operation
     qDebug() << "!";
 }
 
@@ -437,6 +512,7 @@ void DJIonboardSDK::on_cb_flight_autoSend_clicked(bool checked)
 
 void DJIonboardSDK::on_btn_virtualRC_send_clicked()
 {
+    vrc->sentContorl(true, VirtualRC::CutOff_ToRealRC);
     vrcSend->start();
     vrc->sendData();
 }
@@ -466,4 +542,44 @@ void DJIonboardSDK::on_btn_coreSet_clicked()
     data[14] = 0;
     data[15] = 0;
     api->setBroadcastFeq(data);
+}
+
+void DJIonboardSDK::on_btn_vrc_down_pressed()
+{
+    ui->slider_VRC_RV->setValue(ui->slider_VRC_RV->value() - 10);
+}
+
+void DJIonboardSDK::on_btn_vrc_up_pressed()
+{
+    ui->slider_VRC_RV->setValue(ui->slider_VRC_RV->value() + 10);
+}
+
+void DJIonboardSDK::on_btn_vrc_left_pressed()
+{
+    ui->slider_VRC_RH->setValue(ui->slider_VRC_RH->value() - 10);
+}
+
+void DJIonboardSDK::on_btn_vrc_right_pressed()
+{
+    ui->slider_VRC_RH->setValue(ui->slider_VRC_RH->value() + 10);
+}
+
+void DJIonboardSDK::on_btn_vrc_w_pressed()
+{
+    ui->slider_VRC_LV->setValue(ui->slider_VRC_LV->value() + 10);
+}
+
+void DJIonboardSDK::on_btn_vrc_S_pressed()
+{
+    ui->slider_VRC_LV->setValue(ui->slider_VRC_LV->value() - 10);
+}
+
+void DJIonboardSDK::on_btn_vrc_A_pressed()
+{
+    ui->slider_VRC_LH->setValue(ui->slider_VRC_LH->value() - 10);
+}
+
+void DJIonboardSDK::on_btn_vrc_D_pressed()
+{
+    ui->slider_VRC_LH->setValue(ui->slider_VRC_LH->value() + 10);
 }

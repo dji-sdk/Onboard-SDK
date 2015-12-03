@@ -79,7 +79,7 @@ void DJI::onboardSDK::CoreAPI::appHandler(Header *header)
                 recvReqData(header);
                 break;
             case 1:
-            //! @todo
+            //! @todo unnecessary ack in case 1. Maybe add code later
             default:
                 if (ACKSessionTab[header->sessionID - 1].session_status ==
                     ACK_SESSION_PROCESS)
@@ -95,7 +95,6 @@ void DJI::onboardSDK::CoreAPI::appHandler(Header *header)
                         ACKSessionTab[header->sessionID - 1].session_status =
                             ACK_SESSION_PROCESS;
                     recvReqData(header);
-
                 }
                 else if (ACKSessionTab[header->sessionID - 1].session_status ==
                          ACK_SESSION_USING)
@@ -219,8 +218,8 @@ int DJI::onboardSDK::CoreAPI::ackInterface(Ack *parameter)
 
     if (parameter->session_id == 0)
     {
-        //! @todo
-        ;
+        //! @note nothing todo session 0 is a nack session.
+        return 0;
     }
     else if (parameter->session_id > 0 && parameter->session_id < 32)
     {

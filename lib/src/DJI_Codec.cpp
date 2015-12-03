@@ -795,6 +795,11 @@ void DJI::onboardSDK::CoreAPI::byteHandler(const uint8_t in_data)
     }
 }
 
+void CoreAPI::byteStreamHandler(uint8_t *buffer, size_t size)
+{
+    //! @todo implement
+}
+
 void calculateCRC(void *p_data)
 {
     Header *p_head = (Header *)p_data;

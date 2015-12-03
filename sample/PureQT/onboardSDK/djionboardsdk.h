@@ -43,9 +43,8 @@ class DJIonboardSDK : public QMainWindow
 
     //! @note callback static class pointer and callback functions
   public:
-    DJIonboardSDK *sdk;
-
-    void setControlCallback(CoreAPI *This, Header *header);
+    static DJIonboardSDK *sdk;
+    static void setControlCallback(CoreAPI *This, Header *header);
 
   private slots:
     void on_btn_portRefresh_clicked();
@@ -57,12 +56,14 @@ class DJIonboardSDK : public QMainWindow
     void on_btn_coreVersion_clicked();
     void on_btn_coreSetControl_clicked();
 
+    void on_tmr_virtualRC_autosend();
     void on_btn_VRC_resetAll_clicked();
     void on_btn_VRC_resetLeft_clicked();
     void on_btn_VRC_resetRight_clicked();
-    void on_tmr_virtualRC_autosend();
     void on_btn_virtualRC_send_clicked();
     void on_btn_virtualRC_init_clicked();
+    void on_btn_vrc_down_pressed();
+    void on_btn_vrc_up_pressed();
 
     void on_btg_flight_HL(QAbstractButton *button);
     void on_btg_flight_VL(QAbstractButton *button);
@@ -93,7 +94,14 @@ class DJIonboardSDK : public QMainWindow
 
     void autosend();
 
-private:
+    void on_btn_vrc_left_pressed();
+    void on_btn_vrc_right_pressed();
+    void on_btn_vrc_w_pressed();
+    void on_btn_vrc_A_pressed();
+    void on_btn_vrc_S_pressed();
+    void on_btn_vrc_D_pressed();
+
+  private:
     Ui::DJIonboardSDK *ui;
 
     CoreAPI *api;
