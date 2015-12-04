@@ -583,3 +583,31 @@ void DJIonboardSDK::on_btn_vrc_D_pressed()
 {
     ui->slider_VRC_LH->setValue(ui->slider_VRC_LH->value() + 10);
 }
+
+void DJIonboardSDK::on_btr_camera_speed_clicked()
+{
+    ui->hs_camera_yaw->setValue(0);
+    ui->hs_camera_yaw->setMinimum(-1800);
+    ui->hs_camera_yaw->setMaximum(1800);
+    ui->hs_camera_roll->setValue(0);
+    ui->hs_camera_roll->setMinimum(-1800);
+    ui->hs_camera_roll->setMaximum(1800);
+    ui->hs_camera_pitch->setValue(0);
+    ui->hs_camera_pitch->setMinimum(-1800);
+    ui->hs_camera_pitch->setMaximum(1800);
+    ui->gb_cameraFlag->setEnabled(false);
+}
+
+void DJIonboardSDK::on_btr_camera_angle_clicked()
+{
+    ui->hs_camera_yaw->setValue(0);
+    ui->hs_camera_yaw->setMinimum(-3200);
+    ui->hs_camera_yaw->setMaximum(3200);
+    ui->hs_camera_roll->setValue(0);
+    ui->hs_camera_roll->setMinimum(-350);
+    ui->hs_camera_roll->setMaximum(350);
+    ui->hs_camera_pitch->setValue(0);
+    ui->hs_camera_pitch->setMinimum(-900);
+    ui->hs_camera_pitch->setMaximum(300);
+    ui->gb_cameraFlag->setEnabled(true);
+}

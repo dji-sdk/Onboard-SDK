@@ -1,5 +1,5 @@
-#ifndef DJI_PRO_TYPE
-#define DJI_PRO_TYPE
+#ifndef DJI_TYPE
+#define DJI_TYPE
 
 #include "DJI_Config.h"
 
@@ -296,4 +296,4 @@ const size_t MMU_TABLE_NUM = 32;
 #define CMD_SESSION_1 1
 #define CMD_SESSION_AUTO 32
 
-#endif // DJI_PRO_TYPE
+#endif // DJI_TYPE

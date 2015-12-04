@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1440</width>
+    <width>1400</width>
     <height>820</height>
    </rect>
   </property>
@@ -23,7 +23,7 @@
       <x>10</x>
       <y>0</y>
       <width>261</width>
-      <height>118</height>
+      <height>151</height>
      </rect>
     </property>
     <property name="title">
@@ -61,6 +61,9 @@
           </widget>
          </item>
         </layout>
+       </item>
+       <item>
+        <widget class="QComboBox" name="comboBox_portName"/>
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -791,9 +794,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>120</y>
+      <y>150</y>
       <width>261</width>
-      <height>641</height>
+      <height>611</height>
      </rect>
     </property>
     <property name="title">
@@ -808,9 +811,6 @@
           <string>Record</string>
          </property>
         </widget>
-       </item>
-       <item>
-        <widget class="QComboBox" name="comboBox_portName"/>
        </item>
        <item>
         <widget class="QPushButton" name="btn_cameraShoot">
@@ -979,6 +979,13 @@
          </property>
         </spacer>
        </item>
+       <item row="3" column="3">
+        <widget class="QPushButton" name="btn_camera_send_19">
+         <property name="text">
+          <string>Reset (0)</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </item>
      <item>
@@ -993,7 +1000,7 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_31">
           <item>
-           <widget class="QRadioButton" name="btr_camera_9">
+           <widget class="QRadioButton" name="btr_camera_speed">
             <property name="minimumSize">
              <size>
               <width>0</width>
@@ -1003,10 +1010,13 @@
             <property name="text">
              <string>Speed</string>
             </property>
+            <attribute name="buttonGroup">
+             <string notr="true">btg_cameraMode</string>
+            </attribute>
            </widget>
           </item>
           <item>
-           <widget class="QRadioButton" name="btr_camera_10">
+           <widget class="QRadioButton" name="btr_camera_angle">
             <property name="minimumSize">
              <size>
               <width>0</width>
@@ -1016,6 +1026,12 @@
             <property name="text">
              <string>Angle</string>
             </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+            <attribute name="buttonGroup">
+             <string notr="true">btg_cameraMode</string>
+            </attribute>
            </widget>
           </item>
          </layout>
@@ -1060,6 +1076,12 @@
        </item>
        <item>
         <widget class="QSlider" name="hs_camera_yaw">
+         <property name="minimum">
+          <number>-3200</number>
+         </property>
+         <property name="maximum">
+          <number>3200</number>
+         </property>
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
@@ -1090,6 +1112,12 @@
        </item>
        <item>
         <widget class="QSlider" name="hs_camera_roll">
+         <property name="minimum">
+          <number>-350</number>
+         </property>
+         <property name="maximum">
+          <number>350</number>
+         </property>
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
@@ -1108,6 +1136,15 @@
        </item>
        <item>
         <widget class="QSlider" name="hs_camera_pitch">
+         <property name="minimum">
+          <number>-900</number>
+         </property>
+         <property name="maximum">
+          <number>300</number>
+         </property>
+         <property name="sliderPosition">
+          <number>0</number>
+         </property>
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
@@ -1116,9 +1153,9 @@
       </layout>
      </item>
      <item>
-      <widget class="QGroupBox" name="groupBox12">
+      <widget class="QGroupBox" name="gb_cameraFlag">
        <property name="title">
-        <string>Speed Control Flag</string>
+        <string>Angle Control Flag</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
@@ -1177,6 +1214,9 @@
                <property name="text">
                 <string>Absolute</string>
                </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
               </widget>
              </item>
             </layout>
@@ -1202,6 +1242,12 @@
                <property name="text">
                 <string>Enable</string>
                </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+               <attribute name="buttonGroup">
+                <string notr="true">btg_cameraYaw</string>
+               </attribute>
               </widget>
              </item>
              <item>
@@ -1215,6 +1261,9 @@
                <property name="text">
                 <string>Disable</string>
                </property>
+               <attribute name="buttonGroup">
+                <string notr="true">btg_cameraYaw</string>
+               </attribute>
               </widget>
              </item>
             </layout>
@@ -1244,6 +1293,12 @@
                <property name="text">
                 <string>Enable</string>
                </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+               <attribute name="buttonGroup">
+                <string notr="true">btg_cameraRoll</string>
+               </attribute>
               </widget>
              </item>
              <item>
@@ -1257,6 +1312,9 @@
                <property name="text">
                 <string>Disable</string>
                </property>
+               <attribute name="buttonGroup">
+                <string notr="true">btg_cameraRoll</string>
+               </attribute>
               </widget>
              </item>
             </layout>
@@ -1282,6 +1340,9 @@
                <property name="text">
                 <string>Enable</string>
                </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
               </widget>
              </item>
              <item>
@@ -1303,21 +1364,42 @@
          </layout>
         </item>
         <item>
-         <widget class="QLabel" name="label_14">
-          <property name="text">
-           <string>Flag Data</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="lineEdit_flightFlag_2">
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
-         </widget>
+         <layout class="QHBoxLayout" name="horizontalLayout_63">
+          <item>
+           <widget class="QLabel" name="label_40">
+            <property name="text">
+             <string>Flag Data</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="lineEdit_flightFlag_2">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_41">
+            <property name="text">
+             <string>Time</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="lineEdit_flightFlag_3">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </widget>
@@ -1325,20 +1407,23 @@
     </layout>
    </widget>
    <widget class="QGroupBox" name="groupBox_4">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>830</x>
-      <y>310</y>
-      <width>181</width>
-      <height>261</height>
+      <x>820</x>
+      <y>600</y>
+      <width>561</width>
+      <height>161</height>
      </rect>
     </property>
     <property name="title">
      <string>WayPoint</string>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout_7">
+    <layout class="QHBoxLayout" name="horizontalLayout_58">
      <item>
-      <layout class="QVBoxLayout" name="verticalLayout_8">
+      <layout class="QVBoxLayout" name="verticalLayout_7">
        <item>
         <widget class="QPushButton" name="btn_cameraAngle_2">
          <property name="text">
@@ -1354,48 +1439,98 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="btn_cameraRecord_2">
-         <property name="text">
-          <string>Start</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="btn_cameraShoot_2">
-         <property name="text">
-          <string>Pause</string>
-         </property>
-        </widget>
-       </item>
-       <item>
         <widget class="QPushButton" name="btn_cameraShoot_4">
          <property name="text">
           <string>Download</string>
          </property>
         </widget>
        </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_5">
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_5">
+        <layout class="QVBoxLayout" name="verticalLayout_9">
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout_9">
-           <item>
-            <widget class="QPushButton" name="btn_cameraShoot_5">
-             <property name="text">
-              <string>Set Speed</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="btn_cameraShoot_3">
-             <property name="text">
-              <string>Get Speed</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
+          <widget class="QPushButton" name="btn_cameraRecord_2">
+           <property name="text">
+            <string>Start</string>
+           </property>
+          </widget>
          </item>
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout_10">
+          <widget class="QPushButton" name="btn_cameraRecord_3">
+           <property name="text">
+            <string>Stop</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btn_cameraShoot_2">
+           <property name="text">
+            <string>Pause</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_10">
+         <item>
+          <spacer name="verticalSpacer_8">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btn_cameraShoot_5">
+           <property name="text">
+            <string>Set Speed</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="verticalSpacer_7">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btn_cameraShoot_3">
+           <property name="text">
+            <string>Get Speed</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="verticalSpacer_5">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_59">
            <item>
             <widget class="QLabel" name="label_4">
              <property name="maximumSize">
@@ -1417,71 +1552,622 @@
            </item>
           </layout>
          </item>
+         <item>
+          <spacer name="verticalSpacer_6">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
         </layout>
        </item>
       </layout>
      </item>
+     <item>
+      <widget class="QListView" name="listView"/>
+     </item>
     </layout>
    </widget>
    <widget class="QGroupBox" name="groupBox_5">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>610</x>
-      <y>560</y>
-      <width>201</width>
+      <x>820</x>
+      <y>300</y>
+      <width>561</width>
       <height>171</height>
      </rect>
     </property>
     <property name="title">
      <string>Hot Point</string>
     </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_62">
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_35">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_40">
+         <item>
+          <widget class="QPushButton" name="btn_camera_send_8">
+           <property name="text">
+            <string>check</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btn_camera_send_7">
+           <property name="text">
+            <string>reset yaw</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_37">
+         <item>
+          <widget class="QPushButton" name="btn_camera_send_2">
+           <property name="text">
+            <string>start</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btn_camera_send_3">
+           <property name="text">
+            <string>stop</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btn_camera_send_4">
+           <property name="text">
+            <string>pause</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_38">
+         <item>
+          <widget class="QPushButton" name="btn_camera_send_5">
+           <property name="text">
+            <string>set</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_27">
+           <property name="text">
+            <string>velocity</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lineEdit_flight_Yaw_2">
+           <property name="focusPolicy">
+            <enum>Qt::ClickFocus</enum>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_39">
+         <item>
+          <widget class="QPushButton" name="btn_camera_send_6">
+           <property name="text">
+            <string>set</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_28">
+           <property name="text">
+            <string> radius </string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lineEdit_flight_Yaw_3">
+           <property name="focusPolicy">
+            <enum>Qt::ClickFocus</enum>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_39">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_53">
+         <property name="sizeConstraint">
+          <enum>QLayout::SetMaximumSize</enum>
+         </property>
+         <property name="leftMargin">
+          <number>6</number>
+         </property>
+         <property name="rightMargin">
+          <number>6</number>
+         </property>
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_34">
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_41">
+             <item>
+              <widget class="QLabel" name="label_29">
+               <property name="text">
+                <string>latitude </string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="lineEdit_flight_Yaw_4">
+               <property name="focusPolicy">
+                <enum>Qt::ClickFocus</enum>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_42">
+             <item>
+              <widget class="QLabel" name="label_30">
+               <property name="text">
+                <string>longitude</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="lineEdit_flight_Yaw_5">
+               <property name="focusPolicy">
+                <enum>Qt::ClickFocus</enum>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_43">
+             <item>
+              <widget class="QLabel" name="label_31">
+               <property name="text">
+                <string>altitude </string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="lineEdit_flight_Yaw_6">
+               <property name="focusPolicy">
+                <enum>Qt::ClickFocus</enum>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_4">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Current</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_47">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_45">
+           <item>
+            <widget class="QLabel" name="label_33">
+             <property name="text">
+              <string> palstance</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="lineEdit_flight_Yaw_8">
+             <property name="focusPolicy">
+              <enum>Qt::ClickFocus</enum>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_44">
+           <item>
+            <widget class="QLabel" name="label_32">
+             <property name="text">
+              <string>radius</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="lineEdit_flight_Yaw_7">
+             <property name="focusPolicy">
+              <enum>Qt::ClickFocus</enum>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_48">
+         <item>
+          <spacer name="horizontalSpacer_6">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="cb_flight_autoSend_2">
+           <property name="text">
+            <string>clocwise</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_7">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QComboBox" name="comboBox_portName_3">
+           <item>
+            <property name="text">
+             <string>yaw mode</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_8">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+    </layout>
    </widget>
    <widget class="QGroupBox" name="groupBox_6">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>1070</x>
-      <y>320</y>
-      <width>201</width>
-      <height>80</height>
+      <x>820</x>
+      <y>480</y>
+      <width>561</width>
+      <height>115</height>
      </rect>
     </property>
     <property name="title">
      <string>Follow Me</string>
     </property>
-   </widget>
-   <widget class="QGroupBox" name="groupBox_7">
-    <property name="geometry">
-     <rect>
-      <x>1280</x>
-      <y>340</y>
-      <width>141</width>
-      <height>381</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string>Status</string>
-    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_57">
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_36">
+       <item>
+        <widget class="QComboBox" name="comboBox_portName_2">
+         <item>
+          <property name="text">
+           <string>follow mode</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="comboBox_portName_6">
+         <item>
+          <property name="text">
+           <string>sensitivity</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="comboBox_portName_4">
+         <item>
+          <property name="text">
+           <string>yaw mode</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_37">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_54">
+         <item>
+          <widget class="QLabel" name="label_37">
+           <property name="text">
+            <string>latitude </string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lineEdit_flight_Yaw_12">
+           <property name="focusPolicy">
+            <enum>Qt::ClickFocus</enum>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSlider" name="hs_camera_yaw_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="invertedAppearance">
+            <bool>false</bool>
+           </property>
+           <property name="invertedControls">
+            <bool>false</bool>
+           </property>
+           <property name="tickPosition">
+            <enum>QSlider::NoTicks</enum>
+           </property>
+           <property name="tickInterval">
+            <number>0</number>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_55">
+         <item>
+          <widget class="QLabel" name="label_38">
+           <property name="text">
+            <string>longitude</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lineEdit_flight_Yaw_13">
+           <property name="focusPolicy">
+            <enum>Qt::ClickFocus</enum>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSlider" name="hs_camera_yaw_3">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="invertedAppearance">
+            <bool>false</bool>
+           </property>
+           <property name="invertedControls">
+            <bool>false</bool>
+           </property>
+           <property name="tickPosition">
+            <enum>QSlider::NoTicks</enum>
+           </property>
+           <property name="tickInterval">
+            <number>0</number>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_56">
+         <item>
+          <widget class="QLabel" name="label_39">
+           <property name="text">
+            <string>altitude </string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lineEdit_flight_Yaw_14">
+           <property name="focusPolicy">
+            <enum>Qt::ClickFocus</enum>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSlider" name="hs_camera_yaw_4">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="invertedAppearance">
+            <bool>false</bool>
+           </property>
+           <property name="invertedControls">
+            <bool>false</bool>
+           </property>
+           <property name="tickPosition">
+            <enum>QSlider::NoTicks</enum>
+           </property>
+           <property name="tickInterval">
+            <number>0</number>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_6">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>80</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Current</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_38">
+       <item>
+        <widget class="QPushButton" name="btn_camera_send_16">
+         <property name="text">
+          <string>start</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btn_camera_send_18">
+         <property name="text">
+          <string>pause</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btn_camera_send_17">
+         <property name="text">
+          <string>stop</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
    </widget>
    <widget class="QGroupBox" name="groupBox_9">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>1030</x>
-      <y>440</y>
-      <width>181</width>
-      <height>80</height>
+      <x>560</x>
+      <y>550</y>
+      <width>251</width>
+      <height>211</height>
      </rect>
     </property>
     <property name="title">
      <string>Swarm</string>
     </property>
+    <layout class="QVBoxLayout" name="verticalLayout_8">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_61">
+       <item>
+        <widget class="QPushButton" name="pushButton_2">
+         <property name="text">
+          <string>manage</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton">
+         <property name="text">
+          <string>find peer</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_3">
+         <property name="text">
+          <string>start</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_60">
+       <item>
+        <widget class="QColumnView" name="columnView"/>
+       </item>
+       <item>
+        <widget class="QGraphicsView" name="graphicsView"/>
+       </item>
+      </layout>
+     </item>
+    </layout>
    </widget>
    <widget class="QGroupBox" name="groupBox_8">
     <property name="geometry">
      <rect>
       <x>820</x>
       <y>0</y>
-      <width>531</width>
-      <height>304</height>
+      <width>561</width>
+      <height>291</height>
      </rect>
     </property>
     <property name="title">
@@ -2831,23 +3517,22 @@
      </item>
     </layout>
    </widget>
-   <zorder>groupBox_4</zorder>
-   <zorder>groupBox_5</zorder>
    <zorder>groupBox_6</zorder>
-   <zorder>groupBox_7</zorder>
    <zorder>groupBox_9</zorder>
    <zorder>groupBox_8</zorder>
    <zorder>groupBox_10</zorder>
    <zorder>groupBox3</zorder>
    <zorder>groupBox_2</zorder>
    <zorder>groupBox_3</zorder>
+   <zorder>groupBox_4</zorder>
+   <zorder>groupBox_5</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1440</width>
+     <width>1400</width>
      <height>23</height>
     </rect>
    </property>
@@ -2881,6 +3566,7 @@
  <resources/>
  <connections/>
  <buttongroups>
+  <buttongroup name="btg_cameraMode"/>
   <buttongroup name="btg_flightTask"/>
   <buttongroup name="btg_flightCL"/>
   <buttongroup name="btg_flightYL"/>
@@ -2889,5 +3575,7 @@
   <buttongroup name="btg_flightHL"/>
   <buttongroup name="btg_flightSM"/>
   <buttongroup name="btg_vrcGear"/>
+  <buttongroup name="btg_cameraRoll"/>
+  <buttongroup name="btg_cameraYaw"/>
  </buttongroups>
 </ui>

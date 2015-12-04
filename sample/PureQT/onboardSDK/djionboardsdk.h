@@ -101,7 +101,11 @@ class DJIonboardSDK : public QMainWindow
     void on_btn_vrc_S_pressed();
     void on_btn_vrc_D_pressed();
 
-  private:
+    void on_btr_camera_speed_clicked();
+
+    void on_btr_camera_angle_clicked();
+
+private:
     Ui::DJIonboardSDK *ui;
 
     CoreAPI *api;

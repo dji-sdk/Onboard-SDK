@@ -1,6 +1,6 @@
 /*! @brief
- *  @file DJI_Pro_API.h
- *  @version 1.0
+ *  @file DJI_API.h
+ *  @version 3.0
  *  @date Nov 15, 2015
  *
  *  @abstract
@@ -16,8 +16,8 @@
  *
  * */
 
-#ifndef DJI_PRO_API_H
-#define DJI_PRO_API_H
+#ifndef DJI_API_H
+#define DJI_API_H
 #include "DJI_Type.h"
 
 #include "DJI_HardDriver.h"
@@ -308,4 +308,4 @@ class VirtualRC
 } // namespace onboardSDK
 } // namespace DJI
 
-#endif // DJI_PRO_API_H
+#endif // DJI_API_H

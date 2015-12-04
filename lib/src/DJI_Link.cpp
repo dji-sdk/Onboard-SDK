@@ -80,7 +80,7 @@ void DJI::onboardSDK::CoreAPI::appHandler(Header *header)
                 break;
             case 1:
             //! @todo unnecessary ack in case 1. Maybe add code later
-            default:
+            default://! @note session id is 2
                 if (ACKSessionTab[header->sessionID - 1].session_status ==
                     ACK_SESSION_PROCESS)
                 {

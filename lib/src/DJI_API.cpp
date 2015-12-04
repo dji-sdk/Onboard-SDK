@@ -102,7 +102,6 @@ void CoreAPI::setBroadcastFeq(uint8_t *data, CallBack callback)
 {
     send(2, 0, SET_ACTIVATION, CODE_FREQUENCY, data, 16,
          callback ? callback : CoreAPI::setFrequencyCallback, 100, 1);
-    API_STATUS("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 }
 
 void CoreAPI::setControl(bool enable, CallBack callback)
