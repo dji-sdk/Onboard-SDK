@@ -28,14 +28,6 @@ class DJIonboardSDK : public QMainWindow
     void closePort();
     void refreshPort();
 
-    void updateFlightFlag();
-    void updateFlightX();
-    void updateFlightY();
-    void updateFlightZ();
-    void updateFlightYaw();
-    void resetFlightData();
-    void flightSend();
-
   protected:
     void closeEvent(QCloseEvent *);
 
@@ -44,6 +36,7 @@ class DJIonboardSDK : public QMainWindow
     static DJIonboardSDK *sdk;
     static void setControlCallback(CoreAPI *This, Header *header);
 
+    void resetCameraAngle();
 private slots:
     void on_btn_portRefresh_clicked();
     void on_btn_portOpen_clicked();
@@ -54,16 +47,30 @@ private slots:
     void on_btn_coreVersion_clicked();
     void on_btn_coreSetControl_clicked();
 
-    void on_tmr_virtualRC_autosend();//! @todo rename
+    void on_tmr_VRC_autosend();
     void on_btn_VRC_resetAll_clicked();
     void on_btn_VRC_resetLeft_clicked();
     void on_btn_VRC_resetRight_clicked();
-    void on_btn_virtualRC_send_clicked();
+    void on_btn_virtualRC_send_clicked();//! @todo rename
     void on_btn_virtualRC_init_clicked();
     void on_btn_vrc_down_pressed();
     void on_btn_vrc_up_pressed();
 
-    void on_btn_camera_up_clicked();
+
+    void on_btn_camera_0_clicked();
+    void on_btn_camera_8_pressed();
+    void on_btn_camera_2_pressed();
+    void on_btn_camera_7_pressed();
+    void on_btn_camera_9_pressed();
+    void on_btn_camera_4_pressed();
+    void on_btn_camera_6_pressed();
+    void on_tmr_Camera_autosend();
+    void on_cb_camera_send_clicked(bool checked);
+
+    void on_btn_cameraRecord_clicked(bool checked);
+    void on_btn_cameraShoot_clicked();
+    void on_btn_camera_send_clicked();
+
     void on_btr_camera_angle_clicked();
     void on_btr_camera_speed_clicked();
     void on_btg_cameraAngle(QAbstractButton *button);
@@ -80,7 +87,7 @@ private slots:
     void on_btn_flight_up_pressed();
     void on_btn_flight_left_pressed();
     void on_btn_flight_right_pressed();
-    void on_pushButton_down_pressed();//! @todo rename pushbutton ->btn
+    void on_btn_flight_down_pressed();
     void on_btn_flight_leftYaw_pressed();
     void on_btn_flight_rightYaw_pressed();
     void on_btg_flight_HL(QAbstractButton *button);
@@ -88,6 +95,14 @@ private slots:
     void on_btg_flight_YL(QAbstractButton *button);
     void on_btg_flight_CL(QAbstractButton *button);
     void on_btg_flight_SM(QAbstractButton *button);
+
+    void updateFlightFlag();
+    void updateFlightX();
+    void updateFlightY();
+    void updateFlightZ();
+    void updateFlightYaw();
+    void resetFlightData();
+    void flightSend();
 
     void on_lineEdit_flight_X_returnPressed();
     void on_lineEdit_flight_Y_returnPressed();
@@ -104,12 +119,6 @@ private slots:
     void on_btn_vrc_A_pressed();
     void on_btn_vrc_S_pressed();
     void on_btn_vrc_D_pressed();
-
-    void on_btn_cameraRecord_clicked(bool checked);
-
-    void on_btn_cameraShoot_clicked();
-
-    void on_btn_camera_send_clicked();
 
 private:
     Ui::DJIonboardSDK *ui;

@@ -1075,7 +1075,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="checkBox">
+           <widget class="QCheckBox" name="cb_camera_send">
             <property name="text">
              <string>Auto send</string>
             </property>
@@ -2901,7 +2901,7 @@
         <number>0</number>
        </property>
        <item row="3" column="1">
-        <widget class="QPushButton" name="pushButton_down">
+        <widget class="QPushButton" name="btn_flight_down">
          <property name="minimumSize">
           <size>
            <width>40</width>
