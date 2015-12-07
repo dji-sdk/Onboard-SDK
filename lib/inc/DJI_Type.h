@@ -126,30 +126,19 @@ typedef uint8_t BatteryData;
 
 typedef struct GimbalAngleData
 {
-    signed short yaw_angle;
-    signed short roll_angle;
-    signed short pitch_angle;
-    struct
-    {
-        unsigned char base : 1;
-        unsigned char yaw_cmd_ignore : 1;
-        unsigned char roll_cmd_ignore : 1;
-        unsigned char pitch_cmd_ignore : 1;
-        unsigned char reserved : 4;
-    } ctrl_byte;
-    unsigned char duration;
+    uint16_t yaw_angle;
+    uint16_t roll_angle;
+    uint16_t pitch_angle;
+    uint8_t ctrl_byte;
+    uint8_t duration;
 } GimbalAngleData;
 
 typedef struct GimbalSpeedData
 {
-    signed short yaw_angle_rate;
-    signed short roll_angle_rate;
-    signed short pitch_angle_rate;
-    struct ControlByte
-    {
-        unsigned char reserve : 7;
-        unsigned char ctrl_switch : 1; // decide increment mode or absolute mode
-    } ctrl_byte;
+    uint16_t yaw_angle_rate;
+    uint16_t roll_angle_rate;
+    uint16_t pitch_angle_rate;
+    uint8_t reserved; // always 0x80;
 } GimbalSpeedData;
 
 typedef float float32_t;
@@ -275,7 +264,7 @@ typedef struct VirtualRCData
     uint32_t Channel_13;
     uint32_t Channel_14;
     uint32_t Channel_15;
-}VirtualRCData;
+} VirtualRCData;
 
 #pragma pack()
 } // namespace onboardSDK

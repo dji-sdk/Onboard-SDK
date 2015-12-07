@@ -36,6 +36,7 @@ DJIonboardSDK::DJIonboardSDK(QWidget *parent)
 
     flight = new Flight(api);
     vrc = new VirtualRC(api);
+    cam = new Camera(api);
 
     refreshPort();
     setPort();
@@ -67,13 +68,35 @@ DJIonboardSDK::DJIonboardSDK(QWidget *parent)
     resetFlightData();
 
     autoSend = new QTimer();
-    autoSend->setInterval(50);
+    autoSend->setInterval(50); // 20Hz
     connect(autoSend, SIGNAL(timeout()), this, SLOT(autosend()));
     //! @endcode init flight
 
+    //! @code init camera
+    connect(ui->btg_cameraAngle, SIGNAL(buttonClicked(QAbstractButton *)), this,
+            SLOT(on_btg_cameraAngle(QAbstractButton *)));
+    connect(ui->btg_cameraYaw, SIGNAL(buttonClicked(QAbstractButton *)), this,
+            SLOT(on_btg_cameraYaw(QAbstractButton *)));
+    connect(ui->btg_cameraRoll, SIGNAL(buttonClicked(QAbstractButton *)), this,
+            SLOT(on_btg_cameraRoll(QAbstractButton *)));
+    connect(ui->btg_cameraPitch, SIGNAL(buttonClicked(QAbstractButton *)), this,
+            SLOT(on_btg_cameraPitch(QAbstractButton *)));
+
+    camFlag = 0;
+
+    on_btg_cameraAngle(ui->btg_cameraAngle->checkedButton());
+    on_btg_cameraYaw(ui->btg_cameraYaw->checkedButton());
+    on_btg_cameraRoll(ui->btg_cameraRoll->checkedButton());
+    on_btg_cameraPitch(ui->btg_cameraPitch->checkedButton());
+    updateCameraFlag();
+
+    cameraSend = new QTimer();
+    cameraSend->setInterval(100); // 10Hz
+    //! @endcode
+
     //! @code init virtual RC
     vrcSend = new QTimer();
-    vrcSend->setInterval(100); // 2Hz
+    vrcSend->setInterval(400); // 2.5Hz
     connect(vrcSend, SIGNAL(timeout()), this,
             SLOT(on_tmr_virtualRC_autosend()));
     //! @endcode init virtual RC
@@ -179,6 +202,8 @@ void DJIonboardSDK::setControlCallback(CoreAPI *This, Header *header)
     //    CoreAPI::setControlCallback(This, header);
 }
 
+
+
 void DJIonboardSDK::on_btn_portRefresh_clicked() { refreshPort(); }
 
 void DJIonboardSDK::setBaudrate()
@@ -245,8 +270,8 @@ void DJIonboardSDK::on_btn_coreActive_clicked()
     data.app_api_level = 2;
     data.app_ver = SDK_VERSION;
     data.app_id = ui->lineEdit_ID->text().toInt();
-    data.app_bundle_id[0] = data.app_bundle_id[1] = 0x12; // for ios
-                                                          // verification
+    data.app_bundle_id[0] = data.app_bundle_id[1] =
+        0x12; //! @note for ios verification
     *key = ui->lineEdit_Key->text().toLocal8Bit();
     data.app_key = key->data(); //! @warning memory leak fixme
     api->activate(&data);
@@ -287,21 +312,14 @@ void DJIonboardSDK::on_tmr_virtualRC_autosend()
     data.roll = ui->slider_VRC_RH->value();
     data.pitch = ui->slider_VRC_RV->value();
     data.yaw = ui->slider_VRC_LH->value();
+
     if (ui->btg_vrcMode->checkedButton()->text() == "F")
-    {
         data.mode = 496;
-        // qDebug() << "F mod";
-    }
     else if (ui->btg_vrcMode->checkedButton()->text() == "A")
-    {
         data.mode = 1024;
-        // qDebug() << "A mod";
-    }
     else
-    {
         data.mode = 1552;
-        // qDebug() << "P mod";
-    }
+
     if (ui->btg_vrcGear->checkedButton()->text() == "Up")
         data.gear = 1684;
     else
@@ -598,6 +616,44 @@ void DJIonboardSDK::on_btr_camera_speed_clicked()
     ui->gb_cameraFlag->setEnabled(false);
 }
 
+void DJIonboardSDK::updateCameraFlag()
+{
+    ui->lineEdit_cameraFlag->clear();
+    ui->lineEdit_cameraFlag->setText(QString::number(camFlag, 16));
+}
+
+void DJIonboardSDK::on_btg_cameraAngle(QAbstractButton *button)
+{
+    camFlag &= 0xFE;
+    if (button->text() == "Absolute")
+        camFlag |= 0x01;
+    updateCameraFlag();
+}
+
+void DJIonboardSDK::on_btg_cameraYaw(QAbstractButton *button)
+{
+    camFlag &= 0xFD;
+    if (button->text() == "Disable")
+        camFlag |= 0x02;
+    updateCameraFlag();
+}
+
+void DJIonboardSDK::on_btg_cameraRoll(QAbstractButton *button)
+{
+    camFlag &= 0xFB;
+    if (button->text() == "Disable")
+        camFlag |= 0x04;
+    updateCameraFlag();
+}
+
+void DJIonboardSDK::on_btg_cameraPitch(QAbstractButton *button)
+{
+    camFlag &= 0xF7;
+    if (button->text() == "Disable")
+        camFlag |= 0x08;
+    updateCameraFlag();
+}
+
 void DJIonboardSDK::on_btr_camera_angle_clicked()
 {
     ui->hs_camera_yaw->setValue(0);
@@ -610,4 +666,49 @@ void DJIonboardSDK::on_btr_camera_angle_clicked()
     ui->hs_camera_pitch->setMinimum(-900);
     ui->hs_camera_pitch->setMaximum(300);
     ui->gb_cameraFlag->setEnabled(true);
+}
+
+void DJIonboardSDK::on_btn_cameraRecord_clicked(bool checked)
+{
+    if (checked)
+    {
+        ui->btn_cameraRecord->setText("Stop");
+        cam->setCamera(Camera::CODE_CAMERA_VIDEO_START);
+    }
+    else
+    {
+        ui->btn_cameraRecord->setText("Record");
+        cam->setCamera(Camera::CODE_CAMERA_VIDEO_STOP);
+    }
+}
+
+void DJIonboardSDK::on_btn_cameraShoot_clicked()
+{
+    cam->setCamera(Camera::CODE_CAMERA_SHOT);
+}
+
+void DJIonboardSDK::on_btn_camera_send_clicked()
+{
+    GimbalSpeedData speedData;
+    GimbalAngleData angleData;
+    if (ui->btg_cameraMode->checkedButton()->text() == "Speed")
+    {
+        qDebug() << "speed";
+        speedData.yaw_angle_rate = ui->hs_camera_yaw->value();
+        speedData.roll_angle_rate = ui->hs_camera_roll->value();
+        speedData.pitch_angle_rate = ui->hs_camera_pitch->value();
+        qDebug() << speedData.yaw_angle_rate << speedData.roll_angle_rate
+                 << speedData.pitch_angle_rate;
+        cam->setGimbalSpeed(&speedData);
+    }
+    else
+    {
+        qDebug() << "angle";
+        angleData.yaw_angle = ui->hs_camera_yaw->value();
+        angleData.roll_angle = ui->hs_camera_roll->value();
+        angleData.pitch_angle = ui->hs_camera_pitch->value();
+        angleData.ctrl_byte = camFlag;
+        angleData.duration = 10;
+        cam->setGimbalAngle(&angleData);
+    }
 }

@@ -810,6 +810,9 @@
          <property name="text">
           <string>Record</string>
          </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
         </widget>
        </item>
        <item>
@@ -827,7 +830,7 @@
         <number>0</number>
        </property>
        <item row="1" column="1">
-        <widget class="QPushButton" name="pushButton_5">
+        <widget class="QPushButton" name="btn_camera_4">
          <property name="minimumSize">
           <size>
            <width>40</width>
@@ -841,6 +844,9 @@
           </size>
          </property>
          <property name="text">
+          <string>4</string>
+         </property>
+         <property name="shortcut">
           <string>4</string>
          </property>
         </widget>
@@ -859,7 +865,7 @@
         </spacer>
        </item>
        <item row="2" column="3">
-        <widget class="QPushButton" name="pushButton_12">
+        <widget class="QPushButton" name="btn_camera_2">
          <property name="minimumSize">
           <size>
            <width>80</width>
@@ -875,6 +881,9 @@
          <property name="text">
           <string>2</string>
          </property>
+         <property name="shortcut">
+          <string>2</string>
+         </property>
         </widget>
        </item>
        <item row="1" column="3">
@@ -883,7 +892,7 @@
           <number>0</number>
          </property>
          <item>
-          <widget class="QPushButton" name="pushButton_13">
+          <widget class="QPushButton" name="btn_camera_7">
            <property name="minimumSize">
             <size>
              <width>40</width>
@@ -899,10 +908,13 @@
            <property name="text">
             <string>7</string>
            </property>
+           <property name="shortcut">
+            <string>7</string>
+           </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_14">
+          <widget class="QPushButton" name="btn_camera_9">
            <property name="minimumSize">
             <size>
              <width>40</width>
@@ -918,12 +930,15 @@
            <property name="text">
             <string>9</string>
            </property>
+           <property name="shortcut">
+            <string>9</string>
+           </property>
           </widget>
          </item>
         </layout>
        </item>
        <item row="1" column="4">
-        <widget class="QPushButton" name="pushButton_11">
+        <widget class="QPushButton" name="btn_camera_6">
          <property name="minimumSize">
           <size>
            <width>40</width>
@@ -939,10 +954,13 @@
          <property name="text">
           <string>6</string>
          </property>
+         <property name="shortcut">
+          <string>6</string>
+         </property>
         </widget>
        </item>
        <item row="0" column="3">
-        <widget class="QPushButton" name="btn_camera_up">
+        <widget class="QPushButton" name="btn_camera_8">
          <property name="minimumSize">
           <size>
            <width>80</width>
@@ -980,9 +998,12 @@
         </spacer>
        </item>
        <item row="3" column="3">
-        <widget class="QPushButton" name="btn_camera_send_19">
+        <widget class="QPushButton" name="btn_camera_0">
          <property name="text">
           <string>Reset (0)</string>
+         </property>
+         <property name="shortcut">
+          <string>0</string>
          </property>
         </widget>
        </item>
@@ -1201,6 +1222,9 @@
                <property name="text">
                 <string>Incremental</string>
                </property>
+               <attribute name="buttonGroup">
+                <string notr="true">btg_cameraAngle</string>
+               </attribute>
               </widget>
              </item>
              <item>
@@ -1217,6 +1241,9 @@
                <property name="checked">
                 <bool>true</bool>
                </property>
+               <attribute name="buttonGroup">
+                <string notr="true">btg_cameraAngle</string>
+               </attribute>
               </widget>
              </item>
             </layout>
@@ -1343,6 +1370,9 @@
                <property name="checked">
                 <bool>true</bool>
                </property>
+               <attribute name="buttonGroup">
+                <string notr="true">btg_cameraPitch</string>
+               </attribute>
               </widget>
              </item>
              <item>
@@ -1356,6 +1386,9 @@
                <property name="text">
                 <string>Disable</string>
                </property>
+               <attribute name="buttonGroup">
+                <string notr="true">btg_cameraPitch</string>
+               </attribute>
               </widget>
              </item>
             </layout>
@@ -1376,7 +1409,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_flightFlag_2">
+           <widget class="QLineEdit" name="lineEdit_cameraFlag">
             <property name="readOnly">
              <bool>true</bool>
             </property>
@@ -2136,7 +2169,7 @@
        <item>
         <widget class="QPushButton" name="pushButton">
          <property name="text">
-          <string>find peer</string>
+          <string>find peers</string>
          </property>
         </widget>
        </item>
@@ -3566,16 +3599,18 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="btg_cameraMode"/>
-  <buttongroup name="btg_flightTask"/>
-  <buttongroup name="btg_flightCL"/>
-  <buttongroup name="btg_flightYL"/>
-  <buttongroup name="btg_flightVL"/>
-  <buttongroup name="btg_vrcMode"/>
   <buttongroup name="btg_flightHL"/>
-  <buttongroup name="btg_flightSM"/>
+  <buttongroup name="btg_cameraPitch"/>
+  <buttongroup name="btg_vrcMode"/>
+  <buttongroup name="btg_flightCL"/>
   <buttongroup name="btg_vrcGear"/>
   <buttongroup name="btg_cameraRoll"/>
+  <buttongroup name="btg_flightVL"/>
+  <buttongroup name="btg_flightYL"/>
+  <buttongroup name="btg_cameraAngle"/>
+  <buttongroup name="btg_cameraMode"/>
+  <buttongroup name="btg_flightSM"/>
+  <buttongroup name="btg_flightTask"/>
   <buttongroup name="btg_cameraYaw"/>
  </buttongroups>
 </ui>

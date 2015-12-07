@@ -111,25 +111,6 @@ void CoreAPI::setControl(bool enable, CallBack callback)
          callback ? callback : CoreAPI::setControlCallback, 500, 2);
 }
 
-void CoreAPI::setGimbalAngle(GimbalAngleData *p_user_data)
-{
-    send(0, 1, SET_CONTROL, API_GIMBAL_CTRL_ANGLE_REQUEST,
-         (unsigned char *)p_user_data, sizeof(GimbalAngleData), 0, 0, 1);
-}
-
-void CoreAPI::setGimbalSpeed(GimbalSpeedData *p_user_data)
-{
-    send(0, 1, SET_CONTROL, API_GIMBAL_CTRL_SPEED_REQUEST,
-         (unsigned char *)p_user_data, sizeof(GimbalSpeedData), 0, 0, 1);
-}
-
-void CoreAPI::setCamera(CAMERA_CODE camera_cmd)
-{
-    unsigned char send_data = 0;
-    send(0, 1, SET_CONTROL, camera_cmd, (unsigned char *)&send_data,
-         sizeof(send_data), 0, 0, 0);
-}
-
 HardDriver *CoreAPI::getDriver() const { return driver; }
 
 void CoreAPI::setDriver(HardDriver *value) { driver = value; }
@@ -282,6 +263,27 @@ void CoreAPI::setControlCallback(CoreAPI *This, Header *header)
             API_STATUS("there is unkown error,ack=0x%X\n", ack_data);
             break;
     }
+}
+
+Camera::Camera(CoreAPI *ContorlAPI) { api = ContorlAPI; }
+
+void Camera::setCamera(Camera::CAMERA_CODE camera_cmd)
+{
+    unsigned char send_data = 0;
+    api->send(0, 1, SET_CONTROL, camera_cmd, &send_data, 1);
+}
+
+void Camera::setGimbalAngle(GimbalAngleData *data)
+{
+    api->send(0, 1, SET_CONTROL, Camera::CODE_GIMBAL_ANGLE,
+              (unsigned char *)data, sizeof(GimbalAngleData));
+}
+
+void Camera::setGimbalSpeed(GimbalSpeedData *data)
+{
+    data->reserved = 0x80;
+    api->send(0, 1, SET_CONTROL, Camera::CODE_GIMBAL_SPEED,
+              (unsigned char *)data, sizeof(GimbalSpeedData));
 }
 
 CoreAPI *Camera::getApi() const { return api; }

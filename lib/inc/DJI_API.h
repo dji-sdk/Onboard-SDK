@@ -77,15 +77,6 @@ enum BROADCAST_CODE
     CODE_WAYPOINT = 0x04
 };
 
-enum CAMERA_CODE
-{
-    CODE_GIMBAL_SPEED = 0x1A,
-    CODE_GIMBAL_ANGLE = 0x1B,
-    CODE_CAMERA_SHOT = 0x20,
-    CODE_CAMERA_VIDEO_START = 0x21,
-    CODE_CAMERA_VIDEO_STOP = 0x22
-};
-
 enum VIRTUALRC_CODE
 {
     CODE_VIRTUALRC_SETTINGS,
@@ -110,7 +101,7 @@ class CoreAPI
 
     //! @todo modify to a new algorithm
     void byteHandler(const uint8_t in_data);
-    void byteStreamHandler(uint8_t* buffer,size_t size);
+    void byteStreamHandler(uint8_t *buffer, size_t size);
 
   public:
     /*! @code CoreAPI*/
@@ -131,10 +122,6 @@ class CoreAPI
      *  @note These functions is based on API functions above.
      *  @todo move to a new class
      */
-
-    void setGimbalAngle(GimbalAngleData *p_user_data);
-    void setGimbalSpeed(GimbalSpeedData *p_user_data);
-    void setCamera(CAMERA_CODE camera_cmd);
 
     QuaternionData getQuaternion() const;
     BroadcastData getBroadcastData() const;
@@ -249,7 +236,24 @@ class Flight
 class Camera
 {
   public:
+    enum CAMERA_CODE
+    {
+        CODE_GIMBAL_SPEED = 0x1A,
+        CODE_GIMBAL_ANGLE = 0x1B,
+        CODE_CAMERA_SHOT = 0x20,
+        CODE_CAMERA_VIDEO_START = 0x21,
+        CODE_CAMERA_VIDEO_STOP = 0x22
+    };
+
+  public:
     Camera(CoreAPI *ContorlAPI = 0);
+
+    //! @note all camera control functions are none-callback function.
+    void setCamera(CAMERA_CODE camera_cmd);
+    void setGimbalAngle(GimbalAngleData *data);
+    void setGimbalSpeed(GimbalSpeedData *data);
+
+  public: //! @note Access method
     CoreAPI *getApi() const;
     void setApi(CoreAPI *value);
 
