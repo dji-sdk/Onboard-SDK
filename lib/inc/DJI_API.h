@@ -93,7 +93,7 @@ class CoreAPI
      *
      * @note
      * if you can read data in a interrupt, try to pass data through
-     * byteHandler();
+     * byteHandler() or byteStreamHandler()
      * */
   public:
     void sendPoll(void);
@@ -125,6 +125,8 @@ class CoreAPI
 
     QuaternionData getQuaternion() const;
     BroadcastData getBroadcastData() const;
+    TimeStampData getTime() const;
+    FlightStatus getFlightStatus() const;
     VelocityData getGroundSpeed() const;
     CtrlInfoData getCtrlInfo() const;
     BatteryData getBatteryCapacity() const;
@@ -133,7 +135,7 @@ class CoreAPI
     /*! @code user functions entrance*/
     void setTransparentTransmissionCallback(
         TransparentHandler transparentHandlerEntrance);
-    void setBroadcastCallback(BroadcastHandler broadcastHandlerEntrance);
+    void setBroadcastCallback(CallBack callback);
 
   private:
     BroadcastData broadcastData;
@@ -142,8 +144,8 @@ class CoreAPI
     unsigned char encodeSendData[BUFFER_SIZE];
     unsigned char encodeACK[ACK_SIZE];
 
+    CallBack broadcastCallback;
     ReceiveHandler recvHandler;
-    BroadcastHandler broadcastHandler;
     TransparentHandler transparentHandler;
 
     VersionData versionData;

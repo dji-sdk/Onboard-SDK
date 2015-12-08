@@ -4,6 +4,9 @@
 #include <QMainWindow>
 #include <QAbstractButton>
 #include <QTimer>
+#include <QWebView>
+//#include <QWebEngineView>
+#include <QHBoxLayout>
 #include "QonboardSDK.h"
 
 using namespace DJI::onboardSDK;
@@ -37,6 +40,9 @@ class DJIonboardSDK : public QMainWindow
     static void setControlCallback(CoreAPI *This, Header *header);
 
     void resetCameraAngle();
+    void upDateTime();
+    void upDateCapacity();
+    void upDateFlightStatus();
 private slots:
     void on_btn_portRefresh_clicked();
     void on_btn_portOpen_clicked();
@@ -120,6 +126,10 @@ private slots:
     void on_btn_vrc_S_pressed();
     void on_btn_vrc_D_pressed();
 
+    void on_btn_webLoad_clicked();
+
+    void on_btn_coreRead_clicked();
+    void on_tmr_Broadcast();
 private:
     Ui::DJIonboardSDK *ui;
 
@@ -144,6 +154,10 @@ private:
     Camera *cam;
     uint8_t camFlag;
     QTimer *cameraSend;
+
+    QTimer *timerBroadcast;
+    QWebView *webView;
+//    QWebEngineView *webView;
 };
 
 #endif // DJIONBOARDSDK_H

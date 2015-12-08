@@ -116,23 +116,8 @@ void DJI::onboardSDK::CoreAPI::broadcast(Header *header)
 
     driver->freeMSG();
 
-    if (broadcastHandler)
-        broadcastHandler();
-
-    if (broadcastData.timeStamp.time % 400 == 0)
-    {
-        API_DEBUG("\ntime: %d %u %x, data flag %x, length %d \n"
-                  "Quaternion:   %f %f %f %f\n"
-                  "Acceleration: %f %f %f \n"
-                  "Battery: %d \n",
-                  broadcastData.timeStamp.time, broadcastData.timeStamp.asr_ts,
-                  broadcastData.timeStamp.sync_flag, *enableFlag,
-                  header->length, broadcastData.q.q0, broadcastData.q.q1,
-                  broadcastData.q.q2, broadcastData.q.q3, broadcastData.a.x,
-                  broadcastData.a.y, broadcastData.a.z, broadcastData.capacity);
-        //         API_STATUS("\n %d \n",
-        //         broadcastData.ctrl_info.cur_ctrl_dev_in_navi_mode);
-    }
+    if (broadcastCallback)
+        broadcastCallback(this,header);
 }
 
 void DJI::onboardSDK::CoreAPI::recvReqData(Header *header)
@@ -201,8 +186,7 @@ void DJI::onboardSDK::CoreAPI::setTransparentTransmissionCallback(
     transparentHandler = transparentHandlerEntrance;
 }
 
-void DJI::onboardSDK::CoreAPI::setBroadcastCallback(
-    BroadcastHandler broadcastHandlerEntrance)
+void DJI::onboardSDK::CoreAPI::setBroadcastCallback(CallBack callback)
 {
-    broadcastHandler = broadcastHandlerEntrance;
+    broadcastCallback = callback;
 }

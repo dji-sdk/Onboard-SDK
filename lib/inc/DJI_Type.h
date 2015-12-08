@@ -93,32 +93,32 @@ typedef struct MMU_Tab
 
 typedef struct CMDSession
 {
-    unsigned int sessionID : 5;
-    unsigned int usageFlag : 1;
-    unsigned int sent : 5;
-    unsigned int retry : 5;
-    unsigned int timeout : 16;
+    uint32_t sessionID : 5;
+    uint32_t usageFlag : 1;
+    uint32_t sent : 5;
+    uint32_t retry : 5;
+    uint32_t timeout : 16;
     MMU_Tab *mmu;
     CallBack callback;
-    unsigned int pre_seq_num;
-    unsigned int pre_timestamp;
+    uint32_t pre_seq_num;
+    uint32_t pre_timestamp;
 } CMDSession;
 
 typedef struct ACKSession
 {
-    unsigned int sessionID : 5;
-    unsigned int session_status : 2;
-    unsigned int res : 25;
+    uint32_t sessionID : 5;
+    uint32_t session_status : 2;
+    uint32_t res : 25;
     MMU_Tab *mmu;
 } ACKSession;
 
 typedef struct Ack
 {
-    unsigned short session_id : 8;
-    unsigned short need_encrypt : 8;
-    unsigned short seq_num;
-    unsigned int length;
-    unsigned char *buf;
+    uint16_t session_id : 8;
+    uint16_t need_encrypt : 8;
+    uint16_t seq_num;
+    uint32_t length;
+    uint8_t  *buf;
 } Ack;
 
 #pragma pack(1)
@@ -126,18 +126,18 @@ typedef uint8_t BatteryData;
 
 typedef struct GimbalAngleData
 {
-    uint16_t yaw_angle;
-    uint16_t roll_angle;
-    uint16_t pitch_angle;
+    int16_t yaw_angle;
+    int16_t roll_angle;
+    int16_t pitch_angle;
     uint8_t ctrl_byte;
     uint8_t duration;
 } GimbalAngleData;
 
 typedef struct GimbalSpeedData
 {
-    uint16_t yaw_angle_rate;
-    uint16_t roll_angle_rate;
-    uint16_t pitch_angle_rate;
+    int16_t yaw_angle_rate;
+    int16_t roll_angle_rate;
+    int16_t pitch_angle_rate;
     uint8_t reserved; // always 0x80;
 } GimbalSpeedData;
 
@@ -180,47 +180,59 @@ typedef struct
 
 typedef struct
 {
-    signed short roll;
-    signed short pitch;
-    signed short yaw;
-    signed short throttle;
-    signed short mode;
-    signed short gear;
+    int16_t roll;
+    int16_t pitch;
+    int16_t yaw;
+    int16_t throttle;
+    int16_t mode;
+    int16_t gear;
 } RadioData;
 
 typedef struct
 {
-    signed short x;
-    signed short y;
-    signed short z;
+    int16_t x;
+    int16_t y;
+    int16_t z;
 } MagnetData;
 
 typedef struct CtrlInfoData
 {
     //! @todo mode remote to enums
+#ifdef SDK_VERSION_3_0
     uint8_t data;
-    unsigned char cur_ctrl_dev_in_navi_mode : 3; /*0->rc  1->app  2->serial*/
-    unsigned char serial_req_status : 1;		 /*1->opensd  0->close*/
-    unsigned char reserved : 4;
+#endif
+    uint8_t cur_ctrl_dev_in_navi_mode : 3; /*0->rc  1->app  2->serial*/
+    uint8_t serial_req_status : 1;		 /*1->opensd  0->close*/
+    uint8_t reserved : 4;
 } CtrlInfoData;
 
+#ifdef SDK_VERSION_2_3
+typedef uint32_t TimeStampData;
+#endif //SDK_VERSION_2_3
+
+#ifdef SDK_VERSION_3_0
 typedef struct TimeStampData
 {
     uint32_t time;
     uint32_t asr_ts;
     uint8_t sync_flag;
 } TimeStampData;
+#endif //SDK_VERSION_3_0
 
 typedef struct GimbalData
 {
     float32_t roll;
     float32_t pitch;
     float32_t yaw;
-    unsigned char is_pitch_limit : 1;
-    unsigned char is_roll_limit : 1;
-    unsigned char is_yaw_limit : 1;
-    unsigned char reserved : 5;
+#ifdef SDK_VERSION_3_0
+    uint8_t is_pitch_limit : 1;
+    uint8_t is_roll_limit : 1;
+    uint8_t is_yaw_limit : 1;
+    uint8_t reserved : 5;
+#endif //SDK_VERSION_3_0
 } GimbalData;
+
+typedef uint8_t FlightStatus;
 
 typedef struct BroadcastData
 {
@@ -233,7 +245,7 @@ typedef struct BroadcastData
     MagnetData mag;
     RadioData rc;
     GimbalData gimbal;
-    unsigned char status;
+    FlightStatus status;//! @todo define enum
     BatteryData capacity;
     CtrlInfoData ctrl_info;
     uint8_t activation;

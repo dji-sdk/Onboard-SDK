@@ -49,13 +49,16 @@ size_t QHardDriver::send(const uint8_t *buf, size_t len)
             while (sent != len)
             {
                 sent += port->write((char *)(buf + sent), len);
-                port->waitForBytesWritten(5);
+                port->waitForBytesWritten(2);
             }
-        else
-            return 0;
+        sendlock.unlock();
+        return sent;
     }
     else
+    {
+        sendlock.unlock();
         return 0;
+    }
     sendlock.unlock();
     return sent;
 }
@@ -81,7 +84,7 @@ void QHardDriver::lockMSG() { msg.lock(); }
 void QHardDriver::freeMSG() { msg.unlock(); }
 void QHardDriver::setBaudrate(int value) { baudrate = value; }
 
-APIThread::APIThread(CoreAPI *API, int Type, QObject *parent):QThread(parent)
+APIThread::APIThread(CoreAPI *API, int Type, QObject *parent) : QThread(parent)
 {
     api = API;
     type = Type;

@@ -12,11 +12,13 @@ CoreAPI::CoreAPI(HardDriver *Driver, ReceiveHandler user_cmd_handler_entrance)
     filter.reuse_count = 0;
     filter.reuse_index = 0;
     filter.enc_enabled = 0;
-    broadcastHandler = 0;
+    broadcastCallback = 0;
     transparentHandler = 0;
+#ifdef SDK_VERSION_3_0
     broadcastData.timeStamp.time = 0;
     broadcastData.timeStamp.asr_ts = 0;
     broadcastData.timeStamp.sync_flag = 0;
+#endif
 
     recvHandler = user_cmd_handler_entrance ? user_cmd_handler_entrance : 0;
 
@@ -102,6 +104,16 @@ void CoreAPI::setBroadcastFeq(uint8_t *data, CallBack callback)
 {
     send(2, 0, SET_ACTIVATION, CODE_FREQUENCY, data, 16,
          callback ? callback : CoreAPI::setFrequencyCallback, 100, 1);
+}
+
+TimeStampData CoreAPI::getTime() const
+{
+    return broadcastData.timeStamp;
+}
+
+FlightStatus CoreAPI::getFlightStatus() const
+{
+    return broadcastData.status;
 }
 
 void CoreAPI::setControl(bool enable, CallBack callback)

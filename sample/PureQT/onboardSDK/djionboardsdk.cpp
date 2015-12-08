@@ -24,6 +24,17 @@ DJIonboardSDK::DJIonboardSDK(QWidget *parent)
 
     ui->setupUi(this);
 
+    //! @code mission webview
+    //!
+    //!
+    webView = new QWebView(this); // new QWebEngineView(this);
+    QHBoxLayout *weblayout = new QHBoxLayout();
+    ui->widget_web->setLayout(weblayout);
+    weblayout->addWidget(webView);
+    //    ui->webView->load(QUrl("http://threejs.org/examples/#webgl_geometry_spline_editor"));
+    //    ui->webView->show();
+    //! @endcode mission webview
+
     //! @code init DJISDK
     port = new QSerialPort(this);
     driver = new QHardDriver(port);
@@ -117,6 +128,16 @@ DJIonboardSDK::DJIonboardSDK(QWidget *parent)
         }
         f.close();
     }
+
+//! @code version control
+#ifdef SDK_VERSION_2_3
+    ui->gb_CoreData->setEnabled(false);
+    ui->gb_VRC->setEnabled(false);
+#endif // SDK_VERSION_2_3
+    //! @endcode
+    timerBroadcast = new QTimer();
+    connect(timerBroadcast, SIGNAL(timeout()), this, SLOT(on_tmr_Broadcast()));
+    timerBroadcast->start(300);
 }
 
 DJIonboardSDK::~DJIonboardSDK() { delete ui; }
@@ -737,10 +758,7 @@ void DJIonboardSDK::on_btn_camera_6_pressed()
     ui->hs_camera_yaw->setValue(ui->hs_camera_yaw->value() + 5);
 }
 
-void DJIonboardSDK::on_tmr_Camera_autosend()
-{
-    on_btn_camera_send_clicked();
-}
+void DJIonboardSDK::on_tmr_Camera_autosend() { on_btn_camera_send_clicked(); }
 
 void DJIonboardSDK::on_cb_camera_send_clicked(bool checked)
 {
@@ -748,4 +766,46 @@ void DJIonboardSDK::on_cb_camera_send_clicked(bool checked)
         cameraSend->start();
     else
         cameraSend->stop();
+}
+
+void DJIonboardSDK::on_btn_webLoad_clicked()
+{
+    webView->load(
+        QUrl("http://threejs.org/examples/#webgl_geometry_spline_editor"));
+}
+
+void DJIonboardSDK::upDateTime()
+{
+    ui->le_coreTimeStamp->setText(QString::number(api->getTime().time));
+    ui->le_coreNanoStamp->setText(QString::number(api->getTime().asr_ts));
+    ui->le_coreSyncFlag->setText(QString::number(api->getTime().sync_flag));
+}
+
+void DJIonboardSDK::upDateCapacity()
+{
+    ui->le_coreCapacity->setText(QString::number(api->getBatteryCapacity()));
+}
+
+void DJIonboardSDK::on_btn_coreRead_clicked()
+{
+    upDateTime();
+    upDateCapacity();
+    upDateFlightStatus();
+}
+
+void DJIonboardSDK::upDateFlightStatus()
+{
+    ui->le_coreFlightStatus->setText(QString::number((api->getFlightStatus())));
+}
+
+void DJIonboardSDK::on_tmr_Broadcast()
+{
+    if (ui->cb_coreTimeStamp->isChecked())
+        upDateTime();
+    if (ui->cb_coreCapacity->isChecked())
+        upDateCapacity();
+    if(ui->cb_coreFlightStatus->isChecked())
+        upDateFlightStatus();
+    if(ui->cb_coreControlDevice->isChecked())
+        ui->le_coreControlDevice->setText(QString::number((api->getCtrlInfo().cur_ctrl_dev_in_navi_mode)));
 }

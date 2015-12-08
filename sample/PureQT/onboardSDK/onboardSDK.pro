@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui serialport
+QT       += core gui serialport  webkitwidgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -33,7 +33,8 @@ HEADERS  += djionboardsdk.h \
     ../../../lib/inc/DJI_HardDriver.h \
     ../../../lib/inc/DJI_Link.h \
     ../../../lib/inc/DJI_Memory.h \
-    ../../../lib/inc/DJI_Type.h
+    ../../../lib/inc/DJI_Type.h \
+    ../../../lib/inc/DJI_Version.h
 
 FORMS    += djionboardsdk.ui
 

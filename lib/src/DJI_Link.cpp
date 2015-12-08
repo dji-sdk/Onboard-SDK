@@ -40,6 +40,8 @@ void DJI::onboardSDK::CoreAPI::sendData(unsigned char *buf)
     Header *pHeader = (Header *)buf;
     ans = driver->send(buf, pHeader->length);
     if (ans == 0)
+        API_STATUS("Port not send");
+    if (ans == -1)
         API_ERROR("Port closed");
 }
 
@@ -80,7 +82,7 @@ void DJI::onboardSDK::CoreAPI::appHandler(Header *header)
                 break;
             case 1:
             //! @todo unnecessary ack in case 1. Maybe add code later
-            default://! @note session id is 2
+            default: //! @note session id is 2
                 if (ACKSessionTab[header->sessionID - 1].session_status ==
                     ACK_SESSION_PROCESS)
                 {

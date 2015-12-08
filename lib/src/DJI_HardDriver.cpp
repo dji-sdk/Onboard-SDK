@@ -9,5 +9,12 @@
  */
 #include "DJI_HardDriver.h"
 
+/*! @note in this file we will implement some common corss platform drivers later
+ *  @todo implement
+ *
+ *
+ *
+ * */
+
 
 
