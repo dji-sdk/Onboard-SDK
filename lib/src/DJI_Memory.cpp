@@ -273,11 +273,12 @@ ACKSession *DJI::onboardSDK::CoreAPI::allocACK(unsigned short session_id,
     {
         if (ACKSessionTab[session_id - 1].mmu)
         {
-            freeMemory(ACKSessionTab[session_id - 1].mmu);
+            freeACK(&ACKSessionTab[session_id - 1]);
         }
         mmu = allocMemory(size);
         if (mmu == NULL)
         {
+            //! @todo optmize
         }
         else
         {

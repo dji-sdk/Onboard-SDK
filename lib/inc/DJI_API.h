@@ -4,6 +4,7 @@
  *  @date Nov 15, 2015
  *
  *  @abstract
+ *  Core API for DJI onboardSDK library
  *
  *  @attention
  *  Project configuration:

@@ -865,6 +865,10 @@ void DJIonboardSDK::on_tmr_Broadcast()
         updateVirturalRCData();
     if (ui->cb_FlightA->isChecked())
         updateFlightAcc();
+    if (ui->cb_FlightP->isChecked())
+        updateFlightPal();
+    if (ui->cb_FlightM->isChecked())
+        updateMagnet();
 }
 
 void DJIonboardSDK::updateCameraYaw()
@@ -916,8 +920,26 @@ void DJIonboardSDK::on_btn_vrcRead_clicked() { updateVirturalRCData(); }
 void DJIonboardSDK::updateFlightAcc()
 {
     ui->le_Flight_accx->setText(QString::number(flight->getAcceleration().x));
-    ui->le_Flight_accz->setText(QString::number(flight->getAcceleration().y));
-    ui->le_Flight_accy->setText(QString::number(flight->getAcceleration().z));
+    ui->le_Flight_accy->setText(QString::number(flight->getAcceleration().y));
+    ui->le_Flight_accz->setText(QString::number(flight->getAcceleration().z));
 }
 
 void DJIonboardSDK::on_btn_FlightAcc_clicked() { updateFlightAcc(); }
+
+void DJIonboardSDK::updateFlightPal()
+{
+    ui->le_Flight_palx->setText(QString::number(flight->getPalstance().x));
+    ui->le_Flight_paly->setText(QString::number(flight->getPalstance().y));
+    ui->le_Flight_palz->setText(QString::number(flight->getPalstance().z));
+}
+
+void DJIonboardSDK::on_btn_FlightPal_clicked() { updateFlightPal(); }
+
+void DJIonboardSDK::updateMagnet()
+{
+    ui->le_Flight_magx->setText(QString::number(flight->getMagnet().x));
+    ui->le_Flight_magy->setText(QString::number(flight->getMagnet().y));
+    ui->le_Flight_magz->setText(QString::number(flight->getMagnet().z));
+}
+
+void DJIonboardSDK::on_btn_FlightMag_clicked() { updateMagnet(); }

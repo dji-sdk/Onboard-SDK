@@ -18,6 +18,8 @@ class Flight
     void setFlight(FlightData *data);
 
     CommonData getAcceleration() const;
+    CommonData getPalstance() const;
+    MagnetData getMagnet() const;
 
   public: //! @note callbacks
     static void armCallback(CoreAPI *This, Header *header);

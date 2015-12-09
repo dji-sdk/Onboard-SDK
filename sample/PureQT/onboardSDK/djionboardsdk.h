@@ -45,6 +45,8 @@ class DJIonboardSDK : public QMainWindow
     void updateCameraPitch();
     void updateVirturalRCData();
     void updateFlightAcc();
+    void updateFlightPal();
+    void updateMagnet();
 private slots:
     void on_btn_portRefresh_clicked();
     void on_btn_portOpen_clicked();
@@ -145,6 +147,10 @@ private slots:
 
 
     void on_btn_FlightAcc_clicked();
+
+    void on_btn_FlightPal_clicked();
+
+    void on_btn_FlightMag_clicked();
 
 private:
     Ui::DJIonboardSDK *ui;

@@ -36,6 +36,16 @@ CommonData Flight::getAcceleration() const
     return api->getBroadcastData().a;
 }
 
+CommonData Flight::getPalstance() const
+{
+    return api->getBroadcastData().w;
+}
+
+MagnetData Flight::getMagnet() const
+{
+    return api->getBroadcastData().mag;
+}
+
 void Flight::armCallback(CoreAPI *This __UNUSED, Header *header)
 {
     unsigned short ack_data;

@@ -908,7 +908,11 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLineEdit" name="le_coreCapacity"/>
+                 <widget class="QLineEdit" name="le_coreCapacity">
+                  <property name="readOnly">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </item>
@@ -922,7 +926,11 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLineEdit" name="le_coreFlightStatus"/>
+                 <widget class="QLineEdit" name="le_coreFlightStatus">
+                  <property name="readOnly">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </item>
@@ -936,7 +944,11 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLineEdit" name="le_coreControlDevice"/>
+                 <widget class="QLineEdit" name="le_coreControlDevice">
+                  <property name="readOnly">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </item>
@@ -2442,7 +2454,11 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLineEdit" name="le_cameraYaw"/>
+                 <widget class="QLineEdit" name="le_cameraYaw">
+                  <property name="readOnly">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
                 </item>
                 <item>
                  <widget class="QCheckBox" name="cb_cameraYawLimit">
@@ -2472,7 +2488,11 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLineEdit" name="le_cameraRoll"/>
+                 <widget class="QLineEdit" name="le_cameraRoll">
+                  <property name="readOnly">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
                 </item>
                 <item>
                  <widget class="QCheckBox" name="cb_cameraRollLimit">
@@ -2502,7 +2522,11 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLineEdit" name="le_cameraPitch"/>
+                 <widget class="QLineEdit" name="le_cameraPitch">
+                  <property name="readOnly">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
                 </item>
                 <item>
                  <widget class="QCheckBox" name="cb_cameraPitchLimit">
@@ -3167,7 +3191,11 @@
                       </widget>
                      </item>
                      <item>
-                      <widget class="QLineEdit" name="le_vrcYaw"/>
+                      <widget class="QLineEdit" name="le_vrcYaw">
+                       <property name="readOnly">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
                      </item>
                     </layout>
                    </item>
@@ -3181,7 +3209,11 @@
                       </widget>
                      </item>
                      <item>
-                      <widget class="QLineEdit" name="le_vrcThrottle"/>
+                      <widget class="QLineEdit" name="le_vrcThrottle">
+                       <property name="readOnly">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
                      </item>
                     </layout>
                    </item>
@@ -3199,7 +3231,11 @@
                       </widget>
                      </item>
                      <item>
-                      <widget class="QLineEdit" name="le_vrcRoll"/>
+                      <widget class="QLineEdit" name="le_vrcRoll">
+                       <property name="readOnly">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
                      </item>
                     </layout>
                    </item>
@@ -3213,7 +3249,11 @@
                       </widget>
                      </item>
                      <item>
-                      <widget class="QLineEdit" name="le_vrcMode"/>
+                      <widget class="QLineEdit" name="le_vrcMode">
+                       <property name="readOnly">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
                      </item>
                     </layout>
                    </item>
@@ -3231,7 +3271,11 @@
                       </widget>
                      </item>
                      <item>
-                      <widget class="QLineEdit" name="le_vrcPitch"/>
+                      <widget class="QLineEdit" name="le_vrcPitch">
+                       <property name="readOnly">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
                      </item>
                     </layout>
                    </item>
@@ -3245,7 +3289,11 @@
                       </widget>
                      </item>
                      <item>
-                      <widget class="QLineEdit" name="le_vrcGear"/>
+                      <widget class="QLineEdit" name="le_vrcGear">
+                       <property name="readOnly">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
                      </item>
                     </layout>
                    </item>
@@ -3330,7 +3378,11 @@
                       </widget>
                      </item>
                      <item>
-                      <widget class="QLineEdit" name="le_Flight_accx"/>
+                      <widget class="QLineEdit" name="le_Flight_accx">
+                       <property name="readOnly">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
                      </item>
                     </layout>
                    </item>
@@ -3344,7 +3396,11 @@
                       </widget>
                      </item>
                      <item>
-                      <widget class="QLineEdit" name="le_Flight_accy"/>
+                      <widget class="QLineEdit" name="le_Flight_accy">
+                       <property name="readOnly">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
                      </item>
                     </layout>
                    </item>
@@ -3358,7 +3414,11 @@
                       </widget>
                      </item>
                      <item>
-                      <widget class="QLineEdit" name="le_Flight_accz"/>
+                      <widget class="QLineEdit" name="le_Flight_accz">
+                       <property name="readOnly">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
                      </item>
                     </layout>
                    </item>
@@ -3381,7 +3441,7 @@
                       </widget>
                      </item>
                      <item>
-                      <widget class="QPushButton" name="pushButton_11">
+                      <widget class="QPushButton" name="btn_FlightPal">
                        <property name="text">
                         <string>Read</string>
                        </property>
@@ -3392,7 +3452,7 @@
                    <item>
                     <layout class="QHBoxLayout" name="horizontalLayout_73">
                      <item>
-                      <widget class="QCheckBox" name="cb_FlightA_2">
+                      <widget class="QCheckBox" name="cb_FlightP">
                        <property name="text">
                         <string>X</string>
                        </property>
@@ -3405,7 +3465,11 @@
                       </widget>
                      </item>
                      <item>
-                      <widget class="QLineEdit" name="lineEdit_12"/>
+                      <widget class="QLineEdit" name="le_Flight_palx">
+                       <property name="readOnly">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
                      </item>
                     </layout>
                    </item>
@@ -3419,7 +3483,11 @@
                       </widget>
                      </item>
                      <item>
-                      <widget class="QLineEdit" name="lineEdit_13"/>
+                      <widget class="QLineEdit" name="le_Flight_paly">
+                       <property name="readOnly">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
                      </item>
                     </layout>
                    </item>
@@ -3433,7 +3501,11 @@
                       </widget>
                      </item>
                      <item>
-                      <widget class="QLineEdit" name="lineEdit_14"/>
+                      <widget class="QLineEdit" name="le_Flight_palz">
+                       <property name="readOnly">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
                      </item>
                     </layout>
                    </item>
@@ -3456,7 +3528,7 @@
                       </widget>
                      </item>
                      <item>
-                      <widget class="QPushButton" name="pushButton_14">
+                      <widget class="QPushButton" name="btn_FlightMag">
                        <property name="text">
                         <string>Read</string>
                        </property>
@@ -3467,7 +3539,7 @@
                    <item>
                     <layout class="QHBoxLayout" name="horizontalLayout_91">
                      <item>
-                      <widget class="QCheckBox" name="cb_FlightA_3">
+                      <widget class="QCheckBox" name="cb_FlightM">
                        <property name="text">
                         <string>X</string>
                        </property>
@@ -3480,7 +3552,11 @@
                       </widget>
                      </item>
                      <item>
-                      <widget class="QLineEdit" name="lineEdit_25"/>
+                      <widget class="QLineEdit" name="le_Flight_magx">
+                       <property name="readOnly">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
                      </item>
                     </layout>
                    </item>
@@ -3494,7 +3570,11 @@
                       </widget>
                      </item>
                      <item>
-                      <widget class="QLineEdit" name="lineEdit_26"/>
+                      <widget class="QLineEdit" name="le_Flight_magy">
+                       <property name="readOnly">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
                      </item>
                     </layout>
                    </item>
@@ -3508,7 +3588,11 @@
                       </widget>
                      </item>
                      <item>
-                      <widget class="QLineEdit" name="lineEdit_27"/>
+                      <widget class="QLineEdit" name="le_Flight_magz">
+                       <property name="readOnly">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
                      </item>
                     </layout>
                    </item>
@@ -3541,7 +3625,7 @@
                       </widget>
                      </item>
                      <item>
-                      <widget class="QPushButton" name="pushButton_9">
+                      <widget class="QPushButton" name="btn_FlightQua">
                        <property name="text">
                         <string>Read</string>
                        </property>
@@ -3659,7 +3743,7 @@
                       </widget>
                      </item>
                      <item>
-                      <widget class="QPushButton" name="pushButton_12">
+                      <widget class="QPushButton" name="btn_FlightVel">
                        <property name="text">
                         <string>Read</string>
                        </property>
@@ -3683,7 +3767,11 @@
                       </widget>
                      </item>
                      <item>
-                      <widget class="QLineEdit" name="lineEdit_15"/>
+                      <widget class="QLineEdit" name="lineEdit_15">
+                       <property name="readOnly">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
                      </item>
                     </layout>
                    </item>
@@ -3697,7 +3785,11 @@
                       </widget>
                      </item>
                      <item>
-                      <widget class="QLineEdit" name="lineEdit_16"/>
+                      <widget class="QLineEdit" name="lineEdit_16">
+                       <property name="readOnly">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
                      </item>
                     </layout>
                    </item>
@@ -3711,7 +3803,11 @@
                       </widget>
                      </item>
                      <item>
-                      <widget class="QLineEdit" name="lineEdit_17"/>
+                      <widget class="QLineEdit" name="lineEdit_17">
+                       <property name="readOnly">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
                      </item>
                     </layout>
                    </item>
@@ -3725,7 +3821,11 @@
                       </widget>
                      </item>
                      <item>
-                      <widget class="QLineEdit" name="lineEdit_18"/>
+                      <widget class="QLineEdit" name="lineEdit_18">
+                       <property name="readOnly">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
                      </item>
                     </layout>
                    </item>
@@ -3739,7 +3839,11 @@
                       </widget>
                      </item>
                      <item>
-                      <widget class="QLineEdit" name="lineEdit_19"/>
+                      <widget class="QLineEdit" name="lineEdit_19">
+                       <property name="readOnly">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
                      </item>
                     </layout>
                    </item>
@@ -3777,7 +3881,7 @@
                       </widget>
                      </item>
                      <item>
-                      <widget class="QPushButton" name="pushButton_15">
+                      <widget class="QPushButton" name="btn_FlightPos">
                        <property name="text">
                         <string>Read</string>
                        </property>
@@ -3795,7 +3899,11 @@
                       </widget>
                      </item>
                      <item>
-                      <widget class="QLineEdit" name="lineEdit_28"/>
+                      <widget class="QLineEdit" name="lineEdit_28">
+                       <property name="readOnly">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
                      </item>
                     </layout>
                    </item>
@@ -3809,7 +3917,11 @@
                       </widget>
                      </item>
                      <item>
-                      <widget class="QLineEdit" name="lineEdit_33"/>
+                      <widget class="QLineEdit" name="lineEdit_33">
+                       <property name="readOnly">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
                      </item>
                     </layout>
                    </item>
@@ -3823,7 +3935,11 @@
                       </widget>
                      </item>
                      <item>
-                      <widget class="QLineEdit" name="lineEdit_36"/>
+                      <widget class="QLineEdit" name="lineEdit_36">
+                       <property name="readOnly">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
                      </item>
                     </layout>
                    </item>
@@ -3837,7 +3953,11 @@
                       </widget>
                      </item>
                      <item>
-                      <widget class="QLineEdit" name="lineEdit_37"/>
+                      <widget class="QLineEdit" name="lineEdit_37">
+                       <property name="readOnly">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
                      </item>
                     </layout>
                    </item>
@@ -3851,7 +3971,11 @@
                       </widget>
                      </item>
                      <item>
-                      <widget class="QLineEdit" name="lineEdit_38"/>
+                      <widget class="QLineEdit" name="lineEdit_38">
+                       <property name="readOnly">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
                      </item>
                     </layout>
                    </item>
