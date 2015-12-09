@@ -41,7 +41,7 @@ void DJI::onboardSDK::CoreAPI::sendData(unsigned char *buf)
     ans = driver->send(buf, pHeader->length);
     if (ans == 0)
         API_STATUS("Port not send");
-    if (ans == -1)
+    if (ans == (size_t)-1)
         API_ERROR("Port closed");
 }
 
@@ -199,10 +199,10 @@ void DJI::onboardSDK::CoreAPI::setKey(const char *key)
 
 void CoreAPI::setActivation(bool isActivated)
 {
-    if(isActivated)
-       broadcastData.activation = 1;
-               else
-               broadcastData.activation = 0;
+    if (isActivated)
+        broadcastData.activation = 1;
+    else
+        broadcastData.activation = 0;
 }
 
 unsigned short calculateLength(unsigned short size, unsigned short encrypt_flag)

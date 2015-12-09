@@ -260,7 +260,7 @@ void DJIonboardSDK::activationCallback(CoreAPI *This, Header *header)
     }
     else
     {
-       sdk->ui->btn_coreActive->setText("Decode Error");
+        sdk->ui->btn_coreActive->setText("Decode Error");
     }
 }
 
@@ -334,7 +334,7 @@ void DJIonboardSDK::on_btn_coreActive_clicked()
         0x12; //! @note for ios verification
     *key = ui->lineEdit_Key->text().toLocal8Bit();
     data.app_key = key->data(); //! @warning memory leak fixme
-    api->activate(&data,DJIonboardSDK::activationCallback);
+    api->activate(&data, DJIonboardSDK::activationCallback);
 }
 
 void DJIonboardSDK::on_btn_coreVersion_clicked() { api->getVersion(); }
@@ -761,7 +761,7 @@ void DJIonboardSDK::on_btn_camera_send_clicked()
         angleData.roll_angle = ui->hs_camera_roll->value();
         angleData.pitch_angle = ui->hs_camera_pitch->value();
         angleData.ctrl_byte = camFlag;
-        angleData.duration = 10;
+        angleData.duration = ui->lineEdit_cameraTime->text().toInt();
         cam->setGimbalAngle(&angleData);
     }
 }
@@ -855,4 +855,69 @@ void DJIonboardSDK::on_tmr_Broadcast()
         upDateFlightStatus();
     if (ui->cb_coreControlDevice->isChecked())
         updateControlDevice();
+    if (ui->cb_cameraYaw->isChecked())
+        updateCameraYaw();
+    if (ui->cb_cameraRoll->isChecked())
+        updateCameraRoll();
+    if (ui->cb_cameraPitch->isChecked())
+        updateCameraPitch();
+    if (ui->cb_vrcData->isChecked())
+        updateVirturalRCData();
+    if (ui->cb_FlightA->isChecked())
+        updateFlightAcc();
 }
+
+void DJIonboardSDK::updateCameraYaw()
+{
+    ui->le_cameraYaw->setText(QString::number(cam->getYaw()));
+    if (cam->isYawLimit())
+        ui->cb_cameraYawLimit->setChecked(true);
+    else
+        ui->cb_cameraYawLimit->setChecked(false);
+}
+
+void DJIonboardSDK::updateCameraRoll()
+{
+    ui->le_cameraRoll->setText(QString::number(cam->getRoll()));
+    if (cam->isRollLimit())
+        ui->cb_cameraRollLimit->setChecked(true);
+    else
+        ui->cb_cameraRollLimit->setChecked(false);
+}
+
+void DJIonboardSDK::updateCameraPitch()
+{
+    ui->le_cameraPitch->setText(QString::number(cam->getPitch()));
+    if (cam->isPitchLimit())
+        ui->cb_cameraPitchLimit->setChecked(true);
+    else
+        ui->cb_cameraPitchLimit->setChecked(false);
+}
+
+void DJIonboardSDK::on_btn_cameraRead_clicked()
+{
+    updateCameraYaw();
+    updateCameraRoll();
+    updateCameraPitch();
+}
+
+void DJIonboardSDK::updateVirturalRCData()
+{
+    ui->le_vrcYaw->setText(QString::number(vrc->getRCdata().yaw));
+    ui->le_vrcRoll->setText(QString::number(vrc->getRCdata().roll));
+    ui->le_vrcPitch->setText(QString::number(vrc->getRCdata().pitch));
+    ui->le_vrcThrottle->setText(QString::number(vrc->getRCdata().throttle));
+    ui->le_vrcMode->setText(QString::number(vrc->getRCdata().mode));
+    ui->le_vrcGear->setText(QString::number(vrc->getRCdata().gear));
+}
+
+void DJIonboardSDK::on_btn_vrcRead_clicked() { updateVirturalRCData(); }
+
+void DJIonboardSDK::updateFlightAcc()
+{
+    ui->le_Flight_accx->setText(QString::number(flight->getAcceleration().x));
+    ui->le_Flight_accz->setText(QString::number(flight->getAcceleration().y));
+    ui->le_Flight_accy->setText(QString::number(flight->getAcceleration().z));
+}
+
+void DJIonboardSDK::on_btn_FlightAcc_clicked() { updateFlightAcc(); }

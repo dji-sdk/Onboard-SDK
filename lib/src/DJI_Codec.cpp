@@ -795,7 +795,7 @@ void DJI::onboardSDK::CoreAPI::byteHandler(const uint8_t in_data)
     }
 }
 
-void CoreAPI::byteStreamHandler(uint8_t *buffer, size_t size)
+void CoreAPI::byteStreamHandler(uint8_t *buffer __UNUSED, size_t size __UNUSED)
 {
     //! @todo implement
 }

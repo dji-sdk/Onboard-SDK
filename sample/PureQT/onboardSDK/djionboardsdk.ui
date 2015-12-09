@@ -17,8 +17,8 @@
    <string>DJIonboardSDK</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QGridLayout" name="gridLayout_10">
-    <item row="0" column="0">
+   <layout class="QHBoxLayout" name="horizontalLayout_58">
+    <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
        <number>0</number>
@@ -1579,7 +1579,7 @@
                  <widget class="QGroupBox" name="groupBox8_2">
                   <property name="minimumSize">
                    <size>
-                    <width>110</width>
+                    <width>112</width>
                     <height>88</height>
                    </size>
                   </property>
@@ -2388,9 +2388,12 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLineEdit" name="lineEdit_flightFlag_3">
+                 <widget class="QLineEdit" name="lineEdit_cameraTime">
+                  <property name="text">
+                   <string>10</string>
+                  </property>
                   <property name="readOnly">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                  </widget>
                 </item>
@@ -2439,12 +2442,15 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLineEdit" name="lineEdit_37"/>
+                 <widget class="QLineEdit" name="le_cameraYaw"/>
                 </item>
                 <item>
-                 <widget class="QCheckBox" name="checkBox_11">
+                 <widget class="QCheckBox" name="cb_cameraYawLimit">
                   <property name="text">
                    <string>Limited</string>
+                  </property>
+                  <property name="checkable">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
@@ -2466,12 +2472,15 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLineEdit" name="lineEdit_38"/>
+                 <widget class="QLineEdit" name="le_cameraRoll"/>
                 </item>
                 <item>
-                 <widget class="QCheckBox" name="checkBox_12">
+                 <widget class="QCheckBox" name="cb_cameraRollLimit">
                   <property name="text">
                    <string>Limited</string>
+                  </property>
+                  <property name="checkable">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
@@ -2493,12 +2502,18 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLineEdit" name="lineEdit_39"/>
+                 <widget class="QLineEdit" name="le_cameraPitch"/>
                 </item>
                 <item>
-                 <widget class="QCheckBox" name="checkBox_13">
+                 <widget class="QCheckBox" name="cb_cameraPitchLimit">
                   <property name="text">
                    <string>Limited</string>
+                  </property>
+                  <property name="checkable">
+                   <bool>true</bool>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
                   </property>
                  </widget>
                 </item>
@@ -2753,7 +2768,7 @@
                    <item row="4" column="0">
                     <layout class="QHBoxLayout" name="horizontalLayout_96">
                      <item>
-                      <widget class="QPushButton" name="pushButton_16">
+                      <widget class="QPushButton" name="btn_vrcRead">
                        <property name="text">
                         <string>Read</string>
                        </property>
@@ -3131,11 +3146,31 @@
               <item>
                <widget class="QGroupBox" name="groupBox_24">
                 <property name="title">
-                 <string>Real Radio Control Broadcast Data</string>
+                 <string>Virtual Radio Control Broadcast Data</string>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_48">
                  <item>
-                  <layout class="QHBoxLayout" name="horizontalLayout_101">
+                  <layout class="QHBoxLayout" name="horizontalLayout_82">
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_97">
+                     <item>
+                      <widget class="QCheckBox" name="cb_vrcData">
+                       <property name="text">
+                        <string> Yaw </string>
+                       </property>
+                       <property name="autoRepeat">
+                        <bool>false</bool>
+                       </property>
+                       <property name="autoExclusive">
+                        <bool>false</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QLineEdit" name="le_vrcYaw"/>
+                     </item>
+                    </layout>
+                   </item>
                    <item>
                     <layout class="QHBoxLayout" name="horizontalLayout_100">
                      <item>
@@ -3146,21 +3181,39 @@
                       </widget>
                      </item>
                      <item>
-                      <widget class="QLineEdit" name="lineEdit_32"/>
+                      <widget class="QLineEdit" name="le_vrcThrottle"/>
                      </item>
                     </layout>
                    </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <layout class="QHBoxLayout" name="horizontalLayout_101">
                    <item>
-                    <layout class="QHBoxLayout" name="horizontalLayout_97">
+                    <layout class="QHBoxLayout" name="horizontalLayout_103">
                      <item>
-                      <widget class="QLabel" name="label_66">
+                      <widget class="QLabel" name="label_71">
                        <property name="text">
-                        <string> Yaw </string>
+                        <string>    Roll </string>
                        </property>
                       </widget>
                      </item>
                      <item>
-                      <widget class="QLineEdit" name="lineEdit_29"/>
+                      <widget class="QLineEdit" name="le_vrcRoll"/>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_98">
+                     <item>
+                      <widget class="QLabel" name="label_67">
+                       <property name="text">
+                        <string>  Mode  </string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QLineEdit" name="le_vrcMode"/>
                      </item>
                     </layout>
                    </item>
@@ -3169,62 +3222,30 @@
                  <item>
                   <layout class="QHBoxLayout" name="horizontalLayout_104">
                    <item>
-                    <layout class="QHBoxLayout" name="horizontalLayout_98">
+                    <layout class="QHBoxLayout" name="horizontalLayout_105">
                      <item>
-                      <widget class="QLabel" name="label_67">
+                      <widget class="QLabel" name="label_72">
                        <property name="text">
-                        <string>Mode</string>
+                        <string>    Pitch</string>
                        </property>
                       </widget>
                      </item>
                      <item>
-                      <widget class="QLineEdit" name="lineEdit_30"/>
+                      <widget class="QLineEdit" name="le_vrcPitch"/>
                      </item>
                     </layout>
                    </item>
-                   <item>
-                    <layout class="QHBoxLayout" name="horizontalLayout_103">
-                     <item>
-                      <widget class="QLabel" name="label_71">
-                       <property name="text">
-                        <string> Roll</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item>
-                      <widget class="QLineEdit" name="lineEdit_34"/>
-                     </item>
-                    </layout>
-                   </item>
-                  </layout>
-                 </item>
-                 <item>
-                  <layout class="QHBoxLayout" name="horizontalLayout_106">
                    <item>
                     <layout class="QHBoxLayout" name="horizontalLayout_99">
                      <item>
                       <widget class="QLabel" name="label_68">
                        <property name="text">
-                        <string>Gear</string>
+                        <string>  Gear  </string>
                        </property>
                       </widget>
                      </item>
                      <item>
-                      <widget class="QLineEdit" name="lineEdit_31"/>
-                     </item>
-                    </layout>
-                   </item>
-                   <item>
-                    <layout class="QHBoxLayout" name="horizontalLayout_105">
-                     <item>
-                      <widget class="QLabel" name="label_72">
-                       <property name="text">
-                        <string>Pitch</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item>
-                      <widget class="QLineEdit" name="lineEdit_35"/>
+                      <widget class="QLineEdit" name="le_vrcGear"/>
                      </item>
                     </layout>
                    </item>
@@ -3278,16 +3299,16 @@
                    <item>
                     <layout class="QHBoxLayout" name="horizontalLayout_68">
                      <item>
-                      <widget class="QPushButton" name="pushButton_10">
+                      <widget class="QCheckBox" name="checkBox_3">
                        <property name="text">
-                        <string>Read</string>
+                        <string>Record</string>
                        </property>
                       </widget>
                      </item>
                      <item>
-                      <widget class="QCheckBox" name="checkBox_3">
+                      <widget class="QPushButton" name="btn_FlightAcc">
                        <property name="text">
-                        <string>Record</string>
+                        <string>Read</string>
                        </property>
                       </widget>
                      </item>
@@ -3296,14 +3317,20 @@
                    <item>
                     <layout class="QHBoxLayout" name="horizontalLayout_69">
                      <item>
-                      <widget class="QLabel" name="label_46">
+                      <widget class="QCheckBox" name="cb_FlightA">
                        <property name="text">
-                        <string> X </string>
+                        <string>X</string>
+                       </property>
+                       <property name="autoRepeat">
+                        <bool>false</bool>
+                       </property>
+                       <property name="autoExclusive">
+                        <bool>false</bool>
                        </property>
                       </widget>
                      </item>
                      <item>
-                      <widget class="QLineEdit" name="lineEdit_9"/>
+                      <widget class="QLineEdit" name="le_Flight_accx"/>
                      </item>
                     </layout>
                    </item>
@@ -3312,12 +3339,12 @@
                      <item>
                       <widget class="QLabel" name="label_47">
                        <property name="text">
-                        <string> Y </string>
+                        <string>   Y </string>
                        </property>
                       </widget>
                      </item>
                      <item>
-                      <widget class="QLineEdit" name="lineEdit_10"/>
+                      <widget class="QLineEdit" name="le_Flight_accy"/>
                      </item>
                     </layout>
                    </item>
@@ -3326,12 +3353,12 @@
                      <item>
                       <widget class="QLabel" name="label_48">
                        <property name="text">
-                        <string> Z </string>
+                        <string>   Z </string>
                        </property>
                       </widget>
                      </item>
                      <item>
-                      <widget class="QLineEdit" name="lineEdit_11"/>
+                      <widget class="QLineEdit" name="le_Flight_accz"/>
                      </item>
                     </layout>
                    </item>
@@ -3347,16 +3374,16 @@
                    <item>
                     <layout class="QHBoxLayout" name="horizontalLayout_72">
                      <item>
-                      <widget class="QPushButton" name="pushButton_11">
+                      <widget class="QCheckBox" name="checkBox_4">
                        <property name="text">
-                        <string>Read</string>
+                        <string>Record</string>
                        </property>
                       </widget>
                      </item>
                      <item>
-                      <widget class="QCheckBox" name="checkBox_4">
+                      <widget class="QPushButton" name="pushButton_11">
                        <property name="text">
-                        <string>Record</string>
+                        <string>Read</string>
                        </property>
                       </widget>
                      </item>
@@ -3365,9 +3392,15 @@
                    <item>
                     <layout class="QHBoxLayout" name="horizontalLayout_73">
                      <item>
-                      <widget class="QLabel" name="label_49">
+                      <widget class="QCheckBox" name="cb_FlightA_2">
                        <property name="text">
-                        <string> X </string>
+                        <string>X</string>
+                       </property>
+                       <property name="autoRepeat">
+                        <bool>false</bool>
+                       </property>
+                       <property name="autoExclusive">
+                        <bool>false</bool>
                        </property>
                       </widget>
                      </item>
@@ -3379,9 +3412,9 @@
                    <item>
                     <layout class="QHBoxLayout" name="horizontalLayout_74">
                      <item>
-                      <widget class="QLabel" name="label_50">
+                      <widget class="QLabel" name="label_49">
                        <property name="text">
-                        <string> Y </string>
+                        <string>   Y </string>
                        </property>
                       </widget>
                      </item>
@@ -3395,7 +3428,7 @@
                      <item>
                       <widget class="QLabel" name="label_51">
                        <property name="text">
-                        <string> Z </string>
+                        <string>   Z </string>
                        </property>
                       </widget>
                      </item>
@@ -3416,16 +3449,16 @@
                    <item>
                     <layout class="QHBoxLayout" name="horizontalLayout_90">
                      <item>
-                      <widget class="QPushButton" name="pushButton_14">
+                      <widget class="QCheckBox" name="checkBox_7">
                        <property name="text">
-                        <string>Read</string>
+                        <string>Record</string>
                        </property>
                       </widget>
                      </item>
                      <item>
-                      <widget class="QCheckBox" name="checkBox_7">
+                      <widget class="QPushButton" name="pushButton_14">
                        <property name="text">
-                        <string>Record</string>
+                        <string>Read</string>
                        </property>
                       </widget>
                      </item>
@@ -3434,9 +3467,15 @@
                    <item>
                     <layout class="QHBoxLayout" name="horizontalLayout_91">
                      <item>
-                      <widget class="QLabel" name="label_62">
+                      <widget class="QCheckBox" name="cb_FlightA_3">
                        <property name="text">
-                        <string> X </string>
+                        <string>X</string>
+                       </property>
+                       <property name="autoRepeat">
+                        <bool>false</bool>
+                       </property>
+                       <property name="autoExclusive">
+                        <bool>false</bool>
                        </property>
                       </widget>
                      </item>
@@ -3448,9 +3487,9 @@
                    <item>
                     <layout class="QHBoxLayout" name="horizontalLayout_92">
                      <item>
-                      <widget class="QLabel" name="label_63">
+                      <widget class="QLabel" name="label_50">
                        <property name="text">
-                        <string> Y </string>
+                        <string>   Y </string>
                        </property>
                       </widget>
                      </item>
@@ -3462,9 +3501,9 @@
                    <item>
                     <layout class="QHBoxLayout" name="horizontalLayout_93">
                      <item>
-                      <widget class="QLabel" name="label_64">
+                      <widget class="QLabel" name="label_62">
                        <property name="text">
-                        <string> Z </string>
+                        <string>   Z </string>
                        </property>
                       </widget>
                      </item>
@@ -3481,108 +3520,13 @@
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_49">
                 <item>
-                 <widget class="QGroupBox" name="groupBox_20">
-                  <property name="title">
-                   <string>Velocity</string>
-                  </property>
-                  <layout class="QVBoxLayout" name="verticalLayout_44">
-                   <item>
-                    <layout class="QHBoxLayout" name="horizontalLayout_76">
-                     <item>
-                      <widget class="QPushButton" name="pushButton_12">
-                       <property name="text">
-                        <string>Read</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item>
-                      <widget class="QCheckBox" name="checkBox_5">
-                       <property name="text">
-                        <string>Auto Record</string>
-                       </property>
-                      </widget>
-                     </item>
-                    </layout>
-                   </item>
-                   <item>
-                    <layout class="QHBoxLayout" name="horizontalLayout_77">
-                     <item>
-                      <widget class="QLabel" name="label_52">
-                       <property name="text">
-                        <string> X </string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item>
-                      <widget class="QLineEdit" name="lineEdit_15"/>
-                     </item>
-                    </layout>
-                   </item>
-                   <item>
-                    <layout class="QHBoxLayout" name="horizontalLayout_78">
-                     <item>
-                      <widget class="QLabel" name="label_53">
-                       <property name="text">
-                        <string> Y </string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item>
-                      <widget class="QLineEdit" name="lineEdit_16"/>
-                     </item>
-                    </layout>
-                   </item>
-                   <item>
-                    <layout class="QHBoxLayout" name="horizontalLayout_79">
-                     <item>
-                      <widget class="QLabel" name="label_54">
-                       <property name="text">
-                        <string> Z </string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item>
-                      <widget class="QLineEdit" name="lineEdit_17"/>
-                     </item>
-                    </layout>
-                   </item>
-                   <item>
-                    <layout class="QHBoxLayout" name="horizontalLayout_82">
-                     <item>
-                      <layout class="QHBoxLayout" name="horizontalLayout_80">
-                       <item>
-                        <widget class="QLabel" name="label_55">
-                         <property name="text">
-                          <string>Health Flag</string>
-                         </property>
-                        </widget>
-                       </item>
-                       <item>
-                        <widget class="QLineEdit" name="lineEdit_18"/>
-                       </item>
-                      </layout>
-                     </item>
-                     <item>
-                      <layout class="QHBoxLayout" name="horizontalLayout_81">
-                       <item>
-                        <widget class="QLabel" name="label_56">
-                         <property name="text">
-                          <string>Sensor ID</string>
-                         </property>
-                        </widget>
-                       </item>
-                       <item>
-                        <widget class="QLineEdit" name="lineEdit_19"/>
-                       </item>
-                      </layout>
-                     </item>
-                    </layout>
-                   </item>
-                  </layout>
-                 </widget>
-                </item>
-                <item>
                  <widget class="QGroupBox" name="groupBox_17">
+                  <property name="minimumSize">
+                   <size>
+                    <width>172</width>
+                    <height>0</height>
+                   </size>
+                  </property>
                   <property name="title">
                    <string>Quaternion</string>
                   </property>
@@ -3590,16 +3534,16 @@
                    <item>
                     <layout class="QHBoxLayout" name="horizontalLayout_52">
                      <item>
-                      <widget class="QPushButton" name="pushButton_9">
+                      <widget class="QCheckBox" name="checkBox_2">
                        <property name="text">
-                        <string>Read</string>
+                        <string>Record</string>
                        </property>
                       </widget>
                      </item>
                      <item>
-                      <widget class="QCheckBox" name="checkBox_2">
+                      <widget class="QPushButton" name="pushButton_9">
                        <property name="text">
-                        <string>Auto Record</string>
+                        <string>Read</string>
                        </property>
                       </widget>
                      </item>
@@ -3608,9 +3552,15 @@
                    <item>
                     <layout class="QHBoxLayout" name="horizontalLayout_64">
                      <item>
-                      <widget class="QLabel" name="label_44">
+                      <widget class="QCheckBox" name="cb_FlightA_4">
                        <property name="text">
                         <string>Q0</string>
+                       </property>
+                       <property name="autoRepeat">
+                        <bool>false</bool>
+                       </property>
+                       <property name="autoExclusive">
+                        <bool>false</bool>
                        </property>
                       </widget>
                      </item>
@@ -3628,7 +3578,7 @@
                      <item>
                       <widget class="QLabel" name="label_45">
                        <property name="text">
-                        <string>Q1</string>
+                        <string>   Q1 </string>
                        </property>
                       </widget>
                      </item>
@@ -3646,7 +3596,7 @@
                      <item>
                       <widget class="QLabel" name="label_34">
                        <property name="text">
-                        <string>Q2</string>
+                        <string>   Q2 </string>
                        </property>
                       </widget>
                      </item>
@@ -3664,7 +3614,7 @@
                      <item>
                       <widget class="QLabel" name="label_35">
                        <property name="text">
-                        <string>Q3</string>
+                        <string>   Q3 </string>
                        </property>
                       </widget>
                      </item>
@@ -3674,6 +3624,234 @@
                         <bool>true</bool>
                        </property>
                       </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <spacer name="verticalSpacer_6">
+                     <property name="orientation">
+                      <enum>Qt::Vertical</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>20</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QGroupBox" name="groupBox_20">
+                  <property name="title">
+                   <string>Velocity</string>
+                  </property>
+                  <layout class="QVBoxLayout" name="verticalLayout_44">
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_76">
+                     <item>
+                      <widget class="QCheckBox" name="checkBox_5">
+                       <property name="text">
+                        <string>Record</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QPushButton" name="pushButton_12">
+                       <property name="text">
+                        <string>Read</string>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_77">
+                     <item>
+                      <widget class="QCheckBox" name="cb_FlightA_5">
+                       <property name="text">
+                        <string>X</string>
+                       </property>
+                       <property name="autoRepeat">
+                        <bool>false</bool>
+                       </property>
+                       <property name="autoExclusive">
+                        <bool>false</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QLineEdit" name="lineEdit_15"/>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_78">
+                     <item>
+                      <widget class="QLabel" name="label_53">
+                       <property name="text">
+                        <string>   Y </string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QLineEdit" name="lineEdit_16"/>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_79">
+                     <item>
+                      <widget class="QLabel" name="label_54">
+                       <property name="text">
+                        <string>   Z </string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QLineEdit" name="lineEdit_17"/>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_80">
+                     <item>
+                      <widget class="QLabel" name="label_55">
+                       <property name="text">
+                        <string>Health Flag</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QLineEdit" name="lineEdit_18"/>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_81">
+                     <item>
+                      <widget class="QLabel" name="label_56">
+                       <property name="text">
+                        <string>Sensor ID  </string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QLineEdit" name="lineEdit_19"/>
+                     </item>
+                    </layout>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item>
+                 <layout class="QVBoxLayout" name="verticalLayout_56"/>
+                </item>
+                <item>
+                 <widget class="QGroupBox" name="groupBox_26">
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>180</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>172</width>
+                    <height>1000</height>
+                   </size>
+                  </property>
+                  <property name="title">
+                   <string>Position</string>
+                  </property>
+                  <layout class="QVBoxLayout" name="verticalLayout_54">
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_94">
+                     <item>
+                      <widget class="QCheckBox" name="checkBox_8">
+                       <property name="text">
+                        <string>Auto Record</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QPushButton" name="pushButton_15">
+                       <property name="text">
+                        <string>Read</string>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_102">
+                     <item>
+                      <widget class="QLabel" name="label_63">
+                       <property name="text">
+                        <string>Latitude </string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QLineEdit" name="lineEdit_28"/>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_112">
+                     <item>
+                      <widget class="QLabel" name="label_64">
+                       <property name="text">
+                        <string>Longitude</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QLineEdit" name="lineEdit_33"/>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_117">
+                     <item>
+                      <widget class="QLabel" name="label_65">
+                       <property name="text">
+                        <string>Altitude </string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QLineEdit" name="lineEdit_36"/>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_119">
+                     <item>
+                      <widget class="QLabel" name="label_70">
+                       <property name="text">
+                        <string>Height   </string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QLineEdit" name="lineEdit_37"/>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_120">
+                     <item>
+                      <widget class="QLabel" name="label_73">
+                       <property name="text">
+                        <string>Healt    </string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QLineEdit" name="lineEdit_38"/>
                      </item>
                     </layout>
                    </item>
@@ -3714,343 +3892,6 @@
         <string>Mission</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_8">
-        <item row="0" column="2">
-         <widget class="QGroupBox" name="groupBox_5">
-          <property name="enabled">
-           <bool>true</bool>
-          </property>
-          <property name="title">
-           <string>Hot Point</string>
-          </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_62">
-           <item>
-            <layout class="QVBoxLayout" name="verticalLayout_35">
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_40">
-               <item>
-                <widget class="QPushButton" name="btn_camera_send_8">
-                 <property name="text">
-                  <string>check</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QPushButton" name="btn_camera_send_7">
-                 <property name="text">
-                  <string>reset yaw</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_37">
-               <item>
-                <widget class="QPushButton" name="btn_camera_send_2">
-                 <property name="text">
-                  <string>start</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QPushButton" name="btn_camera_send_3">
-                 <property name="text">
-                  <string>stop</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QPushButton" name="btn_camera_send_4">
-                 <property name="text">
-                  <string>pause</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_38">
-               <item>
-                <widget class="QPushButton" name="btn_camera_send_5">
-                 <property name="text">
-                  <string>set</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="label_27">
-                 <property name="text">
-                  <string>velocity</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLineEdit" name="lineEdit_flight_Yaw_2">
-                 <property name="focusPolicy">
-                  <enum>Qt::ClickFocus</enum>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_39">
-               <item>
-                <widget class="QPushButton" name="btn_camera_send_6">
-                 <property name="text">
-                  <string>set</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="label_28">
-                 <property name="text">
-                  <string> radius </string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLineEdit" name="lineEdit_flight_Yaw_3">
-                 <property name="focusPolicy">
-                  <enum>Qt::ClickFocus</enum>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <layout class="QVBoxLayout" name="verticalLayout_39">
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_53">
-               <property name="sizeConstraint">
-                <enum>QLayout::SetMaximumSize</enum>
-               </property>
-               <property name="leftMargin">
-                <number>6</number>
-               </property>
-               <property name="rightMargin">
-                <number>6</number>
-               </property>
-               <item>
-                <layout class="QVBoxLayout" name="verticalLayout_34">
-                 <item>
-                  <layout class="QHBoxLayout" name="horizontalLayout_41">
-                   <item>
-                    <widget class="QLabel" name="label_29">
-                     <property name="text">
-                      <string>latitude </string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QLineEdit" name="lineEdit_flight_Yaw_4">
-                     <property name="focusPolicy">
-                      <enum>Qt::ClickFocus</enum>
-                     </property>
-                     <property name="text">
-                      <string/>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </item>
-                 <item>
-                  <layout class="QHBoxLayout" name="horizontalLayout_42">
-                   <item>
-                    <widget class="QLabel" name="label_30">
-                     <property name="text">
-                      <string>longitude</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QLineEdit" name="lineEdit_flight_Yaw_5">
-                     <property name="focusPolicy">
-                      <enum>Qt::ClickFocus</enum>
-                     </property>
-                     <property name="text">
-                      <string/>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </item>
-                 <item>
-                  <layout class="QHBoxLayout" name="horizontalLayout_43">
-                   <item>
-                    <widget class="QLabel" name="label_31">
-                     <property name="text">
-                      <string>Altitude </string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QLineEdit" name="lineEdit_flight_Yaw_6">
-                     <property name="focusPolicy">
-                      <enum>Qt::ClickFocus</enum>
-                     </property>
-                     <property name="text">
-                      <string/>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </item>
-                </layout>
-               </item>
-               <item>
-                <widget class="QPushButton" name="pushButton_4">
-                 <property name="minimumSize">
-                  <size>
-                   <width>0</width>
-                   <height>80</height>
-                  </size>
-                 </property>
-                 <property name="text">
-                  <string>Current</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_47">
-               <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_45">
-                 <item>
-                  <widget class="QLabel" name="label_33">
-                   <property name="text">
-                    <string> palstance</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLineEdit" name="lineEdit_flight_Yaw_8">
-                   <property name="focusPolicy">
-                    <enum>Qt::ClickFocus</enum>
-                   </property>
-                   <property name="text">
-                    <string/>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_44">
-                 <item>
-                  <widget class="QLabel" name="label_32">
-                   <property name="text">
-                    <string>radius</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLineEdit" name="lineEdit_flight_Yaw_7">
-                   <property name="focusPolicy">
-                    <enum>Qt::ClickFocus</enum>
-                   </property>
-                   <property name="text">
-                    <string/>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_48">
-               <item>
-                <spacer name="horizontalSpacer_6">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item>
-                <widget class="QCheckBox" name="cb_flight_autoSend_2">
-                 <property name="text">
-                  <string>clocwise</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <spacer name="horizontalSpacer_7">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item>
-                <widget class="QComboBox" name="comboBox_portName_3">
-                 <item>
-                  <property name="text">
-                   <string>yaw mode</string>
-                  </property>
-                 </item>
-                </widget>
-               </item>
-               <item>
-                <spacer name="horizontalSpacer_8">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-              </layout>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <spacer name="horizontalSpacer_9">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QPushButton" name="btn_webLoad">
-             <property name="text">
-              <string>PushButton</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
         <item row="1" column="0">
          <layout class="QVBoxLayout" name="verticalLayout_52">
           <item>
@@ -4394,6 +4235,359 @@
           </item>
          </layout>
         </item>
+        <item row="0" column="1">
+         <widget class="QGroupBox" name="groupBox_5">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="title">
+           <string>Hot Point</string>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_62">
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_35">
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_40">
+               <item>
+                <widget class="QPushButton" name="btn_camera_send_8">
+                 <property name="text">
+                  <string>check</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="btn_camera_send_7">
+                 <property name="text">
+                  <string>reset yaw</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_37">
+               <item>
+                <widget class="QPushButton" name="btn_camera_send_2">
+                 <property name="text">
+                  <string>start</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="btn_camera_send_3">
+                 <property name="text">
+                  <string>stop</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="btn_camera_send_4">
+                 <property name="text">
+                  <string>pause</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_38">
+               <item>
+                <widget class="QPushButton" name="btn_camera_send_5">
+                 <property name="text">
+                  <string>set</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_27">
+                 <property name="text">
+                  <string>velocity</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="lineEdit_flight_Yaw_2">
+                 <property name="focusPolicy">
+                  <enum>Qt::ClickFocus</enum>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_39">
+               <item>
+                <widget class="QPushButton" name="btn_camera_send_6">
+                 <property name="text">
+                  <string>set</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_28">
+                 <property name="text">
+                  <string> radius </string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="lineEdit_flight_Yaw_3">
+                 <property name="focusPolicy">
+                  <enum>Qt::ClickFocus</enum>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_39">
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_53">
+               <property name="sizeConstraint">
+                <enum>QLayout::SetMaximumSize</enum>
+               </property>
+               <property name="leftMargin">
+                <number>6</number>
+               </property>
+               <property name="rightMargin">
+                <number>6</number>
+               </property>
+               <item>
+                <layout class="QVBoxLayout" name="verticalLayout_34">
+                 <item>
+                  <layout class="QHBoxLayout" name="horizontalLayout_41">
+                   <item>
+                    <widget class="QLabel" name="label_29">
+                     <property name="text">
+                      <string>latitude </string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QLineEdit" name="lineEdit_flight_Yaw_4">
+                     <property name="focusPolicy">
+                      <enum>Qt::ClickFocus</enum>
+                     </property>
+                     <property name="text">
+                      <string/>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <layout class="QHBoxLayout" name="horizontalLayout_42">
+                   <item>
+                    <widget class="QLabel" name="label_30">
+                     <property name="text">
+                      <string>longitude</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QLineEdit" name="lineEdit_flight_Yaw_5">
+                     <property name="focusPolicy">
+                      <enum>Qt::ClickFocus</enum>
+                     </property>
+                     <property name="text">
+                      <string/>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <layout class="QHBoxLayout" name="horizontalLayout_43">
+                   <item>
+                    <widget class="QLabel" name="label_31">
+                     <property name="text">
+                      <string>Altitude </string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QLineEdit" name="lineEdit_flight_Yaw_6">
+                     <property name="focusPolicy">
+                      <enum>Qt::ClickFocus</enum>
+                     </property>
+                     <property name="text">
+                      <string/>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <widget class="QPushButton" name="pushButton_4">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>80</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>Current</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_47">
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_45">
+                 <item>
+                  <widget class="QLabel" name="label_33">
+                   <property name="text">
+                    <string> palstance</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="lineEdit_flight_Yaw_8">
+                   <property name="focusPolicy">
+                    <enum>Qt::ClickFocus</enum>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_44">
+                 <item>
+                  <widget class="QLabel" name="label_32">
+                   <property name="text">
+                    <string>radius</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="lineEdit_flight_Yaw_7">
+                   <property name="focusPolicy">
+                    <enum>Qt::ClickFocus</enum>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_48">
+               <item>
+                <spacer name="horizontalSpacer_6">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="cb_flight_autoSend_2">
+                 <property name="text">
+                  <string>clocwise</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_7">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item>
+                <widget class="QComboBox" name="comboBox_portName_3">
+                 <item>
+                  <property name="text">
+                   <string>yaw mode</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_8">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_9">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btn_webLoad">
+             <property name="text">
+              <string>Go</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_12">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QWidget" name="widget_web" native="true"/>
+        </item>
         <item row="0" column="0">
          <widget class="QGroupBox" name="groupBox_21">
           <property name="minimumSize">
@@ -4507,9 +4701,6 @@
           </layout>
          </widget>
         </item>
-        <item row="1" column="2">
-         <widget class="QWidget" name="widget_web" native="true"/>
-        </item>
        </layout>
       </widget>
       <widget class="QWidget" name="tbSwarm">
@@ -4614,17 +4805,17 @@
  <connections/>
  <buttongroups>
   <buttongroup name="btg_vrcGear"/>
+  <buttongroup name="btg_cameraRoll"/>
   <buttongroup name="btg_vrcMode"/>
-  <buttongroup name="btg_flightVL"/>
+  <buttongroup name="btg_cameraMode"/>
+  <buttongroup name="btg_flightTask"/>
   <buttongroup name="btg_flightHL"/>
   <buttongroup name="btg_flightYL"/>
+  <buttongroup name="btg_flightSM"/>
+  <buttongroup name="btg_flightVL"/>
   <buttongroup name="btg_cameraAngle"/>
   <buttongroup name="btg_flightCL"/>
   <buttongroup name="btg_cameraPitch"/>
-  <buttongroup name="btg_flightTask"/>
-  <buttongroup name="btg_cameraRoll"/>
-  <buttongroup name="btg_flightSM"/>
-  <buttongroup name="btg_cameraMode"/>
   <buttongroup name="btg_cameraYaw"/>
  </buttongroups>
 </ui>

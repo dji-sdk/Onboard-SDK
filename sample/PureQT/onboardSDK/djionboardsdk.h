@@ -40,7 +40,12 @@ class DJIonboardSDK : public QMainWindow
     static void setControlCallback(CoreAPI *This, Header *header);
     static void activationCallback(CoreAPI *This, Header *header);
 
-  private slots:
+    void updateCameraYaw();
+    void updateCameraRoll();
+    void updateCameraPitch();
+    void updateVirturalRCData();
+    void updateFlightAcc();
+private slots:
     void on_btn_portRefresh_clicked();
     void on_btn_portOpen_clicked();
     void on_comboBox_portName_currentIndexChanged(int index);
@@ -49,6 +54,7 @@ class DJIonboardSDK : public QMainWindow
     void on_btn_coreActive_clicked();
     void on_btn_coreVersion_clicked();
     void on_btn_coreSetControl_clicked();
+    void on_btn_coreRead_clicked();
     void on_tmr_Broadcast();
 
     void upDateTime();
@@ -65,6 +71,15 @@ class DJIonboardSDK : public QMainWindow
     void on_btn_vrc_down_pressed();
     void on_btn_vrc_up_pressed();
 
+    void on_btn_vrc_left_pressed();
+    void on_btn_vrc_right_pressed();
+    void on_btn_vrc_w_pressed();
+    void on_btn_vrc_A_pressed();
+    void on_btn_vrc_S_pressed();
+    void on_btn_vrc_D_pressed();
+    void on_btn_vrcRead_clicked();
+
+    void on_btn_cameraRead_clicked();
     void on_btn_camera_0_clicked();
     void on_btn_camera_8_pressed();
     void on_btn_camera_2_pressed();
@@ -122,18 +137,16 @@ class DJIonboardSDK : public QMainWindow
 
     void autosend(); //! @todo rename add fligh signature.
 
-    void on_btn_vrc_left_pressed();
-    void on_btn_vrc_right_pressed();
-    void on_btn_vrc_w_pressed();
-    void on_btn_vrc_A_pressed();
-    void on_btn_vrc_S_pressed();
-    void on_btn_vrc_D_pressed();
+
 
     void on_btn_webLoad_clicked();
 
-    void on_btn_coreRead_clicked();
 
-  private:
+
+
+    void on_btn_FlightAcc_clicked();
+
+private:
     Ui::DJIonboardSDK *ui;
 
     CoreAPI *api;

@@ -5,34 +5,41 @@
 
 #ifdef WIN32
 #define __func__ __FUNCTION__
-#endif
+#endif //WIN32
 #ifdef QT
 #define APIprintf qDebug
 #include <QDebug>
 #else
 #define APIprintf printf
-#endif
+#endif //QT
+#ifdef __GNUC__
+#define __UNUSED __attribute__((__unused__))
+#else
+#define __UNUSED
+#endif //__GNUC__
 
 #ifdef API_DEBUG_DATA
 #define API_DEBUG(format, ...)                                                 \
     APIprintf("DEBUG %s,line %d: " format, __func__, __LINE__, ##__VA_ARGS__)
 #else
-#define API_DEBUG(format, ...) 0
+#define API_DEBUG(format, ...)
 #endif
 
 #ifdef API_ERROR_DATA
 #define API_ERROR(format, ...)                                                 \
     APIprintf("Error %s,line %d: " format, __func__, __LINE__, ##__VA_ARGS__)
 #else
-#define API_ERROR(format, ...) 0
+#define API_ERROR(format, ...)
 #endif
 
 #ifdef API_STATUS_DATA
 #define API_STATUS(format, ...)                                                \
     APIprintf("Status %s,line %d: " format, __func__, __LINE__, ##__VA_ARGS__)
 #else
-#define API_STATUS(format, ...) 0
+#define API_STATUS(format, ...)
 #endif
+
+
 
 namespace DJI
 {

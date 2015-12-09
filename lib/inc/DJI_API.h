@@ -64,7 +64,7 @@ enum CONTROL_CODE
     CODE_SETCONTROL = 0,
     CODE_TASK = 1,
     CODE_STATUS = 2,
-    CODE_CONTORL = 3,
+    CODE_CONTROL = 3,
     CODE_SETARM = 5,
 };
 
@@ -120,8 +120,8 @@ class CoreAPI
     void getVersion(CallBack callback = 0);
     void sendToMobile(uint8_t *data, uint8_t len, CallBack callback = 0);
     void setBroadcastFeq(uint8_t *data, CallBack callback = 0);
-    void setKey(const char *key);
     void setActivation(bool isActivated);
+    void setKey(const char *key);
 
     //! @note Core read API
     BroadcastData getBroadcastData() const;
@@ -129,7 +129,6 @@ class CoreAPI
     FlightStatus getFlightStatus() const;
     CtrlInfoData getCtrlInfo() const;
     BatteryData getBatteryCapacity() const;
-    CommonData getGroundAcc() const;
 
     /*! @code Flight contorl
      *  @note These functions is based on API functions above.
@@ -216,58 +215,8 @@ class CoreAPI
     ActivateData getAccountData() const;
     void setAccountData(const ActivateData &value);
 
-private:
+  private:
     HardDriver *driver;
-};
-
-class Flight
-{
-public:
-    Flight(CoreAPI *ContorlAPI = 0);
-
-    void task(TASK taskname, CallBack TaskCallback = 0);
-    void setArm(bool enable, CallBack ArmCallback = 0);
-    void setFlight(FlightData *data);
-
-  public: //! @note callbacks
-    static void armCallback(CoreAPI *This, Header *header);
-    static void taskCallback(CoreAPI *This, Header *header);
-
-  public: //! @note Access method
-    CoreAPI *getApi() const;
-    void setApi(CoreAPI *value);
-
-  private:
-    CoreAPI *api;
-    TaskData taskData;
-};
-
-class Camera
-{
-  public:
-    enum CAMERA_CODE
-    {
-        CODE_GIMBAL_SPEED = 0x1A,
-        CODE_GIMBAL_ANGLE = 0x1B,
-        CODE_CAMERA_SHOT = 0x20,
-        CODE_CAMERA_VIDEO_START = 0x21,
-        CODE_CAMERA_VIDEO_STOP = 0x22
-    };
-
-  public:
-    Camera(CoreAPI *ContorlAPI = 0);
-
-    //! @note all camera control functions are none-callback function.
-    void setCamera(CAMERA_CODE camera_cmd);
-    void setGimbalAngle(GimbalAngleData *data);
-    void setGimbalSpeed(GimbalSpeedData *data);
-
-  public: //! @note Access method
-    CoreAPI *getApi() const;
-    void setApi(CoreAPI *value);
-
-  private:
-    CoreAPI *api;
 };
 
 class Mission
@@ -308,6 +257,8 @@ class VirtualRC
     void sendData(VirtualRCData Data);
     void sendData();
     void resetData();
+
+    RadioData getRCdata() const;
 
   public:
     CoreAPI *getApi() const;

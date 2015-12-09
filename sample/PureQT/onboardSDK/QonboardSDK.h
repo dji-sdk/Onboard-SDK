@@ -2,6 +2,8 @@
 #define QONBOARDSDK_H
 
 #include <DJI_HardDriver.h>
+#include <DJI_Camera.h>
+#include <DJI_Flight.h>
 #include <DJI_API.h>
 #include <QSerialPort>
 #include <QSerialPortInfo>

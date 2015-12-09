@@ -1,4 +1,4 @@
-#include "DJI_API.h"
+#include "DJI_Flight.h"
 
 using namespace DJI::onboardSDK;
 
@@ -27,11 +27,16 @@ void Flight::setArm(bool enable, CallBack ArmCallback)
 
 void Flight::setFlight(FlightData *data)
 {
-    api->send(0, 1, SET_CONTROL, CODE_CONTORL, (unsigned char *)data,
+    api->send(0, 1, SET_CONTROL, CODE_CONTROL, (unsigned char *)data,
               sizeof(FlightData));
 }
 
-void Flight::armCallback(CoreAPI *This, Header *header)
+CommonData Flight::getAcceleration() const
+{
+    return api->getBroadcastData().a;
+}
+
+void Flight::armCallback(CoreAPI *This __UNUSED, Header *header)
 {
     unsigned short ack_data;
     if (header->length - EXC_DATA_SIZE <= 2)
@@ -48,7 +53,7 @@ void Flight::armCallback(CoreAPI *This, Header *header)
     }
 }
 
-void Flight::taskCallback(CoreAPI *This, Header *header)
+void Flight::taskCallback(CoreAPI *This __UNUSED, Header *header)
 {
     unsigned short ack_data;
     if (header->length - EXC_DATA_SIZE <= 2)

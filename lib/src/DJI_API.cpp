@@ -129,7 +129,7 @@ void CoreAPI::setAccountData(const ActivateData &value)
 void CoreAPI::setControl(bool enable, CallBack callback)
 {
     unsigned char data = enable ? 1 : 0;
-    send(2, 1, SET_CONTROL, API_CTRL_MANAGEMENT, &data, 1,
+    send(2, 1, SET_CONTROL, CODE_SETCONTROL, &data, 1,
          callback ? callback : CoreAPI::setControlCallback, 500, 2);
 }
 
@@ -202,7 +202,7 @@ void CoreAPI::activateCallback(CoreAPI *This, Header *header)
     }
 }
 
-void CoreAPI::sendToMobileCallback(CoreAPI *This, Header *header)
+void CoreAPI::sendToMobileCallback(CoreAPI *This __UNUSED, Header *header)
 {
     unsigned short ack_data = 0xFFFF;
     if (header->length - EXC_DATA_SIZE <= 2)
@@ -216,7 +216,7 @@ void CoreAPI::sendToMobileCallback(CoreAPI *This, Header *header)
                   header->sessionID, header->sequence_number);
 }
 
-void CoreAPI::setFrequencyCallback(CoreAPI *This, Header *header)
+void CoreAPI::setFrequencyCallback(CoreAPI *This __UNUSED, Header *header)
 {
     unsigned short ack_data = 0xFFFF;
 
@@ -269,13 +269,13 @@ void CoreAPI::setControlCallback(CoreAPI *This, Header *header)
             break;
         case 0x0003:
             API_STATUS("obtain control running\n");
-            This->send(2, 1, SET_CONTROL, API_CTRL_MANAGEMENT, &data, 1,
+            This->send(2, 1, SET_CONTROL, CODE_SETCONTROL, &data, 1,
                        CoreAPI::setControlCallback, 500, 2);
             break;
         case 0x0004:
             API_STATUS("release control running\n");
             data = 0;
-            This->send(2, 1, SET_CONTROL, API_CTRL_MANAGEMENT, &data, 1,
+            This->send(2, 1, SET_CONTROL, CODE_SETCONTROL, &data, 1,
                        CoreAPI::setControlCallback, 500, 2);
             break;
         case 0x00C9:
@@ -286,31 +286,6 @@ void CoreAPI::setControlCallback(CoreAPI *This, Header *header)
             break;
     }
 }
-
-Camera::Camera(CoreAPI *ContorlAPI) { api = ContorlAPI; }
-
-void Camera::setCamera(Camera::CAMERA_CODE camera_cmd)
-{
-    unsigned char send_data = 0;
-    api->send(0, 1, SET_CONTROL, camera_cmd, &send_data, 1);
-}
-
-void Camera::setGimbalAngle(GimbalAngleData *data)
-{
-    api->send(0, 1, SET_CONTROL, Camera::CODE_GIMBAL_ANGLE,
-              (unsigned char *)data, sizeof(GimbalAngleData));
-}
-
-void Camera::setGimbalSpeed(GimbalSpeedData *data)
-{
-    data->reserved = 0x80;
-    api->send(0, 1, SET_CONTROL, Camera::CODE_GIMBAL_SPEED,
-              (unsigned char *)data, sizeof(GimbalSpeedData));
-}
-
-CoreAPI *Camera::getApi() const { return api; }
-
-void Camera::setApi(CoreAPI *value) { api = value; }
 
 CoreAPI *Mission::getApi() const { return api; }
 

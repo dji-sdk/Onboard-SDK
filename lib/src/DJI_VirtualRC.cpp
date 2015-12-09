@@ -34,6 +34,11 @@ void VirtualRC::resetData()
              1024, 1024, 1024, 1024, 1024, 1024, 1024, 1024 };
 }
 
+RadioData VirtualRC::getRCdata() const
+{
+    return api->getBroadcastData().rc;
+}
+
 CoreAPI *VirtualRC::getApi() const { return api; }
 
 void VirtualRC::setApi(CoreAPI *value) { api = value; }

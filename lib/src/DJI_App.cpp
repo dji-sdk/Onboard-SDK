@@ -65,11 +65,6 @@ QuaternionData DJI::onboardSDK::CoreAPI::getQuaternion() const
     return broadcastData.q;
 }
 
-CommonData DJI::onboardSDK::CoreAPI::getGroundAcc() const
-{
-    return broadcastData.a;
-}
-
 VelocityData DJI::onboardSDK::CoreAPI::getGroundSpeed() const
 {
     return broadcastData.v;
