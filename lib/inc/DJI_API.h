@@ -105,7 +105,10 @@ class CoreAPI
 
   public:
     /*! @code CoreAPI*/
+    //! @note init API
     CoreAPI(HardDriver *Driver, ReceiveHandler user_cmd_handler_entrance = 0);
+
+    //! @note Core Control API
     void ack(req_id_t req_id, unsigned char *ackdata, int len);
     void send(unsigned char session_mode, unsigned char is_enc, CMD_SET cmd_set,
               unsigned char cmd_id, void *pdata, int len,
@@ -117,21 +120,23 @@ class CoreAPI
     void getVersion(CallBack callback = 0);
     void sendToMobile(uint8_t *data, uint8_t len, CallBack callback = 0);
     void setBroadcastFeq(uint8_t *data, CallBack callback = 0);
+    void setKey(const char *key);
+    void setActivation(bool isActivated);
+
+    //! @note Core read API
+    BroadcastData getBroadcastData() const;
+    TimeStampData getTime() const;
+    FlightStatus getFlightStatus() const;
+    CtrlInfoData getCtrlInfo() const;
+    BatteryData getBatteryCapacity() const;
+    CommonData getGroundAcc() const;
 
     /*! @code Flight contorl
      *  @note These functions is based on API functions above.
      *  @todo move to a new class
      */
-
-    QuaternionData getQuaternion() const;
-    BroadcastData getBroadcastData() const;
-    TimeStampData getTime() const;
-    FlightStatus getFlightStatus() const;
     VelocityData getGroundSpeed() const;
-    CtrlInfoData getCtrlInfo() const;
-    BatteryData getBatteryCapacity() const;
-    CommonData getGroundAcc() const;
-
+    QuaternionData getQuaternion() const;
     /*! @code user functions entrance*/
     void setTransparentTransmissionCallback(
         TransparentHandler transparentHandlerEntrance);
@@ -203,19 +208,21 @@ class CoreAPI
     void verifyHead(SDKFilter *p_filter);
     void verifyData(SDKFilter *p_filter);
     void callApp(SDKFilter *p_filter);
-    void setKey(const char *key);
 
   public:
     HardDriver *getDriver() const;
     void setDriver(HardDriver *value);
 
-  private:
+    ActivateData getAccountData() const;
+    void setAccountData(const ActivateData &value);
+
+private:
     HardDriver *driver;
 };
 
 class Flight
 {
-  public:
+public:
     Flight(CoreAPI *ContorlAPI = 0);
 
     void task(TASK taskname, CallBack TaskCallback = 0);

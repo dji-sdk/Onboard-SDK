@@ -115,6 +115,16 @@ FlightStatus CoreAPI::getFlightStatus() const
 {
     return broadcastData.status;
 }
+ActivateData CoreAPI::getAccountData() const
+{
+    return accountData;
+}
+
+void CoreAPI::setAccountData(const ActivateData &value)
+{
+    accountData = value;
+}
+
 
 void CoreAPI::setControl(bool enable, CallBack callback)
 {
@@ -168,9 +178,9 @@ void CoreAPI::activateCallback(CoreAPI *This, Header *header)
             {
                 API_STATUS("Activation Successfully\n");
 
-                This->driver->lockMSG();
+                This->getDriver()->lockMSG();
                 This->broadcastData.activation = 1;
-                This->driver->freeMSG();
+                This->getDriver()->freeMSG();
 
                 if (This->accountData.app_key)
                     This->setKey(This->accountData.app_key);
@@ -179,9 +189,9 @@ void CoreAPI::activateCallback(CoreAPI *This, Header *header)
             {
                 API_ERROR("activate code:0x%X\n", ack_data);
 
-                This->driver->lockMSG();
+                This->getDriver()->lockMSG();
                 This->broadcastData.activation = 0;
-                This->driver->freeMSG();
+                This->getDriver()->freeMSG();
             }
         }
     }

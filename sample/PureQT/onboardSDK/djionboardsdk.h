@@ -38,12 +38,9 @@ class DJIonboardSDK : public QMainWindow
   public:
     static DJIonboardSDK *sdk;
     static void setControlCallback(CoreAPI *This, Header *header);
+    static void activationCallback(CoreAPI *This, Header *header);
 
-    void resetCameraAngle();
-    void upDateTime();
-    void upDateCapacity();
-    void upDateFlightStatus();
-private slots:
+  private slots:
     void on_btn_portRefresh_clicked();
     void on_btn_portOpen_clicked();
     void on_comboBox_portName_currentIndexChanged(int index);
@@ -52,16 +49,21 @@ private slots:
     void on_btn_coreActive_clicked();
     void on_btn_coreVersion_clicked();
     void on_btn_coreSetControl_clicked();
+    void on_tmr_Broadcast();
+
+    void upDateTime();
+    void upDateCapacity();
+    void upDateFlightStatus();
+    void updateControlDevice();
 
     void on_tmr_VRC_autosend();
     void on_btn_VRC_resetAll_clicked();
     void on_btn_VRC_resetLeft_clicked();
     void on_btn_VRC_resetRight_clicked();
-    void on_btn_virtualRC_send_clicked();//! @todo rename
+    void on_btn_virtualRC_send_clicked(); //! @todo rename
     void on_btn_virtualRC_init_clicked();
     void on_btn_vrc_down_pressed();
     void on_btn_vrc_up_pressed();
-
 
     void on_btn_camera_0_clicked();
     void on_btn_camera_8_pressed();
@@ -83,6 +85,7 @@ private slots:
     void on_btg_cameraYaw(QAbstractButton *button);
     void on_btg_cameraRoll(QAbstractButton *button);
     void on_btg_cameraPitch(QAbstractButton *button);
+    void resetCameraAngle();
     void updateCameraFlag();
 
     void on_btn_flight_frount_pressed();
@@ -117,7 +120,7 @@ private slots:
     void on_cb_flight_autoSend_clicked(bool checked);
     void on_btn_flight_dataReset_clicked();
 
-    void autosend();//! @todo rename add fligh signature.
+    void autosend(); //! @todo rename add fligh signature.
 
     void on_btn_vrc_left_pressed();
     void on_btn_vrc_right_pressed();
@@ -129,8 +132,8 @@ private slots:
     void on_btn_webLoad_clicked();
 
     void on_btn_coreRead_clicked();
-    void on_tmr_Broadcast();
-private:
+
+  private:
     Ui::DJIonboardSDK *ui;
 
     CoreAPI *api;
@@ -157,7 +160,7 @@ private:
 
     QTimer *timerBroadcast;
     QWebView *webView;
-//    QWebEngineView *webView;
+    //    QWebEngineView *webView;
 };
 
 #endif // DJIONBOARDSDK_H

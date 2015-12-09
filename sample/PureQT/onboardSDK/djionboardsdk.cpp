@@ -224,6 +224,46 @@ void DJIonboardSDK::setControlCallback(CoreAPI *This, Header *header)
     //    CoreAPI::setControlCallback(This, header);
 }
 
+void DJIonboardSDK::activationCallback(CoreAPI *This, Header *header)
+{
+    volatile unsigned short ack_data;
+    if (header->length - EXC_DATA_SIZE <= 2)
+    {
+        memcpy((unsigned char *)&ack_data,
+               ((unsigned char *)header) + sizeof(Header),
+               (header->length - EXC_DATA_SIZE));
+        if (ack_data == SDK_ACTIVATE_NEW_DEVICE)
+        {
+            sdk->ui->btn_coreActive->setText("New Device");
+        }
+        else
+        {
+            if (ack_data == SDK_ACTIVATE_SUCCESS)
+            {
+                sdk->ui->btn_coreActive->setText("Success");
+                This->getDriver()->lockMSG();
+                This->setActivation(true);
+                This->getDriver()->freeMSG();
+
+                if (This->getAccountData().app_key)
+                    This->setKey(This->getAccountData().app_key);
+            }
+            else
+            {
+                sdk->ui->btn_coreActive->setText("Error");
+
+                This->getDriver()->lockMSG();
+                This->setActivation(false);
+                This->getDriver()->freeMSG();
+            }
+        }
+    }
+    else
+    {
+       sdk->ui->btn_coreActive->setText("Decode Error");
+    }
+}
+
 void DJIonboardSDK::on_btn_portRefresh_clicked() { refreshPort(); }
 
 void DJIonboardSDK::setBaudrate()
@@ -294,7 +334,7 @@ void DJIonboardSDK::on_btn_coreActive_clicked()
         0x12; //! @note for ios verification
     *key = ui->lineEdit_Key->text().toLocal8Bit();
     data.app_key = key->data(); //! @warning memory leak fixme
-    api->activate(&data);
+    api->activate(&data,DJIonboardSDK::activationCallback);
 }
 
 void DJIonboardSDK::on_btn_coreVersion_clicked() { api->getVersion(); }
@@ -791,11 +831,18 @@ void DJIonboardSDK::on_btn_coreRead_clicked()
     upDateTime();
     upDateCapacity();
     upDateFlightStatus();
+    updateControlDevice();
 }
 
 void DJIonboardSDK::upDateFlightStatus()
 {
     ui->le_coreFlightStatus->setText(QString::number((api->getFlightStatus())));
+}
+
+void DJIonboardSDK::updateControlDevice()
+{
+    ui->le_coreControlDevice->setText(
+        QString::number((api->getCtrlInfo().cur_ctrl_dev_in_navi_mode)));
 }
 
 void DJIonboardSDK::on_tmr_Broadcast()
@@ -804,8 +851,8 @@ void DJIonboardSDK::on_tmr_Broadcast()
         upDateTime();
     if (ui->cb_coreCapacity->isChecked())
         upDateCapacity();
-    if(ui->cb_coreFlightStatus->isChecked())
+    if (ui->cb_coreFlightStatus->isChecked())
         upDateFlightStatus();
-    if(ui->cb_coreControlDevice->isChecked())
-        ui->le_coreControlDevice->setText(QString::number((api->getCtrlInfo().cur_ctrl_dev_in_navi_mode)));
+    if (ui->cb_coreControlDevice->isChecked())
+        updateControlDevice();
 }

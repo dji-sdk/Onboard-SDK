@@ -197,6 +197,14 @@ void DJI::onboardSDK::CoreAPI::setKey(const char *key)
     filter.enc_enabled = 1;
 }
 
+void CoreAPI::setActivation(bool isActivated)
+{
+    if(isActivated)
+       broadcastData.activation = 1;
+               else
+               broadcastData.activation = 0;
+}
+
 unsigned short calculateLength(unsigned short size, unsigned short encrypt_flag)
 {
     unsigned short len;

@@ -58,7 +58,7 @@
           <property name="title">
            <string>Core API</string>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout">
+          <layout class="QVBoxLayout" name="verticalLayout_47">
            <item>
             <widget class="QGroupBox" name="groupBox3">
              <property name="title">
@@ -819,13 +819,24 @@
              <property name="title">
               <string>CoreStatus</string>
              </property>
-             <layout class="QVBoxLayout" name="verticalLayout_47">
+             <layout class="QVBoxLayout" name="verticalLayout">
               <item>
-               <widget class="QPushButton" name="btn_coreRead">
-                <property name="text">
-                 <string>Read</string>
-                </property>
-               </widget>
+               <layout class="QHBoxLayout" name="horizontalLayout_57">
+                <item>
+                 <widget class="QPushButton" name="btn_coreRead">
+                  <property name="text">
+                   <string>Read</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="checkBox_14">
+                  <property name="text">
+                   <string>Record</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
               </item>
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_115">
@@ -2397,7 +2408,7 @@
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_107">
                 <item>
-                 <widget class="QPushButton" name="pushButton_17">
+                 <widget class="QPushButton" name="btn_cameraRead">
                   <property name="text">
                    <string>Read</string>
                   </property>
@@ -2406,7 +2417,7 @@
                 <item>
                  <widget class="QCheckBox" name="checkBox_10">
                   <property name="text">
-                   <string>Auto Record</string>
+                   <string>Record</string>
                   </property>
                  </widget>
                 </item>
@@ -2415,9 +2426,15 @@
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_108">
                 <item>
-                 <widget class="QLabel" name="label_74">
+                 <widget class="QCheckBox" name="cb_cameraYaw">
                   <property name="text">
                    <string> Yaw </string>
+                  </property>
+                  <property name="autoRepeat">
+                   <bool>false</bool>
+                  </property>
+                  <property name="autoExclusive">
+                   <bool>false</bool>
                   </property>
                  </widget>
                 </item>
@@ -2436,9 +2453,15 @@
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_109">
                 <item>
-                 <widget class="QLabel" name="label_75">
+                 <widget class="QCheckBox" name="cb_cameraRoll">
                   <property name="text">
                    <string> Roll</string>
+                  </property>
+                  <property name="autoRepeat">
+                   <bool>false</bool>
+                  </property>
+                  <property name="autoExclusive">
+                   <bool>false</bool>
                   </property>
                  </widget>
                 </item>
@@ -2457,9 +2480,15 @@
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_110">
                 <item>
-                 <widget class="QLabel" name="label_76">
+                 <widget class="QCheckBox" name="cb_cameraPitch">
                   <property name="text">
                    <string>Pitch</string>
+                  </property>
+                  <property name="autoRepeat">
+                   <bool>false</bool>
+                  </property>
+                  <property name="autoExclusive">
+                   <bool>false</bool>
                   </property>
                  </widget>
                 </item>
@@ -2733,7 +2762,7 @@
                      <item>
                       <widget class="QCheckBox" name="checkBox_9">
                        <property name="text">
-                        <string>Auto Record</string>
+                        <string>Record</string>
                        </property>
                       </widget>
                      </item>
@@ -4585,17 +4614,17 @@
  <connections/>
  <buttongroups>
   <buttongroup name="btg_vrcGear"/>
+  <buttongroup name="btg_vrcMode"/>
+  <buttongroup name="btg_flightVL"/>
+  <buttongroup name="btg_flightHL"/>
+  <buttongroup name="btg_flightYL"/>
+  <buttongroup name="btg_cameraAngle"/>
+  <buttongroup name="btg_flightCL"/>
   <buttongroup name="btg_cameraPitch"/>
   <buttongroup name="btg_flightTask"/>
-  <buttongroup name="btg_cameraMode"/>
-  <buttongroup name="btg_flightYL"/>
-  <buttongroup name="btg_vrcMode"/>
-  <buttongroup name="btg_flightCL"/>
   <buttongroup name="btg_cameraRoll"/>
-  <buttongroup name="btg_flightVL"/>
-  <buttongroup name="btg_cameraYaw"/>
-  <buttongroup name="btg_cameraAngle"/>
-  <buttongroup name="btg_flightHL"/>
   <buttongroup name="btg_flightSM"/>
+  <buttongroup name="btg_cameraMode"/>
+  <buttongroup name="btg_cameraYaw"/>
  </buttongroups>
 </ui>
