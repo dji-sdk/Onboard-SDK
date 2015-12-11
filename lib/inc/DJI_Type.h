@@ -15,7 +15,7 @@
 #endif // WIN32
 
 #define APIprintf(...)                                                         \
-    sprintf_s(DJI::onboardSDK::buffer, bufsize, ##__VA_ARGS__)
+    sprintf(DJI::onboardSDK::buffer, ##__VA_ARGS__)
 
 #define API_LOG(driver, title, fmt, ...)                                       \
     {                                                                          \
