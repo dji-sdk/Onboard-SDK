@@ -1,9 +1,10 @@
 /*! @brief
- *  @file DJI_Pro_API.h
- *  @version 1.0
+ *  @file DJI_API.h
+ *  @version 3.0
  *  @date Nov 15, 2015
  *
  *  @abstract
+ *  Core API for DJI onboardSDK library
  *
  *  @attention
  *  Project configuration:
@@ -16,8 +17,8 @@
  *
  * */
 
-#ifndef DJI_PRO_API_H
-#define DJI_PRO_API_H
+#ifndef DJI_API_H
+#define DJI_API_H
 #include "DJI_Type.h"
 
 #include "DJI_HardDriver.h"
@@ -29,10 +30,8 @@ namespace onboardSDK
 class CoreAPI;
 class Flight;
 class Camera;
-class Mission;
-class Swarm;
-class VirtualRC;
 
+//! @todo sort enum and move to a new file
 enum TASK
 {
     TASK_GOHOME = 1,
@@ -40,17 +39,28 @@ enum TASK
     TASK_LANDING = 6
 };
 
+enum ACK_CODE
+{
+    ACK_SUCCESS = 0x0000,
+    ACK_KEYERROR = 0xFF00,
+    ACK_NO_AUTHORIZATION = 0xFF01,
+    ACK_NO_RIGHTS = 0xFF02,
+    ACK_NO_RESPONSE = 0xFFFF
+};
+
 enum CMD_SET
 {
     SET_ACTIVATION = 0x00,
     SET_CONTROL = 0x01,
-    SET_BROADCAST = 0x02
+    SET_BROADCAST = 0x02,
+    SET_VIRTUALRC = 0x05
 };
 
 enum ACTIVATION_CODE
 {
     CODE_GETVERSION = 0,
     CODE_ACTIVATE = 1,
+    CODE_FREQUENCY = 0x10,
     CODE_TOMOBILE = 0xFE
 };
 
@@ -59,29 +69,23 @@ enum CONTROL_CODE
     CODE_SETCONTROL = 0,
     CODE_TASK = 1,
     CODE_STATUS = 2,
-    CODE_CONTORL = 3,
-    CODE_GIMBAL_SPEED = 0x1A,
-    CODE_GIMBAL_ANGLE = 0x1B,
-    CODE_CAMERA_SHOT = 0x20,
-    CODE_CAMERA_VIDEO_START = 0x21,
-    CODE_CAMERA_VIDEO_STOP = 0x22
+    CODE_CONTROL = 3,
+    CODE_SETARM = 5,
 };
 
 enum BROADCAST_CODE
 {
     CODE_BROADCAST = 0x00,
     CODE_LOSTCTRL = 0x01,
-    CODE_FROMMOBILE = 0x02
+    CODE_FROMMOBILE = 0x02,
+    CODE_MISSION = 0x03,
+    CODE_WAYPOINT = 0x04
 };
 
-/*! @note overdefined in CONTROL_CODE
- * Just using for test
- * */
-enum CAMERA
+enum VIRTUALRC_CODE
 {
-    CAMERA_SHOT = 0x20,
-    CAMERA_VIDEO_START = 0x21,
-    CAMERA_VIDEO_STOP = 0x22
+    CODE_VIRTUALRC_SETTINGS,
+    CODE_VIRTUALRC_DATA
 };
 
 class CoreAPI
@@ -94,82 +98,78 @@ class CoreAPI
      *
      * @note
      * if you can read data in a interrupt, try to pass data through
-     *byteHandler();
+     * byteHandler() or byteStreamHandler()
      * */
   public:
     void sendPoll(void);
     void readPoll(void);
+    void callbackPoll(void);//! @todo not available yet
+    void autoResendPoll(void);//! @todo not available yet
 
+    //! @todo modify to a new algorithm
     void byteHandler(const uint8_t in_data);
+    void byteStreamHandler(uint8_t *buffer, size_t size);
 
   public:
-    /*! @code API*/
-    CoreAPI(HardDriver *Driver, ReceiveHandler user_cmd_handler_entrance = 0);
-    void send(unsigned char session_mode, unsigned char is_enc, CMD_SET cmd_set,
-              unsigned char cmd_id, unsigned char *pdata, int len,
-              CallBack ack_callback, int timeout, int retry_time);
-    void send(Command *parameter);
+    /*! @code CoreAPI*/
+    //! @note init API
+    CoreAPI(HardDriver *Driver, bool useCallbackThread = false, CallBack userRecvCallback = 0);
+
+    //! @note Core Control API
     void ack(req_id_t req_id, unsigned char *ackdata, int len);
-    void getVersion(Get_API_Version_Notify user_notice_entrance);
-    void task(TASK taskname, CommandResult user_notice_entrance);
-    void activate(ActivateData_t *p_user_data,
-                  CommandResult user_notice_entrance);
-    void sendToMobile(unsigned char *data, unsigned char len,
-                      CommandResult user_notice_entrance);
-    void setControl(unsigned char cmd, CommandResult user_notice_entrance);
+    void send(unsigned char session_mode, unsigned char is_enc, CMD_SET cmd_set,
+              unsigned char cmd_id, void *pdata, int len,
+              CallBack ack_callback = 0, int timeout = 0, int retry_time = 1);
+    void send(Command *parameter);
 
-    /*! @code Flight contorl
-     *  @note These functions is based on API functions above.
-     *  @todo move to a new class
-     */
-    void setAttitude(AttitudeData_t *p_user_data);
-    void setGimbalAngle(GimbalAngleData *p_user_data);
-    void setGimbalSpeed(GimbalSpeedData *p_user_data);
-    void setCamera(CAMERA camera_cmd);
+    void activate(ActivateData *data, CallBack callback = 0);
+    void setControl(bool enable, CallBack callback = 0);
+    void getVersion(CallBack callback = 0);
+    void sendToMobile(uint8_t *data, uint8_t len, CallBack callback = 0);
+    void setBroadcastFeq(uint8_t *data, CallBack callback = 0);
+    void setActivation(bool isActivated);
+    void setKey(const char *key);
 
-    QuaternionData getQuaternion() const;
+    //! @note Core read API
     BroadcastData getBroadcastData() const;
+    TimeStampData getTime() const;
+    FlightStatus getFlightStatus() const;
     CtrlInfoData getCtrlInfo() const;
     BatteryData getBatteryCapacity() const;
-    CommonData getGroundAcc() const;
-    SpeedData getGroundSpeed() const;
 
-    /*! @code user functions entrance*/
+    /*! @todo user functions entrance*/
     void setTransparentTransmissionCallback(
         TransparentHandler transparentHandlerEntrance);
-    void setBroadcastCallback(BroadcastHandler broadcastHandlerEntrance);
+
+    //! @note call back functions
+  public:
+    void setBroadcastCallback(CallBack callback);
+
+    static void activateCallback(CoreAPI *This, Header *header);
+    static void getVersionCallback(CoreAPI *This, Header *header);
+    static void setControlCallback(CoreAPI *This, Header *header);
+    static void sendToMobileCallback(CoreAPI *This, Header *header);
+    static void setFrequencyCallback(CoreAPI *This, Header *header);
 
   private:
     BroadcastData broadcastData;
 
   private:
-    //! @note reconstructed from DJI_Pro_App.cpp
     unsigned char encodeSendData[BUFFER_SIZE];
     unsigned char encodeACK[ACK_SIZE];
 
-    CommandResult taskResult;
-    CommandResult activateResult;
-    CommandResult toMobileResult;
-    CommandResult setControlResult;
-
-    ReceiveHandler recvHandler;
-    BroadcastHandler broadcastHandler;
+    CallBack cbList[CALLBACK_LIST_NUM];
+    CallBack broadcastCallback;
+    CallBack recvCallback;
+    uint8_t cblistTail;
     TransparentHandler transparentHandler;
 
-    TaskData_t taskData;
-    VersionData_t versionData;
-    ActivateData_t accountData;
+    VersionData versionData;
+    ActivateData accountData;
 
     unsigned short seq_num;
 
     SDKFilter filter;
-
-  private:
-    static void taskCallback(CoreAPI *This, Header *header);
-    static void activateCallback(CoreAPI *This, Header *header);
-    static void getVersionCallback(CoreAPI *This, Header *header);
-    static void setControlCallback(CoreAPI *This, Header *header);
-    static void sendToMobileCallback(CoreAPI *This, Header *header);
 
   private:
     void recvReqData(Header *header);
@@ -212,62 +212,22 @@ class CoreAPI
     void verifyHead(SDKFilter *p_filter);
     void verifyData(SDKFilter *p_filter);
     void callApp(SDKFilter *p_filter);
-    void setKey(const char *key);
+    void storeData(SDKFilter *p_filter, unsigned char in_data);
+    bool decodeACKStatus(unsigned short ack);
 
   public:
     HardDriver *getDriver() const;
     void setDriver(HardDriver *value);
 
+    ActivateData getAccountData() const;
+    void setAccountData(const ActivateData &value);
+
   private:
     HardDriver *driver;
-};
-
-class Flight
-{
-public:
-    Flight(CoreAPI* ContorlAPI);
-private:
-    Flight();
-    CoreAPI* api;
-};
-
-class Camera
-{
-public:
-    Camera(CoreAPI* ContorlAPI);
-private:
-    Camera();
-    CoreAPI* api;
-};
-
-class Mission
-{
-public:
-    Mission(CoreAPI* ContorlAPI);
-private:
-    Mission();
-    CoreAPI* api;
-};
-
-class Swarm
-{
-public:
-    Swarm(CoreAPI* ContorlAPI);
-private:
-    Swarm();
-    CoreAPI* api;
-};
-
-class VirtualRC
-{
-public:
-    VirtualRC(CoreAPI* ContorlAPI);
-private:
-    VirtualRC();
-    CoreAPI* api;
+    bool CallbackThread;
 };
 
 } // namespace onboardSDK
 } // namespace DJI
 
-#endif // DJI_PRO_API_H
+#endif // DJI_API_H
