@@ -1,16 +1,27 @@
-/*
- * DJI_Pro_Link.h
+/*! @brief
+ *  @file DJI_Link.h
+ *  @version 3.0
+ *  @date Dec 4, 2015
  *
- *  Created on: Mar 12, 2015
- *      Author: wuyuwei
- *  Modified on: Nov 11, 2015
- *  by william.wu
- */
-
-#ifndef DJI_PRO_LINK_H_
-#define DJI_PRO_LINK_H_
-
-#define DJI_SDK_PRO_VER 0
+ *  @abstract
+ *
+ *  @attention
+ *  Project configuration:
+ *
+ *  @version features:
+ *  -* @version V3.0
+ *  -* DJI-onboard-SDK for Windows,QT,STM32,ROS,Cmake
+ *  -* @date Nov 15, 2015
+ *  -* @author william.wu
+ *  -*
+ *  -* @version V2.0
+ *  -* C-like DJI-onboard-SDK library
+ *  -* @date Mar 12, 2015
+ *  -* @author wuyuwei
+ *
+ * */
+#ifndef DJI_LINK_H
+#define DJI_LINK_H
 
 #define ACK_SESSION_IDLE 0
 #define ACK_SESSION_PROCESS 1
@@ -20,4 +31,4 @@
 
 #include "DJI_Type.h"
 
-#endif /* DJI_PRO_LINK_H_ */
+#endif // DJI_LINK_H

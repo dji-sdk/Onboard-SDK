@@ -1,38 +1,59 @@
-#ifndef DJI_PRO_TYPE
-#define DJI_PRO_TYPE
+#ifndef DJI_TYPE
+#define DJI_TYPE
 
 #include "DJI_Config.h"
+#include <stdio.h>
+
+#ifdef __GNUC__
+#define __UNUSED __attribute__((__unused__))
+#else
+#define __UNUSED
+#endif //__GNUC__
 
 #ifdef WIN32
 #define __func__ __FUNCTION__
-#endif
+#endif // WIN32
+
+#define APIprintf(...)                                                         \
+    sprintf_s(DJI::onboardSDK::buffer, bufsize, ##__VA_ARGS__)
+
+#define API_LOG(driver, title, fmt, ...)                                       \
+    {                                                                          \
+        if ((title))                                                           \
+        {                                                                      \
+            APIprintf("%s %s,line %d: " fmt, title, __func__, __LINE__,        \
+                      ##__VA_ARGS__);                                          \
+            (driver)->displayLog();                                            \
+        }                                                                      \
+    }
 
 #ifdef API_DEBUG_DATA
-#define API_DEBUG(format, ...)                                                 \
-    printf("DEBUG %s,line %d: " format, __func__, __LINE__, ##__VA_ARGS__)
+#define DEBUG_LOG "DEBUG"
 #else
-#define API_DEBUG(format, ...) 0
+#define DEBUG_LOG 0
 #endif
 
 #ifdef API_ERROR_DATA
-#define API_ERROR(format, ...)                                                 \
-    printf("Error %s,line %d: " format, __func__, __LINE__, ##__VA_ARGS__)
+#define ERROR_LOG "ERROR"
 #else
-#define API_ERROR(format, ...) 0
+#define ERROR_LOG 0
 #endif
 
 #ifdef API_STATUS_DATA
-#define API_STATUS(format, ...)                                                \
-    printf("MSG %s,line %d: " format, __func__, __LINE__, ##__VA_ARGS__)
+#define STATUS_LOG "STATUS"
 #else
-#define API_STATUS(format, ...) 0
+#define STATUS_LOG 0
 #endif
 
 namespace DJI
 {
 namespace onboardSDK
 {
+const size_t bufsize = 1024;
+extern char buffer[];
+
 const size_t SESSION_TABLE_NUM = 32;
+const size_t CALLBACK_LIST_NUM = 10;
 class CoreAPI;
 
 typedef struct Header
@@ -87,63 +108,52 @@ typedef struct MMU_Tab
 
 typedef struct CMDSession
 {
-    unsigned int sessionID : 5;
-    unsigned int usageFlag : 1;
-    unsigned int sent : 5;
-    unsigned int retry : 5;
-    unsigned int timeout : 16;
+    uint32_t sessionID : 5;
+    uint32_t usageFlag : 1;
+    uint32_t sent : 5;
+    uint32_t retry : 5;
+    uint32_t timeout : 16;
     MMU_Tab *mmu;
     CallBack callback;
-    unsigned int pre_seq_num;
-    unsigned int pre_timestamp;
+    uint32_t pre_seq_num;
+    uint32_t pre_timestamp;
 } CMDSession;
 
 typedef struct ACKSession
 {
-    unsigned int sessionID : 5;
-    unsigned int session_status : 2;
-    unsigned int res : 25;
+    uint32_t sessionID : 5;
+    uint32_t session_status : 2;
+    uint32_t res : 25;
     MMU_Tab *mmu;
 } ACKSession;
 
 typedef struct Ack
 {
-    unsigned short session_id : 8;
-    unsigned short need_encrypt : 8;
-    unsigned short seq_num;
-    unsigned int length;
-    unsigned char *buf;
+    uint16_t session_id : 8;
+    uint16_t need_encrypt : 8;
+    uint16_t seq_num;
+    uint32_t length;
+    uint8_t *buf;
 } Ack;
 
-typedef uint8_t BatteryData;
 #pragma pack(1)
+typedef uint8_t BatteryData;
 
 typedef struct GimbalAngleData
 {
-    signed short yaw_angle;
-    signed short roll_angle;
-    signed short pitch_angle;
-    struct
-    {
-        unsigned char base : 1;
-        unsigned char yaw_cmd_ignore : 1;
-        unsigned char roll_cmd_ignore : 1;
-        unsigned char pitch_cmd_ignore : 1;
-        unsigned char reserve : 4;
-    } ctrl_byte;
-    unsigned char duration;
+    int16_t yaw_angle;
+    int16_t roll_angle;
+    int16_t pitch_angle;
+    uint8_t ctrl_byte;
+    uint8_t duration;
 } GimbalAngleData;
 
 typedef struct GimbalSpeedData
 {
-    signed short yaw_angle_rate;
-    signed short roll_angle_rate;
-    signed short pitch_angle_rate;
-    struct ControlByte
-    {
-        unsigned char reserve : 7;
-        unsigned char ctrl_switch : 1; // decide increment mode or absolute mode
-    } ctrl_byte;
+    int16_t yaw_angle_rate;
+    int16_t roll_angle_rate;
+    int16_t pitch_angle_rate;
+    uint8_t reserved; // always 0x80;
 } GimbalSpeedData;
 
 typedef float float32_t;
@@ -164,65 +174,124 @@ typedef struct
     float32_t z;
 } CommonData;
 
-typedef struct SpeedData
+typedef struct VelocityData
 {
     float32_t x;
     float32_t y;
     float32_t z;
-    unsigned char health_flag : 1;
-    unsigned char feedback_sensor_id : 4;
-    unsigned char reserve : 3;
-} SpeedData;
+    uint8_t health_flag : 1;
+    uint8_t feedback_sensor_id : 4;
+    uint8_t reserve : 3;
+} VelocityData;
 
 typedef struct
 {
-    float64_t lati;
-    float64_t longti;
-    float32_t alti;
+    float64_t latitude;
+    float64_t longtitude;
+    float32_t altitude;
     float32_t height;
-    unsigned char health_flag;
-} PositionData_t;
+    uint8_t health;
+} PossitionData;
 
 typedef struct
 {
-    signed short roll;
-    signed short pitch;
-    signed short yaw;
-    signed short throttle;
-    signed short mode;
-    signed short gear;
-} RadioData_t;
+    int16_t roll;
+    int16_t pitch;
+    int16_t yaw;
+    int16_t throttle;
+    int16_t mode;
+    int16_t gear;
+} RadioData;
 
 typedef struct
 {
-    signed short x;
-    signed short y;
-    signed short z;
-} api_mag_data_t;
+    int16_t x;
+    int16_t y;
+    int16_t z;
+} MagnetData;
 
-typedef struct
+typedef struct CtrlInfoData
 {
-    unsigned char cur_ctrl_dev_in_navi_mode : 3; /*0->rc  1->app  2->serial*/
-    unsigned char serial_req_status : 1;		 /*1->opensd  0->close*/
-    unsigned char reserved : 4;
+#ifdef SDK_VERSION_3_0
+    uint8_t data;
+#endif
+    //! @todo mode remote to enums
+    uint8_t cur_ctrl_dev_in_navi_mode : 3; /*0->rc  1->app  2->serial*/
+    uint8_t serial_req_status : 1;		   /*1->opensd  0->close*/
+    uint8_t reserved : 4;
 } CtrlInfoData;
 
-typedef struct
+#ifdef SDK_VERSION_2_3
+typedef uint32_t TimeStampData;
+#endif // SDK_VERSION_2_3
+
+#ifdef SDK_VERSION_3_0
+typedef struct TimeStampData
 {
-    unsigned int timeStamp;
+    uint32_t time;
+    uint32_t asr_ts;
+    uint8_t sync_flag;
+} TimeStampData;
+#endif // SDK_VERSION_3_0
+
+typedef struct GimbalData
+{
+    float32_t roll;
+    float32_t pitch;
+    float32_t yaw;
+#ifdef SDK_VERSION_3_0
+    uint8_t is_pitch_limit : 1;
+    uint8_t is_roll_limit : 1;
+    uint8_t is_yaw_limit : 1;
+    uint8_t reserved : 5;
+#endif // SDK_VERSION_3_0
+} GimbalData;
+
+typedef uint8_t FlightStatus;
+
+typedef struct BroadcastData
+{
+    TimeStampData timeStamp;
     QuaternionData q;
     CommonData a;
-    SpeedData v;
+    VelocityData v;
     CommonData w;
-    PositionData_t pos;
-    api_mag_data_t mag;
-    RadioData_t rc;
-    CommonData gimbal;
-    unsigned char status;
+    PossitionData pos;
+    MagnetData mag;
+    RadioData rc;
+    GimbalData gimbal;
+    FlightStatus status; //! @todo define enum
     BatteryData capacity;
     CtrlInfoData ctrl_info;
     uint8_t activation;
 } BroadcastData;
+
+typedef struct VirtualRCSetting
+{
+    uint8_t enable : 1;
+    uint8_t cutoff : 1;
+    uint8_t reserved : 6;
+} VirtualRCSetting;
+
+typedef struct VirtualRCData
+{
+    uint32_t roll;
+    uint32_t pitch;
+    uint32_t throttle;
+    uint32_t yaw;
+    uint32_t gear;
+    uint32_t reserved;
+    uint32_t mode;
+    uint32_t Channel_07;
+    uint32_t Channel_08;
+    uint32_t Channel_09;
+    uint32_t Channel_10;
+    uint32_t Channel_11;
+    uint32_t Channel_12;
+    uint32_t Channel_13;
+    uint32_t Channel_14;
+    uint32_t Channel_15;
+} VirtualRCData;
 
 #pragma pack()
 } // namespace onboardSDK
@@ -243,4 +312,4 @@ const size_t MMU_TABLE_NUM = 32;
 #define CMD_SESSION_1 1
 #define CMD_SESSION_AUTO 32
 
-#endif // DJI_PRO_TYPE
+#endif // DJI_TYPE

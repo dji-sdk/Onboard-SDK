@@ -619,6 +619,32 @@ void DJI::onboardSDK::CoreAPI::callApp(SDKFilter *p_filter)
     sdk_stream_prepare_lambda(p_filter);
 }
 
+bool CoreAPI::decodeACKStatus(unsigned short ack)
+{
+    switch (ack)
+    {
+        case ACK_SUCCESS:
+            API_LOG(driver, STATUS_LOG,"SUCCESS.");
+            return true;
+        case ACK_KEYERROR:
+            API_LOG(driver, ERROR_LOG, "Wrong encode Key, Activate again.");
+            return false;
+        case ACK_NO_AUTHORIZATION:
+            API_LOG(driver, ERROR_LOG, "Pleasd obtain control and retry.");
+            return false;
+        case ACK_NO_RIGHTS:
+            API_LOG(driver, ERROR_LOG, "Need higher Level access.");
+            return false;
+        case ACK_NO_RESPONSE:
+            API_LOG(driver, ERROR_LOG,
+                    "Check your Hardware connection and retry.");
+            return false;
+        default:
+            API_LOG(driver, ERROR_LOG, "Unkown ACK code: 0x%x", ack);
+            return false;
+    }
+}
+
 void sdk_stream_shift_data_lambda(SDKFilter *p_filter)
 {
     if (p_filter->recv_index)
@@ -632,8 +658,8 @@ void sdk_stream_shift_data_lambda(SDKFilter *p_filter)
     }
 }
 
-// push data to filter buffer
-void storeData(SDKFilter *p_filter, unsigned char in_data)
+//! @note push data to filter buffer
+void CoreAPI::storeData(SDKFilter *p_filter, unsigned char in_data)
 {
     if (p_filter->recv_index < _SDK_MAX_RECV_SIZE)
     {
@@ -642,7 +668,7 @@ void storeData(SDKFilter *p_filter, unsigned char in_data)
     }
     else
     {
-        // Error, buffer overflow! Just clear and continue.
+        API_LOG(driver, ERROR_LOG, "buffer overflow");
         memset(p_filter->comm_recv_buf, 0, p_filter->recv_index);
         p_filter->recv_index = 0;
     }
@@ -698,7 +724,7 @@ void DJI::onboardSDK::CoreAPI::verifyData(SDKFilter *p_filter)
     }
     else
     {
-        // data crc fail, re-use the data part
+        //! @note data crc fail, re-use the data part
         sdk_stream_update_reuse_part_lambda(p_filter);
     }
 }
@@ -745,7 +771,7 @@ void DJI::onboardSDK::CoreAPI::checkStream(SDKFilter *p_filter)
 }
 
 void DJI::onboardSDK::CoreAPI::streamHandler(SDKFilter *p_filter,
-                                         unsigned char in_data)
+                                             unsigned char in_data)
 {
     storeData(p_filter, in_data);
     checkStream(p_filter);
@@ -793,6 +819,11 @@ void DJI::onboardSDK::CoreAPI::byteHandler(const uint8_t in_data)
         }
         filter.reuse_count = 0;
     }
+}
+
+void CoreAPI::byteStreamHandler(uint8_t *buffer __UNUSED, size_t size __UNUSED)
+{
+    //! @todo implement
 }
 
 void calculateCRC(void *p_data)
@@ -851,8 +882,11 @@ unsigned short DJI::onboardSDK::CoreAPI::encrypt(
         return 0;
 
     if (filter.enc_enabled == 0 && is_enc)
+    {
+        API_LOG(driver, ERROR_LOG,
+                "Can not send encode data, no available key");
         return 0;
-
+    }
     if (w_len == 0 || psrc == 0)
         data_len = (unsigned short)sizeof(Header);
     else
@@ -860,6 +894,8 @@ unsigned short DJI::onboardSDK::CoreAPI::encrypt(
 
     if (is_enc)
         data_len = data_len + (16 - w_len % 16);
+
+    API_LOG(driver, DEBUG_LOG, "data len: %d\n", data_len);
 
     p_head->sof = _SDK_SOF;
     p_head->length = data_len;

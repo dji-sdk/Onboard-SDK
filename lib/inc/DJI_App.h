@@ -1,19 +1,10 @@
-/*
- * DJI_Pro_App.cpp
- *
- *  Created on: Sep 8, 2015
- *      Author: wuyuwei
- *  Modified on: Nov 11, 2015
- *  by william.wu
- */
-#ifndef __DJI_PRO_APP_H__
-#define __DJI_PRO_APP_H__
+#ifndef DJI_APP_H
+#define DJI_APP_H
 
 #include <stdint.h>
 
 #include "DJI_Link.h"
-
-#define MY_DEV_ID 0x00
+#include "DJI_Type.h"
 
 #define API_VER_QUERY 0x00
 #define API_CTRL_MANAGEMENT 0x00
@@ -56,19 +47,12 @@
 #define YAW_GND 0x00
 #define YAW_BODY 0x01
 
-#define MAKE_VERSION(a, b, c, d)                                               \
-    (((a << 24) & 0xff000000) | ((b << 16) & 0x00ff0000) |                     \
-     ((c << 8) & 0x0000ff00) | (d & 0x000000ff))
-#define SDK_VERSION (MAKE_VERSION(2, 3, 10, 0))
-
-// data_type
-
 //----------------------------------------------------------------------
 // uav std_msgs reciever
 //----------------------------------------------------------------------
 #define MSG_ENABLE_FLAG_LEN 2
 
-#define ENABLE_MSG_TIME 0x0001
+#define HAS_TIME 0x0001
 #define HAS_Q 0x0002
 #define HAS_A 0x0004
 #define HAS_V 0x0008
@@ -115,7 +99,7 @@ typedef struct
 {
     unsigned char cmd_sequence;
     unsigned char cmd_data;
-} TaskData_t;
+} TaskData;
 
 //----------------------------------------------------------------------
 // for activation
@@ -124,13 +108,6 @@ typedef struct
 /*
  *  code re-construction according onboard api protocol
  */
-
-#define SDK_ERR_SUCCESS 0x0000
-#define SDK_ERR_COMMAND_NOT_SUPPORTED 0xFF00
-#define SDK_ERR_NO_AUTHORIZED 0xFF01
-#define SDK_ERR_NO_RIGHTS 0xFF02
-#define SDK_ERR_NO_RESPONSE 0xFFFF
-
 #define SDK_ACTIVATE_SUCCESS 0x0000
 #define SDK_ACTIVATE_PARAM_ERROR 0x0001
 #define SDK_ACTIVATE_DATA_ENC_ERROR 0x0002
@@ -141,54 +118,41 @@ typedef struct
 #define SDK_ACTIVATE_LEVEL_ERROR 0x0007
 #define SDK_ACTIVATE_SDK_VERSION_ERROR 0x0008
 
-
 #pragma pack(1)
 
-/*
- *struct of activate data
- */
-
-typedef struct
+typedef struct ActivateData
 {
     unsigned int app_id;
     unsigned int app_api_level;
     unsigned int app_ver;
     unsigned char app_bundle_id[32];
     char *app_key;
-} ActivateData_t;
+} ActivateData;
 
-/*
- *struct of version query data
- */
-
-typedef struct
+typedef struct VersionData
 {
     unsigned short version_ack;
     unsigned int version_crc;
+#ifdef SDK_VERSION_3_1
+    char version_ID[11];
+#endif //SDK_VERSION_3_1
     char version_name[32];
-} VersionData_t;
+} VersionData;
 
-/*
- *struct of attitude data
- */
-
-typedef struct
+typedef struct FlightData
 {
     unsigned char ctrl_flag;
     float roll_or_x;
     float pitch_or_y;
     float thr_z;
     float yaw;
-} AttitudeData_t;
+} FlightData;
 
 #pragma pack()
 
 typedef void (*CommandResult)(unsigned short result);
-typedef void (*Get_API_Version_Notify)(VersionData_t *);
 typedef void (*ReceiveHandler)(DJI::onboardSDK::Header *pHeader);
 typedef void (*BroadcastHandler)(void);
 typedef void (*TransparentHandler)(unsigned char *buf, unsigned char len);
 
-typedef void (*ResultCallback)(DJI::onboardSDK::CoreAPI *);
-
-#endif
+#endif // DJI_APP_H

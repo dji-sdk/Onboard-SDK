@@ -209,9 +209,10 @@ void DJI::onboardSDK::CoreAPI::setupSession()
  */
 
 CMDSession *DJI::onboardSDK::CoreAPI::allocSession(unsigned short session_id,
-                                               unsigned short size)
+                                                   unsigned short size)
 {
     unsigned int i;
+    API_LOG(driver, DEBUG_LOG,"Alloc size %d", size);
     MMU_Tab *mmu = NULL;
 
     if (session_id == 0 || session_id == 1)
@@ -223,7 +224,7 @@ CMDSession *DJI::onboardSDK::CoreAPI::allocSession(unsigned short session_id,
         else
         {
             /* session is busy */
-            API_ERROR("session %d is busy\n", session_id);
+            API_LOG(driver, ERROR_LOG,"session %d is busy\n", session_id);
             return NULL;
         }
     }
@@ -258,25 +259,26 @@ void DJI::onboardSDK::CoreAPI::freeSession(CMDSession *session)
 {
     if (session->usageFlag == 1)
     {
-        API_DEBUG("session id %d\n", session->sessionID);
+        API_LOG(driver, DEBUG_LOG,"session id %d\n", session->sessionID);
         freeMemory(session->mmu);
         session->usageFlag = 0;
     }
 }
 
 ACKSession *DJI::onboardSDK::CoreAPI::allocACK(unsigned short session_id,
-                                           unsigned short size)
+                                               unsigned short size)
 {
     MMU_Tab *mmu = NULL;
     if (session_id > 0 && session_id < 32)
     {
         if (ACKSessionTab[session_id - 1].mmu)
         {
-            freeMemory(ACKSessionTab[session_id - 1].mmu);
+            freeACK(&ACKSessionTab[session_id - 1]);
         }
         mmu = allocMemory(size);
         if (mmu == NULL)
         {
+            //! @todo optmize
         }
         else
         {

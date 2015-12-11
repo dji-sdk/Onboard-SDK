@@ -2,29 +2,39 @@
 #include <string.h>
 #include <stdio.h>
 
-DJI::onboardSDK::CoreAPI::CoreAPI(DJI::onboardSDK::HardDriver *Driver,
-                          ReceiveHandler user_cmd_handler_entrance)
+using namespace DJI::onboardSDK;
+
+CoreAPI::CoreAPI(HardDriver *Driver, bool useCallbackThread,
+                 CallBack userRecvCallback)
 {
     driver = Driver;
-    // taskData = { 0, 0 };
+    // driver->init();
+
     seq_num = 0;
-    // filter = { 0 };
-    taskResult = 0;
-    activateResult = 0;
-    toMobileResult = 0;
-    setControlResult = 0;
-    broadcastHandler = 0;
+    filter.recv_index = 0;
+    filter.reuse_count = 0;
+    filter.reuse_index = 0;
+    filter.enc_enabled = 0;
+    broadcastCallback = 0;
     transparentHandler = 0;
-    recvHandler = user_cmd_handler_entrance ? user_cmd_handler_entrance : 0;
+#ifndef SDK_VERSION_2_3
+    broadcastData.timeStamp.time = 0;
+    broadcastData.timeStamp.asr_ts = 0;
+    broadcastData.timeStamp.sync_flag = 0;
+#endif
+
+    recvCallback = userRecvCallback ? userRecvCallback : 0;
+
+    CallbackThread = useCallbackThread;
 
     setup();
+
+    getVersion();
 }
 
-void DJI::onboardSDK::CoreAPI::send(unsigned char session_mode,
-                                unsigned char is_enc, CMD_SET cmd_set,
-                                unsigned char cmd_id, unsigned char *pdata,
-                                int len, CallBack ack_callback, int timeout,
-                                int retry_time)
+void CoreAPI::send(unsigned char session_mode, unsigned char is_enc,
+                   CMD_SET cmd_set, unsigned char cmd_id, void *pdata, int len,
+                   CallBack ack_callback, int timeout, int retry_time)
 {
     Command param;
     unsigned char *ptemp = (unsigned char *)encodeSendData;
@@ -45,12 +55,9 @@ void DJI::onboardSDK::CoreAPI::send(unsigned char session_mode,
     sendInterface(&param);
 }
 
-void DJI::onboardSDK::CoreAPI::send(Command *parameter)
-{
-    sendInterface(parameter);
-}
+void CoreAPI::send(Command *parameter) { sendInterface(parameter); }
 
-void DJI::onboardSDK::CoreAPI::ack(req_id_t req_id, unsigned char *ackdata, int len)
+void CoreAPI::ack(req_id_t req_id, unsigned char *ackdata, int len)
 {
     Ack param;
 
@@ -65,24 +72,9 @@ void DJI::onboardSDK::CoreAPI::ack(req_id_t req_id, unsigned char *ackdata, int 
     this->ackInterface(&param);
 }
 
-void DJI::onboardSDK::CoreAPI::task(TASK taskname,
-                                CommandResult user_notice_entrance)
+void CoreAPI::getVersion(CallBack callback)
 {
-    unsigned char cur_cmd = 0;
-    taskResult = user_notice_entrance;
-    cur_cmd = taskname;
-
-    taskData.cmd_data = cur_cmd;
-    taskData.cmd_sequence++;
-
-    send(2, 1, SET_CONTROL, API_CMD_REQUEST, (unsigned char *)&taskData,
-         sizeof(taskData), DJI::onboardSDK::CoreAPI::taskCallback, 100, 3);
-}
-
-void DJI::onboardSDK::CoreAPI::getVersion(
-    Get_API_Version_Notify user_notice_entrance)
-{
-    versionData.version_ack = 0xFFFF;
+    versionData.version_ack = ACK_NO_RESPONSE;
     versionData.version_crc = 0x0;
     versionData.version_name[0] = 0;
 
@@ -90,126 +82,79 @@ void DJI::onboardSDK::CoreAPI::getVersion(
     unsigned retry_time = 3;
     unsigned char cmd_data = 0;
 
-    send(2, 1, SET_ACTIVATION, API_VER_QUERY, (unsigned char *)&cmd_data, 1,
-         DJI::onboardSDK::CoreAPI::getVersionCallback, cmd_timeout, retry_time);
+    send(2, 0, SET_ACTIVATION, CODE_GETVERSION, (unsigned char *)&cmd_data, 1,
+         callback ? callback : CoreAPI::getVersionCallback, cmd_timeout,
+         retry_time);
 }
 
-void DJI::onboardSDK::CoreAPI::activate(ActivateData_t *p_user_data,
-                                    CommandResult user_notice_entrance)
+void CoreAPI::activate(ActivateData *data, CallBack callback)
 {
-    activateResult = user_notice_entrance ? user_notice_entrance : 0;
-    accountData = *p_user_data;
+    accountData = *data;
 
-    send(2, 0, SET_ACTIVATION, API_USER_ACTIVATION,
-         (unsigned char *)&accountData, sizeof(accountData) - sizeof(char *),
-         DJI::onboardSDK::CoreAPI::activateCallback, 1000, 3);
+    send(2, 0, SET_ACTIVATION, CODE_ACTIVATE, (unsigned char *)&accountData,
+         sizeof(accountData) - sizeof(char *),
+         callback ? callback : CoreAPI::activateCallback, 1000, 3);
 }
 
-void DJI::onboardSDK::CoreAPI::sendToMobile(unsigned char *data, unsigned char len,
-                                        CommandResult user_notice_entrance)
+void CoreAPI::sendToMobile(uint8_t *data, uint8_t len, CallBack callback)
 {
     if (len > 100)
     {
-        API_ERROR("Too much data to send");
+        API_LOG(driver,ERROR_LOG,"Too much data to send");
         return;
     }
-    toMobileResult = user_notice_entrance ? user_notice_entrance : 0;
-    send(2, 0, SET_ACTIVATION, API_TRANSPARENT_DATA_TO_MOBILE, data, len,
-         DJI::onboardSDK::CoreAPI::sendToMobileCallback, 500, 2);
+    send(2, 0, SET_ACTIVATION, CODE_TOMOBILE, data, len,
+         callback ? callback : CoreAPI::sendToMobileCallback, 500, 2);
 }
 
-void DJI::onboardSDK::CoreAPI::setControl(unsigned char cmd,
-                                      CommandResult user_notice_entrance)
+void CoreAPI::setBroadcastFeq(uint8_t *data, CallBack callback)
 {
-    unsigned char data = cmd & 0x1;
-    setControlResult = user_notice_entrance ? user_notice_entrance : 0;
-    send(2, 1, SET_CONTROL, API_CTRL_MANAGEMENT, &data, 1,
-         DJI::onboardSDK::CoreAPI::setControlCallback, 500, 1);
+    send(2, 0, SET_ACTIVATION, CODE_FREQUENCY, data, 16,
+         callback ? callback : CoreAPI::setFrequencyCallback, 100, 1);
 }
 
-void DJI::onboardSDK::CoreAPI::setAttitude(AttitudeData_t *p_user_data)
+TimeStampData CoreAPI::getTime() const { return broadcastData.timeStamp; }
+
+FlightStatus CoreAPI::getFlightStatus() const { return broadcastData.status; }
+ActivateData CoreAPI::getAccountData() const { return accountData; }
+
+void CoreAPI::setAccountData(const ActivateData &value) { accountData = value; }
+
+void CoreAPI::setControl(bool enable, CallBack callback)
 {
-    send(0, 1, SET_CONTROL, API_CTRL_REQUEST, (unsigned char *)p_user_data,
-         sizeof(AttitudeData_t), 0, 0, 1);
+    unsigned char data = enable ? 1 : 0;
+    send(2, 1, SET_CONTROL, CODE_SETCONTROL, &data, 1,
+         callback ? callback : CoreAPI::setControlCallback, 500, 2);
 }
 
-void DJI::onboardSDK::CoreAPI::setGimbalAngle(GimbalAngleData *p_user_data)
-{
-    send(0, 1, SET_CONTROL, API_GIMBAL_CTRL_ANGLE_REQUEST,
-         (unsigned char *)p_user_data, sizeof(GimbalAngleData), 0, 0, 1);
-}
+HardDriver *CoreAPI::getDriver() const { return driver; }
 
-void DJI::onboardSDK::CoreAPI::setGimbalSpeed(GimbalSpeedData *p_user_data)
-{
-    send(0, 1, SET_CONTROL, API_GIMBAL_CTRL_SPEED_REQUEST,
-         (unsigned char *)p_user_data, sizeof(GimbalSpeedData), 0, 0, 1);
-}
+void CoreAPI::setDriver(HardDriver *value) { driver = value; }
 
-void DJI::onboardSDK::CoreAPI::setCamera(DJI::onboardSDK::CAMERA camera_cmd)
-{
-    unsigned char send_data = 0;
-    send(0, 1, SET_CONTROL, camera_cmd, (unsigned char *)&send_data,
-         sizeof(send_data), 0, 0, 0);
-}
-
-DJI::onboardSDK::HardDriver *DJI::onboardSDK::CoreAPI::getDriver() const
-{
-    return driver;
-}
-
-void DJI::onboardSDK::CoreAPI::setDriver(HardDriver *value) { driver = value; }
-
-void DJI::onboardSDK::CoreAPI::taskCallback(DJI::onboardSDK::CoreAPI *This,
-                                        Header *header)
-{
-    unsigned short ack_data;
-    if (header->length - EXC_DATA_SIZE <= 2)
-    {
-        memcpy((unsigned char *)&ack_data,
-               ((unsigned char *)header) + sizeof(Header),
-               (header->length - EXC_DATA_SIZE));
-        API_STATUS("task running successfully,%d\n", ack_data);
-        //! @todo
-
-        if (This->taskResult)
-            This->taskResult(ack_data);
-    }
-    else
-    {
-        API_ERROR("ACK is exception,seesion id %d,sequence %d\n",
-                  header->sessionID, header->sequence_number);
-    }
-}
-
-void DJI::onboardSDK::CoreAPI::getVersionCallback(DJI::onboardSDK::CoreAPI *This,
-                                              Header *header)
+void CoreAPI::getVersionCallback(CoreAPI *This, Header *header)
 {
     unsigned char *ptemp = ((unsigned char *)header) + sizeof(Header);
-    char *ptemp2;
-    int count = 31;
-    VersionData_t *p_version_data = &This->versionData;
 
-    p_version_data->version_ack = ptemp[0] + (ptemp[1] << 8);
+    This->versionData.version_ack = ptemp[0] + (ptemp[1] << 8);
     ptemp += 2;
-    p_version_data->version_crc =
+    This->versionData.version_crc =
         ptemp[0] + (ptemp[1] << 8) + (ptemp[2] << 16) + (ptemp[3] << 24);
     ptemp += 4;
-    ptemp2 = p_version_data->version_name;
-    while (*ptemp && count)
-    {
-        *ptemp2++ = (char)*ptemp++;
-        count--;
-    }
-    *ptemp2 = 0;
+#ifdef SDK_VERSION_3_1
+    memcpy(This->versionData.version_ID, ptemp, 11);
+    ptemp += 11;
+#endif
+    memcpy(This->versionData.version_name, ptemp, 32);
 
-    //! @todo
-    API_STATUS("version ack=%d\n", p_version_data->version_ack);
-    API_STATUS("version crc=0x%X\n", p_version_data->version_crc);
-    API_STATUS("version name=%s\n", p_version_data->version_name);
+    API_LOG(This->driver,STATUS_LOG,"version ack = %d", This->versionData.version_ack);
+    API_LOG(This->driver,STATUS_LOG,"version crc = 0x%X", This->versionData.version_crc);
+#ifdef SDK_VERSION_3_1
+    API_LOG(This->driver,STATUS_LOG,"version ID = %s\n", This->versionData.version_ID);
+#endif
+    API_LOG(This->driver,STATUS_LOG,"version name = %s", This->versionData.version_name);
 }
 
-void DJI::onboardSDK::CoreAPI::activateCallback(DJI::onboardSDK::CoreAPI *This,
-                                            Header *header)
+void CoreAPI::activateCallback(CoreAPI *This, Header *header)
 {
     volatile unsigned short ack_data;
     if (header->length - EXC_DATA_SIZE <= 2)
@@ -219,94 +164,132 @@ void DJI::onboardSDK::CoreAPI::activateCallback(DJI::onboardSDK::CoreAPI *This,
                (header->length - EXC_DATA_SIZE));
         if (ack_data == SDK_ACTIVATE_NEW_DEVICE)
         {
-            API_STATUS("new device try again\n");
+            API_LOG(This->driver,STATUS_LOG,"new device try again\n");
         }
         else
         {
             if (ack_data == SDK_ACTIVATE_SUCCESS)
             {
-                API_STATUS("Activation Successfully\n");
+                API_LOG(This->driver,STATUS_LOG,"Activation Successfully\n");
 
-                This->driver->lockMSG();
+                This->getDriver()->lockMSG();
                 This->broadcastData.activation = 1;
-                This->driver->freeMSG();
+                This->getDriver()->freeMSG();
 
                 if (This->accountData.app_key)
                     This->setKey(This->accountData.app_key);
             }
             else
             {
-                API_STATUS("activate code:0x%X\n", ack_data);
-
-                This->driver->lockMSG();
+                API_LOG(This->driver,ERROR_LOG,"activate code:0x%X\n", ack_data);
+                This->getDriver()->lockMSG();
                 This->broadcastData.activation = 0;
-                This->driver->freeMSG();
-            }
-            if (This->activateResult)
-            {
-                This->activateResult(ack_data);
+                This->getDriver()->freeMSG();
             }
         }
     }
     else
     {
-        API_ERROR("ACK is exception,seesion id %d,sequence %d\n",
+        API_LOG(This->driver,ERROR_LOG,"ACK is exception,seesion id %d,sequence %d\n",
                   header->sessionID, header->sequence_number);
     }
 }
 
-void DJI::onboardSDK::CoreAPI::sendToMobileCallback(DJI::onboardSDK::CoreAPI *This,
-                                                Header *header)
+void CoreAPI::sendToMobileCallback(CoreAPI *This, Header *header)
 {
-    unsigned short ack_data = 0xFFFF;
+    unsigned short ack_data = ACK_NO_RESPONSE;
     if (header->length - EXC_DATA_SIZE <= 2)
     {
         memcpy((unsigned char *)&ack_data,
                ((unsigned char *)header) + sizeof(Header),
                (header->length - EXC_DATA_SIZE));
-        if (This->toMobileResult)
-            This->toMobileResult(ack_data);
+        if (!This->decodeACKStatus(ack_data))
+        {
+            API_LOG(This->driver,ERROR_LOG,"While calling this function");
+        }
     }
     else
-        API_ERROR("ACK is exception,seesion id %d,sequence %d\n",
+    {
+        API_LOG(This->driver,ERROR_LOG,"ACK is exception,seesion id %d,sequence %d\n",
                   header->sessionID, header->sequence_number);
+    }
 }
 
-void DJI::onboardSDK::CoreAPI::setControlCallback(CoreAPI *This, Header *header)
+void CoreAPI::setFrequencyCallback(CoreAPI *This __UNUSED, Header *header)
 {
-    unsigned short ack_data = 0xFFFF;
+    unsigned short ack_data = ACK_NO_RESPONSE;
+
     if (header->length - EXC_DATA_SIZE <= 2)
     {
         memcpy((unsigned char *)&ack_data,
                ((unsigned char *)header) + sizeof(Header),
                (header->length - EXC_DATA_SIZE));
-        if (This->setControlResult)
-            This->setControlResult(ack_data);
+    }
+    switch (ack_data)
+    {
+        case 0x0000:
+            API_LOG(This->driver,STATUS_LOG,"Frequency set success");
+            break;
+        case 0x0001:
+            API_LOG(This->driver,ERROR_LOG,"Frequency parameter error");
+            break;
+        default:
+            if (!This->decodeACKStatus(ack_data))
+            {
+                API_LOG(This->driver,ERROR_LOG,"While calling this function");
+            }
+            break;
+    }
+}
+
+void CoreAPI::setControlCallback(CoreAPI *This, Header *header)
+{
+    unsigned short ack_data = ACK_NO_RESPONSE;
+    unsigned char data = 0x1;
+
+    if (header->length - EXC_DATA_SIZE <= 2)
+    {
+        memcpy((unsigned char *)&ack_data,
+               ((unsigned char *)header) + sizeof(Header),
+               (header->length - EXC_DATA_SIZE));
     }
     else
-        API_ERROR("ACK is exception,seesion id %d,sequence %d\n",
+    {
+        API_LOG(This->driver,ERROR_LOG,"ACK is exception,seesion id %d,sequence %d\n",
                   header->sessionID, header->sequence_number);
+    }
 
     switch (ack_data)
     {
         case 0x0000:
-            API_STATUS("Obtain control failed, Conditions did not "
+            API_LOG(This->driver,STATUS_LOG,"Obtain control failed, Conditions did not "
                        "satisfied");
             break;
         case 0x0001:
-            API_STATUS("release control successfully\n");
+            API_LOG(This->driver,STATUS_LOG,"release control successfully\n");
             break;
         case 0x0002:
-            API_STATUS("obtain control successfully\n");
+            API_LOG(This->driver,STATUS_LOG,"obtain control successfully\n");
             break;
         case 0x0003:
-            API_STATUS("obtain control running\n");
+            API_LOG(This->driver,STATUS_LOG,"obtain control running\n");
+            This->send(2, 1, SET_CONTROL, CODE_SETCONTROL, &data, 1,
+                       CoreAPI::setControlCallback, 500, 2);
             break;
         case 0x0004:
-            API_STATUS("control request already done");
+            API_LOG(This->driver,STATUS_LOG,"release control running\n");
+            data = 0;
+            This->send(2, 1, SET_CONTROL, CODE_SETCONTROL, &data, 1,
+                       CoreAPI::setControlCallback, 500, 2);
+            break;
+        case 0x00C9:
+            API_LOG(This->driver,STATUS_LOG,"IOC mode opening can not obtain control\n");
             break;
         default:
-            API_STATUS("there is unkown error,ack=0x%X\n", ack_data);
+            if (!This->decodeACKStatus(ack_data))
+            {
+                API_LOG(This->driver,ERROR_LOG,"While calling this function");
+            }
             break;
     }
 }
