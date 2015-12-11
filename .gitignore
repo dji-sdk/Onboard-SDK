@@ -7,7 +7,17 @@ sample/STM32/MDK/Objects/
 sample/STM32/MDK/Listings/
 sample/Windows/Windows12/DJIonboardSDK/DJIonboardSDK/Debug/
 sample/PureQT/build-onboardSDK-Desktop_Qt_5_4_2_MinGW_32bit-Debug/
+sample/PureQT/build-onboardSDK-Desktop_Qt_5_4_2_MinGW_32bit-Release/
 sample/PureQT/build-onboardSDK-Desktop_Qt5_5_1_MSVC12_64bit-Debug/
+sample/PureQT/build-onboardSDK-Desktop_Qt5_5_1_MSVC12_64bit-Release/
+sample/PureQT/build-onboardSDK-Desktop_Qt_5_5_1_MSVC2013_64bit-Debug/
+sample/PureQT/build-onboardSDK-Desktop_Qt_5_5_1_MSVC2013_64bit-Release/
+sample/PureQT/build-onboardSDK-5_5_1Mingw-Release/
+sample/PureQT/build-onboardSDK-msvc2013-Release/
+sample/PureQT/build-onboardSDK-5_5_1Mingw-Debug/
+sample/PureQT/build-onboardSDK-msvc2013-Debug/
+sample/STM32/MDK/DJISDK.uvguix.oneno
+
 lib/DJI_onboardSDK/
 =======
 sample/Linux-Cmdline/output/DJI_Onboard_API_Cmdline_Test
