@@ -2,50 +2,58 @@
 #define DJI_TYPE
 
 #include "DJI_Config.h"
+#include <stdio.h>
 
-#ifdef WIN32
-#define __func__ __FUNCTION__
-#endif //WIN32
-#ifdef QT
-#define APIprintf qDebug
-#include <QDebug>
-#else
-#define APIprintf printf
-#endif //QT
 #ifdef __GNUC__
 #define __UNUSED __attribute__((__unused__))
 #else
 #define __UNUSED
 #endif //__GNUC__
 
+#ifdef WIN32
+#define __func__ __FUNCTION__
+#endif // WIN32
+
+#define APIprintf(...)                                                         \
+    sprintf_s(DJI::onboardSDK::buffer, bufsize, ##__VA_ARGS__)
+
+#define API_LOG(driver, title, fmt, ...)                                       \
+    {                                                                          \
+        if ((title))                                                           \
+        {                                                                      \
+            APIprintf("%s %s,line %d: " fmt, title, __func__, __LINE__,        \
+                      ##__VA_ARGS__);                                          \
+            (driver)->displayLog();                                            \
+        }                                                                      \
+    }
+
 #ifdef API_DEBUG_DATA
-#define API_DEBUG(format, ...)                                                 \
-    APIprintf("DEBUG %s,line %d: " format, __func__, __LINE__, ##__VA_ARGS__)
+#define DEBUG_LOG "DEBUG"
 #else
-#define API_DEBUG(format, ...)
+#define DEBUG_LOG 0
 #endif
 
 #ifdef API_ERROR_DATA
-#define API_ERROR(format, ...)                                                 \
-    APIprintf("Error %s,line %d: " format, __func__, __LINE__, ##__VA_ARGS__)
+#define ERROR_LOG "ERROR"
 #else
-#define API_ERROR(format, ...)
+#define ERROR_LOG 0
 #endif
 
 #ifdef API_STATUS_DATA
-#define API_STATUS(format, ...)                                                \
-    APIprintf("Status %s,line %d: " format, __func__, __LINE__, ##__VA_ARGS__)
+#define STATUS_LOG "STATUS"
 #else
-#define API_STATUS(format, ...)
+#define STATUS_LOG 0
 #endif
-
-
 
 namespace DJI
 {
 namespace onboardSDK
 {
+const size_t bufsize = 1024;
+extern char buffer[];
+
 const size_t SESSION_TABLE_NUM = 32;
+const size_t CALLBACK_LIST_NUM = 10;
 class CoreAPI;
 
 typedef struct Header
@@ -125,7 +133,7 @@ typedef struct Ack
     uint16_t need_encrypt : 8;
     uint16_t seq_num;
     uint32_t length;
-    uint8_t  *buf;
+    uint8_t *buf;
 } Ack;
 
 #pragma pack(1)
@@ -178,11 +186,11 @@ typedef struct VelocityData
 
 typedef struct
 {
-    float64_t lati;
-    float64_t longti;
-    float32_t alti;
+    float64_t latitude;
+    float64_t longtitude;
+    float32_t altitude;
     float32_t height;
-    uint8_t health_flag;
+    uint8_t health;
 } PossitionData;
 
 typedef struct
@@ -204,18 +212,18 @@ typedef struct
 
 typedef struct CtrlInfoData
 {
-    //! @todo mode remote to enums
 #ifdef SDK_VERSION_3_0
     uint8_t data;
 #endif
+    //! @todo mode remote to enums
     uint8_t cur_ctrl_dev_in_navi_mode : 3; /*0->rc  1->app  2->serial*/
-    uint8_t serial_req_status : 1;		 /*1->opensd  0->close*/
+    uint8_t serial_req_status : 1;		   /*1->opensd  0->close*/
     uint8_t reserved : 4;
 } CtrlInfoData;
 
 #ifdef SDK_VERSION_2_3
 typedef uint32_t TimeStampData;
-#endif //SDK_VERSION_2_3
+#endif // SDK_VERSION_2_3
 
 #ifdef SDK_VERSION_3_0
 typedef struct TimeStampData
@@ -224,7 +232,7 @@ typedef struct TimeStampData
     uint32_t asr_ts;
     uint8_t sync_flag;
 } TimeStampData;
-#endif //SDK_VERSION_3_0
+#endif // SDK_VERSION_3_0
 
 typedef struct GimbalData
 {
@@ -236,7 +244,7 @@ typedef struct GimbalData
     uint8_t is_roll_limit : 1;
     uint8_t is_yaw_limit : 1;
     uint8_t reserved : 5;
-#endif //SDK_VERSION_3_0
+#endif // SDK_VERSION_3_0
 } GimbalData;
 
 typedef uint8_t FlightStatus;
@@ -252,7 +260,7 @@ typedef struct BroadcastData
     MagnetData mag;
     RadioData rc;
     GimbalData gimbal;
-    FlightStatus status;//! @todo define enum
+    FlightStatus status; //! @todo define enum
     BatteryData capacity;
     CtrlInfoData ctrl_info;
     uint8_t activation;

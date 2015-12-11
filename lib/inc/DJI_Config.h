@@ -1,5 +1,5 @@
-#ifndef __DJI_CONFIG_H__
-#define __DJI_CONFIG_H__
+#ifndef DJI_CONFIG_H
+#define DJI_CONFIG_H
 
 #include <stdint.h>
 #define MEMORY_SIZE 1024 // unit is byte
@@ -15,4 +15,4 @@
 //#define SDK_VERSION_3_1
 #include <DJI_Version.h>
 
-#endif //__DJI_CONFIG_H__
+#endif // DJI_CONFIG_H

@@ -46,7 +46,10 @@ class DJIonboardSDK : public QMainWindow
     void updateVirturalRCData();
     void updateFlightAcc();
     void updateFlightPal();
-    void updateMagnet();
+    void updateFlightMagnet();
+    void updateFlightQuaternion();
+    void updateFlightVelocity();
+    void updateFlightPossition();
 private slots:
     void on_btn_portRefresh_clicked();
     void on_btn_portOpen_clicked();
@@ -129,6 +132,12 @@ private slots:
     void updateFlightYaw();
     void resetFlightData();
     void flightSend();
+    void on_btn_FlightAcc_clicked();
+    void on_btn_FlightPal_clicked();
+    void on_btn_FlightMag_clicked();
+    void on_btn_FlightQua_clicked();
+    void on_btn_FlightVel_clicked();
+    void on_btn_FlightPos_clicked();
 
     void on_lineEdit_flight_X_returnPressed();
     void on_lineEdit_flight_Y_returnPressed();
@@ -139,18 +148,7 @@ private slots:
 
     void autosend(); //! @todo rename add fligh signature.
 
-
-
     void on_btn_webLoad_clicked();
-
-
-
-
-    void on_btn_FlightAcc_clicked();
-
-    void on_btn_FlightPal_clicked();
-
-    void on_btn_FlightMag_clicked();
 
 private:
     Ui::DJIonboardSDK *ui;

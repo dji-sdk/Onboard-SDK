@@ -1,4 +1,5 @@
 #include "DJI_Flight.h"
+#include <string.h>
 
 using namespace DJI::onboardSDK;
 
@@ -31,22 +32,25 @@ void Flight::setFlight(FlightData *data)
               sizeof(FlightData));
 }
 
-CommonData Flight::getAcceleration() const
+QuaternionData Flight::getQuaternion() const
 {
-    return api->getBroadcastData().a;
+    return api->getBroadcastData().q;
 }
 
-CommonData Flight::getPalstance() const
+PossitionData Flight::getPossition() const
 {
-    return api->getBroadcastData().w;
+    return api->getBroadcastData().pos;
 }
 
-MagnetData Flight::getMagnet() const
-{
-    return api->getBroadcastData().mag;
-}
+VelocityData Flight::getVelocity() const { return api->getBroadcastData().v; }
 
-void Flight::armCallback(CoreAPI *This __UNUSED, Header *header)
+CommonData Flight::getAcceleration() const { return api->getBroadcastData().a; }
+
+CommonData Flight::getPalstance() const { return api->getBroadcastData().w; }
+
+MagnetData Flight::getMagnet() const { return api->getBroadcastData().mag; }
+
+void Flight::armCallback(CoreAPI *This, Header *header)
 {
     unsigned short ack_data;
     if (header->length - EXC_DATA_SIZE <= 2)
@@ -54,12 +58,13 @@ void Flight::armCallback(CoreAPI *This __UNUSED, Header *header)
         memcpy((unsigned char *)&ack_data,
                ((unsigned char *)header) + sizeof(Header),
                (header->length - EXC_DATA_SIZE));
-        API_STATUS("Call back,0x%x\n", ack_data);
+        API_LOG(This->getDriver(), STATUS_LOG, "Call back,0x%x\n", ack_data);
     }
     else
     {
-        API_ERROR("ACK is exception,seesion id %d,sequence %d\n",
-                  header->sessionID, header->sequence_number);
+        API_LOG(This->getDriver(), ERROR_LOG,
+                "ACK is exception,seesion id %d,sequence %d\n",
+                header->sessionID, header->sequence_number);
     }
 }
 
@@ -71,11 +76,13 @@ void Flight::taskCallback(CoreAPI *This __UNUSED, Header *header)
         memcpy((unsigned char *)&ack_data,
                ((unsigned char *)header) + sizeof(Header),
                (header->length - EXC_DATA_SIZE));
-        API_STATUS("task running successfully,%d\n", ack_data);
+        API_LOG(This->getDriver(), STATUS_LOG, "task running successfully,%d\n",
+                ack_data);
     }
     else
     {
-        API_ERROR("ACK is exception,seesion id %d,sequence %d\n",
-                  header->sessionID, header->sequence_number);
+        API_LOG(This->getDriver(), ERROR_LOG,
+                "ACK is exception,seesion id %d,sequence %d\n",
+                header->sessionID, header->sequence_number);
     }
 }

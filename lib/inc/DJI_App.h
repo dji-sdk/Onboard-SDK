@@ -1,20 +1,10 @@
-/*
- * DJI_Pro_App.cpp
- *
- *  Created on: Sep 8, 2015
- *      Author: wuyuwei
- *  Modified on: Nov 11, 2015
- *  by william.wu
- */
-#ifndef __DJI_APP_H__
-#define __DJI_APP_H__
+#ifndef DJI_APP_H
+#define DJI_APP_H
 
 #include <stdint.h>
 
 #include "DJI_Link.h"
 #include "DJI_Type.h"
-
-#define MY_DEV_ID 0x00
 
 #define API_VER_QUERY 0x00
 #define API_CTRL_MANAGEMENT 0x00
@@ -118,13 +108,6 @@ typedef struct
 /*
  *  code re-construction according onboard api protocol
  */
-
-#define SDK_ERR_SUCCESS 0x0000
-#define SDK_ERR_COMMAND_NOT_SUPPORTED 0xFF00
-#define SDK_ERR_NO_AUTHORIZED 0xFF01
-#define SDK_ERR_NO_RIGHTS 0xFF02
-#define SDK_ERR_NO_RESPONSE 0xFFFF
-
 #define SDK_ACTIVATE_SUCCESS 0x0000
 #define SDK_ACTIVATE_PARAM_ERROR 0x0001
 #define SDK_ACTIVATE_DATA_ENC_ERROR 0x0002
@@ -172,4 +155,4 @@ typedef void (*ReceiveHandler)(DJI::onboardSDK::Header *pHeader);
 typedef void (*BroadcastHandler)(void);
 typedef void (*TransparentHandler)(unsigned char *buf, unsigned char len);
 
-#endif //__DJI_APP_H__
+#endif // DJI_APP_H

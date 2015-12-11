@@ -37,7 +37,8 @@ HEADERS  += djionboardsdk.h \
     ../../../lib/inc/DJI_Type.h \
     ../../../lib/inc/DJI_Version.h \
     ../../../lib/inc/DJI_Camera.h \
-    ../../../lib/inc/DJI_Flight.h
+    ../../../lib/inc/DJI_Flight.h \
+    ../../../lib/inc/DJI_VirtualRC.h
 
 FORMS    += djionboardsdk.ui
 

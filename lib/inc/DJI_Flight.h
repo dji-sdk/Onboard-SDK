@@ -10,6 +10,8 @@ namespace onboardSDK
 
 class Flight
 {
+public:
+
   public:
     Flight(CoreAPI *ContorlAPI = 0);
 
@@ -17,6 +19,9 @@ class Flight
     void setArm(bool enable, CallBack ArmCallback = 0);
     void setFlight(FlightData *data);
 
+    QuaternionData getQuaternion() const;
+    PossitionData getPossition()const;
+    VelocityData getVelocity() const;
     CommonData getAcceleration() const;
     CommonData getPalstance() const;
     MagnetData getMagnet() const;

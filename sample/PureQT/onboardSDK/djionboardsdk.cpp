@@ -5,17 +5,7 @@
 
 DJIonboardSDK *DJIonboardSDK::sdk = 0;
 
-void DJIonboardSDK::resetFlightData()
-{
-    flightx = 0;
-    flighty = 0;
-    flightz = 0;
-    flightyaw = 0;
-    updateFlightX();
-    updateFlightY();
-    updateFlightZ();
-    updateFlightYaw();
-}
+
 
 DJIonboardSDK::DJIonboardSDK(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::DJIonboardSDK)
@@ -25,23 +15,20 @@ DJIonboardSDK::DJIonboardSDK(QWidget *parent)
     ui->setupUi(this);
 
     //! @code mission webview
-    //!
-    //!
     webView = new QWebView(this); // new QWebEngineView(this);
     QHBoxLayout *weblayout = new QHBoxLayout();
     ui->widget_web->setLayout(weblayout);
     weblayout->addWidget(webView);
-    //    ui->webView->load(QUrl("http://threejs.org/examples/#webgl_geometry_spline_editor"));
-    //    ui->webView->show();
     //! @endcode mission webview
 
     //! @code init DJISDK
     port = new QSerialPort(this);
     driver = new QHardDriver(port);
+    driver->setDisplay(ui->tb_display);
     api = new CoreAPI(driver);
 
-    send = new APIThread(api, 1, this);
-    read = new APIThread(api, 2, this);
+    send = new APIThread(api, 1, port);
+    read = new APIThread(api, 2, port);
 
     key = new QByteArray;
 
@@ -176,7 +163,7 @@ void DJIonboardSDK::closeEvent(QCloseEvent *)
 
 void DJIonboardSDK::setControlCallback(CoreAPI *This, Header *header)
 {
-    unsigned short ack_data = 0xFFFF;
+    unsigned short ack_data = ACK_NO_RESPONSE;
     unsigned char data = 0x1;
 
     if (header->length - EXC_DATA_SIZE <= 2)
@@ -186,8 +173,13 @@ void DJIonboardSDK::setControlCallback(CoreAPI *This, Header *header)
                (header->length - EXC_DATA_SIZE));
     }
     else
-        API_ERROR("ACK is exception,seesion id %d,sequence %d\n",
+    {
+        API_LOG(sdk->driver, ERROR_LOG,"ACK is exception,seesion id %d,sequence %d\n",
                   header->sessionID, header->sequence_number);
+#ifdef API_ERROR_DATA
+        sdk->driver->displayLog();
+#endif
+    }
 
     switch (ack_data)
     {
@@ -195,19 +187,19 @@ void DJIonboardSDK::setControlCallback(CoreAPI *This, Header *header)
             if (sdk)
                 sdk->ui->btn_coreSetControl->setText("Swtich to mod F");
             else
-                API_ERROR("known SDK pointer 0.");
+                API_LOG(sdk->driver, ERROR_LOG,"known SDK pointer 0.");
             break;
         case 0x0001:
             if (sdk)
                 sdk->ui->btn_coreSetControl->setText("Obtain Control");
             else
-                API_ERROR("known SDK pointer 0.");
+                API_LOG(sdk->driver, ERROR_LOG,"known SDK pointer 0.");
             break;
         case 0x0002:
             if (sdk)
                 sdk->ui->btn_coreSetControl->setText("Release Control");
             else
-                API_ERROR("known SDK pointer 0.");
+                API_LOG(sdk->driver, ERROR_LOG,"known SDK pointer 0.");
             break;
         case 0x0003:
             This->send(2, 1, SET_CONTROL, API_CTRL_MANAGEMENT, &data, 1,
@@ -471,6 +463,18 @@ void DJIonboardSDK::updateFlightZ()
 void DJIonboardSDK::updateFlightYaw()
 {
     ui->lineEdit_flight_Yaw->setText(QString::number(flightyaw));
+}
+
+void DJIonboardSDK::resetFlightData()
+{
+    flightx = 0;
+    flighty = 0;
+    flightz = 0;
+    flightyaw = 0;
+    updateFlightX();
+    updateFlightY();
+    updateFlightZ();
+    updateFlightYaw();
 }
 
 void DJIonboardSDK::on_btn_flight_frount_pressed()
@@ -847,6 +851,8 @@ void DJIonboardSDK::updateControlDevice()
 
 void DJIonboardSDK::on_tmr_Broadcast()
 {
+    //! @note this function cost too much time to run.
+    //! it is better run outside the broadcastCallback.
     if (ui->cb_coreTimeStamp->isChecked())
         upDateTime();
     if (ui->cb_coreCapacity->isChecked())
@@ -868,7 +874,13 @@ void DJIonboardSDK::on_tmr_Broadcast()
     if (ui->cb_FlightP->isChecked())
         updateFlightPal();
     if (ui->cb_FlightM->isChecked())
-        updateMagnet();
+        updateFlightMagnet();
+    if (ui->cb_FlightQ->isChecked())
+        updateFlightQuaternion();
+    if (ui->cb_FlightV->isChecked())
+        updateFlightVelocity();
+    if (ui->cb_FlightPos->isChecked())
+        updateFlightPossition();
 }
 
 void DJIonboardSDK::updateCameraYaw()
@@ -898,24 +910,15 @@ void DJIonboardSDK::updateCameraPitch()
         ui->cb_cameraPitchLimit->setChecked(false);
 }
 
-void DJIonboardSDK::on_btn_cameraRead_clicked()
-{
-    updateCameraYaw();
-    updateCameraRoll();
-    updateCameraPitch();
-}
-
 void DJIonboardSDK::updateVirturalRCData()
 {
-    ui->le_vrcYaw->setText(QString::number(vrc->getRCdata().yaw));
-    ui->le_vrcRoll->setText(QString::number(vrc->getRCdata().roll));
-    ui->le_vrcPitch->setText(QString::number(vrc->getRCdata().pitch));
-    ui->le_vrcThrottle->setText(QString::number(vrc->getRCdata().throttle));
-    ui->le_vrcMode->setText(QString::number(vrc->getRCdata().mode));
-    ui->le_vrcGear->setText(QString::number(vrc->getRCdata().gear));
+    ui->le_vrcYaw->setText(QString::number(vrc->getVRCdata().yaw));
+    ui->le_vrcRoll->setText(QString::number(vrc->getVRCdata().roll));
+    ui->le_vrcPitch->setText(QString::number(vrc->getVRCdata().pitch));
+    ui->le_vrcThrottle->setText(QString::number(vrc->getVRCdata().throttle));
+    ui->le_vrcMode->setText(QString::number(vrc->getVRCdata().mode));
+    ui->le_vrcGear->setText(QString::number(vrc->getVRCdata().gear));
 }
-
-void DJIonboardSDK::on_btn_vrcRead_clicked() { updateVirturalRCData(); }
 
 void DJIonboardSDK::updateFlightAcc()
 {
@@ -924,8 +927,6 @@ void DJIonboardSDK::updateFlightAcc()
     ui->le_Flight_accz->setText(QString::number(flight->getAcceleration().z));
 }
 
-void DJIonboardSDK::on_btn_FlightAcc_clicked() { updateFlightAcc(); }
-
 void DJIonboardSDK::updateFlightPal()
 {
     ui->le_Flight_palx->setText(QString::number(flight->getPalstance().x));
@@ -933,13 +934,56 @@ void DJIonboardSDK::updateFlightPal()
     ui->le_Flight_palz->setText(QString::number(flight->getPalstance().z));
 }
 
-void DJIonboardSDK::on_btn_FlightPal_clicked() { updateFlightPal(); }
-
-void DJIonboardSDK::updateMagnet()
+void DJIonboardSDK::updateFlightMagnet()
 {
     ui->le_Flight_magx->setText(QString::number(flight->getMagnet().x));
     ui->le_Flight_magy->setText(QString::number(flight->getMagnet().y));
     ui->le_Flight_magz->setText(QString::number(flight->getMagnet().z));
 }
 
-void DJIonboardSDK::on_btn_FlightMag_clicked() { updateMagnet(); }
+void DJIonboardSDK::updateFlightQuaternion()
+{
+    ui->le_Flight_Q0->setText(QString::number(flight->getQuaternion().q0));
+    ui->le_Flight_Q1->setText(QString::number(flight->getQuaternion().q1));
+    ui->le_Flight_Q2->setText(QString::number(flight->getQuaternion().q2));
+    ui->le_Flight_Q3->setText(QString::number(flight->getQuaternion().q3));
+}
+
+void DJIonboardSDK::updateFlightVelocity()
+{
+    ui->le_Flight_Vx->setText(QString::number(flight->getVelocity().x));
+    ui->le_Flight_Vy->setText(QString::number(flight->getVelocity().y));
+    ui->le_Flight_Vz->setText(QString::number(flight->getVelocity().z));
+    ui->le_Flight_VS->setText(
+        QString::number(flight->getVelocity().feedback_sensor_id));
+    ui->le_Flight_VH->setText(
+        QString::number(flight->getVelocity().health_flag));
+}
+
+void DJIonboardSDK::updateFlightPossition()
+{
+    ui->le_Flight_PosH->setText(QString::number(flight->getPossition().height));
+    ui->le_Flight_PosLa->setText(
+        QString::number(flight->getPossition().latitude));
+    ui->le_Flight_PosLo->setText(
+        QString::number(flight->getPossition().longtitude));
+    ui->le_Flight_PosAl->setText(
+        QString::number(flight->getPossition().altitude));
+    ui->le_Flight_PosHealth->setText(
+        QString::number(flight->getPossition().health));
+}
+
+void DJIonboardSDK::on_btn_vrcRead_clicked() { updateVirturalRCData(); }
+void DJIonboardSDK::on_btn_FlightAcc_clicked() { updateFlightAcc(); }
+void DJIonboardSDK::on_btn_FlightPal_clicked() { updateFlightPal(); }
+void DJIonboardSDK::on_btn_FlightMag_clicked() { updateFlightMagnet(); }
+void DJIonboardSDK::on_btn_FlightVel_clicked() { updateFlightVelocity(); }
+void DJIonboardSDK::on_btn_FlightQua_clicked() { updateFlightQuaternion(); }
+void DJIonboardSDK::on_btn_FlightPos_clicked() { updateFlightPossition(); }
+
+void DJIonboardSDK::on_btn_cameraRead_clicked()
+{
+    updateCameraYaw();
+    updateCameraRoll();
+    updateCameraPitch();
+}

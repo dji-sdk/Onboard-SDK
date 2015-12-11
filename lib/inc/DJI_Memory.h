@@ -1,6 +1,6 @@
-#ifndef DJI_PRO_RMU_H_
-#define DJI_PRO_RMU_H_
+#ifndef DJI_MEMORY_H
+#define DJI_MEMORY_H
 
 #include "DJI_Type.h"
 
-#endif /* DJI_PRO_RMU_H_ */
+#endif // DJI_MEMORY_H

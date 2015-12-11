@@ -1,4 +1,4 @@
-#include <DJI_API.h>
+#include "DJI_VirtualRC.h"
 
 using namespace DJI::onboardSDK;
 
@@ -30,14 +30,25 @@ void VirtualRC::sendData()
 
 void VirtualRC::resetData()
 {
-    data = { 1024, 1024, 1024, 1024, 1024, 1684, 1024, 1024,
-             1024, 1024, 1024, 1024, 1024, 1024, 1024, 1024 };
+    data.roll = 1024;
+    data.pitch = 1024;
+    data.throttle = 1024;
+    data.yaw = 1024;
+    data.gear = 1024;
+    data.reserved = 1024;
+    data.mode = 1024;
+    data.Channel_07 = 1024;
+    data.Channel_08 = 1024;
+    data.Channel_09 = 1024;
+    data.Channel_10 = 1024;
+    data.Channel_11 = 1024;
+    data.Channel_12 = 1024;
+    data.Channel_13 = 1024;
+    data.Channel_14 = 1024;
+    data.Channel_15 = 1024;
 }
 
-RadioData VirtualRC::getRCdata() const
-{
-    return api->getBroadcastData().rc;
-}
+RadioData VirtualRC::getVRCdata() const { return api->getBroadcastData().rc; }
 
 CoreAPI *VirtualRC::getApi() const { return api; }
 

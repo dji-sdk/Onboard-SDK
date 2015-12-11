@@ -44,6 +44,15 @@ enum TASK
     TASK_LANDING = 6
 };
 
+enum ACK_CODE
+{
+    ACK_SUCCESS = 0x0000,
+    ACK_KEYERROR = 0xFF00,
+    ACK_NO_AUTHORIZATION = 0xFF01,
+    ACK_NO_RIGHTS = 0xFF02,
+    ACK_NO_RESPONSE = 0xFFFF
+};
+
 enum CMD_SET
 {
     SET_ACTIVATION = 0x00,
@@ -99,6 +108,8 @@ class CoreAPI
   public:
     void sendPoll(void);
     void readPoll(void);
+    void callbackPoll(void);//! @todo not available yet
+    void autoResendPoll(void);//! @todo not available yet
 
     //! @todo modify to a new algorithm
     void byteHandler(const uint8_t in_data);
@@ -107,7 +118,7 @@ class CoreAPI
   public:
     /*! @code CoreAPI*/
     //! @note init API
-    CoreAPI(HardDriver *Driver, ReceiveHandler user_cmd_handler_entrance = 0);
+    CoreAPI(HardDriver *Driver, bool useCallbackThread = false, CallBack userRecvCallback = 0);
 
     //! @note Core Control API
     void ack(req_id_t req_id, unsigned char *ackdata, int len);
@@ -131,16 +142,19 @@ class CoreAPI
     CtrlInfoData getCtrlInfo() const;
     BatteryData getBatteryCapacity() const;
 
-    /*! @code Flight contorl
-     *  @note These functions is based on API functions above.
-     *  @todo move to a new class
-     */
-    VelocityData getGroundSpeed() const;
-    QuaternionData getQuaternion() const;
-    /*! @code user functions entrance*/
+    /*! @todo user functions entrance*/
     void setTransparentTransmissionCallback(
         TransparentHandler transparentHandlerEntrance);
+
+    //! @note call back functions
+  public:
     void setBroadcastCallback(CallBack callback);
+
+    static void activateCallback(CoreAPI *This, Header *header);
+    static void getVersionCallback(CoreAPI *This, Header *header);
+    static void setControlCallback(CoreAPI *This, Header *header);
+    static void sendToMobileCallback(CoreAPI *This, Header *header);
+    static void setFrequencyCallback(CoreAPI *This, Header *header);
 
   private:
     BroadcastData broadcastData;
@@ -149,8 +163,10 @@ class CoreAPI
     unsigned char encodeSendData[BUFFER_SIZE];
     unsigned char encodeACK[ACK_SIZE];
 
+    CallBack cbList[CALLBACK_LIST_NUM];
     CallBack broadcastCallback;
-    ReceiveHandler recvHandler;
+    CallBack recvCallback;
+    uint8_t cblistTail;
     TransparentHandler transparentHandler;
 
     VersionData versionData;
@@ -159,13 +175,6 @@ class CoreAPI
     unsigned short seq_num;
 
     SDKFilter filter;
-
-  public:
-    static void activateCallback(CoreAPI *This, Header *header);
-    static void getVersionCallback(CoreAPI *This, Header *header);
-    static void setControlCallback(CoreAPI *This, Header *header);
-    static void sendToMobileCallback(CoreAPI *This, Header *header);
-    static void setFrequencyCallback(CoreAPI *This, Header *header);
 
   private:
     void recvReqData(Header *header);
@@ -208,6 +217,8 @@ class CoreAPI
     void verifyHead(SDKFilter *p_filter);
     void verifyData(SDKFilter *p_filter);
     void callApp(SDKFilter *p_filter);
+    void storeData(SDKFilter *p_filter, unsigned char in_data);
+    bool decodeACKStatus(unsigned short ack);
 
   public:
     HardDriver *getDriver() const;
@@ -218,17 +229,7 @@ class CoreAPI
 
   private:
     HardDriver *driver;
-};
-
-class Mission
-{
-  public:
-    Mission(CoreAPI *ContorlAPI = 0);
-    CoreAPI *getApi() const;
-    void setApi(CoreAPI *value);
-
-  private:
-    CoreAPI *api;
+    bool CallbackThread;
 };
 
 class Swarm
@@ -240,34 +241,6 @@ class Swarm
 
   private:
     CoreAPI *api;
-};
-
-class VirtualRC
-{
-  public:
-    enum CutOff
-    {
-        CutOff_ToLogic = 0,
-        CutOff_ToRealRC = 1
-    };
-
-  public:
-    VirtualRC(CoreAPI *ContorlAPI = 0);
-
-    void sentContorl(bool enable, CutOff cutoffType);
-    void sendData(VirtualRCData Data);
-    void sendData();
-    void resetData();
-
-    RadioData getRCdata() const;
-
-  public:
-    CoreAPI *getApi() const;
-    void setApi(CoreAPI *value);
-
-  private:
-    CoreAPI *api;
-    VirtualRCData data;
 };
 
 } // namespace onboardSDK

@@ -60,12 +60,14 @@ class HardDriver
      *  @brief provide a mutex for multi-thread. when operating messages.
      *
      *  @attention
-     *  when writing and reading data, there might have a multi-thread problem.
+     *  when writting and reading data, there might have multi-thread problems.
      *  Abstract class HardDriver did not consider these issue.
-     *  Please be careful when you are going to implement send and readall funtions.
+     *  Please be careful when you are going to implement send and readall
+     *funtions.
      *
      *  @note
-     *  we strongly suggest you to inherit this class in your own file, not just implement
+     *  we strongly suggest you to inherit this class in your own file, not just
+     *implement
      *  it in DJI_HardDriver.cpp or inside this class
      *
      * */
@@ -81,6 +83,16 @@ class HardDriver
 
     virtual void lockMSG() = 0;
     virtual void freeMSG() = 0;
+
+  public:
+    enum DisplayType
+    {
+        TYPE_STATUS,
+        TYPE_ERROR,
+        TYPE_DEBUG
+    };
+
+    virtual void displayLog(char *buf = 0);
 };
 } // namespace onboardSDK
 } // namespace DJI

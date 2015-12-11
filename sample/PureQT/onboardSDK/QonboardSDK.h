@@ -4,13 +4,15 @@
 #include <DJI_HardDriver.h>
 #include <DJI_Camera.h>
 #include <DJI_Flight.h>
+#include <DJI_VirtualRC.h>
 #include <DJI_API.h>
 #include <QSerialPort>
 #include <QSerialPortInfo>
 
 #include <QMutex>
-
 #include <QThread>
+
+#include <QTextBrowser>
 
 using namespace DJI::onboardSDK;
 
@@ -30,17 +32,23 @@ class QHardDriver : public HardDriver
     void lockMSG();
     void freeMSG();
 
+    void displayLog(char *buf = 0);
+
     void setBaudrate(int value);
 
-  private:
+    QTextBrowser *getDisplay() const;
+    void setDisplay(QTextBrowser *value);
+
+private:
     QHardDriver();
 
-  private:
+private:
     int baudrate;
     QSerialPort *port;
     QMutex memory;
     QMutex msg;
     QMutex sendlock;
+    QTextBrowser *display;
 };
 
 class APIThread : public QThread

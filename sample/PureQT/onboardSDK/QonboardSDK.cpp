@@ -6,6 +6,9 @@ QHardDriver::QHardDriver()
     port = 0;
     baudrate = 9600;
 }
+QTextBrowser *QHardDriver::getDisplay() const { return display; }
+
+void QHardDriver::setDisplay(QTextBrowser *value) { display = value; }
 
 QHardDriver::QHardDriver(QSerialPort *Port)
 {
@@ -23,14 +26,18 @@ void QHardDriver::init()
         port->setParity(QSerialPort::NoParity);
         port->setDataBits(QSerialPort::Data8);
         port->setStopBits(QSerialPort::OneStop);
-        if (port->open(QIODevice::ReadWrite))
-            API_STATUS("port %s open success",
-                       port->portName().toLocal8Bit().data());
-        else
-            API_ERROR("fail to open port %s",
-                      port->portName().toLocal8Bit().data());
 
-        API_STATUS("BaudRate: %d", port->baudRate());
+        if (port->open(QIODevice::ReadWrite))
+        {
+            API_LOG(this, STATUS_LOG, "port %s open success",
+                    port->portName().toLocal8Bit().data());
+        }
+        else
+        {
+            API_LOG(this, ERROR_LOG, "fail to open port %s",
+                    port->portName().toLocal8Bit().data());
+        }
+        API_LOG(this, STATUS_LOG, "BaudRate: %d", port->baudRate());
     }
 }
 
@@ -82,6 +89,21 @@ void QHardDriver::freeMemory() { memory.unlock(); }
 void QHardDriver::lockMSG() { msg.lock(); }
 
 void QHardDriver::freeMSG() { msg.unlock(); }
+
+void QHardDriver::displayLog(char *buf)
+{
+    if (buf)
+        qDebug("%s", buf);
+    else
+    {
+        if (display)
+        {
+            display->append(QString(DJI::onboardSDK::buffer));
+        }
+        else
+            qDebug("%s", DJI::onboardSDK::buffer);
+    }
+}
 void QHardDriver::setBaudrate(int value) { baudrate = value; }
 
 APIThread::APIThread(CoreAPI *API, int Type, QObject *parent) : QThread(parent)

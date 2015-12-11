@@ -60,16 +60,6 @@ BatteryData DJI::onboardSDK::CoreAPI::getBatteryCapacity() const
     return broadcastData.capacity;
 }
 
-QuaternionData DJI::onboardSDK::CoreAPI::getQuaternion() const
-{
-    return broadcastData.q;
-}
-
-VelocityData DJI::onboardSDK::CoreAPI::getGroundSpeed() const
-{
-    return broadcastData.v;
-}
-
 CtrlInfoData DJI::onboardSDK::CoreAPI::getCtrlInfo() const
 {
     return broadcastData.ctrl_info;
@@ -112,7 +102,7 @@ void DJI::onboardSDK::CoreAPI::broadcast(Header *header)
     driver->freeMSG();
 
     if (broadcastCallback)
-        broadcastCallback(this,header);
+        broadcastCallback(this, header);
 }
 
 void DJI::onboardSDK::CoreAPI::recvReqData(Header *header)
@@ -139,7 +129,7 @@ void DJI::onboardSDK::CoreAPI::recvReqData(Header *header)
                 }
                 break;
             case CODE_LOSTCTRL:
-                API_STATUS("onboardSDK lost contrl\n");
+                API_LOG(driver, STATUS_LOG, "onboardSDK lost contrl\n");
                 Ack param;
                 if (header->sessionID > 0)
                 {
@@ -154,34 +144,32 @@ void DJI::onboardSDK::CoreAPI::recvReqData(Header *header)
                 break;
             case CODE_MISSION:
                 //! @todo add mission session decode
-                API_DEBUG("%x",
-                          *((unsigned char *)header + sizeof(Header) + 2));
+
+                API_LOG(driver, DEBUG_LOG, "%x",
+                        *((unsigned char *)header + sizeof(Header) + 2));
                 break;
             case CODE_WAYPOINT:
                 //! @todo add waypoint session decode
                 break;
             default:
-                API_STATUS("error, unknown BROADCAST command code\n");
+                API_LOG(driver, STATUS_LOG,
+                        "error, unknown BROADCAST command code\n");
                 break;
         }
     }
     else
-    {
-        API_DEBUG("receive unknown command\n");
-        if (recvHandler)
-        {
-            recvHandler(header);
-        }
-    }
+        API_LOG(driver, DEBUG_LOG, "receive unknown command\n");
+    if (recvCallback)
+        recvCallback(this, header);
 }
 
-void DJI::onboardSDK::CoreAPI::setTransparentTransmissionCallback(
+void CoreAPI::setTransparentTransmissionCallback(
     TransparentHandler transparentHandlerEntrance)
 {
     transparentHandler = transparentHandlerEntrance;
 }
 
-void DJI::onboardSDK::CoreAPI::setBroadcastCallback(CallBack callback)
+void CoreAPI::setBroadcastCallback(CallBack callback)
 {
     broadcastCallback = callback;
 }
