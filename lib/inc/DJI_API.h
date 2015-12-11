@@ -30,11 +30,6 @@ namespace onboardSDK
 class CoreAPI;
 class Flight;
 class Camera;
-class VirtualRC;
-class Swarm;
-class WayPoint;
-class HotPoint;
-class FollowMe;
 
 //! @todo sort enum and move to a new file
 enum TASK
