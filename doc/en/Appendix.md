@@ -26,7 +26,7 @@ In general, in the ground frame, a general definition for the UAV orientation is
 <tr>
   <td rowspan="5">Control mode byte</td>
   <td>bit 7:6</td>
-  <td>0b00: HORI_ATTI_TILT_ANG<br>0b01: HORI_VEL<br>0b10: HORI_POS</td>
+  <td>0b00: HORIZ_ATT<br>0b01: HORIZ_VEL<br>0b10: HORIZ_POS</td>
 </tr>
 <tr>
   <td>bit 5:4</td>
@@ -52,8 +52,8 @@ We suggest developers do not use VERT_POS control mode indoor when your UAV does
 
 > Please note that if the following conditions are met that the control mode is functional:
 > 
-* Only when the GPS signal is good (health\_flag >=3)，horizontal position control (HORI_POS) related control modes can be used.
-* Only when GPS signal is good (health\_flag >=3)，or when Gudiance system is working properly with N1 Autopilot，horizontal velocity control（HORI_VEL）related control modes can be used.
+* Only when the GPS signal is good (health\_flag >=3)，horizontal position control (HORIZ_POS) related control modes can be used.
+* Only when GPS signal is good (health\_flag >=3)，or when Gudiance system is working properly with N1 Autopilot，horizontal velocity control（HORIZ_VEL）related control modes can be used.
 
 
 <table>
@@ -78,15 +78,15 @@ We suggest developers do not use VERT_POS control mode indoor when your UAV does
 
 <tr>
   <td rowspan="3">Horizontal</td>
-  <td>HORI_ATTI_TILT_ANG*</td>
+  <td>HORIZ_ATT*</td>
   <td>Pitch & roll angle, need to be referenced to either the ground or body frame</td>
 </tr>
 <tr>
-  <td>HORI_POS**</td>
+  <td>HORIZ_POS**</td>
   <td>Position offsets of pitch & roll directions, need to be referenced to either the ground or body frame</td>
 </tr>
 <tr>
-  <td>HORI_VEL</td>
+  <td>HORIZ_VEL</td>
   <td>Velocities on pitch & roll directions, need to be referenced to either the ground or body frame</td>
 </tr>
 
@@ -101,7 +101,7 @@ We suggest developers do not use VERT_POS control mode indoor when your UAV does
 </tr>
 </table>
 
-**The input of HORI_POS is a position offset instead of an actual position. This design aims to take both GPS flight and vision-based flight into consideration. If the developer wants to use GPS navigation, the GPS information sent by the UAV can be used to calculate position offset. While in vision-based flight application, developers should have their own positioning device (along with Gudiance or GPS to provide velocity measurement) to do position control. **
+**The input of HORIZ_POS is a position offset instead of an actual position. This design aims to take both GPS flight and vision-based flight into consideration. If the developer wants to use GPS navigation, the GPS information sent by the UAV can be used to calculate position offset. While in vision-based flight application, developers should have their own positioning device (along with Gudiance or GPS to provide velocity measurement) to do position control. **
 
 
 
@@ -111,20 +111,20 @@ By specifying the `control_mode_byte`, 14 control modes can be constructed :
 
 |Index|Combinations|Input Data Range<br>(throttle/pitch&roll/yaw)|control_mode_byte*|
 |---|------------|---------------------------------------------|--------------|
-|1|VERT_VEL<br>HORI_ATTI_TILT_ANG<br>YAW_ANG|-4 m/s ~ 4 m/s<br>-30 degree ~ 30 degree<br>-180 degree ~ 180 degree|0b00000xx0|
-|2**|VERT_VEL<br>HORI_ATTI_TILT_ANG<br>YAW_RATE|-4 m/s ~ 4 m/s<br>-30 degree ~ 30 degree<br>-100 degree/s ~ 100 degree/s|0b00001xxy|
-|3|VERT_VEL<br>HORI_VEL<br>YAW_ANG|-4 m/s ~ 4 m/s<br>-10 m/s ~ 10 m/s<br>-180 degree ~ 180 degree|0b01000xx0|
-|4|VERT_VEL<br>HORI_VEL<br>YAW_RATE|-4 m/s ~ 4 m/s<br>-10 m/s ~ 10 m/s<br>-100 degree/s ~ 100 degree/s|0b01001xxy|
-|5|VERT_VEL<br>HORI_POS<br>YAW_ANG|-4 m/s ~ 4 m/s<br>offset in meters (no limit)<br>-180 degree ~ 180 degree|0b10000xx0|
-|6|VERT_VEL<br>HORI_POS<br>YAW_RATE|-4 m/s ~ 4 m/s<br>offset in meters (no limit)<br>-100 degree/s ~ 100 degree/s|0b10001xxy|
-|7|VERT_POS<br>HORI_ATTI_TILT_ANG<br>YAW_ANG|0m to height limit<br>-30 degree ~ 30 degree<br>-180 degree ~ 180 degree|0b00010xx0|
-|8|VERT_POS<br>HORI_ATTI_TILT_ANG<br>YAW_RATE|0m to height limit<br>-30 degree ~ 30 degree<br>-100 degree/s ~ 100 degree/s|0b00011xxy|
-|9|VERT_POS<br>HORI_VEL<br>YAW_ANG|0m to height limit<br>-10 m/s ~ 10 m/s<br>-180 degree ~ 180 degree|0b01010xx0|
-|10|VERT_POS<br>HORI_VEL<br>YAW_RATE|0m to height limit<br>-10 m/s ~ 10 m/s<br>-100 degree/s ~ 100 degree/s|0b01011xxy|
-|11|VERT_POS<br>HORI_POS<br>YAW_ANG|0m to height limit<br>offset in meters (no limit)<br>-180 degree ~ 180 degree|0b10010xx0|
-|12|VERT_POS<br>HORI_POS<br>YAW_RATE|0m to height limit<br>offset in meters (no limit)<br>-100 degree/s ~ 100 degree/s|0b10011xxy|
-|13|VERT_THRUST<br>HORI_ATTI_TILT_ANG<br>YAW_ANG|10 ~ 100 (use with precaution)<br>-30 degree ~ 30 degree<br>-180 degree ~ 180 degree|0b00100xx0|
-|14|VERT_THRUST<br>HORI_ATTI_TILT_ANG<br>YAW_RATE|10 ~ 100 (use with precaution)<br>-30 degree ~ 30 degree<br>-100 degree/s ~ 100 degree/s|0b00101xxy|
+|1|VERT_VEL<br>HORIZ_ATT<br>YAW_ANG|-4 m/s ~ 4 m/s<br>-30 degree ~ 30 degree<br>-180 degree ~ 180 degree|0b00000xx0|
+|2**|VERT_VEL<br>HORIZ_ATT<br>YAW_RATE|-4 m/s ~ 4 m/s<br>-30 degree ~ 30 degree<br>-100 degree/s ~ 100 degree/s|0b00001xxy|
+|3|VERT_VEL<br>HORIZ_VEL<br>YAW_ANG|-4 m/s ~ 4 m/s<br>-10 m/s ~ 10 m/s<br>-180 degree ~ 180 degree|0b01000xx0|
+|4|VERT_VEL<br>HORIZ_VEL<br>YAW_RATE|-4 m/s ~ 4 m/s<br>-10 m/s ~ 10 m/s<br>-100 degree/s ~ 100 degree/s|0b01001xxy|
+|5|VERT_VEL<br>HORIZ_POS<br>YAW_ANG|-4 m/s ~ 4 m/s<br>offset in meters (no limit)<br>-180 degree ~ 180 degree|0b10000xx0|
+|6|VERT_VEL<br>HORIZ_POS<br>YAW_RATE|-4 m/s ~ 4 m/s<br>offset in meters (no limit)<br>-100 degree/s ~ 100 degree/s|0b10001xxy|
+|7|VERT_POS<br>HORIZ_ATT<br>YAW_ANG|0m to height limit<br>-30 degree ~ 30 degree<br>-180 degree ~ 180 degree|0b00010xx0|
+|8|VERT_POS<br>HORIZ_ATT<br>YAW_RATE|0m to height limit<br>-30 degree ~ 30 degree<br>-100 degree/s ~ 100 degree/s|0b00011xxy|
+|9|VERT_POS<br>HORIZ_VEL<br>YAW_ANG|0m to height limit<br>-10 m/s ~ 10 m/s<br>-180 degree ~ 180 degree|0b01010xx0|
+|10|VERT_POS<br>HORIZ_VEL<br>YAW_RATE|0m to height limit<br>-10 m/s ~ 10 m/s<br>-100 degree/s ~ 100 degree/s|0b01011xxy|
+|11|VERT_POS<br>HORIZ_POS<br>YAW_ANG|0m to height limit<br>offset in meters (no limit)<br>-180 degree ~ 180 degree|0b10010xx0|
+|12|VERT_POS<br>HORIZ_POS<br>YAW_RATE|0m to height limit<br>offset in meters (no limit)<br>-100 degree/s ~ 100 degree/s|0b10011xxy|
+|13|VERT_THRUST<br>HORIZ_ATT<br>YAW_ANG|10 ~ 100 (use with precaution)<br>-30 degree ~ 30 degree<br>-180 degree ~ 180 degree|0b00100xx0|
+|14|VERT_THRUST<br>HORIZ_ATT<br>YAW_RATE|10 ~ 100 (use with precaution)<br>-30 degree ~ 30 degree<br>-100 degree/s ~ 100 degree/s|0b00101xxy|
 
 
 >*the lowest 3 bits in control_mode_byte decide the horizontal frame and yaw frame.  
