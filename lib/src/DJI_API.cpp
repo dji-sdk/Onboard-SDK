@@ -16,16 +16,18 @@ CoreAPI::CoreAPI(HardDriver *Driver, bool useCallbackThread,
     filter.reuse_index = 0;
     filter.enc_enabled = 0;
     broadcastCallback = 0;
-    transparentHandler = 0;
+    fromMobileCallback = 0;
 #ifndef SDK_VERSION_2_3
     broadcastData.timeStamp.time = 0;
     broadcastData.timeStamp.asr_ts = 0;
     broadcastData.timeStamp.sync_flag = 0;
 #endif
 
+    hotPointData = true;
+
     recvCallback = userRecvCallback ? userRecvCallback : 0;
 
-    CallbackThread = useCallbackThread;
+    callbackThread = useCallbackThread;
 
     setup();
 
@@ -74,7 +76,7 @@ void CoreAPI::ack(req_id_t req_id, unsigned char *ackdata, int len)
 
 void CoreAPI::getVersion(CallBack callback)
 {
-    versionData.version_ack = ACK_NO_RESPONSE;
+    versionData.version_ack = AC_COMMON_NO_RESPONSE;
     versionData.version_crc = 0x0;
     versionData.version_name[0] = 0;
 
@@ -100,7 +102,7 @@ void CoreAPI::sendToMobile(uint8_t *data, uint8_t len, CallBack callback)
 {
     if (len > 100)
     {
-        API_LOG(driver,ERROR_LOG,"Too much data to send");
+        API_LOG(driver, ERROR_LOG, "Too much data to send");
         return;
     }
     send(2, 0, SET_ACTIVATION, CODE_TOMOBILE, data, len,
@@ -119,6 +121,12 @@ FlightStatus CoreAPI::getFlightStatus() const { return broadcastData.status; }
 ActivateData CoreAPI::getAccountData() const { return accountData; }
 
 void CoreAPI::setAccountData(const ActivateData &value) { accountData = value; }
+void CoreAPI::setHotPointData(bool value) { hotPointData = value; }
+void CoreAPI::setWayPointData(bool value) { wayPointData = value; }
+void CoreAPI::setFollowData(bool value) { followData = value; }
+bool CoreAPI::getHotPointData() const { return hotPointData; }
+bool CoreAPI::getWayPointData() const { return wayPointData; }
+bool CoreAPI::getFollowData() const { return followData; }
 
 void CoreAPI::setControl(bool enable, CallBack callback)
 {
@@ -146,31 +154,31 @@ void CoreAPI::getVersionCallback(CoreAPI *This, Header *header)
 #endif
     memcpy(This->versionData.version_name, ptemp, 32);
 
-    API_LOG(This->driver,STATUS_LOG,"version ack = %d", This->versionData.version_ack);
-    API_LOG(This->driver,STATUS_LOG,"version crc = 0x%X", This->versionData.version_crc);
+    API_LOG(This->driver, STATUS_LOG, "version ack = %d\n",
+            This->versionData.version_ack);
+    API_LOG(This->driver, STATUS_LOG, "version crc = 0x%X\n",
+            This->versionData.version_crc);
 #ifdef SDK_VERSION_3_1
-    API_LOG(This->driver,STATUS_LOG,"version ID = %s\n", This->versionData.version_ID);
+    API_LOG(This->driver, STATUS_LOG, "version ID = %s\n",
+            This->versionData.version_ID);
 #endif
-    API_LOG(This->driver,STATUS_LOG,"version name = %s", This->versionData.version_name);
+    API_LOG(This->driver, STATUS_LOG, "version name = %s\n",
+            This->versionData.version_name);
 }
 
 void CoreAPI::activateCallback(CoreAPI *This, Header *header)
 {
-    volatile unsigned short ack_data;
+
+    unsigned short ack_data;
     if (header->length - EXC_DATA_SIZE <= 2)
     {
         memcpy((unsigned char *)&ack_data,
                ((unsigned char *)header) + sizeof(Header),
                (header->length - EXC_DATA_SIZE));
-        if (ack_data == SDK_ACTIVATE_NEW_DEVICE)
+        switch (ack_data)
         {
-            API_LOG(This->driver,STATUS_LOG,"new device try again\n");
-        }
-        else
-        {
-            if (ack_data == SDK_ACTIVATE_SUCCESS)
-            {
-                API_LOG(This->driver,STATUS_LOG,"Activation Successfully\n");
+            case ACK_ACTIVE_SUCCESS:
+                API_LOG(This->driver, STATUS_LOG, "Activation Successfully\n");
 
                 This->getDriver()->lockMSG();
                 This->broadcastData.activation = 1;
@@ -178,26 +186,61 @@ void CoreAPI::activateCallback(CoreAPI *This, Header *header)
 
                 if (This->accountData.app_key)
                     This->setKey(This->accountData.app_key);
-            }
-            else
-            {
-                API_LOG(This->driver,ERROR_LOG,"activate code:0x%X\n", ack_data);
-                This->getDriver()->lockMSG();
-                This->broadcastData.activation = 0;
-                This->getDriver()->freeMSG();
-            }
+                return;
+            case ACK_ACTIVE_NEW_DEVICE:
+                API_LOG(This->driver, STATUS_LOG, "new device try again\n");
+                break;
+            case ACK_ACTIVE_PARAMETER_ERROR:
+                API_LOG(This->driver, ERROR_LOG, "activate Wrong pahameter\n");
+                break;
+            case ACK_ACTIVE_ENCODE_ERROR:
+                API_LOG(This->driver, ERROR_LOG, "activate encode error\n");
+                break;
+            case ACK_ACTIVE_APP_NOT_CONNECTED:
+                API_LOG(This->driver, ERROR_LOG,
+                        "activate DJIGO not connected\n");
+                break;
+            case ACK_ACTIVE_NO_INTERNET:
+                API_LOG(This->driver, ERROR_LOG,
+                        "activate DJIGO not connected to the internet\n");
+                break;
+            case ACK_ACTIVE_SERVER_REFUSED:
+                API_LOG(This->driver, ERROR_LOG, "activate DJI server reject "
+                                                 "your request, please use an "
+                                                 "available SDK ID\n");
+                break;
+            case ACK_ACTIVE_ACCESS_LEVEL_ERROR:
+                API_LOG(This->driver, ERROR_LOG,
+                        "activate Wrong SDK permission\n");
+                break;
+            case ACK_ACTIVE_VERSION_ERROR:
+                API_LOG(This->driver, ERROR_LOG,
+                        "activate SDK version did not match\n");
+                This->getVersion();
+                break;
+            default:
+                if (!This->decodeACKStatus(ack_data))
+                {
+                    API_LOG(This->driver, ERROR_LOG,
+                            "While calling this function");
+                }
+                break;
         }
+        This->getDriver()->lockMSG();
+        This->broadcastData.activation = 0;
+        This->getDriver()->freeMSG();
     }
     else
     {
-        API_LOG(This->driver,ERROR_LOG,"ACK is exception,seesion id %d,sequence %d\n",
-                  header->sessionID, header->sequence_number);
+        API_LOG(This->driver, ERROR_LOG,
+                "ACK is exception,seesion id %d,sequence %d\n",
+                header->sessionID, header->sequence_number);
     }
 }
 
 void CoreAPI::sendToMobileCallback(CoreAPI *This, Header *header)
 {
-    unsigned short ack_data = ACK_NO_RESPONSE;
+    unsigned short ack_data = AC_COMMON_NO_RESPONSE;
     if (header->length - EXC_DATA_SIZE <= 2)
     {
         memcpy((unsigned char *)&ack_data,
@@ -205,19 +248,20 @@ void CoreAPI::sendToMobileCallback(CoreAPI *This, Header *header)
                (header->length - EXC_DATA_SIZE));
         if (!This->decodeACKStatus(ack_data))
         {
-            API_LOG(This->driver,ERROR_LOG,"While calling this function");
+            API_LOG(This->driver, ERROR_LOG, "While calling this function");
         }
     }
     else
     {
-        API_LOG(This->driver,ERROR_LOG,"ACK is exception,seesion id %d,sequence %d\n",
-                  header->sessionID, header->sequence_number);
+        API_LOG(This->driver, ERROR_LOG,
+                "ACK is exception,seesion id %d,sequence %d\n",
+                header->sessionID, header->sequence_number);
     }
 }
 
 void CoreAPI::setFrequencyCallback(CoreAPI *This __UNUSED, Header *header)
 {
-    unsigned short ack_data = ACK_NO_RESPONSE;
+    unsigned short ack_data = AC_COMMON_NO_RESPONSE;
 
     if (header->length - EXC_DATA_SIZE <= 2)
     {
@@ -228,15 +272,15 @@ void CoreAPI::setFrequencyCallback(CoreAPI *This __UNUSED, Header *header)
     switch (ack_data)
     {
         case 0x0000:
-            API_LOG(This->driver,STATUS_LOG,"Frequency set success");
+            API_LOG(This->driver, STATUS_LOG, "Frequency set success");
             break;
         case 0x0001:
-            API_LOG(This->driver,ERROR_LOG,"Frequency parameter error");
+            API_LOG(This->driver, ERROR_LOG, "Frequency parameter error");
             break;
         default:
             if (!This->decodeACKStatus(ack_data))
             {
-                API_LOG(This->driver,ERROR_LOG,"While calling this function");
+                API_LOG(This->driver, ERROR_LOG, "While calling this function");
             }
             break;
     }
@@ -244,7 +288,7 @@ void CoreAPI::setFrequencyCallback(CoreAPI *This __UNUSED, Header *header)
 
 void CoreAPI::setControlCallback(CoreAPI *This, Header *header)
 {
-    unsigned short ack_data = ACK_NO_RESPONSE;
+    unsigned short ack_data = AC_COMMON_NO_RESPONSE;
     unsigned char data = 0x1;
 
     if (header->length - EXC_DATA_SIZE <= 2)
@@ -255,40 +299,43 @@ void CoreAPI::setControlCallback(CoreAPI *This, Header *header)
     }
     else
     {
-        API_LOG(This->driver,ERROR_LOG,"ACK is exception,seesion id %d,sequence %d\n",
-                  header->sessionID, header->sequence_number);
+        API_LOG(This->driver, ERROR_LOG,
+                "ACK is exception,seesion id %d,sequence %d\n",
+                header->sessionID, header->sequence_number);
     }
 
     switch (ack_data)
     {
-        case 0x0000:
-            API_LOG(This->driver,STATUS_LOG,"Obtain control failed, Conditions did not "
-                       "satisfied");
+        case ACK_SETCONTROL_NEED_MODE_F:
+            API_LOG(This->driver, STATUS_LOG,
+                    "Obtain control failed, Conditions did not "
+                    "satisfied");
             break;
-        case 0x0001:
-            API_LOG(This->driver,STATUS_LOG,"release control successfully\n");
+        case ACK_SETCONTROL_RELEASE_SUCCESS:
+            API_LOG(This->driver, STATUS_LOG, "release control successfully\n");
             break;
-        case 0x0002:
-            API_LOG(This->driver,STATUS_LOG,"obtain control successfully\n");
+        case ACK_SETCONTROL_OBTAIN_SUCCESS:
+            API_LOG(This->driver, STATUS_LOG, "obtain control successfully\n");
             break;
-        case 0x0003:
-            API_LOG(This->driver,STATUS_LOG,"obtain control running\n");
+        case ACK_SETCONTROL_OBTAIN_RUNNING:
+            API_LOG(This->driver, STATUS_LOG, "obtain control running\n");
             This->send(2, 1, SET_CONTROL, CODE_SETCONTROL, &data, 1,
                        CoreAPI::setControlCallback, 500, 2);
             break;
-        case 0x0004:
-            API_LOG(This->driver,STATUS_LOG,"release control running\n");
+        case ACK_SETCONTROL_RELEASE_RUNNING:
+            API_LOG(This->driver, STATUS_LOG, "release control running\n");
             data = 0;
             This->send(2, 1, SET_CONTROL, CODE_SETCONTROL, &data, 1,
                        CoreAPI::setControlCallback, 500, 2);
             break;
-        case 0x00C9:
-            API_LOG(This->driver,STATUS_LOG,"IOC mode opening can not obtain control\n");
+        case ACK_SETCONTROL_IOC:
+            API_LOG(This->driver, STATUS_LOG,
+                    "IOC mode opening can not obtain control\n");
             break;
         default:
             if (!This->decodeACKStatus(ack_data))
             {
-                API_LOG(This->driver,ERROR_LOG,"While calling this function");
+                API_LOG(This->driver, ERROR_LOG, "While calling this function");
             }
             break;
     }

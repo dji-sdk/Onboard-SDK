@@ -4,6 +4,7 @@
 #include <DJI_HardDriver.h>
 #include <DJI_Camera.h>
 #include <DJI_Flight.h>
+#include <DJI_HotPoint.h>
 #include <DJI_VirtualRC.h>
 #include <DJI_API.h>
 #include <QSerialPort>

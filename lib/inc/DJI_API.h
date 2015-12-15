@@ -20,6 +20,7 @@
 #ifndef DJI_API_H
 #define DJI_API_H
 #include "DJI_Type.h"
+#include "DJI_Mission.h"
 
 #include "DJI_HardDriver.h"
 #include "DJI_App.h"
@@ -30,22 +31,42 @@ namespace onboardSDK
 class CoreAPI;
 class Flight;
 class Camera;
+class VirtualRC;
+class HotPoint;
 
 //! @todo sort enum and move to a new file
-enum TASK
+
+enum ACK_COMMON_CODE
 {
-    TASK_GOHOME = 1,
-    TASK_TAKEOFF = 4,
-    TASK_LANDING = 6
+    ACK_COMMON_SUCCESS = 0x0000,
+    ACK_COMMON_KEYERROR = 0xFF00,
+    ACK_COMMON_NO_AUTHORIZATION = 0xFF01,
+    ACK_COMMON_NO_RIGHTS = 0xFF02,
+    AC_COMMON_NO_RESPONSE = 0xFFFF
 };
 
-enum ACK_CODE
+enum ACK_ACTIVE_CODE
 {
-    ACK_SUCCESS = 0x0000,
-    ACK_KEYERROR = 0xFF00,
-    ACK_NO_AUTHORIZATION = 0xFF01,
-    ACK_NO_RIGHTS = 0xFF02,
-    ACK_NO_RESPONSE = 0xFFFF
+    ACK_ACTIVE_SUCCESS = 0x0000,
+    ACK_ACTIVE_PARAMETER_ERROR = 0x0001,
+    ACK_ACTIVE_ENCODE_ERROR = 0x0002,
+    ACK_ACTIVE_NEW_DEVICE = 0x0003,
+    ACK_ACTIVE_APP_NOT_CONNECTED = 0x0004,
+    ACK_ACTIVE_NO_INTERNET = 0x0005,
+    ACK_ACTIVE_SERVER_REFUSED = 0x0006,
+    ACK_ACTIVE_ACCESS_LEVEL_ERROR = 0x0007,
+    ACK_ACTIVE_VERSION_ERROR = 0x0008
+};
+
+enum ACK_SETCONTROL_CODE
+{
+    ACK_SETCONTROL_NEED_MODE_F = 0x0000,
+    ACK_SETCONTROL_RELEASE_SUCCESS = 0x0001,
+    ACK_SETCONTROL_OBTAIN_SUCCESS = 0x0002,
+    ACK_SETCONTROL_OBTAIN_RUNNING = 0x0003,
+    ACK_SETCONTROL_RELEASE_RUNNING = 0x0004,
+    ACK_SETCONTROL_IOC = 0x00C9,
+
 };
 
 enum CMD_SET
@@ -53,7 +74,19 @@ enum CMD_SET
     SET_ACTIVATION = 0x00,
     SET_CONTROL = 0x01,
     SET_BROADCAST = 0x02,
+    SET_MISSION = 0x03,
     SET_VIRTUALRC = 0x05
+};
+
+enum HOTPOINT_CODE
+{
+    CODE_HOTPOINT_START = 0x20,
+    CODE_HOTPOINT_STOP = 0x21,
+    CODE_HOTPOINT_PAUSE = 0x22,
+    CODE_HOTPOINT_PALSTANCE = 0x23,
+    CODE_HOTPOINT_RADIUS = 0x24,
+    CODE_HOTPOINT_SETYAW = 0x25,
+    CODE_HOTPOINT_LOAD = 0x26
 };
 
 enum ACTIVATION_CODE
@@ -88,6 +121,15 @@ enum VIRTUALRC_CODE
     CODE_VIRTUALRC_DATA
 };
 
+enum MISSION_TYPE
+{
+    MISSION_MODE_A,
+    MISSION_WAYPOINT,
+    MISSION_HOTPOINT,
+    MISSION_FOLLOW,
+    MISSION_IOC
+};
+
 class CoreAPI
 {
     /*! @brief
@@ -103,17 +145,18 @@ class CoreAPI
   public:
     void sendPoll(void);
     void readPoll(void);
-    void callbackPoll(void);//! @todo not available yet
-    void autoResendPoll(void);//! @todo not available yet
+    void callbackPoll(void);   //! @todo not available yet
+    void autoResendPoll(void); //! @todo not available yet
 
-    //! @todo modify to a new algorithm
     void byteHandler(const uint8_t in_data);
+    //! @todo modify to a new algorithm
     void byteStreamHandler(uint8_t *buffer, size_t size);
 
   public:
     /*! @code CoreAPI*/
     //! @note init API
-    CoreAPI(HardDriver *Driver, bool useCallbackThread = false, CallBack userRecvCallback = 0);
+    CoreAPI(HardDriver *Driver, bool useCallbackThread = false,
+            CallBack userRecvCallback = 0);
 
     //! @note Core Control API
     void ack(req_id_t req_id, unsigned char *ackdata, int len);
@@ -137,14 +180,13 @@ class CoreAPI
     CtrlInfoData getCtrlInfo() const;
     BatteryData getBatteryCapacity() const;
 
-    /*! @todo user functions entrance*/
-    void setTransparentTransmissionCallback(
-        TransparentHandler transparentHandlerEntrance);
-
     //! @note call back functions
   public:
+    //! @note Recevie data callback enterance
     void setBroadcastCallback(CallBack callback);
+    void setFromMobileCallback(CallBack FromMobileEntrance);
 
+    //! @note user callback sample
     static void activateCallback(CoreAPI *This, Header *header);
     static void getVersionCallback(CoreAPI *This, Header *header);
     static void setControlCallback(CoreAPI *This, Header *header);
@@ -158,11 +200,11 @@ class CoreAPI
     unsigned char encodeSendData[BUFFER_SIZE];
     unsigned char encodeACK[ACK_SIZE];
 
+    uint8_t cblistTail;
     CallBack cbList[CALLBACK_LIST_NUM];
     CallBack broadcastCallback;
     CallBack recvCallback;
-    uint8_t cblistTail;
-    TransparentHandler transparentHandler;
+    CallBack fromMobileCallback;
 
     VersionData versionData;
     ActivateData accountData;
@@ -213,24 +255,38 @@ class CoreAPI
     void verifyData(SDKFilter *p_filter);
     void callApp(SDKFilter *p_filter);
     void storeData(SDKFilter *p_filter, unsigned char in_data);
-    bool decodeACKStatus(unsigned short ack);
 
   public:
-    HardDriver *getDriver() const;
-    void setDriver(HardDriver *value);
+    //! @note ack decoder
+    bool decodeACKStatus(unsigned short ack);
+    bool decodeMissionStatus(uint8_t ack);
 
+  public:
+    //! @note private variables access functions
     ActivateData getAccountData() const;
+    HardDriver *getDriver() const;
+    bool getHotPointData() const;
+    bool getWayPointData() const;
+    bool getFollowData() const;
+
     void setAccountData(const ActivateData &value);
+    void setDriver(HardDriver *value);
+    void setHotPointData(bool value);
+    void setWayPointData(bool value);
+    void setFollowData(bool value);
 
   private:
     HardDriver *driver;
-    bool CallbackThread;
+    bool callbackThread;
+    bool hotPointData;
+    bool wayPointData;
+    bool followData;
 };
 
 class Swarm
 {
   public:
-    Swarm(CoreAPI *ContorlAPI = 0);
+    Swarm(CoreAPI *ControlAPI = 0);
     CoreAPI *getApi() const;
     void setApi(CoreAPI *value);
 

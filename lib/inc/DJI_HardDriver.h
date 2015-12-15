@@ -34,7 +34,7 @@ class HardDriver
 
     /*! @note How to use
      *  In order to provide platform crossable DJI onboardSDK library,
-     *  we abstract this class as a hard ware level.
+     *  we abstract this class as a hardware level.
      *
      *  @note function descriptions:
      *
@@ -85,12 +85,6 @@ class HardDriver
     virtual void freeMSG() = 0;
 
   public:
-    enum DisplayType
-    {
-        TYPE_STATUS,
-        TYPE_ERROR,
-        TYPE_DEBUG
-    };
 
     virtual void displayLog(char *buf = 0);
 };

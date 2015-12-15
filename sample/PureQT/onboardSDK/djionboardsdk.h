@@ -50,7 +50,7 @@ class DJIonboardSDK : public QMainWindow
     void updateFlightQuaternion();
     void updateFlightVelocity();
     void updateFlightPossition();
-private slots:
+  private slots:
     void on_btn_portRefresh_clicked();
     void on_btn_portOpen_clicked();
     void on_comboBox_portName_currentIndexChanged(int index);
@@ -150,6 +150,16 @@ private slots:
 
     void on_btn_webLoad_clicked();
 
+    void on_cb_mission_hp_clicked(bool checked);
+    void on_cb_mission_wp_clicked(bool checked);
+    void on_cb_mission_follow_clicked(bool checked);
+
+    void on_btn_hotPoint_start_clicked();
+    void on_btn_hotPoint_stop_clicked();
+    void on_btn_hotPoint_current_clicked();
+    void on_btn_hp_setPal_clicked();
+
+
 private:
     Ui::DJIonboardSDK *ui;
 
@@ -170,6 +180,8 @@ private:
 
     VirtualRC *vrc;
     QTimer *vrcSend;
+
+    HotPoint *hp;
 
     Camera *cam;
     uint8_t camFlag;

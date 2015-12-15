@@ -1,5 +1,6 @@
 #include "QonboardSDK.h"
 #include <QDateTime>
+#include <QScrollBar>
 
 QHardDriver::QHardDriver()
 {
@@ -99,6 +100,8 @@ void QHardDriver::displayLog(char *buf)
         if (display)
         {
             display->append(QString(DJI::onboardSDK::buffer));
+            display->verticalScrollBar()->setSliderPosition(
+                display->verticalScrollBar()->maximum());
         }
         else
             qDebug("%s", DJI::onboardSDK::buffer);

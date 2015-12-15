@@ -26,6 +26,10 @@
 #define ACK_SESSION_IDLE 0
 #define ACK_SESSION_PROCESS 1
 #define ACK_SESSION_USING 2
+#define CMD_SESSION_0 0
+#define CMD_SESSION_1 1
+#define CMD_SESSION_AUTO 32
+
 
 #define POLL_TICK 20 // unit is ms
 

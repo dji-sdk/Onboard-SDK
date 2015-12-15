@@ -108,8 +108,8 @@ void DJI::onboardSDK::CoreAPI::broadcast(Header *header)
 void DJI::onboardSDK::CoreAPI::recvReqData(Header *header)
 {
     unsigned char buf[100] = { 0, 0 };
-    unsigned char len = 0;
 
+    uint8_t ack = *((unsigned char *)header + sizeof(Header) + 2);
     if (getCmdSet(header) == SET_BROADCAST)
     {
         switch (getCmdCode(header))
@@ -118,14 +118,10 @@ void DJI::onboardSDK::CoreAPI::recvReqData(Header *header)
                 broadcast(header);
                 break;
             case CODE_FROMMOBILE:
-                if (transparentHandler)
+                if (fromMobileCallback)
                 {
-                    len = (header->length - EXC_DATA_SIZE - 2) > 100
-                              ? 100
-                              : (header->length - EXC_DATA_SIZE - 2);
-                    memcpy(buf, ((unsigned char *)header) + sizeof(Header) + 2,
-                           len);
-                    transparentHandler(buf, len);
+                    API_LOG(driver, STATUS_LOG, "Recevie data from mobile\n")
+                    fromMobileCallback(this, header);
                 }
                 break;
             case CODE_LOSTCTRL:
@@ -144,9 +140,36 @@ void DJI::onboardSDK::CoreAPI::recvReqData(Header *header)
                 break;
             case CODE_MISSION:
                 //! @todo add mission session decode
-
-                API_LOG(driver, DEBUG_LOG, "%x",
-                        *((unsigned char *)header + sizeof(Header) + 2));
+                switch (ack)
+                {
+                    case MISSION_MODE_A:
+                        break;
+                    case MISSION_WAYPOINT:
+                        if (wayPointData)
+                        {
+                            API_LOG(driver, STATUS_LOG, "Mode A \n");
+                        }
+                        break;
+                    case MISSION_HOTPOINT:
+                        if (hotPointData)
+                        {
+                            API_LOG(driver, STATUS_LOG, "Mode HP \n");
+                        }
+                        break;
+                    case MISSION_FOLLOW:
+                        if (followData)
+                        {
+                            API_LOG(driver, STATUS_LOG, "Mode Follow \n");
+                        }
+                        break;
+                    case MISSION_IOC:
+                        API_LOG(driver, STATUS_LOG, "Mode IOC \n");
+                        break;
+                    default:
+                        API_LOG(driver, ERROR_LOG,
+                                "unkown mission code 0x%X \n", ack);
+                        break;
+                }
                 break;
             case CODE_WAYPOINT:
                 //! @todo add waypoint session decode
@@ -163,10 +186,9 @@ void DJI::onboardSDK::CoreAPI::recvReqData(Header *header)
         recvCallback(this, header);
 }
 
-void CoreAPI::setTransparentTransmissionCallback(
-    TransparentHandler transparentHandlerEntrance)
+void CoreAPI::setFromMobileCallback(CallBack FromMobileEntrance)
 {
-    transparentHandler = transparentHandlerEntrance;
+    fromMobileCallback = FromMobileEntrance;
 }
 
 void CoreAPI::setBroadcastCallback(CallBack callback)

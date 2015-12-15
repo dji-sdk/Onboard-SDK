@@ -30,23 +30,6 @@
 #define API_INFO_QUERY 0x02
 #define API_SIM_ECHO 0xFF
 
-#define HORIZ_ATT 0x00
-#define HORIZ_VEL 0x40
-#define HORIZ_POS 0x80
-
-#define VERT_VEL 0x00
-#define VERT_POS 0x10
-#define VERT_TRU 0x20
-
-#define YAW_ANG 0x00
-#define YAW_RATE 0x08
-
-#define HORIZ_GND 0x00
-#define HORIZ_BODY 0x02
-
-#define YAW_GND 0x00
-#define YAW_BODY 0x01
-
 //----------------------------------------------------------------------
 // uav std_msgs reciever
 //----------------------------------------------------------------------
@@ -76,8 +59,6 @@ typedef struct
     unsigned char reserve : 2;
 } req_id_t;
 
-#define DATA_MAX_SIZE (1000u)
-#define ERR_INDEX (0xff)
 #define EXC_DATA_SIZE (16u)
 #define SET_CMD_SIZE (2u)
 
@@ -90,33 +71,6 @@ typedef struct
 #define STATUS_CMD_EXECUTING 0x0003
 #define STATUS_CMD_EXE_FAIL 0x0004
 #define STATUS_CMD_EXE_SUCCESS 0x0005
-
-/*
- *struct of cmd agency data
- */
-
-typedef struct
-{
-    unsigned char cmd_sequence;
-    unsigned char cmd_data;
-} TaskData;
-
-//----------------------------------------------------------------------
-// for activation
-//----------------------------------------------------------------------
-
-/*
- *  code re-construction according onboard api protocol
- */
-#define SDK_ACTIVATE_SUCCESS 0x0000
-#define SDK_ACTIVATE_PARAM_ERROR 0x0001
-#define SDK_ACTIVATE_DATA_ENC_ERROR 0x0002
-#define SDK_ACTIVATE_NEW_DEVICE 0x0003
-#define SDK_ACTIVATE_DJI_APP_NOT_CONNECT 0x0004
-#define SDK_ACTIVATE_DIJ_APP_NO_INTERNET 0x0005
-#define SDK_ACTIVATE_SERVER_REFUSED 0x0006
-#define SDK_ACTIVATE_LEVEL_ERROR 0x0007
-#define SDK_ACTIVATE_SDK_VERSION_ERROR 0x0008
 
 #pragma pack(1)
 
@@ -139,14 +93,6 @@ typedef struct VersionData
     char version_name[32];
 } VersionData;
 
-typedef struct FlightData
-{
-    unsigned char ctrl_flag;
-    float roll_or_x;
-    float pitch_or_y;
-    float thr_z;
-    float yaw;
-} FlightData;
 
 #pragma pack()
 

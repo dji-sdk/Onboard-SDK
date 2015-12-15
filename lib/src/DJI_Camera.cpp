@@ -39,17 +39,22 @@ float32_t Camera::getPitch() const
 
 bool Camera::isYawLimit() const
 {
+#ifndef SDK_VERSION_2_3
     return api->getBroadcastData().gimbal.is_yaw_limit ? true : false;
+#endif
 }
 
 bool Camera::isRollLimit() const
 {
+#ifndef SDK_VERSION_2_3
     return api->getBroadcastData().gimbal.is_roll_limit ? true : false;
+#endif
 }
-
 bool Camera::isPitchLimit() const
 {
+#ifndef SDK_VERSION_2_3
     return api->getBroadcastData().gimbal.is_pitch_limit ? true : false;
+#endif
 }
 
 CoreAPI *Camera::getApi() const { return api; }

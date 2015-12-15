@@ -5,8 +5,6 @@
 
 DJIonboardSDK *DJIonboardSDK::sdk = 0;
 
-
-
 DJIonboardSDK::DJIonboardSDK(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::DJIonboardSDK)
 {
@@ -35,6 +33,7 @@ DJIonboardSDK::DJIonboardSDK(QWidget *parent)
     flight = new Flight(api);
     vrc = new VirtualRC(api);
     cam = new Camera(api);
+    hp = new HotPoint(api);
 
     refreshPort();
     setPort();
@@ -43,6 +42,7 @@ DJIonboardSDK::DJIonboardSDK(QWidget *parent)
 
     send->start();
     read->start();
+
     //! @endcode init DJISDK
 
     //! @code init flight
@@ -96,7 +96,7 @@ DJIonboardSDK::DJIonboardSDK(QWidget *parent)
 
     //! @code init virtual RC
     vrcSend = new QTimer();
-    vrcSend->setInterval(400); // 2.5Hz
+    vrcSend->setInterval(200); // 5Hz
     connect(vrcSend, SIGNAL(timeout()), this, SLOT(on_tmr_VRC_autosend()));
     //! @endcode init virtual RC
 
@@ -163,7 +163,7 @@ void DJIonboardSDK::closeEvent(QCloseEvent *)
 
 void DJIonboardSDK::setControlCallback(CoreAPI *This, Header *header)
 {
-    unsigned short ack_data = ACK_NO_RESPONSE;
+    unsigned short ack_data = AC_COMMON_NO_RESPONSE;
     unsigned char data = 0x1;
 
     if (header->length - EXC_DATA_SIZE <= 2)
@@ -174,8 +174,9 @@ void DJIonboardSDK::setControlCallback(CoreAPI *This, Header *header)
     }
     else
     {
-        API_LOG(sdk->driver, ERROR_LOG,"ACK is exception,seesion id %d,sequence %d\n",
-                  header->sessionID, header->sequence_number);
+        API_LOG(sdk->driver, ERROR_LOG,
+                "ACK is exception,seesion id %d,sequence %d\n",
+                header->sessionID, header->sequence_number);
 #ifdef API_ERROR_DATA
         sdk->driver->displayLog();
 #endif
@@ -187,19 +188,19 @@ void DJIonboardSDK::setControlCallback(CoreAPI *This, Header *header)
             if (sdk)
                 sdk->ui->btn_coreSetControl->setText("Swtich to mod F");
             else
-                API_LOG(sdk->driver, ERROR_LOG,"known SDK pointer 0.");
+                API_LOG(sdk->driver, ERROR_LOG, "known SDK pointer 0.");
             break;
         case 0x0001:
             if (sdk)
                 sdk->ui->btn_coreSetControl->setText("Obtain Control");
             else
-                API_LOG(sdk->driver, ERROR_LOG,"known SDK pointer 0.");
+                API_LOG(sdk->driver, ERROR_LOG, "known SDK pointer 0.");
             break;
         case 0x0002:
             if (sdk)
                 sdk->ui->btn_coreSetControl->setText("Release Control");
             else
-                API_LOG(sdk->driver, ERROR_LOG,"known SDK pointer 0.");
+                API_LOG(sdk->driver, ERROR_LOG, "known SDK pointer 0.");
             break;
         case 0x0003:
             This->send(2, 1, SET_CONTROL, API_CTRL_MANAGEMENT, &data, 1,
@@ -224,29 +225,19 @@ void DJIonboardSDK::activationCallback(CoreAPI *This, Header *header)
         memcpy((unsigned char *)&ack_data,
                ((unsigned char *)header) + sizeof(Header),
                (header->length - EXC_DATA_SIZE));
-        if (ack_data == SDK_ACTIVATE_NEW_DEVICE)
+        if (ack_data == ACK_ACTIVE_NEW_DEVICE)
         {
             sdk->ui->btn_coreActive->setText("New Device");
         }
         else
         {
-            if (ack_data == SDK_ACTIVATE_SUCCESS)
+            if (ack_data == ACK_ACTIVE_SUCCESS)
             {
                 sdk->ui->btn_coreActive->setText("Success");
-                This->getDriver()->lockMSG();
-                This->setActivation(true);
-                This->getDriver()->freeMSG();
-
-                if (This->getAccountData().app_key)
-                    This->setKey(This->getAccountData().app_key);
             }
             else
             {
                 sdk->ui->btn_coreActive->setText("Error");
-
-                This->getDriver()->lockMSG();
-                This->setActivation(false);
-                This->getDriver()->freeMSG();
             }
         }
     }
@@ -254,6 +245,7 @@ void DJIonboardSDK::activationCallback(CoreAPI *This, Header *header)
     {
         sdk->ui->btn_coreActive->setText("Decode Error");
     }
+    This->activateCallback(This, header);
 }
 
 void DJIonboardSDK::on_btn_portRefresh_clicked() { refreshPort(); }
@@ -391,11 +383,11 @@ void DJIonboardSDK::on_btg_flight_HL(QAbstractButton *button)
     QString name = button->text();
     flightFlag &= 0x3F;
     if (name == "Angle")
-        flightFlag |= 0x00;
+        flightFlag |= Flight::HORIZONTAL_ANGLE;
     else if (name == "Velocity")
-        flightFlag |= 0x40;
+        flightFlag |= Flight::HORIZONTAL_VELOCITY;
     else if (name == "Possition")
-        flightFlag |= 0x80;
+        flightFlag |= Flight::HORIZONTAL_POSSITION;
     updateFlightFlag();
 }
 
@@ -404,11 +396,11 @@ void DJIonboardSDK::on_btg_flight_VL(QAbstractButton *button)
     QString name = button->text();
     flightFlag &= 0xCF;
     if (name == "Thrust")
-        flightFlag |= 0x20;
+        flightFlag |= Flight::VERTICAL_THRUST;
     else if (name == "Velocity")
-        flightFlag |= 0x00;
+        flightFlag |= Flight::VERTICAL_VELOCITY;
     else if (name == "Possition")
-        flightFlag |= 0x10;
+        flightFlag |= Flight::VERTICAL_POSSITION;
     updateFlightFlag();
 }
 
@@ -417,9 +409,9 @@ void DJIonboardSDK::on_btg_flight_YL(QAbstractButton *button)
     QString name = button->text();
     flightFlag &= 0xF7;
     if (name == "Angle")
-        flightFlag |= 0x00;
+        flightFlag |= Flight::YAW_ANGLE;
     else
-        flightFlag |= 0x08;
+        flightFlag |= Flight::YAW_PALSTANCE;
     updateFlightFlag();
 }
 
@@ -428,9 +420,9 @@ void DJIonboardSDK::on_btg_flight_CL(QAbstractButton *button)
     QString name = button->text();
     flightFlag &= 0xF9;
     if (name == "Ground")
-        flightFlag |= 0x00;
+        flightFlag |= Flight::HORIZONTAL_GROUND;
     else
-        flightFlag |= 0x02;
+        flightFlag |= Flight::HORIZONTAL_BODY;
     updateFlightFlag();
 }
 void DJIonboardSDK::on_btg_flight_SM(QAbstractButton *button)
@@ -439,9 +431,9 @@ void DJIonboardSDK::on_btg_flight_SM(QAbstractButton *button)
     QString name = button->text();
     flightFlag &= 0xFE;
     if (name == "Disable")
-        flightFlag |= 0x00;
+        flightFlag |= Flight::SMOOTH_DISABLE;
     else
-        flightFlag |= 0x01;
+        flightFlag |= Flight::SMOOTH_ENABLE;
     updateFlightFlag();
 }
 
@@ -506,11 +498,11 @@ void DJIonboardSDK::autosend() { flightSend(); }
 void DJIonboardSDK::on_btn_flight_runTask_clicked()
 {
     QString name = ui->btg_flightTask->checkedButton()->text();
-    TASK type = TASK_GOHOME;
+    Flight::TASK type = Flight::TASK_GOHOME;
     if (name == "Take off")
-        type = TASK_TAKEOFF;
+        type = Flight::TASK_TAKEOFF;
     else if (name == "Landing")
-        type = TASK_LANDING;
+        type = Flight::TASK_LANDING;
 
     flight->task(type);
 }
@@ -814,15 +806,17 @@ void DJIonboardSDK::on_cb_camera_send_clicked(bool checked)
 
 void DJIonboardSDK::on_btn_webLoad_clicked()
 {
-    webView->load(
-        QUrl("http://threejs.org/examples/#webgl_geometry_spline_editor"));
+    webView->load(QUrl("http://10.60.23.193"));
 }
 
 void DJIonboardSDK::upDateTime()
 {
-    ui->le_coreTimeStamp->setText(QString::number(api->getTime().time));
+#ifdef SDK_VERSION_2_3
+    ui->le_coreTimeStamp->setText(QString::number(api->getTime()));
+#else
     ui->le_coreNanoStamp->setText(QString::number(api->getTime().asr_ts));
     ui->le_coreSyncFlag->setText(QString::number(api->getTime().sync_flag));
+#endif
 }
 
 void DJIonboardSDK::upDateCapacity()
@@ -987,3 +981,44 @@ void DJIonboardSDK::on_btn_cameraRead_clicked()
     updateCameraRoll();
     updateCameraPitch();
 }
+
+void DJIonboardSDK::on_btn_hotPoint_start_clicked()
+{
+    hp->setHotPoint(ui->le_hp_lo->text().toFloat(),
+                    ui->le_hp_la->text().toFloat(),
+                    ui->le_hp_al->text().toFloat());
+    hp->setClockwise(ui->cb_hp_cl->isChecked());
+    hp->setPalstance(ui->le_hp_pa->text().toFloat());
+    hp->setRadius(ui->le_hp_ra->text().toFloat());
+    hp->start();
+}
+
+void DJIonboardSDK::on_btn_hp_setPal_clicked()
+{
+    hp->startPalstance(ui->le_hp_pa->text().toFloat(),
+                       ui->cb_hp_cl->isChecked());
+}
+
+void DJIonboardSDK::on_btn_hotPoint_current_clicked()
+{
+    ui->le_hp_al->setText(QString::number(flight->getPossition().altitude));
+    ui->le_hp_la->setText(QString::number(flight->getPossition().latitude));
+    ui->le_hp_lo->setText(QString::number(flight->getPossition().longtitude));
+}
+
+void DJIonboardSDK::on_cb_mission_hp_clicked(bool checked)
+{
+    api->setHotPointData(checked);
+}
+
+void DJIonboardSDK::on_cb_mission_wp_clicked(bool checked)
+{
+    api->setWayPointData(checked);
+}
+
+void DJIonboardSDK::on_cb_mission_follow_clicked(bool checked)
+{
+    api->setFollowData(checked);
+}
+
+void DJIonboardSDK::on_btn_hotPoint_stop_clicked() { hp->stop(); }

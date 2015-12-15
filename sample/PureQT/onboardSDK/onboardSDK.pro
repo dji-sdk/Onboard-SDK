@@ -23,7 +23,9 @@ SOURCES += main.cpp\
     ../../../lib/src/DJI_Link.cpp \
     ../../../lib/src/DJI_Memory.cpp \
     ../../../lib/src/DJI_VirtualRC.cpp \
-    ../../../lib/src/DJI_Camera.cpp
+    ../../../lib/src/DJI_Camera.cpp \
+    ../../../lib/src/DJI_HotPoint.cpp \
+    ../../../lib/src/DJI_Mission.cpp
 
 HEADERS  += djionboardsdk.h \
     QonboardSDK.h \
@@ -38,7 +40,9 @@ HEADERS  += djionboardsdk.h \
     ../../../lib/inc/DJI_Version.h \
     ../../../lib/inc/DJI_Camera.h \
     ../../../lib/inc/DJI_Flight.h \
-    ../../../lib/inc/DJI_VirtualRC.h
+    ../../../lib/inc/DJI_VirtualRC.h \
+    ../../../lib/inc/DJI_HotPoint.h \
+    ../../../lib/inc/DJI_Mission.h
 
 FORMS    += djionboardsdk.ui
 

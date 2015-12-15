@@ -623,19 +623,19 @@ bool CoreAPI::decodeACKStatus(unsigned short ack)
 {
     switch (ack)
     {
-        case ACK_SUCCESS:
+        case ACK_COMMON_SUCCESS:
             API_LOG(driver, STATUS_LOG,"SUCCESS.");
             return true;
-        case ACK_KEYERROR:
+        case ACK_COMMON_KEYERROR:
             API_LOG(driver, ERROR_LOG, "Wrong encode Key, Activate again.");
             return false;
-        case ACK_NO_AUTHORIZATION:
+        case ACK_COMMON_NO_AUTHORIZATION:
             API_LOG(driver, ERROR_LOG, "Pleasd obtain control and retry.");
             return false;
-        case ACK_NO_RIGHTS:
+        case ACK_COMMON_NO_RIGHTS:
             API_LOG(driver, ERROR_LOG, "Need higher Level access.");
             return false;
-        case ACK_NO_RESPONSE:
+        case AC_COMMON_NO_RESPONSE:
             API_LOG(driver, ERROR_LOG,
                     "Check your Hardware connection and retry.");
             return false;

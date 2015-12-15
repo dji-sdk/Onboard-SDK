@@ -21,7 +21,7 @@
     {                                                                          \
         if ((title))                                                           \
         {                                                                      \
-            APIprintf("%s %s,line %d: " fmt, title, __func__, __LINE__,        \
+            APIprintf("%s %s,line %d: " fmt, title?title:"NONE", __func__, __LINE__,        \
                       ##__VA_ARGS__);                                          \
             (driver)->displayLog();                                            \
         }                                                                      \
@@ -137,6 +137,8 @@ typedef struct Ack
 } Ack;
 
 #pragma pack(1)
+
+
 typedef uint8_t BatteryData;
 
 typedef struct GimbalAngleData
@@ -167,7 +169,7 @@ typedef struct QuaternionData
     float32_t q3;
 } QuaternionData;
 
-typedef struct
+typedef struct CommonData
 {
     float32_t x;
     float32_t y;
@@ -184,7 +186,7 @@ typedef struct VelocityData
     uint8_t reserve : 3;
 } VelocityData;
 
-typedef struct
+typedef struct PossitionData
 {
     float64_t latitude;
     float64_t longtitude;
@@ -193,7 +195,7 @@ typedef struct
     uint8_t health;
 } PossitionData;
 
-typedef struct
+typedef struct RadioData
 {
     int16_t roll;
     int16_t pitch;
@@ -203,18 +205,25 @@ typedef struct
     int16_t gear;
 } RadioData;
 
-typedef struct
+typedef struct MagnetData
 {
     int16_t x;
     int16_t y;
     int16_t z;
 } MagnetData;
 
+typedef struct GPSData
+{
+    float64_t latitude;
+    float64_t longtitude;
+    float64_t altitude;
+} GPSData;
+
 typedef struct CtrlInfoData
 {
-#ifdef SDK_VERSION_3_0
+#ifndef SDK_VERSION_2_3
     uint8_t data;
-#endif
+#endif // SDK_VERSION_2_3
     //! @todo mode remote to enums
     uint8_t cur_ctrl_dev_in_navi_mode : 3; /*0->rc  1->app  2->serial*/
     uint8_t serial_req_status : 1;		   /*1->opensd  0->close*/
@@ -223,31 +232,35 @@ typedef struct CtrlInfoData
 
 #ifdef SDK_VERSION_2_3
 typedef uint32_t TimeStampData;
-#endif // SDK_VERSION_2_3
-
-#ifdef SDK_VERSION_3_0
+#else
 typedef struct TimeStampData
 {
     uint32_t time;
     uint32_t asr_ts;
     uint8_t sync_flag;
 } TimeStampData;
-#endif // SDK_VERSION_3_0
+#endif // SDK_VERSION_2_3
 
 typedef struct GimbalData
 {
     float32_t roll;
     float32_t pitch;
     float32_t yaw;
-#ifdef SDK_VERSION_3_0
+#ifndef SDK_VERSION_2_3
     uint8_t is_pitch_limit : 1;
     uint8_t is_roll_limit : 1;
     uint8_t is_yaw_limit : 1;
     uint8_t reserved : 5;
-#endif // SDK_VERSION_3_0
+#endif // SDK_VERSION_2_3
 } GimbalData;
 
 typedef uint8_t FlightStatus;
+
+typedef struct
+{
+    unsigned char cmd_sequence;
+    unsigned char cmd_data;
+} TaskData;
 
 typedef struct BroadcastData
 {
@@ -298,18 +311,6 @@ typedef struct VirtualRCData
 } // namespace DJI
 
 #define PRO_PURE_DATA_MAX_SIZE 1007 // 2^10 - header size
-
-/* memory management unit */
-
 const size_t MMU_TABLE_NUM = 32;
-
-/* session management unit */
-
-#define ACK_SESSION_IDLE 0
-#define ACK_SESSION_PROCESS 1
-#define ACK_SESSION_USING 2
-#define CMD_SESSION_0 0
-#define CMD_SESSION_1 1
-#define CMD_SESSION_AUTO 32
 
 #endif // DJI_TYPE
