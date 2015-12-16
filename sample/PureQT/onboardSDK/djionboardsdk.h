@@ -36,9 +36,8 @@ class DJIonboardSDK : public QMainWindow
 
     //! @note callback static class pointer and callback functions
   public:
-    static DJIonboardSDK *sdk;
-    static void setControlCallback(CoreAPI *This, Header *header);
-    static void activationCallback(CoreAPI *This, Header *header);
+    static void setControlCallback(CoreAPI *This, Header *header, UserData userData);
+    static void activationCallback(CoreAPI *This, Header *header,UserData  userData);
 
     void updateCameraYaw();
     void updateCameraRoll();
@@ -158,7 +157,10 @@ class DJIonboardSDK : public QMainWindow
     void on_btn_hotPoint_stop_clicked();
     void on_btn_hotPoint_current_clicked();
     void on_btn_hp_setPal_clicked();
+    void on_btn_hp_setRadius_clicked();
+    void on_btn_hp_setYaw_clicked();
 
+    void on_btn_hp_data_clicked();
 
 private:
     Ui::DJIonboardSDK *ui;

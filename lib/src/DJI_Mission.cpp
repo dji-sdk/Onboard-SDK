@@ -8,7 +8,7 @@ namespace onboardSDK
 
 MissionACKMap missionACK[] = {
     //! @note common ACK code
-    { 0x00, "0x00 Success" },
+    { 0x00, " 0x00 Success" },
     { 0xD0, " 0xD0 Not At Mode F" },
     { 0xD1, " 0xD1 Need obtain control" },
     { 0xD2, " 0xD2 Need close IOC mode" },
@@ -78,7 +78,7 @@ bool CoreAPI::decodeMissionStatus(uint8_t ack)
     for (uint8_t i = 0; i < sizeof(missionACK); ++i)
         if (missionACK[i].code == ack)
         {
-            API_LOG(driver, STATUS_LOG, "%d %s", missionACK[i].code,
+            API_LOG(driver, STATUS_LOG, "0x%X %s", missionACK[i].code,
                     missionACK[i].meaning);
             return true;
         }

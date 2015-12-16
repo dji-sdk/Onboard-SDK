@@ -101,8 +101,8 @@ void DJI::onboardSDK::CoreAPI::broadcast(Header *header)
 
     driver->freeMSG();
 
-    if (broadcastCallback)
-        broadcastCallback(this, header);
+    if (broadcastCallback.callback)
+        broadcastCallback.callback(this, header,broadcastCallback.userData);
 }
 
 void DJI::onboardSDK::CoreAPI::recvReqData(Header *header)
@@ -118,10 +118,10 @@ void DJI::onboardSDK::CoreAPI::recvReqData(Header *header)
                 broadcast(header);
                 break;
             case CODE_FROMMOBILE:
-                if (fromMobileCallback)
+                if (fromMobileCallback.callback)
                 {
                     API_LOG(driver, STATUS_LOG, "Recevie data from mobile\n")
-                    fromMobileCallback(this, header);
+                    fromMobileCallback.callback(this, header,fromMobileCallback.userData);
                 }
                 break;
             case CODE_LOSTCTRL:
@@ -182,16 +182,22 @@ void DJI::onboardSDK::CoreAPI::recvReqData(Header *header)
     }
     else
         API_LOG(driver, DEBUG_LOG, "receive unknown command\n");
-    if (recvCallback)
-        recvCallback(this, header);
+    if (recvCallback.callback)
+        recvCallback.callback(this, header,recvCallback.userData);
 }
 
-void CoreAPI::setFromMobileCallback(CallBack FromMobileEntrance)
+void CoreAPI::setFromMobileCallback(CallBackHandler FromMobileEntrance)
 {
     fromMobileCallback = FromMobileEntrance;
 }
 
-void CoreAPI::setBroadcastCallback(CallBack callback)
+void CoreAPI::setBroadcastCallback(CallBackHandler callback)
 {
     broadcastCallback = callback;
+}
+
+void CoreAPI::setBroadcastCallback(CallBack handler, UserData userData)
+{
+    broadcastCallback.callback = handler;
+    broadcastCallback.userData = userData;
 }

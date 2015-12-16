@@ -63,12 +63,13 @@ void DJI::onboardSDK::CoreAPI::appHandler(Header *header)
                     API_LOG(driver, DEBUG_LOG, "Recv Session %d ACK\n",
                             p2header->sessionID);
 
-                    callBack = CMDSessionTab[header->sessionID].callback;
+                    callBack = CMDSessionTab[header->sessionID].handler;
                     freeSession(&CMDSessionTab[header->sessionID]);
                     driver->freeMemory();
                     if (callBack)
                         //! @todo new algorithm call in a thread
-                        callBack(this, header);
+                        callBack(this, header,
+                                 CMDSessionTab[header->sessionID].userData);
                 }
                 else
                     driver->freeMemory();
@@ -281,7 +282,7 @@ int DJI::onboardSDK::CoreAPI::ackInterface(Ack *parameter)
     return -1;
 }
 
-int DJI::onboardSDK::CoreAPI::sendInterface(Command *parameter)
+int DJI::onboardSDK::CoreAPI::sendInterface(CallbackCommand *parameter)
 {
     unsigned short ret = 0;
     CMDSession *cmd_session = (CMDSession *)NULL;
@@ -299,6 +300,7 @@ int DJI::onboardSDK::CoreAPI::sendInterface(Command *parameter)
             cmd_session = allocSession(
                 CMD_SESSION_0,
                 calculateLength(parameter->length, parameter->need_encrypt));
+
             if (cmd_session == (CMDSession *)NULL)
             {
                 driver->freeMemory();
@@ -349,7 +351,9 @@ int DJI::onboardSDK::CoreAPI::sendInterface(Command *parameter)
                 return -1;
             }
             cmd_session->pre_seq_num = seq_num++;
-            cmd_session->callback = parameter->callback;
+
+            cmd_session->handler = parameter->handler;
+            cmd_session->userData = parameter->userData;
             cmd_session->timeout = (parameter->timeout > POLL_TICK)
                                        ? parameter->timeout
                                        : POLL_TICK;
@@ -389,7 +393,8 @@ int DJI::onboardSDK::CoreAPI::sendInterface(Command *parameter)
                 return -1;
             }
             cmd_session->pre_seq_num = seq_num++;
-            cmd_session->callback = parameter->callback;
+            cmd_session->handler = parameter->handler;
+            cmd_session->userData = parameter->userData;
             cmd_session->timeout = (parameter->timeout > POLL_TICK)
                                        ? parameter->timeout
                                        : POLL_TICK;

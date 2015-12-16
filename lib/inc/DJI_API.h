@@ -155,21 +155,43 @@ class CoreAPI
   public:
     /*! @code CoreAPI*/
     //! @note init API
-    CoreAPI(HardDriver *Driver, bool useCallbackThread = false,
-            CallBack userRecvCallback = 0);
+    CoreAPI(HardDriver *Driver = 0, bool userCallbackThread = false,
+            CallBack userRecvCallback = 0, UserData UserData = 0);
+    CoreAPI(HardDriver *Driver, CallBackHandler userRecvCallback,
+            bool userCallbackThread = false);
 
-    //! @note Core Control API
+    /*! @note Core Control API
+     *  void send(); is a core overloaded funtion. which has three ways invoked.
+     *
+     *  void send(CallbackCommand *parameter) is a main funcion, other two
+     *  overloaded functions are builded on the base of this function.
+     *
+     *  The difference between CallBack and Handler is whether we have user
+     *  defined data passing in while entering a callback handler.
+     *
+     *
+     *  Please be careful when passing in UserData, there might have memory leak
+     *  problems.
+     * */
     void ack(req_id_t req_id, unsigned char *ackdata, int len);
     void send(unsigned char session_mode, unsigned char is_enc, CMD_SET cmd_set,
-              unsigned char cmd_id, void *pdata, int len,
-              CallBack ack_callback = 0, int timeout = 0, int retry_time = 1);
-    void send(Command *parameter);
+              unsigned char cmd_id, void *pdata, int len, CallBack ack_callback,
+              int timeout = 0, int retry_time = 1);
 
-    void activate(ActivateData *data, CallBack callback = 0);
-    void setControl(bool enable, CallBack callback = 0);
-    void getVersion(CallBack callback = 0);
-    void sendToMobile(uint8_t *data, uint8_t len, CallBack callback = 0);
-    void setBroadcastFeq(uint8_t *data, CallBack callback = 0);
+    void send(unsigned char session_mode, unsigned char is_enc, CMD_SET cmd_set,
+              unsigned char cmd_id, void *pdata, int len, int timeout = 0,
+              int retry_time = 1, CallBack ack_handler = 0,
+              UserData userData = 0);
+    void send(CallbackCommand *parameter);
+
+    void activate(ActivateData *data, CallBack callback = 0,
+                  UserData userData = 0);
+    void setControl(bool enable, CallBack callback = 0, UserData userData = 0);
+    void getVersion(CallBack callback = 0, UserData userData = 0);
+    void sendToMobile(uint8_t *data, uint8_t len, CallBack callback = 0,
+                      UserData userData = 0);
+    void setBroadcastFeq(uint8_t *data, CallBack callback = 0,
+                         UserData userData = 0);
     void setActivation(bool isActivated);
     void setKey(const char *key);
 
@@ -183,15 +205,21 @@ class CoreAPI
     //! @note call back functions
   public:
     //! @note Recevie data callback enterance
-    void setBroadcastCallback(CallBack callback);
-    void setFromMobileCallback(CallBack FromMobileEntrance);
+    void setBroadcastCallback(CallBackHandler callback);
+    void setBroadcastCallback(CallBack handler, UserData userData);
+    void setFromMobileCallback(CallBackHandler FromMobileEntrance);
 
     //! @note user callback sample
-    static void activateCallback(CoreAPI *This, Header *header);
-    static void getVersionCallback(CoreAPI *This, Header *header);
-    static void setControlCallback(CoreAPI *This, Header *header);
-    static void sendToMobileCallback(CoreAPI *This, Header *header);
-    static void setFrequencyCallback(CoreAPI *This, Header *header);
+    static void activateCallback(CoreAPI *This, Header *header,
+                                 UserData userData = 0);
+    static void getVersionCallback(CoreAPI *This, Header *header,
+                                   UserData userData = 0);
+    static void setControlCallback(CoreAPI *This, Header *header,
+                                   UserData userData = 0);
+    static void sendToMobileCallback(CoreAPI *This, Header *header,
+                                     UserData userData = 0);
+    static void setFrequencyCallback(CoreAPI *This, Header *header,
+                                     UserData userData = 0);
 
   private:
     BroadcastData broadcastData;
@@ -201,10 +229,10 @@ class CoreAPI
     unsigned char encodeACK[ACK_SIZE];
 
     uint8_t cblistTail;
-    CallBack cbList[CALLBACK_LIST_NUM];
-    CallBack broadcastCallback;
-    CallBack recvCallback;
-    CallBack fromMobileCallback;
+    CallBackHandler cbList[CALLBACK_LIST_NUM];
+    CallBackHandler broadcastCallback;
+    CallBackHandler recvCallback;
+    CallBackHandler fromMobileCallback;
 
     VersionData versionData;
     ActivateData accountData;
@@ -214,11 +242,13 @@ class CoreAPI
     SDKFilter filter;
 
   private:
+    void init(HardDriver *Driver, CallBackHandler userRecvCallback,
+              bool userCallbackThread);
     void recvReqData(Header *header);
     void appHandler(Header *header);
     void broadcast(Header *header);
 
-    int sendInterface(Command *parameter);
+    int sendInterface(CallbackCommand *parameter);
     int ackInterface(Ack *parameter);
     void sendData(unsigned char *buf);
 

@@ -70,9 +70,13 @@ class HotPoint
 
     void start(CallBack callback = 0);
     void stop(CallBack callback = 0);
-    void startPalstance(Palstance &data, CallBack callback = 0);
-    void startPalstance(float32_t palstance, bool isClockwise,
+    void resetPalstance(Palstance &Data, CallBack callback = 0);
+    void resetPalstance(float32_t palstance, bool isClockwise,
                         CallBack callback = 0);
+    void resetRadius(float32_t degree, CallBack callback = 0, UserData userData = 0);
+    void resetYaw(CallBack callback = 0,UserData userData = 0);
+
+    void readData(CallBack callback = 0,UserData userData = 0);
 
   public:
     //! @note data access functions
@@ -82,7 +86,7 @@ class HotPoint
     void setHotPoint(GPSData gps);
 
     void setRadius(float64_t meter);
-    void setPalstance(float32_t radps);
+    void setPalstance(float32_t defree);
     void setClockwise(bool isClockwise);
     void setCameraView(View view);
     void setYawMode(YawMode mode);
@@ -90,8 +94,9 @@ class HotPoint
     HotPointData getData() const;
 
   public:
-    static void startCallback(CoreAPI *This, Header *header);
-    static void commonCallback(CoreAPI *This, Header *header);
+    static void startCallback(CoreAPI *This, Header *header, UserData userdata = 0);
+    static void commonCallback(CoreAPI *This, Header *header, UserData userdata = 0);
+    static void readCallback(CoreAPI *This, Header *header, UserData userdata = 0);
 
   private:
     CoreAPI *api;

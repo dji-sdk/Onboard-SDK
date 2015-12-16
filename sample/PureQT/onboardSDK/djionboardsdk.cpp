@@ -3,13 +3,9 @@
 
 #include <QFile>
 
-DJIonboardSDK *DJIonboardSDK::sdk = 0;
-
 DJIonboardSDK::DJIonboardSDK(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::DJIonboardSDK)
 {
-    sdk = this;
-
     ui->setupUi(this);
 
     //! @code mission webview
@@ -161,8 +157,10 @@ void DJIonboardSDK::closeEvent(QCloseEvent *)
     }
 }
 
-void DJIonboardSDK::setControlCallback(CoreAPI *This, Header *header)
+void DJIonboardSDK::setControlCallback(CoreAPI *This, Header *header,
+                                       UserData userData)
 {
+    DJIonboardSDK *sdk = (DJIonboardSDK *)userData;
     unsigned short ack_data = AC_COMMON_NO_RESPONSE;
     unsigned char data = 0x1;
 
@@ -203,13 +201,13 @@ void DJIonboardSDK::setControlCallback(CoreAPI *This, Header *header)
                 API_LOG(sdk->driver, ERROR_LOG, "known SDK pointer 0.");
             break;
         case 0x0003:
-            This->send(2, 1, SET_CONTROL, API_CTRL_MANAGEMENT, &data, 1,
-                       DJIonboardSDK::setControlCallback, 500, 2);
+            This->send(2, 1, SET_CONTROL, CODE_SETCONTROL, &data, 1, 500, 2,
+                       DJIonboardSDK::setControlCallback, userData);
             break;
         case 0x0004:
             data = 0;
-            This->send(2, 1, SET_CONTROL, API_CTRL_MANAGEMENT, &data, 1,
-                       DJIonboardSDK::setControlCallback, 500, 2);
+            This->send(2, 1, SET_CONTROL, CODE_SETCONTROL, &data, 1, 500, 2,
+                       DJIonboardSDK::setControlCallback, userData);
             break;
     }
     //! @note For debug, all functional print is moving to this function,
@@ -217,8 +215,10 @@ void DJIonboardSDK::setControlCallback(CoreAPI *This, Header *header)
     //    CoreAPI::setControlCallback(This, header);
 }
 
-void DJIonboardSDK::activationCallback(CoreAPI *This, Header *header)
+void DJIonboardSDK::activationCallback(CoreAPI *This, Header *header,
+                                       UserData userData)
 {
+    DJIonboardSDK *sdk = (DJIonboardSDK *)userData;
     volatile unsigned short ack_data;
     if (header->length - EXC_DATA_SIZE <= 2)
     {
@@ -318,7 +318,7 @@ void DJIonboardSDK::on_btn_coreActive_clicked()
         0x12; //! @note for ios verification
     *key = ui->lineEdit_Key->text().toLocal8Bit();
     data.app_key = key->data(); //! @warning memory leak fixme
-    api->activate(&data, DJIonboardSDK::activationCallback);
+    api->activate(&data, DJIonboardSDK::activationCallback,this);
 }
 
 void DJIonboardSDK::on_btn_coreVersion_clicked() { api->getVersion(); }
@@ -326,9 +326,9 @@ void DJIonboardSDK::on_btn_coreVersion_clicked() { api->getVersion(); }
 void DJIonboardSDK::on_btn_coreSetControl_clicked()
 {
     if (ui->btn_coreSetControl->text() == "Release Control")
-        api->setControl(false, DJIonboardSDK::setControlCallback);
+        api->setControl(false, DJIonboardSDK::setControlCallback, this);
     else
-        api->setControl(true, DJIonboardSDK::setControlCallback);
+        api->setControl(true, DJIonboardSDK::setControlCallback, this);
 }
 void DJIonboardSDK::on_btn_VRC_resetAll_clicked()
 {
@@ -814,6 +814,7 @@ void DJIonboardSDK::upDateTime()
 #ifdef SDK_VERSION_2_3
     ui->le_coreTimeStamp->setText(QString::number(api->getTime()));
 #else
+    ui->le_coreTimeStamp->setText(QString::number(api->getTime().time));
     ui->le_coreNanoStamp->setText(QString::number(api->getTime().asr_ts));
     ui->le_coreSyncFlag->setText(QString::number(api->getTime().sync_flag));
 #endif
@@ -995,7 +996,7 @@ void DJIonboardSDK::on_btn_hotPoint_start_clicked()
 
 void DJIonboardSDK::on_btn_hp_setPal_clicked()
 {
-    hp->startPalstance(ui->le_hp_pa->text().toFloat(),
+    hp->resetPalstance(ui->le_hp_pa->text().toFloat(),
                        ui->cb_hp_cl->isChecked());
 }
 
@@ -1022,3 +1023,16 @@ void DJIonboardSDK::on_cb_mission_follow_clicked(bool checked)
 }
 
 void DJIonboardSDK::on_btn_hotPoint_stop_clicked() { hp->stop(); }
+
+void DJIonboardSDK::on_btn_hp_setRadius_clicked()
+{
+    hp->resetRadius(ui->le_hp_ra->text().toFloat());
+}
+
+void DJIonboardSDK::on_btn_hp_setYaw_clicked()
+{
+    ui->cb_hp_yaw->setCurrentIndex(1);
+    hp->resetYaw();
+}
+
+void DJIonboardSDK::on_btn_hp_data_clicked() {}

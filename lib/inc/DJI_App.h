@@ -96,9 +96,4 @@ typedef struct VersionData
 
 #pragma pack()
 
-typedef void (*CommandResult)(unsigned short result);
-typedef void (*ReceiveHandler)(DJI::onboardSDK::Header *pHeader);
-typedef void (*BroadcastHandler)(void);
-typedef void (*TransparentHandler)(unsigned char *buf, unsigned char len);
-
 #endif // DJI_APP_H

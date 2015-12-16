@@ -4054,27 +4054,51 @@
                 <item>
                  <layout class="QHBoxLayout" name="horizontalLayout_38">
                   <item>
-                   <widget class="QPushButton" name="btn_hp_setPal">
+                   <widget class="QPushButton" name="btn_hp_setYaw">
+                    <property name="minimumSize">
+                     <size>
+                      <width>75</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>75</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
                     <property name="text">
-                     <string>set</string>
+                     <string>reset</string>
                     </property>
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLabel" name="label_33">
-                    <property name="text">
-                     <string> palstance</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QLineEdit" name="le_hp_pa">
-                    <property name="focusPolicy">
-                     <enum>Qt::ClickFocus</enum>
-                    </property>
-                    <property name="text">
-                     <string>15</string>
-                    </property>
+                   <widget class="QComboBox" name="cb_hp_yaw">
+                    <item>
+                     <property name="text">
+                      <string>Auto Yaw</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Align Inside</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Align Outside</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>User define</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Static</string>
+                     </property>
+                    </item>
                    </widget>
                   </item>
                  </layout>
@@ -4082,7 +4106,13 @@
                 <item>
                  <layout class="QHBoxLayout" name="horizontalLayout_39">
                   <item>
-                   <widget class="QPushButton" name="btn_camera_send_6">
+                   <widget class="QPushButton" name="btn_hp_setRadius">
+                    <property name="maximumSize">
+                     <size>
+                      <width>75</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
                     <property name="text">
                      <string>set</string>
                     </property>
@@ -4198,22 +4228,53 @@
                    </layout>
                   </item>
                   <item>
-                   <widget class="QPushButton" name="btn_hotPoint_current">
-                    <property name="minimumSize">
-                     <size>
-                      <width>0</width>
-                      <height>60</height>
-                     </size>
-                    </property>
-                    <property name="text">
-                     <string>Current</string>
-                    </property>
-                   </widget>
+                   <layout class="QVBoxLayout" name="verticalLayout_58">
+                    <item>
+                     <widget class="QPushButton" name="btn_hotPoint_current">
+                      <property name="minimumSize">
+                       <size>
+                        <width>0</width>
+                        <height>25</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string>Possition</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="btn_hp_data">
+                      <property name="minimumSize">
+                       <size>
+                        <width>0</width>
+                        <height>25</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string>Mission</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
                   </item>
                  </layout>
                 </item>
                 <item>
                  <layout class="QHBoxLayout" name="horizontalLayout_48">
+                  <item>
+                   <widget class="QPushButton" name="btn_hp_setPal">
+                    <property name="text">
+                     <string>set</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="label_33">
+                    <property name="text">
+                     <string> palstance</string>
+                    </property>
+                   </widget>
+                  </item>
                   <item>
                    <spacer name="horizontalSpacer_6">
                     <property name="orientation">
@@ -4228,9 +4289,12 @@
                    </spacer>
                   </item>
                   <item>
-                   <widget class="QCheckBox" name="cb_hp_cl">
+                   <widget class="QLineEdit" name="le_hp_pa">
+                    <property name="focusPolicy">
+                     <enum>Qt::ClickFocus</enum>
+                    </property>
                     <property name="text">
-                     <string>clockwise</string>
+                     <string>15</string>
                     </property>
                    </widget>
                   </item>
@@ -4248,46 +4312,11 @@
                    </spacer>
                   </item>
                   <item>
-                   <widget class="QComboBox" name="cb_hp_yaw">
-                    <item>
-                     <property name="text">
-                      <string>Auto Yaw</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Align Inside</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Align Outside</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>User define</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Static</string>
-                     </property>
-                    </item>
+                   <widget class="QCheckBox" name="cb_hp_cl">
+                    <property name="text">
+                     <string>clockwise</string>
+                    </property>
                    </widget>
-                  </item>
-                  <item>
-                   <spacer name="horizontalSpacer_8">
-                    <property name="orientation">
-                     <enum>Qt::Horizontal</enum>
-                    </property>
-                    <property name="sizeHint" stdset="0">
-                     <size>
-                      <width>40</width>
-                      <height>20</height>
-                     </size>
-                    </property>
-                   </spacer>
                   </item>
                  </layout>
                 </item>

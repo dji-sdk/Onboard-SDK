@@ -38,19 +38,41 @@ void HotPoint::stop(CallBack callback)
               callback ? callback : commonCallback, 500, 2);
 }
 
-void HotPoint::startPalstance(HotPoint::Palstance &data, CallBack callback)
+void HotPoint::resetPalstance(HotPoint::Palstance &Data, CallBack callback)
 {
-    api->send(2, 1, SET_MISSION, CODE_HOTPOINT_PALSTANCE, &data, sizeof(data),
+    data.palstance = Data.palstance;
+    data.clockwise = Data.clockwise ? 1 : 0;
+    api->send(2, 1, SET_MISSION, CODE_HOTPOINT_PALSTANCE, &Data, sizeof(Data),
               callback ? callback : commonCallback, 500, 2);
 }
 
-void HotPoint::startPalstance(float32_t palstance, bool isClockwise,
+void HotPoint::resetPalstance(float32_t palstance, bool isClockwise,
                               CallBack callback)
 {
     Palstance p;
     p.palstance = palstance;
     p.clockwise = isClockwise ? 1 : 0;
-    startPalstance(p, callback);
+    resetPalstance(p, callback);
+}
+
+void HotPoint::resetRadius(float32_t degree, CallBack callback,UserData userData)
+{
+    api->send(2, 1, SET_MISSION, CODE_HOTPOINT_RADIUS, &degree, sizeof(degree), 500, 2,
+              callback ? callback : commonCallback,userData);
+}
+
+void HotPoint::resetYaw(CallBack callback, UserData userData)
+{
+    uint8_t zero = 0;
+    api->send(2, 1, SET_MISSION, CODE_HOTPOINT_SETYAW, &zero, sizeof(zero), 500,
+              2, callback ? callback : commonCallback, userData);
+}
+
+void HotPoint::readData(CallBack callback, UserData userData)
+{
+    uint8_t zero = 0;
+    api->send(2, 1, SET_MISSION, CODE_HOTPOINT_LOAD, &zero, sizeof(zero), 500,
+              2, callback ? callback : commonCallback, userData);
 }
 
 void HotPoint::setData(const HotPointData &value) { data = value; }
@@ -72,7 +94,7 @@ void HotPoint::setHotPoint(GPSData gps)
 
 void HotPoint::setRadius(float64_t meter) { data.radius = meter; }
 
-void HotPoint::setPalstance(float32_t radps) { data.palstance = radps; }
+void HotPoint::setPalstance(float32_t defree) { data.palstance = defree; }
 
 void HotPoint::setClockwise(bool isClockwise)
 {
@@ -85,7 +107,8 @@ void HotPoint::setYawMode(HotPoint::YawMode mode) { data.yawMode = mode; }
 
 HotPointData HotPoint::getData() const { return data; }
 
-void HotPoint::startCallback(CoreAPI *This, Header *header)
+void HotPoint::startCallback(CoreAPI *This, Header *header,
+                             UserData userdata __UNUSED)
 {
     StartACK ack;
     if (header->length - EXC_DATA_SIZE <= sizeof(StartACK))
@@ -107,7 +130,28 @@ void HotPoint::startCallback(CoreAPI *This, Header *header)
     }
 }
 
-void HotPoint::commonCallback(CoreAPI *This, Header *header)
+void HotPoint::commonCallback(CoreAPI *This, Header *header,
+                              UserData userdata __UNUSED)
+{
+    API_LOG(This->getDriver(), STATUS_LOG, "HotPoint common");
+    CommonACK ack;
+    if (header->length - EXC_DATA_SIZE <= sizeof(ack))
+    {
+        memcpy((unsigned char *)&ack, (unsigned char *)header + sizeof(Header),
+               (header->length - EXC_DATA_SIZE));
+        if (!This->decodeMissionStatus(ack))
+            API_LOG(This->getDriver(), ERROR_LOG, "decode ack error 0x%X", ack);
+    }
+    else
+    {
+        API_LOG(This->getDriver(), ERROR_LOG,
+                "ACK is exception,seesion id %d,sequence %d\n",
+                header->sessionID, header->sequence_number);
+    }
+}
+
+void HotPoint::readCallback(CoreAPI *This, Header *header,
+                            UserData userdata __UNUSED)
 {
     API_LOG(This->getDriver(), STATUS_LOG, "HotPoint common");
     CommonACK ack;

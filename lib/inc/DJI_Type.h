@@ -14,15 +14,14 @@
 #define __func__ __FUNCTION__
 #endif // WIN32
 
-#define APIprintf(...)                                                         \
-    sprintf(DJI::onboardSDK::buffer, ##__VA_ARGS__)
+#define APIprintf(...) sprintf(DJI::onboardSDK::buffer, ##__VA_ARGS__)
 
 #define API_LOG(driver, title, fmt, ...)                                       \
     {                                                                          \
         if ((title))                                                           \
         {                                                                      \
-            APIprintf("%s %s,line %d: " fmt, title?title:"NONE", __func__, __LINE__,        \
-                      ##__VA_ARGS__);                                          \
+            APIprintf("%s %s,line %d: " fmt, title ? title : "NONE", __func__, \
+                      __LINE__, ##__VA_ARGS__);                                \
             (driver)->displayLog();                                            \
         }                                                                      \
     }
@@ -74,9 +73,16 @@ typedef struct Header
     unsigned int head_crc : 16;
 } Header;
 
-typedef void (*CallBack)(DJI::onboardSDK::CoreAPI *, Header *);
+typedef void (*CallBack)(DJI::onboardSDK::CoreAPI *, Header *, void *);
+typedef void* UserData;
 
-typedef struct Command
+typedef struct CallBackHandler
+{
+    CallBack callback;
+    UserData userData;
+}CallBackHandler;
+
+typedef struct CallbackCommand
 {
     unsigned short session_mode : 2;
     unsigned short need_encrypt : 1;
@@ -84,8 +90,9 @@ typedef struct Command
     unsigned short timeout; // unit is ms
     unsigned int length;
     unsigned char *buf;
-    CallBack callback;
-} Command;
+    CallBack handler;
+    UserData userData;
+} CallbackCommand;
 
 typedef struct SDKFilter
 {
@@ -114,7 +121,8 @@ typedef struct CMDSession
     uint32_t retry : 5;
     uint32_t timeout : 16;
     MMU_Tab *mmu;
-    CallBack callback;
+    CallBack handler;
+    UserData userData;
     uint32_t pre_seq_num;
     uint32_t pre_timestamp;
 } CMDSession;
@@ -137,7 +145,6 @@ typedef struct Ack
 } Ack;
 
 #pragma pack(1)
-
 
 typedef uint8_t BatteryData;
 

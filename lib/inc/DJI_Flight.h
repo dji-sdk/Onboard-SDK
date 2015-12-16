@@ -77,8 +77,8 @@ class Flight
   public:
     Flight(CoreAPI *ContorlAPI = 0);
 
-    void task(TASK taskname, CallBack TaskCallback = 0);
-    void setArm(bool enable, CallBack ArmCallback = 0);
+    void task(TASK taskname, CallBack TaskCallback = 0, UserData userData = 0);
+    void setArm(bool enable, CallBack ArmCallback = 0, UserData userData = 0);
     void setFlight(FlightData *data);
     void setFlight(uint8_t ControlFlag = 0x00);
 
@@ -90,8 +90,8 @@ class Flight
     MagnetData getMagnet() const;
 
   public: //! @note callbacks
-    static void armCallback(CoreAPI *This, Header *header);
-    static void taskCallback(CoreAPI *This, Header *header);
+    static void armCallback(CoreAPI *This, Header *header,UserData userData = 0);
+    static void taskCallback(CoreAPI *This, Header *header,UserData userData = 0);
 
   public: //! @note Access method
     CoreAPI *getApi() const;
