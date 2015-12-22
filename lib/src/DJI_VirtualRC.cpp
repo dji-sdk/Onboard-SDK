@@ -8,7 +8,7 @@ DJI::onboardSDK::VirtualRC::VirtualRC(CoreAPI *ContorlAPI)
     resetData();
 }
 
-void VirtualRC::sentContorl(bool enable, VirtualRC::CutOff cutoffType)
+void VirtualRC::setContorl(bool enable, VirtualRC::CutOff cutoffType)
 {
     VirtualRCSetting setting;
     setting.cutoff = cutoffType;

@@ -1,3 +1,35 @@
+/*! @brief
+ *  @file DJI_Version.h
+ *  @version 3.0
+ *  @date Dec 16, 2015
+ *
+ *  @abstract
+ *  Version control definition for DJI onboardSDK library
+ *  Maintain officially
+ *
+ *  @attention
+ *  Maintain officially, readonly for users
+ *  Do not modify any definition in this file,
+ *  if you are not sure what are you doing exactlly,
+ *  or we will not provide any support.
+ *
+ *  Project configuration:
+ *
+ *  @version features:
+ *  -* @version V3.0
+ *  -* DJI-onboard-SDK for Windows,QT,STM32,ROS,Cmake
+ *  -* @date Dec 16, 2015
+ *  -* @author william.wu
+ *
+ * */
+
+/*! @attention
+ *  Maintain officially, readonly for users
+ *  Do not modify any definition in this file,
+ *  if you are not sure what are you doing exactlly,
+ *  or we will not provide any support.
+ * */
+
 #ifndef DJI_VERSION_H
 #define DJI_VERSION_H
 

@@ -5,7 +5,7 @@
  *  @author wuyunwei,william.wu
  *
  *  @abstract
- *  This file mainly implement fuctions DJI_API.h
+ *  This file mainly implement fuctions in DJI_API.h
  *
  *  All Functions in this file is private function,
  *  which is used for memory and session management.
@@ -103,8 +103,7 @@ MMU_Tab *DJI::onboardSDK::CoreAPI::allocMemory(unsigned short size)
     {
         for (j = 0; j < (mmu_tab_used_num - i - 1); j++)
         {
-            if (MMU[mmu_tab_used_index[j]].pmem >
-                MMU[mmu_tab_used_index[j + 1]].pmem)
+            if (MMU[mmu_tab_used_index[j]].pmem > MMU[mmu_tab_used_index[j + 1]].pmem)
             {
                 mmu_tab_used_index[j + 1] ^= mmu_tab_used_index[j];
                 mmu_tab_used_index[j] ^= mmu_tab_used_index[j + 1];
@@ -140,16 +139,13 @@ MMU_Tab *DJI::onboardSDK::CoreAPI::allocMemory(unsigned short size)
         for (i = 0; i < j; i++)
         {
             if (MMU[mmu_tab_used_index[i + 1]].pmem >
-                (MMU[mmu_tab_used_index[i]].pmem +
-                 MMU[mmu_tab_used_index[i]].mem_size))
+                (MMU[mmu_tab_used_index[i]].pmem + MMU[mmu_tab_used_index[i]].mem_size))
             {
-                memmove(MMU[mmu_tab_used_index[i]].pmem +
-                            MMU[mmu_tab_used_index[i]].mem_size,
+                memmove(MMU[mmu_tab_used_index[i]].pmem + MMU[mmu_tab_used_index[i]].mem_size,
                         MMU[mmu_tab_used_index[i + 1]].pmem,
                         MMU[mmu_tab_used_index[i + 1]].mem_size);
                 MMU[mmu_tab_used_index[i + 1]].pmem =
-                    MMU[mmu_tab_used_index[i]].pmem +
-                    MMU[mmu_tab_used_index[i]].mem_size;
+                    MMU[mmu_tab_used_index[i]].pmem + MMU[mmu_tab_used_index[i]].mem_size;
             }
         }
 
@@ -157,8 +153,8 @@ MMU_Tab *DJI::onboardSDK::CoreAPI::allocMemory(unsigned short size)
         {
             if (MMU[i].usage_flag == 0)
             {
-                MMU[i].pmem = MMU[mmu_tab_used_index[j]].pmem +
-                              MMU[mmu_tab_used_index[j]].mem_size;
+                MMU[i].pmem =
+                    MMU[mmu_tab_used_index[j]].pmem + MMU[mmu_tab_used_index[j]].mem_size;
 
                 MMU[i].mem_size = size;
                 MMU[i].usage_flag = 1;
@@ -212,7 +208,7 @@ CMDSession *DJI::onboardSDK::CoreAPI::allocSession(unsigned short session_id,
                                                    unsigned short size)
 {
     unsigned int i;
-    API_LOG(driver, DEBUG_LOG,"Alloc size %d", size);
+    API_LOG(driver, DEBUG_LOG, "Alloc size %d", size);
     MMU_Tab *mmu = NULL;
 
     if (session_id == 0 || session_id == 1)
@@ -224,7 +220,7 @@ CMDSession *DJI::onboardSDK::CoreAPI::allocSession(unsigned short session_id,
         else
         {
             /* session is busy */
-            API_LOG(driver, ERROR_LOG,"session %d is busy\n", session_id);
+            API_LOG(driver, ERROR_LOG, "session %d is busy\n", session_id);
             return NULL;
         }
     }
@@ -259,14 +255,13 @@ void DJI::onboardSDK::CoreAPI::freeSession(CMDSession *session)
 {
     if (session->usageFlag == 1)
     {
-        API_LOG(driver, DEBUG_LOG,"session id %d\n", session->sessionID);
+        API_LOG(driver, DEBUG_LOG, "session id %d\n", session->sessionID);
         freeMemory(session->mmu);
         session->usageFlag = 0;
     }
 }
 
-ACKSession *DJI::onboardSDK::CoreAPI::allocACK(unsigned short session_id,
-                                               unsigned short size)
+ACKSession *DJI::onboardSDK::CoreAPI::allocACK(unsigned short session_id, unsigned short size)
 {
     MMU_Tab *mmu = NULL;
     if (session_id > 0 && session_id < 32)
@@ -289,7 +284,4 @@ ACKSession *DJI::onboardSDK::CoreAPI::allocACK(unsigned short session_id,
     return NULL;
 }
 
-void DJI::onboardSDK::CoreAPI::freeACK(ACKSession *session)
-{
-    freeMemory(session->mmu);
-}
+void DJI::onboardSDK::CoreAPI::freeACK(ACKSession *session) { freeMemory(session->mmu); }

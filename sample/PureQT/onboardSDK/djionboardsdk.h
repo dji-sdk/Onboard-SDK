@@ -38,6 +38,7 @@ class DJIonboardSDK : public QMainWindow
   public:
     static void setControlCallback(CoreAPI *This, Header *header, UserData userData);
     static void activationCallback(CoreAPI *This, Header *header,UserData  userData);
+    static void hotpintReadCallback(CoreAPI *This, Header *header,UserData  userData);
 
     void updateCameraYaw();
     void updateCameraRoll();
@@ -159,8 +160,18 @@ class DJIonboardSDK : public QMainWindow
     void on_btn_hp_setPal_clicked();
     void on_btn_hp_setRadius_clicked();
     void on_btn_hp_setYaw_clicked();
-
     void on_btn_hp_data_clicked();
+
+    void on_btn_follow_current_clicked();
+    void on_hs_follow_la_valueChanged(int value);
+    void on_hs_follow_lo_valueChanged(int value);
+    void on_hs_follow_al_valueChanged(int value);
+    void on_hs_follow_an_valueChanged(int value);
+    void on_btn_follow_update_clicked();
+    void on_btn_follow_start_clicked();
+    void on_btn_follow_pause_clicked(bool checked);
+    void on_btn_follow_stop_clicked();
+    void on_tmr_follow_send();
 
 private:
     Ui::DJIonboardSDK *ui;
@@ -188,6 +199,10 @@ private:
     Camera *cam;
     uint8_t camFlag;
     QTimer *cameraSend;
+
+    Follow *follow;
+    FollowTarget targetBase;
+    QTimer *followSend;
 
     QTimer *timerBroadcast;
     QWebView *webView;

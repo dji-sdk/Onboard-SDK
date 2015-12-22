@@ -1,3 +1,22 @@
+/*! @brief
+ *  @file DJI_APP.h
+ *  @version 3.0
+ *  @date Dec 16, 2015
+ *
+ *  @abstract
+ *  Core API Link upper level for DJI onboardSDK library
+ *
+ *  @attention
+ *  Project configuration:
+ *
+ *  @version features:
+ *  -* @version V3.0
+ *  -* DJI-onboard-SDK for Windows,QT,STM32,ROS,Cmake
+ *  -* @date Dec 16, 2015
+ *  -* @author william.wu
+ *
+ * */
+
 #ifndef DJI_APP_H
 #define DJI_APP_H
 
@@ -6,33 +25,6 @@
 #include "DJI_Link.h"
 #include "DJI_Type.h"
 
-#define API_VER_QUERY 0x00
-#define API_CTRL_MANAGEMENT 0x00
-#define API_OPEN_SERIAL 0x00
-#define API_STD_DATA 0x00
-#define API_CMD_REQUEST 0x01
-#define API_CMD_STATUS_REQUEST 0x02
-#define API_CTRL_REQUEST 0x03
-#define API_TRANSPARENT_DATA_TO_MOBILE 0xFE
-#define API_TRANSPARENT_DATA_TO_OBOARD 0x02
-#define API_GIMBAL_CTRL_SPEED_REQUEST 0x1A
-#define API_GIMBAL_CTRL_ANGLE_REQUEST 0x1B
-
-#define API_MISSION_WP_INFO 0x10
-#define API_MISSION_WP_DATA 0x11
-#define API_MISSION_WP_CMD 0x12
-
-#define API_MISSION_HP_START 0x20
-#define API_MISSION_HP_CMD 0x21
-
-#define API_VERSION_QUERY 0x00
-#define API_USER_ACTIVATION 0x01
-#define API_INFO_QUERY 0x02
-#define API_SIM_ECHO 0xFF
-
-//----------------------------------------------------------------------
-// uav std_msgs reciever
-//----------------------------------------------------------------------
 #define MSG_ENABLE_FLAG_LEN 2
 
 #define HAS_TIME 0x0001
@@ -89,10 +81,9 @@ typedef struct VersionData
     unsigned int version_crc;
 #ifdef SDK_VERSION_3_1
     char version_ID[11];
-#endif //SDK_VERSION_3_1
+#endif // SDK_VERSION_3_1
     char version_name[32];
 } VersionData;
-
 
 #pragma pack()
 

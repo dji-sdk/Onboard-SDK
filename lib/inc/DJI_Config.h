@@ -1,3 +1,23 @@
+/*! @brief
+ *  @file DJI_Config.h
+ *  @version 3.0
+ *  @date Dec 16, 2015
+ *
+ *  @abstract
+ *  Configuration optional Micro definitions for DJI onboardSDK library.
+ *
+ *  @attention
+ *  Project configuration:
+ *  None
+ *
+ *  @version features:
+ *  -* @version V3.0
+ *  -* DJI-onboard-SDK for Windows,QT,STM32,ROS,Cmake
+ *  -* @date Dec 16, 2015
+ *  -* @author william.wu
+ *
+ * */
+
 #ifndef DJI_CONFIG_H
 #define DJI_CONFIG_H
 
