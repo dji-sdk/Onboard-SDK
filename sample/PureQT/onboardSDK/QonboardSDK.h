@@ -6,13 +6,15 @@
 #include <DJI_Flight.h>
 #include <DJI_HotPoint.h>
 #include <DJI_Follow.h>
+#include <DJI_WayPoint.h>
 #include <DJI_VirtualRC.h>
 #include <DJI_API.h>
 #include <QSerialPort>
 #include <QSerialPortInfo>
-
+#include <QItemDelegate>
 #include <QMutex>
 #include <QThread>
+#include <QComboBox>
 
 #include <QTextBrowser>
 
@@ -68,4 +70,76 @@ class APIThread : public QThread
     int type;
 };
 
+//! @note widget for GUI
+class TurnModeDelegate : public QItemDelegate
+{
+    Q_OBJECT
+  public:
+    TurnModeDelegate(QObject *parent = 0) : QItemDelegate(parent) {}
+    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option __UNUSED,
+                          const QModelIndex &index __UNUSED) const
+    {
+        QComboBox *editor = new QComboBox(parent);
+        editor->addItem("Clockwise");
+        editor->addItem("Counter-clockwise");
+        return editor;
+    }
+    void setEditorData(QWidget *editor, const QModelIndex &index) const
+    {
+        QString text = index.model()->data(index, Qt::EditRole).toString();
+        QComboBox *comboBox = static_cast<QComboBox *>(editor);
+        int tindex = comboBox->findText(text);
+        comboBox->setCurrentIndex(tindex);
+    }
+    void setModelData(QWidget *editor, QAbstractItemModel *model,
+                      const QModelIndex &index) const
+    {
+        QComboBox *comboBox = static_cast<QComboBox *>(editor);
+        QString text = comboBox->currentText();
+        model->setData(index, text, Qt::EditRole);
+    }
+    void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option,
+                              const QModelIndex &index __UNUSED) const
+    {
+        editor->setGeometry(option.rect);
+    }
+};
+
+class ActionDelegate : public QItemDelegate
+{
+    Q_OBJECT
+  public:
+    ActionDelegate(QObject *parent = 0) : QItemDelegate(parent) {}
+    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option __UNUSED,
+                          const QModelIndex &index __UNUSED) const
+    {
+        QComboBox *editor = new QComboBox(parent);
+        editor->addItem("Stay");
+        editor->addItem("Take picture");
+        editor->addItem("Start recording");
+        editor->addItem("Stop recording");
+        editor->addItem("Yaw");
+        editor->addItem("Gimbal pitch");
+        return editor;
+    }
+    void setEditorData(QWidget *editor, const QModelIndex &index) const
+    {
+        QString text = index.model()->data(index, Qt::EditRole).toString();
+        QComboBox *comboBox = static_cast<QComboBox *>(editor);
+        int tindex = comboBox->findText(text);
+        comboBox->setCurrentIndex(tindex);
+    }
+    void setModelData(QWidget *editor, QAbstractItemModel *model,
+                      const QModelIndex &index) const
+    {
+        QComboBox *comboBox = static_cast<QComboBox *>(editor);
+        QString text = comboBox->currentText();
+        model->setData(index, text, Qt::EditRole);
+    }
+    void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option __UNUSED,
+                              const QModelIndex &index __UNUSED) const
+    {
+        editor->setGeometry(option.rect);
+    }
+};
 #endif // QONBOARDSDK_H

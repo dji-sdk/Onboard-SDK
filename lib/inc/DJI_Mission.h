@@ -47,7 +47,7 @@ typedef struct MissionACKMap
 
 void missionCallback(CoreAPI *This, Header *header, UserData userdata = 0);
 
-} // onboardSDK
-} // DJI
+} // namespace onboardSDK
+} // namespace DJI
 
 #endif // DJI_MISSION_H

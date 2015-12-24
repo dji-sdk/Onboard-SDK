@@ -7,6 +7,10 @@
 #include <QWebView>
 //#include <QWebEngineView>
 #include <QHBoxLayout>
+#include <QStandardItemModel>
+#include <QList>
+
+#include <QComboBox>
 #include "QonboardSDK.h"
 
 using namespace DJI::onboardSDK;
@@ -37,8 +41,8 @@ class DJIonboardSDK : public QMainWindow
     //! @note callback static class pointer and callback functions
   public:
     static void setControlCallback(CoreAPI *This, Header *header, UserData userData);
-    static void activationCallback(CoreAPI *This, Header *header,UserData  userData);
-    static void hotpintReadCallback(CoreAPI *This, Header *header,UserData  userData);
+    static void activationCallback(CoreAPI *This, Header *header, UserData userData);
+    static void hotpintReadCallback(CoreAPI *This, Header *header, UserData userData);
 
     void updateCameraYaw();
     void updateCameraRoll();
@@ -50,7 +54,8 @@ class DJIonboardSDK : public QMainWindow
     void updateFlightQuaternion();
     void updateFlightVelocity();
     void updateFlightPossition();
-  private slots:
+    QStandardItemModel *initAction();
+private slots:
     void on_btn_portRefresh_clicked();
     void on_btn_portOpen_clicked();
     void on_comboBox_portName_currentIndexChanged(int index);
@@ -173,6 +178,22 @@ class DJIonboardSDK : public QMainWindow
     void on_btn_follow_stop_clicked();
     void on_tmr_follow_send();
 
+    void on_btn_waypoint_add_clicked();
+    void on_btn_waypoint_init_clicked();
+    void on_waypoint_data_changed(const QModelIndex &topLeft, const QModelIndex &bottomRight,
+                                  const QVector<int> &roles __UNUSED);
+
+    void on_btn_log_clean_clicked();
+    void on_btn_log_save_clicked();
+
+    void on_cb_waypoint_point_currentIndexChanged(int index);
+    void on_btn_waypoint_remove_clicked();
+    void on_btn_waypoint_action_clicked();
+    void on_btn_waypoint_reset_clicked();
+    void on_btn_waypoint_removeAction_clicked();
+
+    void on_btn_core_setSync_clicked();
+
 private:
     Ui::DJIonboardSDK *ui;
 
@@ -201,8 +222,13 @@ private:
     QTimer *cameraSend;
 
     Follow *follow;
-    FollowTarget targetBase;
     QTimer *followSend;
+
+    WayPoint *wp;
+    QStandardItemModel *waypointData;
+    QStandardItemModel *currentAction;
+    QStandardItemModel *nullAction;
+    QList<QStandardItemModel*> actionData;
 
     QTimer *timerBroadcast;
     QWebView *webView;

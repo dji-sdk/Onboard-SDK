@@ -39,7 +39,7 @@ void Follow::stop(CallBack callback, UserData userData)
 void Follow::pause(bool isPause, CallBack callback, UserData userData)
 {
     uint8_t data = isPause ? 0 : 1;
-    api->send(2, 1, SET_MISSION, CODE_FOLLOW_PAUSE, &data, sizeof(data), 500, 2,
+    api->send(2, 1, SET_MISSION, CODE_FOLLOW_SETPAUSE, &data, sizeof(data), 500, 2,
               callback ? callback : missionCallback, userData);
 }
 

@@ -90,6 +90,14 @@ class Flight
     };
 #endif // SDK_VERSION_2_3
 
+    /*! @note
+     *  In order to keep your drone safe,
+     *  you must keep sending FlightData to flight controller.
+     *  Or your drone will hover.
+     *
+     *  Possion control is a open-looped control.
+     *  That means it accept incremental data, not absolute possition data.
+     * */
   public:
     Flight(CoreAPI *ContorlAPI = 0);
 

@@ -50,8 +50,8 @@ typedef struct HotPointData
 
 class HotPoint
 {
+  public:
 #pragma pack(1)
-
     typedef struct StartACK
     {
         uint8_t ack;
@@ -69,9 +69,8 @@ class HotPoint
         MissionACK ack;
         HotPointData data;
     } ReadACK;
-
 #pragma pack()
-  public:
+
     enum View
     {
         VIEW_NORTH = 0,
@@ -105,7 +104,8 @@ class HotPoint
     void stop(CallBack callback = 0, UserData userData = 0);
 
     void resetPalstance(Palstance &Data, CallBack callback = 0, UserData userData = 0);
-    void resetPalstance(float32_t palstance, bool isClockwise, CallBack callback = 0, UserData userData = 0);
+    void resetPalstance(float32_t palstance, bool isClockwise, CallBack callback = 0,
+                        UserData userData = 0);
     void resetRadius(float32_t degree, CallBack callback = 0, UserData userData = 0);
     void resetYaw(CallBack callback = 0, UserData userData = 0);
 

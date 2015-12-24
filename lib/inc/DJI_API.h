@@ -75,7 +75,13 @@ enum CMD_SET
     SET_CONTROL = 0x01,
     SET_BROADCAST = 0x02,
     SET_MISSION = 0x03,
+    SET_SYNC = 0x04,
     SET_VIRTUALRC = 0x05
+};
+
+enum SYNC_CODE
+{
+    CODE_SYNC_BROADCAST = 0x00
 };
 
 enum HOTPOINT_CODE
@@ -93,8 +99,20 @@ enum FOLLOW_CODE
 {
     CODE_FOLLOW_START = 0x30,
     CODE_FOLLOW_STOP = 0x31,
-    CODE_FOLLOW_PAUSE = 0X32,
+    CODE_FOLLOW_SETPAUSE = 0X32,
     CODE_FOLLOW_TARGET = 0X33
+};
+
+enum WAYPOINT_CODE
+{
+    CODE_WAYPOINT_INIT = 0x10,
+    CODE_WAYPOINT_ADD = 0x11,
+    CODE_WAYPOINT_SETSTART = 0x12,
+    CODE_WAYPOINT_SETPAUSE = 0x13,
+    CODE_WAYPOINT_DOWNLOAD = 0x14,
+    CODE_WAYPOINT_INDEX = 0x15,
+    CODE_WAYPOINT_SETVELOCITY = 0x16,
+    CODE_WAYPOINT_GETVELOSITY = 0x17,
 };
 
 enum ACTIVATION_CODE
@@ -193,6 +211,7 @@ class CoreAPI
     void sendToMobile(uint8_t *data, uint8_t len, CallBack callback = 0, UserData userData = 0);
     void setBroadcastFeq(uint8_t *data, CallBack callback = 0, UserData userData = 0);
     void setActivation(bool isActivated);
+    void setSyncFeq(uint32_t feqInHz);
     void setKey(const char *key);
 
     //! @note Core read API

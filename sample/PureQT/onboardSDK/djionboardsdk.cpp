@@ -2,6 +2,19 @@
 #include "ui_djionboardsdk.h"
 
 #include <QFile>
+#include <QFileDialog>
+
+QStandardItemModel *DJIonboardSDK::initAction()
+{
+    QStandardItemModel *action = new QStandardItemModel();
+    action->setHorizontalHeaderItem(0, new QStandardItem(QObject::tr("No.")));
+    action->setHorizontalHeaderItem(1, new QStandardItem(QObject::tr("Index")));
+    action->setHorizontalHeaderItem(2, new QStandardItem(QObject::tr("Type")));
+    action->setHorizontalHeaderItem(3, new QStandardItem(QObject::tr("Time")));
+    action->setHorizontalHeaderItem(4, new QStandardItem(QObject::tr("Data")));
+
+    return action;
+}
 
 DJIonboardSDK::DJIonboardSDK(QWidget *parent) : QMainWindow(parent), ui(new Ui::DJIonboardSDK)
 {
@@ -30,6 +43,7 @@ DJIonboardSDK::DJIonboardSDK(QWidget *parent) : QMainWindow(parent), ui(new Ui::
     cam = new Camera(api);
     hp = new HotPoint(api);
     follow = new Follow(api);
+    wp = new WayPoint(api);
 
     refreshPort();
     setPort();
@@ -96,6 +110,7 @@ DJIonboardSDK::DJIonboardSDK(QWidget *parent) : QMainWindow(parent), ui(new Ui::
     //! @endcode init virtual RC
 
     //! @code init Follow
+    FollowTarget targetBase;
     targetBase.latitude = 0;
     targetBase.longitude = 0;
     targetBase.angle = 0;
@@ -122,13 +137,44 @@ DJIonboardSDK::DJIonboardSDK(QWidget *parent) : QMainWindow(parent), ui(new Ui::
         f.close();
     }
 
-//! @code version control
+    //! @code version control
+    timerBroadcast = new QTimer();
 #ifdef SDK_VERSION_2_3
     ui->gb_CoreData->setEnabled(false);
     ui->gb_VRC->setEnabled(false);
 #endif // SDK_VERSION_2_3
     //! @endcode
-    timerBroadcast = new QTimer();
+
+    //! @code init WayPoint
+    waypointData = new QStandardItemModel();
+    waypointData->setHorizontalHeaderItem(0, new QStandardItem(QObject::tr("No.")));
+    waypointData->setHorizontalHeaderItem(1, new QStandardItem(QObject::tr("Latitude")));
+    waypointData->setHorizontalHeaderItem(2, new QStandardItem(QObject::tr("Longitude")));
+    waypointData->setHorizontalHeaderItem(3, new QStandardItem(QObject::tr("Altitude")));
+    waypointData->setHorizontalHeaderItem(4, new QStandardItem(QObject::tr("Damping")));
+    waypointData->setHorizontalHeaderItem(5, new QStandardItem(QObject::tr("Yaw")));
+    waypointData->setHorizontalHeaderItem(6, new QStandardItem(QObject::tr("Pitch")));
+    waypointData->setHorizontalHeaderItem(7, new QStandardItem(QObject::tr("TurnMode")));
+    waypointData->setHorizontalHeaderItem(8, new QStandardItem(QObject::tr("Anction Num")));
+
+    nullAction = initAction();
+    currentAction = nullAction;
+
+    ui->tv_waypoin_actions->setItemDelegateForColumn(3, new ActionDelegate());
+    ui->tv_waypoin_actions->setModel(currentAction);
+    ui->tv_waypoin_actions->verticalHeader()->hide();
+    ui->tv_waypoin_actions->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
+    ui->tv_waypoin_data->setItemDelegateForColumn(7, new TurnModeDelegate());
+    ui->tv_waypoin_data->setModel(waypointData);
+    ui->tv_waypoin_data->verticalHeader()->hide();
+    ui->tv_waypoin_data->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    connect(waypointData, SIGNAL(dataChanged(QModelIndex, QModelIndex, QVector<int>)), this,
+            SLOT(on_waypoint_data_changed(QModelIndex, QModelIndex, QVector<int>)));
+
+    ui->cb_waypoint_point->addItem("Null");
+    //! @endcode
+
     connect(timerBroadcast, SIGNAL(timeout()), this, SLOT(on_tmr_Broadcast()));
     timerBroadcast->start(300);
 }
@@ -1020,14 +1066,10 @@ void DJIonboardSDK::on_btn_hp_data_clicked() { hp->readData(hotpintReadCallback,
 
 void DJIonboardSDK::on_btn_follow_current_clicked()
 {
-    targetBase.latitude = flight->getPossition().latitude;
-    targetBase.longitude = flight->getPossition().longtitude;
-    targetBase.height = flight->getPossition().altitude;
-    targetBase.angle = 0;
-    ui->le_follow_la->setText(QString::number(targetBase.latitude));
-    ui->le_follow_lo->setText(QString::number(targetBase.longitude));
-    ui->le_follow_hi->setText(QString::number(targetBase.height));
-    ui->le_follow_an->setText(QString::number(targetBase.angle));
+    ui->le_follow_la->setText(QString::number(0.0));
+    ui->le_follow_lo->setText(QString::number(0.0));
+    ui->le_follow_hi->setText(QString::number(0.0));
+    ui->le_follow_an->setText(QString::number(0.0));
     ui->hs_follow_al->setValue(0);
     ui->hs_follow_lo->setValue(0);
     ui->hs_follow_la->setValue(0);
@@ -1036,22 +1078,22 @@ void DJIonboardSDK::on_btn_follow_current_clicked()
 
 void DJIonboardSDK::on_hs_follow_la_valueChanged(int value)
 {
-    ui->le_follow_la->setText(QString::number(targetBase.latitude + value / 10000.0));
+    ui->le_follow_la->setText(QString::number(value / 10000.0));
 }
 
 void DJIonboardSDK::on_hs_follow_lo_valueChanged(int value)
 {
-    ui->le_follow_lo->setText(QString::number(targetBase.longitude + value / 10000.0));
+    ui->le_follow_lo->setText(QString::number(value / 10000.0));
 }
 
 void DJIonboardSDK::on_hs_follow_al_valueChanged(int value)
 {
-    ui->le_follow_hi->setText(QString::number(targetBase.height + value / 100.0));
+    ui->le_follow_hi->setText(QString::number(value / 100.0));
 }
 
 void DJIonboardSDK::on_hs_follow_an_valueChanged(int value)
 {
-    ui->le_follow_an->setText(QString::number(targetBase.angle + value / 114.59156));
+    ui->le_follow_an->setText(QString::number(value / 114.59156));
 }
 
 void DJIonboardSDK::on_btn_follow_update_clicked() { on_tmr_follow_send(); }
@@ -1083,4 +1125,112 @@ void DJIonboardSDK::on_tmr_follow_send()
                          ui->le_follow_lo->text().toDouble() +
                              flight->getPossition().longtitude,
                          ui->le_follow_hi->text().toInt(), ui->le_follow_an->text().toInt());
+}
+
+void DJIonboardSDK::on_btn_waypoint_add_clicked()
+{
+    int number = waypointData->rowCount();
+    waypointData->setItem(number, 0, new QStandardItem(QString::number(number)));
+    waypointData->setItem(number, 1,
+                          new QStandardItem(QString::number(flight->getPossition().latitude)));
+    waypointData->setItem(
+        number, 2, new QStandardItem(QString::number(flight->getPossition().longtitude)));
+    waypointData->setItem(number, 3,
+                          new QStandardItem(QString::number(flight->getPossition().altitude)));
+    waypointData->setItem(number, 4, new QStandardItem("not available now"));
+    waypointData->setItem(number, 5, new QStandardItem("0"));
+    waypointData->setItem(number, 6, new QStandardItem("0"));
+    waypointData->setItem(number, 7, new QStandardItem("Clockwise"));
+    waypointData->setItem(number, 8, new QStandardItem("0"));
+
+    actionData.append(initAction());
+    ui->cb_waypoint_point->addItem(QString::number(ui->cb_waypoint_point->count()));
+}
+
+void DJIonboardSDK::on_btn_waypoint_init_clicked()
+{
+    //! @todo
+    API_LOG(api->getDriver(), STATUS_LOG, "%lf", waypointData->index(0, 0).data().toDouble());
+    API_LOG(api->getDriver(), STATUS_LOG, "%lf", waypointData->index(0, 1).data().toDouble());
+}
+
+void DJIonboardSDK::on_waypoint_data_changed(const QModelIndex &topLeft,
+                                             const QModelIndex &bottomRight,
+                                             const QVector<int> &roles __UNUSED)
+{
+    //! @todo
+    API_LOG(api->getDriver(), STATUS_LOG, "c: %d r: %d %s", bottomRight.column(),
+            bottomRight.row(), topLeft.data().toByteArray().data());
+    API_LOG(api->getDriver(), STATUS_LOG, "c: %d r: %d %lf", bottomRight.column(),
+            bottomRight.row(), topLeft.data().toDouble());
+}
+
+void DJIonboardSDK::on_btn_waypoint_remove_clicked()
+{
+    if (ui->cb_waypoint_point->count() != 1)
+    {
+        ui->cb_waypoint_point->removeItem(ui->cb_waypoint_point->count() - 1);
+        QStandardItemModel *last = actionData.last();
+        actionData.removeLast();
+        delete last;
+        waypointData->removeRow(waypointData->rowCount() - 1);
+    }
+}
+
+void DJIonboardSDK::on_cb_waypoint_point_currentIndexChanged(int index)
+{
+    if (index != 0)
+    {
+        if (actionData.length() >= (index - 1))
+        {
+            ui->tv_waypoin_actions->setModel(actionData[index - 1]);
+            currentAction = actionData[index - 1];
+        }
+    }
+    else
+    {
+        ui->tv_waypoin_actions->setModel(nullAction);
+        currentAction = nullAction;
+    }
+}
+
+void DJIonboardSDK::on_btn_log_clean_clicked() { ui->tb_display->clear(); }
+
+void DJIonboardSDK::on_btn_log_save_clicked()
+{
+    QString data = QFileDialog::getSaveFileName(this, "Save", QString(), "Text (*.txt)");
+    API_LOG(api->getDriver(), STATUS_LOG, "%s", data.toLatin1().data());
+}
+
+void DJIonboardSDK::on_btn_waypoint_action_clicked()
+{
+    if (currentAction != nullAction)
+    {
+        int number = currentAction->rowCount();
+        if (number <= 15 && ui->cb_waypoint_point->currentIndex() != -1)
+        {
+            currentAction->setItem(number, 0, new QStandardItem(QString::number(number)));
+            currentAction->setItem(number, 1, new QStandardItem(QString::number(
+                                                  ui->cb_waypoint_point->currentIndex())));
+        }
+        else
+        {
+            API_LOG(api->getDriver(), STATUS_LOG, "The maximum number of actions is 15");
+        }
+    }
+}
+
+void DJIonboardSDK::on_btn_waypoint_reset_clicked()
+{
+    while (actionData.length() != 0)
+    {
+        on_btn_waypoint_remove_clicked();
+    }
+}
+
+void DJIonboardSDK::on_btn_waypoint_removeAction_clicked() {}
+
+void DJIonboardSDK::on_btn_core_setSync_clicked()
+{
+    api->setSyncFeq(ui->le_coreSyncFeq->text().toInt());
 }

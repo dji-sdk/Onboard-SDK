@@ -1,5 +1,5 @@
 /*! @brief
- *  @file DJI_HotPoint.h
+ *  @file DJI_Follow.h
  *  @version 3.0
  *  @date Dec 16, 2015
  *

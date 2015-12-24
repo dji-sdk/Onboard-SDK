@@ -49,5 +49,9 @@
 #define SDK_VERSION (MAKE_VERSION(3, 1, 10, 0))
 #endif
 
+#ifdef SDK_VERSION_3_0_A3
+#define SDK_VERSION (MAKE_VERSION(3, 0, 100, 0))
+#endif
+
 #endif // DJI_VERSION_H
 
