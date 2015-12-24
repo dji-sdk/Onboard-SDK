@@ -26,6 +26,8 @@ namespace DJI
 namespace onboardSDK
 {
 
+class WayPoint;
+
 #pragma pack(1)
 typedef struct WayPointInitData
 {
@@ -34,7 +36,7 @@ typedef struct WayPointInitData
     float32_t idleVelocity;
 
     uint8_t finishAction;
-    uint8_t executiveMode;
+    uint8_t executiveTimes;
     uint8_t yawMode;
     uint8_t traceMode;
     uint8_t RCLostAction;
@@ -66,9 +68,27 @@ typedef struct WayPointData
     uint8_t actionNumber : 4;
     uint8_t actionRepeat : 4;
 
-    uint8_t commandList[15];
-    int16_t commandParameter[15];
+    uint8_t commandList[16];//! @note issues here list number is 15
+    int16_t commandParameter[16];
 } WayPointData;
+
+typedef struct WayPointVelocityACK
+{
+    uint8_t ack;
+    float32_t idleVelocity;
+} WayPointVelocityACK;
+
+typedef struct WayPointInitACK
+{
+    uint8_t ack;
+    WayPointInitData data;
+} WayPointInitACK;
+
+typedef struct WayPointDataACK
+{
+    uint8_t ack;
+    uint8_t index;
+} WayPointDataACK;
 
 #pragma pack()
 
@@ -80,19 +100,33 @@ class WayPoint
 #else
     WayPoint(WayPointData *list, uint8_t len, CoreAPI *ControlAPI = 0);
 #endif // STATIC_MEMORY
-    void init(const WayPointInitData *info = 0,CallBack callback = 0, UserData userData = 0);
+    void init(const WayPointInitData *Info = 0, CallBack callback = 0, UserData userData = 0);
     void start(CallBack callback = 0, UserData userData = 0);
     void stop(CallBack callback = 0, UserData userData = 0);
     //! @note true for pause, false for resume
     void pause(bool isPause, CallBack callback = 0, UserData userData = 0);
     void readInitData(CallBack callback = 0, UserData userData = 0);
     void readIndexData(uint8_t index, CallBack callback = 0, UserData userData = 0);
+    void readIdleVelocity(CallBack callback = 0, UserData userData = 0);
+    //! @todo
+    //void uploadAll(CallBack callback = 0, UserData userData = 0);
+    bool uploadIndexData(WayPointData *data, CallBack callback = 0, UserData userData = 0);
+    bool uploadIndexData(uint8_t pos, CallBack callback = 0, UserData userData = 0);
+    void updateIdleVelocity(float32_t meterPreSecond, CallBack callback = 0,
+                            UserData userData = 0);
 
     void setInfo(const WayPointInitData &value);
-    void setIndex(WayPointData *value);
+    void setIndex(WayPointData *value, size_t pos);
     WayPointInitData getInfo() const;
     WayPointData *getIndex() const;
-private:
+    WayPointData *getIndex(size_t pos) const;
+
+  public:
+    static void idleVelocityCallback(CoreAPI *This, Header *header, UserData wpThis);
+    static void readInitDataCallback(CoreAPI *This, Header *header, UserData wpThis);
+    static void uploadIndexDataCallback(CoreAPI *This, Header *header, UserData wpThis);
+
+  private:
     CoreAPI *api;
     WayPointInitData info;
     WayPointData *index;

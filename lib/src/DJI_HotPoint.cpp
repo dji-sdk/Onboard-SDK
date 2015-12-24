@@ -15,7 +15,7 @@ void HotPoint::initData()
     data.version = 0;
 
     data.height = api->getBroadcastData().pos.altitude;
-    data.longtitude = api->getBroadcastData().pos.longtitude;
+    data.longtitude = api->getBroadcastData().pos.longitude;
     data.latitude = api->getBroadcastData().pos.latitude;
 
     data.radius = 10;
@@ -38,7 +38,7 @@ void HotPoint::stop(CallBack callback, UserData userData)
               callback ? callback : missionCallback, userData);
 }
 
-void HotPoint::resetPalstance(HotPoint::Palstance &Data, CallBack callback, UserData userData)
+void HotPoint::updatePalstance(HotPoint::Palstance &Data, CallBack callback, UserData userData)
 {
     data.palstance = Data.palstance;
     data.clockwise = Data.clockwise ? 1 : 0;
@@ -46,15 +46,15 @@ void HotPoint::resetPalstance(HotPoint::Palstance &Data, CallBack callback, User
               callback ? callback : missionCallback, userData);
 }
 
-void HotPoint::resetPalstance(float32_t palstance, bool isClockwise, CallBack callback, UserData userData)
+void HotPoint::updatePalstance(float32_t palstance, bool isClockwise, CallBack callback, UserData userData)
 {
     Palstance p;
     p.palstance = palstance;
     p.clockwise = isClockwise ? 1 : 0;
-    resetPalstance(p, callback,userData);
+    updatePalstance(p, callback,userData);
 }
 
-void HotPoint::resetRadius(float32_t degree, CallBack callback, UserData userData)
+void HotPoint::updateRadius(float32_t degree, CallBack callback, UserData userData)
 {
     api->send(2, 1, SET_MISSION, CODE_HOTPOINT_RADIUS, &degree, sizeof(degree), 500, 2,
               callback ? callback : missionCallback, userData);

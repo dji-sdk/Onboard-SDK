@@ -43,10 +43,10 @@ class QHardDriver : public HardDriver
     QTextBrowser *getDisplay() const;
     void setDisplay(QTextBrowser *value);
 
-private:
+  private:
     QHardDriver();
 
-private:
+  private:
     int baudrate;
     QSerialPort *port;
     QMutex memory;
@@ -61,7 +61,7 @@ class APIThread : public QThread
 
   public:
     APIThread();
-    APIThread(CoreAPI *API, int Type,QObject *parent = 0);
+    APIThread(CoreAPI *API, int Type, QObject *parent = 0);
 
     void run();
 
@@ -142,4 +142,17 @@ class ActionDelegate : public QItemDelegate
         editor->setGeometry(option.rect);
     }
 };
+
+class ReadOnlyDelegate : public QItemDelegate
+{
+    Q_OBJECT
+  public:
+    ReadOnlyDelegate(QObject *parent = 0) : QItemDelegate(parent) {}
+    QWidget *createEditor(QWidget *parent  __UNUSED, const QStyleOptionViewItem &option __UNUSED,
+                          const QModelIndex &index __UNUSED) const
+    {
+        return NULL;
+    }
+};
+
 #endif // QONBOARDSDK_H

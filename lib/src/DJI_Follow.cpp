@@ -13,7 +13,7 @@ void Follow::initData()
     data.mode = MODE_RELATIVE;
     data.yaw = YAW_TOTARGET;
     data.target.latitude = api->getBroadcastData().pos.latitude;
-    data.target.longitude = api->getBroadcastData().pos.longtitude;
+    data.target.longitude = api->getBroadcastData().pos.longitude;
     data.target.height = api->getBroadcastData().pos.altitude;
     data.target.angle = 0;
     data.sensitivity = 1;

@@ -10,6 +10,7 @@ namespace onboardSDK
 MissionACKMap missionACK[] = {
     //! @note common ACK code
     { 0x00, " 0x00 Success" },
+    { 0x01, " 0x01 Wrong WayPoint Index"},
     { 0xD0, " 0xD0 Not At Mode F" },
     { 0xD1, " 0xD1 Need obtain control" },
     { 0xD2, " 0xD2 Need close IOC mode" },

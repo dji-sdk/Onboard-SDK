@@ -229,7 +229,7 @@ typedef struct VelocityData
 typedef struct PossitionData
 {
     float64_t latitude;
-    float64_t longtitude;
+    float64_t longitude;
     float32_t altitude;
     float32_t height;
     uint8_t health;

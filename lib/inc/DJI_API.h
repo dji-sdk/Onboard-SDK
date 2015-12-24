@@ -106,13 +106,13 @@ enum FOLLOW_CODE
 enum WAYPOINT_CODE
 {
     CODE_WAYPOINT_INIT = 0x10,
-    CODE_WAYPOINT_ADD = 0x11,
+    CODE_WAYPOINT_ADDPOINT = 0x11,
     CODE_WAYPOINT_SETSTART = 0x12,
     CODE_WAYPOINT_SETPAUSE = 0x13,
     CODE_WAYPOINT_DOWNLOAD = 0x14,
     CODE_WAYPOINT_INDEX = 0x15,
     CODE_WAYPOINT_SETVELOCITY = 0x16,
-    CODE_WAYPOINT_GETVELOSITY = 0x17,
+    CODE_WAYPOINT_GETVELOCITY = 0x17,
 };
 
 enum ACTIVATION_CODE
@@ -311,11 +311,11 @@ class CoreAPI
     bool getWayPointData() const;
     bool getFollowData() const;
 
-    void setAccountData(const ActivateData &value);
-    void setDriver(HardDriver *value);
     void setHotPointData(bool value);
     void setWayPointData(bool value);
     void setFollowData(bool value);
+    void setDriver(HardDriver *value);
+    void setAccountData(const ActivateData &value);
 
   private:
     HardDriver *driver;
@@ -323,17 +323,6 @@ class CoreAPI
     bool hotPointData;
     bool wayPointData;
     bool followData;
-};
-
-class Swarm
-{
-  public:
-    Swarm(CoreAPI *ControlAPI = 0);
-    CoreAPI *getApi() const;
-    void setApi(CoreAPI *value);
-
-  private:
-    CoreAPI *api;
 };
 
 } // namespace onboardSDK

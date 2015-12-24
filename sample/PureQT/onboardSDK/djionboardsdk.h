@@ -55,7 +55,10 @@ class DJIonboardSDK : public QMainWindow
     void updateFlightVelocity();
     void updateFlightPossition();
     QStandardItemModel *initAction();
+    void wpAddPoint();
+    void wpRemovePoint();
 private slots:
+    //! @note too much slots, tired to rename.
     void on_btn_portRefresh_clicked();
     void on_btn_portOpen_clicked();
     void on_comboBox_portName_currentIndexChanged(int index);
@@ -64,6 +67,7 @@ private slots:
     void on_btn_coreActive_clicked();
     void on_btn_coreVersion_clicked();
     void on_btn_coreSetControl_clicked();
+    void on_btn_core_setSync_clicked();
     void on_btn_coreRead_clicked();
     void on_tmr_Broadcast();
 
@@ -76,7 +80,7 @@ private slots:
     void on_btn_VRC_resetAll_clicked();
     void on_btn_VRC_resetLeft_clicked();
     void on_btn_VRC_resetRight_clicked();
-    void on_btn_virtualRC_send_clicked(); //! @todo rename
+    void on_btn_virtualRC_send_clicked();
     void on_btn_virtualRC_init_clicked();
     void on_btn_vrc_down_pressed();
     void on_btn_vrc_up_pressed();
@@ -150,10 +154,12 @@ private slots:
     void on_lineEdit_flight_Yaw_returnPressed();
     void on_cb_flight_autoSend_clicked(bool checked);
     void on_btn_flight_dataReset_clicked();
-
-    void autosend(); //! @todo rename add fligh signature.
+    void filght_autosend();
 
     void on_btn_webLoad_clicked();
+
+    void on_btn_log_clean_clicked();
+    void on_btn_log_save_clicked();
 
     void on_cb_mission_hp_clicked(bool checked);
     void on_cb_mission_wp_clicked(bool checked);
@@ -178,21 +184,28 @@ private slots:
     void on_btn_follow_stop_clicked();
     void on_tmr_follow_send();
 
-    void on_btn_waypoint_add_clicked();
-    void on_btn_waypoint_init_clicked();
-    void on_waypoint_data_changed(const QModelIndex &topLeft, const QModelIndex &bottomRight,
-                                  const QVector<int> &roles __UNUSED);
-
-    void on_btn_log_clean_clicked();
-    void on_btn_log_save_clicked();
-
     void on_cb_waypoint_point_currentIndexChanged(int index);
-    void on_btn_waypoint_remove_clicked();
+    void on_le_waypoint_number_editingFinished();
     void on_btn_waypoint_action_clicked();
     void on_btn_waypoint_reset_clicked();
     void on_btn_waypoint_removeAction_clicked();
+    void on_btn_waypoint_viewPoint_clicked();
+    void on_btn_wp_ivset_clicked();
+    void on_btn_wp_ivRead_clicked();
+    void on_btn_waypoint_add_clicked();
+    void on_btn_waypoint_remove_clicked();
+    void on_btn_waypoint_init_clicked();
+    void on_btn_wp_pr_clicked(bool checked);
+    void on_le_wp_exec_editingFinished();
+    void on_waypoint_data_changed(const QModelIndex &topLeft, const QModelIndex &bottomRight,
+                                  const QVector<int> &roles __UNUSED);
 
-    void on_btn_core_setSync_clicked();
+
+
+    void on_btn_wp_start_stop_clicked(bool checked);
+    void on_btn_wp_loadOne_clicked();
+
+    void on_btn_wp_loadAll_clicked();
 
 private:
     Ui::DJIonboardSDK *ui;

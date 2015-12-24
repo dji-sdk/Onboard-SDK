@@ -94,19 +94,19 @@ class HotPoint
     void initData();
 
     /*! @note API functions
-     *  @attention difference between set and reset
+     *  @attention difference between set and update
      *  Set functions only change the HotPoint data in this class,
-     *  Reset functions will change the Mission status.
-     *  In other words: drone will response reset functions immediately.
+     *  Update functions will change the Mission status.
+     *  In other words: drone will response update functions immediately.
      * */
 
     void start(CallBack callback = 0, UserData userData = 0);
     void stop(CallBack callback = 0, UserData userData = 0);
 
-    void resetPalstance(Palstance &Data, CallBack callback = 0, UserData userData = 0);
-    void resetPalstance(float32_t palstance, bool isClockwise, CallBack callback = 0,
+    void updatePalstance(Palstance &Data, CallBack callback = 0, UserData userData = 0);
+    void updatePalstance(float32_t palstance, bool isClockwise, CallBack callback = 0,
                         UserData userData = 0);
-    void resetRadius(float32_t degree, CallBack callback = 0, UserData userData = 0);
+    void updateRadius(float32_t degree, CallBack callback = 0, UserData userData = 0);
     void resetYaw(CallBack callback = 0, UserData userData = 0);
 
     void readData(CallBack callback = 0, UserData userData = 0);

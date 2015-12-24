@@ -321,7 +321,7 @@ void CoreAPI::setControlCallback(CoreAPI *This, Header *header, UserData userDat
     unsigned short ack_data = AC_COMMON_NO_RESPONSE;
     unsigned char data = 0x1;
 
-    if (header->length - EXC_DATA_SIZE <= 2)
+    if (header->length - EXC_DATA_SIZE <= sizeof(ack_data))
     {
         memcpy((unsigned char *)&ack_data, ((unsigned char *)header) + sizeof(Header),
                (header->length - EXC_DATA_SIZE));
