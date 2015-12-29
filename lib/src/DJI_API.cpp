@@ -35,7 +35,9 @@ void CoreAPI::init(HardDriver *Driver, CallBackHandler userRecvCallback,
     broadcastData.timeStamp.time = 0;
     broadcastData.timeStamp.asr_ts = 0;
     broadcastData.timeStamp.sync_flag = 0;
-#endif
+#else
+    broadcastData.timeStamp = 0;
+#endif // SDK_VERSION_2_3
 
     hotPointData = true;
     followData = true;
@@ -134,7 +136,8 @@ void CoreAPI::getVersion(CallBack callback, UserData userData)
 void CoreAPI::activate(ActivateData *data, CallBack callback, UserData userData)
 {
     accountData = *data;
-
+    for (int i = 0; i < 32; ++i)
+        data->app_bundle_id[i] ='9'; //! @note for ios verification
     send(2, 0, SET_ACTIVATION, CODE_ACTIVATE, (unsigned char *)&accountData,
          sizeof(accountData) - sizeof(char *), 1000, 3,
          callback ? callback : CoreAPI::activateCallback, userData);

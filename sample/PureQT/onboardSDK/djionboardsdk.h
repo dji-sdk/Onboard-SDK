@@ -245,6 +245,7 @@ private:
 
     QTimer *timerBroadcast;
     QWebView *webView;
+    //! @note a better web engine, not available now
     //    QWebEngineView *webView;
 };
 

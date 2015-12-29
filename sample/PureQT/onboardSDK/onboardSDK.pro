@@ -27,7 +27,10 @@ SOURCES += main.cpp\
     ../../../lib/src/DJI_HotPoint.cpp \
     ../../../lib/src/DJI_Mission.cpp \
     ../../../lib/src/DJI_Follow.cpp \
-    ../../../lib/src/DJI_WayPoint.cpp
+    ../../../lib/src/DJI_WayPoint.cpp \
+    ../../../lib/DJIscript/src/DJI_Script.cpp \
+    ../../../lib/DJIscript/src/DJI_Interpreter.cpp \
+    highlighter.cpp
 
 HEADERS  += djionboardsdk.h \
     QonboardSDK.h \
@@ -46,11 +49,14 @@ HEADERS  += djionboardsdk.h \
     ../../../lib/inc/DJI_HotPoint.h \
     ../../../lib/inc/DJI_Mission.h \
     ../../../lib/inc/DJI_Follow.h \
-    ../../../lib/inc/DJI_WayPoint.h
+    ../../../lib/inc/DJI_WayPoint.h \
+    ../../../lib/DJIscript/inc/DJI_Script.h \
+    ../../../lib/DJIscript/inc/DJI_Interpreter.h
 
 FORMS    += djionboardsdk.ui
 
 INCLUDEPATH += \
             ../../../lib/inc \
+            ../../../lib/DJIscript/inc \
 
 DEFINES += QT

@@ -304,6 +304,7 @@ typedef struct
 
 typedef struct BroadcastData
 {
+    unsigned short dataFlag;
     TimeStampData timeStamp;
     QuaternionData q;
     CommonData a;

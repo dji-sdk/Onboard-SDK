@@ -362,7 +362,6 @@ void DJIonboardSDK::on_btn_coreActive_clicked()
     data.app_api_level = 2;
     data.app_ver = SDK_VERSION;
     data.app_id = ui->lineEdit_ID->text().toInt();
-    data.app_bundle_id[0] = data.app_bundle_id[1] = 0x12; //! @note for ios verification
     *key = ui->lineEdit_Key->text().toLocal8Bit();
     data.app_key = key->data(); //! @warning memory leak fixme
     api->activate(&data, DJIonboardSDK::activationCallback, this);
@@ -474,7 +473,7 @@ void DJIonboardSDK::on_btg_flight_CL(QAbstractButton *button)
 }
 void DJIonboardSDK::on_btg_flight_SM(QAbstractButton *button)
 {
-
+#ifndef SDK_VERSION_2_3
     QString name = button->text();
     flightFlag &= 0xFE;
     if (name == "Disable")
@@ -482,6 +481,9 @@ void DJIonboardSDK::on_btg_flight_SM(QAbstractButton *button)
     else
         flightFlag |= Flight::SMOOTH_ENABLE;
     updateFlightFlag();
+#else
+    ui->groupBox9->setDisabled(true);
+#endif
 }
 
 void DJIonboardSDK::updateFlightX()

@@ -169,5 +169,4 @@ void WayPoint::setIndex(WayPointData *value, size_t pos)
     }
     index[pos] = *value;
     for (int i = 0; i < 8; ++i) index[pos].reserved[i] = 0;
-    API_LOG(api->getDriver(), STATUS_LOG, "Index number: %d", 9999);
 }

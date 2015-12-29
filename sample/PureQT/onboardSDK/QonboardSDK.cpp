@@ -42,7 +42,7 @@ void QHardDriver::init()
     }
 }
 
-unsigned int QHardDriver::getTimeStamp()
+time_t QHardDriver::getTimeStamp()
 {
     return QDateTime::currentMSecsSinceEpoch();
 }

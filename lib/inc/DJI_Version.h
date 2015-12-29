@@ -59,6 +59,10 @@ const uint32_t SDK_VERSION = (MAKE_VERSION(3, 1, 10, 0));
 const uint32_t SDK_VERSION = (MAKE_VERSION(3, 0, 100, 0));
 #endif
 
+#ifdef SDK_VERSION_3_1_A3
+const uint32_t SDK_VERSION = (MAKE_VERSION(3, 1, 100, 0));
+#endif
+
 //! @todo better version control structure
 const uint32_t sdkVersionM100_23 = (MAKE_VERSION(2, 3, 10, 0));
 const uint32_t sdkVersionM100_30 = (MAKE_VERSION(3, 0, 10, 0));

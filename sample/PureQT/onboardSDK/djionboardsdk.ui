@@ -21,7 +21,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tbFlight">
        <attribute name="title">
@@ -5749,56 +5749,64 @@
        <attribute name="title">
         <string>Script</string>
        </attribute>
-       <widget class="QWidget" name="layoutWidget">
-        <property name="geometry">
-         <rect>
-          <x>110</x>
-          <y>40</y>
-          <width>258</width>
-          <height>254</height>
-         </rect>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayout_63">
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_60">
-           <item>
-            <widget class="QLineEdit" name="lineEdit"/>
-           </item>
-           <item>
-            <widget class="QPushButton" name="pushButton_4">
-             <property name="text">
-              <string>...</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="pushButton_7">
-             <property name="text">
-              <string>Save</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <widget class="QPushButton" name="pushButton_5">
-           <property name="text">
-            <string>Run</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QTextBrowser" name="textBrowser">
-           <property name="undoRedoEnabled">
-            <bool>true</bool>
-           </property>
-           <property name="readOnly">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
+       <layout class="QHBoxLayout" name="horizontalLayout_133">
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_63">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_60">
+            <item>
+             <widget class="QLineEdit" name="lineEdit"/>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pushButton_4">
+              <property name="text">
+               <string>...</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pushButton_7">
+              <property name="text">
+               <string>Save</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_script_run">
+            <property name="text">
+             <string>Run</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QTextBrowser" name="tb_script_code">
+            <property name="undoRedoEnabled">
+             <bool>true</bool>
+            </property>
+            <property name="readOnly">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_65">
+          <item>
+           <widget class="QTextBrowser" name="tb_script_output">
+            <property name="undoRedoEnabled">
+             <bool>true</bool>
+            </property>
+            <property name="readOnly">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
       </widget>
       <widget class="QWidget" name="tbSwarm">
        <attribute name="title">
@@ -5978,18 +5986,18 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="btg_cameraPitch"/>
-  <buttongroup name="btg_cameraAngle"/>
-  <buttongroup name="btg_flightHL"/>
-  <buttongroup name="btg_flightYL"/>
-  <buttongroup name="btg_flightSM"/>
-  <buttongroup name="btg_vrcGear"/>
-  <buttongroup name="btg_flightCL"/>
-  <buttongroup name="btg_vrcMode"/>
-  <buttongroup name="btg_cameraRoll"/>
-  <buttongroup name="btg_flightVL"/>
-  <buttongroup name="btg_cameraYaw"/>
   <buttongroup name="btg_flightTask"/>
+  <buttongroup name="btg_cameraPitch"/>
+  <buttongroup name="btg_flightHL"/>
+  <buttongroup name="btg_cameraRoll"/>
+  <buttongroup name="btg_vrcGear"/>
+  <buttongroup name="btg_cameraYaw"/>
+  <buttongroup name="btg_cameraAngle"/>
+  <buttongroup name="btg_vrcMode"/>
+  <buttongroup name="btg_flightCL"/>
   <buttongroup name="btg_cameraMode"/>
+  <buttongroup name="btg_flightYL"/>
+  <buttongroup name="btg_flightVL"/>
+  <buttongroup name="btg_flightSM"/>
  </buttongroups>
 </ui>

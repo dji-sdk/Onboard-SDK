@@ -225,7 +225,7 @@ class CoreAPI
   public:
     //! @note Recevie data callback enterance
     void setBroadcastCallback(CallBackHandler callback);
-    void setBroadcastCallback(CallBack handler, UserData userData);
+    void setBroadcastCallback(CallBack handler, UserData userData = 0);
     void setFromMobileCallback(CallBackHandler FromMobileEntrance);
 
     //! @note user callback sample
