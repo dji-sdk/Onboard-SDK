@@ -108,7 +108,7 @@ class WayPoint
     void readInitData(CallBack callback = 0, UserData userData = 0);
     void readIndexData(uint8_t index, CallBack callback = 0, UserData userData = 0);
     void readIdleVelocity(CallBack callback = 0, UserData userData = 0);
-    //! @todo
+    //! @todo uploadAll
     //void uploadAll(CallBack callback = 0, UserData userData = 0);
     bool uploadIndexData(WayPointData *data, CallBack callback = 0, UserData userData = 0);
     bool uploadIndexData(uint8_t pos, CallBack callback = 0, UserData userData = 0);

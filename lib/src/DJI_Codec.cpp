@@ -789,7 +789,7 @@ void DJI::onboardSDK::CoreAPI::byteHandler(const uint8_t in_data)
 
 void CoreAPI::byteStreamHandler(uint8_t *buffer __UNUSED, size_t size __UNUSED)
 {
-    //! @todo implement
+    //! @todo implement stream handler
 }
 
 void calculateCRC(void *p_data)

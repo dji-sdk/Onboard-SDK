@@ -187,7 +187,7 @@ void DJI::onboardSDK::CoreAPI::readPoll()
 
 void CoreAPI::callbackPoll()
 {
-    //! @todo implement
+    //! @todo implement callbackPoll
     if (cblistTail != CALLBACK_LIST_NUM)
     {
     }

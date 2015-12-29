@@ -36,6 +36,8 @@
 #include "DJI_Config.h"
 #include <stdio.h>
 
+#define NAME(x) #x
+
 #ifdef __GNUC__
 #define __UNUSED __attribute__((__unused__))
 #else

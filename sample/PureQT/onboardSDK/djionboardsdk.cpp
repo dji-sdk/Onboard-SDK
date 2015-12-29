@@ -19,6 +19,7 @@ DJIonboardSDK::DJIonboardSDK(QWidget *parent) : QMainWindow(parent), ui(new Ui::
     port = new QSerialPort(this);
     driver = new QHardDriver(port);
     driver->setDisplay(ui->tb_display);
+    ui->tb_display->append(NAME(ui->tb_display));
     api = new CoreAPI(driver);
 
     send = new APIThread(api, 1, port);
@@ -1254,7 +1255,7 @@ void DJIonboardSDK::on_btn_waypoint_reset_clicked()
 
 void DJIonboardSDK::on_btn_waypoint_removeAction_clicked()
 {
-    //! @todo
+    //! @todo implement removeAction
 }
 
 void DJIonboardSDK::on_btn_core_setSync_clicked()

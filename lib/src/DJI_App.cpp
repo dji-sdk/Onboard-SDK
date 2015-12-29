@@ -66,9 +66,10 @@ void DJI::onboardSDK::CoreAPI::broadcast(Header *header)
     driver->lockMSG();
     pdata += 2;
     enableFlag = (unsigned short *)pdata;
-    broadcastData.dataFlag = enableFlag;
+    broadcastData.dataFlag = *enableFlag;
     size_t len = MSG_ENABLE_FLAG_LEN;
 
+    //! @todo better algorithm
     passData(*enableFlag, HAS_TIME, &broadcastData.timeStamp, pdata, sizeof(TimeStampData),
              len);
     passData(*enableFlag, HAS_Q, &broadcastData.q, pdata, sizeof(QuaternionData), len);

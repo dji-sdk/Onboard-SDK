@@ -10,13 +10,20 @@ namespace onboardSDK
 
 typedef struct ScriptName
 {
-
+    char* name;
+    Task task;
 }ScriptName;
 
 class Interpreter
 {
 public:
+    Interpreter(CoreAPI *controlAPI);
 
+private:
+    Script *script;
+
+public:
+    ScriptName list[];
 };
 
 } // namespace onboardSDK
