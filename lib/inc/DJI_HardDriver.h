@@ -20,6 +20,7 @@
 #define DJI_HARDDRIVER_H
 
 #include <stdint.h>
+#include <time.h>
 #include "DJI_Type.h"
 
 namespace DJI

@@ -25,6 +25,9 @@ class TaskList
              TaskList *Next = 0);
 
   private:
+    TaskList(const TaskList &); //! @note TaskList can not be copied
+
+  private:
     Task task;
     time_t timeout;
     UserData data;

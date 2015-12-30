@@ -22,7 +22,7 @@ TaskList::TaskList(Task t, UserData Data, time_t Timeout, TaskList *Pre, TaskLis
     task = t;
     data = Data;
     timeout = Timeout;
-    this->next = 0;
+    this->next = Next;
     if (Pre != 0)
     {
         if (Pre->next != 0)
@@ -31,15 +31,15 @@ TaskList::TaskList(Task t, UserData Data, time_t Timeout, TaskList *Pre, TaskLis
         }
         Pre->next = this;
     }
-    if (Next != 0)
+    tail = this->next;
+    while (tail->next != 0)
     {
-        this->next = next;
-
-        tail = this->next;
-        while (tail->next != 0)
-        {
-            tail = tail->next;
-        }
-        tail->next = insert;
+        tail = tail->next;
     }
+    tail->next = insert;
+}
+
+TaskList::TaskList(const TaskList &)
+{
+
 }
