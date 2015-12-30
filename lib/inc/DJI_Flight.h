@@ -99,7 +99,7 @@ class Flight
      *  That means it accept incremental data, not absolute possition data.
      * */
   public:
-    Flight(CoreAPI *ContorlAPI = 0);
+    Flight(CoreAPI *ControlAPI = 0);
 
     void task(TASK taskname, CallBack TaskCallback = 0, UserData userData = 0);
     void setArm(bool enable, CallBack ArmCallback = 0, UserData userData = 0);

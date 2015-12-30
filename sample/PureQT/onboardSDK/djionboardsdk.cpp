@@ -638,14 +638,14 @@ void DJIonboardSDK::on_cb_flight_autoSend_clicked(bool checked)
 
 void DJIonboardSDK::on_btn_virtualRC_send_clicked()
 {
-    vrc->setContorl(true, VirtualRC::CutOff_ToRealRC);
+    vrc->setControl(true, VirtualRC::CutOff_ToRealRC);
     vrcSend->start();
     vrc->sendData();
 }
 
 void DJIonboardSDK::on_btn_virtualRC_init_clicked()
 {
-    vrc->setContorl(true, VirtualRC::CutOff_ToRealRC);
+    vrc->setControl(true, VirtualRC::CutOff_ToRealRC);
 }
 
 void DJIonboardSDK::on_btn_coreSet_clicked()
@@ -667,7 +667,7 @@ void DJIonboardSDK::on_btn_coreSet_clicked()
     data[13] = 0;
     data[14] = 0;
     data[15] = 0;
-    api->setBroadcastFeq(data);
+    api->setBroadcastFreq(data);
 }
 
 void DJIonboardSDK::on_btn_vrc_down_pressed()
@@ -1187,8 +1187,8 @@ void DJIonboardSDK::on_btn_waypoint_init_clicked()
     wp->init(&data);
 }
 
-void DJIonboardSDK::on_waypoint_data_changed(const QModelIndex &topLeft,
-                                             const QModelIndex &bottomRight,
+void DJIonboardSDK::on_waypoint_data_changed(const QModelIndex &topLeft __UNUSED,
+                                             const QModelIndex &bottomRight __UNUSED,
                                              const QVector<int> &roles __UNUSED)
 {
     //! @todo waypoint data modify

@@ -35,9 +35,9 @@ class VirtualRC
     };
 
   public:
-    VirtualRC(CoreAPI *ContorlAPI = 0);
+    VirtualRC(CoreAPI *ControlAPI = 0);
 
-    void setContorl(bool enable, CutOff cutoffType);
+    void setControl(bool enable, CutOff cutoffType);
     void sendData(VirtualRCData Data);
     void sendData();
     void resetData();

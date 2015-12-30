@@ -21,7 +21,7 @@ typedef bool (*Task)(Script *, UserData);
 class TaskList
 {
   public:
-    TaskList(Task t = 0, UserData data = 0, time_t timeout = 0, TaskList *Pre = 0,
+    TaskList(Task t = 0, UserData Data = 0, time_t Timeout = 0, TaskList *Pre = 0,
              TaskList *Next = 0);
 
   private:
@@ -39,6 +39,8 @@ class Script
     void addTaskList(TaskList *list, TaskList *pre);
     void If(Task condition, TaskList *True = 0, TaskList *False = 0);
     void Loop(Task condition, TaskList *Loop);
+
+    void run();
 
   public:
     static TaskList *addIf(Task condition, TaskList *True = 0, TaskList *False = 0);

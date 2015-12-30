@@ -13,3 +13,33 @@ Script::Script(CoreAPI *controlAPI)
     camera = new Camera(api);
     follow = new Follow(api);
 }
+
+TaskList::TaskList(Task t, UserData Data, time_t Timeout, TaskList *Pre, TaskList *Next)
+{
+
+    TaskList *insert = 0;
+    TaskList *tail = 0;
+    task = t;
+    data = Data;
+    timeout = Timeout;
+    this->next = 0;
+    if (Pre != 0)
+    {
+        if (Pre->next != 0)
+        {
+            insert = Pre->next;
+        }
+        Pre->next = this;
+    }
+    if (Next != 0)
+    {
+        this->next = next;
+
+        tail = this->next;
+        while (tail->next != 0)
+        {
+            tail = tail->next;
+        }
+        tail->next = insert;
+    }
+}

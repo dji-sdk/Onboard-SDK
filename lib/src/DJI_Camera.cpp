@@ -2,7 +2,7 @@
 
 using namespace DJI::onboardSDK;
 
-Camera::Camera(CoreAPI *ContorlAPI) { api = ContorlAPI; }
+Camera::Camera(CoreAPI *ControlAPI) { api = ControlAPI; }
 
 void Camera::setCamera(Camera::CAMERA_CODE camera_cmd)
 {

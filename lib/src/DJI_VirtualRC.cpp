@@ -2,13 +2,13 @@
 
 using namespace DJI::onboardSDK;
 
-DJI::onboardSDK::VirtualRC::VirtualRC(CoreAPI *ContorlAPI)
+DJI::onboardSDK::VirtualRC::VirtualRC(CoreAPI *ControlAPI)
 {
-    api = ContorlAPI;
+    api = ControlAPI;
     resetData();
 }
 
-void VirtualRC::setContorl(bool enable, VirtualRC::CutOff cutoffType)
+void VirtualRC::setControl(bool enable, VirtualRC::CutOff cutoffType)
 {
     VirtualRCSetting setting;
     setting.cutoff = cutoffType;

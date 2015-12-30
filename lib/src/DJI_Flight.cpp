@@ -3,7 +3,7 @@
 
 using namespace DJI::onboardSDK;
 
-Flight::Flight(DJI::onboardSDK::CoreAPI *ContorlAPI) { api = ContorlAPI; }
+Flight::Flight(DJI::onboardSDK::CoreAPI *ControlAPI) { api = ControlAPI; }
 
 CoreAPI *Flight::getApi() const { return api; }
 

@@ -39,7 +39,7 @@ class Camera
     };
 
   public:
-    Camera(CoreAPI *ContorlAPI = 0);
+    Camera(CoreAPI *ControlAPI = 0);
 
     //! @note all camera control functions are none-callback function.
     void setCamera(CAMERA_CODE camera_cmd);

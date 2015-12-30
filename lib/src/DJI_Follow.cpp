@@ -74,7 +74,7 @@ void Follow::setTarget(FollowTarget target) { data.target = target; }
 
 void Follow::setYawType(const Follow::YAW_TYPE type) { data.yaw = type; }
 
-void Follow::setSensitivity(const Follow::SENSITIVITY sense)
+void Follow::setSensitivity(const Follow::SENSITIVITY sense __UNUSED)
 {
     API_LOG(api->getDriver(), STATUS_LOG, "no available mode but default");
     data.sensitivity = 1;
