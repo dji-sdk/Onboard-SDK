@@ -209,7 +209,7 @@ class CoreAPI
     void setControl(bool enable, CallBack callback = 0, UserData userData = 0);
     void getVersion(CallBack callback = 0, UserData userData = 0);
     void sendToMobile(uint8_t *data, uint8_t len, CallBack callback = 0, UserData userData = 0);
-    void setBroadcastFeq(uint8_t *data, CallBack callback = 0, UserData userData = 0);
+    void setBroadcastFreq(uint8_t *data, CallBack callback = 0, UserData userData = 0);
     void setActivation(bool isActivated);
     void setSyncFeq(uint32_t feqInHz);
     void setKey(const char *key);
@@ -228,7 +228,11 @@ class CoreAPI
     void setBroadcastCallback(CallBack handler, UserData userData = 0);
     void setFromMobileCallback(CallBackHandler FromMobileEntrance);
 
-    //! @note user callback sample
+    /*! @note user callback sample
+     *  @attention We can also use none-static function as a callback function.
+     *  Due to saftey consideration, we strongly suggest you to define a class callback
+     *  function as a static function. And passing in this pointer in a static way.
+     * */
     static void activateCallback(CoreAPI *This, Header *header, UserData userData = 0);
     static void getVersionCallback(CoreAPI *This, Header *header, UserData userData = 0);
     static void setControlCallback(CoreAPI *This, Header *header, UserData userData = 0);

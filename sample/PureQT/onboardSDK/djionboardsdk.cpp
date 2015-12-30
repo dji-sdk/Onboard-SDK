@@ -4,22 +4,11 @@
 #include <QFile>
 #include <QFileDialog>
 
-DJIonboardSDK::DJIonboardSDK(QWidget *parent) : QMainWindow(parent), ui(new Ui::DJIonboardSDK)
+void DJIonboardSDK::initSDK()
 {
-    ui->setupUi(this);
-
-    //! @code mission webview
-    webView = new QWebView(this); // new QWebEngineView(this);
-    QHBoxLayout *weblayout = new QHBoxLayout();
-    ui->widget_web->setLayout(weblayout);
-    weblayout->addWidget(webView);
-    //! @endcode mission webview
-
-    //! @code init DJISDK
     port = new QSerialPort(this);
     driver = new QHardDriver(port);
     driver->setDisplay(ui->tb_display);
-    ui->tb_display->append(NAME(ui->tb_display));
     api = new CoreAPI(driver);
 
     send = new APIThread(api, 1, port);
@@ -28,10 +17,10 @@ DJIonboardSDK::DJIonboardSDK(QWidget *parent) : QMainWindow(parent), ui(new Ui::
     key = new QByteArray;
 
     flight = new Flight(api);
+    follow = new Follow(api);
     vrc = new VirtualRC(api);
     cam = new Camera(api);
     hp = new HotPoint(api);
-    follow = new Follow(api);
     wp = new WayPoint(api);
 
     refreshPort();
@@ -41,10 +30,10 @@ DJIonboardSDK::DJIonboardSDK(QWidget *parent) : QMainWindow(parent), ui(new Ui::
 
     send->start();
     read->start();
+}
 
-    //! @endcode init DJISDK
-
-    //! @code init flight
+void DJIonboardSDK::initFlight()
+{
     connect(ui->btg_flightHL, SIGNAL(buttonClicked(QAbstractButton *)), this,
             SLOT(on_btg_flight_HL(QAbstractButton *)));
     connect(ui->btg_flightVL, SIGNAL(buttonClicked(QAbstractButton *)), this,
@@ -67,9 +56,10 @@ DJIonboardSDK::DJIonboardSDK(QWidget *parent) : QMainWindow(parent), ui(new Ui::
     autoSend = new QTimer();
     autoSend->setInterval(50); // 20Hz
     connect(autoSend, SIGNAL(timeout()), this, SLOT(filght_autosend()));
-    //! @endcode init flight
+}
 
-    //! @code init camera
+void DJIonboardSDK::initCamera()
+{
     connect(ui->btg_cameraAngle, SIGNAL(buttonClicked(QAbstractButton *)), this,
             SLOT(on_btg_cameraAngle(QAbstractButton *)));
     connect(ui->btg_cameraYaw, SIGNAL(buttonClicked(QAbstractButton *)), this,
@@ -90,15 +80,17 @@ DJIonboardSDK::DJIonboardSDK(QWidget *parent) : QMainWindow(parent), ui(new Ui::
     cameraSend = new QTimer();
     cameraSend->setInterval(100); // 10Hz
     connect(cameraSend, SIGNAL(timeout()), this, SLOT(on_tmr_Camera_autosend()));
-    //! @endcode
+}
 
-    //! @code init virtual RC
+void DJIonboardSDK::initVirtualRC()
+{
     vrcSend = new QTimer();
     vrcSend->setInterval(200); // 5Hz
     connect(vrcSend, SIGNAL(timeout()), this, SLOT(on_tmr_VRC_autosend()));
-    //! @endcode init virtual RC
+}
 
-    //! @code init Follow
+void DJIonboardSDK::initFollow()
+{
     FollowTarget targetBase;
     targetBase.latitude = 0;
     targetBase.longitude = 0;
@@ -108,33 +100,10 @@ DJIonboardSDK::DJIonboardSDK(QWidget *parent) : QMainWindow(parent), ui(new Ui::
     followSend = new QTimer();
     followSend->setInterval(20); // 50Hz
     connect(followSend, SIGNAL(timeout()), this, SLOT(on_tmr_follow_send()));
-    //! @endcode init Follow
+}
 
-    QFile f("settings.ini");
-    if (!f.open(QIODevice::ReadOnly | QIODevice::Text))
-        qDebug() << "fail to open";
-    else
-    {
-        while (!f.atEnd())
-        {
-            QByteArray line = f.readLine();
-            if (line.startsWith("ID:"))
-                ui->lineEdit_ID->setText(line.remove(0, 3));
-            else if (line.startsWith("KEY:"))
-                ui->lineEdit_Key->setText(line.remove(0, 4));
-        }
-        f.close();
-    }
-
-    //! @code version control
-    timerBroadcast = new QTimer();
-#ifdef SDK_VERSION_2_3
-    ui->gb_CoreData->setEnabled(false);
-    ui->gb_VRC->setEnabled(false);
-#endif // SDK_VERSION_2_3
-    //! @endcode
-
-    //! @code init WayPoint
+void DJIonboardSDK::initWayPoint()
+{
     waypointData = new QStandardItemModel();
     waypointData->setHorizontalHeaderItem(0, new QStandardItem(QObject::tr("No.")));
     waypointData->setHorizontalHeaderItem(1, new QStandardItem(QObject::tr("Latitude")));
@@ -169,6 +138,48 @@ DJIonboardSDK::DJIonboardSDK(QWidget *parent) : QMainWindow(parent), ui(new Ui::
             SLOT(on_waypoint_data_changed(QModelIndex, QModelIndex, QVector<int>)));
 
     ui->cb_waypoint_point->addItem("Null");
+}
+
+DJIonboardSDK::DJIonboardSDK(QWidget *parent) : QMainWindow(parent), ui(new Ui::DJIonboardSDK)
+{
+    ui->setupUi(this);
+
+    //! @code mission webview
+    webView = new QWebView(this); // new QWebEngineView(this);
+    QHBoxLayout *weblayout = new QHBoxLayout();
+    ui->widget_web->setLayout(weblayout);
+    weblayout->addWidget(webView);
+    //! @endcode mission webview
+
+    initSDK();
+    initFlight();
+    initCamera();
+    initFollow();
+    initWayPoint();
+    initVirtualRC();
+
+    QFile f("settings.ini");
+    if (!f.open(QIODevice::ReadOnly | QIODevice::Text))
+        qDebug() << "fail to open";
+    else
+    {
+        while (!f.atEnd())
+        {
+            QByteArray line = f.readLine();
+            if (line.startsWith("ID:"))
+                ui->lineEdit_ID->setText(line.remove(0, 3));
+            else if (line.startsWith("KEY:"))
+                ui->lineEdit_Key->setText(line.remove(0, 4));
+        }
+        f.close();
+    }
+
+    //! @code version control
+    timerBroadcast = new QTimer();
+#ifdef SDK_VERSION_2_3
+    ui->gb_CoreData->setEnabled(false);
+    ui->gb_VRC->setEnabled(false);
+#endif // SDK_VERSION_2_3
     //! @endcode
 
     connect(timerBroadcast, SIGNAL(timeout()), this, SLOT(on_tmr_Broadcast()));

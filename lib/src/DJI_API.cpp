@@ -154,7 +154,7 @@ void CoreAPI::sendToMobile(uint8_t *data, uint8_t len, CallBack callback, UserDa
          callback ? callback : CoreAPI::sendToMobileCallback, userData);
 }
 
-void CoreAPI::setBroadcastFeq(uint8_t *data, CallBack callback, UserData userData)
+void CoreAPI::setBroadcastFreq(uint8_t *data, CallBack callback, UserData userData)
 {
     send(2, 0, SET_ACTIVATION, CODE_FREQUENCY, data, 16, 100, 1,
          callback ? callback : CoreAPI::setFrequencyCallback, userData);

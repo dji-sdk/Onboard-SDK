@@ -44,6 +44,7 @@ class DJIonboardSDK : public QMainWindow
     static void activationCallback(CoreAPI *This, Header *header, UserData userData);
     static void hotpintReadCallback(CoreAPI *This, Header *header, UserData userData);
 
+private:
     void updateCameraYaw();
     void updateCameraRoll();
     void updateCameraPitch();
@@ -57,6 +58,13 @@ class DJIonboardSDK : public QMainWindow
     QStandardItemModel *initAction();
     void wpAddPoint();
     void wpRemovePoint();
+
+    void initSDK();
+    void initFlight();
+    void initCamera();
+    void initFollow();
+    void initWayPoint();
+    void initVirtualRC();
 private slots:
     //! @note too much slots, tired to rename.
     void on_btn_portRefresh_clicked();
