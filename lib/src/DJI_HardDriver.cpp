@@ -12,6 +12,7 @@ void HardDriver::displayLog(char *buf)
         printf("%s", DJI::onboardSDK::buffer);
 }
 
-void HardDriver::inputStream(char *buf, size_t size)
+void HardDriver::inputStream(char *buf __UNUSED, size_t size __UNUSED)
 {
+    //! @todo implement example
 }

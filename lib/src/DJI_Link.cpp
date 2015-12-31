@@ -213,9 +213,9 @@ void CoreAPI::setActivation(bool isActivated)
         broadcastData.activation = 0;
 }
 
-void CoreAPI::setSyncFeq(uint32_t feqInHz)
+void CoreAPI::setSyncFreq(uint32_t freqInHz)
 {
-    send(0,1,SET_SYNC,CODE_SYNC_BROADCAST,&feqInHz,sizeof(feqInHz));
+    send(0,1,SET_SYNC,CODE_SYNC_BROADCAST,&freqInHz,sizeof(freqInHz));
 }
 
 unsigned short calculateLength(unsigned short size, unsigned short encrypt_flag)

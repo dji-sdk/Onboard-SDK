@@ -1271,7 +1271,7 @@ void DJIonboardSDK::on_btn_waypoint_removeAction_clicked()
 
 void DJIonboardSDK::on_btn_core_setSync_clicked()
 {
-    api->setSyncFeq(ui->le_coreSyncFeq->text().toInt());
+    api->setSyncFreq(ui->le_coreSyncFeq->text().toInt());
 }
 
 void DJIonboardSDK::on_le_waypoint_number_editingFinished()

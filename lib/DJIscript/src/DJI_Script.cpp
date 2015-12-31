@@ -2,7 +2,7 @@
 
 using namespace DJI::onboardSDK;
 
-Script::Script(CoreAPI *controlAPI)
+Script::Script(CoreAPI *controlAPI, TaskSetItem *set, size_t SetSize)
 {
     api = controlAPI;
 
@@ -12,9 +12,17 @@ Script::Script(CoreAPI *controlAPI)
     flight = new Flight(api);
     camera = new Camera(api);
     follow = new Follow(api);
+
+    taskSet = set;
+    setSize = SetSize;
 }
 
 void Script::run()
+{
+
+}
+
+Task Script::match(UserData name)
 {
 
 }
@@ -27,6 +35,8 @@ TaskList::TaskList(Task t, UserData Data, time_t Timeout, TaskList *Pre, TaskLis
     task = t;
     data = Data;
     timeout = Timeout;
+    start = 0;
+
     this->next = Next;
     if (Pre != 0)
     {

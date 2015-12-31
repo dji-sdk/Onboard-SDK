@@ -221,7 +221,7 @@ class CoreAPI
     void sendToMobile(uint8_t *data, uint8_t len, CallBack callback = 0, UserData userData = 0);
     void setBroadcastFreq(uint8_t *dataLenIs16, CallBack callback = 0, UserData userData = 0);
     void setActivation(bool isActivated);
-    void setSyncFeq(uint32_t feqInHz);
+    void setSyncFreq(uint32_t freqInHz);
     void setKey(const char *key);
 
     //! @note Core read API
