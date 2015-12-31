@@ -176,6 +176,7 @@ private slots:
     void on_btn_hotPoint_start_clicked();
     void on_btn_hotPoint_stop_clicked();
     void on_btn_hotPoint_current_clicked();
+    void on_btn_hp_pause_clicked(bool checked);
     void on_btn_hp_setPal_clicked();
     void on_btn_hp_setRadius_clicked();
     void on_btn_hp_setYaw_clicked();
@@ -205,6 +206,7 @@ private slots:
     void on_btn_waypoint_init_clicked();
     void on_btn_wp_pr_clicked(bool checked);
     void on_le_wp_exec_editingFinished();
+    void on_btn_wp_loadAll_clicked();
     void on_waypoint_data_changed(const QModelIndex &topLeft, const QModelIndex &bottomRight,
                                   const QVector<int> &roles __UNUSED);
 
@@ -212,8 +214,6 @@ private slots:
 
     void on_btn_wp_start_stop_clicked(bool checked);
     void on_btn_wp_loadOne_clicked();
-
-    void on_btn_wp_loadAll_clicked();
 
 private:
     Ui::DJIonboardSDK *ui;

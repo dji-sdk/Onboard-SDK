@@ -14,6 +14,11 @@ Script::Script(CoreAPI *controlAPI)
     follow = new Follow(api);
 }
 
+void Script::run()
+{
+
+}
+
 TaskList::TaskList(Task t, UserData Data, time_t Timeout, TaskList *Pre, TaskList *Next)
 {
 

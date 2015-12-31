@@ -38,6 +38,13 @@ void HotPoint::stop(CallBack callback, UserData userData)
               callback ? callback : missionCallback, userData);
 }
 
+void HotPoint::pause(bool isPause, CallBack callback, UserData userData)
+{
+    uint8_t data = isPause ? 0 : 1;
+    api->send(2, 1, SET_MISSION, CODE_HOTPOINT_SETPAUSE, &data, sizeof(data), 500, 2,
+              callback ? callback : missionCallback, userData);
+}
+
 void HotPoint::updatePalstance(HotPoint::Palstance &Data, CallBack callback, UserData userData)
 {
     data.palstance = Data.palstance;

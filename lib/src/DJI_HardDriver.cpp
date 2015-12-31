@@ -11,3 +11,7 @@ void HardDriver::displayLog(char *buf)
     else
         printf("%s", DJI::onboardSDK::buffer);
 }
+
+void HardDriver::inputStream(char *buf, size_t size)
+{
+}

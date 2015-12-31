@@ -36,6 +36,10 @@ class TaskList
 
 class Script
 {
+    /*! @note
+     * class Script only offers a platform frame for scriptional flight control, like command line.
+     * People should define there
+     * */
   public:
     Script(CoreAPI *controlAPI = 0);
 
@@ -43,6 +47,7 @@ class Script
     void If(Task condition, TaskList *True = 0, TaskList *False = 0);
     void Loop(Task condition, TaskList *Loop);
 
+    //! @note run must poll in a independent thread.
     void run();
 
   public:

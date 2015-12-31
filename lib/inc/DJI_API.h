@@ -88,7 +88,7 @@ enum HOTPOINT_CODE
 {
     CODE_HOTPOINT_START = 0x20,
     CODE_HOTPOINT_STOP = 0x21,
-    CODE_HOTPOINT_PAUSE = 0x22,
+    CODE_HOTPOINT_SETPAUSE = 0x22,
     CODE_HOTPOINT_PALSTANCE = 0x23,
     CODE_HOTPOINT_RADIUS = 0x24,
     CODE_HOTPOINT_SETYAW = 0x25,
@@ -156,6 +156,16 @@ enum MISSION_TYPE
     MISSION_IOC
 };
 
+enum BROADCAST_FREQ
+{
+    BROADCAST_FREQ_0HZ = 0,
+    BROADCAST_FREQ_1HZ = 1,
+    BROADCAST_FREQ_10HZ = 2,
+    BROADCAST_FREQ_50HZ = 3,
+    BROADCAST_FREQ_100HZ = 4,
+    BROADCAST_FREQ_HOLD = 5,
+};
+
 class CoreAPI
 {
     /*! @brief
@@ -209,7 +219,7 @@ class CoreAPI
     void setControl(bool enable, CallBack callback = 0, UserData userData = 0);
     void getVersion(CallBack callback = 0, UserData userData = 0);
     void sendToMobile(uint8_t *data, uint8_t len, CallBack callback = 0, UserData userData = 0);
-    void setBroadcastFreq(uint8_t *data, CallBack callback = 0, UserData userData = 0);
+    void setBroadcastFreq(uint8_t *dataLenIs16, CallBack callback = 0, UserData userData = 0);
     void setActivation(bool isActivated);
     void setSyncFeq(uint32_t feqInHz);
     void setKey(const char *key);
@@ -224,7 +234,10 @@ class CoreAPI
     //! @note call back functions
   public:
     //! @note Recevie data callback enterance
-    void setBroadcastCallback(CallBackHandler callback);
+    void setBroadcastCallback(CallBackHandler callback) { broadcastCallback = callback; }
+    void setHotPointCallback(CallBackHandler callback) {hotPointCallback = callback;}
+    void setWayPointCallback(CallBackHandler callback) {wayPointCallback = callback;}
+    void setFollowCallback(CallBackHandler callback) {followCallback = callback;}
     void setBroadcastCallback(CallBack handler, UserData userData = 0);
     void setFromMobileCallback(CallBackHandler FromMobileEntrance);
 
@@ -248,9 +261,12 @@ class CoreAPI
 
     uint8_t cblistTail;
     CallBackHandler cbList[CALLBACK_LIST_NUM];
-    CallBackHandler broadcastCallback;
-    CallBackHandler recvCallback;
     CallBackHandler fromMobileCallback;
+    CallBackHandler broadcastCallback;
+    CallBackHandler hotPointCallback;
+    CallBackHandler wayPointCallback;
+    CallBackHandler followCallback;
+    CallBackHandler recvCallback;
 
     VersionData versionData;
     ActivateData accountData;

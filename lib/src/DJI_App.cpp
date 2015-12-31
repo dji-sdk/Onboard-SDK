@@ -134,19 +134,30 @@ void DJI::onboardSDK::CoreAPI::recvReqData(Header *header)
                     case MISSION_WAYPOINT:
                         if (wayPointData)
                         {
-                            API_LOG(driver, STATUS_LOG, "Mode A \n");
+                            if (wayPointCallback.callback)
+                                wayPointCallback.callback(this, header,
+                                                          wayPointCallback.userData);
+                            else
+                                API_LOG(driver, STATUS_LOG, "Mode waypoint \n");
                         }
                         break;
                     case MISSION_HOTPOINT:
                         if (hotPointData)
                         {
-                            API_LOG(driver, STATUS_LOG, "Mode HP \n");
+                            if (hotPointCallback.callback)
+                                hotPointCallback.callback(this, header,
+                                                          hotPointCallback.userData);
+                            else
+                                API_LOG(driver, STATUS_LOG, "Mode HP \n");
                         }
                         break;
                     case MISSION_FOLLOW:
                         if (followData)
                         {
-                            API_LOG(driver, STATUS_LOG, "Mode Follow \n");
+                            if (followCallback.callback)
+                                followCallback.callback(this, header, followCallback.userData);
+                            else
+                                API_LOG(driver, STATUS_LOG, "Mode Follow \n");
                         }
                         break;
                     case MISSION_IOC:
@@ -175,8 +186,6 @@ void CoreAPI::setFromMobileCallback(CallBackHandler FromMobileEntrance)
 {
     fromMobileCallback = FromMobileEntrance;
 }
-
-void CoreAPI::setBroadcastCallback(CallBackHandler callback) { broadcastCallback = callback; }
 
 void CoreAPI::setBroadcastCallback(CallBack handler, UserData userData)
 {

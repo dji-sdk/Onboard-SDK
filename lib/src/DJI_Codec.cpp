@@ -518,22 +518,22 @@ unsigned int sdk_stream_crc32_calc(const unsigned char *pMsg, unsigned int nLen)
 
     return wCRC;
 }
-//////////////////////////////////////////////////////////////////////////
 
-/* A full command, [===========XOOOOOOO]
-*    [===========XOOOOOOO------------------##########] curr filter buffer
-*          ^                                    ^
-*          |                                    |_____ remain data
-*          |__________________________________________ cur cmd data
-*
-*    after prepare
-*
-*    [OOOOOOO------------------------------##########]
-*
-*    [===========X] has been clear
-*
-*    pre-cmd 7 byte has been saved, and continue to filter
-**/
+/*! @note
+ *  A full command, [===========XOOOOOOO]
+ *    [===========XOOOOOOO------------------##########] curr filter buffer
+ *          ^                                    ^
+ *          |                                    |_____ remain data
+ *          |__________________________________________ cur cmd data
+ *
+ *    after prepare
+ *
+ *    [OOOOOOO------------------------------##########]
+ *
+ *    [===========X] has been clear
+ *
+ *    pre-cmd 7 byte has been saved, and continue to filter
+ * */
 typedef void (*ptr_aes256_codec)(aes256_context *ctx, unsigned char *buf);
 using namespace DJI::onboardSDK;
 

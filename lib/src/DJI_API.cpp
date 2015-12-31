@@ -136,8 +136,7 @@ void CoreAPI::getVersion(CallBack callback, UserData userData)
 void CoreAPI::activate(ActivateData *data, CallBack callback, UserData userData)
 {
     accountData = *data;
-    for (int i = 0; i < 32; ++i)
-        data->app_bundle_id[i] ='9'; //! @note for ios verification
+    for (int i = 0; i < 32; ++i) data->app_bundle_id[i] = '9'; //! @note for ios verification
     send(2, 0, SET_ACTIVATION, CODE_ACTIVATE, (unsigned char *)&accountData,
          sizeof(accountData) - sizeof(char *), 1000, 3,
          callback ? callback : CoreAPI::activateCallback, userData);
@@ -154,9 +153,17 @@ void CoreAPI::sendToMobile(uint8_t *data, uint8_t len, CallBack callback, UserDa
          callback ? callback : CoreAPI::sendToMobileCallback, userData);
 }
 
-void CoreAPI::setBroadcastFreq(uint8_t *data, CallBack callback, UserData userData)
+void CoreAPI::setBroadcastFreq(uint8_t *dataLenIs16, CallBack callback,
+                               UserData userData)
 {
-    send(2, 0, SET_ACTIVATION, CODE_FREQUENCY, data, 16, 100, 1,
+    for (int i = 0; i < 16; ++i)
+    {
+        if (dataLenIs16[i] < 12)
+            dataLenIs16[i] = (dataLenIs16[i] > 5 ? 5 : 0);
+        else
+            dataLenIs16[i] = 0;
+    }
+    send(2, 0, SET_ACTIVATION, CODE_FREQUENCY, dataLenIs16, 16, 100, 1,
          callback ? callback : CoreAPI::setFrequencyCallback, userData);
 }
 

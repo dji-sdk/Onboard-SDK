@@ -21,7 +21,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>2</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tbFlight">
        <attribute name="title">
@@ -4490,9 +4490,12 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QPushButton" name="btn_camera_send_4">
+                   <widget class="QPushButton" name="btn_hp_pause">
                     <property name="text">
                      <string>pause</string>
+                    </property>
+                    <property name="checkable">
+                     <bool>true</bool>
                     </property>
                    </widget>
                   </item>

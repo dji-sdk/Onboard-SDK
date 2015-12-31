@@ -102,6 +102,7 @@ class HotPoint
 
     void start(CallBack callback = 0, UserData userData = 0);
     void stop(CallBack callback = 0, UserData userData = 0);
+    void pause(bool isPause, CallBack callback = 0, UserData userData = 0);
 
     void updatePalstance(Palstance &Data, CallBack callback = 0, UserData userData = 0);
     void updatePalstance(float32_t palstance, bool isClockwise, CallBack callback = 0,

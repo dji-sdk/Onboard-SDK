@@ -1413,3 +1413,13 @@ void DJIonboardSDK::on_btn_wp_loadAll_clicked()
         on_btn_wp_loadOne_clicked();
     }
 }
+
+
+void DJIonboardSDK::on_btn_hp_pause_clicked(bool checked)
+{
+    if (checked)
+        ui->btn_hp_pause->setText("Resume");
+    else
+        ui->btn_hp_pause->setText("Pause");
+    hp->pause(checked);
+}
