@@ -23,7 +23,7 @@ private:
     Script *script;
 
 public:
-    ScriptName list[];
+    ScriptName *list;
 };
 
 } // namespace onboardSDK

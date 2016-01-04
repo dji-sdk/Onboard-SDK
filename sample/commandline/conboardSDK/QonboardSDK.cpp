@@ -1,21 +1,16 @@
 #include "QonboardSDK.h"
 #include <QDateTime>
-#include <QScrollBar>
 
 QHardDriver::QHardDriver()
 {
     port = 0;
     baudrate = 9600;
 }
-QTextBrowser *QHardDriver::getDisplay() const { return display; }
-
-void QHardDriver::setDisplay(QTextBrowser *value) { display = value; }
 
 QHardDriver::QHardDriver(QSerialPort *Port)
 {
     port = Port;
     baudrate = 9600;
-    display = 0;
 }
 
 void QHardDriver::init()
@@ -43,10 +38,7 @@ void QHardDriver::init()
     }
 }
 
-time_t QHardDriver::getTimeStamp()
-{
-    return QDateTime::currentMSecsSinceEpoch();
-}
+time_t QHardDriver::getTimeStamp() { return QDateTime::currentMSecsSinceEpoch(); }
 
 size_t QHardDriver::send(const uint8_t *buf, size_t len)
 {
@@ -98,14 +90,7 @@ void QHardDriver::displayLog(char *buf)
         qDebug("%s", buf);
     else
     {
-        if (display)
-        {
-            display->append(QString(DJI::onboardSDK::buffer));
-            display->verticalScrollBar()->setSliderPosition(
-                display->verticalScrollBar()->maximum());
-        }
-        else
-            qDebug("%s", DJI::onboardSDK::buffer);
+        qDebug("%s", DJI::onboardSDK::buffer);
     }
 }
 void QHardDriver::setBaudrate(int value) { baudrate = value; }

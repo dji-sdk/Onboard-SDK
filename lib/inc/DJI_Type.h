@@ -42,22 +42,19 @@
 #define __UNUSED __attribute__((__unused__))
 #else
 #define __UNUSED
+#pragma warning( disable : 4100 )
 #endif //__GNUC__
 
 #ifdef WIN32
 #define __func__ __FUNCTION__
 #endif // WIN32
 
-#define APIprintf(...) sprintf(DJI::onboardSDK::buffer, ##__VA_ARGS__)
-
-#define API_LOG(driver, title, fmt, ...)                                       \
-    {                                                                          \
-        if ((title))                                                           \
-        {                                                                      \
-            APIprintf("%s %s,line %d: " fmt, title ? title : "NONE", __func__, \
-                      __LINE__, ##__VA_ARGS__);                                \
-            (driver)->displayLog();                                            \
-        }                                                                      \
+#define API_LOG(driver, title, fmt, ...)                                                       \
+    if (title)                                                                                 \
+    {                                                                                          \
+        (sprintf(DJI::onboardSDK::buffer, "%s %s,line %d: " fmt, title ? title : "NONE",       \
+                 __func__, __LINE__, ##__VA_ARGS__));                                          \
+        (driver)->displayLog();                                                                \
     }
 
 #ifdef API_DEBUG_DATA
@@ -108,13 +105,13 @@ typedef struct Header
 } Header;
 
 typedef void (*CallBack)(DJI::onboardSDK::CoreAPI *, Header *, void *);
-typedef void* UserData;
+typedef void *UserData;
 
 typedef struct CallBackHandler
 {
     CallBack callback;
     UserData userData;
-}CallBackHandler;
+} CallBackHandler;
 
 typedef struct Command
 {

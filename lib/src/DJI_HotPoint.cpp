@@ -61,9 +61,9 @@ void HotPoint::updatePalstance(float32_t palstance, bool isClockwise, CallBack c
     updatePalstance(p, callback,userData);
 }
 
-void HotPoint::updateRadius(float32_t degree, CallBack callback, UserData userData)
+void HotPoint::updateRadius(float32_t meter, CallBack callback, UserData userData)
 {
-    api->send(2, 1, SET_MISSION, CODE_HOTPOINT_RADIUS, &degree, sizeof(degree), 500, 2,
+    api->send(2, 1, SET_MISSION, CODE_HOTPOINT_RADIUS, &meter, sizeof(meter), 500, 2,
               callback ? callback : missionCallback, userData);
 }
 
