@@ -182,7 +182,7 @@ class CoreAPI
     void sendPoll(void);
     void readPoll(void);
     void callbackPoll(void);   //! @todo not available yet
-    void autoResendPoll(void); //! @todo not available yet
+    void autoResendPoll(void); //! @todo not available yet move to sendPoll
 
     void byteHandler(const uint8_t in_data);
     //! @todo modify to a new algorithm
@@ -235,9 +235,9 @@ class CoreAPI
   public:
     //! @note Recevie data callback enterance
     void setBroadcastCallback(CallBackHandler callback) { broadcastCallback = callback; }
-    void setHotPointCallback(CallBackHandler callback) {hotPointCallback = callback;}
-    void setWayPointCallback(CallBackHandler callback) {wayPointCallback = callback;}
-    void setFollowCallback(CallBackHandler callback) {followCallback = callback;}
+    void setHotPointCallback(CallBackHandler callback) { hotPointCallback = callback; }
+    void setWayPointCallback(CallBackHandler callback) { wayPointCallback = callback; }
+    void setFollowCallback(CallBackHandler callback) { followCallback = callback; }
     void setBroadcastCallback(CallBack handler, UserData userData = 0);
     void setFromMobileCallback(CallBackHandler FromMobileEntrance);
 

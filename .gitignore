@@ -19,6 +19,7 @@ sample/PureQT/build-onboardSDK-msvc2013-Debug/
 sample/commandline/build-conboardSDK-5_5_1Mingw-Debug/
 sample/commandline/build-conboardSDK-5_5_1Mingw-Release/
 sample/commandline/build-conboardSDK-msvc2013-Release/
+sample/commandline/build-conboardSDK-msvc2013-Debug/
 sample/STM32/MDK/DJISDK.uvguix.oneno
 
 lib/DJI_onboardSDK/

@@ -263,7 +263,7 @@ void DJIonboardSDK::setControlCallback(CoreAPI *This, Header *header, UserData u
     }
     //! @note For debug, all functional print is moving to this function,
     //! default API callback is not necessary.
-    //    CoreAPI::setControlCallback(This, header);
+        CoreAPI::setControlCallback(This, header);
 }
 
 void DJIonboardSDK::activationCallback(CoreAPI *This, Header *header, UserData userData)

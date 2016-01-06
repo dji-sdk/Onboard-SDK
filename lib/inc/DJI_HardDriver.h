@@ -68,9 +68,6 @@ class HardDriver
      *  The default data-passing channel is stdout (printf).
      *  See also "DJI_HardDriver.cpp".
      *
-     *  void inputStream(char *buf,size_t size);
-     *  @brief input data for DJI_Script
-     *
      *  @attention
      *  when writting and reading data, there might have multi-thread problems.
      *  Abstract class HardDriver did not consider these issue.
@@ -98,7 +95,6 @@ class HardDriver
 
   public:
     virtual void displayLog(char *buf = 0);
-    virtual void inputStream(char *buf,size_t size);
 };
 } // namespace onboardSDK
 } // namespace DJI

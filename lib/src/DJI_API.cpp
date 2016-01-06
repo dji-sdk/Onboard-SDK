@@ -156,6 +156,7 @@ void CoreAPI::sendToMobile(uint8_t *data, uint8_t len, CallBack callback, UserDa
 void CoreAPI::setBroadcastFreq(uint8_t *dataLenIs16, CallBack callback,
                                UserData userData)
 {
+    //! @note see also enum BROADCAST_FREQ in DJI_API.h
     for (int i = 0; i < 16; ++i)
     {
         if (dataLenIs16[i] < 12)

@@ -40,6 +40,7 @@
 
 #ifdef __GNUC__
 #define __UNUSED __attribute__((__unused__))
+#define __DELETE(x) delete (char*)x
 #else
 #define __UNUSED
 #pragma warning( disable : 4100 )
@@ -316,6 +317,7 @@ typedef struct BroadcastData
     FlightStatus status; //! @todo define enum
     BatteryData capacity;
     CtrlInfoData ctrl_info;
+    uint8_t controlStatus; //! @todo add IO code
     uint8_t activation;
 } BroadcastData;
 

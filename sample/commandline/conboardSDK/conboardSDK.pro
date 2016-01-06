@@ -35,8 +35,14 @@ SOURCES += main.cpp \
     ../../../lib/src/DJI_VirtualRC.cpp \
     ../../../lib/src/DJI_WayPoint.cpp \
     ../../../lib/DJIscript/src/DJI_Interpreter.cpp \
-    ../../../lib/DJIscript/src/DJI_Script.cpp
+    ../../../lib/DJIscript/src/DJI_Script.cpp \
+    ../../../lib/DJIscript/src/cmdCoreAPI.cpp \
+    ../../../lib/DJIscript/src/cmdIO.cpp
 
 HEADERS += \
     conboardsdktask.h \
-    QonboardSDK.h
+    QonboardSDK.h \
+    ../../../lib/DJIscript/inc/DJI_Interpreter.h \
+    ../../../lib/DJIscript/inc/DJI_Script.h \
+    ../../../lib/DJIscript/inc/cmdCoreAPI.h \
+    ../../../lib/DJIscript/inc/cmdIO.h

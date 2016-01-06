@@ -52,7 +52,8 @@ bool Script::addTask(UserData name, UserData Data, time_t Timeout)
 
 void Script::run()
 {
-    API_LOG(api->getDriver(), STATUS_LOG, "Start");
+    //API_LOG(api->getDriver(), STATUS_LOG, "Start");
+    cout << endl;
     while (taskTree != 0)
     {
         taskTree->run(this);
@@ -61,7 +62,8 @@ void Script::run()
         if (destroy)
             delete destroy;
     }
-    API_LOG(api->getDriver(), STATUS_LOG, "Finish");
+    cout << endl;
+    //API_LOG(api->getDriver(), STATUS_LOG, "Finish");
 }
 
 Task Script::match(UserData name)
@@ -76,6 +78,16 @@ Task Script::match(UserData name)
 void Script::run(Script *script) { script->run(); }
 
 bool Script::emptyTask(Script *script __UNUSED, UserData data __UNUSED) { return true; }
+CoreAPI *Script::getApi() const
+{
+    return api;
+}
+
+void Script::setApi(CoreAPI *value)
+{
+    api = value;
+}
+
 
 TaskList::TaskList(Task t, UserData Data, time_t Timeout, TaskList *Pre, TaskList *Next)
 {

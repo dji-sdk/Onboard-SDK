@@ -102,6 +102,11 @@ class Script
     Flight *flight;
     Camera *camera;
     Follow *follow;
+
+  public:
+    ActivateData adata;
+    CoreAPI *getApi() const;
+    void setApi(CoreAPI *value);
 };
 } // namespace onboardSDK
 } // namespace DJI
