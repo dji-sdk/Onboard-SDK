@@ -85,6 +85,7 @@ TaskSetItem cmdTaskSet[] = { TASK_ITEM(addTask),   //
                              TASK_ITEM(acCA),	  //
                              TASK_ITEM(vsCA),	  //
                              TASK_ITEM(bfCA),	  //
+                             TASK_ITEM(bdCA),	  //
                              TASK_ITEM(SS),		   //
                              TASK_ITEM(loadSS) };
 

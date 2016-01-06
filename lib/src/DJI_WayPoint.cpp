@@ -22,35 +22,35 @@ void WayPoint::init(const WayPointInitData *Info, CallBack callback, UserData us
 {
     if (Info)
         setInfo(*Info);
-    api->send(2, 1, SET_MISSION, CODE_WAYPOINT_INIT, &info, sizeof(info), 500, 2,
+    api->send(2, encript, SET_MISSION, CODE_WAYPOINT_INIT, &info, sizeof(info), 500, 2,
               callback ? callback : missionCallback, userData);
 }
 
 void WayPoint::start(CallBack callback, UserData userData)
 {
     uint8_t start = 0;
-    api->send(2, 1, SET_MISSION, CODE_WAYPOINT_SETSTART, &start, sizeof(start), 500, 2,
+    api->send(2, encript, SET_MISSION, CODE_WAYPOINT_SETSTART, &start, sizeof(start), 500, 2,
               callback ? callback : missionCallback, userData);
 }
 
 void WayPoint::stop(CallBack callback, UserData userData)
 {
     uint8_t stop = 1;
-    api->send(2, 1, SET_MISSION, CODE_WAYPOINT_SETSTART, &stop, sizeof(stop), 500, 2,
+    api->send(2, encript, SET_MISSION, CODE_WAYPOINT_SETSTART, &stop, sizeof(stop), 500, 2,
               callback ? callback : missionCallback, userData);
 }
 
 void WayPoint::pause(bool isPause, CallBack callback, UserData userData)
 {
     uint8_t data = isPause ? 0 : 1;
-    api->send(2, 1, SET_MISSION, CODE_WAYPOINT_SETPAUSE, &data, sizeof(data), 500, 2,
+    api->send(2, encript, SET_MISSION, CODE_WAYPOINT_SETPAUSE, &data, sizeof(data), 500, 2,
               callback ? callback : missionCallback, userData);
 }
 
 void WayPoint::readIdleVelocity(CallBack callback, UserData userData)
 {
     uint8_t zero = 0;
-    api->send(2, 1, SET_MISSION, CODE_WAYPOINT_GETVELOCITY, &zero, sizeof(zero), 500, 2,
+    api->send(2, encript, SET_MISSION, CODE_WAYPOINT_GETVELOCITY, &zero, sizeof(zero), 500, 2,
               callback ? callback : idleVelocityCallback, userData ? userData : this);
 }
 
@@ -69,7 +69,7 @@ bool WayPoint::uploadIndexData(uint8_t pos, CallBack callback, UserData userData
     else
         return false; //! @note range error
 
-    api->send(2, 1, SET_MISSION, CODE_WAYPOINT_ADDPOINT, &send, sizeof(send), 1000, 4,
+    api->send(2, encript, SET_MISSION, CODE_WAYPOINT_ADDPOINT, &send, sizeof(send), 1000, 4,
               callback ? callback : uploadIndexDataCallback, userData);
     return true;
 }
@@ -77,7 +77,7 @@ bool WayPoint::uploadIndexData(uint8_t pos, CallBack callback, UserData userData
 void WayPoint::updateIdleVelocity(float32_t meterPreSecond, CallBack callback,
                                   UserData userData)
 {
-    api->send(2, 1, SET_MISSION, CODE_WAYPOINT_SETVELOCITY, &meterPreSecond,
+    api->send(2, encript, SET_MISSION, CODE_WAYPOINT_SETVELOCITY, &meterPreSecond,
               sizeof(meterPreSecond), 500, 2, callback ? callback : idleVelocityCallback,
               userData ? userData : this);
 }

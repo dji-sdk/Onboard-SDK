@@ -80,8 +80,11 @@ namespace DJI
 {
 namespace onboardSDK
 {
+
+
 const size_t bufsize = 1024;
 extern char buffer[];
+extern uint8_t encript;
 
 const size_t SESSION_TABLE_NUM = 32;
 const size_t CALLBACK_LIST_NUM = 10;

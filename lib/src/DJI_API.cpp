@@ -4,6 +4,12 @@
 
 using namespace DJI::onboardSDK;
 
+#ifdef USE_ENCRIPT
+uint8_t DJI::onboardSDK::encript = 1;
+#else
+uint8_t DJI::onboardSDK::encript = 0;
+#endif // USE_ENCRIPT
+
 CoreAPI::CoreAPI(HardDriver *Driver, bool userCallbackThread, CallBack userRecvCallback,
                  UserData UserData)
 {
@@ -153,8 +159,7 @@ void CoreAPI::sendToMobile(uint8_t *data, uint8_t len, CallBack callback, UserDa
          callback ? callback : CoreAPI::sendToMobileCallback, userData);
 }
 
-void CoreAPI::setBroadcastFreq(uint8_t *dataLenIs16, CallBack callback,
-                               UserData userData)
+void CoreAPI::setBroadcastFreq(uint8_t *dataLenIs16, CallBack callback, UserData userData)
 {
     //! @note see also enum BROADCAST_FREQ in DJI_API.h
     for (int i = 0; i < 16; ++i)
@@ -184,7 +189,7 @@ bool CoreAPI::getFollowData() const { return followData; }
 void CoreAPI::setControl(bool enable, CallBack callback, UserData userData)
 {
     unsigned char data = enable ? 1 : 0;
-    send(2, 1, SET_CONTROL, CODE_SETCONTROL, &data, 1, 500, 2,
+    send(2, encript, SET_CONTROL, CODE_SETCONTROL, &data, 1, 500, 2,
          callback ? callback : CoreAPI::setControlCallback, userData);
 }
 
@@ -236,7 +241,8 @@ void CoreAPI::activateCallback(CoreAPI *This, Header *header, UserData userData 
                     This->setKey(This->accountData.app_key);
                 return;
             case ACK_ACTIVE_NEW_DEVICE:
-                API_LOG(This->driver, STATUS_LOG, "new device try again\n");
+                API_LOG(This->driver, STATUS_LOG, "new device, please link DJIGO to your "
+                                                  "remote controller and try again\n");
                 break;
             case ACK_ACTIVE_PARAMETER_ERROR:
                 API_LOG(This->driver, ERROR_LOG, "activate Wrong pahameter\n");
@@ -248,8 +254,8 @@ void CoreAPI::activateCallback(CoreAPI *This, Header *header, UserData userData 
                 API_LOG(This->driver, ERROR_LOG, "activate DJIGO not connected\n");
                 break;
             case ACK_ACTIVE_NO_INTERNET:
-                API_LOG(This->driver, ERROR_LOG,
-                        "activate DJIGO not connected to the internet\n");
+                API_LOG(This->driver, ERROR_LOG, "activate DJIGO not "
+                                                 "connected to the internet\n");
                 break;
             case ACK_ACTIVE_SERVER_REFUSED:
                 API_LOG(This->driver, ERROR_LOG, "activate DJI server reject "
@@ -357,13 +363,13 @@ void CoreAPI::setControlCallback(CoreAPI *This, Header *header, UserData userDat
             break;
         case ACK_SETCONTROL_OBTAIN_RUNNING:
             API_LOG(This->driver, STATUS_LOG, "obtain control running\n");
-            This->send(2, 1, SET_CONTROL, CODE_SETCONTROL, &data, 1, 500, 2,
+            This->send(2, encript, SET_CONTROL, CODE_SETCONTROL, &data, 1, 500, 2,
                        CoreAPI::setControlCallback);
             break;
         case ACK_SETCONTROL_RELEASE_RUNNING:
             API_LOG(This->driver, STATUS_LOG, "release control running\n");
             data = 0;
-            This->send(2, 1, SET_CONTROL, CODE_SETCONTROL, &data, 1, 500, 2,
+            This->send(2, encript, SET_CONTROL, CODE_SETCONTROL, &data, 1, 500, 2,
                        CoreAPI::setControlCallback);
             break;
         case ACK_SETCONTROL_IOC:

@@ -36,8 +36,8 @@ SOURCES += main.cpp \
     ../../../lib/src/DJI_WayPoint.cpp \
     ../../../lib/DJIscript/src/DJI_Interpreter.cpp \
     ../../../lib/DJIscript/src/DJI_Script.cpp \
-    ../../../lib/DJIscript/src/cmdCoreAPI.cpp \
-    ../../../lib/DJIscript/src/cmdIO.cpp
+    ../../../lib/DJIscript/src/cmdIO.cpp \
+    ../../../lib/DJIscript/src/cmdCoreAPI.cpp
 
 HEADERS += \
     conboardsdktask.h \

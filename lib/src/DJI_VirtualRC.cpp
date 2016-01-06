@@ -13,7 +13,7 @@ void VirtualRC::setControl(bool enable, VirtualRC::CutOff cutoffType)
     VirtualRCSetting setting;
     setting.cutoff = cutoffType;
     setting.enable = enable ? 1 : 0;
-    api->send(0, 1, SET_VIRTUALRC, CODE_VIRTUALRC_SETTINGS, &setting,
+    api->send(0, encript, SET_VIRTUALRC, CODE_VIRTUALRC_SETTINGS, &setting,
               sizeof(setting));
 }
 
@@ -25,7 +25,7 @@ void VirtualRC::sendData(VirtualRCData Data)
 
 void VirtualRC::sendData()
 {
-    api->send(0, 1, SET_VIRTUALRC, CODE_VIRTUALRC_DATA, &data, sizeof(data));
+    api->send(0, encript, SET_VIRTUALRC, CODE_VIRTUALRC_DATA, &data, sizeof(data));
 }
 
 void VirtualRC::resetData()

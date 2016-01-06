@@ -47,11 +47,11 @@ namespace onboardSDK
 const uint32_t SDK_VERSION = (MAKE_VERSION(2, 3, 10, 0));
 #endif
 
-#ifdef SDK_VERSION_3_0
+#ifdef SDK_VERSION_3_0_M100
 const uint32_t SDK_VERSION = (MAKE_VERSION(3, 0, 10, 0));
 #endif
 
-#ifdef SDK_VERSION_3_1
+#ifdef SDK_VERSION_3_1_M100
 const uint32_t SDK_VERSION = (MAKE_VERSION(3, 1, 10, 0));
 #endif
 
