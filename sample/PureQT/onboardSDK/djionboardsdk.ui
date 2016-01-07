@@ -114,7 +114,7 @@
                   <item>
                    <widget class="QLineEdit" name="lineEdit_portBaudrate">
                     <property name="text">
-                     <string>230400</string>
+                     <string>921600</string>
                     </property>
                    </widget>
                   </item>
@@ -5990,17 +5990,17 @@
  <connections/>
  <buttongroups>
   <buttongroup name="btg_flightCL"/>
-  <buttongroup name="btg_flightTask"/>
-  <buttongroup name="btg_vrcGear"/>
-  <buttongroup name="btg_flightSM"/>
   <buttongroup name="btg_cameraAngle"/>
-  <buttongroup name="btg_flightHL"/>
-  <buttongroup name="btg_cameraPitch"/>
-  <buttongroup name="btg_flightVL"/>
+  <buttongroup name="btg_vrcGear"/>
   <buttongroup name="btg_cameraYaw"/>
   <buttongroup name="btg_flightYL"/>
-  <buttongroup name="btg_vrcMode"/>
+  <buttongroup name="btg_flightVL"/>
   <buttongroup name="btg_cameraMode"/>
+  <buttongroup name="btg_flightSM"/>
+  <buttongroup name="btg_cameraPitch"/>
+  <buttongroup name="btg_flightHL"/>
   <buttongroup name="btg_cameraRoll"/>
+  <buttongroup name="btg_flightTask"/>
+  <buttongroup name="btg_vrcMode"/>
  </buttongroups>
 </ui>

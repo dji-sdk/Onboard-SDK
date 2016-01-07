@@ -36,6 +36,7 @@ bool CA(Script* script __UNUSED, UserData data)
         cout << "|             0x0100 gimbal                                     |" << endl;
         cout << "|             0x0200 device status                              |" << endl;
         cout << "|             0x0400 battery                                    |" << endl;
+        cout << "|             0x0800 control status                             |" << endl;
         cout << "| - ct <bool> true for obtain control, false for release control|" << endl;
         cout << "| - sy <freq> set synchronized frequency in HZ                  |" << endl;
         cout << "|------------------DJI onboardSDK - Core API--------------------|" << endl;
@@ -196,5 +197,40 @@ bool vsCA(Script* script, UserData data)
 
     __DELETE(data);
     script->addTask(waitInput);
+    return true;
+}
+
+bool ctCA(Script* script, UserData data)
+{
+    stringstream s;
+
+    s << (char*)data;
+    char drop[20];
+    s >> drop >> drop;
+
+    int boool;
+    s >> boool;
+
+    if (boool)
+        script->getApi()->setControl(false);
+    else
+        script->getApi()->setControl(true);
+
+    return true;
+}
+
+bool syCA(Script* script, UserData data)
+{
+    stringstream s;
+
+    s << (char*)data;
+    char drop[20];
+    s >> drop >> drop;
+
+    int freq;
+    s >> freq;
+
+    script->getApi()->setSyncFreq(freq);
+
     return true;
 }

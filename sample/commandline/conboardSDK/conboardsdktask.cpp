@@ -4,90 +4,39 @@
 #include <fstream>
 
 #include <cmdIO.h>
+#include <cmdSettings.h>
 #include <cmdCoreAPI.h>
+#include <cmdFlight.h>
 
 using namespace std;
 
-bool SS(Script* script, UserData data);
-bool loadSS(Script* script, UserData data);
+TaskSetItem cmdTaskSet[] = {
+    TASK_ITEM(addTask),   //
+    TASK_ITEM(waitInput), //
+    TASK_ITEM(help),	  //
 
-bool SS(Script* script, UserData data)
-{
-    char* inputData = (char*)data;
-    char command[100];
-    sscanf(inputData, "--%s", command);
-    if (strcmp(command, "help") == 0)
-    {
-        cout << "|------------------DJI onboardSDK - Script Settings-------------|" << endl;
-        cout << "| --SS <command> <data>                                         |" << endl;
-        cout << "| - id <id> set activate ID                                     |" << endl;
-        cout << "| - key <key> set activate encript key                          |" << endl;
-        cout << "| - save <N/A> save id and key                                  |" << endl;
-        cout << "| - load <file name> load and print id and key                  |" << endl;
-        cout << "| - sp <number> select serial port                              |" << endl;
-        cout << "|      - ls print serial ports list                             |" << endl;
-        cout << "|      - auto select automaticaly                               |" << endl;
-        cout << "|------------------DJI onboardSDK - Script Settings-------------|" << endl;
+    TASK_ITEM(SS),	 //
+    TASK_ITEM(idSS),   //
+    TASK_ITEM(keySS),  //
+    TASK_ITEM(saveSS), //
+    TASK_ITEM(loadSS), //
+    TASK_ITEM(spSS),   //
 
-        script->addTask(waitInput);
-        script->addTask(waitInput);
-    }
-    else
-    {
-        if (sscanf(inputData, "--%*s%s", command))
-        {
-            strcat(command, "SS");
-            script->addTask((UserData)command, data);
-        }
-        else
-            script->addTask(addTask);
-    }
-    return true;
-}
+    TASK_ITEM(CA),   //
+    TASK_ITEM(acCA), //
+    TASK_ITEM(vsCA), //
+    TASK_ITEM(bfCA), //
+    TASK_ITEM(bdCA), //
+    TASK_ITEM(ctCA), //
+    TASK_ITEM(syCA), //
 
-bool loadSS(Script* script, UserData data)
-{
-    char* inputData = (char*)data;
-    char command[100];
-    char line[1024];
-    static char key[50];
-    if (sscanf(inputData, "--%*s%*s%s", command))
-        cout << "Path: " << command;
-    else
-        memcpy(command, "settings.ini", 13);
-    ifstream read(command);
+    TASK_ITEM(FC),   //
+    TASK_ITEM(tkFC), //
+    TASK_ITEM(mcFC), //
+    TASK_ITEM(bfFC), //
+    TASK_ITEM(flFC), //
 
-    while (!read.eof())
-    {
-        read.getline(line, 1024);
-        if (*line != 0) //! @note sscanf have features on empty buffer.
-        {
-            int id;
-            if (sscanf(line, "ID:%d", &id))
-                script->adata.app_id = id;
-            script->adata.app_api_level = 2;
-            script->adata.app_ver = SDK_VERSION;
-            if (sscanf(line, "KEY:%s", key))
-                script->adata.app_key = key;
-        }
-    }
-    read.close();
-
-    __DELETE(data);
-    script->addTask(waitInput);
-    return true;
-}
-
-TaskSetItem cmdTaskSet[] = { TASK_ITEM(addTask),   //
-                             TASK_ITEM(waitInput), //
-                             TASK_ITEM(help),	  //
-                             TASK_ITEM(CA),		   //
-                             TASK_ITEM(acCA),	  //
-                             TASK_ITEM(vsCA),	  //
-                             TASK_ITEM(bfCA),	  //
-                             TASK_ITEM(bdCA),	  //
-                             TASK_ITEM(SS),		   //
-                             TASK_ITEM(loadSS) };
+};
 
 ConboardSDKScript::ConboardSDKScript(CoreAPI* api)
     : Script(api, cmdTaskSet, sizeof(cmdTaskSet) / sizeof(TaskSetItem))

@@ -210,8 +210,6 @@ private slots:
     void on_waypoint_data_changed(const QModelIndex &topLeft, const QModelIndex &bottomRight,
                                   const QVector<int> &roles __UNUSED);
 
-
-
     void on_btn_wp_start_stop_clicked(bool checked);
     void on_btn_wp_loadOne_clicked();
 
