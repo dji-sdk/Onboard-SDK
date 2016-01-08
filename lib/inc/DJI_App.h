@@ -83,6 +83,7 @@ typedef struct VersionData
     char version_ID[11];
 #endif // SDK_VERSION_3_1
     char version_name[32];
+    DJI::onboardSDK::Version version;
 } VersionData;
 
 #pragma pack()

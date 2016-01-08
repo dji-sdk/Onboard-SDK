@@ -176,6 +176,7 @@ DJIonboardSDK::DJIonboardSDK(QWidget *parent) : QMainWindow(parent), ui(new Ui::
 
     //! @code version control
     timerBroadcast = new QTimer();
+    on_cb_core_mechine_activated(ui->cb_core_mechine->currentIndex());
 #ifdef SDK_VERSION_2_3
     ui->gb_CoreData->setEnabled(false);
     ui->gb_VRC->setEnabled(false);
@@ -263,7 +264,7 @@ void DJIonboardSDK::setControlCallback(CoreAPI *This, Header *header, UserData u
     }
     //! @note For debug, all functional print is moving to this function,
     //! default API callback is not necessary.
-        CoreAPI::setControlCallback(This, header);
+    CoreAPI::setControlCallback(This, header);
 }
 
 void DJIonboardSDK::activationCallback(CoreAPI *This, Header *header, UserData userData)
@@ -372,7 +373,6 @@ void DJIonboardSDK::on_btn_coreActive_clicked()
 {
     ActivateData data;
     data.app_api_level = 2;
-    data.app_ver = SDK_VERSION;
     data.app_id = ui->lineEdit_ID->text().toInt();
     *key = ui->lineEdit_Key->text().toLocal8Bit();
     data.app_key = key->data(); //! @warning memory leak fixme
@@ -893,7 +893,7 @@ void DJIonboardSDK::upDateFlightStatus()
 void DJIonboardSDK::updateControlDevice()
 {
     ui->le_coreControlDevice->setText(
-        QString::number((api->getCtrlInfo().cur_ctrl_dev_in_navi_mode)));
+        QString::number((api->getCtrlInfo().device)));
 }
 
 void DJIonboardSDK::on_tmr_Broadcast()
@@ -1414,7 +1414,6 @@ void DJIonboardSDK::on_btn_wp_loadAll_clicked()
     }
 }
 
-
 void DJIonboardSDK::on_btn_hp_pause_clicked(bool checked)
 {
     if (checked)
@@ -1422,4 +1421,16 @@ void DJIonboardSDK::on_btn_hp_pause_clicked(bool checked)
     else
         ui->btn_hp_pause->setText("Pause");
     hp->pause(checked);
+}
+
+void DJIonboardSDK::on_cb_core_mechine_activated(int index)
+{
+#ifndef SDK_VERSION_2_3
+    if (index)
+        api->setVersion(versionM100_31);
+    else
+        api->setVersion(versionA3_31);
+#else
+    ui->cb_core_mechine->setEnabled(false);
+#endif
 }

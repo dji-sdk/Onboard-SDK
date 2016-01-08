@@ -126,8 +126,8 @@ bool bdCA(Script* script, UserData data)
                     break;
                 case 10:
                     cout << "Control: " << (int)bd.ctrl_info.data << endl;
-                    cout << "Device:  " << (int)bd.ctrl_info.cur_ctrl_dev_in_navi_mode << endl;
-                    cout << "Status:  " << (int)bd.ctrl_info.serial_req_status << endl;
+                    cout << "Device:  " << (int)bd.ctrl_info.device << endl;
+                    cout << "Status:  " << (int)bd.ctrl_info.signature << endl;
                     break;
             }
             cout << endl;

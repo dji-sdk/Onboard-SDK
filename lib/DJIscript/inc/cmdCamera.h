@@ -28,6 +28,9 @@
  * */
 
 bool CC  (DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
+bool cmCC(DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
+bool agCC(DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
+bool sgCC(DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
 
 
 #endif // CMDCAMERA_H

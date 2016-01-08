@@ -9,10 +9,9 @@
 using namespace std;
 using namespace DJI::onboardSDK;
 
-
 bool FC(Script *script, UserData data)
 {
-    char* inputData = (char*)data;
+    char *inputData = (char *)data;
     char command[100];
     sscanf(inputData, "--%s", command);
     if (strcmp(command, "help") == 0)
@@ -69,3 +68,11 @@ bool FC(Script *script, UserData data)
     }
     return true;
 }
+
+bool tkFC(Script *script, UserData data) { return true; }
+
+bool mcFC(Script *script, UserData data) { return true; }
+
+bool bfFC(Script *script, UserData data) { return true; }
+
+bool flFC(Script *script, UserData data) { return true; }

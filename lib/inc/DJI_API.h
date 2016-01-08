@@ -327,6 +327,7 @@ class CoreAPI
     //! @note private variables access functions
     ActivateData getAccountData() const;
     HardDriver *getDriver() const;
+    Version getVersion() const;
     bool getHotPointData() const;
     bool getWayPointData() const;
     bool getFollowData() const;
@@ -336,8 +337,10 @@ class CoreAPI
     void setFollowData(bool value);
     void setDriver(HardDriver *value);
     void setAccountData(const ActivateData &value);
+    void setVersion(const Version &value);
 
-  private:
+
+private:
     HardDriver *driver;
     bool callbackThread;
     bool hotPointData;

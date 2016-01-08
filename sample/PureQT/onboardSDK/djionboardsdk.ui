@@ -68,6 +68,27 @@
                <number>0</number>
               </property>
               <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_136">
+                <item>
+                 <widget class="QComboBox" name="cb_core_mechine">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <item>
+                   <property name="text">
+                    <string>M100</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>A3</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
                <layout class="QVBoxLayout" name="verticalLayout_3">
                 <item>
                  <layout class="QHBoxLayout" name="horizontalLayout">
@@ -5868,12 +5889,20 @@
                </property>
               </widget>
              </item>
+             <item row="1" column="1">
+              <widget class="QOpenGLWidget" name="openGLWidget"/>
+             </item>
             </layout>
            </item>
           </layout>
          </widget>
         </item>
        </layout>
+      </widget>
+      <widget class="QWidget" name="tab">
+       <attribute name="title">
+        <string>页</string>
+       </attribute>
       </widget>
      </widget>
     </item>
@@ -5989,18 +6018,18 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="btg_flightCL"/>
-  <buttongroup name="btg_cameraAngle"/>
-  <buttongroup name="btg_vrcGear"/>
-  <buttongroup name="btg_cameraYaw"/>
-  <buttongroup name="btg_flightYL"/>
-  <buttongroup name="btg_flightVL"/>
-  <buttongroup name="btg_cameraMode"/>
   <buttongroup name="btg_flightSM"/>
-  <buttongroup name="btg_cameraPitch"/>
   <buttongroup name="btg_flightHL"/>
+  <buttongroup name="btg_flightYL"/>
+  <buttongroup name="btg_flightCL"/>
   <buttongroup name="btg_cameraRoll"/>
-  <buttongroup name="btg_flightTask"/>
   <buttongroup name="btg_vrcMode"/>
+  <buttongroup name="btg_cameraPitch"/>
+  <buttongroup name="btg_cameraAngle"/>
+  <buttongroup name="btg_flightVL"/>
+  <buttongroup name="btg_vrcGear"/>
+  <buttongroup name="btg_cameraMode"/>
+  <buttongroup name="btg_cameraYaw"/>
+  <buttongroup name="btg_flightTask"/>
  </buttongroups>
 </ui>

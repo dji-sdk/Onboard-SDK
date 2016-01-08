@@ -213,6 +213,8 @@ private slots:
     void on_btn_wp_start_stop_clicked(bool checked);
     void on_btn_wp_loadOne_clicked();
 
+    void on_cb_core_mechine_activated(int index);
+
 private:
     Ui::DJIonboardSDK *ui;
 

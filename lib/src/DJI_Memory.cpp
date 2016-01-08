@@ -48,13 +48,9 @@ void DJI::onboardSDK::CoreAPI::setupMMU()
 void freeMemory(MMU_Tab *mmu_tab)
 {
     if (mmu_tab == (MMU_Tab *)0)
-    {
         return;
-    }
     if (mmu_tab->tab_index == 0 || mmu_tab->tab_index == (MMU_TABLE_NUM - 1))
-    {
         return;
-    }
     mmu_tab->usage_flag = 0;
 }
 
@@ -73,23 +69,17 @@ MMU_Tab *DJI::onboardSDK::CoreAPI::allocMemory(unsigned short size)
     unsigned char magic_flag = 0;
 
     if (size > PRO_PURE_DATA_MAX_SIZE || size > MEMORY_SIZE)
-    {
         return (MMU_Tab *)0;
-    }
 
     for (i = 0; i < MMU_TABLE_NUM; i++)
-    {
         if (MMU[i].usage_flag == 1)
         {
             mem_used += MMU[i].mem_size;
             mmu_tab_used_index[mmu_tab_used_num++] = MMU[i].tab_index;
         }
-    }
 
     if (MEMORY_SIZE < (mem_used + size))
-    {
         return (MMU_Tab *)0;
-    }
 
     if (mem_used == 0)
     {
@@ -100,17 +90,13 @@ MMU_Tab *DJI::onboardSDK::CoreAPI::allocMemory(unsigned short size)
     }
 
     for (i = 0; i < (mmu_tab_used_num - 1); i++)
-    {
         for (j = 0; j < (mmu_tab_used_num - i - 1); j++)
-        {
             if (MMU[mmu_tab_used_index[j]].pmem > MMU[mmu_tab_used_index[j + 1]].pmem)
             {
                 mmu_tab_used_index[j + 1] ^= mmu_tab_used_index[j];
                 mmu_tab_used_index[j] ^= mmu_tab_used_index[j + 1];
                 mmu_tab_used_index[j + 1] ^= mmu_tab_used_index[j];
             }
-        }
-    }
 
     for (i = 0; i < (mmu_tab_used_num - 1); i++)
     {
@@ -198,10 +184,9 @@ void DJI::onboardSDK::CoreAPI::setupSession()
 }
 
 /*! @note Alloc a cmd session for sending cmd data
- *  when arg session_id = 0/1, which means select session 0/1 to send cmd
+ *  when arg session_id = 0/1, it means select session 0/1 to send cmd
  *  otherwise set arg session_id = CMD_SESSION_AUTO (32), which means auto
- * select
- *  a idle session id between 2~31.
+ *  select a idle session id is between 2~31.
  */
 
 CMDSession *DJI::onboardSDK::CoreAPI::allocSession(unsigned short session_id,
@@ -227,12 +212,8 @@ CMDSession *DJI::onboardSDK::CoreAPI::allocSession(unsigned short session_id,
     else
     {
         for (i = 2; i < SESSION_TABLE_NUM; i++)
-        {
             if (CMDSessionTab[i].usageFlag == 0)
-            {
                 break;
-            }
-        }
     }
     if (i < 32 && CMDSessionTab[i].usageFlag == 0)
     {
@@ -267,9 +248,7 @@ ACKSession *DJI::onboardSDK::CoreAPI::allocACK(unsigned short session_id, unsign
     if (session_id > 0 && session_id < 32)
     {
         if (ACKSessionTab[session_id - 1].mmu)
-        {
             freeACK(&ACKSessionTab[session_id - 1]);
-        }
         mmu = allocMemory(size);
         if (mmu == NULL)
         {

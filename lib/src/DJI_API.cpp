@@ -49,6 +49,8 @@ void CoreAPI::init(HardDriver *Driver, CallBackHandler userRecvCallback,
     followData = true;
     callbackThread = userCallbackThread;
 
+    versionData.version = SDK_VERSION;
+
     setup();
 }
 
@@ -141,7 +143,10 @@ void CoreAPI::getVersion(CallBack callback, UserData userData)
 
 void CoreAPI::activate(ActivateData *data, CallBack callback, UserData userData)
 {
+    data->app_ver = versionData.version;
     accountData = *data;
+    API_LOG(driver,STATUS_LOG,"version 0x%X",versionData.version);
+
     for (int i = 0; i < 32; ++i) data->app_bundle_id[i] = '9'; //! @note for ios verification
     send(2, 0, SET_ACTIVATION, CODE_ACTIVATE, (unsigned char *)&accountData,
          sizeof(accountData) - sizeof(char *), 1000, 3,
@@ -332,6 +337,9 @@ void CoreAPI::setFrequencyCallback(CoreAPI *This __UNUSED, Header *header,
             break;
     }
 }
+Version CoreAPI::getVersion() const { return versionData.version; }
+
+void CoreAPI::setVersion(const Version &value) { versionData.version = value; }
 
 void CoreAPI::setControlCallback(CoreAPI *This, Header *header, UserData userData __UNUSED)
 {

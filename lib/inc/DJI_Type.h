@@ -76,6 +76,12 @@
 #define STATUS_LOG 0
 #endif
 
+#ifdef API_MISSION_DATA
+#define MISSION_LOG "MISSION"
+#else
+#define MISSION_LOG 0
+#endif
+
 namespace DJI
 {
 namespace onboardSDK
@@ -268,8 +274,8 @@ typedef struct CtrlInfoData
     uint8_t data;
 #endif // SDK_VERSION_2_3
     //! @todo mode remote to enums
-    uint8_t cur_ctrl_dev_in_navi_mode : 3; /*0->rc  1->app  2->serial*/
-    uint8_t serial_req_status : 1;		   /*1->opensd  0->close*/
+    uint8_t device : 3; /*0->rc  1->app  2->serial*/
+    uint8_t signature : 1;		   /*1->opensd  0->close*/
     uint8_t reserved : 4;
 } CtrlInfoData;
 
@@ -320,6 +326,9 @@ typedef struct BroadcastData
     FlightStatus status; //! @todo define enum
     BatteryData capacity;
     CtrlInfoData ctrl_info;
+
+    //! @note these variables are not send from FMU,
+    //! just a record for user.
     uint8_t controlStatus; //! @todo add IO code
     uint8_t activation;
 } BroadcastData;
