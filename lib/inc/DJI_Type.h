@@ -342,6 +342,9 @@ typedef struct VirtualRCSetting
 
 typedef struct VirtualRCData
 {
+    //! @note this is default mapping data structure for
+    //! virtual remote controller.
+    //! @todo channel map
     uint32_t roll;
     uint32_t pitch;
     uint32_t throttle;

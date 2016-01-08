@@ -21,7 +21,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tbFlight">
        <attribute name="title">
@@ -5805,7 +5805,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QTextBrowser" name="tb_script_code">
+           <widget class="QTextEdit" name="te_script_code">
             <property name="undoRedoEnabled">
              <bool>true</bool>
             </property>
@@ -5898,11 +5898,6 @@
          </widget>
         </item>
        </layout>
-      </widget>
-      <widget class="QWidget" name="tab">
-       <attribute name="title">
-        <string>页</string>
-       </attribute>
       </widget>
      </widget>
     </item>

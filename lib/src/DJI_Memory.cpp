@@ -199,9 +199,7 @@ CMDSession *DJI::onboardSDK::CoreAPI::allocSession(unsigned short session_id,
     if (session_id == 0 || session_id == 1)
     {
         if (this->CMDSessionTab[session_id].usageFlag == 0)
-        {
             i = session_id;
-        }
         else
         {
             /* session is busy */
@@ -220,9 +218,7 @@ CMDSession *DJI::onboardSDK::CoreAPI::allocSession(unsigned short session_id,
         CMDSessionTab[i].usageFlag = 1;
         mmu = allocMemory(size);
         if (mmu == NULL)
-        {
             CMDSessionTab[i].usageFlag = 0;
-        }
         else
         {
             CMDSessionTab[i].mmu = mmu;

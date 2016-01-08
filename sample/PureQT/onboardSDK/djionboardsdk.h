@@ -11,7 +11,11 @@
 #include <QList>
 
 #include <QComboBox>
+#include <gridmapKernel.h>
+
 #include "QonboardSDK.h"
+#include "conboardsdktask.h"
+
 
 using namespace DJI::onboardSDK;
 
@@ -215,6 +219,8 @@ private slots:
 
     void on_cb_core_mechine_activated(int index);
 
+    void on_btn_script_run_clicked();
+
 private:
     Ui::DJIonboardSDK *ui;
 
@@ -253,6 +259,8 @@ private:
 
     QTimer *timerBroadcast;
     QWebView *webView;
+
+    ConboardSDKScript *scriptSDK;
     //! @note a better web engine, not available now
     //    QWebEngineView *webView;
 };

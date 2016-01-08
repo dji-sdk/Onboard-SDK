@@ -185,6 +185,9 @@ DJIonboardSDK::DJIonboardSDK(QWidget *parent) : QMainWindow(parent), ui(new Ui::
 
     connect(timerBroadcast, SIGNAL(timeout()), this, SLOT(on_tmr_Broadcast()));
     timerBroadcast->start(300);
+    scriptSDK = new ConboardSDKScript(api);
+    ScriptThread *st = new ScriptThread(scriptSDK);
+    st->start();
 }
 
 DJIonboardSDK::~DJIonboardSDK() { delete ui; }
@@ -892,8 +895,7 @@ void DJIonboardSDK::upDateFlightStatus()
 
 void DJIonboardSDK::updateControlDevice()
 {
-    ui->le_coreControlDevice->setText(
-        QString::number((api->getCtrlInfo().device)));
+    ui->le_coreControlDevice->setText(QString::number((api->getCtrlInfo().device)));
 }
 
 void DJIonboardSDK::on_tmr_Broadcast()
@@ -1433,4 +1435,12 @@ void DJIonboardSDK::on_cb_core_mechine_activated(int index)
 #else
     ui->cb_core_mechine->setEnabled(false);
 #endif
+}
+
+void DJIonboardSDK::on_btn_script_run_clicked()
+{
+    //! @todo remap stdin and stdout
+    QString data = ui->te_script_code->toPlainText();
+    scriptSDK->addTask(data.toLocal8Bit().data());
+    //ui->tb_script_output->
 }

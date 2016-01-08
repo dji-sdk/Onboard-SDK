@@ -25,10 +25,7 @@ bool FC(Script *script, UserData data)
         cout << "| - mc <bool> stop motor or standby                             |" << endl;
         cout << "|      <bool> 0 stop                                            |" << endl;
         cout << "|             1 standby                                         |" << endl;
-        cout << "| - bf {<channel> <frequency>} read flight control version      |" << endl;
-        cout << "|      <channel> 0 ~ 15                                         |" << endl;
-        cout << "|      <frequency> 0 1 10 50 100                                |" << endl;
-        cout << "|                  other input will hold the latest frequency   |" << endl;
+        cout << "|                                                               |" << endl;
         cout << "| - fl <flag> <x> <y> <z> <yaw> flight control                  |" << endl;
         cout << "|      <flag> default  VERTICAL_VELOCITY                        |" << endl;
         cout << "|             0x10     VERTICAL_POSSITION                       |" << endl;
@@ -69,9 +66,38 @@ bool FC(Script *script, UserData data)
     return true;
 }
 
-bool tkFC(Script *script, UserData data) { return true; }
+bool tkFC(Script *script, UserData data)
+{
+    stringstream s;
 
-bool mcFC(Script *script, UserData data) { return true; }
+    s << (char *)data;
+    char drop[20];
+    s >> drop >> drop;
+    int flag;
+    s >> flag;
+
+    script->getFlight()->task((DJI::onboardSDK::Flight::TASK)flag);
+
+    return true;
+}
+
+bool mcFC(Script *script, UserData data)
+{
+    stringstream s;
+
+    s << (char *)data;
+    char drop[20];
+    s >> drop >> drop;
+    int flag;
+    s >> flag;
+
+    if(flag)
+        script->getFlight()->setArm(true);
+    else
+        script->getFlight()->setArm(false);
+
+    return true;
+}
 
 bool bfFC(Script *script, UserData data) { return true; }
 

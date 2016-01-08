@@ -107,6 +107,8 @@ class Script
     ActivateData adata;
     CoreAPI *getApi() const;
     void setApi(CoreAPI *value);
+    Flight *getFlight() const;
+    void setFlight(Flight *value);
 };
 } // namespace onboardSDK
 } // namespace DJI

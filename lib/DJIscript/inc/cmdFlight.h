@@ -29,7 +29,6 @@
 bool FC  (DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
 bool tkFC(DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
 bool mcFC(DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
-bool bfFC(DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
 bool flFC(DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
 
 #endif // CMDFLIGHT_H

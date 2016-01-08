@@ -78,6 +78,16 @@ Task Script::match(UserData name)
 void Script::run(Script *script) { script->run(); }
 
 bool Script::emptyTask(Script *script __UNUSED, UserData data __UNUSED) { return true; }
+Flight *Script::getFlight() const
+{
+    return flight;
+}
+
+void Script::setFlight(Flight *value)
+{
+    flight = value;
+}
+
 CoreAPI *Script::getApi() const
 {
     return api;
