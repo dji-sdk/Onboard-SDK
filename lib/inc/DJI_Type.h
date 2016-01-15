@@ -43,7 +43,9 @@
 #define __DELETE(x) delete (char*)x
 #else
 #define __UNUSED
+#define __DELETE(x) delete x
 #pragma warning( disable : 4100 )
+#pragma warning( disable : 4800 )
 #endif //__GNUC__
 
 #ifdef WIN32
