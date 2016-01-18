@@ -13,6 +13,8 @@
 #include <QComboBox>
 #include <gridmapKernel.h>
 
+#include <fstream>
+
 #include "QonboardSDK.h"
 #include "conboardsdktask.h"
 
@@ -64,6 +66,7 @@ private:
     void wpRemovePoint();
 
     void initSDK();
+    void initScript();
     void initFlight();
     void initCamera();
     void initFollow();
@@ -261,6 +264,7 @@ private:
     QWebView *webView;
 
     ConboardSDKScript *scriptSDK;
+    std::fstream* scriptlog;
     //! @note a better web engine, not available now
     //    QWebEngineView *webView;
 };

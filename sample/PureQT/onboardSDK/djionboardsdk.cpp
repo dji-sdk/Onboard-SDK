@@ -3,6 +3,9 @@
 
 #include <QFile>
 #include <QFileDialog>
+#include <iostream>
+#include <fstream>
+#include <string>
 
 void DJIonboardSDK::initSDK()
 {
@@ -140,6 +143,15 @@ void DJIonboardSDK::initWayPoint()
     ui->cb_waypoint_point->addItem("Null");
 }
 
+void DJIonboardSDK::initScript()
+{
+    scriptSDK = new ConboardSDKScript(api);
+    ScriptThread *st = new ScriptThread(scriptSDK);
+    st->start();
+    scriptlog = new std::fstream("script.log");
+    std::cout.rdbuf(scriptlog->rdbuf());
+}
+
 DJIonboardSDK::DJIonboardSDK(QWidget *parent) : QMainWindow(parent), ui(new Ui::DJIonboardSDK)
 {
     ui->setupUi(this);
@@ -185,12 +197,10 @@ DJIonboardSDK::DJIonboardSDK(QWidget *parent) : QMainWindow(parent), ui(new Ui::
 
     connect(timerBroadcast, SIGNAL(timeout()), this, SLOT(on_tmr_Broadcast()));
     timerBroadcast->start(300);
-    scriptSDK = new ConboardSDKScript(api);
-    ScriptThread *st = new ScriptThread(scriptSDK);
-    st->start();
+    initScript();
 }
 
-DJIonboardSDK::~DJIonboardSDK() { delete ui; }
+DJIonboardSDK::~DJIonboardSDK() { delete ui; scriptlog->close();}
 
 void DJIonboardSDK::refreshPort()
 {
@@ -1440,6 +1450,7 @@ void DJIonboardSDK::on_cb_core_mechine_activated(int index)
 void DJIonboardSDK::on_btn_script_run_clicked()
 {
     //! @todo remap stdin and stdout
+    //!
     QString data = ui->te_script_code->toPlainText();
     scriptSDK->addTask(data.toLocal8Bit().data());
     //ui->tb_script_output->
