@@ -6,6 +6,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <gridmap.h>
 
 void DJIonboardSDK::initSDK()
 {
@@ -33,6 +34,8 @@ void DJIonboardSDK::initSDK()
 
     send->start();
     read->start();
+
+
 }
 
 void DJIonboardSDK::initFlight()

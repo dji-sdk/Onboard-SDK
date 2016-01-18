@@ -41,7 +41,8 @@ SOURCES += main.cpp\
     ../../../lib/DJIscript/src/cmdSettings.cpp \
     ../../../lib/DJIscript/src/cmdVirtualRC.cpp \
     ../../../lib/DJIscript/src/cmdWayPoint.cpp \
-    conboardsdktask.cpp
+    conboardsdktask.cpp \
+    ../../../lib/gridmap/src/gridmap.cpp
 
 HEADERS  += djionboardsdk.h \
     QonboardSDK.h \
@@ -73,7 +74,8 @@ HEADERS  += djionboardsdk.h \
     ../../../lib/DJIscript/inc/cmdSettings.h \
     ../../../lib/DJIscript/inc/cmdVirtualRC.h \
     ../../../lib/DJIscript/inc/cmdWayPoint.h \
-    conboardsdktask.h
+    conboardsdktask.h \
+    ../../../lib/gridmap/inc/gridmap.h
 
 FORMS    += djionboardsdk.ui
 

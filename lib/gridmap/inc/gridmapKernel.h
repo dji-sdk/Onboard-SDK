@@ -13,6 +13,7 @@ public:
     GridmapKernel();
 private:
 
+
 };
 
 }//namespace Vision
