@@ -28,11 +28,10 @@
  * */
 
 bool HP         (DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
-bool startFM     (DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
-bool stopFM     (DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
-bool pauseFM    (DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
-bool restartFM  (DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
-bool updateFM   (DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
+bool startHP    (DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
+bool stopHP     (DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
+bool pauseHP    (DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
+bool restartHP  (DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
 
 
 #endif // CMDHOTPOINT_H

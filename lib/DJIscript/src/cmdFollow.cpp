@@ -9,9 +9,6 @@
 using namespace std;
 using namespace DJI::onboardSDK;
 
-
-
-
 bool FM(Script *script, UserData data)
 {
     char* inputData = (char*)data;

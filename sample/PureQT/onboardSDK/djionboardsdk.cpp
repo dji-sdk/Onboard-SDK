@@ -322,7 +322,7 @@ void DJIonboardSDK::hotpintReadCallback(CoreAPI *This, Header *header, UserData 
     HotPoint::readCallback(This, header, sdk->hp);
     API_LOG(This->getDriver(), STATUS_LOG, "Refreshing data");
     sdk->ui->le_hp_la->setText(QString::number(sdk->hp->getData().latitude));
-    sdk->ui->le_hp_lo->setText(QString::number(sdk->hp->getData().longtitude));
+    sdk->ui->le_hp_lo->setText(QString::number(sdk->hp->getData().longitude));
     sdk->ui->le_hp_al->setText(QString::number(sdk->hp->getData().height));
     sdk->ui->le_hp_pa->setText(QString::number(sdk->hp->getData().palstance));
     sdk->ui->le_hp_ra->setText(QString::number(sdk->hp->getData().radius));

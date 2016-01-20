@@ -108,9 +108,11 @@ class Script
     void setApi(CoreAPI *value);
     void setFlight(Flight *value);
     void setFollow(Follow *value);
+    void setHotpoint(HotPoint *value);
     CoreAPI *getApi() const;
     Flight *getFlight() const;
     Follow *getFollow() const;
+    HotPoint *getHotpoint() const;
 };
 } // namespace onboardSDK
 } // namespace DJI

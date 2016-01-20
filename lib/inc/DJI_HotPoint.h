@@ -34,7 +34,7 @@ typedef struct HotPointData
     uint8_t version;
 
     float64_t latitude;
-    float64_t longtitude;
+    float64_t longitude;
     float64_t height;
 
     float64_t radius;

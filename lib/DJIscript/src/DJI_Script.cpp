@@ -78,6 +78,16 @@ Task Script::match(UserData name)
 void Script::run(Script *script) { script->run(); }
 
 bool Script::emptyTask(Script *script __UNUSED, UserData data __UNUSED) { return true; }
+HotPoint *Script::getHotpoint() const
+{
+    return hotpoint;
+}
+
+void Script::setHotpoint(HotPoint *value)
+{
+    hotpoint = value;
+}
+
 Follow *Script::getFollow() const
 {
     return follow;

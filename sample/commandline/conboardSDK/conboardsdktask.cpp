@@ -8,6 +8,7 @@
 #include <cmdCoreAPI.h>
 #include <cmdFlight.h>
 #include <cmdFollow.h>
+#include <cmdHotPoint.h>
 
 using namespace std;
 
@@ -42,6 +43,12 @@ TaskSetItem cmdTaskSet[] = {
     TASK_ITEM(pauseFM),   //
     TASK_ITEM(restartFM), //
     TASK_ITEM(updateFM),  //
+
+    TASK_ITEM(HP),		  //
+    TASK_ITEM(startHP),   //
+    TASK_ITEM(stopHP),	//
+    TASK_ITEM(pauseHP),   //
+    TASK_ITEM(restartHP), //
 };
 
 ConboardSDKScript::ConboardSDKScript(CoreAPI* api)
