@@ -28,3 +28,52 @@
 
 using namespace std;
 using namespace DJI::onboardSDK;
+
+bool WP(Script *script, UserData data)
+{
+    __DELETE(data);
+    script->addTask(waitInput);
+    return true;
+}
+
+bool initWP(Script *script, UserData data)
+{
+    __DELETE(data);
+    script->addTask(waitInput);
+    return true;
+}
+
+bool startWP(Script *script, UserData data)
+{
+    __DELETE(data);
+    script->addTask(waitInput);
+    return true;
+}
+
+bool stopWP(Script *script, UserData data)
+{
+    __DELETE(data);
+    script->addTask(waitInput);
+    return true;
+}
+
+bool pauseWP(Script *script, UserData data)
+{
+    __DELETE(data);
+    script->addTask(waitInput);
+    return true;
+}
+
+bool retartWP(Script *script, UserData data)
+{
+    __DELETE(data);
+    script->addTask(waitInput);
+    return true;
+}
+
+bool apWP(Script *script, UserData data)
+{
+    __DELETE(data);
+    script->addTask(waitInput);
+    return true;
+}

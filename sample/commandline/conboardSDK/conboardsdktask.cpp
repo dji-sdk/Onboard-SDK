@@ -9,6 +9,9 @@
 #include <cmdFlight.h>
 #include <cmdFollow.h>
 #include <cmdHotPoint.h>
+#include <cmdWayPoint.h>
+#include <cmdVirtualRC.h>
+#include <cmdCamera.h>
 
 using namespace std;
 
@@ -49,6 +52,24 @@ TaskSetItem cmdTaskSet[] = {
     TASK_ITEM(stopHP),	//
     TASK_ITEM(pauseHP),   //
     TASK_ITEM(restartHP), //
+
+    TASK_ITEM(VC),		//
+    TASK_ITEM(startVC), //
+    TASK_ITEM(stopVC),  //
+    TASK_ITEM(ctVC),	//
+
+    TASK_ITEM(WP),		 //
+    TASK_ITEM(initWP),   //
+    TASK_ITEM(startWP),  //
+    TASK_ITEM(stopWP),   //
+    TASK_ITEM(pauseWP),  //
+    TASK_ITEM(retartWP), //
+    TASK_ITEM(apWP),	 //
+
+    TASK_ITEM(CC),   //
+    TASK_ITEM(cmCC), //
+    TASK_ITEM(agCC), //
+    TASK_ITEM(sgCC), //
 };
 
 ConboardSDKScript::ConboardSDKScript(CoreAPI* api)
