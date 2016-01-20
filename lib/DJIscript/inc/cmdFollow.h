@@ -27,4 +27,11 @@
  *  Just use it please. Maybe these names will change somehow.
  * */
 
+bool FM         (DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
+bool startFM     (DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
+bool stopFM     (DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
+bool pauseFM    (DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
+bool restartFM  (DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
+bool updateFM   (DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
+
 #endif // CMDFOLLOW_H

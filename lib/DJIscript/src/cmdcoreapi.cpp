@@ -20,7 +20,7 @@ bool CA(Script* script __UNUSED, UserData data)
         cout << "| --CA <command> <data>                                         |" << endl;
         cout << "| - ac <N/A> activate, load data from files. See also SS load   |" << endl;
         cout << "| - vs <N/A> read flight control version                        |" << endl;
-        cout << "| - bf {<channel> <frequency>} read flight control version      |" << endl;
+        cout << "| - bf {<channel> <frequency>} set broadcast frequency          |" << endl;
         cout << "|      <channel> 0 ~ 15                                         |" << endl;
         cout << "|      <frequency> 0 1 10 50 100                                |" << endl;
         cout << "|                  other input will hold the latest frequency   |" << endl;
@@ -208,14 +208,16 @@ bool ctCA(Script* script, UserData data)
     char drop[20];
     s >> drop >> drop;
 
-    int boool;
-    s >> boool;
+    int boolean;
+    s >> boolean;
 
-    if (boool)
+    if (boolean)
         script->getApi()->setControl(false);
     else
         script->getApi()->setControl(true);
 
+    __DELETE(data);
+    script->addTask(waitInput);
     return true;
 }
 
@@ -232,5 +234,7 @@ bool syCA(Script* script, UserData data)
 
     script->getApi()->setSyncFreq(freq);
 
+    __DELETE(data);
+    script->addTask(waitInput);
     return true;
 }

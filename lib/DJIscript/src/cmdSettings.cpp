@@ -78,6 +78,7 @@ bool loadSS(Script* script, UserData data)
 
 bool idSS(Script* script, UserData data)
 {
+    //! @todo idss
     cout << "not available yet." << endl;
     __DELETE(data);
     script->addTask(waitInput);
@@ -86,6 +87,7 @@ bool idSS(Script* script, UserData data)
 
 bool keySS(Script* script, UserData data)
 {
+    //! @todo keySS
     cout << "not available yet." << endl;
     __DELETE(data);
     script->addTask(waitInput);
@@ -94,6 +96,7 @@ bool keySS(Script* script, UserData data)
 
 bool saveSS(Script* script, UserData data)
 {
+    //! @todo saveSS
     cout << "not available yet." << endl;
     __DELETE(data);
     script->addTask(waitInput);
@@ -102,6 +105,7 @@ bool saveSS(Script* script, UserData data)
 
 bool spSS(Script* script, UserData data)
 {
+    //! @todo spSS
     cout << "not available yet." << endl;
     __DELETE(data);
     script->addTask(waitInput);

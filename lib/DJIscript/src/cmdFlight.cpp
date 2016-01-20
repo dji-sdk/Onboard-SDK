@@ -99,6 +99,4 @@ bool mcFC(Script *script, UserData data)
     return true;
 }
 
-bool bfFC(Script *script, UserData data) { return true; }
-
 bool flFC(Script *script, UserData data) { return true; }

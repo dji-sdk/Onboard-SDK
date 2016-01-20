@@ -34,7 +34,6 @@ TaskSetItem cmdTaskSet[] = {
     TASK_ITEM(tkFC), //
     TASK_ITEM(mcFC), //
     TASK_ITEM(flFC), //
-
 };
 
 ConboardSDKScript::ConboardSDKScript(CoreAPI* api)

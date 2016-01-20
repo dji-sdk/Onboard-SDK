@@ -78,6 +78,16 @@ Task Script::match(UserData name)
 void Script::run(Script *script) { script->run(); }
 
 bool Script::emptyTask(Script *script __UNUSED, UserData data __UNUSED) { return true; }
+Follow *Script::getFollow() const
+{
+    return follow;
+}
+
+void Script::setFollow(Follow *value)
+{
+    follow = value;
+}
+
 Flight *Script::getFlight() const
 {
     return flight;

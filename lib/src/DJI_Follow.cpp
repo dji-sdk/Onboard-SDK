@@ -5,10 +5,10 @@ using namespace DJI::onboardSDK;
 Follow::Follow(CoreAPI *ControlAPI)
 {
     api = ControlAPI;
-    initData();
+    resetData();
 }
 
-void Follow::initData()
+void Follow::resetData()
 {
     data.mode = MODE_RELATIVE;
     data.yaw = YAW_TOTARGET;
@@ -24,7 +24,7 @@ void Follow::start(FollowData *Data, CallBack callback, UserData userData)
     if (Data)
         data = *Data;
     else
-        initData();
+        resetData();
     api->send(2, encript, SET_MISSION, CODE_FOLLOW_START, &data, sizeof(data), 500, 2,
               callback ? callback : missionCallback, userData);
 }

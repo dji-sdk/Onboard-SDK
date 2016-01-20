@@ -34,8 +34,6 @@ void DJIonboardSDK::initSDK()
 
     send->start();
     read->start();
-
-
 }
 
 void DJIonboardSDK::initFlight()
@@ -203,7 +201,11 @@ DJIonboardSDK::DJIonboardSDK(QWidget *parent) : QMainWindow(parent), ui(new Ui::
     initScript();
 }
 
-DJIonboardSDK::~DJIonboardSDK() { delete ui; scriptlog->close();}
+DJIonboardSDK::~DJIonboardSDK()
+{
+    delete ui;
+    scriptlog->close();
+}
 
 void DJIonboardSDK::refreshPort()
 {
@@ -1441,7 +1443,7 @@ void DJIonboardSDK::on_btn_hp_pause_clicked(bool checked)
 void DJIonboardSDK::on_cb_core_mechine_activated(int index)
 {
 #ifndef SDK_VERSION_2_3
-    if (index)
+    if (!index)
         api->setVersion(versionM100_31);
     else
         api->setVersion(versionA3_31);
@@ -1456,5 +1458,5 @@ void DJIonboardSDK::on_btn_script_run_clicked()
     //!
     QString data = ui->te_script_code->toPlainText();
     scriptSDK->addTask(data.toLocal8Bit().data());
-    //ui->tb_script_output->
+    // ui->tb_script_output->
 }
