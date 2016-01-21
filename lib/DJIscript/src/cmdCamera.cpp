@@ -1,5 +1,5 @@
 #include "cmdIO.h"
-#include "cmdcamera.h"
+#include "cmdCamera.h"
 
 #include <string.h>
 #include <iostream>
