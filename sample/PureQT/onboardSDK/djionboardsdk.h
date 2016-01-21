@@ -15,9 +15,10 @@
 
 #include <fstream>
 
+#include <gridmap.h>
+
 #include "QonboardSDK.h"
 #include "conboardsdktask.h"
-
 
 using namespace DJI::onboardSDK;
 
@@ -50,7 +51,7 @@ class DJIonboardSDK : public QMainWindow
     static void activationCallback(CoreAPI *This, Header *header, UserData userData);
     static void hotpintReadCallback(CoreAPI *This, Header *header, UserData userData);
 
-private:
+  private:
     void updateCameraYaw();
     void updateCameraRoll();
     void updateCameraPitch();
@@ -72,7 +73,7 @@ private:
     void initFollow();
     void initWayPoint();
     void initVirtualRC();
-private slots:
+  private slots:
     //! @note too much slots, tired to rename.
     void on_btn_portRefresh_clicked();
     void on_btn_portOpen_clicked();
@@ -224,7 +225,7 @@ private slots:
 
     void on_btn_script_run_clicked();
 
-private:
+  private:
     Ui::DJIonboardSDK *ui;
 
     CoreAPI *api;
@@ -258,15 +259,17 @@ private:
     QStandardItemModel *waypointData;
     QStandardItemModel *currentAction;
     QStandardItemModel *nullAction;
-    QList<QStandardItemModel*> actionData;
+    QList<QStandardItemModel *> actionData;
 
     QTimer *timerBroadcast;
     QWebView *webView;
 
     ConboardSDKScript *scriptSDK;
-    std::fstream* scriptlog;
+    std::fstream *scriptlog;
     //! @note a better web engine, not available now
     //    QWebEngineView *webView;
+
+    gridmap *gm;
 };
 
 #endif // DJIONBOARDSDK_H

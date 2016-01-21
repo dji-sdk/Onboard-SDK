@@ -6,7 +6,6 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <gridmap.h>
 
 void DJIonboardSDK::initSDK()
 {
@@ -156,6 +155,8 @@ void DJIonboardSDK::initScript()
 DJIonboardSDK::DJIonboardSDK(QWidget *parent) : QMainWindow(parent), ui(new Ui::DJIonboardSDK)
 {
     ui->setupUi(this);
+    gm = new gridmap(0);
+    ui->gridLayout_swarm->addWidget(gm, 2, 2);
 
     //! @code mission webview
     webView = new QWebView(this); // new QWebEngineView(this);

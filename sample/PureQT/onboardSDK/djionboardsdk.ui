@@ -60,7 +60,7 @@
         <item>
          <widget class="QTabWidget" name="tabWidget">
           <property name="currentIndex">
-           <number>0</number>
+           <number>3</number>
           </property>
           <widget class="QWidget" name="tbFlight">
            <attribute name="title">
@@ -5911,7 +5911,7 @@
                 </layout>
                </item>
                <item>
-                <layout class="QGridLayout" name="gridLayout_10">
+                <layout class="QGridLayout" name="gridLayout_swarm">
                  <item row="1" column="0">
                   <widget class="QGraphicsView" name="graphicsView_2"/>
                  </item>
@@ -5927,9 +5927,6 @@
                     <string>TextLabel</string>
                    </property>
                   </widget>
-                 </item>
-                 <item row="1" column="1">
-                  <widget class="QOpenGLWidget" name="openGLWidget"/>
                  </item>
                 </layout>
                </item>
@@ -6030,18 +6027,18 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="btg_flightTask"/>
-  <buttongroup name="btg_cameraAngle"/>
-  <buttongroup name="btg_flightCL"/>
-  <buttongroup name="btg_flightSM"/>
-  <buttongroup name="btg_cameraPitch"/>
-  <buttongroup name="btg_flightVL"/>
-  <buttongroup name="btg_vrcGear"/>
   <buttongroup name="btg_flightYL"/>
   <buttongroup name="btg_cameraRoll"/>
-  <buttongroup name="btg_cameraYaw"/>
-  <buttongroup name="btg_vrcMode"/>
-  <buttongroup name="btg_flightHL"/>
+  <buttongroup name="btg_cameraPitch"/>
+  <buttongroup name="btg_flightTask"/>
+  <buttongroup name="btg_flightCL"/>
+  <buttongroup name="btg_cameraAngle"/>
   <buttongroup name="btg_cameraMode"/>
+  <buttongroup name="btg_vrcGear"/>
+  <buttongroup name="btg_flightHL"/>
+  <buttongroup name="btg_vrcMode"/>
+  <buttongroup name="btg_flightVL"/>
+  <buttongroup name="btg_flightSM"/>
+  <buttongroup name="btg_cameraYaw"/>
  </buttongroups>
 </ui>
