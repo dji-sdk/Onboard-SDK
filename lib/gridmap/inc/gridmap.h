@@ -10,57 +10,32 @@
 #include <QVector2D>
 #include <QBasicTimer>
 #include <QOpenGLShaderProgram>
-#include <QOpenGLTexture>
-#include <QOpenGLBuffer>
-
-class GeometryEngine : protected QOpenGLFunctions
-{
-public:
-    GeometryEngine();
-    virtual ~GeometryEngine();
-
-    void drawCubeGeometry(QOpenGLShaderProgram *program);
-
-private:
-    void initCubeGeometry();
-
-    QOpenGLBuffer arrayBuf;
-    QOpenGLBuffer indexBuf;
-};
-
-class gridmap :public QOpenGLWidget, protected QOpenGLFunctions
+class Gridmap : public QOpenGLWidget
 {
     Q_OBJECT
 
-public:
-    explicit gridmap(QWidget *parent = 0);
-    ~gridmap();
-    void resizeGL(int w, int h) Q_DECL_OVERRIDE;
-protected:
+  public:
+    explicit Gridmap(QWidget *parent = 0);
+    ~Gridmap();
+
+  public:
+    void drawBox(int x, int y, int z, float a, QColor c);
+
+  protected:
     void mousePressEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
     void mouseReleaseEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
+    void mouseMoveEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
+    void wheelEvent(QWheelEvent *e) Q_DECL_OVERRIDE;
     void timerEvent(QTimerEvent *e) Q_DECL_OVERRIDE;
 
     void initializeGL() Q_DECL_OVERRIDE;
-
+    void resizeGL(int width, int height) Q_DECL_OVERRIDE;
     void paintGL() Q_DECL_OVERRIDE;
 
-    void initShaders();
-    void initTextures();
-
-private:
+  private:
+    DJI::vision::GridmapKernel kernel;
     QBasicTimer timer;
-    QOpenGLShaderProgram program;
-    GeometryEngine *geometries;
-
-    QOpenGLTexture *texture;
-
-    QMatrix4x4 projection;
-
-    QVector2D mousePressPosition;
-    QVector3D rotationAxis;
-    qreal angularSpeed;
-    QQuaternion rotation;
+    float rotate;
 };
 
 #endif // GRIDMAP_H

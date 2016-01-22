@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui serialport  webkitwidgets
+QT       += core gui serialport webkitwidgets opengl
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 

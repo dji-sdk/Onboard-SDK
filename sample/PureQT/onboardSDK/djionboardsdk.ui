@@ -17,7 +17,7 @@
    <string>DJIonboardSDK</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QHBoxLayout" name="horizontalLayout_138">
+   <layout class="QVBoxLayout" name="verticalLayout_66">
     <property name="spacing">
      <number>0</number>
     </property>
@@ -60,7 +60,7 @@
         <item>
          <widget class="QTabWidget" name="tabWidget">
           <property name="currentIndex">
-           <number>3</number>
+           <number>4</number>
           </property>
           <widget class="QWidget" name="tbFlight">
            <attribute name="title">
@@ -5871,6 +5871,33 @@
             </item>
            </layout>
           </widget>
+          <widget class="QWidget" name="tab">
+           <attribute name="title">
+            <string>Gridmap</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout_67">
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_57">
+              <item>
+               <widget class="QFrame" name="frame">
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>180</height>
+                 </size>
+                </property>
+                <property name="frameShape">
+                 <enum>QFrame::StyledPanel</enum>
+                </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Raised</enum>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
           <widget class="QWidget" name="tbSwarm">
            <attribute name="title">
             <string>Swarm</string>
@@ -5912,21 +5939,14 @@
                </item>
                <item>
                 <layout class="QGridLayout" name="gridLayout_swarm">
-                 <item row="1" column="0">
+                 <item row="0" column="0">
                   <widget class="QGraphicsView" name="graphicsView_2"/>
                  </item>
-                 <item row="2" column="0">
+                 <item row="1" column="0">
                   <widget class="QTreeView" name="treeView"/>
                  </item>
-                 <item row="2" column="1">
+                 <item row="1" column="1">
                   <widget class="QGraphicsView" name="graphicsView"/>
-                 </item>
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="label_4">
-                   <property name="text">
-                    <string>TextLabel</string>
-                   </property>
-                  </widget>
                  </item>
                 </layout>
                </item>
@@ -5958,7 +5978,14 @@
     </property>
     <addaction name="actionOpen_O"/>
    </widget>
+   <widget class="QMenu" name="menuHelp_H">
+    <property name="title">
+     <string>Help(H)</string>
+    </property>
+    <addaction name="actionAbout"/>
+   </widget>
    <addaction name="menuFile_F"/>
+   <addaction name="menuHelp_H"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -6022,23 +6049,28 @@
     <string>Ctrl+O</string>
    </property>
   </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About(A)</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="btg_flightYL"/>
-  <buttongroup name="btg_cameraRoll"/>
-  <buttongroup name="btg_cameraPitch"/>
-  <buttongroup name="btg_flightTask"/>
-  <buttongroup name="btg_flightCL"/>
-  <buttongroup name="btg_cameraAngle"/>
-  <buttongroup name="btg_cameraMode"/>
   <buttongroup name="btg_vrcGear"/>
-  <buttongroup name="btg_flightHL"/>
-  <buttongroup name="btg_vrcMode"/>
   <buttongroup name="btg_flightVL"/>
+  <buttongroup name="btg_cameraPitch"/>
+  <buttongroup name="btg_cameraMode"/>
+  <buttongroup name="btg_cameraRoll"/>
+  <buttongroup name="btg_flightCL"/>
   <buttongroup name="btg_flightSM"/>
+  <buttongroup name="btg_flightTask"/>
+  <buttongroup name="btg_cameraAngle"/>
+  <buttongroup name="btg_vrcMode"/>
   <buttongroup name="btg_cameraYaw"/>
+  <buttongroup name="btg_flightHL"/>
+  <buttongroup name="btg_flightYL"/>
  </buttongroups>
 </ui>

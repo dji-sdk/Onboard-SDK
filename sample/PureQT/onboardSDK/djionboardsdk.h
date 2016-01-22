@@ -225,7 +225,11 @@ class DJIonboardSDK : public QMainWindow
 
     void on_btn_script_run_clicked();
 
-  private:
+    void on_tabWidget_currentChanged(int index);
+
+    void on_actionOpen_O_triggered();
+
+private:
     Ui::DJIonboardSDK *ui;
 
     CoreAPI *api;
@@ -269,7 +273,7 @@ class DJIonboardSDK : public QMainWindow
     //! @note a better web engine, not available now
     //    QWebEngineView *webView;
 
-    gridmap *gm;
+    Gridmap *gm;
 };
 
 #endif // DJIONBOARDSDK_H
