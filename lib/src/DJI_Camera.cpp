@@ -34,7 +34,7 @@ float32_t Camera::getPitch() const { return api->getBroadcastData().gimbal.pitch
 bool Camera::isYawLimit() const
 {
 #ifndef SDK_VERSION_2_3
-    return api->getBroadcastData().gimbal.is_yaw_limit ? true : false;
+    return api->getBroadcastData().gimbal.yawLimit ? true : false;
 #else
     return false;
 #endif
@@ -43,7 +43,7 @@ bool Camera::isYawLimit() const
 bool Camera::isRollLimit() const
 {
 #ifndef SDK_VERSION_2_3
-    return api->getBroadcastData().gimbal.is_roll_limit ? true : false;
+    return api->getBroadcastData().gimbal.rollLimit ? true : false;
 #else
     return false;
 #endif
@@ -51,7 +51,7 @@ bool Camera::isRollLimit() const
 bool Camera::isPitchLimit() const
 {
 #ifndef SDK_VERSION_2_3
-    return api->getBroadcastData().gimbal.is_pitch_limit ? true : false;
+    return api->getBroadcastData().gimbal.pitchLimit ? true : false;
 #else
     return false;
 #endif

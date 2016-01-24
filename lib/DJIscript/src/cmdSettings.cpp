@@ -18,13 +18,7 @@ bool SS(Script* script, UserData data)
     {
         cout << "|------------------DJI onboardSDK - Script Settings-------------|" << endl;
         cout << "| --SS <command> <data>                                         |" << endl;
-        cout << "| - id <id> set activate ID                                     |" << endl;
-        cout << "| - key <key> set activate encript key                          |" << endl;
-        cout << "| - save <N/A> save id and key                                  |" << endl;
         cout << "| - load <file name> load and print id and key                  |" << endl;
-        cout << "| - sp <number> select serial port                              |" << endl;
-        cout << "|      - ls print serial ports list                             |" << endl;
-        cout << "|      - auto select automaticaly                               |" << endl;
         cout << "|------------------DJI onboardSDK - Script Settings-------------|" << endl;
 
         script->addTask(waitInput);
@@ -55,20 +49,24 @@ bool loadSS(Script* script, UserData data)
         memcpy(command, "settings.ini", 13);
     ifstream read(command);
 
-    while (!read.eof())
-    {
-        read.getline(line, 1024);
-        if (*line != 0) //! @note sscanf have features on empty buffer.
+    if (read.is_open())
+        while (!read.eof())
         {
-            int id;
-            if (sscanf(line, "ID:%d", &id))
-                script->adata.app_id = id;
-            script->adata.app_api_level = 2;
-            script->adata.app_ver = SDK_VERSION;
-            if (sscanf(line, "KEY:%s", key))
-                script->adata.app_key = key;
+            read.getline(line, 1024);
+            if (*line != 0) //! @note sscanf have features on empty buffer.
+            {
+                int id;
+                if (sscanf(line, "ID:%d", &id))
+                    script->adata.app_id = id;
+                script->adata.app_api_level = 2;
+                script->adata.app_ver = SDK_VERSION;
+                if (sscanf(line, "KEY:%s", key))
+                    script->adata.app_key = key;
+            }
+            cout << line << endl;
         }
-    }
+    else
+        cout << "can not open file" << endl;
     read.close();
 
     __DELETE(data);

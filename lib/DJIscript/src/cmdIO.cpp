@@ -33,6 +33,9 @@ bool addTask(Script* script, UserData data __UNUSED)
     cout << "|          is equal to:                                         |" << endl;
     cout << "|          --<module> <command> <data1>                         |" << endl;
     cout << "|          --<module> <command> <data2>                         |" << endl;
+    cout << "|                                                               |" << endl;
+    cout << "| Attention! this sample is not a full functional version,      |" << endl;
+    cout << "| Quick start only.                                             |" << endl;
     cout << "|------------------DJI onboardSDK command line------------------|" << endl;
 
     script->addTask(waitInput);
@@ -61,5 +64,11 @@ bool help(Script* script, UserData data)
         script->addTask((UserData)command, inputData);
     else
         script->addTask(addTask);
+    return true;
+}
+
+bool test(Script* script, UserData data)
+{
+    cout << "test" << endl;
     return true;
 }

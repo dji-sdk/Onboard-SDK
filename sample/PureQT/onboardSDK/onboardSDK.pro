@@ -86,10 +86,6 @@ INCLUDEPATH += \
 
 DEFINES += QT
 
-RESOURCES += \
-    ../../../lib/gridmap/src/shaders.qrc \
-    ../../../lib/gridmap/src/textures.qrc
+RESOURCES +=
 
-DISTFILES += \
-    ../../../lib/gridmap/src/fshader.glsl \
-    ../../../lib/gridmap/src/vshader.glsl
+DISTFILES +=

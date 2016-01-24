@@ -29,10 +29,10 @@ namespace onboardSDK
 
 typedef struct FlightData
 {
-    uint8_t ctrl_flag;
-    float32_t roll_or_x;
-    float32_t pitch_or_y;
-    float32_t thr_z;
+    uint8_t flag;
+    float32_t x;
+    float32_t y;
+    float32_t z;
     float32_t yaw;
 } FlightData;
 

@@ -32,7 +32,6 @@ class QHardDriver : public HardDriver
     void lockMSG();
     void freeMSG();
 
-    void displayLog(char *buf = 0);
 
     void setBaudrate(int value);
 

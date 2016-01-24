@@ -112,7 +112,7 @@ void WayPoint::idleVelocityCallback(CoreAPI *This, Header *header, UserData wpTh
     else
     {
         API_LOG(This->getDriver(), ERROR_LOG, "ACK is exception,seesion id %d,sequence %d\n",
-                header->sessionID, header->sequence_number);
+                header->sessionID, header->sequenceNumber);
         return;
     }
     This->decodeMissionStatus(ack.ack);
@@ -131,7 +131,7 @@ void WayPoint::readInitDataCallback(CoreAPI *This, Header *header, UserData wpTh
     else
     {
         API_LOG(This->getDriver(), ERROR_LOG, "ACK is exception,seesion id %d,sequence %d\n",
-                header->sessionID, header->sequence_number);
+                header->sessionID, header->sequenceNumber);
         return;
     }
     This->decodeMissionStatus(ack.ack);
@@ -149,7 +149,7 @@ void WayPoint::uploadIndexDataCallback(CoreAPI *This, Header *header, UserData w
     else
     {
         API_LOG(This->getDriver(), ERROR_LOG, "ACK is exception,seesion id %d,sequence %d\n",
-                header->sessionID, header->sequence_number);
+                header->sessionID, header->sequenceNumber);
         return;
     }
     This->decodeMissionStatus(ack.ack);

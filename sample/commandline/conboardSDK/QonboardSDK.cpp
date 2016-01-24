@@ -84,15 +84,6 @@ void QHardDriver::lockMSG() { msg.lock(); }
 
 void QHardDriver::freeMSG() { msg.unlock(); }
 
-void QHardDriver::displayLog(char *buf)
-{
-    if (buf)
-        qDebug("%s", buf);
-    else
-    {
-        qDebug("%s", DJI::onboardSDK::buffer);
-    }
-}
 void QHardDriver::setBaudrate(int value) { baudrate = value; }
 
 APIThread::APIThread(CoreAPI *API, int Type, QObject *parent) : QThread(parent)

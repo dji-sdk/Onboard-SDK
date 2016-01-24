@@ -248,7 +248,7 @@ void DJIonboardSDK::setControlCallback(CoreAPI *This, Header *header, UserData u
     else
     {
         API_LOG(sdk->driver, ERROR_LOG, "ACK is exception,seesion id %d,sequence %d\n",
-                header->sessionID, header->sequence_number);
+                header->sessionID, header->sequenceNumber);
     }
 
     switch (ack_data)
@@ -564,10 +564,10 @@ void DJIonboardSDK::on_btn_flight_back_pressed()
 void DJIonboardSDK::flightSend()
 {
     FlightData data;
-    data.ctrl_flag = flightFlag;
-    data.roll_or_x = flightx;
-    data.pitch_or_y = flighty;
-    data.thr_z = flightz;
+    data.flag = flightFlag;
+    data.x = flightx;
+    data.y = flighty;
+    data.z = flightz;
     data.yaw = flightyaw;
     flight->setFlight(&data);
 }
@@ -820,17 +820,17 @@ void DJIonboardSDK::on_btn_camera_send_clicked()
     GimbalAngleData angleData;
     if (ui->btg_cameraMode->checkedButton()->text() == "Speed")
     {
-        speedData.yaw_angle_rate = ui->hs_camera_yaw->value();
-        speedData.roll_angle_rate = ui->hs_camera_roll->value();
-        speedData.pitch_angle_rate = ui->hs_camera_pitch->value();
+        speedData.yaw = ui->hs_camera_yaw->value();
+        speedData.roll = ui->hs_camera_roll->value();
+        speedData.pitch = ui->hs_camera_pitch->value();
         cam->setGimbalSpeed(&speedData);
     }
     else
     {
-        angleData.yaw_angle = ui->hs_camera_yaw->value();
-        angleData.roll_angle = ui->hs_camera_roll->value();
-        angleData.pitch_angle = ui->hs_camera_pitch->value();
-        angleData.ctrl_byte = camFlag;
+        angleData.yaw = ui->hs_camera_yaw->value();
+        angleData.roll = ui->hs_camera_roll->value();
+        angleData.pitch = ui->hs_camera_pitch->value();
+        angleData.mode = camFlag;
         angleData.duration = ui->lineEdit_cameraTime->text().toInt();
         cam->setGimbalAngle(&angleData);
     }
@@ -886,8 +886,8 @@ void DJIonboardSDK::upDateTime()
     ui->le_coreTimeStamp->setText(QString::number(api->getTime()));
 #else
     ui->le_coreTimeStamp->setText(QString::number(api->getTime().time));
-    ui->le_coreNanoStamp->setText(QString::number(api->getTime().asr_ts));
-    ui->le_coreSyncFlag->setText(QString::number(api->getTime().sync_flag));
+    ui->le_coreNanoStamp->setText(QString::number(api->getTime().nanoTime));
+    ui->le_coreSyncFlag->setText(QString::number(api->getTime().syncFlag));
 #endif
 }
 
@@ -1019,8 +1019,8 @@ void DJIonboardSDK::updateFlightVelocity()
     ui->le_Flight_Vx->setText(QString::number(flight->getVelocity().x));
     ui->le_Flight_Vy->setText(QString::number(flight->getVelocity().y));
     ui->le_Flight_Vz->setText(QString::number(flight->getVelocity().z));
-    ui->le_Flight_VS->setText(QString::number(flight->getVelocity().feedback_sensor_id));
-    ui->le_Flight_VH->setText(QString::number(flight->getVelocity().health_flag));
+    ui->le_Flight_VS->setText(QString::number(flight->getVelocity().sensorID));
+    ui->le_Flight_VH->setText(QString::number(flight->getVelocity().health));
 }
 
 void DJIonboardSDK::updateFlightPossition()

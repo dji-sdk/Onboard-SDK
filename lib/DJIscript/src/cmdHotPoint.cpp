@@ -55,7 +55,7 @@ bool HP(Script *script, UserData data)
     {
         if (sscanf(inputData, "--%*s%s", command))
         {
-            strcat(command, "FM");
+            strcat(command, "HP");
             script->addTask((UserData)command, data);
         }
         else

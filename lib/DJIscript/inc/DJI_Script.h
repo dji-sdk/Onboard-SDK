@@ -10,16 +10,10 @@
 #include <DJI_WayPoint.h>
 #include <DJI_VirtualRC.h>
 
-#define TASK_ITEM(x)                                                                           \
+#define TASK_ITEM(x, r)                                                                        \
     {                                                                                          \
-        (UserData) #x, x                                                                       \
+        (UserData) #x, x, r                                                                    \
     }
-
-#define CMD_ITEM(x)                                                                            \
-    {                                                                                          \
-        (UserData) "--" #x, x                                                                  \
-    }
-
 namespace DJI
 {
 namespace onboardSDK
@@ -31,8 +25,8 @@ typedef bool (*Task)(DJI::onboardSDK::Script *, DJI::onboardSDK::UserData);
 class TaskList
 {
   public:
-    TaskList(Task t = 0, UserData Data = 0, time_t Timeout = 0, TaskList *Pre = 0,
-             TaskList *Next = 0);
+    TaskList(Task t = 0, UserData Data = 0, int Repeat = 0, time_t Timeout = 0,
+             TaskList *Pre = 0, TaskList *Next = 0);
 
     void run(Script *s);
 
@@ -53,12 +47,14 @@ class TaskList
     time_t timeout;
     UserData data;
     TaskList *next;
+    int repeat;
 };
 
 typedef struct TaskSetItem
 {
     UserData name;
     Task task;
+    int repeat;
 } TaskSetItem;
 
 class Script
@@ -71,7 +67,7 @@ class Script
     Script(CoreAPI *controlAPI = 0, TaskSetItem *set = 0, size_t SetSize = 0);
 
     void addTaskList(TaskList *list, TaskList *pre = 0);
-    void addTask(Task t, UserData Data = 0, time_t Timeout = 0);
+    void addTask(Task t, UserData Data = 0, int Repeat = 0, time_t Timeout = 0);
     bool addTask(UserData name, UserData Data = 0, time_t Timeout = 0);
 
     void If(Task condition, TaskList *True = 0, TaskList *False = 0);
@@ -80,7 +76,8 @@ class Script
     //! @note run must poll in a independent thread.
     void run();
 
-    virtual Task match(UserData name);
+    virtual TaskSetItem match(UserData name);
+    virtual bool quitCurrent();
 
   public:
     static void run(Script *script);
@@ -89,6 +86,25 @@ class Script
     static TaskList *addLoop(Task condition, TaskList *Loop);
 
     static bool emptyTask(Script *script, UserData data __UNUSED);
+
+  public:
+    ActivateData adata;
+
+    void setApi(CoreAPI *value);
+    void setFlight(Flight *value);
+    void setFollow(Follow *value);
+    void setCamera(Camera *value);
+    void setHotpoint(HotPoint *value);
+    void setVirtualRC(VirtualRC *value);
+    void setWaypoint(WayPoint *value);
+
+    CoreAPI *getApi() const;
+    Flight *getFlight() const;
+    Follow *getFollow() const;
+    HotPoint *getHotpoint() const;
+    VirtualRC *getVirtualRC() const;
+    Camera *getCamera() const;
+    WayPoint *getWaypoint() const;
 
   private:
     TaskList *taskTree;
@@ -102,17 +118,6 @@ class Script
     Flight *flight;
     Camera *camera;
     Follow *follow;
-
-  public:
-    ActivateData adata;
-    void setApi(CoreAPI *value);
-    void setFlight(Flight *value);
-    void setFollow(Follow *value);
-    void setHotpoint(HotPoint *value);
-    CoreAPI *getApi() const;
-    Flight *getFlight() const;
-    Follow *getFollow() const;
-    HotPoint *getHotpoint() const;
 };
 } // namespace onboardSDK
 } // namespace DJI

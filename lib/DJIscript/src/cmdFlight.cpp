@@ -60,7 +60,7 @@ bool FC(Script *script, UserData data)
     else
     {
         sscanf(inputData, "--%*s%s", command);
-        strcat(command, "CA");
+        strcat(command, "FC");
         script->addTask((UserData)command, data);
     }
     return true;
@@ -91,7 +91,7 @@ bool mcFC(Script *script, UserData data)
     int flag;
     s >> flag;
 
-    if(flag)
+    if (flag)
         script->getFlight()->setArm(true);
     else
         script->getFlight()->setArm(false);
@@ -99,4 +99,18 @@ bool mcFC(Script *script, UserData data)
     return true;
 }
 
-bool flFC(Script *script, UserData data) { return true; }
+bool flFC(Script *script, UserData data)
+{
+    stringstream s;
+
+    s << (char *)data;
+    char drop[20];
+    s >> drop >> drop;
+    FlightData fd;
+
+    s >> fd.flag >> fd.x >> fd.y >> fd.z >> fd.yaw;
+
+    script->getFlight()->setFlight(&fd);
+
+    return true;
+}

@@ -34,15 +34,67 @@ bool CC(Script *script, UserData data)
     else
     {
         sscanf(inputData, "--%*s%s", command);
-        strcat(command, "CA");
+        strcat(command, "CC");
         script->addTask((UserData)command, data);
     }
     return true;
 }
 
-bool cmCC(Script *script, UserData data) { return true; }
+bool cmCC(Script *script, UserData data)
+{
+    stringstream s;
 
-bool agCC(Script *script, UserData data) { return true; }
+    s << (char *)data;
+    char drop[20];
+    s >> drop >> drop;
 
-bool sgCC(Script *script, UserData data) { return true; }
+    uint8_t f;
+    s >> f;
 
+    script->getCamera()->setCamera((Camera::CAMERA_CODE)f);
+
+    __DELETE(data);
+    script->addTask(waitInput);
+    return true;
+}
+
+bool agCC(Script *script, UserData data)
+{
+    stringstream s;
+
+    FollowData fdata;
+
+    s << (char *)data;
+    char drop[20];
+    s >> drop >> drop;
+
+    GimbalAngleData a;
+    s >> a.yaw >> a.roll >> a.pitch >> a.duration;
+    a.mode = 1;
+
+    script->getCamera()->setGimbalAngle(&a);
+
+    __DELETE(data);
+    script->addTask(waitInput);
+    return true;
+}
+
+bool sgCC(Script *script, UserData data)
+{
+    stringstream s;
+
+    FollowData fdata;
+
+    s << (char *)data;
+    char drop[20];
+    s >> drop >> drop;
+
+    GimbalSpeedData a;
+    s >> a.yaw >> a.roll >> a.pitch;
+
+    script->getCamera()->setGimbalSpeed(&a);
+
+    __DELETE(data);
+    script->addTask(waitInput);
+    return true;
+}

@@ -11,7 +11,7 @@ using namespace DJI::onboardSDK;
 
 bool FM(Script *script, UserData data)
 {
-    char* inputData = (char*)data;
+    char *inputData = (char *)data;
     char command[100];
     sscanf(inputData, "--%s", command);
     if (strcmp(command, "help") == 0)
@@ -26,7 +26,7 @@ bool FM(Script *script, UserData data)
         cout << "| - pause <nodata> pause follow mission                         |" << endl;
         cout << "| - restart <nodata> restart follow mission                     |" << endl;
         cout << "| - update <latitude> <longitude> <altitude>                    |" << endl;
-        cout << "|      update target position                                   |" << endl;
+        cout << "|          update target position                               |" << endl;
         cout << "|------------------DJI onboardSDK - Script Settings-------------|" << endl;
 
         script->addTask(waitInput);
@@ -45,14 +45,13 @@ bool FM(Script *script, UserData data)
     return true;
 }
 
-
 bool startFM(Script *script, UserData data)
 {
     stringstream s;
 
     FollowData fdata;
 
-    s << (char*)data;
+    s << (char *)data;
     char drop[20];
     s >> drop >> drop;
 
@@ -67,9 +66,7 @@ bool startFM(Script *script, UserData data)
     __DELETE(data);
     script->addTask(waitInput);
     return true;
-
 }
-
 
 bool stopFM(Script *script, UserData data)
 {
@@ -80,7 +77,6 @@ bool stopFM(Script *script, UserData data)
     return true;
 }
 
-
 bool pauseFM(Script *script, UserData data)
 {
     script->getFollow()->pause(true);
@@ -89,7 +85,6 @@ bool pauseFM(Script *script, UserData data)
     script->addTask(waitInput);
     return true;
 }
-
 
 bool restartFM(Script *script, UserData data)
 {
@@ -100,14 +95,13 @@ bool restartFM(Script *script, UserData data)
     return true;
 }
 
-
 bool updateFM(Script *script, UserData data)
 {
     stringstream s;
 
     FollowTarget fdata;
 
-    s << (char*)data;
+    s << (char *)data;
     char drop[20];
     s >> drop >> drop;
 

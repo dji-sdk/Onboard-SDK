@@ -26,10 +26,10 @@ void CoreAPI::init(HardDriver *Driver, CallBackHandler userRecvCallback,
     // driver->init();
 
     seq_num = 0;
-    filter.recv_index = 0;
-    filter.reuse_count = 0;
-    filter.reuse_index = 0;
-    filter.enc_enabled = 0;
+    filter.recvIndex = 0;
+    filter.reuseCount = 0;
+    filter.reuseIndex = 0;
+    filter.encode = 0;
     broadcastCallback.callback = 0;
     broadcastCallback.userData = 0;
     fromMobileCallback.callback = 0;
@@ -39,8 +39,8 @@ void CoreAPI::init(HardDriver *Driver, CallBackHandler userRecvCallback,
 
 #ifndef SDK_VERSION_2_3
     broadcastData.timeStamp.time = 0;
-    broadcastData.timeStamp.asr_ts = 0;
-    broadcastData.timeStamp.sync_flag = 0;
+    broadcastData.timeStamp.nanoTime = 0;
+    broadcastData.timeStamp.syncFlag = 0;
 #else
     broadcastData.timeStamp = 0;
 #endif // SDK_VERSION_2_3
@@ -60,25 +60,25 @@ CoreAPI::CoreAPI(HardDriver *Driver, CallBackHandler userRecvCallback, bool user
     // getVersion();
 }
 
-void CoreAPI::send(unsigned char session_mode, unsigned char is_enc, CMD_SET cmd_set,
-                   unsigned char cmd_id, void *pdata, int len, CallBack ack_callback,
-                   int timeout, int retry_time)
+void CoreAPI::send(unsigned char session, unsigned char is_enc, CMD_SET cmdSet,
+                   unsigned char cmdID, void *pdata, int len, CallBack ackCallback, int timeout,
+                   int retry)
 {
     Command param;
     unsigned char *ptemp = (unsigned char *)encodeSendData;
-    *ptemp++ = cmd_set;
-    *ptemp++ = cmd_id;
+    *ptemp++ = cmdSet;
+    *ptemp++ = cmdID;
 
     memcpy(encodeSendData + SET_CMD_SIZE, pdata, len);
 
-    param.handler = ack_callback;
-    param.session_mode = session_mode;
+    param.handler = ackCallback;
+    param.sessionMode = session;
     param.length = len + SET_CMD_SIZE;
     param.buf = encodeSendData;
-    param.retry_time = retry_time;
+    param.retry = retry;
 
     param.timeout = timeout;
-    param.need_encrypt = is_enc;
+    param.encrypt = is_enc;
 
     param.userData = 0;
 
@@ -97,13 +97,13 @@ void CoreAPI::send(unsigned char session_mode, bool is_enc, CMD_SET cmd_set,
     memcpy(encodeSendData + SET_CMD_SIZE, pdata, len);
 
     param.handler = ack_handler;
-    param.session_mode = session_mode;
+    param.sessionMode = session_mode;
     param.length = len + SET_CMD_SIZE;
     param.buf = encodeSendData;
-    param.retry_time = retry_time;
+    param.retry = retry_time;
 
     param.timeout = timeout;
-    param.need_encrypt = is_enc ? 1 : 0;
+    param.encrypt = is_enc ? 1 : 0;
 
     param.userData = userData;
 
@@ -118,9 +118,9 @@ void CoreAPI::ack(req_id_t req_id, unsigned char *ackdata, int len)
 
     memcpy(encodeACK, ackdata, len);
 
-    param.session_id = req_id.session_id;
-    param.seq_num = req_id.sequence_number;
-    param.need_encrypt = req_id.need_encrypt;
+    param.sessionID = req_id.session_id;
+    param.seqNum = req_id.sequence_number;
+    param.encrypt = req_id.need_encrypt;
     param.buf = encodeACK;
     param.length = len;
 
@@ -145,7 +145,8 @@ void CoreAPI::activate(ActivateData *data, CallBack callback, UserData userData)
 {
     data->app_ver = versionData.version;
     accountData = *data;
-    API_LOG(driver,STATUS_LOG,"version 0x%X",versionData.version);
+
+    API_LOG(driver, DEBUG_LOG, "version 0x%X/n", versionData.version);
 
     for (int i = 0; i < 32; ++i) data->app_bundle_id[i] = '9'; //! @note for ios verification
     send(2, 0, SET_ACTIVATION, CODE_ACTIVATE, (unsigned char *)&accountData,
@@ -288,7 +289,7 @@ void CoreAPI::activateCallback(CoreAPI *This, Header *header, UserData userData 
     else
     {
         API_LOG(This->driver, ERROR_LOG, "ACK is exception,seesion id %d,sequence %d\n",
-                header->sessionID, header->sequence_number);
+                header->sessionID, header->sequenceNumber);
     }
 }
 
@@ -307,7 +308,7 @@ void CoreAPI::sendToMobileCallback(CoreAPI *This, Header *header, UserData userD
     else
     {
         API_LOG(This->driver, ERROR_LOG, "ACK is exception,seesion id %d,sequence %d\n",
-                header->sessionID, header->sequence_number);
+                header->sessionID, header->sequenceNumber);
     }
 }
 
@@ -354,7 +355,7 @@ void CoreAPI::setControlCallback(CoreAPI *This, Header *header, UserData userDat
     else
     {
         API_LOG(This->driver, ERROR_LOG, "ACK is exception,seesion id %d,sequence %d\n",
-                header->sessionID, header->sequence_number);
+                header->sessionID, header->sequenceNumber);
     }
 
     switch (ack_data)

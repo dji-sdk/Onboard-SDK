@@ -11,7 +11,7 @@ class ConboardSDKScript : public Script
   public:
     ConboardSDKScript(CoreAPI* api);
 
-    Task match(const char* name);
+    TaskSetItem match(const char* name);
     void addTask(const char* Name, UserData Data = 0, time_t Timeout = 0);
 };
 

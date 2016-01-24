@@ -54,10 +54,10 @@ BroadcastData DJI::onboardSDK::CoreAPI::getBroadcastData() const { return broadc
 
 BatteryData DJI::onboardSDK::CoreAPI::getBatteryCapacity() const
 {
-    return broadcastData.capacity;
+    return broadcastData.battery;
 }
 
-CtrlInfoData DJI::onboardSDK::CoreAPI::getCtrlInfo() const { return broadcastData.ctrl_info; }
+CtrlInfoData DJI::onboardSDK::CoreAPI::getCtrlInfo() const { return broadcastData.ctrlInfo; }
 
 void DJI::onboardSDK::CoreAPI::broadcast(Header *header)
 {
@@ -81,9 +81,9 @@ void DJI::onboardSDK::CoreAPI::broadcast(Header *header)
     passData(*enableFlag, HAS_RC, &broadcastData.rc, pdata, sizeof(RadioData), len);
     passData(*enableFlag, HAS_GIMBAL, &broadcastData.gimbal, pdata, sizeof(GimbalData), len);
     passData(*enableFlag, HAS_STATUS, &broadcastData.status, pdata, sizeof(uint8_t), len);
-    passData(*enableFlag, HAS_BATTERY, &broadcastData.capacity, pdata, sizeof(BatteryData),
+    passData(*enableFlag, HAS_BATTERY, &broadcastData.battery, pdata, sizeof(BatteryData),
              len);
-    passData(*enableFlag, HAS_DEVICE, &broadcastData.ctrl_info, pdata, sizeof(CtrlInfoData),
+    passData(*enableFlag, HAS_DEVICE, &broadcastData.ctrlInfo, pdata, sizeof(CtrlInfoData),
              len);
 
     driver->freeMSG();
@@ -117,9 +117,9 @@ void DJI::onboardSDK::CoreAPI::recvReqData(Header *header)
                 if (header->sessionID > 0)
                 {
                     buf[0] = buf[1] = 0;
-                    param.session_id = header->sessionID;
-                    param.seq_num = header->sequence_number;
-                    param.need_encrypt = header->enc_type;
+                    param.sessionID = header->sessionID;
+                    param.seqNum = header->sequenceNumber;
+                    param.encrypt = header->enc;
                     param.buf = buf;
                     param.length = 2;
                     ackInterface(&param);

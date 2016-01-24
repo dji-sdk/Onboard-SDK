@@ -27,12 +27,12 @@
  *  Just use it please. Maybe these names will change somehow.
  * */
 
-bool WP         (DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
-bool initWP         (DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
-bool startWP         (DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
-bool stopWP         (DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
-bool pauseWP         (DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
-bool retartWP         (DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
-bool apWP         (DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
+bool WP(DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
+bool initWP(DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
+bool startWP(DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
+bool stopWP(DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
+bool pauseWP(DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
+bool restartWP(DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
+bool apWP(DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
 
 #endif // CMDWAYPOINT_H

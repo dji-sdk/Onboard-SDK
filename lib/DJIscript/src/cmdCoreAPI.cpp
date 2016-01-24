@@ -74,8 +74,8 @@ bool bdCA(Script* script, UserData data)
             {
                 case 0:
                     cout << "Time: " << bd.timeStamp.time << endl;
-                    cout << "Nano: " << bd.timeStamp.asr_ts << endl;
-                    cout << "Sync: " << (int)bd.timeStamp.sync_flag << endl;
+                    cout << "Nano: " << bd.timeStamp.nanoTime << endl;
+                    cout << "Sync: " << (int)bd.timeStamp.syncFlag << endl;
                     break;
                 case 1:
                     cout << "Q0: " << bd.q.q0 << endl;
@@ -122,12 +122,12 @@ bool bdCA(Script* script, UserData data)
                     cout << "Status: " << (int)bd.status << endl;
                     break;
                 case 9:
-                    cout << "Bettery: " << (int)bd.capacity << endl;
+                    cout << "Bettery: " << (int)bd.battery << endl;
                     break;
                 case 10:
-                    cout << "Control: " << (int)bd.ctrl_info.data << endl;
-                    cout << "Device:  " << (int)bd.ctrl_info.device << endl;
-                    cout << "Status:  " << (int)bd.ctrl_info.signature << endl;
+                    cout << "Control: " << (int)bd.ctrlInfo.data << endl;
+                    cout << "Device:  " << (int)bd.ctrlInfo.device << endl;
+                    cout << "Status:  " << (int)bd.ctrlInfo.signature << endl;
                     break;
             }
             cout << endl;
@@ -212,9 +212,9 @@ bool ctCA(Script* script, UserData data)
     s >> boolean;
 
     if (boolean)
-        script->getApi()->setControl(false);
-    else
         script->getApi()->setControl(true);
+    else
+        script->getApi()->setControl(false);
 
     __DELETE(data);
     script->addTask(waitInput);

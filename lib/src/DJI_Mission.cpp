@@ -100,7 +100,7 @@ void missionCallback(CoreAPI *This, Header *header, UserData userdata __UNUSED)
     else
     {
         API_LOG(This->getDriver(), ERROR_LOG, "ACK is exception,seesion id %d,sequence %d\n",
-                header->sessionID, header->sequence_number);
+                header->sessionID, header->sequenceNumber);
     }
 }
 

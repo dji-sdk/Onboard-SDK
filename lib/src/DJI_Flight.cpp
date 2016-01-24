@@ -11,8 +11,8 @@ void Flight::setApi(CoreAPI *value) { api = value; }
 
 void Flight::task(TASK taskname, CallBack TaskCallback, UserData userData)
 {
-    taskData.cmd_data = taskname;
-    taskData.cmd_sequence++;
+    taskData.cmdData = taskname;
+    taskData.cmdSequence++;
 
     api->send(2, encript, SET_CONTROL, CODE_TASK, (unsigned char *)&taskData,
               sizeof(taskData), 100, 3,
@@ -65,7 +65,7 @@ void Flight::armCallback(CoreAPI *This, Header *header,
     {
         API_LOG(This->getDriver(), ERROR_LOG,
                 "ACK is exception,seesion id %d,sequence %d\n",
-                header->sessionID, header->sequence_number);
+                header->sessionID, header->sequenceNumber);
     }
 }
 
@@ -85,6 +85,6 @@ void Flight::taskCallback(CoreAPI *This, Header *header,
     {
         API_LOG(This->getDriver(), ERROR_LOG,
                 "ACK is exception,seesion id %d,sequence %d\n",
-                header->sessionID, header->sequence_number);
+                header->sessionID, header->sequenceNumber);
     }
 }
