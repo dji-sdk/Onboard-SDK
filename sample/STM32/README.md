@@ -152,8 +152,8 @@ PC上，所以在PC上的串口调试助手中**发送端选择HEX发送**，**�
 https://github.com/Awilonk/OnBoardSDK_STM32
 
 ##Introduction
-This project use stm32f407Discovery demoboard for testing,Keil uVision5 to complie.Use serial port interface to communicate with demoboard or send out command to M100.  
-Use 4-wire-serial interface.If your computer do no has one,USB-TTL serial cable is necessary.CP2102 is recommend.Before using this example program,make sure you have **read all [documents](https://developer.dji.com/cn/onboard-sdk/documentation/ProgrammingGuide/) about OnboardSDK carefully.**  
+This project uses stm32f407Discovery demoboard for testing, Keil uVision5 to complie. Serial port works as an interface to communicate with demoboard or send out command to M100.  
+Use 4-wire-serial interface. If your computer do no has one, USB-TTL serial cable is necessary. CP2102 is recommend. Before using this example program, make sure you have **read all [documents](https://developer.dji.com/cn/onboard-sdk/documentation/ProgrammingGuide/) about OnboardSDK carefully.**  
 
 
 ##content
@@ -170,32 +170,32 @@ Use 4-wire-serial interface.If your computer do no has one,USB-TTL serial cable 
 
 ##Hardware Installation
 
-Use USART2 for debug.PB10,PB11 as stm32's TX,RX.When connect to an external device ,link stm32-board's Rx to your device's TX.BaudRate is 115200.BaudRate here must be the same as BaudRate in your Serial debugging assistant.;
+Choose USART2 for debug. PB10, PB11 as stm32's TX, RX. When connect to an external device, link stm32-board's Rx to your device's TX. BaudRate is 115200.BaudRate here must be the same as BaudRate in your Serial debugging assistant.
 
-Use USART3 for communicating with M100.PA2,PA3 as TX,RX,which should be plug in the "USART_CAN2" prot.The BaudRate here should equal to BaudRate of N1 flight control system on M100,which can be adjust on "DJI Assistant". 
+Use USART3 for communicating with M100. PA2, PA3 as TX, RX, which should be plug in the "USART_CAN2" prot. The BaudRate here should equal to BaudRate of N1 flight control system on M100, which can be adjust on "DJI Assistant". 
 ![硬件串口](image/硬件串口.png)
 
 ##Getting Start
 
->The first connection between stm32f4 and M100 **MUST** use your mobile device and remote control.[More about activate](https://developer.dji.com/cn/onboard-sdk/documentation/ActivationGuide/)  
->After the first activate,a VIRTUAL REMOTE CONTROL can take the place of remote control.  
+>The first connection between stm32f4 and M100 **MUST** use your mobile device and remote control. [More about activate](https://developer.dji.com/cn/onboard-sdk/documentation/ActivationGuide/)  
+>After the first activate, a VIRTUAL REMOTE CONTROL can take the place of remote control.  
 
 ###How to operate
 
-1. power on your M100 **warning!:remove the propellers if you are no sure !!**
-2. when it's booted,connect stm32 with M100.Since there is no 3v/5v power interface on M100.**Please settle it by yourself.**Using a 26v to 5v Voltage Converter or UBEC(Ultra Battery Elimination Circuit) or ever a carrying a POWER BANK is OK.
+1. power on your M100 **WARNING! Remove the propellers if they are no in use!!**
+2. when it's booted,connect stm32 with M100. Since there is no 3v/5v power interface on M100. **Please settle it by yourself. **Using a 26v to 5v Voltage Converter or UBEC(Ultra Battery Elimination Circuit) or ever a carrying a POWER BANK is OK.
 3. Connect stm32 with PC by serial interface.Extension cord and wireless seral port are recommened when you are doing a test.
 
-All the communication in this program **has been set to UNENCRYPTED**.If necessary,configre it in the program by yourself.
+All the communication in this program **has been set to UNENCRYPTED**. If necessary, configre it in the program by yourself.
 
-If the Hardware has been set correctly,reset your stm32.If everything is ok,there would be a version infomation callback by M100.Therefrom,system is ready for your command.
+If the Hardware has been set correctly,reset your stm32. If everything is ok,there would be a version infomation callback by M100. Therefrom, system is ready for your command.
 ![初始化成功](/image/初始化成功.png)
 
 ###Command Format
 
 + The protocol frame consist of Frame Header,Command,Data(optional),Frame Footer;  
 - The first and second byte is frame header.  
-- The third and fourth is command .  
+- The third and fourth is command.  
 - Followed is data(optional).  
 + The last byte is frame booter.  
 
@@ -229,8 +229,8 @@ The Localpositionnavigation function need to enter parameter by yourself.Here gi
 
 0xFA 0xFB 0x04 0x01 0x91 0x00 0x00 0x00 0x00 0x00 0x20 0x00 0x00 0xFE
 
-Amoug them, 0x04 0x01 means to choose the Localpositionnacigation.  
-0x91 is the Control mode byte which is choosing *VERT_POS* ，*HORI_POS* ，*YAW_RATE*， *Ground系* ，*stable mode*.  
+Among them, 0x04 0x01 means local position navigation.  
+0x91 is the Control mode byte which is choosing *VERT_POS* ，*HORI_POS* ，*YAW_RATE*， *Frame* ，*Stable Mode*.  
 
 
 + 0x00 0x00 is the distance of X direction is 0;
@@ -240,7 +240,7 @@ Amoug them, 0x04 0x01 means to choose the Localpositionnacigation.
   
 
 
-*Attention:The input of HORI_POS is a position offset instead of an actual position. This design aims to take both GPS flight and vision-based flight into consideration. If the developer wants to use GPS navigation, the GPS information sent by the UAV can be used to calculate position offset. While in vision-based flight application, developers should have their own positioning device (along with Gudiance or GPS to provide velocity measurement) to do position control. For example, xuhao1 SDK package implements a GPS-based position control where target position can be passed as GPS coordinate.*   
+*Attention:The input of HORI_POS is a position offset instead of an actual position. This design aims to take both GPS flight and vision-based flight into consideration. If the developer wants to use GPS navigation, the GPS information sent by the UAV can be used to calculate position offset. While in vision-based flight application, developers should have their own positioning device (along with Gudiance or GPS to provide velocity measurement) to do position control.*   
 
 
 ###Movement control mode
@@ -252,7 +252,7 @@ Attitude control mode needed user sending flight data.data include:
 - Throttle or Z-axis control value
 + Yaw control value  
 
-Since this example program use serial assistant to send cmd and data to the UAV,we use data format as below to send flight data to the UAV.  
+Since this example program use serial assistant to send cmd and data to the UAV, we use data format as below to send flight data to the UAV.  
 
   
 0xFA 0xFB 0x04 0x01 **ctrl_flag,  roll_or_x_L,  roll_or_x_H,   pitch_or_y_L,  pitch_or_y_H,   thr_z_L,   thr_z_H,  yaw_L,  yaw_H** 0xFE
@@ -261,7 +261,7 @@ Among this frame,every single data consist of two bytes.Default type of data is 
  Low byte comes first and Hight byte comes later.  
 
 
-**e.g.**To enter 2564 to roll_or_x.First,transform to hexadecimal,which is 0xA04.Low byte 0x04 send first,high byte 0x0A comes later.  
+e.g. To enter 2564 to roll_or_x.First,transform to hexadecimal,which is 0xA04. Low byte 0x04 send first,high byte 0x0A comes later.  
 i.e. 0xFA 0xFB 0x04 0x01 0x91 **0x0A 0x04**.......0xFE    
 
 Here is an example:  
@@ -271,10 +271,10 @@ Here is an example:
 + **step 3**: Pay attention to the lower right corner of simulator,UAV is flying on the movement you specify.  ![flying](/image/flyaway.png)   
 
 
-If you are unfamiliar with this data transform,a convert flight data displayer is provided.The only difference from the Input flight data mode is it would no really send out data,it just display it.You can also use it as a calculator.
+If you are unfamiliar with this data transform,a convert flight data displayer is provided. The only difference from the Input flight data mode is it would no really send out data,it just display it. You can also use it as a calculator.
 
 
-It's worth noting that,once using Input flight data mode,the data you input would sequential send to the UAV.Sending a cmd start with other from 0x04 0x01 would **stop** sending data,UAV would try to stop and hover there. 
+It's worth noting that,once using Input flight data mode, the data you input would sequential send to the UAV. Sending a cmd start with other from 0x04 0x01 would **stop** sending data, UAV would try to stop and hover there. 
 
 ###Get Broadcastdata
 To get broadcastdata send back by the UAV,send cmd 0x08.Timestamp and battery capacity remain are printed now.Add more if you needed.
@@ -289,7 +289,7 @@ A normal order of it are as below:
 
 ![flow](image/flow.png)  
 
-If using Virtual RC,the real RC **can no control the UAV**.When losing signal of Virtual RC longer than 1s,UAV would Land or cutt off to real RC.  
+If using Virtual RC,the real RC **can no control the UAV**. When losing signal of Virtual RC longer than 1s, UAV would Land or cutt off to real RC.  
 This program choose to land after losing Virtual RC  
 
 
