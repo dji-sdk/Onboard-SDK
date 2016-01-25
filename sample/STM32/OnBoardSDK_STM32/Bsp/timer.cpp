@@ -94,7 +94,7 @@ void TIM2_IRQHandler()
 {
 	if(TIM_GetITStatus(TIM2,TIM_IT_Update)==SET)
 		{
-		 if((Rx_buff[2]==0x04)&&(Rx_buff[3]==0x01))
+		 if(Rx_buff[2]==0x04)
 				{	
 				flight.setFlight(&flightData);
 				}

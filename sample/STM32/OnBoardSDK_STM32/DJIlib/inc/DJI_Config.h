@@ -34,8 +34,8 @@
 #define API_ERROR_DATA
 #define API_STATUS_DATA
 
-//#define SDK_VERSION_2_3
-#define SDK_VERSION_3_1
+#define SDK_VERSION_2_3
+//#define SDK_VERSION_3_1
 //#define SDK_VERSION_3_0_A3
 //#define SDK_VERSION_3_1_A3
 #include <DJI_Version.h>

@@ -18,11 +18,11 @@ float Hex2int(char HighBit,char LowBit)
 {	//turn two 8-bits hex number into a signed integer,which range of-32767~32727
 	if(HighBit&0x80)
 	{//
-		return (-(((HighBit&0x7f)<<8)|LowBit)/100);
+		return (-(((HighBit&0x7f)<<8)|LowBit)/100.0);
 	}
 	else
 	{//MSB is 1 means a negative number    e.g MSB means most significant bit
-		return ((((HighBit&0x7f)<<8)|LowBit)/100);
+		return ((((HighBit&0x7f)<<8)|LowBit)/100.0);
 	}
 }
 

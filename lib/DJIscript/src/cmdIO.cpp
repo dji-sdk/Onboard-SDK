@@ -16,10 +16,6 @@ bool addTask(Script* script, UserData data __UNUSED)
     cout << "| - < CA > core API module                                      |" << endl;
     cout << "| - < FC > flight control module                                |" << endl;
     cout << "| - < CC > camera control module                                |" << endl;
-    cout << "| - < VC > virtual remote control module                        |" << endl;
-    cout << "| - < FM > follow mission module                                |" << endl;
-    cout << "| - < WP > waypoint mission module                              |" << endl;
-    cout << "| - < HP > hotpoint mission module                              |" << endl;
     cout << "| - < SS > script settings module                               |" << endl;
     cout << "|                                                               |" << endl;
     cout << "| Command examples:                                             |" << endl;

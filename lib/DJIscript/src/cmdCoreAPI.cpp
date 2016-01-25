@@ -20,10 +20,6 @@ bool CA(Script* script __UNUSED, UserData data)
         cout << "| --CA <command> <data>                                         |" << endl;
         cout << "| - ac <N/A> activate, load data from files. See also SS load   |" << endl;
         cout << "| - vs <N/A> read flight control version                        |" << endl;
-        cout << "| - bf {<channel> <frequency>} set broadcast frequency          |" << endl;
-        cout << "|      <channel> 0 ~ 15                                         |" << endl;
-        cout << "|      <frequency> 0 1 10 50 100                                |" << endl;
-        cout << "|                  other input will hold the latest frequency   |" << endl;
         cout << "| - bd <flag> show broadcast data based on flag.                |" << endl;
         cout << "|      <flag> 0x0001 time                                       |" << endl;
         cout << "|             0x0002 quaternion                                 |" << endl;
@@ -38,7 +34,6 @@ bool CA(Script* script __UNUSED, UserData data)
         cout << "|             0x0400 battery                                    |" << endl;
         cout << "|             0x0800 control status                             |" << endl;
         cout << "| - ct <bool> true for obtain control, false for release control|" << endl;
-        cout << "| - sy <freq> set synchronized frequency in HZ                  |" << endl;
         cout << "|------------------DJI onboardSDK - Core API--------------------|" << endl;
 
         __DELETE(data);
@@ -73,9 +68,7 @@ bool bdCA(Script* script, UserData data)
             switch (i)
             {
                 case 0:
-                    cout << "Time: " << bd.timeStamp.time << endl;
-                    cout << "Nano: " << bd.timeStamp.nanoTime << endl;
-                    cout << "Sync: " << (int)bd.timeStamp.syncFlag << endl;
+                    cout << "Time: " << bd.timeStamp << endl;
                     break;
                 case 1:
                     cout << "Q0: " << bd.q.q0 << endl;
@@ -125,7 +118,6 @@ bool bdCA(Script* script, UserData data)
                     cout << "Bettery: " << (int)bd.battery << endl;
                     break;
                 case 10:
-                    cout << "Control: " << (int)bd.ctrlInfo.data << endl;
                     cout << "Device:  " << (int)bd.ctrlInfo.device << endl;
                     cout << "Status:  " << (int)bd.ctrlInfo.signature << endl;
                     break;
