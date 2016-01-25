@@ -391,10 +391,10 @@ void DJIonboardSDK::on_comboBox_portName_currentIndexChanged(int index)
 void DJIonboardSDK::on_btn_coreActive_clicked()
 {
     ActivateData data;
-    data.app_api_level = 2;
-    data.app_id = ui->lineEdit_ID->text().toInt();
+    data.reserved = 2;
+    data.ID = ui->lineEdit_ID->text().toInt();
     *key = ui->lineEdit_Key->text().toLocal8Bit();
-    data.app_key = key->data(); //! @warning memory leak fixme
+    data.encKey = key->data(); //! @warning memory leak fixme
     api->activate(&data, DJIonboardSDK::activationCallback, this);
 }
 

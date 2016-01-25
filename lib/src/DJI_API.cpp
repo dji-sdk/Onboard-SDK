@@ -143,12 +143,13 @@ void CoreAPI::getVersion(CallBack callback, UserData userData)
 
 void CoreAPI::activate(ActivateData *data, CallBack callback, UserData userData)
 {
-    data->app_ver = versionData.version;
+    data->version = versionData.version;
     accountData = *data;
+    accountData.reserved = 2;
 
     API_LOG(driver, DEBUG_LOG, "version 0x%X/n", versionData.version);
 
-    for (int i = 0; i < 32; ++i) data->app_bundle_id[i] = '9'; //! @note for ios verification
+    for (int i = 0; i < 32; ++i) data->iosID[i] = '9'; //! @note for ios verification
     send(2, 0, SET_ACTIVATION, CODE_ACTIVATE, (unsigned char *)&accountData,
          sizeof(accountData) - sizeof(char *), 1000, 3,
          callback ? callback : CoreAPI::activateCallback, userData);
@@ -243,8 +244,8 @@ void CoreAPI::activateCallback(CoreAPI *This, Header *header, UserData userData 
                 This->broadcastData.activation = 1;
                 This->getDriver()->freeMSG();
 
-                if (This->accountData.app_key)
-                    This->setKey(This->accountData.app_key);
+                if (This->accountData.encKey)
+                    This->setKey(This->accountData.encKey);
                 return;
             case ACK_ACTIVE_NEW_DEVICE:
                 API_LOG(This->driver, STATUS_LOG, "new device, please link DJIGO to your "

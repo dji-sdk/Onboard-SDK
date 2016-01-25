@@ -19,7 +19,7 @@ class GridmapKernel
     void nextView();
 
 public:
-    static const size_t mpsz = 128;
+    static const size_t mpsz = 256;
 
     Point *getView() const;
     void setView(Point *value);

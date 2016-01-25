@@ -57,11 +57,11 @@ bool loadSS(Script* script, UserData data)
             {
                 int id;
                 if (sscanf(line, "ID:%d", &id))
-                    script->adata.app_id = id;
-                script->adata.app_api_level = 2;
-                script->adata.app_ver = SDK_VERSION;
+                    script->adata.ID = id;
+                script->adata.reserved = 2;
+                script->adata.version = SDK_VERSION;
                 if (sscanf(line, "KEY:%s", key))
-                    script->adata.app_key = key;
+                    script->adata.encKey = key;
             }
             cout << line << endl;
         }

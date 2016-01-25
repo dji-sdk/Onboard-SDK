@@ -64,7 +64,7 @@ TaskSetItem cmdTaskSet[] = {
     TASK_ITEM(startWP, 0),  //
     TASK_ITEM(stopWP, 0),   //
     TASK_ITEM(pauseWP, 0),  //
-    TASK_ITEM(retartWP, 0), //
+    TASK_ITEM(restartWP, 0), //
     TASK_ITEM(apWP, 0),		//
 
     TASK_ITEM(CC, 0),   //
@@ -80,9 +80,9 @@ ConboardSDKScript::ConboardSDKScript(CoreAPI* api)
 
 TaskSetItem ConboardSDKScript::match(const char* name) { return Script::match((UserData)name); }
 
-void ConboardSDKScript::addTask(const char* Name, UserData Data,  time_t Timeout)
+void ConboardSDKScript::addTask(const char* Name, UserData Data, time_t Timeout)
 {
-    Script::addTask((UserData)Name, Data,Timeout);
+    Script::addTask((UserData)Name, Data, Timeout);
 }
 
 ScriptThread::ScriptThread(ConboardSDKScript* Script, QObject* parent) : QThread(parent)

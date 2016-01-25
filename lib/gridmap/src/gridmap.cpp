@@ -5,8 +5,8 @@
 
 Gridmap::Gridmap(QWidget *parent) : QOpenGLWidget(parent)
 {
-    for (int i = 0; i < 100000; ++i)
-        kernel.addPoint(rand() % 128, rand() % 128, rand() % 128);
+    for (int i = 0; i < 200000; ++i)
+        kernel.addPoint(rand() % kernel.mpsz, rand() % kernel.mpsz, rand() % kernel.mpsz);
 }
 
 Gridmap::~Gridmap() {}
@@ -99,7 +99,7 @@ void Gridmap::resizeGL(int width, int height)
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     GLfloat zNear = 0.1;
-    GLfloat zFar = 1000.0;
+    GLfloat zFar = 10000.0;
     GLfloat aspect = (GLfloat)width / (GLfloat)height;
     GLfloat fH = tan(GLfloat(90.0 / 360.0 * 3.14159)) * zNear;
     GLfloat fW = fH * aspect;
@@ -120,10 +120,17 @@ void Gridmap::paintGL()
     glBegin(GL_QUADS);
     DJI::vision::GridmapKernel::Point *v = kernel.getView();
     for (size_t i = 0; i < DJI::vision::GridmapKernel::mpsz; ++i)
+    {
+//        glColor4f(0.5 + (0.5 * i / DJI::vision::GridmapKernel::mpsz),
+//                  0.5 + (0.5 * i / DJI::vision::GridmapKernel::mpsz),
+//                  0.5 + (0.5 * i / DJI::vision::GridmapKernel::mpsz), 0.8);
         for (size_t j = 0; j < DJI::vision::GridmapKernel::mpsz; ++j)
             for (size_t k = 0; k < DJI::vision::GridmapKernel::mpsz; ++k)
+            {
                 if (v[i * DJI::vision::GridmapKernel::mpsz * DJI::vision::GridmapKernel::mpsz +
                       j * DJI::vision::GridmapKernel::mpsz + k] == true)
                     drawBox(i, j, k, 0.8, QColor(255, 255, 0));
+            }
+    }
     glEnd();
 }
