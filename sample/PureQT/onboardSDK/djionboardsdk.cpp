@@ -155,7 +155,6 @@ void DJIonboardSDK::initScript()
 DJIonboardSDK::DJIonboardSDK(QWidget *parent) : QMainWindow(parent), ui(new Ui::DJIonboardSDK)
 {
     ui->setupUi(this);
-    gm = new Gridmap(0);
     on_tabWidget_currentChanged(ui->tabWidget->currentIndex());
 
     //! @code mission webview
@@ -878,7 +877,7 @@ void DJIonboardSDK::on_cb_camera_send_clicked(bool checked)
         cameraSend->stop();
 }
 
-void DJIonboardSDK::on_btn_webLoad_clicked() { webView->load(QUrl("http://10.60.23.193")); }
+void DJIonboardSDK::on_btn_webLoad_clicked() { webView->load(QUrl("")); }
 
 void DJIonboardSDK::upDateTime()
 {
@@ -1457,17 +1456,12 @@ void DJIonboardSDK::on_btn_script_run_clicked()
 {
     //! @todo remap stdin and stdout
     //!
-    QString data = ui->te_script_code->toPlainText();
-    scriptSDK->addTask(data.toLocal8Bit().data());
-    // ui->tb_script_output->
+
 }
 
 void DJIonboardSDK::on_tabWidget_currentChanged(int index)
 {
-    if (index == 4)
-        ui->gridLayout_swarm->addWidget(gm, 0, 1, 1, 1);
-    if (index == 3)
-        ui->verticalLayout_57->addWidget(gm);
+
 }
 
 void DJIonboardSDK::on_actionOpen_O_triggered()

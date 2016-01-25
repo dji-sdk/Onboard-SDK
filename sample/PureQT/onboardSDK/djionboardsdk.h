@@ -11,11 +11,8 @@
 #include <QList>
 
 #include <QComboBox>
-#include <gridmapKernel.h>
 
 #include <fstream>
-
-#include <gridmap.h>
 
 #include "QonboardSDK.h"
 #include "conboardsdktask.h"
@@ -273,7 +270,6 @@ private:
     //! @note a better web engine, not available now
     //    QWebEngineView *webView;
 
-    Gridmap *gm;
 };
 
 #endif // DJIONBOARDSDK_H

@@ -31,7 +31,6 @@ SOURCES += main.cpp\
     ../../../lib/DJIscript/src/DJI_Script.cpp \
     ../../../lib/DJIscript/src/DJI_Interpreter.cpp \
     highlighter.cpp \
-    ../../../lib/gridmap/src/gridmapKernel.cpp \
     ../../../lib/DJIscript/src/cmdCamera.cpp \
     ../../../lib/DJIscript/src/cmdCoreAPI.cpp \
     ../../../lib/DJIscript/src/cmdFlight.cpp \
@@ -41,8 +40,7 @@ SOURCES += main.cpp\
     ../../../lib/DJIscript/src/cmdSettings.cpp \
     ../../../lib/DJIscript/src/cmdVirtualRC.cpp \
     ../../../lib/DJIscript/src/cmdWayPoint.cpp \
-    conboardsdktask.cpp \
-    ../../../lib/gridmap/src/gridmap.cpp
+    conboardsdktask.cpp
 
 HEADERS  += djionboardsdk.h \
     QonboardSDK.h \
@@ -64,7 +62,6 @@ HEADERS  += djionboardsdk.h \
     ../../../lib/inc/DJI_WayPoint.h \
     ../../../lib/DJIscript/inc/DJI_Script.h \
     ../../../lib/DJIscript/inc/DJI_Interpreter.h \
-    ../../../lib/gridmap/inc/gridmapKernel.h \
     ../../../lib/DJIscript/inc/cmdCamera.h \
     ../../../lib/DJIscript/inc/cmdCoreAPI.h \
     ../../../lib/DJIscript/inc/cmdFlight.h \
@@ -74,15 +71,13 @@ HEADERS  += djionboardsdk.h \
     ../../../lib/DJIscript/inc/cmdSettings.h \
     ../../../lib/DJIscript/inc/cmdVirtualRC.h \
     ../../../lib/DJIscript/inc/cmdWayPoint.h \
-    conboardsdktask.h \
-    ../../../lib/gridmap/inc/gridmap.h
+    conboardsdktask.h
 
 FORMS    += djionboardsdk.ui
 
 INCLUDEPATH += \
             ../../../lib/inc \
             ../../../lib/DJIscript/inc \
-            ../../../lib/gridmap/inc \
 
 DEFINES += QT
 

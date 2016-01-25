@@ -42,7 +42,7 @@ In general, in the ground frame, a general definition for the UAV orientation is
 </tr>
 <tr>
   <td>bit 0 </td>
-  <td>0b0: yaw frame is ground frame<br>0b1: yaw frame is body frame</td>
+  <td>0b0: non-stable mode<br>0b1: stable mode</td>
 </tr>
 </table>
 
@@ -53,7 +53,7 @@ We suggest developers do not use VERT_POS control mode indoor when your UAV does
 > Please note that if the following conditions are met that the control mode is functional:
 > 
 * Only when the GPS signal is good (health\_flag >=3)，horizontal position control (HORI_POS) related control modes can be used.
-* Only when GPS signal is good (health\_flag >=3)，or when Gudiance system is working properly with N1 Autopilot，horizontal velocity control（HORI_VEL）related control modes can be used.
+* Only when GPS signal is good (health\_flag >=3)，or when Gudiance system is working properly with Autopilot，horizontal velocity control（HORI_VEL）related control modes can be used.
 
 
 <table>
@@ -78,11 +78,11 @@ We suggest developers do not use VERT_POS control mode indoor when your UAV does
 
 <tr>
   <td rowspan="3">Horizontal</td>
-  <td>HORI_ATTI_TILT_ANG*</td>
+  <td>HORI_ATTI_TILT_ANG</td>
   <td>Pitch & roll angle, need to be referenced to either the ground or body frame</td>
 </tr>
 <tr>
-  <td>HORI_POS**</td>
+  <td>HORI_POS*</td>
   <td>Position offsets of pitch & roll directions, need to be referenced to either the ground or body frame</td>
 </tr>
 <tr>
@@ -93,7 +93,7 @@ We suggest developers do not use VERT_POS control mode indoor when your UAV does
 <tr>
   <td rowspan="2">Yaw</td>
   <td>YAW_ANG</td>
-  <td>Yaw angle is referenced to the ground frame. In this control mode, Ground frame is enforeced in N1 Autopilot</td>
+  <td>Yaw angle is referenced to the ground frame. In this control mode, Ground frame is enforeced in Autopilot</td>
 </tr>
 <tr>
   <td>YAW_RATE</td>
@@ -101,36 +101,43 @@ We suggest developers do not use VERT_POS control mode indoor when your UAV does
 </tr>
 </table>
 
+<!-- **HORI_ATTI_TILT_ANG模式控制量如Down图，DJI飞控采用水平面直接进行整个平面旋转。其中平面旋转角度为Θ,旋转方向与x轴或roll轴方向角度为γ。输入参量Θx=Θ*cos(γ),Θy=Θ*sin(γ)。(当采用Ground坐标系时γ为飞行方向与正北方向夹角，此时飞行器飞行状态与IOC模式相似；当采用Body坐标系时γ为飞行方向与飞行器机头方向夹角，此时飞行器飞行状态与遥控器Down的姿态模式相似)* 
+
+<div align="center">
+<img src="Images/HORI_ATTI_TILT_ANG.jpg" alt="HORI_ATTI_TILT_ANG" width="540">
+</div> -->
+
+
 **The input of HORI_POS is a position offset instead of an actual position. This design aims to take both GPS flight and vision-based flight into consideration. If the developer wants to use GPS navigation, the GPS information sent by the UAV can be used to calculate position offset. While in vision-based flight application, developers should have their own positioning device (along with Gudiance or GPS to provide velocity measurement) to do position control. **
 
 
 
 ### Combinations  
 
-By specifying the `control_mode_byte`, 14 control modes can be constructed :
+Attitude control accuracy is about 0.5 degrees, speed control accuracy of about 0.2 m/s.
 
-|Index|Combinations|Input Data Range<br>(throttle/pitch&roll/yaw)|control_mode_byte*|
+|Index|Combinations|Input Data Range<br>(throttle/pitch&roll/yaw)|control_mode_byte|
 |---|------------|---------------------------------------------|--------------|
-|1|VERT_VEL<br>HORI_ATTI_TILT_ANG<br>YAW_ANG|-4 m/s ~ 4 m/s<br>-30 degree ~ 30 degree<br>-180 degree ~ 180 degree|0b00000xx0|
-|2**|VERT_VEL<br>HORI_ATTI_TILT_ANG<br>YAW_RATE|-4 m/s ~ 4 m/s<br>-30 degree ~ 30 degree<br>-100 degree/s ~ 100 degree/s|0b00001xxy|
-|3|VERT_VEL<br>HORI_VEL<br>YAW_ANG|-4 m/s ~ 4 m/s<br>-10 m/s ~ 10 m/s<br>-180 degree ~ 180 degree|0b01000xx0|
+|1|VERT_VEL<br>HORI_ATTI_TILT_ANG<br>YAW_ANG|-4 m/s ~ 4 m/s<br>-30 degree ~ 30 degree<br>-180 degree ~ 180 degree|0b00000xxy|
+|2|VERT_VEL<br>HORI_ATTI_TILT_ANG<br>YAW_RATE|-4 m/s ~ 4 m/s<br>-30 degree ~ 30 degree<br>-100 degree/s ~ 100 degree/s|0b00001xxy|
+|3|VERT_VEL<br>HORI_VEL<br>YAW_ANG|-4 m/s ~ 4 m/s<br>-10 m/s ~ 10 m/s<br>-180 degree ~ 180 degree|0b01000xxy|
 |4|VERT_VEL<br>HORI_VEL<br>YAW_RATE|-4 m/s ~ 4 m/s<br>-10 m/s ~ 10 m/s<br>-100 degree/s ~ 100 degree/s|0b01001xxy|
-|5|VERT_VEL<br>HORI_POS<br>YAW_ANG|-4 m/s ~ 4 m/s<br>offset in meters (no limit)<br>-180 degree ~ 180 degree|0b10000xx0|
+|5|VERT_VEL<br>HORI_POS<br>YAW_ANG|-4 m/s ~ 4 m/s<br>offset in meters (no limit)<br>-180 degree ~ 180 degree|0b10000xxy|
 |6|VERT_VEL<br>HORI_POS<br>YAW_RATE|-4 m/s ~ 4 m/s<br>offset in meters (no limit)<br>-100 degree/s ~ 100 degree/s|0b10001xxy|
-|7|VERT_POS<br>HORI_ATTI_TILT_ANG<br>YAW_ANG|0m to height limit<br>-30 degree ~ 30 degree<br>-180 degree ~ 180 degree|0b00010xx0|
+|7|VERT_POS<br>HORI_ATTI_TILT_ANG<br>YAW_ANG|0m to height limit<br>-30 degree ~ 30 degree<br>-180 degree ~ 180 degree|0b00010xxy|
 |8|VERT_POS<br>HORI_ATTI_TILT_ANG<br>YAW_RATE|0m to height limit<br>-30 degree ~ 30 degree<br>-100 degree/s ~ 100 degree/s|0b00011xxy|
-|9|VERT_POS<br>HORI_VEL<br>YAW_ANG|0m to height limit<br>-10 m/s ~ 10 m/s<br>-180 degree ~ 180 degree|0b01010xx0|
+|9|VERT_POS<br>HORI_VEL<br>YAW_ANG|0m to height limit<br>-10 m/s ~ 10 m/s<br>-180 degree ~ 180 degree|0b01010xxy|
 |10|VERT_POS<br>HORI_VEL<br>YAW_RATE|0m to height limit<br>-10 m/s ~ 10 m/s<br>-100 degree/s ~ 100 degree/s|0b01011xxy|
-|11|VERT_POS<br>HORI_POS<br>YAW_ANG|0m to height limit<br>offset in meters (no limit)<br>-180 degree ~ 180 degree|0b10010xx0|
+|11|VERT_POS<br>HORI_POS<br>YAW_ANG|0m to height limit<br>offset in meters (no limit)<br>-180 degree ~ 180 degree|0b10010xxy|
 |12|VERT_POS<br>HORI_POS<br>YAW_RATE|0m to height limit<br>offset in meters (no limit)<br>-100 degree/s ~ 100 degree/s|0b10011xxy|
-|13|VERT_THRUST<br>HORI_ATTI_TILT_ANG<br>YAW_ANG|10 ~ 100 (use with precaution)<br>-30 degree ~ 30 degree<br>-180 degree ~ 180 degree|0b00100xx0|
+|13|VERT_THRUST<br>HORI_ATTI_TILT_ANG<br>YAW_ANG|10 ~ 100 (use with precaution)<br>-30 degree ~ 30 degree<br>-180 degree ~ 180 degree|0b00100xxy|
 |14|VERT_THRUST<br>HORI_ATTI_TILT_ANG<br>YAW_RATE|10 ~ 100 (use with precaution)<br>-30 degree ~ 30 degree<br>-100 degree/s ~ 100 degree/s|0b00101xxy|
 
 
->*the lowest 3 bits in control_mode_byte decide the horizontal frame and yaw frame.  
+
 >xx presents horizontal frame，00 means ground frame，01 means body frame.  
->y presents yaw frame，0 means ground frame，1 means body frame.  
->**In this combination，if all input data is '0', the UAV will brake and hold in a self-balance status at a fixed  position.
+>y presents stable flag，0 means non-stable mode，1 means stable mode. Stable mode only works in horizontal control.  
+
 
 
 ## Flight Data
@@ -148,12 +155,24 @@ By specifying the `control_mode_byte`, 14 control modes can be constructed :
 </tr>
 
 <tr>
-  <td>Time Stamp</td>
+  <td rowspan="3">Time Stamp</td>
   <td>time</td>
   <td>uint32_t</td>
-  <td>time stamp</td>
-  <td>1/600s</td>
-  <td>100Hz</td>
+  <td>400hz time stamp</td>
+  <td>1/400s</td>
+  <td rowspan="3 ">100Hz</td>
+</tr>
+<tr>
+  <td>time</td>
+  <td>uint32_t</td>
+  <td>ns time stamp</td>
+  <td>ns</td>
+</tr>
+<tr>
+  <td>time</td>
+  <td>uint8_t</td>
+  <td>Sync signal flag</td>
+  <td>---</td>
 </tr>
 <tr>
   <td rowspan="4">Quarternion</td>
@@ -181,7 +200,7 @@ By specifying the `control_mode_byte`, 14 control modes can be constructed :
   <td>agx</td>
   <td>float32</td>
   <td rowspan="3">Linear acceleration (Raw/Fusion)</td>
-  <td rowspan="3">Ground: m/s<sup>2</sup><br>Body: G</td>
+  <td rowspan="3">Fusion: m/s<sup>2</sup><br>Raw: G</td>
   <td rowspan="3">100Hz</td>
 </tr>
 <tr>
@@ -197,7 +216,7 @@ By specifying the `control_mode_byte`, 14 control modes can be constructed :
   <td rowspan="4">Linear velocity</td>
   <td>vgx</td>
   <td>float32</td>
-  <td rowspan="3">Linear velocity</td>
+  <td rowspan="3">Linear velocity in Ground Frame</td>
   <td rowspan="3">m/s</td>
   <td rowspan="4">100Hz</td>
 </tr>
@@ -326,12 +345,12 @@ By specifying the `control_mode_byte`, 14 control modes can be constructed :
 </tr>
 
 <tr>
-  <td rowspan="3">Gimbal</td>
+  <td rowspan="4">Gimbal</td>
   <td>roll</td>
   <td>float32</td>
   <td rowspan="3">roll, pitch and yaw of ground frame</td>
   <td rowspan="3">º</td>
-  <td rowspan="3">50Hz</td>
+  <td rowspan="4">50Hz</td>
 </tr>
 <tr>
   <td>pitch</td>
@@ -340,8 +359,18 @@ By specifying the `control_mode_byte`, 14 control modes can be constructed :
 <tr>
   <td>yaw</td>
   <td>float32</td>
-</tr>
 
+</tr>
+<tr>
+  <td>limit_byte</td>
+  <td>uint8_t</td>
+  <td>limit flag<ul>
+    <li>bit 0: Pitch limit flag</li>
+    <li>bit 1: Roll limit flag</li>
+    <li>bit 2: Yaw limit flag</li>
+    <li>bit 3:7 reserved</li></ul>
+  <td>---</td>
+</tr>
 <tr>
   <td>Flight status</td>
   <td>status</td>
@@ -361,7 +390,14 @@ By specifying the `control_mode_byte`, 14 control modes can be constructed :
 </tr>
 
 <tr>
-  <td>Source of Control</td>
+  <td rowspan="2">Source of Control</td>
+  <td>cur_mov_control_mode</td>
+  <td>uint8_t</td>
+  <td>current api control mode</td>
+  <td>---</td>
+  <td rowspan="2">0Hz</td>
+</tr>
+<tr>
   <td>status</td>
   <td>uint8_t</td>
   <td>Control device<ul>
@@ -375,18 +411,45 @@ By specifying the `control_mode_byte`, 14 control modes can be constructed :
      <li>bit 4:7 ：reserved</li>
   </ul></td>
   <td>---</td>
-  <td>0Hz</td>
+
 </tr>
 
 </table>
 
-
+**current api control mode**
+~~~c
+typedef enum 
+{
+  ATTI_STOP                    = 0,
+  HORIZ_ANG_VERT_VEL_YAW_ANG   = 1,
+  HORIZ_ANG_VERT_VEL_YAW_RATE  = 2,
+  HORIZ_VEL_VERT_VEL_YAW_ANG   = 3,
+  HORIZ_VEL_VERT_VEL_YAW_RATE  = 4,
+  HORIZ_POS_VERT_VEL_YAW_ANG   = 5,
+  HORIZ_POS_VERT_VEL_YAW_RATE  = 6,
+  HORIZ_ANG_VERT_POS_YAW_ANG   = 7,
+  HORIZ_ANG_VERT_POS_YAW_RATE  = 8,
+  HORIZ_VEL_VERT_POS_YAW_ANG   = 9,
+  HORIZ_VEL_VERT_POS_YAW_RATE  = 10,
+  HORIZ_POS_VERT_POS_YAW_ANG   = 11,
+  HORIZ_POS_VERT_POS_YAW_RATE  = 12,
+  HORIZ_ANG_VERT_THR_YAW_ANG   = 13,
+  HORIZ_ANG_VERT_THR_YAW_RATE  = 14,
+  HORIZ_VEL_VERT_THR_YAW_ANG   = 15,
+  HORIZ_VEL_VERT_THR_YAW_RATE  = 16,
+  HORIZ_POS_VERT_THR_YAW_ANG   = 17,
+  HORIZ_POS_VERT_THR_YAW_RATE  = 18,
+  GPS_ATII_CTRL_CL_YAW_RATE    = 97,
+  GPS_ATTI_CTRL_YAW_RATE       = 98,
+  ATTI_CTRL_YAW_RATE           = 99,
+  ATTI_CTRL_STOP               = 100
+}
+~~~
 ### Raw/Fusion
 
-Raw/Fusion can be chosen by DJI N1 assistant software.  
+Raw/Fusion can be chosen by DJI assistant software.  
 
-Because raw data is generated from actual sensor on UAV, this kind of data will not be available in simulator. Please choose Fusion when you use DJI simulator. 
- 
+Because raw data is generated from actual sensor on UAV, this kind of data will not be available in simulator. Please choose Fusion when you use DJI simulator.  
 <table>
 <tr>
   <th>Item Name</th>
@@ -403,7 +466,7 @@ Because raw data is generated from actual sensor on UAV, this kind of data will 
 <tr>
   <td>Fusion(Body)</td>
   <td>Fusion data</td>
-  <td>G</td>
+  <td>m/s<sup>2</sup></td>
 </tr>
 <tr>
   <td>Raw(Body)</td>

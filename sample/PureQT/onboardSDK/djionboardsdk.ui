@@ -60,7 +60,7 @@
         <item>
          <widget class="QTabWidget" name="tabWidget">
           <property name="currentIndex">
-           <number>3</number>
+           <number>1</number>
           </property>
           <widget class="QWidget" name="tbFlight">
            <attribute name="title">
@@ -5789,6 +5789,9 @@
               </item>
               <item>
                <widget class="QPushButton" name="btn_webLoad">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
                 <property name="text">
                  <string>View Map</string>
                 </property>
@@ -5805,153 +5808,6 @@
                </widget>
               </item>
              </layout>
-            </item>
-           </layout>
-          </widget>
-          <widget class="QWidget" name="tbScript">
-           <attribute name="title">
-            <string>Script</string>
-           </attribute>
-           <layout class="QHBoxLayout" name="horizontalLayout_133">
-            <item>
-             <layout class="QVBoxLayout" name="verticalLayout_63">
-              <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_60">
-                <item>
-                 <widget class="QLineEdit" name="lineEdit"/>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="pushButton_4">
-                  <property name="text">
-                   <string>...</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="pushButton_7">
-                  <property name="text">
-                   <string>Save</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-              <item>
-               <widget class="QPushButton" name="btn_script_run">
-                <property name="text">
-                 <string>Run</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QTextEdit" name="te_script_code">
-                <property name="undoRedoEnabled">
-                 <bool>true</bool>
-                </property>
-                <property name="readOnly">
-                 <bool>false</bool>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <layout class="QVBoxLayout" name="verticalLayout_65">
-              <item>
-               <widget class="QTextBrowser" name="tb_script_output">
-                <property name="undoRedoEnabled">
-                 <bool>true</bool>
-                </property>
-                <property name="readOnly">
-                 <bool>false</bool>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-           </layout>
-          </widget>
-          <widget class="QWidget" name="tab">
-           <attribute name="title">
-            <string>Gridmap</string>
-           </attribute>
-           <layout class="QVBoxLayout" name="verticalLayout_67">
-            <item>
-             <layout class="QVBoxLayout" name="verticalLayout_57">
-              <item>
-               <widget class="QFrame" name="frame">
-                <property name="maximumSize">
-                 <size>
-                  <width>16777215</width>
-                  <height>180</height>
-                 </size>
-                </property>
-                <property name="frameShape">
-                 <enum>QFrame::StyledPanel</enum>
-                </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Raised</enum>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-           </layout>
-          </widget>
-          <widget class="QWidget" name="tbSwarm">
-           <attribute name="title">
-            <string>Swarm</string>
-           </attribute>
-           <layout class="QHBoxLayout" name="horizontalLayout_45">
-            <item>
-             <widget class="QGroupBox" name="groupBox_9">
-              <property name="enabled">
-               <bool>true</bool>
-              </property>
-              <property name="title">
-               <string>Swarm</string>
-              </property>
-              <layout class="QVBoxLayout" name="verticalLayout_8">
-               <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_61">
-                 <item>
-                  <widget class="QPushButton" name="pushButton_2">
-                   <property name="text">
-                    <string>manage</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="pushButton">
-                   <property name="text">
-                    <string>find peers</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="pushButton_3">
-                   <property name="text">
-                    <string>start</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item>
-                <layout class="QGridLayout" name="gridLayout_swarm">
-                 <item row="0" column="0">
-                  <widget class="QGraphicsView" name="graphicsView_2"/>
-                 </item>
-                 <item row="1" column="0">
-                  <widget class="QTreeView" name="treeView"/>
-                 </item>
-                 <item row="1" column="1">
-                  <widget class="QGraphicsView" name="graphicsView"/>
-                 </item>
-                </layout>
-               </item>
-              </layout>
-             </widget>
             </item>
            </layout>
           </widget>
@@ -6059,18 +5915,18 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="btg_vrcGear"/>
-  <buttongroup name="btg_flightVL"/>
-  <buttongroup name="btg_cameraPitch"/>
   <buttongroup name="btg_cameraMode"/>
   <buttongroup name="btg_cameraRoll"/>
   <buttongroup name="btg_flightCL"/>
-  <buttongroup name="btg_flightSM"/>
-  <buttongroup name="btg_flightTask"/>
-  <buttongroup name="btg_cameraAngle"/>
-  <buttongroup name="btg_vrcMode"/>
   <buttongroup name="btg_cameraYaw"/>
-  <buttongroup name="btg_flightHL"/>
+  <buttongroup name="btg_cameraPitch"/>
+  <buttongroup name="btg_vrcMode"/>
+  <buttongroup name="btg_vrcGear"/>
   <buttongroup name="btg_flightYL"/>
+  <buttongroup name="btg_flightVL"/>
+  <buttongroup name="btg_flightSM"/>
+  <buttongroup name="btg_cameraAngle"/>
+  <buttongroup name="btg_flightHL"/>
+  <buttongroup name="btg_flightTask"/>
  </buttongroups>
 </ui>
