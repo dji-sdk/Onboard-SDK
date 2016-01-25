@@ -1,5 +1,7 @@
 # DJI Onboard SDK Main Page | 主页
 
+[![Join the chat at https://gitter.im/dji-sdk/Onboard-SDK](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/dji-sdk/Onboard-SDK?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [English](#welcome-onboard-sdk-developers) | [中文](#欢迎onboard-sdk开发者)
 
 ## Welcome, Onboard SDK developers! 
