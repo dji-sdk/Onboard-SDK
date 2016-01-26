@@ -15,9 +15,6 @@ With it you can run the following commands:
 * The Attitude Control
 * The Gimbal Control
 * The Camera Control
-* The Waypoint Task Control
-* The Hotpoint Task Control
-* The Follow Me Task Control
 
 ## Hardware Installation
 * In order to communicate with the N1 Autopilot via the DJI OPEN protocal, a physical connection between your Onboard Device and the N1 Autopilot is required with a USB to TTL serial cable (SOLD Seperately).
@@ -32,7 +29,8 @@ To setup:
 
 1. Set up the correct serial port and baudrate in `main.cpp` (especially when running in Linux platform)
 2. When running the example, you are required to set up the key first, an example format is the `key.txt`, after that you need to link the key file with you program like this:
-	![](image/terminal.png)
+
+	![](image/key.png)
 
 
 ENJOY your flight!
@@ -54,9 +52,6 @@ ENJOY your flight!
 * 姿态控制
 * 云台控制
 * 相机控制
-* 航点指令
-* 热点环绕指令
-* 智能跟随指令
 
 ##硬件安装
 
@@ -72,5 +67,6 @@ ENJOY your flight!
 
 1. 开发者需要在 `main.cpp` 中输入合适的串口设备名称和波特率（尤其是 Linux 平台）
 2. 在实际运行之时，开发者需要首先配置好自己的key文件，一个格式样例是 `key.txt` ，并且在运行例程时首先在程序中配置 key 文件的位置，如图：
-	![](image/terminal.png)
+
+	![](image/key.png)
 	

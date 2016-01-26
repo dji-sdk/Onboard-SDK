@@ -11,10 +11,6 @@ This example, which can run in both Windows and Linux platform, aims to help you
 * The Attitude Control
 * The Gimbal Control
 * The Camera Control
-* The Virtual RC Control
-* The Waypoint Task Control
-* The Hotpoint Task Control
-* The Follow Me Task Control
 
 Developers can play with this example via the GUI interaction interface of QT.
 
@@ -71,10 +67,6 @@ QT 例程是我们基于 QT 平台实现的 SDK 例程，它可以运行在 Wind
 * 姿态控制
 * 云台控制
 * 相机控制
-* 虚拟遥控
-* 航点指令
-* 热点环绕指令
-* 智能跟随指令
 
 开发者可以通过程序的图形界面来进行交互和测试。
 
