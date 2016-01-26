@@ -32,7 +32,8 @@ To setup:
 
 1. Set up the correct serial port and baudrate in `main.cpp` (especially when running in Linux platform)
 2. When running the example, you are required to set up the key first, an example format is the `key.txt`, after that you need to link the key file with you program like this:
-	![](image/terminal.png)
+
+	![](image/key.png)
 
 
 ENJOY your flight!
@@ -72,5 +73,6 @@ ENJOY your flight!
 
 1. 开发者需要在 `main.cpp` 中输入合适的串口设备名称和波特率（尤其是 Linux 平台）
 2. 在实际运行之时，开发者需要首先配置好自己的key文件，一个格式样例是 `key.txt` ，并且在运行例程时首先在程序中配置 key 文件的位置，如图：
-	![](image/terminal.png)
+
+	![](image/key.png)
 	

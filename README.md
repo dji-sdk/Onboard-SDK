@@ -1,5 +1,7 @@
 # DJI Onboard SDK Main Page | 主页
 
+[![Join the chat at https://gitter.im/dji-sdk/Onboard-SDK](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/dji-sdk/Onboard-SDK?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 If you are not new here and worked on our 2.3 firmware before, you are suggested to read [the release notes](ReleaseNotes.md)
 
 如果你是从2.3固件升级至3.1固件的开发者，我们建议你首先阅读[版本发布记录](ReleaseNotes.md)

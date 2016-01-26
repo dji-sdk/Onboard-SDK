@@ -43,7 +43,7 @@ https://github.com/Awilonk/OnBoardSDK_STM32
 
 
 硬件正确配置后，复位stm32。如果一切正常，你将会看到M100发送回来的版本信息，此时可以向M100发送测试指令
-![初始化成功](/image/初始化成功.png)
+![初始化成功](image/初始化成功.png)
 
 ###指令格式
 
@@ -114,9 +114,9 @@ PC上，所以在PC上的串口调试助手中**发送端选择HEX发送**，**�
 0x0A。    
 即:0xFA 0xFB 0x04 0x01 0x91 **0x0A 0x04**.......0xFE  
 下面是一个示范：  
-+ 第一步，起飞。![起飞](/image/takeoff.png)  
-- 第二部，发出期望的姿态指令。例如这里希望飞机的roll以2°的姿态在10m的高度飞行则发出相应指令  ![命令](/image/input1.png)  
-+ 第三步，注意观察模拟器的右下角，飞机正在以指定的姿态飞行。  ![飞行](/image/flyaway.png)  
++ 第一步，起飞。![起飞](image/takeoff.png)  
+- 第二部，发出期望的姿态指令。例如这里希望飞机的roll以2°的姿态在10m的高度飞行则发出相应指令  ![命令](image/input1.png)  
++ 第三步，注意观察模拟器的右下角，飞机正在以指定的姿态飞行。  ![飞行](image/flyaway.png)  
 
 如果对数据换算不是很熟练。可以使用换算姿态数据模式(0x04 0x02)。这个模式的输入逻辑和写入姿态数据的逻辑是一样的，区别是这个模式不会真的往飞机发送命令，而只是返回换算后的值供用户检验。可以把它当成一个计算器使用
 
@@ -129,21 +129,21 @@ PC上，所以在PC上的串口调试助手中**发送端选择HEX发送**，**�
 ###获取广播数据
 
 获取广播数据只要发送0x08就可以了。现在打印了当前的时间戳和剩余电量，需要更多数据请自行添加
-![广播](/image/data.png)  
+![广播](image/data.png)  
 
 ###发送指令的顺序
 
 指令的发送是有顺序的
 
 正确的顺序如下
-![流程图](/image/流程图.png)
+![流程图](image/流程图.png)
 
 如果使用了虚拟遥控，在正常飞行中物理遥控器**不能控制飞机**。程序中可以选择失去虚拟遥控信号1s后 *降落* 或者 *切换到物理遥控*。  
 本例程中选择了失去虚拟遥控后直接降落模式。   
 
 ##动画示范
 下面这个小动画演示了 读取版本信息->激活->打开虚拟遥控A档->虚拟遥控F档->获取控制权->一键起飞->打开热点功能->一键返航->关闭虚拟遥控功能。的过程
-![giftest](/image/gif.gif)
+![giftest](image/gif.gif)
 
 ----------
 
@@ -189,7 +189,7 @@ Use USART3 for communicating with M100. PA2, PA3 as TX, RX, which should be plug
 All the communication in this program **has been set to UNENCRYPTED**. If necessary, configre it in the program by yourself.
 
 If the Hardware has been set correctly,reset your stm32. If everything is ok,there would be a version infomation callback by M100. Therefrom, system is ready for your command.
-![初始化成功](/image/初始化成功.png)
+![初始化成功](image/初始化成功.png)
 
 ###Command Format
 
@@ -265,10 +265,10 @@ e.g. To enter 2564 to roll_or_x.First,transform to hexadecimal,which is 0xA04. L
 i.e. 0xFA 0xFB 0x04 0x01 0x91 **0x0A 0x04**.......0xFE    
 
 Here is an example:  
-+ **step 1**: Take off.![takeoff](/image/takeoff.png)  
++ **step 1**: Take off.![takeoff](image/takeoff.png)  
 - **step 2**: Send out flight data that request UAV to excute.   
- ![cmd](/image/input1.png)
-+ **step 3**: Pay attention to the lower right corner of simulator,UAV is flying on the movement you specify.  ![flying](/image/flyaway.png)   
+ ![cmd](image/input1.png)
++ **step 3**: Pay attention to the lower right corner of simulator,UAV is flying on the movement you specify.  ![flying](image/flyaway.png)   
 
 
 If you are unfamiliar with this data transform,a convert flight data displayer is provided. The only difference from the Input flight data mode is it would no really send out data,it just display it. You can also use it as a calculator.
@@ -278,7 +278,7 @@ It's worth noting that,once using Input flight data mode, the data you input wou
 
 ###Get Broadcastdata
 To get broadcastdata send back by the UAV,send cmd 0x08.Timestamp and battery capacity remain are printed now.Add more if you needed.
-![brocastdata](/image/data.png)   
+![brocastdata](image/data.png)   
 
 
 ###How to send command  
@@ -297,4 +297,4 @@ This program choose to land after losing Virtual RC
 This little gif demonstrate how to send command using Serial debugging assistant.  
 It shows a typical command flow like:
 Read current version->Activate->Turn VRC to mode A->Turn VRC to mode F->Obtain control->Take off->Start HotPoint->GoHome->Turn VRC.  
-![giftest](/image/gif.gif)
+![giftest](image/gif.gif)

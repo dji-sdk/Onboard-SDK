@@ -1,4 +1,4 @@
-[English Version](#summary-of-changes-from-firmware-2.3-to-firmware-3.1) [中文版本](#固件与SDK接口更新（从2.3升级至3.1）)
+[English Version](#summary-of-changes-from-firmware-23-to-firmware-31) | [中文版本](#固件与sdk接口更新从23升级至31)
 
 #Summary of changes from firmware 2.3 to firmware 3.1
 
@@ -56,9 +56,9 @@ Also, we keep the original 2.3 branch and old library as an archive for our old 
 
 ## `F` Mode Updates [IMPORTANT]
 
-**Important** Drone will runs into the F mode directly when power on with mode bar in position `F`, while in 2.3 firmware, the same situation, develoeprs should switch the mode bar away then back to `F` in order to enter F mode logic.
+**Important: ** Developers are able to obtain the SDK control ability directly when the drone is powered on with mode bar in position `F`, while in 2.3 firmware, the same situation, develoeprs should switch the mode bar away then back to `F` in order to obtain control.
 
-In order to avoid any dangerous situation, developers must pay attention and be careful on this change.
+To avoid any dangerous situation, developers must pay attention and be careful on this change.
 
 #固件与SDK接口更新（从2.3升级至3.1）
 
@@ -90,12 +90,12 @@ In order to avoid any dangerous situation, developers must pay attention and be 
 
 我们使用了新的数据结构与层逻辑来升级 Onboard SDK 的库文件。
 
-处于技术支撑与维护的方便性和拓展性，我们的新库不但支持最新的 3.1 固件，而且向下兼容 2.3 固件。
+出于技术支持与版本维护的方便性和可拓展性，我们决定新的 SDK 库不但支持最新的 3.1 固件，而且向下兼容 2.3 固件。
 
-此外，我们仍然为之前的开发者们保留了原有的 2.3 分支，供查阅与存档用。
+此外，我们仍然为之前的开发者们保留了原有的 2.3 分支（文档和库），供查阅与存档用。
 
 ## 档位模式升级 【重要】
 
-**注意：** 在 3.1 固件中，若开机时模式开关被置于 `F` 档位，飞机将可以直接在 Onboard SDK 获取控制权。这不同于 2.3 中需要将 `F` 档位拨走再拨回来的设定。
+**注意：** 在 3.1 固件中，若开机时模式开关被置于 `F` 档位，飞机将可以直接被 Onboard SDK 获取控制权。这不同于 2.3 中需要将 `F` 档位拨走再拨回来的设定。
 
 开发者一定要注意此点，以防出现任何程序跑飞导致飞机暴走的危险。
