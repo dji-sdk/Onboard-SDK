@@ -159,8 +159,11 @@ Hotpoint is a functionality that allows the drone to circle around a given point
 
 ## The Status Push Information and Event Push Information
 
-  There is a broadcast data of drone status in firmware 2.3.
-  Similary, we have built a protocol to push groundstation information.
+  There is a broadcast of flight data in firmware 2.3. In 3.1, we add a similar protocol to push groundstation status and events.
+
+  Note: Developers should select the `Ground Station Status` checkbox in DJI Assistant in order to receive the pushed info.
+
+  ![](Images/groundstation.png)
   
 1. Status Push Information
 

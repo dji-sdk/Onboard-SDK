@@ -480,6 +480,13 @@ typedef struct{
 
 NO ACK
 
+---
+
+The following CMD SET/ID are not API but broadcast data protocol, by which developers can check the current mission status and events like how flight data works.
+
+Note: Developers should select the `Ground Station Status` checkbox in DJI Assistant.
+
+    ![](Images/groundstation.png)
 
 ## 0x02, 0x03 Current Mission State Push Information 
 
