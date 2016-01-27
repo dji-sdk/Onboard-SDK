@@ -138,7 +138,7 @@ Please comply with the local regulations during the development process and the 
 
 - [QT example, both Windows and Linux](sample/PureQT)
 
-- [Command Line example, both Windows and Linux](sample/CommandLine)
+- [Command Line example, both Windows and Linux](sample/commandline)
 
 - [Linux ROS example](https://github.com/dji-sdk/Onboard-SDK-ROS)
 
@@ -296,7 +296,7 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 
 - [QT example, both Windows and Linux](sample/PureQT)
 
-- [Command Line example, both Windows and Linux](sample/CommandLine)
+- [Command Line example, both Windows and Linux](sample/commandline)
 
 - [Linux ROS example](https://github.com/dji-sdk/Onboard-SDK-ROS)
 
