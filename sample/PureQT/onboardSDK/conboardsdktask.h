@@ -12,7 +12,7 @@ class ConboardSDKScript : public Script
     ConboardSDKScript(CoreAPI* api);
 
     TaskSetItem match(const char* name);
-    void addTask(const char* Name, UserData Data = 0, time_t Timeout = 0);
+    void addTask(const char* Name, UserData Data = 0, DJI::time_ms Timeout = 0);
 };
 
 class ScriptThread : public QThread

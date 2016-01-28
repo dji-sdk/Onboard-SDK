@@ -52,7 +52,6 @@ void DJIonboardSDK::initFlight()
     on_btg_flight_VL(ui->btg_flightVL->checkedButton());
     on_btg_flight_YL(ui->btg_flightYL->checkedButton());
     on_btg_flight_CL(ui->btg_flightCL->checkedButton());
-    on_btg_flight_SM(ui->btg_flightSM->checkedButton());
 
     resetFlightData();
 
@@ -258,12 +257,12 @@ void DJIonboardSDK::setControlCallback(CoreAPI *This, Header *header, UserData u
                 API_LOG(sdk->driver, ERROR_LOG, "known SDK pointer 0.");
             break;
         case ACK_SETCONTROL_OBTAIN_RUNNING:
-            This->send(2, encript, SET_CONTROL, CODE_SETCONTROL, &data, 1, 500, 2,
+            This->send(2, encrypt, SET_CONTROL, CODE_SETCONTROL, &data, 1, 500, 2,
                        DJIonboardSDK::setControlCallback, userData);
             break;
         case ACK_SETCONTROL_RELEASE_RUNNING:
             data = 0;
-            This->send(2, encript, SET_CONTROL, CODE_SETCONTROL, &data, 1, 500, 2,
+            This->send(2, encrypt, SET_CONTROL, CODE_SETCONTROL, &data, 1, 500, 2,
                        DJIonboardSDK::setControlCallback, userData);
             break;
     }
@@ -407,20 +406,6 @@ void DJIonboardSDK::on_tmr_VRC_autosend()
 {
     VirtualRCData data;
 
-
-    if (ui->btg_vrcMode->checkedButton()->text() == "F")
-        data.mode = 496;
-    else if (ui->btg_vrcMode->checkedButton()->text() == "A")
-        data.mode = 1024;
-    else
-        data.mode = 1552;
-
-    if (ui->btg_vrcGear->checkedButton()->text() == "Up")
-        data.gear = 1684;
-    else
-        data.gear = 1324;
-
-    vrc->sendData(data);
 }
 
 void DJIonboardSDK::updateFlightFlag()
@@ -476,39 +461,22 @@ void DJIonboardSDK::on_btg_flight_CL(QAbstractButton *button)
         flightFlag |= Flight::HORIZONTAL_BODY;
     updateFlightFlag();
 }
-void DJIonboardSDK::on_btg_flight_SM(QAbstractButton *button)
-{
-#ifndef SDK_VERSION_2_3
-    QString name = button->text();
-    flightFlag &= 0xFE;
-    if (name == "Disable")
-        flightFlag |= Flight::SMOOTH_DISABLE;
-    else
-        flightFlag |= Flight::SMOOTH_ENABLE;
-    updateFlightFlag();
-#else
-    ui->groupBox9->setDisabled(true);
-#endif
-}
+
 
 void DJIonboardSDK::updateFlightX()
 {
-    ui->lineEdit_flight_X->setText(QString::number(flightx));
 }
 
 void DJIonboardSDK::updateFlightY()
 {
-    ui->lineEdit_flight_Y->setText(QString::number(flighty));
 }
 
 void DJIonboardSDK::updateFlightZ()
 {
-    ui->lineEdit_flight_Z->setText(QString::number(flightz));
 }
 
 void DJIonboardSDK::updateFlightYaw()
 {
-    ui->lineEdit_flight_Yaw->setText(QString::number(flightyaw));
 }
 
 void DJIonboardSDK::resetFlightData()
@@ -603,22 +571,18 @@ void DJIonboardSDK::on_btn_flight_dataReset_clicked() { resetFlightData(); }
 
 void DJIonboardSDK::on_lineEdit_flight_X_returnPressed()
 {
-    flightx = ui->lineEdit_flight_X->text().toFloat();
 }
 
 void DJIonboardSDK::on_lineEdit_flight_Y_returnPressed()
 {
-    flighty = ui->lineEdit_flight_Y->text().toFloat();
 }
 
 void DJIonboardSDK::on_lineEdit_flight_Z_returnPressed()
 {
-    flightz = ui->lineEdit_flight_Z->text().toFloat();
 }
 
 void DJIonboardSDK::on_lineEdit_flight_Yaw_returnPressed()
 {
-    flightyaw = ui->lineEdit_flight_Yaw->text().toFloat();
 }
 
 void DJIonboardSDK::on_cb_flight_autoSend_clicked(bool checked)

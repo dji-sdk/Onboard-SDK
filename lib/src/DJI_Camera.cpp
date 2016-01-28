@@ -7,19 +7,19 @@ Camera::Camera(CoreAPI *ControlAPI) { api = ControlAPI; }
 void Camera::setCamera(Camera::CAMERA_CODE camera_cmd)
 {
     unsigned char send_data = 0;
-    api->send(0, encript, SET_CONTROL, camera_cmd, &send_data, 1);
+    api->send(0, encrypt, SET_CONTROL, camera_cmd, &send_data, 1);
 }
 
 void Camera::setGimbalAngle(GimbalAngleData *data)
 {
-    api->send(0, encript, SET_CONTROL, Camera::CODE_GIMBAL_ANGLE, (unsigned char *)data,
+    api->send(0, encrypt, SET_CONTROL, Camera::CODE_GIMBAL_ANGLE, (unsigned char *)data,
               sizeof(GimbalAngleData));
 }
 
 void Camera::setGimbalSpeed(GimbalSpeedData *data)
 {
     data->reserved = 0x80;
-    api->send(0, encript, SET_CONTROL, Camera::CODE_GIMBAL_SPEED, (unsigned char *)data,
+    api->send(0, encrypt, SET_CONTROL, Camera::CODE_GIMBAL_SPEED, (unsigned char *)data,
               sizeof(GimbalSpeedData));
 }
 

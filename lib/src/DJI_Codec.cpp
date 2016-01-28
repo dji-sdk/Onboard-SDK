@@ -401,7 +401,7 @@ void aes256_decrypt_ecb(aes256_context *ctx, unsigned char *buf)
 // END OF AES-256
 
 //////////////////////////////////////////////////////////////////////////
-unsigned short crc_tab16[] = {
+uint16_t crc_tab16[] = {
     0x0000, 0xc0c1, 0xc181, 0x0140, 0xc301, 0x03c0, 0x0280, 0xc241, 0xc601, 0x06c0, 0x0780,
     0xc741, 0x0500, 0xc5c1, 0xc481, 0x0440, 0xcc01, 0x0cc0, 0x0d80, 0xcd41, 0x0f00, 0xcfc1,
     0xce81, 0x0e40, 0x0a00, 0xcac1, 0xcb81, 0x0b40, 0xc901, 0x09c0, 0x0880, 0xc841, 0xd801,
@@ -428,7 +428,7 @@ unsigned short crc_tab16[] = {
     0x81c1, 0x8081, 0x4040,
 };
 
-unsigned int crc_tab32[] = {
+uint32_t crc_tab32[] = {
     0x00000000, 0x77073096, 0xee0e612c, 0x990951ba, 0x076dc419, 0x706af48f, 0xe963a535,
     0x9e6495a3, 0x0edb8832, 0x79dcb8a4, 0xe0d5e91e, 0x97d2d988, 0x09b64c2b, 0x7eb17cbd,
     0xe7b82d07, 0x90bf1d91, 0x1db71064, 0x6ab020f2, 0xf3b97148, 0x84be41de, 0x1adad47d,
@@ -470,33 +470,33 @@ unsigned int crc_tab32[] = {
 
 const unsigned short CRC_INIT = 0x3AA3;
 
-unsigned short crc16_update(unsigned short crc, unsigned char ch)
+uint16_t crc16_update(uint16_t crc, uint8_t ch)
 {
-    unsigned short tmp;
-    unsigned short msg;
+    uint16_t tmp;
+    uint16_t msg;
 
-    msg = 0x00ff & (unsigned short)ch;
+    msg = 0x00ff & (uint16_t)ch;
     tmp = crc ^ msg;
     crc = (crc >> 8) ^ crc_tab16[tmp & 0xff];
 
     return crc;
 }
 
-unsigned int crc32_update(unsigned int crc, unsigned char ch)
+uint32_t crc32_update(uint32_t crc, uint8_t ch)
 {
-    unsigned int tmp;
-    unsigned int msg;
+    uint32_t tmp;
+    uint32_t msg;
 
-    msg = 0x000000ffL & (unsigned int)ch;
+    msg = 0x000000ffL & (uint32_t)ch;
     tmp = crc ^ msg;
     crc = (crc >> 8) ^ crc_tab32[tmp & 0xff];
     return crc;
 }
 
-unsigned short sdk_stream_crc16_calc(const unsigned char *pMsg, unsigned int nLen)
+uint16_t sdk_stream_crc16_calc(const uint8_t *pMsg, size_t nLen)
 {
-    unsigned int i;
-    unsigned short wCRC = CRC_INIT;
+    size_t i;
+    uint16_t wCRC = CRC_INIT;
 
     for (i = 0; i < nLen; i++)
     {
@@ -506,10 +506,10 @@ unsigned short sdk_stream_crc16_calc(const unsigned char *pMsg, unsigned int nLe
     return wCRC;
 }
 
-unsigned int sdk_stream_crc32_calc(const unsigned char *pMsg, unsigned int nLen)
+uint32_t sdk_stream_crc32_calc(const uint8_t *pMsg, size_t nLen)
 {
-    unsigned int i;
-    unsigned int wCRC = CRC_INIT;
+    size_t i;
+    uint32_t wCRC = CRC_INIT;
 
     for (i = 0; i < nLen; i++)
     {

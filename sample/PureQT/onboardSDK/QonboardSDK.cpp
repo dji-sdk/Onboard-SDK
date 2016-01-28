@@ -43,7 +43,7 @@ void QHardDriver::init()
     }
 }
 
-time_t QHardDriver::getTimeStamp()
+DJI::time_ms QHardDriver::getTimeStamp()
 {
     return QDateTime::currentMSecsSinceEpoch();
 }
@@ -127,6 +127,7 @@ void APIThread::run()
         msleep(1);
     }
 }
+
 
 APIThread::APIThread()
 {

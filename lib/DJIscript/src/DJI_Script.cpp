@@ -35,13 +35,13 @@ void Script::addTaskList(TaskList *list, TaskList *pre)
     }
 }
 
-void Script::addTask(Task t, UserData Data, int Repeat, time_t Timeout)
+void Script::addTask(Task t, UserData Data, int Repeat, time_ms Timeout)
 {
     TaskList *list = new TaskList(t, Data, Repeat,Timeout);
     addTaskList(list);
 }
 
-bool Script::addTask(UserData name, UserData Data, time_t Timeout)
+bool Script::addTask(UserData name, UserData Data, time_ms Timeout)
 {
     TaskSetItem t = match(name);
     if (t.task)
@@ -126,7 +126,7 @@ CoreAPI *Script::getApi() const { return api; }
 
 void Script::setApi(CoreAPI *value) { api = value; }
 
-TaskList::TaskList(Task t, UserData Data, int Repeat, time_t Timeout, TaskList *Pre,
+TaskList::TaskList(Task t, UserData Data, int Repeat, time_ms Timeout, TaskList *Pre,
                    TaskList *Next)
 {
     task = t;

@@ -22,7 +22,7 @@ class QHardDriver : public HardDriver
     QHardDriver(QSerialPort *Port);
 
     void init();
-    time_t getTimeStamp();
+    DJI::time_ms getTimeStamp();
     size_t send(const uint8_t *buf, size_t len);
     size_t readall(uint8_t *buf, size_t maxlen);
 

@@ -4,11 +4,11 @@
 
 using namespace DJI::onboardSDK;
 
-#ifdef USE_ENCRIPT
-uint8_t DJI::onboardSDK::encript = 1;
+#ifdef USE_ENCRYPT
+uint8_t DJI::onboardSDK::encrypt = 1;
 #else
-uint8_t DJI::onboardSDK::encript = 0;
-#endif // USE_ENCRIPT
+uint8_t DJI::onboardSDK::encrypt = 0;
+#endif // USE_ENCRYPT
 
 CoreAPI::CoreAPI(HardDriver *Driver, bool userCallbackThread, CallBack userRecvCallback,
                  UserData UserData)
@@ -196,7 +196,7 @@ bool CoreAPI::getFollowData() const { return followData; }
 void CoreAPI::setControl(bool enable, CallBack callback, UserData userData)
 {
     unsigned char data = enable ? 1 : 0;
-    send(2, encript, SET_CONTROL, CODE_SETCONTROL, &data, 1, 500, 2,
+    send(2, DJI::onboardSDK::encrypt, SET_CONTROL, CODE_SETCONTROL, &data, 1, 500, 2,
          callback ? callback : CoreAPI::setControlCallback, userData);
 }
 
@@ -373,14 +373,14 @@ void CoreAPI::setControlCallback(CoreAPI *This, Header *header, UserData userDat
             break;
         case ACK_SETCONTROL_OBTAIN_RUNNING:
             API_LOG(This->driver, STATUS_LOG, "obtain control running\n");
-            This->send(2, encript, SET_CONTROL, CODE_SETCONTROL, &data, 1, 500, 2,
-                       CoreAPI::setControlCallback);
+            This->send(2, DJI::onboardSDK::encrypt, SET_CONTROL, CODE_SETCONTROL, &data, 1, 500,
+                       2, CoreAPI::setControlCallback);
             break;
         case ACK_SETCONTROL_RELEASE_RUNNING:
             API_LOG(This->driver, STATUS_LOG, "release control running\n");
             data = 0;
-            This->send(2, encript, SET_CONTROL, CODE_SETCONTROL, &data, 1, 500, 2,
-                       CoreAPI::setControlCallback);
+            This->send(2, DJI::onboardSDK::encrypt, SET_CONTROL, CODE_SETCONTROL, &data, 1, 500,
+                       2, CoreAPI::setControlCallback);
             break;
         case ACK_SETCONTROL_IOC:
             API_LOG(This->driver, STATUS_LOG, "IOC mode opening can not obtain control\n");
