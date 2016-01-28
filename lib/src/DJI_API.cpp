@@ -145,6 +145,7 @@ void CoreAPI::activate(ActivateData *data, CallBack callback, UserData userData)
 {
     data->version = versionData.version;
     accountData = *data;
+    accountData.reserved = 2;
 
     API_LOG(driver, DEBUG_LOG, "version 0x%X/n", versionData.version);
 

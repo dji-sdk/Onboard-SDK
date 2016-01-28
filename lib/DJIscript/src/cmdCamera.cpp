@@ -62,8 +62,6 @@ bool agCC(Script *script, UserData data)
 {
     stringstream s;
 
-    FollowData fdata;
-
     s << (char *)data;
     char drop[20];
     s >> drop >> drop;
@@ -82,8 +80,6 @@ bool agCC(Script *script, UserData data)
 bool sgCC(Script *script, UserData data)
 {
     stringstream s;
-
-    FollowData fdata;
 
     s << (char *)data;
     char drop[20];

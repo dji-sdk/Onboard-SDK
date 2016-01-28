@@ -3,6 +3,16 @@
 
 #include <DJI_Script.h>
 
+#include <cmdIO.h>
+#include <cmdSettings.h>
+#include <cmdCoreAPI.h>
+#include <cmdFlight.h>
+#include <cmdFollow.h>
+#include <cmdHotPoint.h>
+#include <cmdVirtualRC.h>
+#include <cmdWayPoint.h>
+#include <cmdCamera.h>
+
 using namespace DJI::onboardSDK;
 
 class ConboardSDKScript : public Script
@@ -10,7 +20,7 @@ class ConboardSDKScript : public Script
   public:
     ConboardSDKScript(CoreAPI* api);
 
-    Task match(const char* name);
+    TaskSetItem match(const char* name);
     void addTask(const char* Name, UserData Data = 0, time_t Timeout = 0);
 };
 

@@ -40,12 +40,12 @@
 
 #ifdef __GNUC__
 #define __UNUSED __attribute__((__unused__))
-#define __DELETE(x) delete (char*)x
+#define __DELETE(x) delete (char *) x
 #else
 #define __UNUSED
 #define __DELETE(x) delete x
-#pragma warning( disable : 4100 )
-#pragma warning( disable : 4800 )
+#pragma warning(disable : 4100)
+#pragma warning(disable : 4800)
 #endif //__GNUC__
 
 #ifdef WIN32
@@ -92,11 +92,10 @@
 
 namespace DJI
 {
-typedef uint32_t time_ms;
+typedef uint64_t time_ms;
 
 namespace onboardSDK
 {
-
 
 const size_t bufsize = 1024;
 extern char buffer[];
@@ -104,6 +103,7 @@ extern uint8_t encrypt;
 
 const size_t SESSION_TABLE_NUM = 32;
 const size_t CALLBACK_LIST_NUM = 10;
+
 class CoreAPI;
 
 typedef struct Header
@@ -284,8 +284,8 @@ typedef struct CtrlInfoData
     uint8_t data;
 #endif // SDK_VERSION_2_3
     //! @todo mode remote to enums
-    uint8_t device : 3; /*0->rc  1->app  2->serial*/
-    uint8_t signature : 1;		   /*1->opensd  0->close*/
+    uint8_t device : 3;	/*0->rc  1->app  2->serial*/
+    uint8_t signature : 1; /*1->opensd  0->close*/
     uint8_t reserved : 4;
 } CtrlInfoData;
 
@@ -294,6 +294,7 @@ typedef uint32_t TimeStampData;
 #else
 typedef struct TimeStampData
 {
+    //! @todo type modify
     uint32_t time;
     uint32_t nanoTime;
     uint8_t syncFlag;
