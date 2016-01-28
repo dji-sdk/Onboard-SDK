@@ -38,10 +38,9 @@
 
 //#define SDK_VERSION_2_3
 #define SDK_VERSION_3_1_M100
-//#define SDK_VERSION_3_1_A3
 
 //! @note if you do not want to use AES encrypt, annotate this micro below
-//#define USE_ENCRYPT
+#define USE_ENCRYPT
 
 #include <DJI_Version.h>
 

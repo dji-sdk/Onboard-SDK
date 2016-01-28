@@ -92,6 +92,8 @@
 
 namespace DJI
 {
+typedef uint32_t time_ms;
+
 namespace onboardSDK
 {
 
@@ -173,7 +175,7 @@ typedef struct CMDSession
     CallBack handler;
     UserData userData;
     uint32_t preSeqNum;
-    uint32_t preTimestamp;
+    time_ms preTimestamp;
 } CMDSession;
 
 typedef struct ACKSession

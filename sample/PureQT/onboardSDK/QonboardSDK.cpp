@@ -43,10 +43,7 @@ void QHardDriver::init()
     }
 }
 
-time_t QHardDriver::getTimeStamp()
-{
-    return QDateTime::currentMSecsSinceEpoch();
-}
+DJI::time_ms QHardDriver::getTimeStamp() { return QDateTime::currentMSecsSinceEpoch(); }
 
 size_t QHardDriver::send(const uint8_t *buf, size_t len)
 {
@@ -120,6 +117,7 @@ void APIThread::run()
 {
     while (1)
     {
+        callTimes++;
         if (type == 1)
             api->sendPoll();
         else if (type == 2)
@@ -127,6 +125,9 @@ void APIThread::run()
         msleep(1);
     }
 }
+size_t APIThread::getCallTimes() const { return callTimes; }
+
+void APIThread::setCallTimes(const size_t &value) { callTimes = value; }
 
 APIThread::APIThread()
 {
