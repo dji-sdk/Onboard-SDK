@@ -32,6 +32,7 @@
 
 //#define API_MISSION_DATA
 //#define API_DEBUG_DATA
+//#define API_BUFFER_DATA
 #define API_ERROR_DATA
 #define API_STATUS_DATA
 
@@ -39,8 +40,8 @@
 #define SDK_VERSION_3_1_M100
 //#define SDK_VERSION_3_1_A3
 
-//! @note if you do not want to use AES encript, comment this micro below
-//#define USE_ENCRIPT
+//! @note if you do not want to use AES encrypt, annotate this micro below
+//#define USE_ENCRYPT
 
 #include <DJI_Version.h>
 

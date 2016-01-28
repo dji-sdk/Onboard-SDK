@@ -339,13 +339,25 @@ class CoreAPI
     void setAccountData(const ActivateData &value);
     void setVersion(const Version &value);
 
-
-private:
+  private:
     HardDriver *driver;
     bool callbackThread;
     bool hotPointData;
     bool wayPointData;
     bool followData;
+
+//! @note debug functions:
+#ifdef API_BUFFER_DATA
+  public:
+    void setTotalRead(const size_t &value) { totalRead = value; }
+    void setOnceRead(const size_t &value) { onceRead = value; }
+
+    size_t getTotalRead() const { return totalRead; }
+    size_t getOnceRead() const { return onceRead; }
+  private:
+    size_t onceRead;
+    size_t totalRead;
+#endif // API_BUFFER_DATA
 };
 
 } // namespace onboardSDK

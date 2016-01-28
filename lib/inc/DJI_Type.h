@@ -72,6 +72,12 @@
 #define ERROR_LOG 0
 #endif
 
+#ifdef API_BUFFER_DATA
+#define BUFFER_LOG "BUFFER"
+#else
+#define BUFFER_LOG 0
+#endif
+
 #ifdef API_STATUS_DATA
 #define STATUS_LOG "STATUS"
 #else
@@ -92,7 +98,7 @@ namespace onboardSDK
 
 const size_t bufsize = 1024;
 extern char buffer[];
-extern uint8_t encript;
+extern uint8_t encrypt;
 
 const size_t SESSION_TABLE_NUM = 32;
 const size_t CALLBACK_LIST_NUM = 10;

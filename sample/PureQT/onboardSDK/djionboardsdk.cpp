@@ -271,12 +271,12 @@ void DJIonboardSDK::setControlCallback(CoreAPI *This, Header *header, UserData u
                 API_LOG(sdk->driver, ERROR_LOG, "known SDK pointer 0.");
             break;
         case ACK_SETCONTROL_OBTAIN_RUNNING:
-            This->send(2, encript, SET_CONTROL, CODE_SETCONTROL, &data, 1, 500, 2,
+            This->send(2, encrypt, SET_CONTROL, CODE_SETCONTROL, &data, 1, 500, 2,
                        DJIonboardSDK::setControlCallback, userData);
             break;
         case ACK_SETCONTROL_RELEASE_RUNNING:
             data = 0;
-            This->send(2, encript, SET_CONTROL, CODE_SETCONTROL, &data, 1, 500, 2,
+            This->send(2, encrypt, SET_CONTROL, CODE_SETCONTROL, &data, 1, 500, 2,
                        DJIonboardSDK::setControlCallback, userData);
             break;
     }

@@ -27,21 +27,21 @@ void HotPoint::initData()
 
 void HotPoint::start(CallBack callback, UserData userData)
 {
-    api->send(2, encript, SET_MISSION, CODE_HOTPOINT_START, &data, sizeof(data), 500, 2,
+    api->send(2, encrypt, SET_MISSION, CODE_HOTPOINT_START, &data, sizeof(data), 500, 2,
               callback ? callback : startCallback, userData);
 }
 
 void HotPoint::stop(CallBack callback, UserData userData)
 {
     uint8_t zero = 0;
-    api->send(2, encript, SET_MISSION, CODE_HOTPOINT_STOP, &zero, sizeof(zero), 500, 2,
+    api->send(2, encrypt, SET_MISSION, CODE_HOTPOINT_STOP, &zero, sizeof(zero), 500, 2,
               callback ? callback : missionCallback, userData);
 }
 
 void HotPoint::pause(bool isPause, CallBack callback, UserData userData)
 {
     uint8_t data = isPause ? 0 : 1;
-    api->send(2, encript, SET_MISSION, CODE_HOTPOINT_SETPAUSE, &data, sizeof(data), 500, 2,
+    api->send(2, encrypt, SET_MISSION, CODE_HOTPOINT_SETPAUSE, &data, sizeof(data), 500, 2,
               callback ? callback : missionCallback, userData);
 }
 
@@ -49,7 +49,7 @@ void HotPoint::updatePalstance(HotPoint::Palstance &Data, CallBack callback, Use
 {
     data.palstance = Data.palstance;
     data.clockwise = Data.clockwise ? 1 : 0;
-    api->send(2, encript, SET_MISSION, CODE_HOTPOINT_PALSTANCE, &Data, sizeof(Data), 500, 2,
+    api->send(2, encrypt, SET_MISSION, CODE_HOTPOINT_PALSTANCE, &Data, sizeof(Data), 500, 2,
               callback ? callback : missionCallback, userData);
 }
 
@@ -64,21 +64,21 @@ void HotPoint::updatePalstance(float32_t palstance, bool isClockwise, CallBack c
 
 void HotPoint::updateRadius(float32_t meter, CallBack callback, UserData userData)
 {
-    api->send(2, encript, SET_MISSION, CODE_HOTPOINT_RADIUS, &meter, sizeof(meter), 500, 2,
+    api->send(2, encrypt, SET_MISSION, CODE_HOTPOINT_RADIUS, &meter, sizeof(meter), 500, 2,
               callback ? callback : missionCallback, userData);
 }
 
 void HotPoint::resetYaw(CallBack callback, UserData userData)
 {
     uint8_t zero = 0;
-    api->send(2, encript, SET_MISSION, CODE_HOTPOINT_SETYAW, &zero, sizeof(zero), 500, 2,
+    api->send(2, encrypt, SET_MISSION, CODE_HOTPOINT_SETYAW, &zero, sizeof(zero), 500, 2,
               callback ? callback : missionCallback, userData);
 }
 
 void HotPoint::readData(CallBack callback, UserData userData)
 {
     uint8_t zero = 0;
-    api->send(2, encript, SET_MISSION, CODE_HOTPOINT_LOAD, &zero, sizeof(zero), 500, 2,
+    api->send(2, encrypt, SET_MISSION, CODE_HOTPOINT_LOAD, &zero, sizeof(zero), 500, 2,
               callback ? callback : missionCallback, userData);
 }
 
