@@ -63,8 +63,3 @@ bool help(Script* script, UserData data)
     return true;
 }
 
-bool test(Script* script, UserData data)
-{
-    cout << "test" << endl;
-    return true;
-}

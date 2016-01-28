@@ -92,7 +92,7 @@
 
 namespace DJI
 {
-typedef uint32_t time_ms;
+typedef uint64_t time_ms;
 
 namespace onboardSDK
 {
@@ -294,6 +294,7 @@ typedef uint32_t TimeStampData;
 #else
 typedef struct TimeStampData
 {
+    //! @todo type modify
     uint32_t time;
     uint32_t nanoTime;
     uint8_t syncFlag;

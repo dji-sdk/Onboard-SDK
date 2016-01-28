@@ -3,12 +3,6 @@
 #include <sstream>
 #include <fstream>
 
-#include <cmdIO.h>
-#include <cmdSettings.h>
-#include <cmdCoreAPI.h>
-#include <cmdFlight.h>
-#include <cmdFollow.h>
-#include <cmdHotPoint.h>
 
 using namespace std;
 
@@ -69,7 +63,7 @@ ConboardSDKScript::ConboardSDKScript(CoreAPI* api)
 {
 }
 
-Task ConboardSDKScript::match(const char* name) { return Script::match((UserData)name); }
+TaskSetItem ConboardSDKScript::match(const char* name) { return Script::match((UserData)name); }
 
 void ConboardSDKScript::addTask(const char* Name, UserData Data, time_t Timeout)
 {

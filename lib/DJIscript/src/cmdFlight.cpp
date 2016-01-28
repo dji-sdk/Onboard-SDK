@@ -22,6 +22,9 @@ bool FC(Script *script, UserData data)
         cout << "|      <task code> 1 go home                                    |" << endl;
         cout << "|                  4 take off                                   |" << endl;
         cout << "|                  6 landing                                    |" << endl;
+        cout << "| - mc <bool> stop motor or standby                             |" << endl;
+        cout << "|      <bool> 0 stop                                            |" << endl;
+        cout << "|             1 standby                                         |" << endl;
         cout << "|                                                               |" << endl;
         cout << "| - fl <flag> <x> <y> <z> <yaw> flight control                  |" << endl;
         cout << "|      <flag> default  VERTICAL_VELOCITY                        |" << endl;

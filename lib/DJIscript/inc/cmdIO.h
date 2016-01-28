@@ -6,6 +6,5 @@
 bool addTask(DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data __UNUSED);
 bool waitInput(DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data __UNUSED);
 bool help(DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
-bool test(DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
 
 #endif // CMDIO_H

@@ -49,7 +49,7 @@ void HardDriverManifold::setDevice(std::string device) {
 }
 
 
-time_t HardDriverManifold::getTimeStamp() {
+DJI::time_ms HardDriverManifold::getTimeStamp() {
     return (unsigned int)time(NULL);
 }
 
