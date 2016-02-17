@@ -19,7 +19,6 @@ TaskSetItem cmdTaskSet[] = {
     TASK_ITEM(addTask, 0),   //
     TASK_ITEM(waitInput, 0), //
     TASK_ITEM(help, 0),		 //
-    TASK_ITEM(test, 0),		 //
 
     TASK_ITEM(SS, 0),	 //
     TASK_ITEM(idSS, 0),   //

@@ -3,6 +3,8 @@
 #include <string.h>
 
 #include <iostream>
+
+#ifdef LINUX
 #include <sys/select.h>
 
 int kbhit()
@@ -37,6 +39,9 @@ if(FD_ISSET(0,&read_fd))
   /* no characters were pending */
   return 0;
 }
+#elif WINDOWS
+#include <conio.h>
+#endif
 
 using namespace DJI::onboardSDK;
 using namespace std;
