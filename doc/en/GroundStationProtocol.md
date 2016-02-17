@@ -99,9 +99,9 @@ In this document, we will introduce the command set and command id again at firs
     </tr>
     <tr>
         <th>0x02</th>
-        <th>Mission State Push Info</th>
+        <th>Mission Status Push Info</th>
         <th>0x03</th>
-        <th>current mission state</th>
+        <th>current mission status</th>
     </tr>
     <tr>
         <th>0x02</th>
@@ -488,9 +488,9 @@ Note: Developers should select the `Ground Station Status` checkbox in DJI Assis
 
     ![](Images/groundstation.png)
 
-## 0x02, 0x03 Current Mission State Push Information 
+## 0x02, 0x03 Current Mission Status Push Information 
 
-There are four kinds of mission states with the same struct size.
+There are four kinds of mission status with the same struct size.
 
 Developers can separate them by their first bytes, i.e. `mission_type`.
 
@@ -512,7 +512,7 @@ waypoint mission push information
 typedef struct{
     uint8_t mission_type; //mission type, should be NAVI_MISSION_WAYPOINT
     uint8_t target_waypoint; //current target waypoint index
-    uint8_t current_state;//current state
+    uint8_t current_status;//current status
     uint8_t error_notification;//error notification
     uint16_t reserved;//reserved
 
@@ -545,7 +545,7 @@ typedef struct{
 }cmd_mission_folowme_status_push_t;
 ```
 
-the other two states(NAVI_MODE_ATTI & NAVI_MISSION_IOC)
+the other two status(NAVI_MODE_ATTI & NAVI_MISSION_IOC)
 
 ```c
 typedef struct{
@@ -604,7 +604,7 @@ waypoint reached event push information
 typedef struct{
     uint8_t incident_type;
     uint8_t waypoint_index;
-    uint8_t current_state;
+    uint8_t current_status;
     uint8_t reserved_1;
     uint8_t reserved_2;
 }cmd_mission_wp_reached_incident_t;
