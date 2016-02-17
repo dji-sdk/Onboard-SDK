@@ -3,6 +3,9 @@
 #include <string.h>
 
 #include <iostream>
+
+#ifdef LINUX
+
 #include <sys/select.h>
 int kbhit()
 {
@@ -29,6 +32,12 @@ return 1;
 /* no characters were pending */
 return 0;
 }
+
+#elif WINDOWS
+
+#include <conio.h>
+
+#endif
 
 using namespace DJI::onboardSDK;
 using namespace std;
