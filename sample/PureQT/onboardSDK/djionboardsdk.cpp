@@ -45,8 +45,8 @@ void DJIonboardSDK::initFlight()
             SLOT(on_btg_flight_YL(QAbstractButton *)));
     connect(ui->btg_flightCL, SIGNAL(buttonClicked(QAbstractButton *)), this,
             SLOT(on_btg_flight_CL(QAbstractButton *)));
-    connect(ui->btg_flightSM, SIGNAL(buttonClicked(QAbstractButton *)), this,
-            SLOT(on_btg_flight_SM(QAbstractButton *)));
+   // connect(ui->btg_flightSM, SIGNAL(buttonClicked(QAbstractButton *)), this,
+    //        SLOT(on_btg_flight_SM(QAbstractButton *)));
 
     on_btg_flight_HL(ui->btg_flightHL->checkedButton());
     on_btg_flight_VL(ui->btg_flightVL->checkedButton());

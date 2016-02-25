@@ -145,7 +145,7 @@ class DJIonboardSDK : public QMainWindow
     void on_btg_flight_VL(QAbstractButton *button);
     void on_btg_flight_YL(QAbstractButton *button);
     void on_btg_flight_CL(QAbstractButton *button);
-    void on_btg_flight_SM(QAbstractButton *button);
+    //void on_btg_flight_SM(QAbstractButton *button);
 
     void updateFlightFlag();
     void updateFlightX();
