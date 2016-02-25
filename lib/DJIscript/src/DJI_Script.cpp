@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-#ifdef LINUX
+#ifdef __linux__
 #include <sys/select.h>
 
 int kbhit()
@@ -39,7 +39,7 @@ if(FD_ISSET(0,&read_fd))
   /* no characters were pending */
   return 0;
 }
-#elif WINDOWS
+#elif _WIN32
 #include <conio.h>
 #endif
 
