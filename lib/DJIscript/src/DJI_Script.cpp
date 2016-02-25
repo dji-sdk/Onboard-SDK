@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-#ifdef LINUX
+#ifdef __linux__ 
 
 #include <sys/select.h>
 int kbhit()
@@ -33,7 +33,7 @@ return 1;
 return 0;
 }
 
-#elif WINDOWS
+#elif _WIN32 
 
 #include <conio.h>
 
