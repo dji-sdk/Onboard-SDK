@@ -38,7 +38,7 @@ void QHardDriver::init()
     }
 }
 
-time_t QHardDriver::getTimeStamp() { return QDateTime::currentMSecsSinceEpoch(); }
+DJI::time_ms QHardDriver::getTimeStamp() { return QDateTime::currentMSecsSinceEpoch(); }
 
 size_t QHardDriver::send(const uint8_t *buf, size_t len)
 {
