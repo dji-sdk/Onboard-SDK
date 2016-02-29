@@ -634,7 +634,6 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
 Please make sure the following conditions have been met:
 
 * The 'enable API control' box is checked in the assistant software.
-* The IOC mode inside the DJI GO APP is off.
 * The mode selection bar of the remote controller is placed at the F position.
 
 **IMPORTANT! afterwase the release of firmware 3.0, the drone will enter F mode logic directly if the mode bar is placed at F when power on, developers do not need to turn away then back to enter F mode logic as the way in firmware 2.3; Please pay attention to this change if you are upgrading from 2.3**  
@@ -666,7 +665,6 @@ Please make sure the following conditions have been met:
     <li>0x0001: successfully released control authorization</li>
     <li>0x0002: successfully obtained control authorization</li>
     <li>0x0003: in progress</li>
-    <li>0x00C9: not turn IOC off</li>
     </ul></td>
 </tr>
 
@@ -1124,42 +1122,42 @@ More info about Flight Data, please refer to [Flight Data part in Appendix](Appe
 
 <tr>
   <td>64</td>
-  <td>24</td>
+  <td>25</td>
   <td>GPS position, altitude, height and healthiness</td>
 </tr>
 
 <tr>
-  <td>88</td>
-  <td>12</td>
+  <td>89</td>
+  <td>6</td>
   <td>Magnetometer data</td>
 </tr>
 
 <tr>
-  <td>100</td>
-  <td>10</td>
+  <td>95</td>
+  <td>12</td>
   <td>Remote controller channels</td>
 </tr>
 
 <tr>
-  <td>110</td>
+  <td>107</td>
   <td>13</td>
   <td>Roll, pitch and yaw of Gimbal </td>
 </tr>
 
 <tr>
-  <td>123</td>
+  <td>120</td>
   <td>1</td>
   <td>Flight status</td>
 </tr>
 
 <tr>
-  <td>124</td>
+  <td>121</td>
   <td>1</td>
   <td>Battery percentage</td>
 </tr>
 
 <tr>
-  <td>125</td>
+  <td>122</td>
   <td>2</td>
   <td>Control device</td>
 </tr>

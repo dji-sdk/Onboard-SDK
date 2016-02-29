@@ -236,11 +236,7 @@ Attitude control accuracy is about 0.5 degrees, speed control accuracy of about 
   <li>bit 0：data valid flag</li>
     <ul>0：invalid</ul>
     <ul>1：valid</ul>
-  <li>bit 1:4 ：data source</li>
-    <ul>0b011：GPS</ul>
-    <ul>0b110：MVO (Mono Video Odometer)</ul>
-    <ul>0b111：SVO (Stereo Video Odometer)</ul>
-  <li>bit 5:7 ：reserved</li>
+  <li>bit 1:7 ：reserved</li>
   </ul></td>
   <td>---</td>
 </tr>
@@ -408,7 +404,10 @@ Attitude control accuracy is about 0.5 degrees, speed control accuracy of about 
      <li>bit 3 ：Flag of Onboard Device control authorization request signature </li>
      <ul>0：No request</ul>
      <ul>1：Been requested</ul>
-     <li>bit 4:7 ：reserved</li>
+     <li>bit 4 ：Flag of Virtual RC </li>
+     <ul>0：Disabled</ul>
+     <ul>1：Enabled</ul>
+     <li>bit 5:7 ：reserved</li>
   </ul></td>
   <td>---</td>
 
