@@ -44,6 +44,7 @@ Developers beginning from firmware 3.1 should ignore this file and check out the
 |Struct Changed|2.3|3.1|
 |--------------|---|---|
 |Time Stamp|`uint32_t`|`typedef struct`<br>`{`<br>&nbsp;&nbsp;`uint32_t time;`<br>&nbsp;&nbsp;`uint32_t asr_ts;`<br>&nbsp;&nbsp;`uint8_t sync_flag;`<br>`}sdk_time_stamp_t;`|
+|Velocity|`typedef struct`<br>`{`<br>&nbsp;&nbsp;`float32 x;`<br>&nbsp;&nbsp;`float32 y;`<br>&nbsp;&nbsp;`float z;`<br>&nbsp;&nbsp;`uint8_t health_flag:1;`<br>&nbsp;&nbsp;`uint8_t sensor_id:4;`<br>&nbsp;&nbsp;`uint8_t reserved:3;`<br>`} velocity_data_t;`|`typedef struct`<br>`{`<br>&nbsp;&nbsp;`float32 x;`<br>&nbsp;&nbsp;`float32 y;`<br>&nbsp;&nbsp;`float z;`<br>&nbsp;&nbsp;`uint8_t health_flag:1;`<br>&nbsp;&nbsp;`uint8_t reserved:7;`<br>`} velocity_data_t;`|
 |Ctrl Device|`typedef struct`<br>`{`<br>&nbsp;&nbsp;`uint8_t cur_ctrl_dev_in_navi_mode: 3;`<br>&nbsp;&nbsp;`uint8_t serial_req_status: 1;`<br>&nbsp;&nbsp;`uint8_t reserved: 4;`<br>`} ctrl_device_t;`|`typedef struct`<br>`{`<br>&nbsp;&nbsp;`uint8_t cur_api_ctrl_mode;`<br>&nbsp;&nbsp;`uint8_t cur_ctrl_dev_in_navi_mode: 3;`<br>&nbsp;&nbsp;`uint8_t serial_req_status: 1;`<br>&nbsp;&nbsp;`uint8_t vrc_enable_flag: 1;`<br>&nbsp;&nbsp;`uint8_t reserved: 3;`<br>`} ctrl_device_t;`|
 
 ## Library Updates
