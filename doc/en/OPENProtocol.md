@@ -860,42 +860,42 @@ More info about Flight Data, please refer to [Flight Data part in Appendix](Appe
 
 <tr>
   <td>59</td>
-  <td>24</td>
+  <td>25</td>
   <td>GPS position, altitude, height and healthiness</td>
 </tr>
 
 <tr>
-  <td>83</td>
-  <td>12</td>
+  <td>84</td>
+  <td>6</td>
   <td>Magnetometer data</td>
 </tr>
 
 <tr>
-  <td>95</td>
-  <td>10</td>
+  <td>90</td>
+  <td>12</td>
   <td>Remote controller channels</td>
 </tr>
 
 <tr>
-  <td>105</td>
+  <td>102</td>
   <td>12</td>
   <td>Roll, pitch and yaw of Gimbal </td>
 </tr>
 
 <tr>
-  <td>117</td>
+  <td>114</td>
   <td>1</td>
   <td>Flight status</td>
 </tr>
 
 <tr>
-  <td>118</td>
+  <td>115</td>
   <td>1</td>
   <td>Battery percentage</td>
 </tr>
 
 <tr>
-  <td>119</td>
+  <td>116</td>
   <td>1</td>
   <td>Control device</td>
 </tr>
