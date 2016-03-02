@@ -40,16 +40,16 @@ void DJI::onboardSDK::CoreAPI::sendData(unsigned char *buf)
     Header *pHeader = (Header *)buf;
     ans = driver->send(buf, pHeader->length);
     if (ans == 0)
-        API_LOG(driver, STATUS_LOG,"Port not send");
+        API_LOG(driver, STATUS_LOG, "Port not send");
     if (ans == (size_t)-1)
-        API_LOG(driver, ERROR_LOG,"Port closed");
+        API_LOG(driver, ERROR_LOG, "Port closed");
 }
 
 void DJI::onboardSDK::CoreAPI::appHandler(Header *header)
 {
     Header *p2header;
     CallBack callBack = 0;
-    if (header->is_ack == 1)
+    if (header->isAck == 1)
     {
         if (header->sessionID > 1 && header->sessionID < 32)
         {
@@ -58,17 +58,16 @@ void DJI::onboardSDK::CoreAPI::appHandler(Header *header)
                 driver->lockMemory();
                 p2header = (Header *)CMDSessionTab[header->sessionID].mmu->pmem;
                 if (p2header->sessionID == header->sessionID &&
-                    p2header->sequence_number == header->sequence_number)
+                    p2header->sequenceNumber == header->sequenceNumber)
                 {
-                    API_LOG(driver, DEBUG_LOG,"Recv Session %d ACK\n", p2header->sessionID);
+                    API_LOG(driver, DEBUG_LOG, "Recv Session %d ACK\n", p2header->sessionID);
 
-                    callBack = CMDSessionTab[header->sessionID].callback;
+                    callBack = CMDSessionTab[header->sessionID].handler;
                     freeSession(&CMDSessionTab[header->sessionID]);
                     driver->freeMemory();
                     if (callBack)
-                        callBack(
-                            this,
-                            header); //! @todo new algorithm call in a thread
+                        //! @todo new algorithm call in a thread
+                        callBack(this, header, CMDSessionTab[header->sessionID].userData);
                 }
                 else
                     driver->freeMemory();
@@ -77,8 +76,6 @@ void DJI::onboardSDK::CoreAPI::appHandler(Header *header)
     }
     else
     {
-        //! @todo request package
-        //!
         switch (header->sessionID)
         {
             case 0:
@@ -88,47 +85,42 @@ void DJI::onboardSDK::CoreAPI::appHandler(Header *header)
             //! @todo unnecessary ack in case 1. Maybe add code later
             //! @todo check algorithm
             default: //! @note session id is 2
-                API_LOG(driver, STATUS_LOG,"ACK %d", header->sessionID);
+                API_LOG(driver, STATUS_LOG, "ACK %d", header->sessionID);
 
-                if (ACKSessionTab[header->sessionID - 1].session_status ==
-                    ACK_SESSION_PROCESS)
+                if (ACKSessionTab[header->sessionID - 1].sessionStatus == ACK_SESSION_PROCESS)
                 {
-                    API_LOG(driver, DEBUG_LOG,"This session is waiting for App ack:"
-                              "session id=%d,seq_num=%d\n",
-                              header->sessionID, header->sequence_number);
+                    API_LOG(driver, DEBUG_LOG, "This session is waiting for App ack:"
+                                               "session id=%d,seq_num=%d\n",
+                            header->sessionID, header->sequenceNumber);
                 }
-                else if (ACKSessionTab[header->sessionID - 1].session_status ==
-                         ACK_SESSION_IDLE)
+                else if (ACKSessionTab[header->sessionID - 1].sessionStatus == ACK_SESSION_IDLE)
                 {
                     if (header->sessionID > 1)
-                        ACKSessionTab[header->sessionID - 1].session_status =
+                        ACKSessionTab[header->sessionID - 1].sessionStatus =
                             ACK_SESSION_PROCESS;
                     recvReqData(header);
                 }
-                else if (ACKSessionTab[header->sessionID - 1].session_status ==
+                else if (ACKSessionTab[header->sessionID - 1].sessionStatus ==
                          ACK_SESSION_USING)
                 {
                     driver->lockMemory();
-                    p2header =
-                        (Header *)
-                            ACKSessionTab[header->sessionID - 1].mmu->pmem;
-                    if (p2header->sequence_number == header->sequence_number)
+                    p2header = (Header *)ACKSessionTab[header->sessionID - 1].mmu->pmem;
+                    if (p2header->sequenceNumber == header->sequenceNumber)
                     {
-                        API_LOG(driver, DEBUG_LOG,"repeat ACK to remote,session "
-                                  "id=%d,seq_num=%d\n",
-                                  header->sessionID, header->sequence_number);
-                        sendData(
-                            ACKSessionTab[header->sessionID - 1].mmu->pmem);
+                        API_LOG(driver, DEBUG_LOG, "repeat ACK to remote,session "
+                                                   "id=%d,seq_num=%d\n",
+                                header->sessionID, header->sequenceNumber);
+                        sendData(ACKSessionTab[header->sessionID - 1].mmu->pmem);
                         driver->freeMemory();
                     }
                     else
                     {
                         API_LOG(driver, DEBUG_LOG,
-                            "same session,but new seq_num pkg,session id=%d,"
-                            "pre seq_num=%d,cur seq_num=%d\n",
-                            header->sessionID, p2header->sequence_number,
-                            header->sequence_number);
-                        ACKSessionTab[header->sessionID - 1].session_status =
+                                "same session,but new seq_num pkg,session id=%d,"
+                                "pre seq_num=%d,cur seq_num=%d\n",
+                                header->sessionID, p2header->sequenceNumber,
+                                header->sequenceNumber);
+                        ACKSessionTab[header->sessionID - 1].sessionStatus =
                             ACK_SESSION_PROCESS;
                         driver->freeMemory();
                         recvReqData(header);
@@ -142,41 +134,44 @@ void DJI::onboardSDK::CoreAPI::appHandler(Header *header)
 void DJI::onboardSDK::CoreAPI::sendPoll()
 {
     unsigned char i;
-    unsigned int cur_timestamp;
+    time_ms curTimestamp;
     for (i = 1; i < SESSION_TABLE_NUM; i++)
     {
         if (CMDSessionTab[i].usageFlag == 1)
         {
-            cur_timestamp = driver->getTimeStamp();
-            if ((cur_timestamp - CMDSessionTab[i].pre_timestamp) >
-                CMDSessionTab[i].timeout)
+            curTimestamp = driver->getTimeStamp();
+            if ((curTimestamp - CMDSessionTab[i].preTimestamp) > CMDSessionTab[i].timeout)
             {
                 driver->lockMemory();
                 if (CMDSessionTab[i].retry > 0)
                 {
                     if (CMDSessionTab[i].sent >= CMDSessionTab[i].retry)
                     {
-                        API_LOG(driver, DEBUG_LOG,"Free ssion %d\n",
-                                  CMDSessionTab[i].sessionID);
+                        API_LOG(driver, DEBUG_LOG, "Free ssion %d\n",
+                                CMDSessionTab[i].sessionID);
 
                         freeSession(&CMDSessionTab[i]);
                     }
                     else
                     {
-                        API_LOG(driver, DEBUG_LOG,"Retry session %d\n",
-                                  CMDSessionTab[i].sessionID);
+                        API_LOG(driver, DEBUG_LOG, "Retry session %d\n",
+                                CMDSessionTab[i].sessionID);
                         sendData(CMDSessionTab[i].mmu->pmem);
-                        CMDSessionTab[i].pre_timestamp = cur_timestamp;
+                        CMDSessionTab[i].preTimestamp = curTimestamp;
                         CMDSessionTab[i].sent++;
                     }
                 }
                 else
                 {
-                    API_LOG(driver, DEBUG_LOG,"send once %d", i);
+                    API_LOG(driver, DEBUG_LOG, "send once %d\n", i);
                     sendData(CMDSessionTab[i].mmu->pmem);
-                    CMDSessionTab[i].pre_timestamp = cur_timestamp;
+                    CMDSessionTab[i].preTimestamp = curTimestamp;
                 }
                 driver->freeMemory();
+            }
+            else
+            {
+                API_LOG(driver, DEBUG_LOG, "timeout Session: %d \n", i);
             }
         }
     }
@@ -187,6 +182,10 @@ void DJI::onboardSDK::CoreAPI::readPoll()
     int read_len;
     uint8_t buf[BUFFER_SIZE];
     read_len = driver->readall(buf, BUFFER_SIZE);
+#ifdef API_BUFFER_DATA
+    onceRead = read_len;
+    totalRead += onceRead;
+#endif // API_BUFFER_DATA
     for (int i = 0; i < read_len; i++)
     {
         byteHandler(buf[i]);
@@ -195,6 +194,7 @@ void DJI::onboardSDK::CoreAPI::readPoll()
 
 void CoreAPI::callbackPoll()
 {
+    //! @todo implement callbackPoll
     if (cblistTail != CALLBACK_LIST_NUM)
     {
     }
@@ -208,8 +208,8 @@ void DJI::onboardSDK::CoreAPI::setup()
 
 void DJI::onboardSDK::CoreAPI::setKey(const char *key)
 {
-    transformTwoByte(key, filter.comm_key);
-    filter.enc_enabled = 1;
+    transformTwoByte(key, filter.sdkKey);
+    filter.encode = 1;
 }
 
 void CoreAPI::setActivation(bool isActivated)
@@ -218,6 +218,11 @@ void CoreAPI::setActivation(bool isActivated)
         broadcastData.activation = 1;
     else
         broadcastData.activation = 0;
+}
+
+void CoreAPI::setSyncFreq(uint32_t freqInHz)
+{
+    send(0, 1, SET_SYNC, CODE_SYNC_BROADCAST, &freqInHz, sizeof(freqInHz));
 }
 
 unsigned short calculateLength(unsigned short size, unsigned short encrypt_flag)
@@ -237,42 +242,40 @@ int DJI::onboardSDK::CoreAPI::ackInterface(Ack *parameter)
 
     if (parameter->length > PRO_PURE_DATA_MAX_SIZE)
     {
-        API_LOG(driver, ERROR_LOG,"length=%d is oversize\n", parameter->length);
+        API_LOG(driver, ERROR_LOG, "length=%d is oversize\n", parameter->length);
         return -1;
     }
 
-    if (parameter->session_id == 0)
+    if (parameter->sessionID == 0)
     {
         //! @note nothing todo session 0 is a nack session.
         return 0;
     }
-    else if (parameter->session_id > 0 && parameter->session_id < 32)
+    else if (parameter->sessionID > 0 && parameter->sessionID < 32)
     {
         driver->lockMemory();
-        ack_session = allocACK(
-            parameter->session_id,
-            calculateLength(parameter->length, parameter->need_encrypt));
+        ack_session = allocACK(parameter->sessionID,
+                               calculateLength(parameter->length, parameter->encrypt));
         if (ack_session == (ACKSession *)NULL)
         {
-            API_LOG(driver, ERROR_LOG,"there is not enough memory\n");
+            API_LOG(driver, ERROR_LOG, "there is not enough memory\n");
             driver->freeMemory();
             return -1;
         }
 
-        ret = encrypt(ack_session->mmu->pmem, parameter->buf, parameter->length,
-                      1, parameter->need_encrypt, parameter->session_id,
-                      parameter->seq_num);
+        ret = encrypt(ack_session->mmu->pmem, parameter->buf, parameter->length, 1,
+                      parameter->encrypt, parameter->sessionID, parameter->seqNum);
         if (ret == 0)
         {
-            API_LOG(driver, ERROR_LOG,"encrypt ERROR\n");
+            API_LOG(driver, ERROR_LOG, "encrypt ERROR\n");
             driver->freeMemory();
             return -1;
         }
 
-        API_LOG(driver, DEBUG_LOG,"Sending data!");
+        API_LOG(driver, DEBUG_LOG, "Sending data!");
         sendData(ack_session->mmu->pmem);
         driver->freeMemory();
-        ack_session->session_status = ACK_SESSION_USING;
+        ack_session->sessionStatus = ACK_SESSION_USING;
         return 0;
     }
 
@@ -285,35 +288,34 @@ int DJI::onboardSDK::CoreAPI::sendInterface(Command *parameter)
     CMDSession *cmd_session = (CMDSession *)NULL;
     if (parameter->length > PRO_PURE_DATA_MAX_SIZE)
     {
-        API_LOG(driver, ERROR_LOG,"ERROR,length=%d is oversize\n", parameter->length);
+        API_LOG(driver, ERROR_LOG, "ERROR,length=%d is oversize\n", parameter->length);
         return -1;
     }
 
-    switch (parameter->session_mode)
+    switch (parameter->sessionMode)
     {
         case 0:
             driver->lockMemory();
-            cmd_session = allocSession(
-                CMD_SESSION_0,
-                calculateLength(parameter->length, parameter->need_encrypt));
+            cmd_session = allocSession(CMD_SESSION_0,
+                                       calculateLength(parameter->length, parameter->encrypt));
+
             if (cmd_session == (CMDSession *)NULL)
             {
                 driver->freeMemory();
-                API_LOG(driver, ERROR_LOG,"ERROR,there is not enough memory\n");
+                API_LOG(driver, ERROR_LOG, "ERROR,there is not enough memory\n");
                 return -1;
             }
-            ret = encrypt(cmd_session->mmu->pmem, parameter->buf,
-                          parameter->length, 0, parameter->need_encrypt,
-                          cmd_session->sessionID, seq_num);
+            ret = encrypt(cmd_session->mmu->pmem, parameter->buf, parameter->length, 0,
+                          parameter->encrypt, cmd_session->sessionID, seq_num);
             if (ret == 0)
             {
-                API_LOG(driver, ERROR_LOG,"encrypt ERROR\n");
+                API_LOG(driver, ERROR_LOG, "encrypt ERROR\n");
                 freeSession(cmd_session);
                 driver->freeMemory();
                 return -1;
             }
 
-            API_LOG(driver, DEBUG_LOG,"send data in session mode 0\n");
+            API_LOG(driver, DEBUG_LOG, "send data in session mode 0\n");
 
             sendData(cmd_session->mmu->pmem);
             seq_num++;
@@ -322,79 +324,76 @@ int DJI::onboardSDK::CoreAPI::sendInterface(Command *parameter)
             break;
         case 1:
             driver->lockMemory();
-            cmd_session = allocSession(
-                CMD_SESSION_1,
-                calculateLength(parameter->length, parameter->need_encrypt));
+            cmd_session = allocSession(CMD_SESSION_1,
+                                       calculateLength(parameter->length, parameter->encrypt));
             if (cmd_session == (CMDSession *)NULL)
             {
                 driver->freeMemory();
-                API_LOG(driver, ERROR_LOG,"ERROR,there are not enough memory\n");
+                API_LOG(driver, ERROR_LOG, "ERROR,there are not enough memory\n");
                 return -1;
             }
-            if (seq_num == cmd_session->pre_seq_num)
+            if (seq_num == cmd_session->preSeqNum)
                 seq_num++;
-            ret = encrypt(cmd_session->mmu->pmem, parameter->buf,
-                          parameter->length, 0, parameter->need_encrypt,
-                          cmd_session->sessionID, seq_num);
+            ret = encrypt(cmd_session->mmu->pmem, parameter->buf, parameter->length, 0,
+                          parameter->encrypt, cmd_session->sessionID, seq_num);
             if (ret == 0)
             {
-                API_LOG(driver, ERROR_LOG,"encrypt ERROR\n");
+                API_LOG(driver, ERROR_LOG, "encrypt ERROR\n");
                 freeSession(cmd_session);
                 driver->freeMemory();
                 return -1;
             }
-            cmd_session->pre_seq_num = seq_num++;
-            cmd_session->callback = parameter->callback;
-            cmd_session->timeout = (parameter->timeout > POLL_TICK)
-                                       ? parameter->timeout
-                                       : POLL_TICK;
-            cmd_session->pre_timestamp = driver->getTimeStamp();
+            cmd_session->preSeqNum = seq_num++;
+
+            cmd_session->handler = parameter->handler;
+            cmd_session->userData = parameter->userData;
+            cmd_session->timeout =
+                (parameter->timeout > POLL_TICK) ? parameter->timeout : POLL_TICK;
+            cmd_session->preTimestamp = driver->getTimeStamp();
             cmd_session->sent = 1;
             cmd_session->retry = 1;
-            API_LOG(driver, DEBUG_LOG,"sending session %d\n", cmd_session->sessionID);
+            API_LOG(driver, DEBUG_LOG, "sending session %d\n", cmd_session->sessionID);
             sendData(cmd_session->mmu->pmem);
             driver->freeMemory();
             break;
         case 2:
             driver->lockMemory();
-            cmd_session = allocSession(
-                CMD_SESSION_AUTO,
-                calculateLength(parameter->length, parameter->need_encrypt));
+            cmd_session = allocSession(CMD_SESSION_AUTO,
+                                       calculateLength(parameter->length, parameter->encrypt));
             if (cmd_session == (CMDSession *)NULL)
             {
                 driver->freeMemory();
-                API_LOG(driver, ERROR_LOG,"ERROR,there is not enough memory\n");
+                API_LOG(driver, ERROR_LOG, "ERROR,there is not enough memory\n");
                 return -1;
             }
-            if (seq_num == cmd_session->pre_seq_num)
+            if (seq_num == cmd_session->preSeqNum)
             {
                 seq_num++;
             }
-            ret = encrypt(cmd_session->mmu->pmem, parameter->buf,
-                          parameter->length, 0, parameter->need_encrypt,
-                          cmd_session->sessionID, seq_num);
+            ret = encrypt(cmd_session->mmu->pmem, parameter->buf, parameter->length, 0,
+                          parameter->encrypt, cmd_session->sessionID, seq_num);
 
             if (ret == 0)
             {
-                API_LOG(driver, ERROR_LOG,"encrypt ERROR");
+                API_LOG(driver, ERROR_LOG, "encrypt ERROR");
                 freeSession(cmd_session);
                 driver->freeMemory();
                 return -1;
             }
-            cmd_session->pre_seq_num = seq_num++;
-            cmd_session->callback = parameter->callback;
-            cmd_session->timeout = (parameter->timeout > POLL_TICK)
-                                       ? parameter->timeout
-                                       : POLL_TICK;
-            cmd_session->pre_timestamp = driver->getTimeStamp();
+            cmd_session->preSeqNum = seq_num++;
+            cmd_session->handler = parameter->handler;
+            cmd_session->userData = parameter->userData;
+            cmd_session->timeout =
+                (parameter->timeout > POLL_TICK) ? parameter->timeout : POLL_TICK;
+            cmd_session->preTimestamp = driver->getTimeStamp();
             cmd_session->sent = 1;
-            cmd_session->retry = parameter->retry_time;
-            API_LOG(driver, DEBUG_LOG,"Sending session %d\n", cmd_session->sessionID);
+            cmd_session->retry = parameter->retry;
+            API_LOG(driver, DEBUG_LOG, "Sending session %d\n", cmd_session->sessionID);
             sendData(cmd_session->mmu->pmem);
             driver->freeMemory();
             break;
         default:
-            API_LOG(driver, ERROR_LOG,"Unknown mode:%d\n", parameter->session_mode);
+            API_LOG(driver, ERROR_LOG, "Unknown mode:%d\n", parameter->sessionMode);
             break;
     }
     return 0;
