@@ -865,15 +865,11 @@ For more info about Movement Control, please refer to [Control mode byte part in
   <td>6</td>
   <td>1</td>
   <td><ul>
-    <li>5 bit</li>
-    <li>1 bit</li>
-    <li>1 bit</li>
+    <li>7 bit</li>
     <li>1 bit</li>
     </ul></td>
   <td><ul>
     <li>Reserved</li>
-    <li>Reset Yaw to Center</li>
-    <li>Ignore User Stick</li>
     <li>Enable Control</li>
     </ul></td>
 </tr>
