@@ -1,30 +1,63 @@
+/*! @brief
+ *  @file DJI_Type.h
+ *  @version 3.0
+ *  @date Dec 16, 2015
+ *
+ *  @abstract
+ *  Type definition for DJI onboardSDK library
+ *  Maintain officially
+ *
+ *  @attention
+ *  Maintain officially, readonly for users
+ *  Do not modify any definition in this file,
+ *  if you are not sure what are you doing exactlly,
+ *  or we will not provide any support.
+ *
+ *  Project configuration:
+ *
+ *  @version features:
+ *  -* @version V3.0
+ *  -* DJI-onboard-SDK for Windows,QT,STM32,ROS,Cmake
+ *  -* @date Dec 16, 2015
+ *  -* @author william.wu
+ *
+ * */
+
+/*! @attention
+ *  Maintain officially, readonly for users
+ *  Do not modify any definition in this file,
+ *  if you are not sure what are you doing exactlly,
+ *  or we will not provide any support.
+ * */
+
 #ifndef DJI_TYPE
 #define DJI_TYPE
 
 #include "DJI_Config.h"
 #include <stdio.h>
 
+#define NAME(x) #x
+
 #ifdef __GNUC__
 #define __UNUSED __attribute__((__unused__))
+#define __DELETE(x) delete (char *) x
 #else
 #define __UNUSED
+#define __DELETE(x) delete x
+#pragma warning(disable : 4100)
+#pragma warning(disable : 4800)
 #endif //__GNUC__
 
 #ifdef WIN32
 #define __func__ __FUNCTION__
 #endif // WIN32
 
-#define APIprintf(...)                                                         \
-    sprintf_s(DJI::onboardSDK::buffer, bufsize, ##__VA_ARGS__)
-
-#define API_LOG(driver, title, fmt, ...)                                       \
-    {                                                                          \
-        if ((title))                                                           \
-        {                                                                      \
-            APIprintf("%s %s,line %d: " fmt, title, __func__, __LINE__,        \
-                      ##__VA_ARGS__);                                          \
-            (driver)->displayLog();                                            \
-        }                                                                      \
+#define API_LOG(driver, title, fmt, ...)                                                       \
+    if (title)                                                                                 \
+    {                                                                                          \
+        (sprintf(DJI::onboardSDK::buffer, "%s %s,line %d: " fmt, title ? title : "NONE",       \
+                 __func__, __LINE__, ##__VA_ARGS__));                                          \
+        (driver)->displayLog();                                                                \
     }
 
 #ifdef API_DEBUG_DATA
@@ -39,21 +72,38 @@
 #define ERROR_LOG 0
 #endif
 
+#ifdef API_BUFFER_DATA
+#define BUFFER_LOG "BUFFER"
+#else
+#define BUFFER_LOG 0
+#endif
+
 #ifdef API_STATUS_DATA
 #define STATUS_LOG "STATUS"
 #else
 #define STATUS_LOG 0
 #endif
 
+#ifdef API_MISSION_DATA
+#define MISSION_LOG "MISSION"
+#else
+#define MISSION_LOG 0
+#endif
+
 namespace DJI
 {
+typedef uint64_t time_ms;
+
 namespace onboardSDK
 {
+
 const size_t bufsize = 1024;
 extern char buffer[];
+extern uint8_t encrypt;
 
 const size_t SESSION_TABLE_NUM = 32;
 const size_t CALLBACK_LIST_NUM = 10;
+
 class CoreAPI;
 
 typedef struct Header
@@ -62,47 +112,55 @@ typedef struct Header
     unsigned int length : 10;
     unsigned int version : 6;
     unsigned int sessionID : 5;
-    unsigned int is_ack : 1;
+    unsigned int isAck : 1;
 
     unsigned int reversed0 : 2; // always 0
 
     unsigned int padding : 5;
-    unsigned int enc_type : 3;
+    unsigned int enc : 3;
     unsigned int reversed1 : 24;
 
-    unsigned int sequence_number : 16;
-    unsigned int head_crc : 16;
+    unsigned int sequenceNumber : 16;
+    unsigned int crc : 16;
 } Header;
 
-typedef void (*CallBack)(DJI::onboardSDK::CoreAPI *, Header *);
+typedef void (*CallBack)(DJI::onboardSDK::CoreAPI *, Header *, void *);
+typedef void *UserData;
+
+typedef struct CallBackHandler
+{
+    CallBack callback;
+    UserData userData;
+} CallBackHandler;
 
 typedef struct Command
 {
-    unsigned short session_mode : 2;
-    unsigned short need_encrypt : 1;
-    unsigned short retry_time : 13;
+    unsigned short sessionMode : 2;
+    unsigned short encrypt : 1;
+    unsigned short retry : 13;
     unsigned short timeout; // unit is ms
-    unsigned int length;
-    unsigned char *buf;
-    CallBack callback;
+    size_t length;
+    uint8_t *buf;
+    CallBack handler;
+    UserData userData;
 } Command;
 
 typedef struct SDKFilter
 {
-    unsigned short reuse_index;
-    unsigned short reuse_count;
-    unsigned short recv_index;
-    unsigned char comm_recv_buf[BUFFER_SIZE];
+    unsigned short reuseIndex;
+    unsigned short reuseCount;
+    unsigned short recvIndex;
+    unsigned char recvBuf[BUFFER_SIZE];
     // for encrypt
-    unsigned char comm_key[32];
-    unsigned char enc_enabled;
+    unsigned char sdkKey[32];
+    unsigned char encode;
 } SDKFilter;
 
 typedef struct MMU_Tab
 {
-    unsigned int tab_index : 8;
-    unsigned int usage_flag : 8;
-    unsigned int mem_size : 16;
+    unsigned int tabIndex : 8;
+    unsigned int usageFlag : 8;
+    unsigned int memSize : 16;
     unsigned char *pmem;
 } MMU_Tab;
 
@@ -114,45 +172,48 @@ typedef struct CMDSession
     uint32_t retry : 5;
     uint32_t timeout : 16;
     MMU_Tab *mmu;
-    CallBack callback;
-    uint32_t pre_seq_num;
-    uint32_t pre_timestamp;
+    CallBack handler;
+    UserData userData;
+    uint32_t preSeqNum;
+    time_ms preTimestamp;
 } CMDSession;
 
 typedef struct ACKSession
 {
     uint32_t sessionID : 5;
-    uint32_t session_status : 2;
+    uint32_t sessionStatus : 2;
     uint32_t res : 25;
     MMU_Tab *mmu;
 } ACKSession;
 
 typedef struct Ack
 {
-    uint16_t session_id : 8;
-    uint16_t need_encrypt : 8;
-    uint16_t seq_num;
+    uint16_t sessionID : 8;
+    uint16_t encrypt : 8;
+    uint16_t seqNum;
     uint32_t length;
     uint8_t *buf;
 } Ack;
 
 #pragma pack(1)
+
 typedef uint8_t BatteryData;
+typedef uint8_t MissionACK;
 
 typedef struct GimbalAngleData
 {
-    int16_t yaw_angle;
-    int16_t roll_angle;
-    int16_t pitch_angle;
-    uint8_t ctrl_byte;
+    int16_t yaw;
+    int16_t roll;
+    int16_t pitch;
+    uint8_t mode;
     uint8_t duration;
 } GimbalAngleData;
 
 typedef struct GimbalSpeedData
 {
-    int16_t yaw_angle_rate;
-    int16_t roll_angle_rate;
-    int16_t pitch_angle_rate;
+    int16_t yaw;
+    int16_t roll;
+    int16_t pitch;
     uint8_t reserved; // always 0x80;
 } GimbalSpeedData;
 
@@ -167,7 +228,7 @@ typedef struct QuaternionData
     float32_t q3;
 } QuaternionData;
 
-typedef struct
+typedef struct CommonData
 {
     float32_t x;
     float32_t y;
@@ -179,21 +240,21 @@ typedef struct VelocityData
     float32_t x;
     float32_t y;
     float32_t z;
-    uint8_t health_flag : 1;
-    uint8_t feedback_sensor_id : 4;
+    uint8_t health : 1;
+    uint8_t sensorID : 4;
     uint8_t reserve : 3;
 } VelocityData;
 
-typedef struct
+typedef struct PossitionData
 {
     float64_t latitude;
-    float64_t longtitude;
+    float64_t longitude;
     float32_t altitude;
     float32_t height;
     uint8_t health;
 } PossitionData;
 
-typedef struct
+typedef struct RadioData
 {
     int16_t roll;
     int16_t pitch;
@@ -203,54 +264,67 @@ typedef struct
     int16_t gear;
 } RadioData;
 
-typedef struct
+typedef struct MagnetData
 {
     int16_t x;
     int16_t y;
     int16_t z;
 } MagnetData;
 
+typedef struct GPSData
+{
+    float64_t latitude;
+    float64_t longtitude;
+    float64_t altitude;
+} GPSData;
+
 typedef struct CtrlInfoData
 {
-#ifdef SDK_VERSION_3_0
+#ifndef SDK_VERSION_2_3
     uint8_t data;
-#endif
+#endif // SDK_VERSION_2_3
     //! @todo mode remote to enums
-    uint8_t cur_ctrl_dev_in_navi_mode : 3; /*0->rc  1->app  2->serial*/
-    uint8_t serial_req_status : 1;		   /*1->opensd  0->close*/
+    uint8_t device : 3;	/*0->rc  1->app  2->serial*/
+    uint8_t signature : 1; /*1->opensd  0->close*/
     uint8_t reserved : 4;
 } CtrlInfoData;
 
 #ifdef SDK_VERSION_2_3
 typedef uint32_t TimeStampData;
-#endif // SDK_VERSION_2_3
-
-#ifdef SDK_VERSION_3_0
+#else
 typedef struct TimeStampData
 {
+    //! @todo type modify
     uint32_t time;
-    uint32_t asr_ts;
-    uint8_t sync_flag;
+    uint32_t nanoTime;
+    uint8_t syncFlag;
 } TimeStampData;
-#endif // SDK_VERSION_3_0
+#endif // SDK_VERSION_2_3
 
 typedef struct GimbalData
 {
     float32_t roll;
     float32_t pitch;
     float32_t yaw;
-#ifdef SDK_VERSION_3_0
-    uint8_t is_pitch_limit : 1;
-    uint8_t is_roll_limit : 1;
-    uint8_t is_yaw_limit : 1;
+#ifndef SDK_VERSION_2_3
+    uint8_t pitchLimit : 1;
+    uint8_t rollLimit : 1;
+    uint8_t yawLimit : 1;
     uint8_t reserved : 5;
-#endif // SDK_VERSION_3_0
+#endif // SDK_VERSION_2_3
 } GimbalData;
 
 typedef uint8_t FlightStatus;
 
+typedef struct
+{
+    unsigned char cmdSequence;
+    unsigned char cmdData;
+} TaskData;
+
 typedef struct BroadcastData
 {
+    unsigned short dataFlag;
     TimeStampData timeStamp;
     QuaternionData q;
     CommonData a;
@@ -261,8 +335,12 @@ typedef struct BroadcastData
     RadioData rc;
     GimbalData gimbal;
     FlightStatus status; //! @todo define enum
-    BatteryData capacity;
-    CtrlInfoData ctrl_info;
+    BatteryData battery;
+    CtrlInfoData ctrlInfo;
+
+    //! @note these variables are not send from FMU,
+    //! just a record for user.
+    uint8_t controlStatus; //! @todo add IO code
     uint8_t activation;
 } BroadcastData;
 
@@ -275,6 +353,9 @@ typedef struct VirtualRCSetting
 
 typedef struct VirtualRCData
 {
+    //! @note this is default mapping data structure for
+    //! virtual remote controller.
+    //! @todo channel map
     uint32_t roll;
     uint32_t pitch;
     uint32_t throttle;
@@ -298,18 +379,6 @@ typedef struct VirtualRCData
 } // namespace DJI
 
 #define PRO_PURE_DATA_MAX_SIZE 1007 // 2^10 - header size
-
-/* memory management unit */
-
 const size_t MMU_TABLE_NUM = 32;
-
-/* session management unit */
-
-#define ACK_SESSION_IDLE 0
-#define ACK_SESSION_PROCESS 1
-#define ACK_SESSION_USING 2
-#define CMD_SESSION_0 0
-#define CMD_SESSION_1 1
-#define CMD_SESSION_AUTO 32
 
 #endif // DJI_TYPE

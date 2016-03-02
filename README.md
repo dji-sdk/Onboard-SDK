@@ -137,11 +137,11 @@ Please comply with the local regulations during the development process and the 
 
 ### Compile & Run Example Section:
 
-- [Linux Command Line example](sample/Linux-Cmdline)
+- [Linux Command Line example](sample/commandline)
 
 - [Linux ROS example](https://github.com/dji-sdk/Onboard-SDK-ROS)
 
-- [Windows QT example](sample/Windows-QT)
+- [Windows QT example](sample/PureQT)
 
 - [STM32 example](sample/STM32)
 
@@ -154,12 +154,6 @@ Please comply with the local regulations during the development process and the 
 - [Programming Guide][3]
 
 - [FAQ][FAQ]
-
-### Articles contributed by external developers:
-
-- [Onboard Device Selection Tips](http://bbs.dji.com/forum.php?mod=viewthread&tid=21106&extra=page%3D1%26filter%3Ddigest%26digest%3D1) (Chinese)
-
-- [Onboard SDK & M100 FAQ (Unofficial)](http://bbs.dji.com/forum.php?mod=viewthread&tid=15991&extra=page%3D1%26filter%3Ddigest%26digest%3D1%26typeid%3D182) (Chinese)
 
 
 [0]:doc/en/OPENProtocol.md  
@@ -291,11 +285,11 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 
 ### 编译与运行示例:
 
-- [Linux Command Line example](sample/Linux-Cmdline)
+- [Linux Command Line example](sample/commandline)
 
 - [Linux ROS example](https://github.com/dji-sdk/Onboard-SDK-ROS)
 
-- [Windows QT example](sample/Windows-QT)
+- [Windows QT example](sample/PureQT)
 
 - [STM32 example](sample/STM32)
 
@@ -309,12 +303,6 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
   
 - [FAQ][cnFAQ]
 
-
-### 由外部开发者提供的文档:
-
-- [可以在M100上使用的机载设备及机载外部设备](http://bbs.dji.com/forum.php?mod=viewthread&tid=21106&extra=page%3D1%26filter%3Ddigest%26digest%3D1)
-
-- [关于M100 & Onboard SDK的问题FAQ (非官方)](http://bbs.dji.com/forum.php?mod=viewthread&tid=15991&extra=page%3D1%26filter%3Ddigest%26digest%3D1%26typeid%3D182)
 
 [cn0]:doc/cn/开放协议.md  
 [cn1]:doc/cn/附录.md  

@@ -219,8 +219,8 @@ By specifying the `control_mode_byte`, 14 control modes can be constructed :
     <ul>1：valid</ul>
   <li>bit 1:4 ：data source</li>
     <ul>0b011：GPS</ul>
-    <ul>0b110：MVO (Mono Video Odometer)</ul>
-    <ul>0b111：SVO (Stereo Video Odometer)</ul>
+    <ul>0b100：MVO (Mono Video Odometer)</ul>
+    <ul>0b101：SVO (Stereo Video Odometer)</ul>
   <li>bit 5:7 ：reserved</li>
   </ul></td>
   <td>---</td>
