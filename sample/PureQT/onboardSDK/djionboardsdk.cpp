@@ -130,7 +130,7 @@ void DJIonboardSDK::initWayPoint()
     ui->tv_waypoint_actions->verticalHeader()->hide();
     ui->tv_waypoint_actions->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
-    ui->tv_waypoint_data->setItemDelegateForColumn(1, new ReadOnlyDelegate());
+    ui->tv_waypoint_data->setItemDelegateForColumn(0, new ReadOnlyDelegate());
     ui->tv_waypoint_data->setItemDelegateForColumn(7, new TurnModeDelegate());
     ui->tv_waypoint_data->setItemDelegateForColumn(8, new ReadOnlyDelegate());
     ui->tv_waypoint_data->setModel(waypointData);
