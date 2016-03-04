@@ -1,8 +1,8 @@
-# Ground Station
+# Ground Station Protocol
 
 This part is about Goundstation related functions(Waypoint, Hotpoint and Follow Me), which has been introduced briefly in the [OPEN Protocol](OPENProtocol.md#cmd-set-0x03-ground-station-cmd-set).
 
-In this document, we will introduce the command set and command id again at first, then show the detailed data structures of every command's data frmae. 
+For the detialed function logic, please refer to the [Ground Station Programming Guide](GroundStationProgrammingGuide.md).
 
 ## Command Set and Command Id
 
@@ -224,7 +224,7 @@ There are totally six kinds of actions as follows, which should be set in `comma
 
 **Note: ** The controller will valid all waypoints' data together after the last one uploaded, which means if there exist at least one invalid waypoint information, the waypoint upload ACK of the last one will be with a error code. 
 
-## 0x03, 0x12: start/stop waypoint mission
+### 0x03, 0x12: start/stop waypoint mission
 
 Request:
 
@@ -234,7 +234,7 @@ uint8_t start;//0-> start, 1-> cancel
 
 ACK: `uint8_t`
 
-## 0x03, 0x13: pause/resume waypoint mission
+### 0x03, 0x13: pause/resume waypoint mission
 
 Request:
 
@@ -245,7 +245,7 @@ uint8_t pause;//0-> pause, 1-> resume
 ACK: `uint8_t`
 
 
-## 0x03, 0x14: download waypoint task
+### 0x03, 0x14: download waypoint task
 
 Request:
 
@@ -260,7 +260,7 @@ struct waypoint_task_download_ack{
 };
 ```
 
-## 0x03, 0x15: download a certain waypoint
+### 0x03, 0x15: download a certain waypoint
 
 Request:
 
@@ -278,7 +278,7 @@ struct waypoint_download_ack{
 };
 ```
 
-## 0x03, 0x16: set idle velocity
+### 0x03, 0x16: set idle velocity
 
 Request:
 
@@ -295,7 +295,7 @@ struct waypoint_set_vel_ack{
 };
 ```
 
-## 0x03, 0x17: read idle velocity
+### 0x03, 0x17: read idle velocity
 
 Request:
 
@@ -311,7 +311,7 @@ struct waypoint_read_vel_ack{
 ```
 
 
-## 0x03, 0x20: upload and start hotpoint task
+### 0x03, 0x20: upload and start hotpoint task
 
 Request:
 
@@ -351,7 +351,7 @@ struct hotpoint_upload_ack{
 };
 ```
 
-## 0x03, 0x21: stop hotpoint mission
+### 0x03, 0x21: stop hotpoint mission
 
 Request:
 
@@ -359,7 +359,7 @@ Request:
 
 ACK: `uint8_t`
 
-## 0x03, 0x22: pause hotpoint mission
+### 0x03, 0x22: pause hotpoint mission
 
 Request:
 
@@ -369,7 +369,7 @@ uint8_t pause; //0->pause, 1->resume
 
 ACK: `uint8_t`
 
-## 0x03, 0x23: set hotpoint idle velocity
+### 0x03, 0x23: set hotpoint idle velocity
 
 ```c
 typedef struct{
@@ -380,7 +380,7 @@ typedef struct{
 
 ACK: `uint8_t`
 
-## 0x03, 0x24: set hotpoint radius
+### 0x03, 0x24: set hotpoint radius
 
 Request:
 
@@ -390,7 +390,7 @@ float radius;
 
 ACK: `uint8_t`
 
-## 0x03, 0x25: reset hotpoint yaw
+### 0x03, 0x25: reset hotpoint yaw
 
 Requset:
 
@@ -398,7 +398,7 @@ Requset:
 
 ACK: `uint8_t`
 
-## 0x03, 0x26: download hotpoint task
+### 0x03, 0x26: download hotpoint task
 
 Request:
 
@@ -413,7 +413,7 @@ struct hotpoint_download_ack {
 };
 ```
 
-## 0x03, 0x27：enable auto-radiu mode
+### 0x03, 0x27：enable auto-radiu mode
 
 Request:
 
@@ -426,7 +426,7 @@ struct hotpoint_auto_radiu {
 
 ACK: `uint8_t`
 
-## 0x03, 0x30: upload and start follow me task
+### 0x03, 0x30: upload and start follow me task
 
 Request:
 
@@ -446,7 +446,7 @@ typedef struct{
 
 ACK: `uint8_t`
 
-## 0x03, 0x31: stop follow me task
+### 0x03, 0x31: stop follow me task
 
 Request:
 
@@ -454,7 +454,7 @@ Request:
 
 ACK: `uint8_t`
 
-## 0x03, 0x32: pause/resume follow me task
+### 0x03, 0x32: pause/resume follow me task
 
 Request:
 
@@ -464,7 +464,7 @@ uint8_t pause; //0->pause, 1->resume
 
 ACK: `uint8_t`
 
-## 0x03, 0x33: update target position
+### 0x03, 0x33: update target position
 
 Request:
  
@@ -488,7 +488,7 @@ Note: Developers should select the `Ground Station Status` checkbox in DJI Assis
 
     ![](Images/groundstation.png)
 
-## 0x02, 0x03 Current Mission Status Push Information 
+### 0x02, 0x03 Current Mission Status Push Information 
 
 There are four kinds of mission status with the same struct size.
 
@@ -559,7 +559,7 @@ typedef struct{
 }cmd_mission_default_status_push_t;
 ```
 
-## 0x02, 0x04 Mission Event Push Information
+### 0x02, 0x04 Mission Event Push Information
 
 There are three kinds of waypoint mission events with the same struct size.
 

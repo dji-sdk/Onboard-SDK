@@ -1199,7 +1199,7 @@ Onboard Device has the lowerest control priority. Its control authorization can 
 </table>
 
 #### CMD ID 0x03 Ground Station State
-For more info about Ground Station, please refer to [Ground Station](GroundStation.md).    
+For more info about Ground Station, please refer to [Ground Station Protocol](GroundStationProtocol.md).    
 <table>
 <tr>
   <th>Data Type</th>
@@ -1224,7 +1224,7 @@ For more info about Ground Station, please refer to [Ground Station](GroundStati
 </tr>
 </table>
 #### CMD ID 0x04 Waypoint Event
-For more info about Ground Station, please refer to [Ground Station](GroundStation.md).    
+For more info about Ground Station, please refer to [Ground Station Protocol](GroundStationProtocol.md).    
 <table>
 <tr>
   <th>Data Type</th>
@@ -1250,7 +1250,7 @@ For more info about Ground Station, please refer to [Ground Station](GroundStati
 </table>
 ### CMD Set 0x03 Ground Station CMD Set
 
-For more info about Ground Station, please refer to [Ground Station](GroundStation.md).  
+For more info about Ground Station, please refer to [Ground Station Protocol](GroundStationProtocol.md).  
 
 #### CMD ID 0x10 Upload waypoint info
 <table>
@@ -1970,7 +1970,7 @@ For more info about Ground Station, please refer to [Ground Station](GroundStati
 </table>
 ### Set 0x05 Virtual RC CMD set
 
-For more info about virual RC, please refer to [Virtual RC](VirtualRC.md).  
+For more info about virual RC, please refer to [Virtual RC Protocol](VirtualRCProtocol.md).  
 
 #### CMD ID 0x00 Virual RC request
 <table>

@@ -151,7 +151,7 @@ Please comply with the local regulations during the development process and the 
 
 - [Programming Guide][3]
 
-- [Ground Station][4]
+- [Ground Station Protocol][4]
 
 - [Virtual RC][5]
  
@@ -320,12 +320,12 @@ Onboard SDK能够允许开发者选用任意合适的机载设备（需另购）
 - [FAQ][cnFAQ]
 
 
-[cn0]:doc/cn/开放协议.md  
-[cn1]:doc/cn/附录.md  
-[cn2]:doc/cn/数据透传.md
-[cn3]:doc/cn/编程指南.md
-[cn4]:doc/cn/地面站协议.md
-[cn5]:doc/cn/虚拟遥控协议.md
-[cn6]:doc/cn/地面站编程指南.md
-[cnActivation]:doc/cn/激活指南.md
+[cn0]:doc/cn/OPENProtocol_cn.md  
+[cn1]:doc/cn/Appendix_cn.md  
+[cn2]:doc/cn/DataTransparentTransmission_cn.md
+[cn3]:doc/cn/ProgrammingGuide_cn.md
+[cn4]:doc/cn/GroundStationProtocol_cn.md
+[cn5]:doc/cn/VirtualRCProtocol_cn.md
+[cn6]:doc/cn/GroundStationProgrammingGuide_cn.md
+[cnActivation]:doc/cn/ActivationGuide_cn.md
 [cnFAQ]:doc/cn/FAQ_cn.md
