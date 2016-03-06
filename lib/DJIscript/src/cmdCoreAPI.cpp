@@ -73,9 +73,14 @@ bool bdCA(Script* script, UserData data)
             switch (i)
             {
                 case 0:
+#ifdef SDK_VERSION_3_1_M100
                     cout << "Time: " << bd.timeStamp.time << endl;
                     cout << "Nano: " << bd.timeStamp.nanoTime << endl;
                     cout << "Sync: " << (int)bd.timeStamp.syncFlag << endl;
+#endif
+#ifdef SDK_VERSION_2_3
+                    cout << "Time:" << bd.timeStamp << endl;
+#endif
                     break;
                 case 1:
                     cout << "Q0: " << bd.q.q0 << endl;
@@ -125,9 +130,11 @@ bool bdCA(Script* script, UserData data)
                     cout << "Bettery: " << (int)bd.battery << endl;
                     break;
                 case 10:
+#ifdef SDK_VERSION_3_1_M100
                     cout << "Control: " << (int)bd.ctrlInfo.data << endl;
                     cout << "Device:  " << (int)bd.ctrlInfo.device << endl;
                     cout << "Status:  " << (int)bd.ctrlInfo.signature << endl;
+#endif
                     break;
             }
             cout << endl;

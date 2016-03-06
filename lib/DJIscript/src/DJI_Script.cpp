@@ -43,6 +43,7 @@ if(FD_ISSET(0,&read_fd))
 #include <conio.h>
 #endif
 
+using namespace DJI;
 using namespace DJI::onboardSDK;
 using namespace std;
 

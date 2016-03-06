@@ -14,8 +14,8 @@ void DJIonboardSDK::initSDK()
     driver->setDisplay(ui->tb_display);
     api = new CoreAPI(driver);
 
-    send = new APIThread(api, 1, port);
-    read = new APIThread(api, 2, port);
+    //send = new APIThread(api, 1, port);
+    //read = new APIThread(api, 2, port);
 
     key = new QByteArray;
 
@@ -31,8 +31,9 @@ void DJIonboardSDK::initSDK()
     setBaudrate();
     openPort();
 
-    send->start();
-    read->start();
+    startTimer(2);
+    //send->start();
+    //read->start();
 }
 
 void DJIonboardSDK::initFlight()
@@ -231,6 +232,12 @@ void DJIonboardSDK::closeEvent(QCloseEvent *)
         f.write(QString("KEY:").append(ui->lineEdit_Key->text()).append("\r\n").toUtf8());
         f.close();
     }
+}
+
+void DJIonboardSDK::timerEvent(QTimerEvent *)
+{
+    api->sendPoll();
+    api->readPoll();
 }
 
 void DJIonboardSDK::setControlCallback(CoreAPI *This, Header *header, UserData userData)

@@ -9,7 +9,7 @@
 #include <QHBoxLayout>
 #include <QStandardItemModel>
 #include <QList>
-
+#include <QTimerEvent>
 #include <QComboBox>
 
 #include <fstream>
@@ -41,6 +41,7 @@ class DJIonboardSDK : public QMainWindow
 
   protected:
     void closeEvent(QCloseEvent *);
+    void timerEvent(QTimerEvent *);
 
     //! @note callback static class pointer and callback functions
   public:
