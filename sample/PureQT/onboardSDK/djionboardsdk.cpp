@@ -983,12 +983,12 @@ void DJIonboardSDK::updateCameraPitch()
 
 void DJIonboardSDK::updateVirturalRCData()
 {
-    ui->le_vrcYaw->setText(QString::number(vrc->getVRCdata().yaw));
-    ui->le_vrcRoll->setText(QString::number(vrc->getVRCdata().roll));
-    ui->le_vrcPitch->setText(QString::number(vrc->getVRCdata().pitch));
-    ui->le_vrcThrottle->setText(QString::number(vrc->getVRCdata().throttle));
-    ui->le_vrcMode->setText(QString::number(vrc->getVRCdata().mode));
-    ui->le_vrcGear->setText(QString::number(vrc->getVRCdata().gear));
+    ui->le_vrcYaw->setText(QString::number(vrc->getVRCData().yaw));
+    ui->le_vrcRoll->setText(QString::number(vrc->getVRCData().roll));
+    ui->le_vrcPitch->setText(QString::number(vrc->getVRCData().pitch));
+    ui->le_vrcThrottle->setText(QString::number(vrc->getVRCData().throttle));
+    ui->le_vrcMode->setText(QString::number(vrc->getVRCData().mode));
+    ui->le_vrcGear->setText(QString::number(vrc->getVRCData().gear));
 }
 
 void DJIonboardSDK::updateFlightAcc()
