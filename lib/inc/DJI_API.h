@@ -217,7 +217,7 @@ class CoreAPI
 
     void activate(ActivateData *data, CallBack callback = 0, UserData userData = 0);
     void setControl(bool enable, CallBack callback = 0, UserData userData = 0);
-    void getVersion(CallBack callback = 0, UserData userData = 0);
+    void getSDKVersion(CallBack callback = 0, UserData userData = 0);
     void sendToMobile(uint8_t *data, uint8_t len, CallBack callback = 0, UserData userData = 0);
     void setBroadcastFreq(uint8_t *dataLenIs16, CallBack callback = 0, UserData userData = 0);
     void setActivation(bool isActivated);
@@ -225,10 +225,10 @@ class CoreAPI
     void setKey(const char *key);
 
     //! @note Core read API
-    BroadcastData getBroadcastData() const;
     TimeStampData getTime() const;
-    FlightStatus getFlightStatus() const;
     CtrlInfoData getCtrlInfo() const;
+    FlightStatus getFlightStatus() const;
+    BroadcastData getBroadcastData() const;
     BatteryData getBatteryCapacity() const;
 
     //! @note call back functions
@@ -327,7 +327,7 @@ class CoreAPI
     //! @note private variables access functions
     ActivateData getAccountData() const;
     HardDriver *getDriver() const;
-    Version getVersion() const;
+    Version getSDKVersion() const;
     bool getHotPointData() const;
     bool getWayPointData() const;
     bool getFollowData() const;

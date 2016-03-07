@@ -127,7 +127,7 @@ void CoreAPI::ack(req_id_t req_id, unsigned char *ackdata, int len)
     this->ackInterface(&param);
 }
 
-void CoreAPI::getVersion(CallBack callback, UserData userData)
+void CoreAPI::getSDKVersion(CallBack callback, UserData userData)
 {
     versionData.version_ack = AC_COMMON_NO_RESPONSE;
     versionData.version_crc = 0x0;
@@ -274,7 +274,7 @@ void CoreAPI::activateCallback(CoreAPI *This, Header *header, UserData userData 
                 break;
             case ACK_ACTIVE_VERSION_ERROR:
                 API_LOG(This->driver, ERROR_LOG, "activate SDK version did not match\n");
-                This->getVersion();
+                This->getSDKVersion();
                 break;
             default:
                 if (!This->decodeACKStatus(ack_data))
@@ -339,7 +339,7 @@ void CoreAPI::setFrequencyCallback(CoreAPI *This __UNUSED, Header *header,
             break;
     }
 }
-Version CoreAPI::getVersion() const { return versionData.version; }
+Version CoreAPI::getSDKVersion() const { return versionData.version; }
 
 void CoreAPI::setVersion(const Version &value) { versionData.version = value; }
 

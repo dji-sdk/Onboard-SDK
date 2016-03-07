@@ -14,8 +14,8 @@ void DJIonboardSDK::initSDK()
     driver->setDisplay(ui->tb_display);
     api = new CoreAPI(driver);
 
-    //send = new APIThread(api, 1, port);
-    //read = new APIThread(api, 2, port);
+    // send = new APIThread(api, 1, port);
+    // read = new APIThread(api, 2, port);
 
     key = new QByteArray;
 
@@ -32,8 +32,8 @@ void DJIonboardSDK::initSDK()
     openPort();
 
     startTimer(2);
-    //send->start();
-    //read->start();
+    // send->start();
+    // read->start();
 }
 
 void DJIonboardSDK::initFlight()
@@ -404,7 +404,7 @@ void DJIonboardSDK::on_btn_coreActive_clicked()
     api->activate(&data, DJIonboardSDK::activationCallback, this);
 }
 
-void DJIonboardSDK::on_btn_coreVersion_clicked() { api->getVersion(); }
+void DJIonboardSDK::on_btn_coreVersion_clicked() { api->getSDKVersion(); }
 
 void DJIonboardSDK::on_btn_coreSetControl_clicked()
 {
@@ -1463,15 +1463,8 @@ void DJIonboardSDK::on_btn_script_run_clicked()
 {
     //! @todo remap stdin and stdout
     //!
-
 }
 
-void DJIonboardSDK::on_tabWidget_currentChanged(int index)
-{
+void DJIonboardSDK::on_tabWidget_currentChanged(int index) {}
 
-}
-
-void DJIonboardSDK::on_actionOpen_O_triggered()
-{
-    qDebug()<<"hello";
-}
+void DJIonboardSDK::on_actionOpen_O_triggered() { qDebug() << "hello"; }

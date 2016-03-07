@@ -200,7 +200,7 @@ bool acCA(Script* script, UserData data)
 
 bool vsCA(Script* script, UserData data)
 {
-    script->getApi()->getVersion();
+    script->getApi()->getSDKVersion();
 
     __DELETE(data);
     script->addTask(waitInput);
