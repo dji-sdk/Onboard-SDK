@@ -55,7 +55,7 @@ void VirtualRC::sendSafeModeData()
 
 VirtualRC::CONTROL_DEVICE VirtualRC::getControlDevice()
 {
-    return api->getBroadcastData().ctrlInfo.device;
+    return (VirtualRC::CONTROL_DEVICE)api->getBroadcastData().ctrlInfo.device;
 }
 
 RadioData VirtualRC::getRCData() const { return api->getBroadcastData().rc; }
@@ -97,5 +97,5 @@ VirtualRCData VirtualRC::toVirtualRCData(RadioData &rData)
     vd.Channel_13 = 1024;
     vd.Channel_14 = 1024;
     vd.Channel_15 = 1024;
-    return vd
+    return vd;
 }
