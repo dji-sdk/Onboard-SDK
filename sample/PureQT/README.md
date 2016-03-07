@@ -22,8 +22,7 @@ Developers can play with this example via the GUI interaction interface of QT.
 ##Compile & Run Environment
 The below environment are required.
 * Qt Ver: QT 5.4 or later
-* Compiler Ver: MinGW 4.9.2 or later; MSVC2012 32bit or later
-  Note: MSVC-64bit is not supported, because the serial port driver in msvc only supports 32bit version, program will crash on 64bit compiler.
+* Compiler Ver: MinGW 4.9.2 or later; MSVC2012 or later
 
 
 ## Hardware Installation
@@ -81,8 +80,7 @@ QT 例程是我们基于 QT 平台实现的 SDK 例程，它可以运行在 Wind
 ##调试与运行环境
 我们成功测试了如下运行环境：
 * QT 版本： QT 5.4 或更新。
-* 编译器版本： MinGW 4.9.2 或更新；MSVC2012 32 位或更新。
-	注：我们不支持64位元的MSVC，因为其串口库会导致程序崩溃。
+* 编译器版本： MinGW 4.9.2 或更新；MSVC2012或更新。
 
 ##硬件安装
 
