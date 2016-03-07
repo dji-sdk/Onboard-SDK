@@ -171,8 +171,8 @@ void CoreAPI::setBroadcastFreq(uint8_t *dataLenIs16, CallBack callback, UserData
     //! @note see also enum BROADCAST_FREQ in DJI_API.h
     for (int i = 0; i < 16; ++i)
     {
-        if (dataLenIs16[i] < 12)
-            dataLenIs16[i] = (dataLenIs16[i] > 5 ? 5 : 0);
+        if (i < 12)
+            dataLenIs16[i] = (dataLenIs16[i] > 5 ? 5 : dataLenIs16[i]);
         else
             dataLenIs16[i] = 0;
     }
