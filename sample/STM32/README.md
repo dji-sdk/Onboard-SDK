@@ -11,17 +11,35 @@ https://github.com/Awilonk/OnBoardSDK_STM32
 
 ##目录
 1. [硬件接口](#硬件接口)
-2. [开始使用](#开始使用)
+2. [环境配置](#环境配置)
+3. [开始使用](#开始使用)
    - [操作步骤](#操作步骤)
    - [指令格式](#指令格式)
    - [姿态控制模式](#姿态控制模式)
    - [获取广播数据](#获取广播数据)
    - [发送指令的顺序](#发送指令的顺序)
-3. [动画示范](#动画示范)  
+4. [动画示范](#动画示范)  
 
 
 ----------
 
+##环境配置
+
+本例程使用的是keil 5.12版本进行创建的。推荐使用更新版本的keil进行开发。
+
+keil5系列软件中没有包含芯片器件库，需要自行安装否则会提示缺少芯片器件库。
+
+安装方法如下： 在 http://www.keil.com/dd2/Pack/ 中找到Keil.STM32F4xx_DFP.2.6.0.pack并下载
+
+![](image/keil1.png)
+
+![](image/keil2.png)
+
+然后在keil中选择 Pack Installer 选择File->Import
+
+![](image/keil3.png)
+
+将下载到的器件库导入到keil中即可。
 
 ##硬件接口
   使用USART2作为Debug通道。端口为PB10，PB11分别对应stm32上USART2的TX、RX，连接串口等外部设备时将外部串口的TX端接到stm32的Rx上，波特率为115200，此处的波特率必须和串口调试助手的波特率一致；
@@ -158,14 +176,28 @@ Use 4-wire-serial interface. If your computer do no has one, USB-TTL serial cabl
 
 ##content
 1. [Hardware Installation](#hardware-installation) 
-2. [Getting Start](#getting-start)
+2. [Environment Setup](#environment-setup)
+3. [Getting Start](#getting-start)
    - [How to operate](#how-to-operate)
    - [Command Format](#command-format)
    - [Movement control mode](#movement-control-mode)
    - [Get Broadcastdata](#get-broadcastdata)
    - [How to send command](#how-to-send-command)
-3. [Gif Demonstration](#gif-demonstration)
+4. [Gif Demonstration](#gif-demonstration)
 
+##Environment Setup
+
+This sample code needs Keil v5.12 or later.
+
+Deverlopers should install the MCU libaray by themselves from http://www.keil.com/dd2/Pack/ by downloading `Keil.STM32F4xx_DFP.2.6.0.pack`
+
+![](image/keil1.png)
+
+![](image/keil2.png)
+
+and then import this file from Keil's `Pack Installer`
+
+![](image/keil3.png)
 
 
 ##Hardware Installation
