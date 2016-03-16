@@ -59,7 +59,7 @@ class DJIonboardSDK : public QMainWindow
     void updateFlightMagnet();
     void updateFlightQuaternion();
     void updateFlightVelocity();
-    void updateFlightPossition();
+    void updateFlightPosition();
     QStandardItemModel *initAction();
     void wpAddPoint();
     void wpRemovePoint();

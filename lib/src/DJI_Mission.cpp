@@ -31,7 +31,7 @@ MissionACKMap missionACK[] = {
     { 0xC1, " 0xC1 Too Low" },
     { 0xC7, " 0xC7 Too Far from Home" },
     { 0xC8, " 0xC8 Mission not supported" },
-    { 0xC9, " 0xC9 Too far from current possition" },
+    { 0xC9, " 0xC9 Too far from current position" },
     { 0xCA, " 0xCA Novice Mode not support missions" },
     { 0xF0, " 0xF0 Taking off" },
     { 0xF1, " 0xF1 Landing" },
@@ -40,7 +40,7 @@ MissionACKMap missionACK[] = {
     { 0xF4, " 0xF4 Wrong command" },
     { 0xFF, " 0xFF Unknown Error" },
     //! @note Follow ACK code
-    { 0xB0, " 0xB0 too far from your possition, lack of Radio connection" },
+    { 0xB0, " 0xB0 too far from your position, lack of Radio connection" },
     { 0xB1, " 0xB1 Cutoff time overflow" },
     { 0xB2, " 0xB2 Too Large Gimbal pitch angle" },
     //! @note HotPoint ACK code

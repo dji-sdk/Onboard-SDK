@@ -28,12 +28,12 @@ bool FC(Script *script, UserData data)
         cout << "|                                                               |" << endl;
         cout << "| - fl <flag> <x> <y> <z> <yaw> flight control                  |" << endl;
         cout << "|      <flag> default  VERTICAL_VELOCITY                        |" << endl;
-        cout << "|             0x10     VERTICAL_POSSITION                       |" << endl;
+        cout << "|             0x10     VERTICAL_POSITION                        |" << endl;
         cout << "|             0x20     VERTICAL_THRUST                          |" << endl;
         cout << "|                                                               |" << endl;
         cout << "|             default  HORIZONTAL_ANGLE                         |" << endl;
         cout << "|             0x40     HORIZONTAL_VELOCITY                      |" << endl;
-        cout << "|             0X80     HORIZONTAL_POSSITION                     |" << endl;
+        cout << "|             0X80     HORIZONTAL_POSITION                      |" << endl;
         cout << "|                                                               |" << endl;
         cout << "|             default  YAW_ANGLE                                |" << endl;
         cout << "|             0x08     YAW_PALSTANCE                            |" << endl;

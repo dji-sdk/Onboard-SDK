@@ -30,7 +30,7 @@ bool CA(Script* script __UNUSED, UserData data)
         cout << "|             0x0004 acceleration                               |" << endl;
         cout << "|             0x0008 velocity                                   |" << endl;
         cout << "|             0x0010 palstance                                  |" << endl;
-        cout << "|             0x0020 possession                                 |" << endl;
+        cout << "|             0x0020 position                                   |" << endl;
         cout << "|             0x0040 magnet                                     |" << endl;
         cout << "|             0x0080 remote controller                          |" << endl;
         cout << "|             0x0100 gimbal                                     |" << endl;

@@ -76,7 +76,7 @@ void DJI::onboardSDK::CoreAPI::broadcast(Header *header)
     passData(*enableFlag, HAS_A, &broadcastData.a, pdata, sizeof(CommonData), len);
     passData(*enableFlag, HAS_V, &broadcastData.v, pdata, sizeof(VelocityData), len);
     passData(*enableFlag, HAS_W, &broadcastData.w, pdata, sizeof(CommonData), len);
-    passData(*enableFlag, HAS_POS, &broadcastData.pos, pdata, sizeof(PossitionData), len);
+    passData(*enableFlag, HAS_POS, &broadcastData.pos, pdata, sizeof(PositionData), len);
     passData(*enableFlag, HAS_MAG, &broadcastData.mag, pdata, sizeof(MagnetData), len);
     passData(*enableFlag, HAS_RC, &broadcastData.rc, pdata, sizeof(RadioData), len);
     passData(*enableFlag, HAS_GIMBAL, &broadcastData.gimbal, pdata, sizeof(GimbalData), len);

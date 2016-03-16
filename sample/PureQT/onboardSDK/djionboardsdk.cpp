@@ -469,8 +469,8 @@ void DJIonboardSDK::on_btg_flight_HL(QAbstractButton *button)
         flightFlag |= Flight::HORIZONTAL_ANGLE;
     else if (name == "Velocity")
         flightFlag |= Flight::HORIZONTAL_VELOCITY;
-    else if (name == "Possition")
-        flightFlag |= Flight::HORIZONTAL_POSSITION;
+    else if (name == "Position")
+        flightFlag |= Flight::HORIZONTAL_POSITION;
     updateFlightFlag();
 }
 
@@ -482,8 +482,8 @@ void DJIonboardSDK::on_btg_flight_VL(QAbstractButton *button)
         flightFlag |= Flight::VERTICAL_THRUST;
     else if (name == "Velocity")
         flightFlag |= Flight::VERTICAL_VELOCITY;
-    else if (name == "Possition")
-        flightFlag |= Flight::VERTICAL_POSSITION;
+    else if (name == "Position")
+        flightFlag |= Flight::VERTICAL_POSITION;
     updateFlightFlag();
 }
 
@@ -951,7 +951,7 @@ void DJIonboardSDK::on_tmr_Broadcast()
     if (ui->cb_FlightV->isChecked())
         updateFlightVelocity();
     if (ui->cb_FlightPos->isChecked())
-        updateFlightPossition();
+        updateFlightPosition();
 }
 
 void DJIonboardSDK::updateCameraYaw()
@@ -1029,13 +1029,13 @@ void DJIonboardSDK::updateFlightVelocity()
     ui->le_Flight_VH->setText(QString::number(flight->getVelocity().health));
 }
 
-void DJIonboardSDK::updateFlightPossition()
+void DJIonboardSDK::updateFlightPosition()
 {
-    ui->le_Flight_PosH->setText(QString::number(flight->getPossition().height));
-    ui->le_Flight_PosLa->setText(QString::number(flight->getPossition().latitude));
-    ui->le_Flight_PosLo->setText(QString::number(flight->getPossition().longitude));
-    ui->le_Flight_PosAl->setText(QString::number(flight->getPossition().altitude));
-    ui->le_Flight_PosHealth->setText(QString::number(flight->getPossition().health));
+    ui->le_Flight_PosH->setText(QString::number(flight->getPosition().height));
+    ui->le_Flight_PosLa->setText(QString::number(flight->getPosition().latitude));
+    ui->le_Flight_PosLo->setText(QString::number(flight->getPosition().longitude));
+    ui->le_Flight_PosAl->setText(QString::number(flight->getPosition().altitude));
+    ui->le_Flight_PosHealth->setText(QString::number(flight->getPosition().health));
 }
 
 QStandardItemModel *DJIonboardSDK::initAction()
@@ -1054,7 +1054,7 @@ void DJIonboardSDK::on_btn_FlightPal_clicked() { updateFlightPal(); }
 void DJIonboardSDK::on_btn_FlightMag_clicked() { updateFlightMagnet(); }
 void DJIonboardSDK::on_btn_FlightVel_clicked() { updateFlightVelocity(); }
 void DJIonboardSDK::on_btn_FlightQua_clicked() { updateFlightQuaternion(); }
-void DJIonboardSDK::on_btn_FlightPos_clicked() { updateFlightPossition(); }
+void DJIonboardSDK::on_btn_FlightPos_clicked() { updateFlightPosition(); }
 
 void DJIonboardSDK::on_btn_cameraRead_clicked()
 {
@@ -1081,9 +1081,9 @@ void DJIonboardSDK::on_btn_hp_setPal_clicked()
 
 void DJIonboardSDK::on_btn_hotPoint_current_clicked()
 {
-    ui->le_hp_al->setText(QString::number(flight->getPossition().altitude));
-    ui->le_hp_la->setText(QString::number(flight->getPossition().latitude));
-    ui->le_hp_lo->setText(QString::number(flight->getPossition().longitude));
+    ui->le_hp_al->setText(QString::number(flight->getPosition().altitude));
+    ui->le_hp_la->setText(QString::number(flight->getPosition().latitude));
+    ui->le_hp_lo->setText(QString::number(flight->getPosition().longitude));
 }
 
 void DJIonboardSDK::on_cb_mission_hp_clicked(bool checked) { api->setHotPointData(checked); }
@@ -1164,8 +1164,8 @@ void DJIonboardSDK::on_btn_follow_start_clicked()
 
 void DJIonboardSDK::on_tmr_follow_send()
 {
-    follow->updateTarget(ui->le_follow_la->text().toDouble() + flight->getPossition().latitude,
-                         ui->le_follow_lo->text().toDouble() + flight->getPossition().longitude,
+    follow->updateTarget(ui->le_follow_la->text().toDouble() + flight->getPosition().latitude,
+                         ui->le_follow_lo->text().toDouble() + flight->getPosition().longitude,
                          ui->le_follow_hi->text().toInt(), ui->le_follow_an->text().toInt());
 }
 
@@ -1174,11 +1174,11 @@ void DJIonboardSDK::wpAddPoint()
     int number = waypointData->rowCount();
     waypointData->setItem(number, 0, new QStandardItem(QString::number(number)));
     waypointData->setItem(number, 1,
-                          new QStandardItem(QString::number(flight->getPossition().latitude)));
+                          new QStandardItem(QString::number(flight->getPosition().latitude)));
     waypointData->setItem(number, 2,
-                          new QStandardItem(QString::number(flight->getPossition().longitude)));
+                          new QStandardItem(QString::number(flight->getPosition().longitude)));
     waypointData->setItem(number, 3,
-                          new QStandardItem(QString::number(flight->getPossition().altitude)));
+                          new QStandardItem(QString::number(flight->getPosition().altitude)));
     waypointData->setItem(number, 4, new QStandardItem("not available now"));
     waypointData->setItem(number, 5, new QStandardItem("0"));
     waypointData->setItem(number, 6, new QStandardItem("0"));
@@ -1311,9 +1311,9 @@ void DJIonboardSDK::on_le_waypoint_number_editingFinished()
 
 void DJIonboardSDK::on_btn_waypoint_viewPoint_clicked()
 {
-    ui->le_wp_la->setText(QString::number(flight->getPossition().latitude));
-    ui->le_wp_lo->setText(QString::number(flight->getPossition().longitude));
-    ui->le_wp_al->setText(QString::number(flight->getPossition().altitude));
+    ui->le_wp_la->setText(QString::number(flight->getPosition().latitude));
+    ui->le_wp_lo->setText(QString::number(flight->getPosition().longitude));
+    ui->le_wp_al->setText(QString::number(flight->getPosition().altitude));
 }
 
 void DJIonboardSDK::on_btn_wp_ivset_clicked()

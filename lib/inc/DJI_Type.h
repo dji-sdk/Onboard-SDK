@@ -245,14 +245,14 @@ typedef struct VelocityData
     uint8_t reserve : 3;
 } VelocityData;
 
-typedef struct PossitionData
+typedef struct PositionData
 {
     float64_t latitude;
     float64_t longitude;
     float32_t altitude;
     float32_t height;
     uint8_t health;
-} PossitionData;
+} PositionData;
 
 typedef struct RadioData
 {
@@ -330,7 +330,7 @@ typedef struct BroadcastData
     CommonData a;
     VelocityData v;
     CommonData w;
-    PossitionData pos;
+    PositionData pos;
     MagnetData mag;
     RadioData rc;
     GimbalData gimbal;

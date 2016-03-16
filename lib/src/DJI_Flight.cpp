@@ -37,7 +37,7 @@ QuaternionData Flight::getQuaternion() const
     return api->getBroadcastData().q;
 }
 
-PossitionData Flight::getPossition() const
+PositionData Flight::getPosition() const
 {
     return api->getBroadcastData().pos;
 }
