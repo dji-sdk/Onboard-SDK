@@ -520,7 +520,7 @@ The execution of different CMDs needs an corresponding Authorization Level. A CM
     <li>0x0000: Success</li>
     <li>0x0001: Invalid parameters</li>
     <li>0x0002: Cannot recognize the encrypted package</li>
-    <li>0x0003: New APP ID, activation in progress</li>
+    <li>0x0003: New APP ID, please connect DJI GO APP</li>
     <li>0x0004: No response from DJI GO APP </li>
     <li>0x0005: No Internet from DJI GO APP </li>
     <li>0x0006: Server rejected</li>
@@ -636,6 +636,8 @@ Please make sure the following conditions have been met:
 * The 'enable API control' box is checked in the assistant software.
 * The mode selection bar of the remote controller is placed at the F position.
 
+Due to the consideration from flight controller, all requests of obtain control or release control need to send **twice**, in which the first ACK will be fail. In our official library, we have already implemented this feature.
+
 **IMPORTANT! afterwase the release of firmware 3.0, the drone will enter F mode logic directly if the mode bar is placed at F when power on, developers do not need to turn away then back to enter F mode logic as the way in firmware 2.3; Please pay attention to this change if you are upgrading from 2.3**  
 
 <table>
@@ -664,7 +666,9 @@ Please make sure the following conditions have been met:
     <li>0x0000: the mode selection bar of the remote controller is not placed at the F position</li>
     <li>0x0001: successfully released control authorization</li>
     <li>0x0002: successfully obtained control authorization</li>
-    <li>0x0003: in progress</li>
+    <li>0x0003: failed obtained control authorization</li>
+    <li>0x0004: failed realeased control authorization</li>
+    <li>0x00C9: in IOC mode</li>
     </ul></td>
 </tr>
 
