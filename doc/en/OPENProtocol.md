@@ -636,7 +636,7 @@ Please make sure the following conditions have been met:
 * The 'enable API control' box is checked in the assistant software.
 * The mode selection bar of the remote controller is placed at the F position.
 
-Due to the consideration from flight controller, all requests of obtain control or release control need to send **twice**, in which the first ACK will be fail. In our official library, we have already implemented this feature.
+Due to the consideration of safety, all requests of obtain control and release control need to be sent **twice** and the first ACK will be fail. In our official library, we have already implemented this feature.
 
 **IMPORTANT! afterwase the release of firmware 3.0, the drone will enter F mode logic directly if the mode bar is placed at F when power on, developers do not need to turn away then back to enter F mode logic as the way in firmware 2.3; Please pay attention to this change if you are upgrading from 2.3**  
 
