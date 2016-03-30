@@ -97,7 +97,7 @@ We suggest developers do not use VERT_POS control mode indoor when your UAV does
 </tr>
 <tr>
   <td>YAW_RATE</td>
-  <td>Yaw angular rate. It can either be referenced to either the ground frame or the body frame</td>
+  <td>Yaw angular velocity</td>
 </tr>
 </table>
 

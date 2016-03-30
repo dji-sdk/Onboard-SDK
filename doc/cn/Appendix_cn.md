@@ -95,11 +95,11 @@
 <tr>
   <td rowspan="2">偏航</td>
   <td>YAW_ANG</td>
-  <td>偏航控制一个 Ground 坐标系下的目标角度。此模式下，飞控会将YAW坐标系强制为Ground系。</td>
+  <td>偏航控制一个 Ground 坐标系下的目标角度。此模式下，飞控会将YAW坐标系强制为Ground系</td>
 </tr>
 <tr>
   <td>YAW_RATE</td>
-  <td>偏航控制目标角速度，航控制目标可以定义在 Ground 坐标系或 Body 坐标系</td>
+  <td>偏航控制目标角速度</td>
 </tr>
 </table>
 
