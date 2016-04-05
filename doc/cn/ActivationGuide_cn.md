@@ -6,7 +6,7 @@
 ---
 
 ## 1. 申请开发者账号
-您可以在https://developer.dji.com/register/ 申请开发者 Level 2 账号，以获得APP id和Key。
+您可以在https://developer.dji.com/register/ 申请开发者账号，以获得APP id和Key。
 ## 2. 开启API控制模式
 使用USB连接PC和飞机，打开PC端调参软件，勾选“启用API控制”
 ![Enable API Control](Images/N1UI.png)

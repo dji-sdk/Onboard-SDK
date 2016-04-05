@@ -185,16 +185,6 @@
 ### 命令集与命令码
 命令集包含一系列命令码，根据具体的命令码实现相应的功能。  
 
-命令需要在相应的权限级别下才能够被执行。当机载设备发出命令的所需权限级别高于飞控所处权限级别时，该命令将不被执行。处在较高权限级别下的飞控可以接受并执行来自机载设备的低级别权限命令。
-
-|权限级别|权限描述|
-|:-----:|--------|
-|0|激活命令相关|
-|1|相机和云台控制命令相关|
-|2|飞行控制命令相关|
-
->备注:*权限级别可通过发送激活命令改变，飞行平台在激活前的默认权限级别默认为0。*
-
 
 ### 功能索引
 <table>
@@ -202,237 +192,194 @@
   <th>命令集</th>
   <th>命令码</th>
   <th>功能</th>
-  <th>所需权限级别</th>
 </tr>
   <td rowspan="4">0x00<br>初始化设置类</td>
   <td>0x00</td>
   <td>获取通信协议版本</td>
-  <td>0</td>
 </tr>
 
 </tr>
   <td>0x01</td>
   <td>激活</td>
-  <td>0</td>
 </tr>
 
 </tr>
   <td>0x10</td>
   <td>设置推送数据频率</td>
-  <td>0</td>
 </tr>
 
 </tr>
   <td>0xFE</td>
   <td>数据透传:从Onboard SDK至Mobile SDK</td>
-  <td>1</td>
 </tr>
 
 <tr>
   <td rowspan="10">0x01<br>控制命令类 </td>
   <td>0x00</td>
   <td>请求获取/释放控制权</td>
-  <td>1</td>
 </tr>
 
 <tr>
   <td>0x01</td>
   <td>切换飞行状态</td>
-  <td>2</td>
 </tr>
 <tr>
   <td>0x02</td>
   <td>查询飞行状态切换结果</td>
-  <td>2</td>
 </tr>
 
 <tr>
   <td>0x03</td>
   <td>姿态控制</td>
-  <td>2</td>
 </tr>
 <tr>
   <td>0x05</td>
   <td>解锁/锁定电机</td>
-  <td>2</td>
 </tr>
 <tr>
   <td>0x1A</td>
   <td>云台角速度控制</td>
-  <td>1</td>
 </tr>
 
 <tr>
   <td>0x1B</td>
   <td>云台角度控制</td>
-  <td>1</td>
 </tr>
 
 <tr>
   <td>0x20</td>
   <td>相机拍照</td>
-  <td>1</td>
 </tr>
 
 <tr>
   <td>0x21</td>
   <td>相机开始录像</td>
-  <td>1</td>
 </tr>
 
 <tr>
   <td>0x22</td>
   <td>相机停止录像</td>
-  <td>1</td>
 </tr>
 <tr>
   <td rowspan="5">0x02<br>推送数据类</td>
   <td>0x00</td>
   <td>飞行数据</td>
-  <td>0</td>
 </tr>
 
 <tr>
   <td>0x01</td>
   <td>失去控制权</td>
-  <td>0</td>
 </tr>
 
 <tr>
   <td>0x02</td>
   <td>数据透传:从Mobile SDK至Onboard SDK</td>
-  <td>0</td>
 </tr>
 <tr>
   <td>0x03</td>
   <td>地面站状态</td>
-  <td>0</td>
 </tr>
 <tr>
   <td>0x04</td>
   <td>航点事件</td>
-  <td>0</td>
 </tr>
 <tr>
   <td rowspan="8">0x03<br>地面站功能类<br>航点部分</td>
   <td>0x10</td>
   <td>上传航点任务信息</td>
-  <td>2</td>
 </tr>
 <tr>
   <td>0x11</td>
   <td>上传航点</td>
-  <td>2</td>
 </tr>
 <tr>
   <td>0x12</td>
   <td>启动/停止航点功能</td>
-  <td>2</td>
 </tr>
 <tr>
   <td>0x13</td>
   <td>暂停/恢复航点功能</td>
-  <td>2</td>
 </tr>
 <tr>
   <td>0x14</td>
   <td>下载航点任务信息</td>
-  <td>2</td>
 </tr>
 <tr>
   <td>0x15</td>
   <td>下载航点信息</td>
-  <td>2</td>
 </tr>
 <tr>
   <td>0x16</td>
   <td>设置巡航速度</td>
-  <td>2</td>
 </tr>
 <tr>
   <td>0x17</td>
   <td>读取巡航速度</td>
-  <td>2</td>
 </tr>
 <tr>
   <td rowspan="8">0x03<br>地面站功能类<br>热点部分</td>
   <td>0x20</td>
   <td>启动热点功能</td>
-  <td>2</td>
 </tr>
 <tr>
   <td>0x21</td>
   <td>停止热点功能</td>
-  <td>2</td>
 </tr>
 <tr>
   <td>0x22</td>
   <td>暂停/恢复热点功能</td>
-  <td>2</td>
 </tr>
 <tr>
   <td>0x23</td>
   <td>设置巡航速度</td>
-  <td>2</td>
 </tr>
 <tr>
   <td>0x24</td>
   <td>设置半径</td>
-  <td>2</td>
 </tr>
 <tr>
   <td>0x25</td>
   <td>重置方向</td>
-  <td>2</td>
 </tr>
 <tr>
   <td>0x26</td>
   <td>下载热点任务信息</td>
-  <td>2</td>
 </tr>
 <tr>
   <td>0x27</td>
   <td>启动自动半径模式</td>
-  <td>2</td>
 </tr>
 <tr>
   <td rowspan="4">0x03<br>地面站功能类<br>跟随部分</td>
   <td>0x30</td>
   <td>启动跟随功能</td>
-  <td>2</td>
 </tr>
 <tr>
   <td>0x31</td>
   <td>停止跟随功能</td>
-  <td>2</td>
 </tr>
 <tr>
   <td>0x32</td>
   <td>暂停/恢复跟随功能</td>
-  <td>2</td>
 </tr>
 <tr>
   <td>0x33</td>
   <td>设置跟踪目标点位置</td>
-  <td>2</td>
 </tr>
 <tr>
   <td>0x04<br>同步信号类</td>
   <td>0x00</td>
   <td>设置同步信号输出频率</td>
-  <td>0</td>
 
 </tr>
 <tr>
   <td rowspan="2">0x05<br>虚拟遥控类</td>
   <td>0x00</td>
   <td>虚拟遥控控制请求</td>
-  <td>2</td>
 </tr>
 <tr>
   <td>0x01</td>
   <td>虚拟遥控数据</td>
-  <td>2</td>
 </tr>
 </table>
 

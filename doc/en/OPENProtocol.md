@@ -184,257 +184,204 @@ On the other hand, there is no need to encrypt data, when developers use a seria
 
 Each CMD Set contains some CMD IDs for different operations.
 
-The execution of different CMDs needs an corresponding Authorization Level. A CMD will not be executed when the current Authorization Level granted is lower.
-
-|Levels|Description|
-|:--------:|----------|
-|0|Activation related|
-|1|Gimbal and Camera control related|
-|2|Flight Control related|
-
->Note: *The Authorization Level of the  Autopilot can be changed by the 'Activation' CMD. The init level is set to be 0.*
-
 ### Function Index
 <table>
 <tr>
   <th>CMD Set</th>
   <th>CMD ID</th>
   <th>Function</th>
-  <th>Level Required</th>
 </tr>
 <tr>
   <td rowspan="4">0x00<br>Initialization CMD Set</td>
   <td>0x00</td>
   <td>Get Protocal Version</td>
-  <td>0</td>
 </tr>
 
 <tr>
   <td>0x01</td>
   <td>Activation</td>
-  <td>0</td>
 </tr>
 
 <tr>
   <td>0x10</td>
   <td>Set 'Flight Data' frequency</td>
-  <td>0</td>
 </tr>
 <tr>
   <td>0xFE</td>
   <td>Data Transparent Transmission<br>From Onboard SDK to Mobile SDK</td>
-  <td>1</td>
 </tr>
 
 <tr>
   <td rowspan="10">0x01<br>Control CMD Set</td>
   <td>0x00</td>
   <td>Obtain/Release Control Authorization</td>
-  <td>1</td>
 </tr>
 
 <tr>
   <td>0x01</td>
   <td>Switch Flight Mode</td>
-  <td>2</td>
 </tr>
 <tr>
   <td>0x02</td>
   <td>Request Switch Result</td>
-  <td>2</td>
 </tr>
 
 <tr>
   <td>0x03</td>
   <td>Movement Control</td>
-  <td>2</td>
 </tr>
 
 <tr>
   <td>0x05</td>
   <td>Arm/Disarm</td>
-  <td>2</td>
 </tr>
 
 
 <tr>
   <td>0x1A</td>
   <td>Gimbal Control in Rate</td>
-  <td>1</td>
 </tr>
 
 <tr>
   <td>0x1B</td>
   <td>Gimbal Control in Position</td>
-  <td>1</td>
 </tr>
 
 <tr>
   <td>0x20</td>
   <td>Take Photo</td>
-  <td>1</td>
 </tr>
 
 <tr>
   <td>0x21</td>
   <td>Start Recording Video</td>
-  <td>1</td>
 </tr>
 
 <tr>
   <td>0x22</td>
   <td>Stop Recording Video</td>
-  <td>1</td>
 </tr>
 
 <tr>
   <td rowspan="5">0x02<br>Push Data CMD Set</td>
   <td>0x00</td>
   <td>Flight Data</td>
-  <td>0</td>
 </tr>
 
 <tr>
   <td>0x01</td>
   <td>Lost of Flight Control</td>
-  <td>0</td>
 </tr>
 <tr>
   <td>0x02</td>
   <td>Data Transparent Transmission<br>From Mobile SDK to Onboard SDK</td>
-  <td>0</td>
 </tr>
 
 <tr>
   <td>0x03</td>
   <td>Ground Station State</td>
-  <td>0</td>
 </tr>
 <tr>
   <td>0x04</td>
   <td>Waypoint Event</td>
-  <td>0</td>
 </tr>
 
 <tr>
   <td rowspan="8">0x03<br>Ground Station CMD Set<br>Waypoint</td>
   <td>0x10</td>
   <td>Upload waypoint info</td>
-  <td>2</td>
 </tr>
 <tr>
   <td>0x11</td>
   <td>Upload waypoint</td>
-  <td>2</td>
 </tr>
 <tr>
   <td>0x12</td>
   <td>Start/Stop waypoint</td>
-  <td>2</td>
 </tr>
 <tr>
   <td>0x13</td>
   <td>Pause/Resume waypoint</td>
-  <td>2</td>
 </tr>
 <tr>
   <td>0x14</td>
   <td>Download waypoint info</td>
-  <td>2</td>
 </tr>
 <tr>
   <td>0x15</td>
   <td>Download index waypoint</td>
-  <td>2</td>
 </tr>
 <tr>
   <td>0x16</td>
   <td>Set idle speed</td>
-  <td>2</td>
 </tr>
 <tr>
   <td>0x17</td>
   <td>Get idle speed</td>
-  <td>2</td>
 </tr>
 <tr>
   <td rowspan="8">0x03<br>Ground Station CMD Set<br>Hotpoint</td>
   <td>0x20</td>
   <td>Start hotpoint</td>
-  <td>2</td>
 </tr>
 <tr>
   <td>0x21</td>
   <td>Stop hotpoint</td>
-  <td>2</td>
 </tr>
 <tr>
   <td>0x22</td>
   <td>Pause/Resume hotpoint</td>
-  <td>2</td>
 </tr>
 <tr>
   <td>0x23</td>
   <td>Set idle speed</td>
-  <td>2</td>
 </tr>
 <tr>
   <td>0x24</td>
   <td>Set radius</td>
-  <td>2</td>
 </tr>
 <tr>
   <td>0x25</td>
   <td>Reset yaw</td>
-  <td>2</td>
 </tr>
 <tr>
   <td>0x26</td>
   <td>Download hotpoint info</td>
-  <td>2</td>
 </tr>
 <tr>
    <td>0x27</td>
    <td>Set Auto Radius</td>
-   <td>2</td>
 <tr>
   <td rowspan="4">0x03<br>Ground Station CMD Set<br>Follow Me</td>
   <td>0x30</td>
   <td>Start follow me</td>
-  <td>2</td>
 </tr>
 <tr>
   <td>0x31</td>
   <td>Stop follow me</td>
-  <td>2</td>
 </tr>
 <tr>
   <td>0x32</td>
   <td>Pause/Resume follow me</td>
-  <td>2</td>
 </tr>
 <tr>
   <td>0x33</td>
   <td>Set target pos info</td>
-  <td>2</td>
 </tr>
 <tr>
   <td>0x04<br>Sync signal CMD Set</td>
   <td>0x00</td>
   <td>Set Sync signal output frequency</td>
-  <td>0</td>
 
 </tr>
 <tr>
   <td rowspan="2">0x05<br>Virual RC CMD Set</td>
   <td>0x00</td>
   <td>Virual RC request</td>
-  <td>2</td>
 </tr>
 <tr>
   <td>0x01</td>
   <td>Virual RC data</td>
-  <td>2</td>
 </tr>
 </table>
 

@@ -4,7 +4,7 @@ This document aims to help developers to understand and quickly activate the fli
 >Note: Please remove the propellers from your uav when following the steps.
 
 ## 1.	Become a DJI Developer
-Please go to https://developer.dji.com/register/ and apply for an Onboard SDK level 2 access. You will receive your APP ID and Key once your application is approved.
+Please go to https://developer.dji.com/register/ and apply for an Onboard SDK access. You will receive your APP ID and Key once your application is approved.
 
 ## 2.	Enable API Control
 Connect your UAV to your PC via a USB-to-MicroUSB cable. Launch the DJI Assistant and check the box next to "Enable API control”.
