@@ -776,8 +776,8 @@ For more info about Movement Control, please refer to [Control mode byte part in
   <td>2</td>
   <td>Return Code <ul>
     <li>0x0000: Arm/Disarm Successfully</li>
-    <li>0x0001: NOT in navi mode</li>
-    <li>0x0002: Arm/Disarm AllREADY</li>
+    <li>0x0001: Please Obtain Control at First</li>
+    <li>0x0002: Already Armed/Disarmed</li>
     </ul></td>
 </tr>
 
