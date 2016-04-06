@@ -660,6 +660,8 @@ Due to the consideration of safety, all requests of obtain control and release c
 </tr>
 
 </table>
+ 
+>Note: auto takeoff only works when motor isn't running 
 
 #### CMD ID 0x02 Request Switch Result
 <table>
@@ -776,8 +778,9 @@ For more info about Movement Control, please refer to [Control mode byte part in
   <td>2</td>
   <td>Return Code <ul>
     <li>0x0000: Arm/Disarm Successfully</li>
-    <li>0x0001: Please Obtain Control at First</li>
+    <li>0x0001: Please obtain control at first</li>
     <li>0x0002: Already Armed/Disarmed</li>
+    <li>0x0003: Cannot disarm when drone not in the air</li>
     </ul></td>
 </tr>
 
