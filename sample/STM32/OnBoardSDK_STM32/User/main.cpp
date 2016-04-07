@@ -12,7 +12,7 @@
 	*******************************************************************************  
 	*  @brief An exmaple program of DJI-onboard-SDK portable for stm32
 	*  
-	*  @version 1.0
+	*  @version 1.1
 	*
 	*  @abstract
 	*
@@ -20,9 +20,9 @@
 	*  Project configuration:
 	*
 	*  @version features:
-	*  -* @version V1.0
+	*  -* @version V1.1
 	*  -* DJI-onboard-SDK portable for stm32
-	*  -* @date Dec 20, 2015
+	*  -* @date Dec 20, 2016
 	*  -* @author yourke.lu
 	*
 	* */
@@ -45,8 +45,6 @@ FlightData flightData ;
 VirtualRC virtualrc = VirtualRC(coreApi); 
 VirtualRCData myVRCdata={1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024,1024};
 
-
-
 int main()
 { 
 	BSPinit();
@@ -54,7 +52,7 @@ int main()
 	printf("Initializing...\r\n");
 	
 	delay_nms(1000);
-	coreApi->getVersion();
+	coreApi->getSDKVersion();
 	delay_nms(20);
 	printf("Done~!\r\n");
 	

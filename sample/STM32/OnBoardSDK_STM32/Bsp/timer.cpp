@@ -18,7 +18,7 @@ void Timer1Config()
 	TIM_TimeBaseInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
 	TIM_TimeBaseInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
 	TIM_TimeBaseInitStructure.TIM_Period = (200 - 1);     	    //t is the time between each Timer irq.
-	TIM_TimeBaseInitStructure.TIM_Prescaler = (16800 - 1);  		//t = (1+TIM_Prescaler/SystemCoreClock)*(1+TIM_Period)
+	TIM_TimeBaseInitStructure.TIM_Prescaler = (8400 - 1);  		//t = (1+TIM_Prescaler/SystemCoreClock)*(1+TIM_Period)
 	TIM_TimeBaseInitStructure.TIM_RepetitionCounter = 0x00;     //here configure TIM1 in 50Hz
 	TIM_TimeBaseInit(TIM1,&TIM_TimeBaseInitStructure);
 	
@@ -44,7 +44,7 @@ void Timer2Config()
 	TIM_TimeBaseInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
 	TIM_TimeBaseInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
 	TIM_TimeBaseInitStructure.TIM_Period = (200 - 1);     	    //t is the time between each Timer irq.
-	TIM_TimeBaseInitStructure.TIM_Prescaler = (16800 - 1);  		//t = (1+TIM_Prescaler/SystemCoreClock)*(1+TIM_Period)
+	TIM_TimeBaseInitStructure.TIM_Prescaler = (4200 - 1);  		//t = (1+TIM_Prescaler/SystemCoreClock)*(1+TIM_Period)
 	TIM_TimeBaseInitStructure.TIM_RepetitionCounter = 0x00;     //here configure TIM1 in 50Hz
 	TIM_TimeBaseInit(TIM2,&TIM_TimeBaseInitStructure);
 	

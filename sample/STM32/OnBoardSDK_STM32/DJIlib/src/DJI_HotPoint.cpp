@@ -15,7 +15,7 @@ void HotPoint::initData()
     data.version = 0;
 
     data.height = api->getBroadcastData().pos.altitude;
-    data.longtitude = api->getBroadcastData().pos.longitude;
+    data.longitude = api->getBroadcastData().pos.longitude;
     data.latitude = api->getBroadcastData().pos.latitude;
 
     data.radius = 10;
@@ -27,21 +27,21 @@ void HotPoint::initData()
 
 void HotPoint::start(CallBack callback, UserData userData)
 {
-    api->send(2, 1, SET_MISSION, CODE_HOTPOINT_START, &data, sizeof(data), 500, 2,
+    api->send(2, encrypt, SET_MISSION, CODE_HOTPOINT_START, &data, sizeof(data), 500, 2,
               callback ? callback : startCallback, userData);
 }
 
 void HotPoint::stop(CallBack callback, UserData userData)
 {
     uint8_t zero = 0;
-    api->send(2, 1, SET_MISSION, CODE_HOTPOINT_STOP, &zero, sizeof(zero), 500, 2,
+    api->send(2, encrypt, SET_MISSION, CODE_HOTPOINT_STOP, &zero, sizeof(zero), 500, 2,
               callback ? callback : missionCallback, userData);
 }
 
 void HotPoint::pause(bool isPause, CallBack callback, UserData userData)
 {
     uint8_t data = isPause ? 0 : 1;
-    api->send(2, 1, SET_MISSION, CODE_HOTPOINT_SETPAUSE, &data, sizeof(data), 500, 2,
+    api->send(2, encrypt, SET_MISSION, CODE_HOTPOINT_SETPAUSE, &data, sizeof(data), 500, 2,
               callback ? callback : missionCallback, userData);
 }
 
@@ -49,50 +49,55 @@ void HotPoint::updatePalstance(HotPoint::Palstance &Data, CallBack callback, Use
 {
     data.palstance = Data.palstance;
     data.clockwise = Data.clockwise ? 1 : 0;
-    api->send(2, 1, SET_MISSION, CODE_HOTPOINT_PALSTANCE, &Data, sizeof(Data), 500, 2,
+    api->send(2, encrypt, SET_MISSION, CODE_HOTPOINT_PALSTANCE, &Data, sizeof(Data), 500, 2,
               callback ? callback : missionCallback, userData);
 }
 
-void HotPoint::updatePalstance(float32_t palstance, bool isClockwise, CallBack callback, UserData userData)
+void HotPoint::updatePalstance(float32_t palstance, bool isClockwise, CallBack callback,
+                               UserData userData)
 {
     Palstance p;
     p.palstance = palstance;
     p.clockwise = isClockwise ? 1 : 0;
-    updatePalstance(p, callback,userData);
+    updatePalstance(p, callback, userData);
 }
 
-void HotPoint::updateRadius(float32_t degree, CallBack callback, UserData userData)
+void HotPoint::updateRadius(float32_t meter, CallBack callback, UserData userData)
 {
-    api->send(2, 1, SET_MISSION, CODE_HOTPOINT_RADIUS, &degree, sizeof(degree), 500, 2,
+    api->send(2, encrypt, SET_MISSION, CODE_HOTPOINT_RADIUS, &meter, sizeof(meter), 500, 2,
               callback ? callback : missionCallback, userData);
 }
 
 void HotPoint::resetYaw(CallBack callback, UserData userData)
 {
     uint8_t zero = 0;
-    api->send(2, 1, SET_MISSION, CODE_HOTPOINT_SETYAW, &zero, sizeof(zero), 500, 2,
+    api->send(2, encrypt, SET_MISSION, CODE_HOTPOINT_SETYAW, &zero, sizeof(zero), 500, 2,
               callback ? callback : missionCallback, userData);
 }
 
 void HotPoint::readData(CallBack callback, UserData userData)
 {
     uint8_t zero = 0;
-    api->send(2, 1, SET_MISSION, CODE_HOTPOINT_LOAD, &zero, sizeof(zero), 500, 2,
+    api->send(2, encrypt, SET_MISSION, CODE_HOTPOINT_LOAD, &zero, sizeof(zero), 500, 2,
               callback ? callback : missionCallback, userData);
 }
 
-void HotPoint::setData(const HotPointData &value) { data = value; }
+void HotPoint::setData(const HotPointData &value)
+{
+    data = value;
+    data.version = 0;
+}
 
 void HotPoint::setHotPoint(float64_t longtitude, float64_t latitude, float64_t altitude)
 {
-    data.longtitude = longtitude;
+    data.longitude = longtitude;
     data.latitude = latitude;
     data.height = altitude;
 }
 
 void HotPoint::setHotPoint(GPSData gps)
 {
-    data.longtitude = gps.longtitude;
+    data.longitude = gps.longtitude;
     data.latitude = gps.latitude;
     data.height = gps.altitude;
 }
@@ -124,7 +129,7 @@ void HotPoint::startCallback(CoreAPI *This, Header *header, UserData userdata __
     else
     {
         API_LOG(This->getDriver(), ERROR_LOG, "ACK is exception,seesion id %d,sequence %d\n",
-                header->sessionID, header->sequence_number);
+                header->sessionID, header->sequenceNumber);
     }
 }
 
@@ -143,6 +148,6 @@ void HotPoint::readCallback(CoreAPI *This, Header *header, UserData userdata)
     else
     {
         API_LOG(This->getDriver(), ERROR_LOG, "ACK is exception,seesion id %d,sequence %d\n",
-                header->sessionID, header->sequence_number);
+                header->sessionID, header->sequenceNumber);
     }
 }

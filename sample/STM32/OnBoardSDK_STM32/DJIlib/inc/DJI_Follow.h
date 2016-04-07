@@ -72,7 +72,7 @@ class Follow
 
   public:
     Follow(CoreAPI *ControlAPI = 0);
-    void initData();
+    void resetData();
 
     void start(FollowData *Data = 0, CallBack callback = 0, UserData userData = 0);
     void stop(CallBack callback = 0, UserData userData = 0);

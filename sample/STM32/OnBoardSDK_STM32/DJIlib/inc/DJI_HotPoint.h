@@ -34,7 +34,7 @@ typedef struct HotPointData
     uint8_t version;
 
     float64_t latitude;
-    float64_t longtitude;
+    float64_t longitude;
     float64_t height;
 
     float64_t radius;
@@ -107,7 +107,7 @@ class HotPoint
     void updatePalstance(Palstance &Data, CallBack callback = 0, UserData userData = 0);
     void updatePalstance(float32_t palstance, bool isClockwise, CallBack callback = 0,
                         UserData userData = 0);
-    void updateRadius(float32_t degree, CallBack callback = 0, UserData userData = 0);
+    void updateRadius(float32_t meter, CallBack callback = 0, UserData userData = 0);
     void resetYaw(CallBack callback = 0, UserData userData = 0);
 
     void readData(CallBack callback = 0, UserData userData = 0);

@@ -182,7 +182,7 @@ class CoreAPI
     void sendPoll(void);
     void readPoll(void);
     void callbackPoll(void);   //! @todo not available yet
-    void autoResendPoll(void); //! @todo not available yet
+    void autoResendPoll(void); //! @todo not available yet move to sendPoll
 
     void byteHandler(const uint8_t in_data);
     //! @todo modify to a new algorithm
@@ -217,7 +217,7 @@ class CoreAPI
 
     void activate(ActivateData *data, CallBack callback = 0, UserData userData = 0);
     void setControl(bool enable, CallBack callback = 0, UserData userData = 0);
-    void getVersion(CallBack callback = 0, UserData userData = 0);
+    void getSDKVersion(CallBack callback = 0, UserData userData = 0);
     void sendToMobile(uint8_t *data, uint8_t len, CallBack callback = 0, UserData userData = 0);
     void setBroadcastFreq(uint8_t *dataLenIs16, CallBack callback = 0, UserData userData = 0);
     void setActivation(bool isActivated);
@@ -225,19 +225,19 @@ class CoreAPI
     void setKey(const char *key);
 
     //! @note Core read API
-    BroadcastData getBroadcastData() const;
     TimeStampData getTime() const;
-    FlightStatus getFlightStatus() const;
     CtrlInfoData getCtrlInfo() const;
+    FlightStatus getFlightStatus() const;
+    BroadcastData getBroadcastData() const;
     BatteryData getBatteryCapacity() const;
 
     //! @note call back functions
   public:
     //! @note Recevie data callback enterance
     void setBroadcastCallback(CallBackHandler callback) { broadcastCallback = callback; }
-    void setHotPointCallback(CallBackHandler callback) {hotPointCallback = callback;}
-    void setWayPointCallback(CallBackHandler callback) {wayPointCallback = callback;}
-    void setFollowCallback(CallBackHandler callback) {followCallback = callback;}
+    void setHotPointCallback(CallBackHandler callback) { hotPointCallback = callback; }
+    void setWayPointCallback(CallBackHandler callback) { wayPointCallback = callback; }
+    void setFollowCallback(CallBackHandler callback) { followCallback = callback; }
     void setBroadcastCallback(CallBack handler, UserData userData = 0);
     void setFromMobileCallback(CallBackHandler FromMobileEntrance);
 
@@ -327,6 +327,7 @@ class CoreAPI
     //! @note private variables access functions
     ActivateData getAccountData() const;
     HardDriver *getDriver() const;
+    Version getSDKVersion() const;
     bool getHotPointData() const;
     bool getWayPointData() const;
     bool getFollowData() const;
@@ -336,6 +337,7 @@ class CoreAPI
     void setFollowData(bool value);
     void setDriver(HardDriver *value);
     void setAccountData(const ActivateData &value);
+    void setVersion(const Version &value);
 
   private:
     HardDriver *driver;
@@ -343,6 +345,19 @@ class CoreAPI
     bool hotPointData;
     bool wayPointData;
     bool followData;
+
+//! @note debug functions:
+#ifdef API_BUFFER_DATA
+  public:
+    void setTotalRead(const size_t &value) { totalRead = value; }
+    void setOnceRead(const size_t &value) { onceRead = value; }
+
+    size_t getTotalRead() const { return totalRead; }
+    size_t getOnceRead() const { return onceRead; }
+  private:
+    size_t onceRead;
+    size_t totalRead;
+#endif // API_BUFFER_DATA
 };
 
 } // namespace onboardSDK

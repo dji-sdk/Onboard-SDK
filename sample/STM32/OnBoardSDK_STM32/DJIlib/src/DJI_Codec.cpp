@@ -401,7 +401,7 @@ void aes256_decrypt_ecb(aes256_context *ctx, unsigned char *buf)
 // END OF AES-256
 
 //////////////////////////////////////////////////////////////////////////
-unsigned short crc_tab16[] = {
+uint16_t crc_tab16[] = {
     0x0000, 0xc0c1, 0xc181, 0x0140, 0xc301, 0x03c0, 0x0280, 0xc241, 0xc601, 0x06c0, 0x0780,
     0xc741, 0x0500, 0xc5c1, 0xc481, 0x0440, 0xcc01, 0x0cc0, 0x0d80, 0xcd41, 0x0f00, 0xcfc1,
     0xce81, 0x0e40, 0x0a00, 0xcac1, 0xcb81, 0x0b40, 0xc901, 0x09c0, 0x0880, 0xc841, 0xd801,
@@ -428,7 +428,7 @@ unsigned short crc_tab16[] = {
     0x81c1, 0x8081, 0x4040,
 };
 
-unsigned int crc_tab32[] = {
+uint32_t crc_tab32[] = {
     0x00000000, 0x77073096, 0xee0e612c, 0x990951ba, 0x076dc419, 0x706af48f, 0xe963a535,
     0x9e6495a3, 0x0edb8832, 0x79dcb8a4, 0xe0d5e91e, 0x97d2d988, 0x09b64c2b, 0x7eb17cbd,
     0xe7b82d07, 0x90bf1d91, 0x1db71064, 0x6ab020f2, 0xf3b97148, 0x84be41de, 0x1adad47d,
@@ -470,33 +470,33 @@ unsigned int crc_tab32[] = {
 
 const unsigned short CRC_INIT = 0x3AA3;
 
-unsigned short crc16_update(unsigned short crc, unsigned char ch)
+uint16_t crc16_update(uint16_t crc, uint8_t ch)
 {
-    unsigned short tmp;
-    unsigned short msg;
+    uint16_t tmp;
+    uint16_t msg;
 
-    msg = 0x00ff & (unsigned short)ch;
+    msg = 0x00ff & (uint16_t)ch;
     tmp = crc ^ msg;
     crc = (crc >> 8) ^ crc_tab16[tmp & 0xff];
 
     return crc;
 }
 
-unsigned int crc32_update(unsigned int crc, unsigned char ch)
+uint32_t crc32_update(uint32_t crc, uint8_t ch)
 {
-    unsigned int tmp;
-    unsigned int msg;
+    uint32_t tmp;
+    uint32_t msg;
 
-    msg = 0x000000ffL & (unsigned int)ch;
+    msg = 0x000000ffL & (uint32_t)ch;
     tmp = crc ^ msg;
     crc = (crc >> 8) ^ crc_tab32[tmp & 0xff];
     return crc;
 }
 
-unsigned short sdk_stream_crc16_calc(const unsigned char *pMsg, unsigned int nLen)
+uint16_t sdk_stream_crc16_calc(const uint8_t *pMsg, size_t nLen)
 {
-    unsigned int i;
-    unsigned short wCRC = CRC_INIT;
+    size_t i;
+    uint16_t wCRC = CRC_INIT;
 
     for (i = 0; i < nLen; i++)
     {
@@ -506,10 +506,10 @@ unsigned short sdk_stream_crc16_calc(const unsigned char *pMsg, unsigned int nLe
     return wCRC;
 }
 
-unsigned int sdk_stream_crc32_calc(const unsigned char *pMsg, unsigned int nLen)
+uint32_t sdk_stream_crc32_calc(const uint8_t *pMsg, size_t nLen)
 {
-    unsigned int i;
-    unsigned int wCRC = CRC_INIT;
+    size_t i;
+    uint32_t wCRC = CRC_INIT;
 
     for (i = 0; i < nLen; i++)
     {
@@ -540,11 +540,11 @@ using namespace DJI::onboardSDK;
 void sdk_stream_prepare_lambda(SDKFilter *p_filter)
 {
     unsigned int bytes_to_move = sizeof(Header) - 1;
-    unsigned int index_of_move = p_filter->recv_index - bytes_to_move;
+    unsigned int index_of_move = p_filter->recvIndex - bytes_to_move;
 
-    memmove(p_filter->comm_recv_buf, p_filter->comm_recv_buf + index_of_move, bytes_to_move);
-    memset(p_filter->comm_recv_buf + bytes_to_move, 0, index_of_move);
-    p_filter->recv_index = bytes_to_move;
+    memmove(p_filter->recvBuf, p_filter->recvBuf + index_of_move, bytes_to_move);
+    memset(p_filter->recvBuf + bytes_to_move, 0, index_of_move);
+    p_filter->recvIndex = bytes_to_move;
 }
 
 void encodeData(SDKFilter *p_filter, Header *p_head, ptr_aes256_codec codec_func)
@@ -556,7 +556,7 @@ void encodeData(SDKFilter *p_filter, Header *p_head, ptr_aes256_codec codec_func
     unsigned int data_idx;
     unsigned char *data_ptr;
 
-    if (p_head->enc_type == 0)
+    if (p_head->enc == 0)
         return;
     if (p_head->length == sizeof(Header))
         return;
@@ -568,7 +568,7 @@ void encodeData(SDKFilter *p_filter, Header *p_head, ptr_aes256_codec codec_func
     loop_blk = data_len / 16;
     data_idx = 0;
 
-    aes256_init(&ctx, p_filter->comm_key);
+    aes256_init(&ctx, p_filter->sdkKey);
     for (buf_i = 0; buf_i < loop_blk; buf_i++)
     {
         codec_func(&ctx, data_ptr + data_idx);
@@ -583,9 +583,9 @@ void encodeData(SDKFilter *p_filter, Header *p_head, ptr_aes256_codec codec_func
 void DJI::onboardSDK::CoreAPI::callApp(SDKFilter *p_filter)
 {
     // pass current data to handler
-    Header *p_head = (Header *)p_filter->comm_recv_buf;
+    Header *p_head = (Header *)p_filter->recvBuf;
     encodeData(p_filter, p_head, aes256_decrypt_ecb);
-    appHandler((Header *)p_filter->comm_recv_buf);
+    appHandler((Header *)p_filter->recvBuf);
     sdk_stream_prepare_lambda(p_filter);
 }
 
@@ -616,12 +616,12 @@ bool CoreAPI::decodeACKStatus(unsigned short ack)
 
 void sdk_stream_shift_data_lambda(SDKFilter *p_filter)
 {
-    if (p_filter->recv_index)
+    if (p_filter->recvIndex)
     {
-        p_filter->recv_index--;
-        if (p_filter->recv_index)
+        p_filter->recvIndex--;
+        if (p_filter->recvIndex)
         {
-            memmove(p_filter->comm_recv_buf, p_filter->comm_recv_buf + 1, p_filter->recv_index);
+            memmove(p_filter->recvBuf, p_filter->recvBuf + 1, p_filter->recvIndex);
         }
     }
 }
@@ -629,16 +629,16 @@ void sdk_stream_shift_data_lambda(SDKFilter *p_filter)
 //! @note push data to filter buffer
 void CoreAPI::storeData(SDKFilter *p_filter, unsigned char in_data)
 {
-    if (p_filter->recv_index < _SDK_MAX_RECV_SIZE)
+    if (p_filter->recvIndex < _SDK_MAX_RECV_SIZE)
     {
-        p_filter->comm_recv_buf[p_filter->recv_index] = in_data;
-        p_filter->recv_index++;
+        p_filter->recvBuf[p_filter->recvIndex] = in_data;
+        p_filter->recvIndex++;
     }
     else
     {
         API_LOG(driver, ERROR_LOG, "buffer overflow");
-        memset(p_filter->comm_recv_buf, 0, p_filter->recv_index);
-        p_filter->recv_index = 0;
+        memset(p_filter->recvBuf, 0, p_filter->recvIndex);
+        p_filter->recvIndex = 0;
     }
 }
 
@@ -667,25 +667,25 @@ void CoreAPI::storeData(SDKFilter *p_filter, unsigned char in_data)
 
 void sdk_stream_update_reuse_part_lambda(SDKFilter *p_filter)
 {
-    unsigned char *p_buf = p_filter->comm_recv_buf;
-    unsigned short bytes_to_move = p_filter->recv_index - sizeof(Header);
+    unsigned char *p_buf = p_filter->recvBuf;
+    unsigned short bytes_to_move = p_filter->recvIndex - sizeof(Header);
     unsigned char *p_src = p_buf + sizeof(Header);
 
-    unsigned short n_dest_index = p_filter->reuse_index - bytes_to_move;
+    unsigned short n_dest_index = p_filter->reuseIndex - bytes_to_move;
     unsigned char *p_dest = p_buf + n_dest_index;
 
     memmove(p_dest, p_src, bytes_to_move);
 
-    p_filter->recv_index = sizeof(Header);
+    p_filter->recvIndex = sizeof(Header);
     sdk_stream_shift_data_lambda(p_filter);
 
-    p_filter->reuse_index = n_dest_index;
-    p_filter->reuse_count++;
+    p_filter->reuseIndex = n_dest_index;
+    p_filter->reuseCount++;
 }
 
 void DJI::onboardSDK::CoreAPI::verifyData(SDKFilter *p_filter)
 {
-    Header *p_head = (Header *)(p_filter->comm_recv_buf);
+    Header *p_head = (Header *)(p_filter->recvBuf);
     if (_SDK_CALC_CRC_TAIL(p_head, p_head->length) == 0)
     {
         callApp(p_filter);
@@ -699,7 +699,7 @@ void DJI::onboardSDK::CoreAPI::verifyData(SDKFilter *p_filter)
 
 void DJI::onboardSDK::CoreAPI::verifyHead(SDKFilter *p_filter)
 {
-    Header *p_head = (Header *)(p_filter->comm_recv_buf);
+    Header *p_head = (Header *)(p_filter->recvBuf);
 
     if ((p_head->sof == _SDK_SOF) && (p_head->version == 0) &&
         (p_head->length <= _SDK_MAX_RECV_SIZE) && (p_head->reversed0 == 0) &&
@@ -719,19 +719,19 @@ void DJI::onboardSDK::CoreAPI::verifyHead(SDKFilter *p_filter)
 
 void DJI::onboardSDK::CoreAPI::checkStream(SDKFilter *p_filter)
 {
-    Header *p_head = (Header *)(p_filter->comm_recv_buf);
+    Header *p_head = (Header *)(p_filter->recvBuf);
 
-    if (p_filter->recv_index < sizeof(Header))
+    if (p_filter->recvIndex < sizeof(Header))
     {
         // Continue receive data, nothing to do
         return;
     }
-    else if (p_filter->recv_index == sizeof(Header))
+    else if (p_filter->recvIndex == sizeof(Header))
     {
         // recv a full-head
         verifyHead(p_filter);
     }
-    else if (p_filter->recv_index == p_head->length)
+    else if (p_filter->recvIndex == p_head->length)
     {
         verifyData(p_filter);
     }
@@ -745,8 +745,8 @@ void DJI::onboardSDK::CoreAPI::streamHandler(SDKFilter *p_filter, unsigned char 
 
 void DJI::onboardSDK::CoreAPI::byteHandler(const uint8_t in_data)
 {
-    filter.reuse_count = 0;
-    filter.reuse_index = _SDK_MAX_RECV_SIZE;
+    filter.reuseCount = 0;
+    filter.reuseIndex = _SDK_MAX_RECV_SIZE;
 
     streamHandler(&filter, in_data);
 
@@ -772,18 +772,18 @@ void DJI::onboardSDK::CoreAPI::byteHandler(const uint8_t in_data)
         *
         * the command tail part move to buffer right
         * */
-    if (filter.reuse_count != 0)
+    if (filter.reuseCount != 0)
     {
-        while (filter.reuse_index < _SDK_MAX_RECV_SIZE)
+        while (filter.reuseIndex < _SDK_MAX_RECV_SIZE)
         {
             /*! @note because reuse_index maybe re-located, so reuse_index must
              * be
              *  always point to un-used index
              *  re-loop the buffered data
              *  */
-            streamHandler(&filter, filter.comm_recv_buf[filter.reuse_index++]);
+            streamHandler(&filter, filter.recvBuf[filter.reuseIndex++]);
         }
-        filter.reuse_count = 0;
+        filter.reuseCount = 0;
     }
 }
 
@@ -807,7 +807,7 @@ void calculateCRC(void *p_data)
     if (p_head->length > sizeof(Header) && p_head->length < _SDK_FULL_DATA_SIZE_MIN)
         return;
 
-    p_head->head_crc = sdk_stream_crc16_calc(p_byte, _SDK_HEAD_DATA_LEN);
+    p_head->crc = sdk_stream_crc16_calc(p_byte, _SDK_HEAD_DATA_LEN);
 
     if (p_head->length >= _SDK_FULL_DATA_SIZE_MIN)
     {
@@ -846,7 +846,7 @@ unsigned short DJI::onboardSDK::CoreAPI::encrypt(unsigned char *pdest,
     if (w_len > 1024)
         return 0;
 
-    if (filter.enc_enabled == 0 && is_enc)
+    if (filter.encode == 0 && is_enc)
     {
         API_LOG(driver, ERROR_LOG, "Can not send encode data, no available key");
         return 0;
@@ -865,15 +865,15 @@ unsigned short DJI::onboardSDK::CoreAPI::encrypt(unsigned char *pdest,
     p_head->length = data_len;
     p_head->version = 0;
     p_head->sessionID = session_id;
-    p_head->is_ack = is_ack ? 1 : 0;
+    p_head->isAck = is_ack ? 1 : 0;
     p_head->reversed0 = 0;
 
     p_head->padding = is_enc ? (16 - w_len % 16) : 0;
-    p_head->enc_type = is_enc ? 1 : 0;
+    p_head->enc = is_enc ? 1 : 0;
     p_head->reversed1 = 0;
 
-    p_head->sequence_number = seq_num;
-    p_head->head_crc = 0;
+    p_head->sequenceNumber = seq_num;
+    p_head->crc = 0;
 
     if (psrc && w_len)
         memcpy(pdest + sizeof(Header), psrc, w_len);

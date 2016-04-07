@@ -4,6 +4,12 @@
 
 using namespace DJI::onboardSDK;
 
+#ifdef USE_ENCRYPT
+uint8_t DJI::onboardSDK::encrypt = 1;
+#else
+uint8_t DJI::onboardSDK::encrypt = 0;
+#endif // USE_ENCRYPT
+
 CoreAPI::CoreAPI(HardDriver *Driver, bool userCallbackThread, CallBack userRecvCallback,
                  UserData UserData)
 {
@@ -20,10 +26,10 @@ void CoreAPI::init(HardDriver *Driver, CallBackHandler userRecvCallback,
     // driver->init();
 
     seq_num = 0;
-    filter.recv_index = 0;
-    filter.reuse_count = 0;
-    filter.reuse_index = 0;
-    filter.enc_enabled = 0;
+    filter.recvIndex = 0;
+    filter.reuseCount = 0;
+    filter.reuseIndex = 0;
+    filter.encode = 0;
     broadcastCallback.callback = 0;
     broadcastCallback.userData = 0;
     fromMobileCallback.callback = 0;
@@ -33,8 +39,8 @@ void CoreAPI::init(HardDriver *Driver, CallBackHandler userRecvCallback,
 
 #ifndef SDK_VERSION_2_3
     broadcastData.timeStamp.time = 0;
-    broadcastData.timeStamp.asr_ts = 0;
-    broadcastData.timeStamp.sync_flag = 0;
+    broadcastData.timeStamp.nanoTime = 0;
+    broadcastData.timeStamp.syncFlag = 0;
 #else
     broadcastData.timeStamp = 0;
 #endif // SDK_VERSION_2_3
@@ -42,6 +48,8 @@ void CoreAPI::init(HardDriver *Driver, CallBackHandler userRecvCallback,
     hotPointData = true;
     followData = true;
     callbackThread = userCallbackThread;
+
+    versionData.version = SDK_VERSION;
 
     setup();
 }
@@ -52,25 +60,25 @@ CoreAPI::CoreAPI(HardDriver *Driver, CallBackHandler userRecvCallback, bool user
     // getVersion();
 }
 
-void CoreAPI::send(unsigned char session_mode, unsigned char is_enc, CMD_SET cmd_set,
-                   unsigned char cmd_id, void *pdata, int len, CallBack ack_callback,
-                   int timeout, int retry_time)
+void CoreAPI::send(unsigned char session, unsigned char is_enc, CMD_SET cmdSet,
+                   unsigned char cmdID, void *pdata, int len, CallBack ackCallback, int timeout,
+                   int retry)
 {
     Command param;
     unsigned char *ptemp = (unsigned char *)encodeSendData;
-    *ptemp++ = cmd_set;
-    *ptemp++ = cmd_id;
+    *ptemp++ = cmdSet;
+    *ptemp++ = cmdID;
 
     memcpy(encodeSendData + SET_CMD_SIZE, pdata, len);
 
-    param.handler = ack_callback;
-    param.session_mode = session_mode;
+    param.handler = ackCallback;
+    param.sessionMode = session;
     param.length = len + SET_CMD_SIZE;
     param.buf = encodeSendData;
-    param.retry_time = retry_time;
+    param.retry = retry;
 
     param.timeout = timeout;
-    param.need_encrypt = is_enc;
+    param.encrypt = is_enc;
 
     param.userData = 0;
 
@@ -89,13 +97,13 @@ void CoreAPI::send(unsigned char session_mode, bool is_enc, CMD_SET cmd_set,
     memcpy(encodeSendData + SET_CMD_SIZE, pdata, len);
 
     param.handler = ack_handler;
-    param.session_mode = session_mode;
+    param.sessionMode = session_mode;
     param.length = len + SET_CMD_SIZE;
     param.buf = encodeSendData;
-    param.retry_time = retry_time;
+    param.retry = retry_time;
 
     param.timeout = timeout;
-    param.need_encrypt = is_enc ? 1 : 0;
+    param.encrypt = is_enc ? 1 : 0;
 
     param.userData = userData;
 
@@ -110,16 +118,16 @@ void CoreAPI::ack(req_id_t req_id, unsigned char *ackdata, int len)
 
     memcpy(encodeACK, ackdata, len);
 
-    param.session_id = req_id.session_id;
-    param.seq_num = req_id.sequence_number;
-    param.need_encrypt = req_id.need_encrypt;
+    param.sessionID = req_id.session_id;
+    param.seqNum = req_id.sequence_number;
+    param.encrypt = req_id.need_encrypt;
     param.buf = encodeACK;
     param.length = len;
 
     this->ackInterface(&param);
 }
 
-void CoreAPI::getVersion(CallBack callback, UserData userData)
+void CoreAPI::getSDKVersion(CallBack callback, UserData userData)
 {
     versionData.version_ack = AC_COMMON_NO_RESPONSE;
     versionData.version_crc = 0x0;
@@ -135,8 +143,13 @@ void CoreAPI::getVersion(CallBack callback, UserData userData)
 
 void CoreAPI::activate(ActivateData *data, CallBack callback, UserData userData)
 {
+    data->version = versionData.version;
     accountData = *data;
-    for (int i = 0; i < 32; ++i) data->app_bundle_id[i] = '9'; //! @note for ios verification
+    accountData.reserved = 2;
+
+    API_LOG(driver, DEBUG_LOG, "version 0x%X/n", versionData.version);
+
+    for (int i = 0; i < 32; ++i) data->iosID[i] = '9'; //! @note for ios verification
     send(2, 0, SET_ACTIVATION, CODE_ACTIVATE, (unsigned char *)&accountData,
          sizeof(accountData) - sizeof(char *), 1000, 3,
          callback ? callback : CoreAPI::activateCallback, userData);
@@ -153,13 +166,13 @@ void CoreAPI::sendToMobile(uint8_t *data, uint8_t len, CallBack callback, UserDa
          callback ? callback : CoreAPI::sendToMobileCallback, userData);
 }
 
-void CoreAPI::setBroadcastFreq(uint8_t *dataLenIs16, CallBack callback,
-                               UserData userData)
+void CoreAPI::setBroadcastFreq(uint8_t *dataLenIs16, CallBack callback, UserData userData)
 {
+    //! @note see also enum BROADCAST_FREQ in DJI_API.h
     for (int i = 0; i < 16; ++i)
     {
-        if (dataLenIs16[i] < 12)
-            dataLenIs16[i] = (dataLenIs16[i] > 5 ? 5 : 0);
+        if (i < 12)
+            dataLenIs16[i] = (dataLenIs16[i] > 5 ? 5 : dataLenIs16[i]);
         else
             dataLenIs16[i] = 0;
     }
@@ -183,7 +196,7 @@ bool CoreAPI::getFollowData() const { return followData; }
 void CoreAPI::setControl(bool enable, CallBack callback, UserData userData)
 {
     unsigned char data = enable ? 1 : 0;
-    send(2, 1, SET_CONTROL, CODE_SETCONTROL, &data, 1, 500, 2,
+    send(2, DJI::onboardSDK::encrypt, SET_CONTROL, CODE_SETCONTROL, &data, 1, 500, 2,
          callback ? callback : CoreAPI::setControlCallback, userData);
 }
 
@@ -231,11 +244,12 @@ void CoreAPI::activateCallback(CoreAPI *This, Header *header, UserData userData 
                 This->broadcastData.activation = 1;
                 This->getDriver()->freeMSG();
 
-                if (This->accountData.app_key)
-                    This->setKey(This->accountData.app_key);
+                if (This->accountData.encKey)
+                    This->setKey(This->accountData.encKey);
                 return;
             case ACK_ACTIVE_NEW_DEVICE:
-                API_LOG(This->driver, STATUS_LOG, "new device try again\n");
+                API_LOG(This->driver, STATUS_LOG, "new device, please link DJIGO to your "
+                                                  "remote controller and try again\n");
                 break;
             case ACK_ACTIVE_PARAMETER_ERROR:
                 API_LOG(This->driver, ERROR_LOG, "activate Wrong pahameter\n");
@@ -247,8 +261,8 @@ void CoreAPI::activateCallback(CoreAPI *This, Header *header, UserData userData 
                 API_LOG(This->driver, ERROR_LOG, "activate DJIGO not connected\n");
                 break;
             case ACK_ACTIVE_NO_INTERNET:
-                API_LOG(This->driver, ERROR_LOG,
-                        "activate DJIGO not connected to the internet\n");
+                API_LOG(This->driver, ERROR_LOG, "activate DJIGO not "
+                                                 "connected to the internet\n");
                 break;
             case ACK_ACTIVE_SERVER_REFUSED:
                 API_LOG(This->driver, ERROR_LOG, "activate DJI server reject "
@@ -260,7 +274,7 @@ void CoreAPI::activateCallback(CoreAPI *This, Header *header, UserData userData 
                 break;
             case ACK_ACTIVE_VERSION_ERROR:
                 API_LOG(This->driver, ERROR_LOG, "activate SDK version did not match\n");
-                This->getVersion();
+                This->getSDKVersion();
                 break;
             default:
                 if (!This->decodeACKStatus(ack_data))
@@ -276,7 +290,7 @@ void CoreAPI::activateCallback(CoreAPI *This, Header *header, UserData userData 
     else
     {
         API_LOG(This->driver, ERROR_LOG, "ACK is exception,seesion id %d,sequence %d\n",
-                header->sessionID, header->sequence_number);
+                header->sessionID, header->sequenceNumber);
     }
 }
 
@@ -295,7 +309,7 @@ void CoreAPI::sendToMobileCallback(CoreAPI *This, Header *header, UserData userD
     else
     {
         API_LOG(This->driver, ERROR_LOG, "ACK is exception,seesion id %d,sequence %d\n",
-                header->sessionID, header->sequence_number);
+                header->sessionID, header->sequenceNumber);
     }
 }
 
@@ -325,6 +339,9 @@ void CoreAPI::setFrequencyCallback(CoreAPI *This __UNUSED, Header *header,
             break;
     }
 }
+Version CoreAPI::getSDKVersion() const { return versionData.version; }
+
+void CoreAPI::setVersion(const Version &value) { versionData.version = value; }
 
 void CoreAPI::setControlCallback(CoreAPI *This, Header *header, UserData userData __UNUSED)
 {
@@ -339,7 +356,7 @@ void CoreAPI::setControlCallback(CoreAPI *This, Header *header, UserData userDat
     else
     {
         API_LOG(This->driver, ERROR_LOG, "ACK is exception,seesion id %d,sequence %d\n",
-                header->sessionID, header->sequence_number);
+                header->sessionID, header->sequenceNumber);
     }
 
     switch (ack_data)
@@ -356,14 +373,14 @@ void CoreAPI::setControlCallback(CoreAPI *This, Header *header, UserData userDat
             break;
         case ACK_SETCONTROL_OBTAIN_RUNNING:
             API_LOG(This->driver, STATUS_LOG, "obtain control running\n");
-            This->send(2, 1, SET_CONTROL, CODE_SETCONTROL, &data, 1, 500, 2,
-                       CoreAPI::setControlCallback);
+            This->send(2, DJI::onboardSDK::encrypt, SET_CONTROL, CODE_SETCONTROL, &data, 1, 500,
+                       2, CoreAPI::setControlCallback);
             break;
         case ACK_SETCONTROL_RELEASE_RUNNING:
             API_LOG(This->driver, STATUS_LOG, "release control running\n");
             data = 0;
-            This->send(2, 1, SET_CONTROL, CODE_SETCONTROL, &data, 1, 500, 2,
-                       CoreAPI::setControlCallback);
+            This->send(2, DJI::onboardSDK::encrypt, SET_CONTROL, CODE_SETCONTROL, &data, 1, 500,
+                       2, CoreAPI::setControlCallback);
             break;
         case ACK_SETCONTROL_IOC:
             API_LOG(This->driver, STATUS_LOG, "IOC mode opening can not obtain control\n");

@@ -68,11 +68,11 @@ typedef struct
 
 typedef struct ActivateData
 {
-    unsigned int app_id;
-    unsigned int app_api_level;
-    unsigned int app_ver;
-    unsigned char app_bundle_id[32];
-    char *app_key;
+    unsigned int ID;
+    unsigned int reserved;
+    unsigned int version;
+    unsigned char iosID[32];
+    char *encKey;
 } ActivateData;
 
 typedef struct VersionData
@@ -83,6 +83,7 @@ typedef struct VersionData
     char version_ID[11];
 #endif // SDK_VERSION_3_1
     char version_name[32];
+    DJI::onboardSDK::Version version;
 } VersionData;
 
 #pragma pack()

@@ -30,32 +30,28 @@ using namespace DJI::onboardSDK;
 void DJI::onboardSDK::CoreAPI::setupMMU()
 {
     unsigned int i;
-    MMU[0].tab_index = 0;
-    MMU[0].usage_flag = 1;
+    MMU[0].tabIndex = 0;
+    MMU[0].usageFlag = 1;
     MMU[0].pmem = memory;
-    MMU[0].mem_size = 0;
+    MMU[0].memSize = 0;
     for (i = 1; i < (MMU_TABLE_NUM - 1); i++)
     {
-        MMU[i].tab_index = i;
-        MMU[i].usage_flag = 0;
+        MMU[i].tabIndex = i;
+        MMU[i].usageFlag = 0;
     }
-    MMU[MMU_TABLE_NUM - 1].tab_index = MMU_TABLE_NUM - 1;
-    MMU[MMU_TABLE_NUM - 1].usage_flag = 1;
+    MMU[MMU_TABLE_NUM - 1].tabIndex = MMU_TABLE_NUM - 1;
+    MMU[MMU_TABLE_NUM - 1].usageFlag = 1;
     MMU[MMU_TABLE_NUM - 1].pmem = memory + MEMORY_SIZE;
-    MMU[MMU_TABLE_NUM - 1].mem_size = 0;
+    MMU[MMU_TABLE_NUM - 1].memSize = 0;
 }
 
 void freeMemory(MMU_Tab *mmu_tab)
 {
     if (mmu_tab == (MMU_Tab *)0)
-    {
         return;
-    }
-    if (mmu_tab->tab_index == 0 || mmu_tab->tab_index == (MMU_TABLE_NUM - 1))
-    {
+    if (mmu_tab->tabIndex == 0 || mmu_tab->tabIndex == (MMU_TABLE_NUM - 1))
         return;
-    }
-    mmu_tab->usage_flag = 0;
+    mmu_tab->usageFlag = 0;
 }
 
 MMU_Tab *DJI::onboardSDK::CoreAPI::allocMemory(unsigned short size)
@@ -73,60 +69,50 @@ MMU_Tab *DJI::onboardSDK::CoreAPI::allocMemory(unsigned short size)
     unsigned char magic_flag = 0;
 
     if (size > PRO_PURE_DATA_MAX_SIZE || size > MEMORY_SIZE)
-    {
         return (MMU_Tab *)0;
-    }
 
     for (i = 0; i < MMU_TABLE_NUM; i++)
-    {
-        if (MMU[i].usage_flag == 1)
+        if (MMU[i].usageFlag == 1)
         {
-            mem_used += MMU[i].mem_size;
-            mmu_tab_used_index[mmu_tab_used_num++] = MMU[i].tab_index;
+            mem_used += MMU[i].memSize;
+            mmu_tab_used_index[mmu_tab_used_num++] = MMU[i].tabIndex;
         }
-    }
 
     if (MEMORY_SIZE < (mem_used + size))
-    {
         return (MMU_Tab *)0;
-    }
 
     if (mem_used == 0)
     {
         MMU[1].pmem = MMU[0].pmem;
-        MMU[1].mem_size = size;
-        MMU[1].usage_flag = 1;
+        MMU[1].memSize = size;
+        MMU[1].usageFlag = 1;
         return &MMU[1];
     }
 
     for (i = 0; i < (mmu_tab_used_num - 1); i++)
-    {
         for (j = 0; j < (mmu_tab_used_num - i - 1); j++)
-        {
             if (MMU[mmu_tab_used_index[j]].pmem > MMU[mmu_tab_used_index[j + 1]].pmem)
             {
                 mmu_tab_used_index[j + 1] ^= mmu_tab_used_index[j];
                 mmu_tab_used_index[j] ^= mmu_tab_used_index[j + 1];
                 mmu_tab_used_index[j + 1] ^= mmu_tab_used_index[j];
             }
-        }
-    }
 
     for (i = 0; i < (mmu_tab_used_num - 1); i++)
     {
         temp32 = (unsigned int)(MMU[mmu_tab_used_index[i + 1]].pmem -
                                 MMU[mmu_tab_used_index[i]].pmem);
 
-        if ((temp32 - MMU[mmu_tab_used_index[i]].mem_size) >= size)
+        if ((temp32 - MMU[mmu_tab_used_index[i]].memSize) >= size)
         {
-            if (temp_area[1] > (temp32 - MMU[mmu_tab_used_index[i]].mem_size))
+            if (temp_area[1] > (temp32 - MMU[mmu_tab_used_index[i]].memSize))
             {
-                temp_area[0] = MMU[mmu_tab_used_index[i]].tab_index;
-                temp_area[1] = temp32 - MMU[mmu_tab_used_index[i]].mem_size;
+                temp_area[0] = MMU[mmu_tab_used_index[i]].tabIndex;
+                temp_area[1] = temp32 - MMU[mmu_tab_used_index[i]].memSize;
             }
         }
 
-        record_temp32 += temp32 - MMU[mmu_tab_used_index[i]].mem_size;
+        record_temp32 += temp32 - MMU[mmu_tab_used_index[i]].memSize;
         if (record_temp32 >= size && magic_flag == 0)
         {
             j = i;
@@ -139,25 +125,25 @@ MMU_Tab *DJI::onboardSDK::CoreAPI::allocMemory(unsigned short size)
         for (i = 0; i < j; i++)
         {
             if (MMU[mmu_tab_used_index[i + 1]].pmem >
-                (MMU[mmu_tab_used_index[i]].pmem + MMU[mmu_tab_used_index[i]].mem_size))
+                (MMU[mmu_tab_used_index[i]].pmem + MMU[mmu_tab_used_index[i]].memSize))
             {
-                memmove(MMU[mmu_tab_used_index[i]].pmem + MMU[mmu_tab_used_index[i]].mem_size,
+                memmove(MMU[mmu_tab_used_index[i]].pmem + MMU[mmu_tab_used_index[i]].memSize,
                         MMU[mmu_tab_used_index[i + 1]].pmem,
-                        MMU[mmu_tab_used_index[i + 1]].mem_size);
+                        MMU[mmu_tab_used_index[i + 1]].memSize);
                 MMU[mmu_tab_used_index[i + 1]].pmem =
-                    MMU[mmu_tab_used_index[i]].pmem + MMU[mmu_tab_used_index[i]].mem_size;
+                    MMU[mmu_tab_used_index[i]].pmem + MMU[mmu_tab_used_index[i]].memSize;
             }
         }
 
         for (i = 1; i < (MMU_TABLE_NUM - 1); i++)
         {
-            if (MMU[i].usage_flag == 0)
+            if (MMU[i].usageFlag == 0)
             {
                 MMU[i].pmem =
-                    MMU[mmu_tab_used_index[j]].pmem + MMU[mmu_tab_used_index[j]].mem_size;
+                    MMU[mmu_tab_used_index[j]].pmem + MMU[mmu_tab_used_index[j]].memSize;
 
-                MMU[i].mem_size = size;
-                MMU[i].usage_flag = 1;
+                MMU[i].memSize = size;
+                MMU[i].usageFlag = 1;
                 return &MMU[i];
             }
         }
@@ -166,12 +152,12 @@ MMU_Tab *DJI::onboardSDK::CoreAPI::allocMemory(unsigned short size)
 
     for (i = 1; i < (MMU_TABLE_NUM - 1); i++)
     {
-        if (MMU[i].usage_flag == 0)
+        if (MMU[i].usageFlag == 0)
         {
-            MMU[i].pmem = MMU[temp_area[0]].pmem + MMU[temp_area[0]].mem_size;
+            MMU[i].pmem = MMU[temp_area[0]].pmem + MMU[temp_area[0]].memSize;
 
-            MMU[i].mem_size = size;
-            MMU[i].usage_flag = 1;
+            MMU[i].memSize = size;
+            MMU[i].usageFlag = 1;
             return &MMU[i];
         }
     }
@@ -192,16 +178,15 @@ void DJI::onboardSDK::CoreAPI::setupSession()
     for (i = 0; i < (SESSION_TABLE_NUM - 1); i++)
     {
         ACKSessionTab[i].sessionID = i + 1;
-        ACKSessionTab[i].session_status = ACK_SESSION_IDLE;
+        ACKSessionTab[i].sessionStatus = ACK_SESSION_IDLE;
         ACKSessionTab[i].mmu = (MMU_Tab *)NULL;
     }
 }
 
 /*! @note Alloc a cmd session for sending cmd data
- *  when arg session_id = 0/1, which means select session 0/1 to send cmd
+ *  when arg session_id = 0/1, it means select session 0/1 to send cmd
  *  otherwise set arg session_id = CMD_SESSION_AUTO (32), which means auto
- * select
- *  a idle session id between 2~31.
+ *  select a idle session id is between 2~31.
  */
 
 CMDSession *DJI::onboardSDK::CoreAPI::allocSession(unsigned short session_id,
@@ -214,9 +199,7 @@ CMDSession *DJI::onboardSDK::CoreAPI::allocSession(unsigned short session_id,
     if (session_id == 0 || session_id == 1)
     {
         if (this->CMDSessionTab[session_id].usageFlag == 0)
-        {
             i = session_id;
-        }
         else
         {
             /* session is busy */
@@ -227,21 +210,15 @@ CMDSession *DJI::onboardSDK::CoreAPI::allocSession(unsigned short session_id,
     else
     {
         for (i = 2; i < SESSION_TABLE_NUM; i++)
-        {
             if (CMDSessionTab[i].usageFlag == 0)
-            {
                 break;
-            }
-        }
     }
     if (i < 32 && CMDSessionTab[i].usageFlag == 0)
     {
         CMDSessionTab[i].usageFlag = 1;
         mmu = allocMemory(size);
         if (mmu == NULL)
-        {
             CMDSessionTab[i].usageFlag = 0;
-        }
         else
         {
             CMDSessionTab[i].mmu = mmu;
@@ -267,9 +244,7 @@ ACKSession *DJI::onboardSDK::CoreAPI::allocACK(unsigned short session_id, unsign
     if (session_id > 0 && session_id < 32)
     {
         if (ACKSessionTab[session_id - 1].mmu)
-        {
             freeACK(&ACKSessionTab[session_id - 1]);
-        }
         mmu = allocMemory(size);
         if (mmu == NULL)
         {

@@ -11,11 +11,9 @@ void User_Activate()
 		char app_bundle_id[32] = "1234567890123456789012";
 	
 		ActivateData user_act_data;
-		user_act_data.app_id = 1023841;
-		user_act_data.app_api_level = 2;
-    user_act_data.app_ver = SDK_VERSION;
-    strcpy((char*)user_act_data.app_bundle_id, app_bundle_id);
-		user_act_data.app_key = key_buf;
+		user_act_data.ID = 1023841;
+	  user_act_data.version = SDK_VERSION;
+		user_act_data.encKey = key_buf;
 	 
 		coreApi->activate(&user_act_data);
 	

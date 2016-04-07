@@ -29,10 +29,10 @@ namespace onboardSDK
 
 typedef struct FlightData
 {
-    uint8_t ctrl_flag;
-    float32_t roll_or_x;
-    float32_t pitch_or_y;
-    float32_t thr_z;
+    uint8_t flag;
+    float32_t x;
+    float32_t y;
+    float32_t z;
     float32_t yaw;
 } FlightData;
 
@@ -53,7 +53,7 @@ class Flight
     enum VerticalLogic
     {
         VERTICAL_VELOCITY = 0x00,
-        VERTICAL_POSSITION = 0x10,
+        VERTICAL_POSITION = 0x10,
         VERTICAL_THRUST = 0x20,
     };
 
@@ -61,7 +61,7 @@ class Flight
     {
         HORIZONTAL_ANGLE = 0x00,
         HORIZONTAL_VELOCITY = 0x40,
-        HORIZONTAL_POSSITION = 0X80,
+        HORIZONTAL_POSITION = 0X80,
     };
 
     enum YawLogic
@@ -76,27 +76,26 @@ class Flight
         HORIZONTAL_BODY = 0x02
     };
 
-#ifdef SDK_VERSION_2_3
+//! @version 2.3
     enum YawCoordinate
     {
         YAW_GROUND = 0x00,
         YAW_BODY = 0X01
     };
-#else
+//! @version 3.1
     enum SmoothMode
     {
         SMOOTH_DISABLE = 0x00,
         SMOOTH_ENABLE = 0x01
     };
-#endif // SDK_VERSION_2_3
 
     /*! @note
      *  In order to keep your drone safe,
      *  you must keep sending FlightData to flight controller.
      *  Or your drone will hover.
      *
-     *  Possion control is a open-looped control.
-     *  That means it accept incremental data, not absolute possition data.
+     *  Posion control is a open-looped control.
+     *  That means it accept incremental data, not absolute position data.
      * */
   public:
     Flight(CoreAPI *ControlAPI = 0);
@@ -107,7 +106,7 @@ class Flight
     void setFlight(uint8_t ControlFlag = 0x00);
 
     QuaternionData getQuaternion() const;
-    PossitionData getPossition() const;
+    PositionData getPosition() const;
     VelocityData getVelocity() const;
     CommonData getAcceleration() const;
     CommonData getPalstance() const;

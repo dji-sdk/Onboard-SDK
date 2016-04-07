@@ -42,7 +42,7 @@ void Rx_buff_Handler()      //when USART recive a 0xfe,start handle command
 		{		
 				if(Rx_buff[2]==0x00)   				//0x00 to get current version
 				{
-				  coreApi->getVersion();        
+				  coreApi->getSDKVersion();        
 				}
 				if(Rx_buff[2]==0x01)					
 				{	
@@ -74,10 +74,10 @@ void Rx_buff_Handler()      //when USART recive a 0xfe,start handle command
 				{
 					if(Rx_buff[3]==0x01)  
 					{   
-						flightData.ctrl_flag =Rx_buff[4];  
-						flightData.roll_or_x = Hex2int(Rx_buff[5],Rx_buff[6]);
-						flightData.pitch_or_y = Hex2int(Rx_buff[7],Rx_buff[8]);
-						flightData.thr_z = Hex2int(Rx_buff[9],Rx_buff[10]);
+						flightData.flag =Rx_buff[4];  
+						flightData.x = Hex2int(Rx_buff[5],Rx_buff[6]);
+						flightData.y = Hex2int(Rx_buff[7],Rx_buff[8]);
+						flightData.z = Hex2int(Rx_buff[9],Rx_buff[10]);
 						flightData.yaw = Hex2int(Rx_buff[11],Rx_buff[12]);
 						flight.setFlight(&flightData);
 						TIM_Cmd(TIM2,ENABLE);
@@ -88,10 +88,10 @@ void Rx_buff_Handler()      //when USART recive a 0xfe,start handle command
 					}
 					if(Rx_buff[3]==0x00)
 					{
-						flightData.ctrl_flag = 0x91;   // binary 10 01 00 01
-						flightData.roll_or_x = 10;
-						flightData.pitch_or_y = 10;
-						flightData.thr_z = 20;
+						flightData.flag = 0x91;   // binary 10 01 00 01
+						flightData.x = 10;
+						flightData.y = 10;
+						flightData.z = 20;
 						flightData.yaw = 100;
 						flight.setFlight(&flightData);
 					}
@@ -145,7 +145,7 @@ void Rx_buff_Handler()      //when USART recive a 0xfe,start handle command
 			{
 				broadcastdata = coreApi->getBroadcastData();
 				printf("TimeStamp is %d\r\n",broadcastdata.timeStamp);
-				printf("Battery capacity remains %d percent\r\n",broadcastdata.capacity);
+				printf("Battery capacity remains %d percent\r\n",broadcastdata.battery);
 			}
 		}
 		else if(Rx_buff[1]==0xFC)   
