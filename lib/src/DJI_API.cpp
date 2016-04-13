@@ -149,7 +149,7 @@ void CoreAPI::activate(ActivateData *data, CallBack callback, UserData userData)
 
     API_LOG(driver, DEBUG_LOG, "version 0x%X/n", versionData.version);
 
-    for (int i = 0; i < 32; ++i) data->iosID[i] = '9'; //! @note for ios verification
+    for (int i = 0; i < 32; ++i) accountData->iosID[i] = '9'; //! @note for ios verification
     send(2, 0, SET_ACTIVATION, CODE_ACTIVATE, (unsigned char *)&accountData,
          sizeof(accountData) - sizeof(char *), 1000, 3,
          callback ? callback : CoreAPI::activateCallback, userData);
