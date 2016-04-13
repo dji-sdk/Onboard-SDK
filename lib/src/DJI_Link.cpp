@@ -63,11 +63,12 @@ void DJI::onboardSDK::CoreAPI::appHandler(Header *header)
                     API_LOG(driver, DEBUG_LOG, "Recv Session %d ACK\n", p2header->sessionID);
 
                     callBack = CMDSessionTab[header->sessionID].handler;
+                    UserData data = CMDSessionTab[header->sessionID].userData;
                     freeSession(&CMDSessionTab[header->sessionID]);
                     driver->freeMemory();
                     if (callBack)
                         //! @todo new algorithm call in a thread
-                        callBack(this, header, CMDSessionTab[header->sessionID].userData);
+                        callBack(this, header, data);
                 }
                 else
                     driver->freeMemory();
