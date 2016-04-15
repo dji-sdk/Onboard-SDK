@@ -29,7 +29,7 @@
       <CLKADS>12000000</CLKADS>
       <pArmCC>5050106::V5.05 update 1 (build 106)::ARMCC</pArmCC>
       <OPTTT>
-        <gFlags>0</gFlags>
+        <gFlags>1</gFlags>
         <BeepAtEnd>1</BeepAtEnd>
         <RunSim>0</RunSim>
         <RunTarget>1</RunTarget>
@@ -83,37 +83,37 @@
         <Book>
           <Number>0</Number>
           <Title>User Manual (MCBSTM32F400)</Title>
-          <Path>e:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.6.0\MDK/Boards/Keil/MCBSTM32F400/Documentation/mcbstm32f200.chm</Path>
+          <Path>C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.6.0\MDK/Boards/Keil/MCBSTM32F400/Documentation/mcbstm32f200.chm</Path>
         </Book>
         <Book>
           <Number>1</Number>
           <Title>Schematics (MCBSTM32F400)</Title>
-          <Path>e:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.6.0\MDK/Boards/Keil/MCBSTM32F400/Documentation/mcbstm32f400-schematics.pdf</Path>
+          <Path>C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.6.0\MDK/Boards/Keil/MCBSTM32F400/Documentation/mcbstm32f400-schematics.pdf</Path>
         </Book>
         <Book>
           <Number>2</Number>
           <Title>Getting Started (STM32F4-Discovery)</Title>
-          <Path>e:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.6.0\MDK/Boards/ST/STM32F4-Discovery/Documentation/DM00037368.pdf</Path>
+          <Path>C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.6.0\MDK/Boards/ST/STM32F4-Discovery/Documentation/DM00037368.pdf</Path>
         </Book>
         <Book>
           <Number>3</Number>
           <Title>User Manual (STM32F4-Discovery)</Title>
-          <Path>e:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.6.0\MDK/Boards/ST/STM32F4-Discovery/Documentation/DM00039084.pdf</Path>
+          <Path>C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.6.0\MDK/Boards/ST/STM32F4-Discovery/Documentation/DM00039084.pdf</Path>
         </Book>
         <Book>
           <Number>4</Number>
           <Title>Bill of Materials (STM32F4-Discovery)</Title>
-          <Path>e:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.6.0\MDK/Boards/ST/STM32F4-Discovery/Documentation/stm32f4discovery_bom.zip</Path>
+          <Path>C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.6.0\MDK/Boards/ST/STM32F4-Discovery/Documentation/stm32f4discovery_bom.zip</Path>
         </Book>
         <Book>
           <Number>5</Number>
           <Title>Gerber Files (STM32F4-Discovery)</Title>
-          <Path>e:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.6.0\MDK/Boards/ST/STM32F4-Discovery/Documentation/stm32f4discovery_gerber.zip</Path>
+          <Path>C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.6.0\MDK/Boards/ST/STM32F4-Discovery/Documentation/stm32f4discovery_gerber.zip</Path>
         </Book>
         <Book>
           <Number>6</Number>
           <Title>Schematics (STM32F4-Discovery)</Title>
-          <Path>e:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.6.0\MDK/Boards/ST/STM32F4-Discovery/Documentation/stm32f4discovery_sch.zip</Path>
+          <Path>C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.6.0\MDK/Boards/ST/STM32F4-Discovery/Documentation/stm32f4discovery_sch.zip</Path>
         </Book>
         <Book>
           <Number>7</Number>
@@ -168,7 +168,24 @@
           <Name>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0STM32F4xx_1024 -FS08000000 -FL0100000 -FP0($$Device:STM32F407VGTx$CMSIS/Flash/STM32F4xx_1024.FLM))</Name>
         </SetRegEntry>
       </TargetDriverDllRegistry>
-      <Breakpoint/>
+      <Breakpoint>
+        <Bp>
+          <Number>0</Number>
+          <Type>0</Type>
+          <LineNumber>52</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>0</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>0</BreakIfRCount>
+          <Filename>..\User\cppforstm32.cpp</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression></Expression>
+        </Bp>
+      </Breakpoint>
       <Tracepoint>
         <THDelay>0</THDelay>
       </Tracepoint>
@@ -712,7 +729,7 @@
       <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\DJIlib\src\DJI_API.cpp</PathWithFileName>
+      <PathWithFileName>..\..\..\..\lib\src\DJI_API.cpp</PathWithFileName>
       <FilenameWithoutPath>DJI_API.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -725,7 +742,7 @@
       <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\DJIlib\src\DJI_App.cpp</PathWithFileName>
+      <PathWithFileName>..\..\..\..\lib\src\DJI_App.cpp</PathWithFileName>
       <FilenameWithoutPath>DJI_App.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -738,7 +755,7 @@
       <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\DJIlib\src\DJI_Camera.cpp</PathWithFileName>
+      <PathWithFileName>..\..\..\..\lib\src\DJI_Camera.cpp</PathWithFileName>
       <FilenameWithoutPath>DJI_Camera.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -751,7 +768,7 @@
       <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\DJIlib\src\DJI_Codec.cpp</PathWithFileName>
+      <PathWithFileName>..\..\..\..\lib\src\DJI_Codec.cpp</PathWithFileName>
       <FilenameWithoutPath>DJI_Codec.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -764,7 +781,7 @@
       <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\DJIlib\src\DJI_Flight.cpp</PathWithFileName>
+      <PathWithFileName>..\..\..\..\lib\src\DJI_Flight.cpp</PathWithFileName>
       <FilenameWithoutPath>DJI_Flight.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -777,8 +794,8 @@
       <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\DJIlib\src\DJI_HardDriver.cpp</PathWithFileName>
-      <FilenameWithoutPath>DJI_HardDriver.cpp</FilenameWithoutPath>
+      <PathWithFileName>..\..\..\..\lib\src\DJI_Follow.cpp</PathWithFileName>
+      <FilenameWithoutPath>DJI_Follow.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -790,8 +807,8 @@
       <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\DJIlib\src\DJI_Link.cpp</PathWithFileName>
-      <FilenameWithoutPath>DJI_Link.cpp</FilenameWithoutPath>
+      <PathWithFileName>..\..\..\..\lib\src\DJI_HardDriver.cpp</PathWithFileName>
+      <FilenameWithoutPath>DJI_HardDriver.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -803,8 +820,8 @@
       <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\DJIlib\src\DJI_Memory.cpp</PathWithFileName>
-      <FilenameWithoutPath>DJI_Memory.cpp</FilenameWithoutPath>
+      <PathWithFileName>..\..\..\..\lib\src\DJI_HotPoint.cpp</PathWithFileName>
+      <FilenameWithoutPath>DJI_HotPoint.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -816,8 +833,8 @@
       <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\DJIlib\src\DJI_VirtualRC.cpp</PathWithFileName>
-      <FilenameWithoutPath>DJI_VirtualRC.cpp</FilenameWithoutPath>
+      <PathWithFileName>..\..\..\..\lib\src\DJI_Link.cpp</PathWithFileName>
+      <FilenameWithoutPath>DJI_Link.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -829,8 +846,8 @@
       <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\DJIlib\src\DJI_HotPoint.cpp</PathWithFileName>
-      <FilenameWithoutPath>DJI_HotPoint.cpp</FilenameWithoutPath>
+      <PathWithFileName>..\..\..\..\lib\src\DJI_Memory.cpp</PathWithFileName>
+      <FilenameWithoutPath>DJI_Memory.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -842,8 +859,34 @@
       <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\DJIlib\src\DJI_Mission.cpp</PathWithFileName>
+      <PathWithFileName>..\..\..\..\lib\src\DJI_Mission.cpp</PathWithFileName>
       <FilenameWithoutPath>DJI_Mission.cpp</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>6</GroupNumber>
+      <FileNumber>47</FileNumber>
+      <FileType>8</FileType>
+      <tvExp>0</tvExp>
+      <Focus>0</Focus>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\..\..\..\lib\src\DJI_VirtualRC.cpp</PathWithFileName>
+      <FilenameWithoutPath>DJI_VirtualRC.cpp</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>6</GroupNumber>
+      <FileNumber>48</FileNumber>
+      <FileType>8</FileType>
+      <tvExp>0</tvExp>
+      <Focus>0</Focus>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\..\..\..\lib\src\DJI_WayPoint.cpp</PathWithFileName>
+      <FilenameWithoutPath>DJI_WayPoint.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

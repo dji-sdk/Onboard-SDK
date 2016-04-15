@@ -56,10 +56,6 @@ int fputc(int ch,FILE *f)
 	
 	return (ch);
 }
-int GetKey(void)
-{
-   
-}
 #ifdef __cplusplus
 }
 #endif //__cplusplus

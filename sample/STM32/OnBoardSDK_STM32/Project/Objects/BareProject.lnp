@@ -38,12 +38,14 @@
 ".\objects\dji_camera.o"
 ".\objects\dji_codec.o"
 ".\objects\dji_flight.o"
+".\objects\dji_follow.o"
 ".\objects\dji_harddriver.o"
+".\objects\dji_hotpoint.o"
 ".\objects\dji_link.o"
 ".\objects\dji_memory.o"
-".\objects\dji_virtualrc.o"
-".\objects\dji_hotpoint.o"
 ".\objects\dji_mission.o"
+".\objects\dji_virtualrc.o"
+".\objects\dji_waypoint.o"
 --library_type=microlib --strict --scatter ".\Objects\BareProject.sct"
 --summary_stderr --info summarysizes --map --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

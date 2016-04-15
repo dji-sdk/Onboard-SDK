@@ -4,7 +4,7 @@
 #include "string.h"
 #include "stdio.h"
 #include "DJI_API.h"
-#include "DJI_HardDriver.h"
+#include "driver.h"
 #include "DJI_Flight.h"
 #include "BspUsart.h"
 #include "stm32f4xx_conf.h"

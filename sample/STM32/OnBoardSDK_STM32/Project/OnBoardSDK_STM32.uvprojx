@@ -366,7 +366,7 @@
               <MiscControls></MiscControls>
               <Define>USE_STDPERIPH_DRIVER,STM32F40_41xxx,USE_STM324xG_EVAL,STM32,STM32F40x</Define>
               <Undefine></Undefine>
-              <IncludePath>..\Lib\CMSIS\inc;..\Lib\STM32F4xx_StdPeriph_Driver\inc;..\DJIlib\inc;..\User;..\Bsp</IncludePath>
+              <IncludePath>..\Lib\CMSIS\inc;..\Lib\STM32F4xx_StdPeriph_Driver\inc;..\User;..\Bsp;..\..\..\..\lib\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -612,57 +612,67 @@
             <File>
               <FileName>DJI_API.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>..\DJIlib\src\DJI_API.cpp</FilePath>
+              <FilePath>..\..\..\..\lib\src\DJI_API.cpp</FilePath>
             </File>
             <File>
               <FileName>DJI_App.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>..\DJIlib\src\DJI_App.cpp</FilePath>
+              <FilePath>..\..\..\..\lib\src\DJI_App.cpp</FilePath>
             </File>
             <File>
               <FileName>DJI_Camera.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>..\DJIlib\src\DJI_Camera.cpp</FilePath>
+              <FilePath>..\..\..\..\lib\src\DJI_Camera.cpp</FilePath>
             </File>
             <File>
               <FileName>DJI_Codec.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>..\DJIlib\src\DJI_Codec.cpp</FilePath>
+              <FilePath>..\..\..\..\lib\src\DJI_Codec.cpp</FilePath>
             </File>
             <File>
               <FileName>DJI_Flight.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>..\DJIlib\src\DJI_Flight.cpp</FilePath>
+              <FilePath>..\..\..\..\lib\src\DJI_Flight.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>DJI_Follow.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\lib\src\DJI_Follow.cpp</FilePath>
             </File>
             <File>
               <FileName>DJI_HardDriver.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>..\DJIlib\src\DJI_HardDriver.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>DJI_Link.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\DJIlib\src\DJI_Link.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>DJI_Memory.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\DJIlib\src\DJI_Memory.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>DJI_VirtualRC.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\DJIlib\src\DJI_VirtualRC.cpp</FilePath>
+              <FilePath>..\..\..\..\lib\src\DJI_HardDriver.cpp</FilePath>
             </File>
             <File>
               <FileName>DJI_HotPoint.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>..\DJIlib\src\DJI_HotPoint.cpp</FilePath>
+              <FilePath>..\..\..\..\lib\src\DJI_HotPoint.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>DJI_Link.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\lib\src\DJI_Link.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>DJI_Memory.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\lib\src\DJI_Memory.cpp</FilePath>
             </File>
             <File>
               <FileName>DJI_Mission.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>..\DJIlib\src\DJI_Mission.cpp</FilePath>
+              <FilePath>..\..\..\..\lib\src\DJI_Mission.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>DJI_VirtualRC.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\lib\src\DJI_VirtualRC.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>DJI_WayPoint.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\lib\src\DJI_WayPoint.cpp</FilePath>
             </File>
           </Files>
         </Group>

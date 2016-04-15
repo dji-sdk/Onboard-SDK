@@ -2,7 +2,7 @@
 #include "DJI_VirtualRC.h"
 #include "main.h"
 
-	uint32_t tick = 0 ;  //tick is the time stamp,which record how many ms since u initialize the system.
+uint32_t tick = 0 ;  //tick is the time stamp,which record how many ms since u initialize the system.
 extern VirtualRC virtualrc; 
 extern VirtualRCData myVRCdata;
 extern FlightData flightData ;
@@ -74,7 +74,7 @@ extern "C"{
 
 void SysTick_Handler(void)
 {
-	if(tick > 4233600000)  //49 days non-reset would cost a tick reset.
+	if(tick > 4233600000ll)  //49 days non-reset would cost a tick reset.
 	{
 		tick= 0;
 	}

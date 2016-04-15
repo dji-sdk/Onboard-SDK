@@ -30,8 +30,6 @@ float Hex2int(char HighBit,char LowBit)
 // Recive Buffer Handler Function
 void Rx_buff_Handler()      //when USART recive a 0xfe,start handle command 
 {  													//in main function
-	
-	int i=0;
 	if(Rx_buff[0]!=0xFA)
 	{
       return;       //fomat erro, return
@@ -144,7 +142,7 @@ void Rx_buff_Handler()      //when USART recive a 0xfe,start handle command
 			if(Rx_buff[2]==0x08)             //test BroadCastData
 			{
 				broadcastdata = coreApi->getBroadcastData();
-				printf("TimeStamp is %d\r\n",broadcastdata.timeStamp);
+				printf("TimeStamp is %d\r\n",broadcastdata.timeStamp.time);
 				printf("Battery capacity remains %d percent\r\n",broadcastdata.battery);
 			}
 		}

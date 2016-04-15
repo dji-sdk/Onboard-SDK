@@ -31,10 +31,6 @@
 
 #include "main.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif //__cplusplus
-	
 /*-----------------------DJI_LIB VARIABLE-----------------------------*/
 using namespace DJI::onboardSDK;
 DJI::onboardSDK::HardDriver* driver = new STM32F4;
@@ -66,12 +62,6 @@ int main()
 		delay_nms(50);
 	}
 }
-
-
-#ifdef __cplusplus
-}
-#endif //__cplusplus
-
 
 void delay_nms(u16 time)
 {    

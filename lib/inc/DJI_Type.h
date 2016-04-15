@@ -44,8 +44,10 @@
 #else
 #define __UNUSED
 #define __DELETE(x) delete x
+#ifndef STM32
 #pragma warning(disable : 4100)
 #pragma warning(disable : 4800)
+#endif // STM32
 #endif //__GNUC__
 
 #ifdef WIN32
