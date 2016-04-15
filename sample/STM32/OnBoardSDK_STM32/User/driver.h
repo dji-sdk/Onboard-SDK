@@ -13,7 +13,7 @@ class STM32F4 : public DJI::onboardSDK::HardDriver
 		if (NULL == buf)
 		{
 			return 0;
-		} //????
+		} 
 
 		while (len--)
 		{
