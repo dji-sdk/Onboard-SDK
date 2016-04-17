@@ -55,6 +55,36 @@ We recommend you first run this example in the simulator then carefully move to 
 
 ENJOY your flight!
 
+##Additional hints
+###install QT on manifold
+* sudo apt-get update
+* sudo apt-get install qtcreator
+now you have qt5.2.1 with out webkit package and serialport driver package
+* sudo apt-get install libqt5webkit5
+now you only need a serialport driver
+* sudo apt-get install libudev-dev
+* git clone git://code.qt.io/qt/qtserialport.git
+* cd qtserialport
+* git checkout origin/old/5.2
+* cd ..
+* mkdir qtserialport-build
+* cd qtserialport-build
+* make
+* sudo make install
+now you have a serialport driver in version 5.2, it still could not run the PureQT example.
+continue and build the 5.3 version's source code.
+* cd ../qtserialport/
+* git checkout origin/5.3
+* cd ../qtserialport-build/
+* make
+In this step the compile would fail, ignore it and continue finishing the following steps
+* sudo make install
+* make
+At this time, the build will success.
+* sudo make install
+Now you could use PureQT example
+* sudo qtcreator
+
 #DJI Onboard SDK QT例程
 
 ##简介
@@ -94,6 +124,35 @@ QT 例程是我们基于 QT 平台实现的 SDK 例程，它可以运行在 Wind
 2. 选择合适的编译器并编译项目。
 3. 在程序中选择好正确的设备和波特率，以及配置好激活所需的 APP ID 与 key
 
-#运行
+##运行
 
 在 QT 中点击绿色三角来运行程序，你可以在模拟器中对其进行测试。
+
+##特别提示
+###在manifold内安装QT
+* sudo apt-get update
+* sudo apt-get install qtcreator
+至此，已经安装了qt5.2.1，但是缺少webkit和串口驱动
+* sudo apt-get install libqt5webkit5
+至此就只剩下串口驱动了
+* sudo apt-get install libudev-dev
+* git clone git://code.qt.io/qt/qtserialport.git
+* cd qtserialport
+* git checkout origin/old/5.2
+* cd ..
+* mkdir qtserialport-build
+* cd qtserialport-build
+* make
+* sudo make install
+现在有了5.2版本的串口驱动，但是这个驱动是不能正常使用的
+* cd ../qtserialport/
+* git checkout origin/5.3
+* cd ../qtserialport-build/
+* make
+这次make会失败，不要理他，继续执行下面的步骤
+* sudo make install
+* make
+这次make会成功
+* sudo make install
+完成安装。用sudo权限开启qtcreator。
+* sudo qtcreator
