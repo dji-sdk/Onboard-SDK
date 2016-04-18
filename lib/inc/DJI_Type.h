@@ -379,7 +379,7 @@ typedef struct GPSData
     float32_t velocityGround;
     float32_t Hdop;
     float32_t Pdop;
-    float32_t GPSFix;
+    float32_t GNSSFlag;
     float32_t GNSSFix;
     float32_t hacc;
     float32_t sacc;

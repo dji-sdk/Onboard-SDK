@@ -37,8 +37,8 @@
 #define API_STATUS_DATA
 
 //#define SDK_VERSION_2_3
-#define SDK_VERSION_3_1_M100
-//#define SDK_VERSION_3_1_A3
+//#define SDK_VERSION_3_1_M100
+#define SDK_VERSION_3_1_A3
 
 #ifdef SDK_VERSION_3_1_A3
 #define API_RTK_DEBUG

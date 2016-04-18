@@ -1075,7 +1075,7 @@ void DJIonboardSDK::updateGPS()
     ui->le_gps_VD->setText(QString::number(api->getBroadcastData().gps.velocityGround));
     ui->le_gps_hdop->setText(QString::number(api->getBroadcastData().gps.Hdop));
     ui->le_gps_pdop->setText(QString::number(api->getBroadcastData().gps.Pdop));
-    ui->le_gps_gpsfix->setText(QString::number(api->getBroadcastData().gps.GPSFix));
+    ui->le_gps_gpsfix->setText(QString::number(api->getBroadcastData().gps.GNSSFlag));
     ui->le_gps_gnssFix->setText(QString::number(api->getBroadcastData().gps.GNSSFix));
     ui->le_gps_hacc->setText(QString::number(api->getBroadcastData().gps.hacc));
     ui->le_gps_sacc->setText(QString::number(api->getBroadcastData().gps.sacc));
