@@ -59,9 +59,9 @@ ENJOY your flight!
 ###install QT on manifold
 * sudo apt-get update
 * sudo apt-get install qtcreator
-now you have qt5.2.1 with out webkit package and serialport driver package
+Now you have qt5.2.1 with out webkit package and serialport driver package
 * sudo apt-get install libqt5webkit5
-now you only need a serialport driver
+Now you only need a serialport driver
 * sudo apt-get install libudev-dev
 * git clone git://code.qt.io/qt/qtserialport.git
 * cd qtserialport
@@ -71,8 +71,8 @@ now you only need a serialport driver
 * cd qtserialport-build
 * make
 * sudo make install
-now you have a serialport driver in version 5.2, it still could not run the PureQT example.
-continue and build the 5.3 version's source code.
+Now you have a serialport driver in version 5.2, it still could not run the PureQT example.
+Continue and build the 5.3 version's source code.
 * cd ../qtserialport/
 * git checkout origin/5.3
 * cd ../qtserialport-build/
@@ -84,6 +84,7 @@ At this time, the build will success.
 * sudo make install
 Now you could use PureQT example
 * sudo qtcreator
+Default serialport name is ttyTHS1
 
 #DJI Onboard SDK QT例程
 
@@ -156,3 +157,4 @@ QT 例程是我们基于 QT 平台实现的 SDK 例程，它可以运行在 Wind
 * sudo make install
 完成安装。用sudo权限开启qtcreator。
 * sudo qtcreator
+默认串口名称为ttyTHS1
