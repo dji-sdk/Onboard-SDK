@@ -4,6 +4,7 @@
 #include <DJI_Script.h>
 #include "QonboardSDK.h"
 
+using namespace DJI;
 using namespace DJI::onboardSDK;
 
 class ConboardSDKScript : public Script

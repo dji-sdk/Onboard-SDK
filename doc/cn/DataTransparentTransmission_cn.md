@@ -51,91 +51,57 @@ DJI 为开发者提供了两种功能完善的 SDK 帮助开发飞行应用：Mo
 
 ### Mobile SDK相关命令
 
-**1. iOS**
+- iOS
 
-~~~cSharp
-//设置委托
-inspireMC.mcDelegate = self;
-  
-//实现委托函数，当接受到数据的时候，该函数被调用
-(void)mainController:(DJIMainController*)mc didReceivedDataFromExternalDevice:(NSData*)data {
-//data为接收到的数据
-NSLog(@"%@",data);
-}
+**1.** 向 Onboard SDK 设备发送指令:
+
+~~~objc
+- (void)sendDataToOnboardSDKDevice:(NSData *)data withCompletion:(DJICompletionBlock)completion;
 ~~~
-  
-**2. Android** 
+
+**2.** 从 Onboard SDK 设备接收指令:
+
+~~~objc
+- (void)flightController:(DJIFlightController *)fc didReceiveDataFromExternalDevice:(NSData *)data;
+~~~
+
+具体细节请查阅 **DJIFlightController.h** 文件
+
+- Android
+
+**1.** 向 Onboard SDK 设备发送指令:
+
+请按照如下方式实现 DJIFlightController 中的 `sendDataToOnboardSDKDevice` 方法:
 
 ~~~java
-  //接收主控透传过来的数据回调接口
-  DJIMainControllerExternalDeviceRecvDataCallBack mExtDevReceiveDataCallBack = null;
-  
-  ///回调接口实例化
-  mExtDevReceiveDataCallBack = new DJIMainControllerExternalDeviceRecvDataCallBack() {
-    @override
-    public void onResult(byte[] data) {
-      //data:接收到的数据
-    }
-  };
-  
-  //设置回调接口
-  DJIDrone.getDjiMC().setExternalDeviceRecvDataCallBack(mExtDevReceiveDataCallBack);
+DJIAircraft mAircraft = (DJIAircraft)DJISDKManager.getInstance().getDJIProduct();
+DJIFlightController mFlightController = mAircraft.getFlightController();
+
+mFlightController.sendDataToOnboardSDKDevice(data,
+                new DJICompletionCallback() {
+                    @Override
+                    public void onResult(DJIError pError) {
+                    }
+                });
 ~~~
 
-## 移动设备透传数据至机载设备 
+**2.** 从 Onboard SDK 设备接收命令:
 
-### Mobile SDK相关命令
-
-相关示例代码如下：
-
-**1. iOS**
-
-  - 初始化，创建对象并连接到飞行器
-  
-~~~cSharp
-  //根据飞行器类型创建 DJIDrone 对象
-  DJIDrone* drone = [DJIDrone droneWithType:DJIDrone_Inspire];
-  //从 DJIDrone 对象获取主控对象
-  DJIInspireMainController* inspireMC = (DJIInspireMainController*)drone.mainController;
-  //开启通信连接
-  [drone connectToDrone];
-~~~
-
-  - 发送数据
-  
-~~~cSharp
-  //透传数据，大小不能超过 100 字节
-  NSData* data = [NSData dataWithByte:"..."];
-  //发送透传数据给外设，并通过回调检查发送状态
-  [inspireMC sendDataToExternalDevice:data withResult:(^(DJIError* error)){
-    if(error.errorCode == ERR_Successed){
-      //数据发送成功
-    }
-    else if(error.errorCode == ERR_InvalidParam) {
-      //data 数据为空或超过 100 字节
-    }
-    else {
-      //数据发送失败
-    }
-  }];
-~~~
-  
-**2. Android**
+请按照如下方式实现回调函数 `FlightControllerReceivedDataFromExternalDeviceCallback`:
 
 ~~~java
-  //需要发送的透传数据, 大小不能超过 100 字节
-  byte[] data = {0};
-  //发送透传数据给飞控
-  DJIDrone.getDjiMC().sendDataToExternalDevice(data,new DJIExecuteResultCallback(){
-    @override
-    public void onResult(DJIError result) {
-      //result 为发送后返回结果:
-      //1. result == DJIError.ERR_PARAM_IILEGAL,  data 可能为空或者长度超过 100
-      //2. result == DJIError.ERR_TIMEOUT,        发送失败
-      //3. result == DJIError.RESULT_OK,          发送成功
-    }
-  });
+DJIAircraft mAircraft = (DJIAircraft)DJISDKManager.getInstance().getDJIProduct();
+DJIFlightController mFlightController = mAircraft.getFlightController();
+
+mFlightController.setReceiveExternalDeviceDataCallback(new FlightControllerReceivedDataFromExternalDeviceCallback() {         
+          @Override
+          public void onResult(byte[] data) {
+          }
+        });
 ~~~
+
+具体细节请查阅 Android SDK 中的 **FlightController** 类
+
 
 ### Onboard SDK相关命令
 **命令集 0x02 命令码 0x02 透传数据（移动设备至机载设备）**

@@ -38,87 +38,55 @@ The following code snippet shows you how to receive the data on different mobile
 
 - iOS
 
-~~~cSharp
-//Setting Delegation
-inspireMC.mcDelegate = self;
-  
-//The delegation function is called when the data comes
-(void)mainController:(DJIMainController*)mc didReceivedDataFromExternalDevice:(NSData*)data {
-//Here is the receiving data
-NSLog(@"%@",data);
-}
+**1.** Send data to Onboard SDK Device:
+
+~~~objc
+- (void)sendDataToOnboardSDKDevice:(NSData *)data withCompletion:(DJICompletionBlock)completion;
 ~~~
-  
+
+**2.** Receive data from Onboard SDK Device:
+
+~~~objc
+- (void)flightController:(DJIFlightController *)fc didReceiveDataFromExternalDevice:(NSData *)data;
+~~~
+
+For more details, please check **DJIFlightController.h** file in the iOS SDK.
+
 - Android
 
-~~~java
-//Init the data callback interface
-DJIMainControllerExternalDeviceRecvDataCallBack mExtDevReceiveDataCallBack = null;
-  
-//Instantiate callback interface
-mExtDevReceiveDataCallBack = new DJIMainControllerExternalDeviceRecvDataCallBack() {
-@override
-public void onResult(byte[] data) {
-  //Here is the receiving data
-}
-};
-  
-//Setting callback interface
-DJIDrone.getDjiMC().setExternalDeviceRecvDataCallBack(mExtDevReceiveDataCallBack);
-~~~
+**1.** Send data to Onboard SDK Device:
 
-## Usage Scenario 2 - upstream from Mobile Device to Onboard Device
-
-The following code snippet shows you how to send User Data on different mobile platforms including iOS and Android.
-
-#### iOS
-
-  - Initialization
-  
-~~~cSharp
-//Create DJI Drone object according to relative UAV type.
-DJIDrone* drone = [DJIDrone droneWithType:DJIDrone_Inspire];
-//Obtain Main controller object from DJI Drone object.
-DJIInspireMainController* inspireMC = (DJIInspireMainController*)drone.mainController;
-//Start data connection.
-[drone connectToDrone];
-~~~
-  
-  - Sending data.
-  
-~~~cSharp
-  //Please note that data size should be no larger than 100 bytes.
-  NSData* data = [NSData dataWithByte:"..."];
-  //Sending data to peripheral and check the sending status through callback function.
-  [inspireMC sendDataToExternalDevice:data withResult:(^(DJIError* error)){
-    if(error.errorCode == ERR_Successed){
-      //Data sent successfully.
-    }
-    else if(error.errorCode == ERR_InvalidParam) {
-      //Data size is null or larger than 100 bytes.
-    }
-    else {
-      //Data sent failed
-    }
-  }];
-~~~
-  
-#### Android
+Please implement the `sendDataToOnboardSDKDevice` method of DJIFlightController as shown below:
 
 ~~~java
-  //Data needs to be sent, please note that data size should be no larger than 100 bytes.
-  byte[] data = {0};
-  //Sending data to UAV
-  DJIDrone.getDjiMC().sendDataToExternalDevice(data,new DJIExecuteResultCallback(){
-    @override
-    public void onResult(DJIError result) {
-      //result is the callback status after sending data
-      //1. result == DJIError.ERR_PARAM_IILEGAL,  Data size is null or larger than 100 bytes.
-      //2. result == DJIError.ERR_TIMEOUT,        Data sent failed.
-      //3. result == DJIError.RESULT_OK,          Data sent successfully.
-    }
-  });
+DJIAircraft mAircraft = (DJIAircraft)DJISDKManager.getInstance().getDJIProduct();
+DJIFlightController mFlightController = mAircraft.getFlightController();
+
+mFlightController.sendDataToOnboardSDKDevice(data,
+                new DJICompletionCallback() {
+                    @Override
+                    public void onResult(DJIError pError) {
+                    }
+                });
 ~~~
+
+**2.** Receive data from Onboard SDK Device:
+
+Please implement the `FlightControllerReceivedDataFromExternalDeviceCallback` callback function as shown below:
+
+~~~java
+DJIAircraft mAircraft = (DJIAircraft)DJISDKManager.getInstance().getDJIProduct();
+DJIFlightController mFlightController = mAircraft.getFlightController();
+
+mFlightController.setReceiveExternalDeviceDataCallback(new FlightControllerReceivedDataFromExternalDeviceCallback() {         
+          @Override
+          public void onResult(byte[] data) {
+          }
+        });
+~~~
+
+For more details, please check the **FlightController** class in the Android SDK.
+
 
 The Onboard Device can receive the data sent from the Mobile Device by means of a CMD from Autopilot with the CMD Set, ID and Val to be:
 

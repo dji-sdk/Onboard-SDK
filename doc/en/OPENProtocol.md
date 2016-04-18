@@ -449,7 +449,7 @@ Each CMD Set contains some CMD IDs for different operations.
   <td>8</td>
   <td>4</td>
   <td>Fixed value:<ul>
-   0x03010A00
+   M100: 0x03010A00<br>A3: 0x03016400
   </ul></td>
 </tr>
 
@@ -836,6 +836,7 @@ For more info about Movement Control, please refer to [Control mode byte part in
   <td>N/A</td>
 </tr>
 </table>
+>Note: M600 with A3 only supports Ronin-MX/Zenmuse X5 Series/Zenmuse X3/Zenmuse XT when operating gimbal control in rate.
 
 #### CMD ID 0x1B Gimbal Control in Position
 <table>
@@ -933,6 +934,8 @@ For more info about Movement Control, please refer to [Control mode byte part in
 
 **Note: Rotating 90 degree in `pitch` direction will cause gimbal lock problem, in which the value of `roll` and `yaw` are not reliable.**
 
+>Note: M600 with A3 only supports Ronin-MX/Zenmuse X5 Series/Zenmuse X3/Zenmuse XT when operating gimbal control in angle.
+
 #### CMD ID 0x20 Take Photo
 <table>
 <tr>
@@ -956,6 +959,9 @@ For more info about Movement Control, please refer to [Control mode byte part in
   <td>N/A</td>
 </tr>
 </table>
+
+>Note: M600 with A3 only supports Zenmuse Series when operating camera control.
+
 #### CMD ID 0x21 Start Video Recording
 
 <table>
@@ -981,6 +987,8 @@ For more info about Movement Control, please refer to [Control mode byte part in
 </tr>
 
 </table>
+>Note: M600 with A3 only supports Zenmuse Series when operating camera control.
+
 #### CMD ID 0x22 Stop Video Recording
 
 <table>
@@ -1005,6 +1013,8 @@ For more info about Movement Control, please refer to [Control mode byte part in
   <td>N/A</td>
 </tr>
 </table>
+>Note: M600 with A3 only supports Zenmuse Series when operating camera control.
+
 ### CMD Set 0x02 Push Data CMD Set
 
 #### CMD ID 0x00 Flight Data
@@ -1014,16 +1024,14 @@ More info about Flight Data, please refer to [Flight Data part in Appendix](Appe
 <table>
 <tr>
   <th>Data Type</th>
-  <th>Offset (byte)*</th>
   <th>Size (byte)</th>
   <th>Description</th>
 </tr>
 
 <tr>
   <td rowspan="13">CMD Val</td>
-  <td>0</td>
   <td>2</td>
-  <td>item presence byte, Bit with value 1 means this flight data contains corresponding data item<ul>
+  <td>item presence byte, Bit with value 1 means this flight data contains corresponding data item<br>M100:<ul>
     <li>bit 0: flag of time stamp</li>
     <li>bit 1: flag of attitude quaternion</li>
     <li>bit 2: flag of linear acceleration</li>
@@ -1037,94 +1045,100 @@ More info about Flight Data, please refer to [Flight Data part in Appendix](Appe
     <li>bit 10: flag of battery info</li>
     <li>bit 11: flag of control device</li>
     <li>bit [12:15]: reserved</li>
-    </ul></td>
+    </ul>
+    A3:<ul>
+    <li>bit 0: flag of time stamp</li>
+    <li>bit 1: flag of attitude quaternion</li>
+    <li>bit 2: flag of linear acceleration</li>
+    <li>bit 3: flag of linear velocity</li>
+    <li>bit 4: flag of angular velocity</li>
+    <li>bit 5: flag of GPS location, altitude and healthiness</li>
+    <li>bit 6: flag of GPS detailed information</li>
+    <li>bit 7: flag of RTK detailed information</li>
+    <li>bit 8: flag of magnetometer</li>
+    <li>bit 9: flag of remote controller data</li>
+    <li>bit 10: flag of roll, pitch and yaw of gimbal </li>
+    <li>bit 11: flag of flight status</li>
+    <li>bit 12: flag of battery info</li>
+    <li>bit 13: flag of control device</li>
+    <li>bit [14:15]: reserved</li>
+  </td>
 </tr>
 
 <tr>
-  <td>2</td>
   <td>9</td>
   <td>Time stamp</td>
 </tr>
 
 <tr>
-  <td>11</td>
   <td>16</td>
   <td>Attitude quaternion</td>
 </tr>
 
 <tr>
-  <td>27</td>
   <td>12</td>
   <td>Linear acceleration</td>
 </tr>
 
 <tr>
-  <td>39</td>
   <td>13</td>
   <td>Linear velocity</td>
 </tr>
 
 <tr>
-  <td>52</td>
   <td>12</td>
   <td>Angular velocity</td>
 </tr>
 
 <tr>
-  <td>64</td>
   <td>25</td>
   <td>GPS position, altitude, height and healthiness</td>
 </tr>
 
 <tr>
-  <td>89</td>
+  <td>68</td>
+  <td>GPS detailed information (A3 only)</td>
+</tr>
+
+<tr>
+  <td>74</td>
+  <td>RTK detailed information (A3 only)</td>
+</tr>
+
+<tr>
   <td>6</td>
   <td>Magnetometer data</td>
 </tr>
 
 <tr>
-  <td>95</td>
   <td>12</td>
   <td>Remote controller channels</td>
 </tr>
 
 <tr>
-  <td>107</td>
   <td>13</td>
   <td>Roll, pitch and yaw of Gimbal </td>
 </tr>
 
 <tr>
-  <td>120</td>
   <td>1</td>
   <td>Flight status</td>
 </tr>
 
 <tr>
-  <td>121</td>
   <td>1</td>
   <td>Battery percentage</td>
 </tr>
 
 <tr>
-  <td>122</td>
   <td>2</td>
   <td>Control device</td>
 </tr>
 
-<tr>
-  <td >ACK Val</td>
-  <td>---</td>
-  <td>---</td>
-  <td>N/A</td>
-</tr>
 </table>
 
->Note: 
-  The offset in the above table is with the assumption that all data items exist. The actual offset of data item in the flight data should be calculated by the flags of 'item presence byte'. 
+>Note: The actual offset of data item in the flight data should be calculated by the flags of 'item presence byte'.
  
-
-
 #### CMD ID 0x01 Lost of Flight Control
 Onboard Device has the lowerest control priority. Its control authorization can be taken over by remote controller and Mobile Device. Once the flight control is lost from the Onboard Device, a push data will be sent by the  Autopilot.
 

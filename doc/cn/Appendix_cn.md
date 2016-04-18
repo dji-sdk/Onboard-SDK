@@ -283,7 +283,232 @@
   <td>GPS 健康度 </td>
   <td>0-5, 5 为最好</td>
 </tr>
-
+<tr>
+  <td rowspan="18"> GPS 详细信息（只适用于A3）</td>
+  <td>date</td>
+  <td>uint32_t</td>
+  <td>日期</td>
+  <td>yy-mm-dd</td>
+  <td rowspan="18">50Hz</td>
+</tr>
+<tr>
+  <td>time</td>
+  <td>uint32_t</td>
+  <td>时间</td>
+  <td>hh-mm-ss</td>
+</tr>
+<tr>
+  <td>longitude</td>
+  <td>int32_t</td>
+  <td>经度</td>
+  <td>degree*10^7</td>
+</tr>
+<tr>
+  <td>latitude</td>
+  <td>int32_t</td>
+  <td>纬度</td>
+  <td>degree*10^7</td>
+</tr>
+<tr>
+  <td>AMSL</td>
+  <td>int32_t</td>
+  <td>海拔高度</td>
+  <td>mm</td>
+</tr>
+<tr>
+  <td>vel_N</td>
+  <td>float32</td>
+  <td>北方向速度</td>
+  <td>cm/s</td>
+</tr>
+<tr>
+  <td>vel_E</td>
+  <td>float32</td>
+  <td>东方向速度</td>
+  <td>cm/s</td>
+</tr>
+<tr>
+  <td>vel_D</td>
+  <td>float32</td>
+  <td>地方向速度</td>
+  <td>cm/s</td>
+</tr>
+<tr>
+  <td>HDOP</td>
+  <td>float32</td>
+  <td>水平分量精度因子</td>
+  <td>---</td>
+</tr>
+<tr>
+  <td>PDOP</td>
+  <td>float32</td>
+  <td>位置精度因子</td>
+  <td>---</td>
+</tr>
+<tr>
+  <td>gps_fix</td>
+  <td>float32</td>
+  <td>保留为3</td>
+  <td>---</td>
+</tr>
+<tr>
+  <td>gnss_flag</td>
+  <td>float32</td>
+  <td>竖直方向位置精度，保留为0</td>
+  <td>---</td>
+</tr>
+<tr>
+  <td>hacc</td>
+  <td>float32</td>
+  <td>水平方向位置精度，保留为0</td>
+  <td>---</td>
+</tr>
+<tr>
+  <td>sacc</td>
+  <td>float32</td>
+  <td>速度精度，保留为0</td>
+  <td>---</td>
+</tr>
+<tr>
+  <td>gps_used</td>
+  <td>uint32_t</td>
+  <td>使用的GPS卫星数量</td>
+  <td>数值</td>
+</tr>
+<tr>
+  <td>gln_used</td>
+  <td>uint32_t</td>
+  <td>使用的GLONASS卫星数量</td>
+  <td>数值</td>
+</tr>
+<tr>
+  <td>sv_num</td>
+  <td>uint16_t</td>
+  <td>一共使用的卫星数量</td>
+  <td>数值</td>
+</tr>
+<tr>
+  <td>gln_used</td>
+  <td>uint16_t</td>
+  <td>GPS状态</td>
+  <td>---</td>
+</tr>
+<tr>
+  <td rowspan="19"> RTK 详细信息（只适用于A3）</td>
+  <td>date</td>
+  <td>uint32_t</td>
+  <td>日期</td>
+  <td>yy-mm-dd</td>
+  <td rowspan="19">50Hz</td>
+</tr>
+<tr>
+  <td>time</td>
+  <td>uint32_t</td>
+  <td>时间</td>
+  <td>hh-mm-ss</td>
+</tr>
+<tr>
+  <td>longitude_RTK</td>
+  <td>double</td>
+  <td>RTK测量经度</td>
+  <td>degree</td>
+</tr>
+<tr>
+  <td>latitude_RTK</td>
+  <td>double</td>
+  <td>RTK测量纬度</td>
+  <td>degree</td>
+</tr>
+<tr>
+  <td>AMSL_RTK</td>
+  <td>float32</td>
+  <td>RTK测量海拔高度</td>
+  <td>m</td>
+</tr>
+<tr>
+  <td>longitude_single</td>
+  <td>int32_t</td>
+  <td>单点定位测量经度</td>
+  <td>degree*10^7</td>
+</tr>
+<tr>
+  <td>latitude_single</td>
+  <td>int32_t</td>
+  <td>单点定位测量纬度</td>
+  <td>degree*10^7</td>
+</tr>
+<tr>
+  <td>AMSL_single</td>
+  <td>int32_t</td>
+  <td>单点定位测量海拔高度</td>
+  <td>cm</td>
+</tr>
+<tr>
+  <td>vel_N</td>
+  <td>float32</td>
+  <td>北方向速度</td>
+  <td>cm/s</td>
+</tr>
+<tr>
+  <td>vel_E</td>
+  <td>float32</td>
+  <td>东方向速度</td>
+  <td>cm/s</td>
+</tr>
+<tr>
+  <td>vel_D</td>
+  <td>float32</td>
+  <td>地方向速度</td>
+  <td>cm/s</td>
+</tr>
+<tr>
+  <td>yaw</td>
+  <td>int16_t</td>
+  <td>天线基线与正南夹角</td>
+  <td>degree</td>
+</tr>
+<tr>
+  <td>sv_num_RTK</td>
+  <td>uint8_t</td>
+  <td>RTK使用的卫星数</td>
+  <td>数量</td>
+</tr>
+<tr>
+  <td>sv_num_Single</td>
+  <td>uint8_t</td>
+  <td>单点定位使用的卫星数</td>
+  <td>数量</td>
+</tr>
+<tr>
+  <td>HDOP</td>
+  <td>float32</td>
+  <td>水平分量精度因子</td>
+  <td>---</td>
+</tr>
+<tr>
+  <td>PDOP</td>
+  <td>float32</td>
+  <td>位置精度因子</td>
+  <td>---</td>
+</tr>
+<tr>
+  <td>position_flag</td>
+  <td>uint8_t[6]</td>
+  <td>定位标志位</td>
+  <td>0:单点;1:RTK;2:定向3:保留</td>
+</tr>
+<tr>
+  <td>gps_state</td>
+  <td>uint16_t</td>
+  <td>GPS状态</td>
+  <td>---</td>
+</tr>
+<tr>
+  <td>rtk_renew_flag</td>
+  <td>uint16_t</td>
+  <td>RTK刷新状态位</td>
+  <td>---</td>
+</tr>
 <tr>
   <td rowspan="3">磁感计</td>
   <td>mx</td>
