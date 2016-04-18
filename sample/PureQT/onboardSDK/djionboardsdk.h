@@ -16,10 +16,6 @@
 
 #include <QComboBox>
 
-#ifdef OPENGL
-#include <gridmap.h>
-#endif
-
 #include <fstream>
 #include "conboardsdktask.h"
 #include "QonboardSDK.h"

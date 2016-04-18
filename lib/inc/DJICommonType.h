@@ -28,17 +28,6 @@ typedef struct SpaceVector
     double z;
 } SpaceVector;
 
-/*
-class Angle
-{
-  public:
-    Angle(double degree = 0);
-
-  private:
-    double degree;
-};
-*/
-
 typedef double Angle;
 
 typedef struct EulerianAngle

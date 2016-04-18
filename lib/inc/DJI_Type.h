@@ -389,18 +389,6 @@ typedef struct GPSData
     uint16_t GPSState;
 } GPSData;
 
-#ifdef SDK_VERSION_3_1_POTATO
-typedef struct MotorData
-{
-    float32_t PWM[4];
-    float32_t roll;
-    float32_t pitch;
-    float32_t yaw;
-    float32_t pressRaw;
-    float32_t pressHeight;
-    int16_t rpm[4];
-} MotorData;
-#endif
 typedef struct BroadcastData
 {
     unsigned short dataFlag;
@@ -420,9 +408,6 @@ typedef struct BroadcastData
     FlightStatus status; //! @todo define enum
     BatteryData battery;
     CtrlInfoData ctrlInfo;
-#ifdef SDK_VERSION_3_1_POTATO
-    MotorData motor;
-#endif
 
     //! @note these variables are not send from FMU,
     //! just a record for user.

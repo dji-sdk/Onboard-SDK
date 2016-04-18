@@ -103,31 +103,33 @@ class Flight
         DEVICE_SDK = 2,
     };
 
+    //! @todo rename
     enum Mode
     {
-      ATTI_STOP                    = 0,
-      HORIZ_ANG_VERT_VEL_YAW_ANG   = 1,
-      HORIZ_ANG_VERT_VEL_YAW_RATE  = 2,
-      HORIZ_VEL_VERT_VEL_YAW_ANG   = 3,
-      HORIZ_VEL_VERT_VEL_YAW_RATE  = 4,
-      HORIZ_POS_VERT_VEL_YAW_ANG   = 5,
-      HORIZ_POS_VERT_VEL_YAW_RATE  = 6,
-      HORIZ_ANG_VERT_POS_YAW_ANG   = 7,
-      HORIZ_ANG_VERT_POS_YAW_RATE  = 8,
-      HORIZ_VEL_VERT_POS_YAW_ANG   = 9,
-      HORIZ_VEL_VERT_POS_YAW_RATE  = 10,
-      HORIZ_POS_VERT_POS_YAW_ANG   = 11,
-      HORIZ_POS_VERT_POS_YAW_RATE  = 12,
-      HORIZ_ANG_VERT_THR_YAW_ANG   = 13,
-      HORIZ_ANG_VERT_THR_YAW_RATE  = 14,
-      HORIZ_VEL_VERT_THR_YAW_ANG   = 15,
-      HORIZ_VEL_VERT_THR_YAW_RATE  = 16,
-      HORIZ_POS_VERT_THR_YAW_ANG   = 17,
-      HORIZ_POS_VERT_THR_YAW_RATE  = 18,
-      GPS_ATII_CTRL_CL_YAW_RATE    = 97,
-      GPS_ATTI_CTRL_YAW_RATE       = 98,
-      ATTI_CTRL_YAW_RATE           = 99,
-      ATTI_CTRL_STOP               = 100
+        ATTI_STOP = 0,
+        HORIZ_ANG_VERT_VEL_YAW_ANG = 1,
+        HORIZ_ANG_VERT_VEL_YAW_RATE = 2,
+        HORIZ_VEL_VERT_VEL_YAW_ANG = 3,
+        HORIZ_VEL_VERT_VEL_YAW_RATE = 4,
+        HORIZ_POS_VERT_VEL_YAW_ANG = 5,
+        HORIZ_POS_VERT_VEL_YAW_RATE = 6,
+        HORIZ_ANG_VERT_POS_YAW_ANG = 7,
+        HORIZ_ANG_VERT_POS_YAW_RATE = 8,
+        HORIZ_VEL_VERT_POS_YAW_ANG = 9,
+        HORIZ_VEL_VERT_POS_YAW_RATE = 10,
+        HORIZ_POS_VERT_POS_YAW_ANG = 11,
+        HORIZ_POS_VERT_POS_YAW_RATE = 12,
+        HORIZ_ANG_VERT_THR_YAW_ANG = 13,
+        HORIZ_ANG_VERT_THR_YAW_RATE = 14,
+        HORIZ_VEL_VERT_THR_YAW_ANG = 15,
+        HORIZ_VEL_VERT_THR_YAW_RATE = 16,
+        HORIZ_POS_VERT_THR_YAW_ANG = 17,
+        HORIZ_POS_VERT_THR_YAW_RATE = 18,
+        GPS_ATII_CTRL_CL_YAW_RATE = 97,
+        GPS_ATTI_CTRL_YAW_RATE = 98,
+        ATTI_CTRL_YAW_RATE = 99,
+        ATTI_CTRL_STOP = 100,
+        MODE_NOT_SUPPORT = 0xFF,
     };
 
     /*! @note
@@ -159,7 +161,6 @@ class Flight
     Angle getYaw() const;
     Angle getRoll() const;
     Angle getPitch() const;
-
 
   public: //! @note callbacks
     static void armCallback(CoreAPI *This, Header *header, UserData userData = 0);
@@ -199,11 +200,11 @@ class Flight
 class FlightUnitTest
 {
     //! @todo implement
-public:
+  public:
     FlightUnitTest();
-private:
-    bool mathematicalMethod();
 
+  private:
+    bool mathematicalMethod();
 };
 
 } // namespace onboardSDK

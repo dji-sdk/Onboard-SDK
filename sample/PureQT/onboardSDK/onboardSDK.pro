@@ -108,7 +108,6 @@ DJISCRIPT_SRC += \
     ../../../lib/DJIscript/src/cmdWayPoint.cpp
 
 DJISCRIPT_INC += \
-    ../../../lib/gridmap/inc/gridmapKernel.h \
     ../../../lib/DJIscript/inc/cmdCamera.h \
     ../../../lib/DJIscript/inc/cmdCoreAPI.h \
     ../../../lib/DJIscript/inc/cmdFlight.h \

@@ -49,10 +49,7 @@
 #define HAS_STATUS 0x0200
 #define HAS_BATTERY 0x0400
 #define HAS_DEVICE 0x0800
-#ifdef SDK_VERSION_3_1_POTATO
-#define HAS_MOTOR 0x1000
-#endif
-#endif
+#endif // SDK_VERSION_3_1_A3
 //----------------------------------------------------------------------
 // App layer function
 //----------------------------------------------------------------------

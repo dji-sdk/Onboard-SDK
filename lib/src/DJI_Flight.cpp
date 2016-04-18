@@ -80,7 +80,11 @@ Flight::Status Flight::getStatus() const
 
 Flight::Mode Flight::getControlMode() const
 {
+#ifndef SDK_VERSION_2_3
     return (Flight::Mode)api->getBroadcastData().ctrlInfo.mode;
+#else
+    return MODE_NOT_SUPPORT;
+#endif // SDK_VERSION_2_3
 }
 
 Angle Flight::getYaw() const
