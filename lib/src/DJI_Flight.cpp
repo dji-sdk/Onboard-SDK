@@ -8,15 +8,19 @@ using namespace DJI::onboardSDK;
 Flight::Flight(DJI::onboardSDK::CoreAPI *ControlAPI)
 {
     api = ControlAPI;
+#ifdef USE_SIMULATION
     simulating = 0;
+#endif // USE_SIMULATION
 }
 
 CoreAPI *Flight::getApi() const { return api; }
 
 void Flight::setApi(CoreAPI *value) { api = value; }
 
+#ifdef USE_SIMULATION
 bool Flight::isSimulating() const { return simulating; }
 void Flight::setSimulating(bool value) { simulating = value; }
+#endif // USE_SIMULATION
 
 void Flight::task(TASK taskname, CallBack TaskCallback, UserData userData)
 {
@@ -49,8 +53,8 @@ QuaternionData Flight::getQuaternion() const
 
         return ans;
     }
-#endif // USE_SIMULATION
     else
+#endif // USE_SIMULATION
         return api->getBroadcastData().q;
 }
 
@@ -85,8 +89,8 @@ Angle Flight::getYaw() const
     if (simulating)
         return AngularSim.yaw;
     else
-        return toEulerianAngle(api->getBroadcastData().q).yaw;
 #endif // USE_SIMULATION
+        return toEulerianAngle(api->getBroadcastData().q).yaw;
 }
 
 Angle Flight::getRoll() const
@@ -95,8 +99,8 @@ Angle Flight::getRoll() const
     if (simulating)
         return AngularSim.roll;
     else
-        return toEulerianAngle(api->getBroadcastData().q).roll;
 #endif // USE_SIMULATION
+        return toEulerianAngle(api->getBroadcastData().q).roll;
 }
 
 Angle Flight::getPitch() const
@@ -105,8 +109,8 @@ Angle Flight::getPitch() const
     if (simulating)
         return AngularSim.pitch;
     else
-        return toEulerianAngle(api->getBroadcastData().q).pitch;
 #endif // USE_SIMULATION
+        return toEulerianAngle(api->getBroadcastData().q).pitch;
 }
 
 void Flight::armCallback(CoreAPI *This, Header *header, UserData userData __UNUSED)
