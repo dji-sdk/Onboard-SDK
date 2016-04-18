@@ -116,7 +116,7 @@ class HotPoint
     //! @note data access functions
     void setData(const HotPointData &value);
     void setHotPoint(float64_t longtitude, float64_t latitude, float64_t altitude);
-    void setHotPoint(GPSData gps);
+    void setHotPoint(GPSPositionData gps);
     void setRadius(float64_t meter);
     void setPalstance(float32_t defree);
     void setClockwise(bool isClockwise);

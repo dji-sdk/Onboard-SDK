@@ -248,7 +248,8 @@ ACKSession *DJI::onboardSDK::CoreAPI::allocACK(unsigned short session_id, unsign
         mmu = allocMemory(size);
         if (mmu == NULL)
         {
-            //! @todo optmize
+            API_LOG(driver, ERROR_LOG, "there is not enough memory\n");
+            return NULL;
         }
         else
         {
@@ -256,6 +257,7 @@ ACKSession *DJI::onboardSDK::CoreAPI::allocACK(unsigned short session_id, unsign
             return &ACKSessionTab[session_id - 1];
         }
     }
+    API_LOG(driver, ERROR_LOG, "wrong Ack session ID: 0x%X\n", session_id);
     return NULL;
 }
 

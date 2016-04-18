@@ -27,6 +27,7 @@
 #include <fstream>
 
 using namespace std;
+using namespace DJI;
 using namespace DJI::onboardSDK;
 
 bool HP(Script *script, UserData data)

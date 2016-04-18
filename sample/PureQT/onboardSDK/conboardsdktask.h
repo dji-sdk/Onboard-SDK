@@ -4,6 +4,7 @@
 #include <DJI_Script.h>
 #include "QonboardSDK.h"
 
+using namespace DJI;
 using namespace DJI::onboardSDK;
 
 class ConboardSDKScript : public Script
@@ -12,7 +13,7 @@ class ConboardSDKScript : public Script
     ConboardSDKScript(CoreAPI* api);
 
     TaskSetItem match(const char* name);
-    void addTask(const char* Name, UserData Data = 0, time_t Timeout = 0);
+    void addTask(const char* Name, UserData Data = 0, DJI::time_ms Timeout = 0);
 };
 
 class ScriptThread : public QThread
@@ -27,3 +28,4 @@ class ScriptThread : public QThread
 };
 
 #endif // CONBOARDSDKTASK_H
+

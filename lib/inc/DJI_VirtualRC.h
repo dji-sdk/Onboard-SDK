@@ -37,13 +37,6 @@ class VirtualRC
         CutOff_ToRealRC = 1
     };
 
-    enum CONTROL_DEVICE
-    {
-        CONTROL_BY_REMOTE_CONTROLLER = 0,
-        CONTROL_BY_MOBILE_APP = 1,
-        CONTROL_BY_VIRTUALRC = 2
-    };
-
   public:
     VirtualRC(CoreAPI *ControlAPI = 0);
 
@@ -99,10 +92,12 @@ class VirtualRC
     void resetData();
     void sendSafeModeData();
 
-    CONTROL_DEVICE getControlDevice();
-    RadioData getRCData() const;
     VirtualRCData getVRCData() const;
+    RadioData getRCData() const;
+
     void setVRCData(const VirtualRCData &value);
+
+    bool isVirtualRC() const;
 
   public:
     static RadioData toRadioData(VirtualRCData &vData);

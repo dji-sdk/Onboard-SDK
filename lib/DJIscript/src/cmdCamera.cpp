@@ -7,6 +7,7 @@
 #include <fstream>
 
 using namespace std;
+using namespace DJI;
 using namespace DJI::onboardSDK;
 
 bool CC(Script *script, UserData data)

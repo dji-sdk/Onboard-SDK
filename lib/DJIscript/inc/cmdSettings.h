@@ -26,11 +26,11 @@
  *  Just use it please. Maybe these names will change somehow.
  * */
 
-bool SS    (DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
-bool idSS  (DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
-bool keySS (DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
-bool saveSS(DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
-bool loadSS(DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
-bool spSS  (DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
+bool SS    (DJI::onboardSDK::Script* script, DJI::UserData data);
+bool idSS  (DJI::onboardSDK::Script* script, DJI::UserData data);
+bool keySS (DJI::onboardSDK::Script* script, DJI::UserData data);
+bool saveSS(DJI::onboardSDK::Script* script, DJI::UserData data);
+bool loadSS(DJI::onboardSDK::Script* script, DJI::UserData data);
+bool spSS  (DJI::onboardSDK::Script* script, DJI::UserData data);
 
 #endif // CMDSETTINGS_H

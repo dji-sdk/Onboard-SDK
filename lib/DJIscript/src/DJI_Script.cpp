@@ -1,47 +1,7 @@
 #include "DJI_Script.h"
 #include <iostream>
 #include <string.h>
-
-#include <iostream>
-
-#ifdef __linux__
-#include <sys/select.h>
-
-int kbhit()
-{
-  struct timeval tv;
-  fd_set read_fd;
-
-  /* Do not wait at all, not even a microsecond */
-  tv.tv_sec=0;
-  tv.tv_usec=0;
-
-  /* Must be done first to initialize read_fd */
-  FD_ZERO(&read_fd);
-
-  /* Makes select() ask if input is ready:
-   * 0 is the file descriptor for stdin    */
-  FD_SET(0,&read_fd);
-
-  /* The first parameter is the number of the
-   * largest file descriptor to check + 1. */
-  if(select(1, &read_fd,NULL, /*No writes*/NULL, /*No exceptions*/&tv) == -1)
-    return 0;  /* An error occured */
-
-  /*  read_fd now holds a bit map of files that are
-   * readable. We test the entry for the standard
-   * input (file 0). */
-  
-if(FD_ISSET(0,&read_fd))
-    /* Character pending on stdin */
-    return 1;
-
-  /* no characters were pending */
-  return 0;
-}
-#elif _WIN32
-#include <conio.h>
-#endif
+//#include <conio.h>
 
 using namespace DJI;
 using namespace DJI::onboardSDK;
@@ -78,7 +38,7 @@ void Script::addTaskList(TaskList *list, TaskList *pre)
 
 void Script::addTask(Task t, UserData Data, int Repeat, time_ms Timeout)
 {
-    TaskList *list = new TaskList(t, Data, Repeat,Timeout);
+    TaskList *list = new TaskList(t, Data, Repeat, Timeout);
     addTaskList(list);
 }
 
@@ -119,53 +79,18 @@ TaskSetItem Script::match(UserData name)
 
 bool Script::quitCurrent()
 {
-    if (kbhit())
-        return true;
+//    if (kbhit())
+//        return true;
     return false;
 }
 
 void Script::run(Script *script) { script->run(); }
 
-bool Script::emptyTask(Script *script __UNUSED, UserData data __UNUSED) { return true; }
-WayPoint *Script::getWaypoint() const
+bool Script::emptyTask(Script *script __UNUSED, UserData data __UNUSED)
 {
-    return waypoint;
+    //! @todo implement
+    return true;
 }
-
-void Script::setWaypoint(WayPoint *value)
-{
-    waypoint = value;
-}
-
-Camera *Script::getCamera() const
-{
-    return camera;
-}
-
-void Script::setCamera(Camera *value)
-{
-    camera = value;
-}
-
-VirtualRC *Script::getVirtualRC() const { return virtualRC; }
-
-void Script::setVirtualRC(VirtualRC *value) { virtualRC = value; }
-
-HotPoint *Script::getHotpoint() const { return hotpoint; }
-
-void Script::setHotpoint(HotPoint *value) { hotpoint = value; }
-
-Follow *Script::getFollow() const { return follow; }
-
-void Script::setFollow(Follow *value) { follow = value; }
-
-Flight *Script::getFlight() const { return flight; }
-
-void Script::setFlight(Flight *value) { flight = value; }
-
-CoreAPI *Script::getApi() const { return api; }
-
-void Script::setApi(CoreAPI *value) { api = value; }
 
 TaskList::TaskList(Task t, UserData Data, int Repeat, time_ms Timeout, TaskList *Pre,
                    TaskList *Next)
@@ -189,6 +114,7 @@ void TaskList::run(Script *s)
     if (task)
         do
         {
+            //! @todo better algorithm
             if (repeat > 0)
                 repeat--;
             task(s, data);

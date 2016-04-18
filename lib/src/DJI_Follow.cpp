@@ -1,5 +1,6 @@
 #include "DJI_Follow.h"
 
+using namespace DJI;
 using namespace DJI::onboardSDK;
 
 Follow::Follow(CoreAPI *ControlAPI)

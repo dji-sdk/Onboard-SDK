@@ -34,6 +34,7 @@
 #define DJI_TYPE
 
 #include "DJI_Config.h"
+#include "DJICommonType.h"
 #include <stdio.h>
 
 #define NAME(x) #x
@@ -44,9 +45,15 @@
 #else
 #define __UNUSED
 #define __DELETE(x) delete x
+//! @todo fix warning.
 #ifndef STM32
 #pragma warning(disable : 4100)
 #pragma warning(disable : 4800)
+#pragma warning(disable : 4996)
+#pragma warning(disable : 4244)
+#pragma warning(disable : 4267)
+#pragma warning(disable : 4700)
+#pragma warning(disable : 4101)
 #endif // STM32
 #endif //__GNUC__
 
@@ -55,13 +62,15 @@
 #endif // WIN32
 
 #define API_LOG(driver, title, fmt, ...)                                                       \
-    if (title)                                                                                 \
+    if ((title))                                                                               \
     {                                                                                          \
-        (sprintf(DJI::onboardSDK::buffer, "%s %s,line %d: " fmt, title ? title : "NONE",       \
-                 __func__, __LINE__, ##__VA_ARGS__));                                          \
-        (driver)->displayLog();                                                                \
+        int len = (sprintf(DJI::onboardSDK::buffer, "%s %s,line %d: " fmt,                     \
+                           (title) ? (title) : "NONE", __func__, __LINE__, ##__VA_ARGS__));    \
+        if ((len != -1) && (len < 1024))                                                       \
+            (driver)->displayLog();                                                            \
+        else                                                                                   \
+            (driver)->displayLog("ERROR: log printer inner fault\n");                          \
     }
-
 #ifdef API_DEBUG_DATA
 #define DEBUG_LOG "DEBUG"
 #else
@@ -92,10 +101,19 @@
 #define MISSION_LOG 0
 #endif
 
+#ifdef API_RTK_DEBUG
+#define RTK_LOG "MISSION"
+#else
+#define RTK_LOG 0
+#endif
+
+//! @note for ARMCC-5.0 compiler
+#ifdef ARMCC
+#pragma anon_unions
+#endif
+
 namespace DJI
 {
-typedef uint64_t time_ms;
-
 namespace onboardSDK
 {
 
@@ -126,8 +144,7 @@ typedef struct Header
     unsigned int crc : 16;
 } Header;
 
-typedef void (*CallBack)(DJI::onboardSDK::CoreAPI *, Header *, void *);
-typedef void *UserData;
+typedef void (*CallBack)(DJI::onboardSDK::CoreAPI *, Header *, UserData);
 
 typedef struct CallBackHandler
 {
@@ -273,22 +290,23 @@ typedef struct MagnetData
     int16_t z;
 } MagnetData;
 
-typedef struct GPSData
+typedef struct GPSPositionData
 {
     float64_t latitude;
-    float64_t longtitude;
+    float64_t longitude;
     float64_t altitude;
-} GPSData;
+} GPSPositionData;
 
 typedef struct CtrlInfoData
 {
 #ifndef SDK_VERSION_2_3
-    uint8_t data;
+    uint8_t mode;
 #endif // SDK_VERSION_2_3
     //! @todo mode remote to enums
-    uint8_t device : 3;	/*0->rc  1->app  2->serial*/
-    uint8_t signature : 1; /*1->opensd  0->close*/
-    uint8_t reserved : 4;
+    uint8_t deviceStatus : 3; /*0->rc  1->app  2->serial*/
+    uint8_t flightStatus : 1; /*1->opensd  0->close*/
+    uint8_t vrcStatus : 1;
+    uint8_t reserved : 3;
 } CtrlInfoData;
 
 #ifdef SDK_VERSION_2_3
@@ -324,6 +342,65 @@ typedef struct
     unsigned char cmdData;
 } TaskData;
 
+//! @todo rename to a final version
+typedef struct RTKData
+{
+    uint32_t date;
+    uint32_t time;
+    float64_t longitude;
+    float64_t latitude;
+    float32_t Hmsl;
+    int32_t longitudeS;
+    int32_t latitudeS;
+    int32_t HmslS;
+    float32_t velocityNorth;
+    float32_t velocityEast;
+    float32_t velocityGround;
+    int16_t yaw;
+    uint8_t SVNS;
+    uint8_t SVNP;
+    float32_t Hdop;
+    float32_t Pdop;
+    uint8_t posFlag[6];
+    uint16_t state;
+    uint16_t rtkNew;
+} RTKData;
+
+//! @todo rename to a final version
+typedef struct GPSData
+{
+    uint32_t date;
+    uint32_t time;
+    int32_t longitude;
+    int32_t latitude;
+    int32_t Hmsl;
+    float32_t velocityNorth;
+    float32_t velocityEast;
+    float32_t velocityGround;
+    float32_t Hdop;
+    float32_t Pdop;
+    float32_t GPSFix;
+    float32_t GNSSFix;
+    float32_t hacc;
+    float32_t sacc;
+    uint32_t GPSUsed;
+    uint32_t GNSSUsed;
+    uint16_t SVNum;
+    uint16_t GPSState;
+} GPSData;
+
+#ifdef SDK_VERSION_3_1_POTATO
+typedef struct MotorData
+{
+    float32_t PWM[4];
+    float32_t roll;
+    float32_t pitch;
+    float32_t yaw;
+    float32_t pressRaw;
+    float32_t pressHeight;
+    int16_t rpm[4];
+} MotorData;
+#endif
 typedef struct BroadcastData
 {
     unsigned short dataFlag;
@@ -334,11 +411,18 @@ typedef struct BroadcastData
     CommonData w;
     PositionData pos;
     MagnetData mag;
+#ifdef SDK_VERSION_3_1_A3
+    GPSData gps;
+    RTKData rtk;
+#endif
     RadioData rc;
     GimbalData gimbal;
     FlightStatus status; //! @todo define enum
     BatteryData battery;
     CtrlInfoData ctrlInfo;
+#ifdef SDK_VERSION_3_1_POTATO
+    MotorData motor;
+#endif
 
     //! @note these variables are not send from FMU,
     //! just a record for user.
@@ -357,7 +441,7 @@ typedef struct VirtualRCData
 {
     //! @note this is default mapping data structure for
     //! virtual remote controller.
-    //! @todo channel map
+    //! @todo channel mapping
     uint32_t roll;
     uint32_t pitch;
     uint32_t throttle;

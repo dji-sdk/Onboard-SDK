@@ -2,7 +2,7 @@
 
 extern CoreAPI *coreApi;
 HotPoint hotpoint(coreApi);
-GPSData myGPSData;
+GPSPositionData myGPSData;
 HotPointData myHotPointData;
 
 void tryHotpoint()
@@ -10,7 +10,7 @@ void tryHotpoint()
 	 
 	myGPSData.altitude = 50;
 	myGPSData.latitude = coreApi->getBroadcastData().pos.latitude;
-	myGPSData.longtitude = coreApi->getBroadcastData().pos.longitude;
+	myGPSData.longitude = coreApi->getBroadcastData().pos.longitude;
 	
 	hotpoint.setHotPoint(myGPSData);
 	hotpoint.setPalstance(15);

@@ -27,9 +27,9 @@
  *  Just use it please. Maybe these names will change somehow.
  * */
 
-bool VC         (DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
-bool startVC    (DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
-bool stopVC     (DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
-bool ctVC       (DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
+bool VC         (DJI::onboardSDK::Script* script, DJI::UserData data);
+bool startVC    (DJI::onboardSDK::Script* script, DJI::UserData data);
+bool stopVC     (DJI::onboardSDK::Script* script, DJI::UserData data);
+bool ctVC       (DJI::onboardSDK::Script* script, DJI::UserData data);
 
 #endif // CMDVIRTUALRC_H

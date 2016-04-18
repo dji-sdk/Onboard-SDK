@@ -27,11 +27,11 @@
  *  Just use it please. Maybe these names will change somehow.
  * */
 
-bool HP         (DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
-bool startHP    (DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
-bool stopHP     (DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
-bool pauseHP    (DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
-bool restartHP  (DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
+bool HP         (DJI::onboardSDK::Script* script, DJI::UserData data);
+bool startHP    (DJI::onboardSDK::Script* script, DJI::UserData data);
+bool stopHP     (DJI::onboardSDK::Script* script, DJI::UserData data);
+bool pauseHP    (DJI::onboardSDK::Script* script, DJI::UserData data);
+bool restartHP  (DJI::onboardSDK::Script* script, DJI::UserData data);
 
 
 #endif // CMDHOTPOINT_H

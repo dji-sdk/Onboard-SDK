@@ -27,6 +27,7 @@
 #include <fstream>
 
 using namespace std;
+using namespace DJI;
 using namespace DJI::onboardSDK;
 
 bool WP(Script *script, UserData data)

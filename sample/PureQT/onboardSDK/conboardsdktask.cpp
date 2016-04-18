@@ -79,9 +79,9 @@ ConboardSDKScript::ConboardSDKScript(CoreAPI* api)
 
 TaskSetItem ConboardSDKScript::match(const char* name) { return Script::match((UserData)name); }
 
-void ConboardSDKScript::addTask(const char* Name, UserData Data, time_t Timeout)
+void ConboardSDKScript::addTask(const char* Name, UserData Data,  DJI::time_ms Timeout)
 {
-    Script::addTask((UserData)Name, Data, Timeout);
+    Script::addTask((UserData)Name, Data,Timeout);
 }
 
 ScriptThread::ScriptThread(ConboardSDKScript* Script, QObject* parent) : QThread(parent)

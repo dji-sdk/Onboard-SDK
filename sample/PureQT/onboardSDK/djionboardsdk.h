@@ -4,19 +4,27 @@
 #include <QMainWindow>
 #include <QAbstractButton>
 #include <QTimer>
+#include <QTextStream>
+#ifdef GROUNDSTATION
 #include <QWebView>
 //#include <QWebEngineView>
+#endif
 #include <QHBoxLayout>
 #include <QStandardItemModel>
 #include <QList>
-#include <QTimerEvent>
+#include <QFile>
+
 #include <QComboBox>
 
+#ifdef OPENGL
+#include <gridmap.h>
+#endif
+
 #include <fstream>
-
-#include "QonboardSDK.h"
 #include "conboardsdktask.h"
+#include "QonboardSDK.h"
 
+using namespace DJI;
 using namespace DJI::onboardSDK;
 
 namespace Ui
@@ -50,16 +58,19 @@ class DJIonboardSDK : public QMainWindow
     static void hotpintReadCallback(CoreAPI *This, Header *header, UserData userData);
 
   private:
-    void updateCameraYaw();
-    void updateCameraRoll();
-    void updateCameraPitch();
-    void updateVirturalRCData();
     void updateFlightAcc();
     void updateFlightPal();
     void updateFlightMagnet();
-    void updateFlightQuaternion();
     void updateFlightVelocity();
     void updateFlightPosition();
+    void updateFlightQuaternion();
+    void updateVirturalRCData();
+    void updateCameraPitch();
+    void updateCameraRoll();
+    void updateCameraYaw();
+    void updateGPS();
+    void updateRTK();
+
     QStandardItemModel *initAction();
     void wpAddPoint();
     void wpRemovePoint();
@@ -69,8 +80,11 @@ class DJIonboardSDK : public QMainWindow
     void initFlight();
     void initCamera();
     void initFollow();
+    void initDisplay();
     void initWayPoint();
     void initVirtualRC();
+    void initGroundStation();
+
   private slots:
     //! @note too much slots, tired to rename.
     void on_btn_portRefresh_clicked();
@@ -83,14 +97,15 @@ class DJIonboardSDK : public QMainWindow
     void on_btn_coreSetControl_clicked();
     void on_btn_core_setSync_clicked();
     void on_btn_coreRead_clicked();
+    void on_btn_mobile_clicked();
     void on_tmr_Broadcast();
+    void on_cb_core_mechine_activated(int index);
 
     void upDateTime();
     void upDateCapacity();
     void upDateFlightStatus();
     void updateControlDevice();
 
-    void on_tmr_VRC_autosend();
     void on_btn_VRC_resetAll_clicked();
     void on_btn_VRC_resetLeft_clicked();
     void on_btn_VRC_resetRight_clicked();
@@ -98,14 +113,14 @@ class DJIonboardSDK : public QMainWindow
     void on_btn_virtualRC_init_clicked();
     void on_btn_vrc_down_pressed();
     void on_btn_vrc_up_pressed();
-
-    void on_btn_vrc_left_pressed();
-    void on_btn_vrc_right_pressed();
+    void on_tmr_VRC_autosend();
     void on_btn_vrc_w_pressed();
     void on_btn_vrc_A_pressed();
     void on_btn_vrc_S_pressed();
     void on_btn_vrc_D_pressed();
     void on_btn_vrcRead_clicked();
+    void on_btn_vrc_left_pressed();
+    void on_btn_vrc_right_pressed();
 
     void on_btn_cameraRead_clicked();
     void on_btn_camera_0_clicked();
@@ -162,6 +177,10 @@ class DJIonboardSDK : public QMainWindow
     void on_btn_FlightVel_clicked();
     void on_btn_FlightPos_clicked();
 
+    void on_lineEdit_flight_X_editingFinished();
+    void on_lineEdit_flight_Y_editingFinished();
+    void on_lineEdit_flight_Z_editingFinished();
+    void on_lineEdit_flight_Yaw_editingFinished();
     void on_lineEdit_flight_X_returnPressed();
     void on_lineEdit_flight_Y_returnPressed();
     void on_lineEdit_flight_Z_returnPressed();
@@ -213,28 +232,26 @@ class DJIonboardSDK : public QMainWindow
     void on_btn_wp_pr_clicked(bool checked);
     void on_le_wp_exec_editingFinished();
     void on_btn_wp_loadAll_clicked();
+    void on_btn_wp_start_stop_clicked(bool checked);
+    void on_btn_wp_loadOne_clicked();
     void on_waypoint_data_changed(const QModelIndex &topLeft, const QModelIndex &bottomRight,
                                   const QVector<int> &roles __UNUSED);
 
-    void on_btn_wp_start_stop_clicked(bool checked);
-    void on_btn_wp_loadOne_clicked();
+    void on_btn_gps_read_clicked();
+    void on_btn_rtk_read_clicked();
 
-    void on_cb_core_mechine_activated(int index);
-
+    //! @todo sort
     void on_btn_script_run_clicked();
 
-    void on_tabWidget_currentChanged(int index);
-
-    void on_actionOpen_O_triggered();
-
 private:
+    void rangeC(float32_t &c);
+
+  private:
     Ui::DJIonboardSDK *ui;
 
     CoreAPI *api;
     QHardDriver *driver;
     QSerialPort *port;
-    APIThread *send;
-    APIThread *read;
     QByteArray *key;
 
     Flight *flight;
@@ -264,13 +281,17 @@ private:
     QList<QStandardItemModel *> actionData;
 
     QTimer *timerBroadcast;
+
+#ifdef GROUNDSTATION
     QWebView *webView;
+//! @note a better web engine, not available now
+//    QWebEngineView *webView;
+#endif
 
     ConboardSDKScript *scriptSDK;
     std::fstream *scriptlog;
-    //! @note a better web engine, not available now
-    //    QWebEngineView *webView;
 
+    size_t broadcastTimes;
 };
 
 #endif // DJIONBOARDSDK_H

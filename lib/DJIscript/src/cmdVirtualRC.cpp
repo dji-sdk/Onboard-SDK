@@ -8,6 +8,7 @@
 #include <fstream>
 
 using namespace std;
+using namespace DJI;
 using namespace DJI::onboardSDK;
 
 bool VC(Script *script, UserData data)
@@ -61,8 +62,9 @@ bool stopVC(Script *script, UserData data)
     return true;
 }
 
-bool ctVC(Script *script, UserData data)
+bool ctVC(Script *script, UserData data __UNUSED)
 {
+    //! @todo implement
     //__DELETE(data);
 
     script->addTask(waitInput);

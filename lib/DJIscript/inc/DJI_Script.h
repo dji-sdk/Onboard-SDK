@@ -20,7 +20,7 @@ namespace onboardSDK
 {
 class Script;
 class Interpreter;
-typedef bool (*Task)(DJI::onboardSDK::Script *, DJI::onboardSDK::UserData);
+typedef bool (*Task)(DJI::onboardSDK::Script *, DJI::UserData);
 
 class TaskList
 {
@@ -90,21 +90,21 @@ class Script
   public:
     ActivateData adata;
 
-    void setApi(CoreAPI *value);
-    void setFlight(Flight *value);
-    void setFollow(Follow *value);
-    void setCamera(Camera *value);
-    void setHotpoint(HotPoint *value);
-    void setVirtualRC(VirtualRC *value);
-    void setWaypoint(WayPoint *value);
+    void setApi(CoreAPI *value) { api = value; }
+    void setFlight(Flight *value) { flight = value; }
+    void setFollow(Follow *value) { follow = value; }
+    void setCamera(Camera *value) { camera = value; }
+    void setHotpoint(HotPoint *value) { hotpoint = value; }
+    void setVirtualRC(VirtualRC *value) { virtualRC = value; }
+    void setWaypoint(WayPoint *value) { waypoint = value; }
 
-    CoreAPI *getApi() const;
-    Flight *getFlight() const;
-    Follow *getFollow() const;
-    HotPoint *getHotpoint() const;
-    VirtualRC *getVirtualRC() const;
-    Camera *getCamera() const;
-    WayPoint *getWaypoint() const;
+    CoreAPI *getApi() const { return api; }
+    Flight *getFlight() const { return flight; }
+    Follow *getFollow() const { return follow; }
+    HotPoint *getHotpoint() const { return hotpoint; }
+    VirtualRC *getVirtualRC() const { return virtualRC; }
+    Camera *getCamera() const { return camera; }
+    WayPoint *getWaypoint() const { return waypoint; }
 
   private:
     TaskList *taskTree;

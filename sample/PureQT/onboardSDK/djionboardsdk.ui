@@ -113,6 +113,9 @@
                       <property name="enabled">
                        <bool>true</bool>
                       </property>
+                      <property name="currentIndex">
+                       <number>0</number>
+                      </property>
                       <item>
                        <property name="text">
                         <string>M100</string>
@@ -2280,7 +2283,7 @@
                <item>
                 <widget class="QGroupBox" name="groupBox4">
                  <property name="title">
-                  <string>TAsk</string>
+                  <string>Task</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignCenter</set>
@@ -3440,7 +3443,7 @@
                 </widget>
                </item>
                <item>
-                <spacer name="verticalSpacer_5">
+                <spacer name="verticalSpacer_7">
                  <property name="orientation">
                   <enum>Qt::Vertical</enum>
                  </property>
@@ -3470,6 +3473,24 @@
                   <string>Flight Broadcast Data</string>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_5">
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_140">
+                    <item>
+                     <widget class="QPushButton" name="btn_mobile">
+                      <property name="text">
+                       <string>Mobile</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="le_mobile">
+                      <property name="readOnly">
+                       <bool>false</bool>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
                   <item>
                    <layout class="QHBoxLayout" name="horizontalLayout_50">
                     <item>
@@ -4501,7 +4522,7 @@
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_59">
                  <item>
-                  <widget class="QGroupBox" name="groupBox">
+                  <widget class="QGroupBox" name="groupBox13_2">
                    <property name="minimumSize">
                     <size>
                      <width>250</width>
@@ -4565,7 +4586,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QGroupBox" name="groupBox">
+                  <widget class="QGroupBox" name="groupBox10">
                    <layout class="QVBoxLayout" name="verticalLayout_39">
                     <item>
                      <widget class="QPushButton" name="btn_hotPoint_current">
@@ -4670,7 +4691,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QGroupBox" name="verticalGroupBox">
+                  <widget class="QGroupBox" name="verticalGroupBox2">
                    <layout class="QVBoxLayout" name="verticalLayout_51">
                     <item>
                      <layout class="QHBoxLayout" name="horizontalLayout_39" stretch="0,0,0">
@@ -4828,7 +4849,7 @@
                 </property>
                 <layout class="QHBoxLayout" name="horizontalLayout_44">
                  <item>
-                  <widget class="QGroupBox" name="groupBox">
+                  <widget class="QGroupBox" name="groupBox_256">
                    <property name="minimumSize">
                     <size>
                      <width>180</width>
@@ -5789,9 +5810,6 @@
               </item>
               <item>
                <widget class="QPushButton" name="btn_webLoad">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
                 <property name="text">
                  <string>View Map</string>
                 </property>
@@ -5808,6 +5826,890 @@
                </widget>
               </item>
              </layout>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="rtk">
+           <attribute name="title">
+            <string>RTK / GPS</string>
+           </attribute>
+           <layout class="QHBoxLayout" name="horizontalLayout_157">
+            <item>
+             <widget class="QGroupBox" name="groupBox_27">
+              <property name="minimumSize">
+               <size>
+                <width>172</width>
+                <height>800</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>172</width>
+                <height>800</height>
+               </size>
+              </property>
+              <property name="title">
+               <string>GPS</string>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_75">
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_148">
+                 <item>
+                  <widget class="QPushButton" name="btn_gps_read">
+                   <property name="text">
+                    <string>Read</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_149">
+                 <item>
+                  <widget class="QCheckBox" name="cb_gps">
+                   <property name="text">
+                    <string>date</string>
+                   </property>
+                   <property name="checked">
+                    <bool>true</bool>
+                   </property>
+                   <property name="autoRepeat">
+                    <bool>false</bool>
+                   </property>
+                   <property name="autoExclusive">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="le_gps_date">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_150">
+                 <item>
+                  <widget class="QLabel" name="label_84">
+                   <property name="text">
+                    <string>   time </string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="le_gps_time">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_151">
+                 <item>
+                  <widget class="QLabel" name="label_85">
+                   <property name="text">
+                    <string> longitude</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="le_gps_longitude">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_152">
+                 <item>
+                  <widget class="QLabel" name="label_86">
+                   <property name="text">
+                    <string> latitude </string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="le_gps_latitude">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_153">
+                 <item>
+                  <widget class="QLabel" name="label_87">
+                   <property name="text">
+                    <string>hmsl</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="le_gps_hmsl">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_154">
+                 <item>
+                  <widget class="QLabel" name="label_88">
+                   <property name="text">
+                    <string>VN</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="le_gps_VN">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_155">
+                 <item>
+                  <widget class="QLabel" name="label_89">
+                   <property name="text">
+                    <string>VE</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="le_gps_VE">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_156">
+                 <item>
+                  <widget class="QLabel" name="label_90">
+                   <property name="text">
+                    <string>VD</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="le_gps_VD">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_166">
+                 <item>
+                  <widget class="QLabel" name="label_98">
+                   <property name="text">
+                    <string>Hdop</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="le_gps_hdop">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_167">
+                 <item>
+                  <widget class="QLabel" name="label_99">
+                   <property name="text">
+                    <string>Pdop</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="le_gps_pdop">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_168">
+                 <item>
+                  <widget class="QLabel" name="label_100">
+                   <property name="text">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;GPSFix &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="le_gps_gpsfix">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_169">
+                 <item>
+                  <widget class="QLabel" name="label_101">
+                   <property name="text">
+                    <string>GLNNFix</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="le_gps_gnssFix">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_170">
+                 <item>
+                  <widget class="QLabel" name="label_102">
+                   <property name="text">
+                    <string>Hacc</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="le_gps_hacc">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_171">
+                 <item>
+                  <widget class="QLabel" name="label_103">
+                   <property name="text">
+                    <string>Sacc</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="le_gps_sacc">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_172">
+                 <item>
+                  <widget class="QLabel" name="label_104">
+                   <property name="text">
+                    <string>GPSUsed </string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="le_gps_guse">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_339">
+                 <item>
+                  <widget class="QLabel" name="label_204">
+                   <property name="text">
+                    <string>GNSSUsed</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="le_gps_gnuse">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_340">
+                 <item>
+                  <widget class="QLabel" name="label_205">
+                   <property name="text">
+                    <string>SVN</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="le_gps_svn">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_341">
+                 <item>
+                  <widget class="QLabel" name="label_206">
+                   <property name="text">
+                    <string>GPSState</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="le_gps_gps">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <spacer name="verticalSpacer_5">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="groupBox_59">
+              <property name="minimumSize">
+               <size>
+                <width>172</width>
+                <height>800</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>172</width>
+                <height>800</height>
+               </size>
+              </property>
+              <property name="title">
+               <string>RTK</string>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_150">
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_342">
+                 <item>
+                  <widget class="QPushButton" name="btn_rtk_read">
+                   <property name="text">
+                    <string>Read</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_343">
+                 <item>
+                  <widget class="QCheckBox" name="cb_rtk">
+                   <property name="text">
+                    <string>date</string>
+                   </property>
+                   <property name="checked">
+                    <bool>true</bool>
+                   </property>
+                   <property name="autoRepeat">
+                    <bool>false</bool>
+                   </property>
+                   <property name="autoExclusive">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="le_rtk_date">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_344">
+                 <item>
+                  <widget class="QLabel" name="label_207">
+                   <property name="text">
+                    <string>   time </string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="le_rtk_time">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_345">
+                 <item>
+                  <widget class="QLabel" name="label_208">
+                   <property name="text">
+                    <string> longitude</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="le_rtk_longitude">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_346">
+                 <item>
+                  <widget class="QLabel" name="label_209">
+                   <property name="text">
+                    <string> latitude </string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="le_rtk_latitude">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_347">
+                 <item>
+                  <widget class="QLabel" name="label_210">
+                   <property name="text">
+                    <string>hmsl</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="le_rtk_hmsl">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_364">
+                 <item>
+                  <widget class="QLabel" name="label_227">
+                   <property name="text">
+                    <string> latitudeS </string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="le_rtk_latitude_2">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_363">
+                 <item>
+                  <widget class="QLabel" name="label_226">
+                   <property name="text">
+                    <string> longitudeS</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="le_rtk_longitude_2">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_362">
+                 <item>
+                  <widget class="QLabel" name="label_225">
+                   <property name="text">
+                    <string>hmslS</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="le_rtk_hmsl_2">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_348">
+                 <item>
+                  <widget class="QLabel" name="label_211">
+                   <property name="text">
+                    <string>VN</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="le_rtk_VN">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_349">
+                 <item>
+                  <widget class="QLabel" name="label_212">
+                   <property name="text">
+                    <string>VE</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="le_rtk_VE">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_350">
+                 <item>
+                  <widget class="QLabel" name="label_213">
+                   <property name="text">
+                    <string>VD</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="le_rtk_VD">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_351">
+                 <item>
+                  <widget class="QLabel" name="label_214">
+                   <property name="text">
+                    <string> yaw</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="le_rtk_yaw">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_352">
+                 <item>
+                  <widget class="QLabel" name="label_215">
+                   <property name="text">
+                    <string>SVNS</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="le_rtk_SVNS">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_353">
+                 <item>
+                  <widget class="QLabel" name="label_216">
+                   <property name="text">
+                    <string>SVNP</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="le_rtk_SVNP">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_354">
+                 <item>
+                  <widget class="QLabel" name="label_217">
+                   <property name="text">
+                    <string>Hdop</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="le_rtk_hdop">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_355">
+                 <item>
+                  <widget class="QLabel" name="label_218">
+                   <property name="text">
+                    <string>Pdop</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="le_rtk_pdop">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_356">
+                 <item>
+                  <widget class="QLabel" name="label_219">
+                   <property name="text">
+                    <string>Flag0</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="le_rtk_flag_1">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_357">
+                 <item>
+                  <widget class="QLabel" name="label_220">
+                   <property name="text">
+                    <string>Flag1</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="le_rtk_flag_2">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_358">
+                 <item>
+                  <widget class="QLabel" name="label_221">
+                   <property name="text">
+                    <string>Flag2</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="le_rtk_flag_3">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_361">
+                 <item>
+                  <widget class="QLabel" name="label_224">
+                   <property name="text">
+                    <string>Flag3</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="le_rtk_flag_4">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_382">
+                 <item>
+                  <widget class="QLabel" name="label_243">
+                   <property name="text">
+                    <string>Flag4</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="le_rtk_flag_5">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_383">
+                 <item>
+                  <widget class="QLabel" name="label_244">
+                   <property name="text">
+                    <string>Flag5</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="le_rtk_flag_6">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_359">
+                 <item>
+                  <widget class="QLabel" name="label_222">
+                   <property name="text">
+                    <string>state</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="le_rtk_state">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_360">
+                 <item>
+                  <widget class="QLabel" name="label_223">
+                   <property name="text">
+                    <string>rtknew</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="le_rtk_new">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <spacer name="verticalSpacer_8">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_9">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
             </item>
            </layout>
           </widget>
@@ -5878,6 +6780,9 @@
          <height>800</height>
         </size>
        </property>
+       <property name="verticalScrollBarPolicy">
+        <enum>Qt::ScrollBarAlwaysOn</enum>
+       </property>
       </widget>
      </item>
      <item>
@@ -5915,18 +6820,18 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="btg_cameraPitch"/>
-  <buttongroup name="btg_flightSM"/>
-  <buttongroup name="btg_flightHL"/>
   <buttongroup name="btg_vrcGear"/>
-  <buttongroup name="btg_flightVL"/>
+  <buttongroup name="btg_cameraPitch"/>
   <buttongroup name="btg_cameraMode"/>
-  <buttongroup name="btg_cameraYaw"/>
-  <buttongroup name="btg_flightCL"/>
-  <buttongroup name="btg_vrcMode"/>
   <buttongroup name="btg_cameraRoll"/>
   <buttongroup name="btg_flightYL"/>
+  <buttongroup name="btg_flightCL"/>
   <buttongroup name="btg_flightTask"/>
+  <buttongroup name="btg_flightVL"/>
+  <buttongroup name="btg_vrcMode"/>
   <buttongroup name="btg_cameraAngle"/>
+  <buttongroup name="btg_cameraYaw"/>
+  <buttongroup name="btg_flightHL"/>
+  <buttongroup name="btg_flightSM"/>
  </buttongroups>
 </ui>

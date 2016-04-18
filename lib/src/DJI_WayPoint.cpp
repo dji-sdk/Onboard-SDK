@@ -1,6 +1,7 @@
 #include "DJI_WayPoint.h"
 #include <string.h>
 
+using namespace DJI;
 using namespace DJI::onboardSDK;
 
 #ifndef STATIC_MEMORY
@@ -18,7 +19,7 @@ WayPoint::WayPoint(WayPointData *list, uint8_t len, CoreAPI *ControlAPI)
 }
 #endif // STATIC_MEMORY
 
-void WayPoint::init(const WayPointInitData *Info, CallBack callback, UserData userData)
+void WayPoint::init(WayPointInitData *Info, CallBack callback, UserData userData)
 {
     if (Info)
         setInfo(*Info);
@@ -57,7 +58,7 @@ void WayPoint::readIdleVelocity(CallBack callback, UserData userData)
 bool WayPoint::uploadIndexData(WayPointData *data, CallBack callback, UserData userData)
 {
     setIndex(data, data->index);
-    return uploadIndexData(data->index,callback,userData);
+    return uploadIndexData(data->index, callback, userData);
 }
 
 bool WayPoint::uploadIndexData(uint8_t pos, CallBack callback, UserData userData)
@@ -164,7 +165,7 @@ void WayPoint::setIndex(WayPointData *value, size_t pos)
         if (index == NULL)
         {
             API_LOG(api->getDriver(), ERROR_LOG, "Lack of memory");
-            return ;
+            return;
         }
     }
     index[pos] = *value;

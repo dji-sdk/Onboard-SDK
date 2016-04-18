@@ -1,6 +1,7 @@
 #include "DJI_HotPoint.h"
 #include <string.h>
 
+using namespace DJI;
 using namespace DJI::onboardSDK;
 
 HotPoint::HotPoint(CoreAPI *ControlAPI)
@@ -95,9 +96,9 @@ void HotPoint::setHotPoint(float64_t longtitude, float64_t latitude, float64_t a
     data.height = altitude;
 }
 
-void HotPoint::setHotPoint(GPSData gps)
+void HotPoint::setHotPoint(GPSPositionData gps)
 {
-    data.longitude = gps.longtitude;
+    data.longitude = gps.longitude;
     data.latitude = gps.latitude;
     data.height = gps.altitude;
 }

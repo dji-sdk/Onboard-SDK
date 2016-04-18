@@ -46,6 +46,7 @@ namespace onboardSDK
 //! @todo better version control structure
 typedef uint32_t Version;
 
+const Version versionPotato_31 = (MAKE_VERSION(3, 1, 100, 0));
 const Version versionM100_23 = (MAKE_VERSION(2, 3, 10, 0));
 const Version versionM100_30 = (MAKE_VERSION(3, 0, 10, 0));
 const Version versionM100_31 = (MAKE_VERSION(3, 1, 10, 0));

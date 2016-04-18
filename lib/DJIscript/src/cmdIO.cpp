@@ -6,6 +6,7 @@
 #include <fstream>
 
 using namespace std;
+using namespace DJI;
 using namespace DJI::onboardSDK;
 
 bool addTask(Script* script, UserData data __UNUSED)

@@ -94,7 +94,7 @@ class HardDriver
     virtual void freeMSG() = 0;
 
   public:
-    virtual void displayLog(char *buf = 0);
+    virtual void displayLog(const char *buf = 0);
 };
 } // namespace onboardSDK
 } // namespace DJI

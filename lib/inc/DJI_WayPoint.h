@@ -100,13 +100,13 @@ class WayPoint
 #else
     WayPoint(WayPointData *list, uint8_t len, CoreAPI *ControlAPI = 0);
 #endif // STATIC_MEMORY
-    void init(const WayPointInitData *Info = 0, CallBack callback = 0, UserData userData = 0);
+    void init(WayPointInitData *Info = 0, CallBack callback = 0, UserData userData = 0);
     void start(CallBack callback = 0, UserData userData = 0);
     void stop(CallBack callback = 0, UserData userData = 0);
     //! @note true for pause, false for resume
     void pause(bool isPause, CallBack callback = 0, UserData userData = 0);
-    void readInitData(CallBack callback = 0, UserData userData = 0);
-    void readIndexData(uint8_t index, CallBack callback = 0, UserData userData = 0);
+    void readInitData(CallBack callback = 0, UserData userData = 0);//! @todo implement
+    void readIndexData(uint8_t index, CallBack callback = 0, UserData userData = 0); //! @todo implement
     void readIdleVelocity(CallBack callback = 0, UserData userData = 0);
     //! @todo uploadAll
     //void uploadAll(CallBack callback = 0, UserData userData = 0);
@@ -125,6 +125,8 @@ class WayPoint
     static void idleVelocityCallback(CoreAPI *This, Header *header, UserData wpThis);
     static void readInitDataCallback(CoreAPI *This, Header *header, UserData wpThis);
     static void uploadIndexDataCallback(CoreAPI *This, Header *header, UserData wpThis);
+    //! @todo add uploadAllCallback
+    //! @todo add readIndexCallback
 
   private:
     CoreAPI *api;

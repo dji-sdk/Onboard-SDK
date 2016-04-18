@@ -28,3 +28,4 @@ lib/DJI_onboardSDK/
 sample/Linux-Cmdline/output/DJI_Onboard_API_Cmdline_Test
 >>>>>>> origin/master
 sample/STM32/OnBoardSDK_STM32/Project/Objects/
+sample/commandline/manifoldPlatform/bin/a.out

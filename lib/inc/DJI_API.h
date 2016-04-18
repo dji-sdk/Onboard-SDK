@@ -42,7 +42,7 @@ enum ACK_COMMON_CODE
     ACK_COMMON_KEYERROR = 0xFF00,
     ACK_COMMON_NO_AUTHORIZATION = 0xFF01,
     ACK_COMMON_NO_RIGHTS = 0xFF02,
-    AC_COMMON_NO_RESPONSE = 0xFFFF
+    ACK_COMMON_NO_RESPONSE = 0xFFFF
 };
 
 enum ACK_ACTIVE_CODE
@@ -181,8 +181,7 @@ class CoreAPI
   public:
     void sendPoll(void);
     void readPoll(void);
-    void callbackPoll(void);   //! @todo not available yet
-    void autoResendPoll(void); //! @todo not available yet move to sendPoll
+    void callbackPoll(void); //! @todo implement, not available yet
 
     void byteHandler(const uint8_t in_data);
     //! @todo modify to a new algorithm
@@ -215,6 +214,7 @@ class CoreAPI
               UserData userData = 0); //! @note better interface entrance
     void send(Command *parameter);	//! @note main interface
 
+    //! @note control API
     void activate(ActivateData *data, CallBack callback = 0, UserData userData = 0);
     void setControl(bool enable, CallBack callback = 0, UserData userData = 0);
     void getSDKVersion(CallBack callback = 0, UserData userData = 0);
@@ -225,21 +225,32 @@ class CoreAPI
     void setKey(const char *key);
 
     //! @note Core read API
-    TimeStampData getTime() const;
-    CtrlInfoData getCtrlInfo() const;
-    FlightStatus getFlightStatus() const;
     BroadcastData getBroadcastData() const;
+    TimeStampData getTime() const;
+    FlightStatus getFlightStatus() const;
+    CtrlInfoData getCtrlInfo() const;
     BatteryData getBatteryCapacity() const;
 
     //! @note call back functions
   public:
     //! @note Recevie data callback enterance
     void setBroadcastCallback(CallBackHandler callback) { broadcastCallback = callback; }
+    void setFromMobileCallback(CallBackHandler FromMobileEntrance);
+
+    void setBroadcastCallback(CallBack handler, UserData userData = 0);
+    void setFromMobileCallback(CallBack handler, UserData userData = 0);
+
+    void setMisssionCallback(CallBackHandler callback) { missionCallback = callback; }
     void setHotPointCallback(CallBackHandler callback) { hotPointCallback = callback; }
     void setWayPointCallback(CallBackHandler callback) { wayPointCallback = callback; }
     void setFollowCallback(CallBackHandler callback) { followCallback = callback; }
-    void setBroadcastCallback(CallBack handler, UserData userData = 0);
-    void setFromMobileCallback(CallBackHandler FromMobileEntrance);
+    void setWayPointEventCallback(CallBackHandler callback);
+
+    void setMisssionCallback(CallBack handler, UserData userData = 0);
+    void setHotPointCallback(CallBack handler, UserData userData = 0);
+    void setWayPointCallback(CallBack handler, UserData userData = 0);
+    void setFollowCallback(CallBack handler, UserData userData = 0);
+    void setWayPointEventCallback(CallBack handler, UserData userData = 0);
 
     /*! @note user callback sample
      *  @attention We can also use none-static function as a callback function.
@@ -247,12 +258,13 @@ class CoreAPI
      *  function as a static function. And passing in this pointer in a static way.
      * */
     static void activateCallback(CoreAPI *This, Header *header, UserData userData = 0);
-    static void getVersionCallback(CoreAPI *This, Header *header, UserData userData = 0);
+    static void getSDKVersionCallback(CoreAPI *This, Header *header, UserData userData = 0);
     static void setControlCallback(CoreAPI *This, Header *header, UserData userData = 0);
     static void sendToMobileCallback(CoreAPI *This, Header *header, UserData userData = 0);
     static void setFrequencyCallback(CoreAPI *This, Header *header, UserData userData = 0);
 
   private:
+    //! @todo init function
     BroadcastData broadcastData;
 
   private:
@@ -265,7 +277,9 @@ class CoreAPI
     CallBackHandler broadcastCallback;
     CallBackHandler hotPointCallback;
     CallBackHandler wayPointCallback;
+    CallBackHandler wayPointEventCallback;
     CallBackHandler followCallback;
+    CallBackHandler missionCallback;
     CallBackHandler recvCallback;
 
     VersionData versionData;
@@ -328,6 +342,7 @@ class CoreAPI
     ActivateData getAccountData() const;
     HardDriver *getDriver() const;
     Version getSDKVersion() const;
+    SDKFilter getFilter() const; //! @note evil definition
     bool getHotPointData() const;
     bool getWayPointData() const;
     bool getFollowData() const;
@@ -354,6 +369,7 @@ class CoreAPI
 
     size_t getTotalRead() const { return totalRead; }
     size_t getOnceRead() const { return onceRead; }
+
   private:
     size_t onceRead;
     size_t totalRead;

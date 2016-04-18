@@ -53,11 +53,6 @@ void VirtualRC::sendSafeModeData()
     sendData();
 }
 
-VirtualRC::CONTROL_DEVICE VirtualRC::getControlDevice()
-{
-    return (VirtualRC::CONTROL_DEVICE)api->getBroadcastData().ctrlInfo.device;
-}
-
 RadioData VirtualRC::getRCData() const { return api->getBroadcastData().rc; }
 
 CoreAPI *VirtualRC::getApi() const { return api; }
@@ -65,6 +60,11 @@ void VirtualRC::setApi(CoreAPI *value) { api = value; }
 
 VirtualRCData VirtualRC::getVRCData() const { return data; }
 void VirtualRC::setVRCData(const VirtualRCData &value) { data = value; }
+
+bool VirtualRC::isVirtualRC() const
+{
+    return api->getBroadcastData().ctrlInfo.vrcStatus == 0 ? false : true;
+}
 
 RadioData VirtualRC::toRadioData(VirtualRCData &vData)
 {

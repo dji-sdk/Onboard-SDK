@@ -363,9 +363,13 @@ void aes256_encrypt_ecb(aes256_context *ctx, unsigned char *buf)
         aes_shiftRows(buf);
         aes_mixColumns(buf);
         if (i & 1)
+        {
             aes_addRoundKey(buf, &ctx->key[16]);
+        }
         else
+        {
             aes_expandEncKey(ctx->key, &rcon), aes_addRoundKey(buf, ctx->key);
+        }
     }
     aes_subBytes(buf);
     aes_shiftRows(buf);
@@ -382,7 +386,7 @@ void aes256_decrypt_ecb(aes256_context *ctx, unsigned char *buf)
     aes_shiftRows_inv(buf);
     aes_subBytes_inv(buf);
 
-    for (i = 14, rcon = 0x80; --i;)
+    for (i = 14, rcon = 0x80; --i;) //! @note exit when --i == 0;
     {
         if ((i & 1))
         {
@@ -605,7 +609,7 @@ bool CoreAPI::decodeACKStatus(unsigned short ack)
         case ACK_COMMON_NO_RIGHTS:
             API_LOG(driver, ERROR_LOG, "Need higher Level access.");
             return false;
-        case AC_COMMON_NO_RESPONSE:
+        case ACK_COMMON_NO_RESPONSE:
             API_LOG(driver, ERROR_LOG, "Check your Hardware connection and retry.");
             return false;
         default:
@@ -702,7 +706,7 @@ void DJI::onboardSDK::CoreAPI::verifyHead(SDKFilter *p_filter)
     Header *p_head = (Header *)(p_filter->recvBuf);
 
     if ((p_head->sof == _SDK_SOF) && (p_head->version == 0) &&
-        (p_head->length <= _SDK_MAX_RECV_SIZE) && (p_head->reversed0 == 0) &&
+        (p_head->length < _SDK_MAX_RECV_SIZE) && (p_head->reversed0 == 0) &&
         (p_head->reversed1 == 0) && (_SDK_CALC_CRC_HEAD(p_head, sizeof(Header)) == 0))
     {
         // check if this head is a ack or simple package
@@ -848,7 +852,8 @@ unsigned short DJI::onboardSDK::CoreAPI::encrypt(unsigned char *pdest,
 
     if (filter.encode == 0 && is_enc)
     {
-        API_LOG(driver, ERROR_LOG, "Can not send encode data, no available key");
+        API_LOG(driver, ERROR_LOG,
+                "Can not send encode data, Please active your device to get an available key.");
         return 0;
     }
     if (w_len == 0 || psrc == 0)

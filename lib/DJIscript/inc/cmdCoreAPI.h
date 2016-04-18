@@ -27,12 +27,12 @@
  *  Just use it please. Maybe these names will change somehow.
  * */
 
-bool CA  (DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
-bool acCA(DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
-bool vsCA(DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
-bool bfCA(DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
-bool bdCA(DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
-bool ctCA(DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
-bool syCA(DJI::onboardSDK::Script* script, DJI::onboardSDK::UserData data);
+bool CA  (DJI::onboardSDK::Script* script, DJI::UserData data);
+bool acCA(DJI::onboardSDK::Script* script, DJI::UserData data);
+bool vsCA(DJI::onboardSDK::Script* script, DJI::UserData data);
+bool bfCA(DJI::onboardSDK::Script* script, DJI::UserData data);
+bool bdCA(DJI::onboardSDK::Script* script, DJI::UserData data);
+bool ctCA(DJI::onboardSDK::Script* script, DJI::UserData data);
+bool syCA(DJI::onboardSDK::Script* script, DJI::UserData data);
 
 #endif // CMDCOREAPI

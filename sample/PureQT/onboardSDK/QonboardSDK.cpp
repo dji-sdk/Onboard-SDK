@@ -1,6 +1,7 @@
 #include "QonboardSDK.h"
 #include <QDateTime>
 #include <QScrollBar>
+#include <QDebug>
 
 QHardDriver::QHardDriver()
 {
@@ -24,13 +25,13 @@ void QHardDriver::init()
     {
         if (port->isOpen())
             port->close();
-        port->setBaudRate(baudrate);
-        port->setParity(QSerialPort::NoParity);
-        port->setDataBits(QSerialPort::Data8);
-        port->setStopBits(QSerialPort::OneStop);
-
         if (port->open(QIODevice::ReadWrite))
         {
+            port->setBaudRate(baudrate);
+            port->setParity(QSerialPort::NoParity);
+            port->setDataBits(QSerialPort::Data8);
+            port->setStopBits(QSerialPort::OneStop);
+
             API_LOG(this, STATUS_LOG, "port %s open success",
                     port->portName().toLocal8Bit().data());
         }
@@ -47,7 +48,7 @@ DJI::time_ms QHardDriver::getTimeStamp() { return QDateTime::currentMSecsSinceEp
 
 size_t QHardDriver::send(const uint8_t *buf, size_t len)
 {
-    sendlock.lock();
+    sendLock.lock();
     size_t sent = 0;
     if (port != 0)
     {
@@ -57,15 +58,15 @@ size_t QHardDriver::send(const uint8_t *buf, size_t len)
                 sent += port->write((char *)(buf + sent), len);
                 port->waitForBytesWritten(2);
             }
-        sendlock.unlock();
+        sendLock.unlock();
         return sent;
     }
     else
     {
-        sendlock.unlock();
+        sendLock.unlock();
         return 0;
     }
-    sendlock.unlock();
+    sendLock.unlock();
     return sent;
 }
 
@@ -89,7 +90,7 @@ void QHardDriver::lockMSG() { msg.lock(); }
 
 void QHardDriver::freeMSG() { msg.unlock(); }
 
-void QHardDriver::displayLog(char *buf)
+void QHardDriver::displayLog(const char *buf)
 {
     if (buf)
         qDebug("%s", buf);

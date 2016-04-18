@@ -36,7 +36,7 @@ class QHardDriver : public HardDriver
     void lockMSG();
     void freeMSG();
 
-    void displayLog(char *buf = 0);
+    void displayLog(const char *buf = 0);
 
     void setBaudrate(int value);
 
@@ -51,7 +51,8 @@ class QHardDriver : public HardDriver
     QSerialPort *port;
     QMutex memory;
     QMutex msg;
-    QMutex sendlock;
+    QMutex sendLock;
+    QMutex bufferLock;
     QTextBrowser *display;
 };
 

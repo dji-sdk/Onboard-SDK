@@ -37,6 +37,17 @@ typedef struct HotPointACKData
     uint8_t palstance;
 } HotPointADKData;
 
+//! @todo unify the naming style
+typedef struct GSPushData
+{
+    uint8_t type;
+    uint8_t data_1;
+    uint8_t data_2;
+    uint8_t data_3;
+    uint8_t data_4;
+    uint8_t data_5;
+} GSPushData;
+
 #pragma pack()
 
 typedef struct MissionACKMap
