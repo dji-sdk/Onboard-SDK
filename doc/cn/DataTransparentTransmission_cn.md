@@ -53,39 +53,15 @@ DJI 为开发者提供了两种功能完善的 SDK 帮助开发飞行应用：Mo
 
 - iOS
 
-**1.** 向 Onboard SDK 设备发送指令:
-
-~~~objc
-- (void)sendDataToOnboardSDKDevice:(NSData *)data withCompletion:(DJICompletionBlock)completion;
-~~~
-
-**2.** 从 Onboard SDK 设备接收指令:
+请按照如下方式实现DJIFlightControllerDelegate:
 
 ~~~objc
 - (void)flightController:(DJIFlightController *)fc didReceiveDataFromExternalDevice:(NSData *)data;
 ~~~
 
-具体细节请查阅 **DJIFlightController.h** 文件
+具体细节请参阅**DJIFlightController.h**文件
 
 - Android
-
-**1.** 向 Onboard SDK 设备发送指令:
-
-请按照如下方式实现 DJIFlightController 中的 `sendDataToOnboardSDKDevice` 方法:
-
-~~~java
-DJIAircraft mAircraft = (DJIAircraft)DJISDKManager.getInstance().getDJIProduct();
-DJIFlightController mFlightController = mAircraft.getFlightController();
-
-mFlightController.sendDataToOnboardSDKDevice(data,
-                new DJICompletionCallback() {
-                    @Override
-                    public void onResult(DJIError pError) {
-                    }
-                });
-~~~
-
-**2.** 从 Onboard SDK 设备接收命令:
 
 请按照如下方式实现回调函数 `FlightControllerReceivedDataFromExternalDeviceCallback`:
 
@@ -100,8 +76,39 @@ mFlightController.setReceiveExternalDeviceDataCallback(new FlightControllerRecei
         });
 ~~~
 
-具体细节请查阅 Android SDK 中的 **FlightController** 类
+具体细节请参阅**FlightController**类
 
+## 移动设备透传数据至机载设备
+
+### Mobile SDK相关命令
+
+- iOS
+
+请按如下方式实现 DJIFlightController:
+
+~~~objc
+- (void)sendDataToOnboardSDKDevice:(NSData *)data withCompletion:(DJICompletionBlock)completion;
+~~~
+
+具体细节请参阅**DJIFlightController.h**文件
+
+- Android
+
+请按如下方式实现 DJIFlightController 中的`sendDataToOnboardSDKDevice`:
+
+~~~java
+DJIAircraft mAircraft = (DJIAircraft)DJISDKManager.getInstance().getDJIProduct();
+DJIFlightController mFlightController = mAircraft.getFlightController();
+
+mFlightController.sendDataToOnboardSDKDevice(data,
+                new DJICompletionCallback() {
+                    @Override
+                    public void onResult(DJIError pError) {
+                    }
+                });
+~~~
+
+具体细节请参阅**FlightController**类
 
 ### Onboard SDK相关命令
 **命令集 0x02 命令码 0x02 透传数据（移动设备至机载设备）**
