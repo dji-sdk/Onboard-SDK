@@ -89,6 +89,9 @@ void DJI::onboardSDK::CoreAPI::broadcast(Header *header)
     passData(*enableFlag, HAS_BATTERY, &broadcastData.battery, pdata, sizeof(BatteryData), len);
     passData(*enableFlag, HAS_DEVICE, &broadcastData.ctrlInfo, pdata, sizeof(CtrlInfoData),
              len);
+#ifdef SDK_VERSION_3_1_POTATO
+    passData(*enableFlag, HAS_MOTOR, &broadcastData.motor, pdata, sizeof(MotorData), len);
+#endif
 
 #ifdef API_RTK_DEBUG
     if (((*enableFlag) & HAS_GPS))
@@ -208,4 +211,10 @@ void CoreAPI::setBroadcastCallback(CallBack handler, UserData userData)
 {
     broadcastCallback.callback = handler;
     broadcastCallback.userData = userData;
+}
+
+void CoreAPI::setFromMobileCallback(CallBack handler, UserData userData)
+{
+    fromMobileCallback.callback = handler;
+    fromMobileCallback.userData = userData;
 }

@@ -179,7 +179,7 @@ void CoreAPI::sendToMobile(uint8_t *data, uint8_t len, CallBack callback, UserDa
         API_LOG(driver, ERROR_LOG, "Too much data to send");
         return;
     }
-    send(2, 0, SET_ACTIVATION, CODE_TOMOBILE, data, len, 500, 2,
+    send(2, 0, SET_ACTIVATION, CODE_TOMOBILE, data, len, 500, 1,
          callback ? callback : CoreAPI::sendToMobileCallback, userData);
 }
 
