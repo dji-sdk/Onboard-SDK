@@ -70,7 +70,7 @@ RadioData VirtualRC::toRadioData(VirtualRCData &vData)
 {
     RadioData rd;
     rd.gear = (vData.gear == 1324) ? -454 : -10000;
-    rd.mode = (1024 - vData.mode) * 10000 / 660;
+    rd.mode = (1024 - vData.mode ) * 10000 / 660;
     rd.pitch = (vData.pitch - 1024) * (10000) / 660;
     rd.roll = (vData.roll - 1024) * (10000) / 660;
     rd.yaw = (vData.yaw - 1024) * (10000) / 660;

@@ -27,7 +27,7 @@
 using namespace DJI;
 using namespace DJI::onboardSDK;
 
-inline void passData(uint16_t flag, uint16_t enable, void *data, unsigned char *buf,
+inline void passData(uint16_t flag, uint16_t &enable, void *data, unsigned char *buf,
                      size_t datalen, size_t &offset)
 {
     //! @todo new algorithm
@@ -36,6 +36,7 @@ inline void passData(uint16_t flag, uint16_t enable, void *data, unsigned char *
         memcpy((unsigned char *)data, (unsigned char *)buf + offset, datalen);
         offset += datalen;
     }
+    enable <<= 1;
 }
 
 unsigned char getCmdSet(Header *header)
@@ -60,6 +61,9 @@ BatteryData DJI::onboardSDK::CoreAPI::getBatteryCapacity() const
 
 CtrlInfoData DJI::onboardSDK::CoreAPI::getCtrlInfo() const { return broadcastData.ctrlInfo; }
 
+#ifdef SDK_DEV
+#include "devApp.cpp"
+#else
 void DJI::onboardSDK::CoreAPI::broadcast(Header *header)
 {
     unsigned char *pdata = ((unsigned char *)header) + sizeof(Header);
@@ -71,41 +75,44 @@ void DJI::onboardSDK::CoreAPI::broadcast(Header *header)
     size_t len = MSG_ENABLE_FLAG_LEN;
 
     //! @todo better algorithm
-    passData(*enableFlag, HAS_TIME, &broadcastData.timeStamp, pdata, sizeof(TimeStampData),
-             len);
-    passData(*enableFlag, HAS_Q, &broadcastData.q, pdata, sizeof(QuaternionData), len);
-    passData(*enableFlag, HAS_A, &broadcastData.a, pdata, sizeof(CommonData), len);
-    passData(*enableFlag, HAS_V, &broadcastData.v, pdata, sizeof(VelocityData), len);
-    passData(*enableFlag, HAS_W, &broadcastData.w, pdata, sizeof(CommonData), len);
-    passData(*enableFlag, HAS_POS, &broadcastData.pos, pdata, sizeof(PositionData), len);
-    passData(*enableFlag, HAS_MAG, &broadcastData.mag, pdata, sizeof(MagnetData), len);
-#ifdef SDK_VERSION_3_1_A3
-    passData(*enableFlag, HAS_GPS, &broadcastData.gps, pdata, sizeof(GPSData), len);
-    passData(*enableFlag, HAS_RTK, &broadcastData.rtk, pdata, sizeof(RTKData), len);
-#endif
-    passData(*enableFlag, HAS_RC, &broadcastData.rc, pdata, sizeof(RadioData), len);
-    passData(*enableFlag, HAS_GIMBAL, &broadcastData.gimbal, pdata, sizeof(GimbalData), len);
-    passData(*enableFlag, HAS_STATUS, &broadcastData.status, pdata, sizeof(uint8_t), len);
-    passData(*enableFlag, HAS_BATTERY, &broadcastData.battery, pdata, sizeof(BatteryData), len);
-    passData(*enableFlag, HAS_DEVICE, &broadcastData.ctrlInfo, pdata, sizeof(CtrlInfoData),
-             len);
-#ifdef SDK_VERSION_3_1_POTATO
-    passData(*enableFlag, HAS_MOTOR, &broadcastData.motor, pdata, sizeof(MotorData), len);
-#endif
 
-#ifdef API_RTK_DEBUG
-    if (((*enableFlag) & HAS_GPS))
-        API_LOG(driver, RTK_LOG, "receive GPS data %lld\n", driver->getTimeStamp());
-    if (((*enableFlag) & HAS_RTK))
-        API_LOG(driver, RTK_LOG, "receive RTK data %lld\n", driver->getTimeStamp());
-#endif
+    uint16_t dataflag = 0x0001;
+    if (versionData.version != versionM100_23)
+        passData(*enableFlag, dataflag, &broadcastData.timeStamp, pdata, sizeof(TimeStampData),
+                 len);
+    else
+        passData(*enableFlag, dataflag, &broadcastData.timeStamp.time, pdata, sizeof(uint32_t),
+                 len);
 
+    passData(*enableFlag, dataflag, &broadcastData.q, pdata, sizeof(QuaternionData), len);
+    passData(*enableFlag, dataflag, &broadcastData.a, pdata, sizeof(CommonData), len);
+    passData(*enableFlag, dataflag, &broadcastData.v, pdata, sizeof(VelocityData), len);
+    passData(*enableFlag, dataflag, &broadcastData.w, pdata, sizeof(CommonData), len);
+    passData(*enableFlag, dataflag, &broadcastData.pos, pdata, sizeof(PositionData), len);
+    passData(*enableFlag, dataflag, &broadcastData.mag, pdata, sizeof(MagnetData), len);
+
+    if (versionData.version == versionA3_31)
+    {
+        passData(*enableFlag, dataflag, &broadcastData.gps, pdata, sizeof(GPSData), len);
+        passData(*enableFlag, dataflag, &broadcastData.rtk, pdata, sizeof(RTKData), len);
+        if (((*enableFlag) & 0x0040))
+            API_LOG(driver, RTK_LOG, "receive GPS data %lld\n", driver->getTimeStamp());
+        if (((*enableFlag) & 0x0080))
+            API_LOG(driver, RTK_LOG, "receive RTK data %lld\n", driver->getTimeStamp());
+    }
+    passData(*enableFlag, dataflag, &broadcastData.rc, pdata, sizeof(RadioData), len);
+    passData(*enableFlag, dataflag, &broadcastData.gimbal, pdata,
+             sizeof(GimbalData) - (versionData.version == versionM100_23) ? 1 : 0, len);
+    passData(*enableFlag, dataflag, &broadcastData.status, pdata, sizeof(uint8_t), len);
+    passData(*enableFlag, dataflag, &broadcastData.battery, pdata, sizeof(BatteryData), len);
+    passData(*enableFlag, dataflag, &broadcastData.ctrlInfo, pdata,
+             sizeof(CtrlInfoData) - ((versionData.version) == versionM100_23) ? 1 : 0, len);
     driver->freeMSG();
 
     if (broadcastCallback.callback)
         broadcastCallback.callback(this, header, broadcastCallback.userData);
 }
-
+#endif
 void DJI::onboardSDK::CoreAPI::recvReqData(Header *header)
 {
     unsigned char buf[100] = { 0, 0 };

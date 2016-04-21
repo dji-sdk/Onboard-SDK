@@ -43,12 +43,12 @@ class VirtualRC
     /*! @attention Safety notes
      * You must use these methods below really carefully with following rules:
      * - Use API setControl(bool enable, CutOff cutoffType); only once in your main loop;
-     * - Check your control device state by useing the following method:
+     * - Check your control device status by useing the following method:
      *   if(getControlDevice() != CONTROL_BY_VIRTUALRC)
      *   {
      *      reset code;
      *   }
-     * - @attention Your reset code must not be "setControl(true);" without any state check
+     * - @attention Your reset code must not be "setControl(true);" without any status check
      *   It may cause your drone became a nut drone.
      * - @note You could quit your VRC(Virtual Remot Control) by switching your remote
      *   controller out of modeF

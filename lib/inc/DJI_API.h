@@ -190,9 +190,9 @@ class CoreAPI
   public:
     /*! @code CoreAPI*/
     //! @note init API
-    CoreAPI(HardDriver *Driver = 0, bool userCallbackThread = false,
-            CallBack userRecvCallback = 0, UserData UserData = 0);
-    CoreAPI(HardDriver *Driver, CallBackHandler userRecvCallback,
+    CoreAPI(HardDriver *Driver = 0, Version SDKVersion = 0, bool userCallbackThread = false,
+            CallBack userRecvCallback = 0, UserData userData = 0);
+    CoreAPI(HardDriver *Driver, Version SDKVersion, CallBackHandler userRecvCallback,
             bool userCallbackThread = false);
 
     /*! @note Core Control API
@@ -217,7 +217,7 @@ class CoreAPI
     //! @note control API
     void activate(ActivateData *data, CallBack callback = 0, UserData userData = 0);
     void setControl(bool enable, CallBack callback = 0, UserData userData = 0);
-    void getSDKVersion(CallBack callback = 0, UserData userData = 0);
+    void getDroneVersion(CallBack callback = 0, UserData userData = 0);
     void sendToMobile(uint8_t *data, uint8_t len, CallBack callback = 0, UserData userData = 0);
     void setBroadcastFreq(uint8_t *dataLenIs16, CallBack callback = 0, UserData userData = 0);
     void setActivation(bool isActivated);
@@ -258,7 +258,7 @@ class CoreAPI
      *  function as a static function. And passing in this pointer in a static way.
      * */
     static void activateCallback(CoreAPI *This, Header *header, UserData userData = 0);
-    static void getSDKVersionCallback(CoreAPI *This, Header *header, UserData userData = 0);
+    static void getDroneVersionCallback(CoreAPI *This, Header *header, UserData userData = 0);
     static void setControlCallback(CoreAPI *This, Header *header, UserData userData = 0);
     static void sendToMobileCallback(CoreAPI *This, Header *header, UserData userData = 0);
     static void setFrequencyCallback(CoreAPI *This, Header *header, UserData userData = 0);
@@ -271,8 +271,8 @@ class CoreAPI
     unsigned char encodeSendData[BUFFER_SIZE];
     unsigned char encodeACK[ACK_SIZE];
 
-    uint8_t cblistTail;
-    CallBackHandler cbList[CALLBACK_LIST_NUM];
+//    uint8_t cblistTail;
+//    CallBackHandler cbList[CALLBACK_LIST_NUM];
     CallBackHandler fromMobileCallback;
     CallBackHandler broadcastCallback;
     CallBackHandler hotPointCallback;
@@ -290,7 +290,8 @@ class CoreAPI
     SDKFilter filter;
 
   private:
-    void init(HardDriver *Driver, CallBackHandler userRecvCallback, bool userCallbackThread);
+    void init(HardDriver *Driver, CallBackHandler userRecvCallback, bool userCallbackThread,
+              Version SDKVersion);
     void recvReqData(Header *header);
     void appHandler(Header *header);
     void broadcast(Header *header);

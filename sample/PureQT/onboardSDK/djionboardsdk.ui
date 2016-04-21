@@ -17,7 +17,7 @@
    <string>DJIonboardSDK</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QVBoxLayout" name="verticalLayout_66">
+   <layout class="QHBoxLayout" name="horizontalLayout_118">
     <property name="spacing">
      <number>0</number>
     </property>
@@ -60,7 +60,7 @@
         <item>
          <widget class="QTabWidget" name="tabWidget">
           <property name="currentIndex">
-           <number>0</number>
+           <number>2</number>
           </property>
           <widget class="QWidget" name="tbFlight">
            <attribute name="title">
@@ -119,6 +119,11 @@
                       <item>
                        <property name="text">
                         <string>M100</string>
+                       </property>
+                      </item>
+                      <item>
+                       <property name="text">
+                        <string>M100_V2.3</string>
                        </property>
                       </item>
                       <item>
@@ -891,6 +896,108 @@
                     </item>
                    </layout>
                   </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_38">
+                    <item>
+                     <widget class="QLabel" name="label_81">
+                      <property name="text">
+                       <string>RTK</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QComboBox" name="comboBox_13">
+                      <property name="currentText">
+                       <string>Hold</string>
+                      </property>
+                      <property name="currentIndex">
+                       <number>5</number>
+                      </property>
+                      <item>
+                       <property name="text">
+                        <string>0Hz</string>
+                       </property>
+                      </item>
+                      <item>
+                       <property name="text">
+                        <string>1Hz</string>
+                       </property>
+                      </item>
+                      <item>
+                       <property name="text">
+                        <string>10Hz</string>
+                       </property>
+                      </item>
+                      <item>
+                       <property name="text">
+                        <string>50Hz</string>
+                       </property>
+                      </item>
+                      <item>
+                       <property name="text">
+                        <string>100Hz</string>
+                       </property>
+                      </item>
+                      <item>
+                       <property name="text">
+                        <string>Hold</string>
+                       </property>
+                      </item>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_44">
+                    <item>
+                     <widget class="QLabel" name="label_82">
+                      <property name="text">
+                       <string>GPS</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QComboBox" name="comboBox_14">
+                      <property name="currentText">
+                       <string>Hold</string>
+                      </property>
+                      <property name="currentIndex">
+                       <number>5</number>
+                      </property>
+                      <item>
+                       <property name="text">
+                        <string>0Hz</string>
+                       </property>
+                      </item>
+                      <item>
+                       <property name="text">
+                        <string>1Hz</string>
+                       </property>
+                      </item>
+                      <item>
+                       <property name="text">
+                        <string>10Hz</string>
+                       </property>
+                      </item>
+                      <item>
+                       <property name="text">
+                        <string>50Hz</string>
+                       </property>
+                      </item>
+                      <item>
+                       <property name="text">
+                        <string>100Hz</string>
+                       </property>
+                      </item>
+                      <item>
+                       <property name="text">
+                        <string>Hold</string>
+                       </property>
+                      </item>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
                  </layout>
                 </widget>
                </item>
@@ -972,57 +1079,6 @@
                      <widget class="QLineEdit" name="le_coreNanoStamp">
                       <property name="readOnly">
                        <bool>true</bool>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </item>
-                  <item>
-                   <layout class="QHBoxLayout" name="horizontalLayout_114">
-                    <item>
-                     <widget class="QLabel" name="label_36">
-                      <property name="text">
-                       <string>   Sync flag </string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLineEdit" name="le_coreSyncFlag">
-                      <property name="readOnly">
-                       <bool>true</bool>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </item>
-                  <item>
-                   <layout class="QHBoxLayout" name="horizontalLayout_127">
-                    <item>
-                     <widget class="QPushButton" name="btn_core_setSync">
-                      <property name="minimumSize">
-                       <size>
-                        <width>78</width>
-                        <height>0</height>
-                       </size>
-                      </property>
-                      <property name="text">
-                       <string>set sync</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLineEdit" name="le_coreSyncFeq">
-                      <property name="maximumSize">
-                       <size>
-                        <width>16777215</width>
-                        <height>16777215</height>
-                       </size>
-                      </property>
-                      <property name="text">
-                       <string>0</string>
-                      </property>
-                      <property name="readOnly">
-                       <bool>false</bool>
                       </property>
                      </widget>
                     </item>
@@ -2731,13 +2787,13 @@
                  <property name="minimumSize">
                   <size>
                    <width>550</width>
-                   <height>400</height>
+                   <height>380</height>
                   </size>
                  </property>
                  <property name="maximumSize">
                   <size>
                    <width>550</width>
-                   <height>400</height>
+                   <height>380</height>
                   </size>
                  </property>
                  <property name="title">
@@ -3443,30 +3499,17 @@
                 </widget>
                </item>
                <item>
-                <spacer name="verticalSpacer_7">
-                 <property name="orientation">
-                  <enum>Qt::Vertical</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>20</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item>
                 <widget class="QGroupBox" name="gb_Status">
                  <property name="minimumSize">
                   <size>
                    <width>550</width>
-                   <height>380</height>
+                   <height>420</height>
                   </size>
                  </property>
                  <property name="maximumSize">
                   <size>
                    <width>550</width>
-                   <height>380</height>
+                   <height>420</height>
                   </size>
                  </property>
                  <property name="title">
@@ -3486,6 +3529,53 @@
                      <widget class="QLineEdit" name="le_mobile">
                       <property name="readOnly">
                        <bool>false</bool>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_114">
+                    <item>
+                     <widget class="QPushButton" name="btn_core_setSync">
+                      <property name="minimumSize">
+                       <size>
+                        <width>78</width>
+                        <height>0</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string>set sync</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="le_coreSyncFeq">
+                      <property name="maximumSize">
+                       <size>
+                        <width>16777215</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string>0</string>
+                      </property>
+                      <property name="readOnly">
+                       <bool>false</bool>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLabel" name="label_36">
+                      <property name="text">
+                       <string>   Sync flag </string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="le_coreSyncFlag">
+                      <property name="readOnly">
+                       <bool>true</bool>
                       </property>
                      </widget>
                     </item>
@@ -3751,7 +3841,13 @@
                       <property name="minimumSize">
                        <size>
                         <width>172</width>
-                        <height>0</height>
+                        <height>180</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>16777215</width>
+                        <height>180</height>
                        </size>
                       </property>
                       <property name="title">
@@ -3868,6 +3964,18 @@
                     </item>
                     <item>
                      <widget class="QGroupBox" name="groupBox_20">
+                      <property name="minimumSize">
+                       <size>
+                        <width>0</width>
+                        <height>180</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>16777215</width>
+                        <height>180</height>
+                       </size>
+                      </property>
                       <property name="title">
                        <string>Velocity</string>
                       </property>
@@ -3986,9 +4094,6 @@
                      </widget>
                     </item>
                     <item>
-                     <layout class="QVBoxLayout" name="verticalLayout_56"/>
-                    </item>
-                    <item>
                      <widget class="QGroupBox" name="groupBox_26">
                       <property name="minimumSize">
                        <size>
@@ -3999,7 +4104,7 @@
                       <property name="maximumSize">
                        <size>
                         <width>172</width>
-                        <height>1000</height>
+                        <height>180</height>
                        </size>
                       </property>
                       <property name="title">
@@ -4135,2067 +4240,563 @@
           </widget>
           <widget class="QWidget" name="tbMission">
            <attribute name="title">
-            <string>Mission</string>
+            <string>Mission\Position</string>
            </attribute>
-           <layout class="QGridLayout" name="gridLayout_8">
-            <item row="2" column="0">
-             <layout class="QVBoxLayout" name="verticalLayout_52">
-              <item>
-               <widget class="QGroupBox" name="gb_follow">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>270</width>
-                  <height>380</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>270</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-                <property name="title">
-                 <string>Follow</string>
-                </property>
-                <layout class="QVBoxLayout" name="verticalLayout_50">
-                 <item>
-                  <layout class="QVBoxLayout" name="verticalLayout_38">
-                   <item>
-                    <widget class="QPushButton" name="btn_follow_start">
-                     <property name="text">
-                      <string>start</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QPushButton" name="btn_follow_pause">
-                     <property name="text">
-                      <string>Pause</string>
-                     </property>
-                     <property name="checkable">
-                      <bool>true</bool>
-                     </property>
-                     <property name="checked">
-                      <bool>true</bool>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QPushButton" name="btn_follow_stop">
-                     <property name="text">
-                      <string>stop</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QPushButton" name="btn_follow_update">
-                     <property name="text">
-                      <string>update</string>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </item>
-                 <item>
-                  <layout class="QVBoxLayout" name="verticalLayout_36">
-                   <item>
-                    <widget class="QComboBox" name="comboBox_portName_2">
-                     <property name="enabled">
-                      <bool>false</bool>
-                     </property>
-                     <item>
-                      <property name="text">
-                       <string>Relative</string>
-                      </property>
-                     </item>
-                     <item>
-                      <property name="text">
-                       <string>Route</string>
-                      </property>
-                     </item>
-                     <item>
-                      <property name="text">
-                       <string>Smart</string>
-                      </property>
-                     </item>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QComboBox" name="comboBox_portName_6">
-                     <property name="enabled">
-                      <bool>false</bool>
-                     </property>
-                     <property name="currentIndex">
-                      <number>1</number>
-                     </property>
-                     <item>
-                      <property name="text">
-                       <string>Low Sensitivity</string>
-                      </property>
-                     </item>
-                     <item>
-                      <property name="text">
-                       <string>Mid Sensitivity</string>
-                      </property>
-                     </item>
-                     <item>
-                      <property name="text">
-                       <string>High Sensitivity</string>
-                      </property>
-                     </item>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QComboBox" name="comboBox_portName_4">
-                     <item>
-                      <property name="text">
-                       <string>Yaw to target</string>
-                      </property>
-                     </item>
-                     <item>
-                      <property name="text">
-                       <string>Yaw Custom</string>
-                      </property>
-                     </item>
-                    </widget>
-                   </item>
-                  </layout>
-                 </item>
-                 <item>
-                  <widget class="QGroupBox" name="gpx">
-                   <layout class="QVBoxLayout" name="verticalLayout_37">
-                    <item>
-                     <layout class="QHBoxLayout" name="horizontalLayout_54">
-                      <item>
-                       <widget class="QLabel" name="label_37">
-                        <property name="text">
-                         <string>latitude diff </string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QLineEdit" name="le_follow_la">
-                        <property name="focusPolicy">
-                         <enum>Qt::ClickFocus</enum>
-                        </property>
-                        <property name="text">
-                         <string>0</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QSlider" name="hs_follow_la">
-                        <property name="minimumSize">
-                         <size>
-                          <width>70</width>
-                          <height>0</height>
-                         </size>
-                        </property>
-                        <property name="minimum">
-                         <number>-1000</number>
-                        </property>
-                        <property name="maximum">
-                         <number>1000</number>
-                        </property>
-                        <property name="orientation">
-                         <enum>Qt::Horizontal</enum>
-                        </property>
-                        <property name="invertedAppearance">
-                         <bool>false</bool>
-                        </property>
-                        <property name="invertedControls">
-                         <bool>false</bool>
-                        </property>
-                        <property name="tickPosition">
-                         <enum>QSlider::NoTicks</enum>
-                        </property>
-                        <property name="tickInterval">
-                         <number>0</number>
-                        </property>
-                       </widget>
-                      </item>
-                     </layout>
-                    </item>
-                    <item>
-                     <layout class="QHBoxLayout" name="horizontalLayout_55">
-                      <item>
-                       <widget class="QLabel" name="label_38">
-                        <property name="text">
-                         <string>longitude diff</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QLineEdit" name="le_follow_lo">
-                        <property name="focusPolicy">
-                         <enum>Qt::ClickFocus</enum>
-                        </property>
-                        <property name="text">
-                         <string>0</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QSlider" name="hs_follow_lo">
-                        <property name="minimumSize">
-                         <size>
-                          <width>70</width>
-                          <height>0</height>
-                         </size>
-                        </property>
-                        <property name="minimum">
-                         <number>-1000</number>
-                        </property>
-                        <property name="maximum">
-                         <number>1000</number>
-                        </property>
-                        <property name="orientation">
-                         <enum>Qt::Horizontal</enum>
-                        </property>
-                        <property name="invertedAppearance">
-                         <bool>false</bool>
-                        </property>
-                        <property name="invertedControls">
-                         <bool>false</bool>
-                        </property>
-                        <property name="tickPosition">
-                         <enum>QSlider::NoTicks</enum>
-                        </property>
-                        <property name="tickInterval">
-                         <number>0</number>
-                        </property>
-                       </widget>
-                      </item>
-                     </layout>
-                    </item>
-                    <item>
-                     <layout class="QHBoxLayout" name="horizontalLayout_56">
-                      <item>
-                       <widget class="QLabel" name="label_39">
-                        <property name="text">
-                         <string> height       </string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QLineEdit" name="le_follow_hi">
-                        <property name="focusPolicy">
-                         <enum>Qt::ClickFocus</enum>
-                        </property>
-                        <property name="text">
-                         <string>0</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QSlider" name="hs_follow_al">
-                        <property name="minimumSize">
-                         <size>
-                          <width>70</width>
-                          <height>0</height>
-                         </size>
-                        </property>
-                        <property name="minimum">
-                         <number>-1000</number>
-                        </property>
-                        <property name="maximum">
-                         <number>1000</number>
-                        </property>
-                        <property name="orientation">
-                         <enum>Qt::Horizontal</enum>
-                        </property>
-                        <property name="invertedAppearance">
-                         <bool>false</bool>
-                        </property>
-                        <property name="invertedControls">
-                         <bool>false</bool>
-                        </property>
-                        <property name="tickPosition">
-                         <enum>QSlider::NoTicks</enum>
-                        </property>
-                        <property name="tickInterval">
-                         <number>0</number>
-                        </property>
-                       </widget>
-                      </item>
-                     </layout>
-                    </item>
-                    <item>
-                     <layout class="QHBoxLayout" name="horizontalLayout_58">
-                      <item>
-                       <widget class="QLabel" name="label_42">
-                        <property name="text">
-                         <string> Angle        </string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QLineEdit" name="le_follow_an">
-                        <property name="enabled">
-                         <bool>false</bool>
-                        </property>
-                        <property name="focusPolicy">
-                         <enum>Qt::ClickFocus</enum>
-                        </property>
-                        <property name="text">
-                         <string>0</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QSlider" name="hs_follow_an">
-                        <property name="enabled">
-                         <bool>false</bool>
-                        </property>
-                        <property name="minimumSize">
-                         <size>
-                          <width>70</width>
-                          <height>0</height>
-                         </size>
-                        </property>
-                        <property name="minimum">
-                         <number>0</number>
-                        </property>
-                        <property name="maximum">
-                         <number>3600</number>
-                        </property>
-                        <property name="orientation">
-                         <enum>Qt::Horizontal</enum>
-                        </property>
-                        <property name="invertedAppearance">
-                         <bool>false</bool>
-                        </property>
-                        <property name="invertedControls">
-                         <bool>false</bool>
-                        </property>
-                        <property name="tickPosition">
-                         <enum>QSlider::NoTicks</enum>
-                        </property>
-                        <property name="tickInterval">
-                         <number>0</number>
-                        </property>
-                       </widget>
-                      </item>
-                     </layout>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="btn_follow_current">
-                   <property name="minimumSize">
-                    <size>
-                     <width>0</width>
-                     <height>20</height>
-                    </size>
-                   </property>
-                   <property name="text">
-                    <string>Reset</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </widget>
-              </item>
-              <item>
-               <widget class="QGroupBox" name="groupBox_5">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>270</width>
-                  <height>380</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>270</width>
-                  <height>400</height>
-                 </size>
-                </property>
-                <property name="title">
-                 <string>Hot Point</string>
-                </property>
-                <layout class="QVBoxLayout" name="verticalLayout_59">
-                 <item>
-                  <widget class="QGroupBox" name="groupBox13_2">
-                   <property name="minimumSize">
-                    <size>
-                     <width>250</width>
-                     <height>0</height>
-                    </size>
-                   </property>
-                   <property name="maximumSize">
-                    <size>
-                     <width>250</width>
-                     <height>16777215</height>
-                    </size>
-                   </property>
-                   <layout class="QVBoxLayout" name="verticalLayout_35">
-                    <item>
-                     <layout class="QHBoxLayout" name="horizontalLayout_40">
-                      <item>
-                       <widget class="QPushButton" name="btn_camera_send_8">
-                        <property name="text">
-                         <string>check</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QPushButton" name="btn_camera_send_7">
-                        <property name="text">
-                         <string>reset yaw</string>
-                        </property>
-                       </widget>
-                      </item>
-                     </layout>
-                    </item>
-                    <item>
-                     <layout class="QHBoxLayout" name="horizontalLayout_37">
-                      <item>
-                       <widget class="QPushButton" name="btn_hotPoint_start">
-                        <property name="text">
-                         <string>start</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QPushButton" name="btn_hotPoint_stop">
-                        <property name="text">
-                         <string>stop</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QPushButton" name="btn_hp_pause">
-                        <property name="text">
-                         <string>pause</string>
-                        </property>
-                        <property name="checkable">
-                         <bool>true</bool>
-                        </property>
-                       </widget>
-                      </item>
-                     </layout>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QGroupBox" name="groupBox10">
-                   <layout class="QVBoxLayout" name="verticalLayout_39">
-                    <item>
-                     <widget class="QPushButton" name="btn_hotPoint_current">
-                      <property name="minimumSize">
-                       <size>
-                        <width>0</width>
-                        <height>25</height>
-                       </size>
-                      </property>
-                      <property name="text">
-                       <string>Position</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="btn_hp_data">
-                      <property name="minimumSize">
-                       <size>
-                        <width>0</width>
-                        <height>25</height>
-                       </size>
-                      </property>
-                      <property name="text">
-                       <string>Mission</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <layout class="QVBoxLayout" name="verticalLayout_34">
-                      <item>
-                       <layout class="QHBoxLayout" name="horizontalLayout_41">
-                        <item>
-                         <widget class="QLabel" name="label_29">
-                          <property name="text">
-                           <string>latitude </string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item>
-                         <widget class="QLineEdit" name="le_hp_la">
-                          <property name="minimumSize">
-                           <size>
-                            <width>80</width>
-                            <height>0</height>
-                           </size>
-                          </property>
-                          <property name="focusPolicy">
-                           <enum>Qt::ClickFocus</enum>
-                          </property>
-                          <property name="text">
-                           <string/>
-                          </property>
-                         </widget>
-                        </item>
-                       </layout>
-                      </item>
-                      <item>
-                       <layout class="QHBoxLayout" name="horizontalLayout_42">
-                        <item>
-                         <widget class="QLabel" name="label_30">
-                          <property name="text">
-                           <string>longitude</string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item>
-                         <widget class="QLineEdit" name="le_hp_lo">
-                          <property name="focusPolicy">
-                           <enum>Qt::ClickFocus</enum>
-                          </property>
-                          <property name="text">
-                           <string/>
-                          </property>
-                         </widget>
-                        </item>
-                       </layout>
-                      </item>
-                      <item>
-                       <layout class="QHBoxLayout" name="horizontalLayout_43">
-                        <item>
-                         <widget class="QLabel" name="label_31">
-                          <property name="text">
-                           <string>Altitude </string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item>
-                         <widget class="QLineEdit" name="le_hp_al">
-                          <property name="focusPolicy">
-                           <enum>Qt::ClickFocus</enum>
-                          </property>
-                          <property name="text">
-                           <string/>
-                          </property>
-                         </widget>
-                        </item>
-                       </layout>
-                      </item>
-                     </layout>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QGroupBox" name="verticalGroupBox2">
-                   <layout class="QVBoxLayout" name="verticalLayout_51">
-                    <item>
-                     <layout class="QHBoxLayout" name="horizontalLayout_39" stretch="0,0,0">
-                      <item>
-                       <widget class="QPushButton" name="btn_hp_setRadius">
-                        <property name="maximumSize">
-                         <size>
-                          <width>75</width>
-                          <height>16777215</height>
-                         </size>
-                        </property>
-                        <property name="text">
-                         <string>set</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QLabel" name="label_32">
-                        <property name="text">
-                         <string>  radius  </string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QLineEdit" name="le_hp_ra">
-                        <property name="focusPolicy">
-                         <enum>Qt::ClickFocus</enum>
-                        </property>
-                        <property name="text">
-                         <string>10</string>
-                        </property>
-                       </widget>
-                      </item>
-                     </layout>
-                    </item>
-                    <item>
-                     <layout class="QHBoxLayout" name="horizontalLayout_48">
-                      <item>
-                       <widget class="QPushButton" name="btn_hp_setPal">
-                        <property name="text">
-                         <string>set</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QLabel" name="label_33">
-                        <property name="text">
-                         <string> palstance</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QLineEdit" name="le_hp_pa">
-                        <property name="focusPolicy">
-                         <enum>Qt::ClickFocus</enum>
-                        </property>
-                        <property name="text">
-                         <string>15</string>
-                        </property>
-                       </widget>
-                      </item>
-                     </layout>
-                    </item>
-                    <item>
-                     <layout class="QHBoxLayout" name="horizontalLayout_53">
-                      <item>
-                       <widget class="QPushButton" name="btn_hp_setYaw">
-                        <property name="minimumSize">
-                         <size>
-                          <width>75</width>
-                          <height>0</height>
-                         </size>
-                        </property>
-                        <property name="maximumSize">
-                         <size>
-                          <width>75</width>
-                          <height>16777215</height>
-                         </size>
-                        </property>
-                        <property name="text">
-                         <string>reset</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QComboBox" name="cb_hp_yaw">
-                        <item>
-                         <property name="text">
-                          <string>Auto Yaw</string>
-                         </property>
-                        </item>
-                        <item>
-                         <property name="text">
-                          <string>Align Inside</string>
-                         </property>
-                        </item>
-                        <item>
-                         <property name="text">
-                          <string>Align Outside</string>
-                         </property>
-                        </item>
-                        <item>
-                         <property name="text">
-                          <string>User define</string>
-                         </property>
-                        </item>
-                        <item>
-                         <property name="text">
-                          <string>Static</string>
-                         </property>
-                        </item>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QCheckBox" name="cb_hp_cl">
-                        <property name="text">
-                         <string>clockwise</string>
-                        </property>
-                       </widget>
-                      </item>
-                     </layout>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                </layout>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item row="0" column="4">
-             <layout class="QHBoxLayout" name="horizontalLayout_118">
-              <property name="spacing">
-               <number>0</number>
-              </property>
-              <item>
-               <widget class="QGroupBox" name="groupBox_4">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>1000</width>
-                  <height>180</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>16777215</width>
-                  <height>180</height>
-                 </size>
-                </property>
-                <property name="title">
-                 <string>WayPoint</string>
-                </property>
-                <layout class="QHBoxLayout" name="horizontalLayout_44">
-                 <item>
-                  <widget class="QGroupBox" name="groupBox_256">
-                   <property name="minimumSize">
-                    <size>
-                     <width>180</width>
-                     <height>0</height>
-                    </size>
-                   </property>
-                   <property name="maximumSize">
-                    <size>
-                     <width>255</width>
-                     <height>16777215</height>
-                    </size>
-                   </property>
-                   <layout class="QHBoxLayout" name="horizontalLayout_5">
-                    <item>
-                     <layout class="QVBoxLayout" name="verticalLayout_9">
-                      <item>
-                       <widget class="QPushButton" name="btn_waypoint_init">
-                        <property name="text">
-                         <string>Init</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QPushButton" name="btn_wp_loadAll">
-                        <property name="text">
-                         <string>Load All</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QPushButton" name="btn_wp_start_stop">
-                        <property name="text">
-                         <string>Start</string>
-                        </property>
-                        <property name="checkable">
-                         <bool>true</bool>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QPushButton" name="btn_wp_pr">
-                        <property name="text">
-                         <string>Pause</string>
-                        </property>
-                        <property name="checkable">
-                         <bool>true</bool>
-                        </property>
-                       </widget>
-                      </item>
-                     </layout>
-                    </item>
-                    <item>
-                     <layout class="QVBoxLayout" name="verticalLayout_7">
-                      <item>
-                       <widget class="QPushButton" name="btn_cameraShoot_4">
-                        <property name="text">
-                         <string>Download</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QPushButton" name="btn_waypoint_add">
-                        <property name="text">
-                         <string>Add Point</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QPushButton" name="btn_waypoint_remove">
-                        <property name="text">
-                         <string>Remove</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QPushButton" name="btn_waypoint_reset">
-                        <property name="text">
-                         <string>Reset</string>
-                        </property>
-                       </widget>
-                      </item>
-                     </layout>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QTabWidget" name="tabWidget_2">
-                   <property name="currentIndex">
-                    <number>0</number>
-                   </property>
-                   <widget class="QWidget" name="init">
-                    <attribute name="title">
-                     <string>Init</string>
-                    </attribute>
-                    <layout class="QHBoxLayout" name="horizontalLayout_132">
-                     <item>
-                      <layout class="QVBoxLayout" name="verticalLayout_61">
-                       <item>
-                        <layout class="QHBoxLayout" name="horizontalLayout_59">
-                         <item>
-                          <widget class="QLabel" name="label_44">
-                           <property name="minimumSize">
-                            <size>
-                             <width>0</width>
-                             <height>0</height>
-                            </size>
-                           </property>
-                           <property name="maximumSize">
-                            <size>
-                             <width>16777215</width>
-                             <height>25</height>
-                            </size>
-                           </property>
-                           <property name="text">
-                            <string>Idle velocity</string>
-                           </property>
-                           <property name="alignment">
-                            <set>Qt::AlignCenter</set>
-                           </property>
-                          </widget>
-                         </item>
-                         <item>
-                          <widget class="QLineEdit" name="le_wp_iv">
-                           <property name="minimumSize">
-                            <size>
-                             <width>80</width>
-                             <height>0</height>
-                            </size>
-                           </property>
-                           <property name="maximumSize">
-                            <size>
-                             <width>80</width>
-                             <height>16777215</height>
-                            </size>
-                           </property>
-                           <property name="text">
-                            <string>3</string>
-                           </property>
-                          </widget>
-                         </item>
-                        </layout>
-                       </item>
-                       <item>
-                        <layout class="QHBoxLayout" name="horizontalLayout_122">
-                         <item>
-                          <widget class="QLabel" name="label_43">
-                           <property name="maximumSize">
-                            <size>
-                             <width>16777215</width>
-                             <height>25</height>
-                            </size>
-                           </property>
-                           <property name="text">
-                            <string>Max velocity</string>
-                           </property>
-                           <property name="alignment">
-                            <set>Qt::AlignCenter</set>
-                           </property>
-                          </widget>
-                         </item>
-                         <item>
-                          <widget class="QLineEdit" name="le_wp_mv">
-                           <property name="minimumSize">
-                            <size>
-                             <width>80</width>
-                             <height>0</height>
-                            </size>
-                           </property>
-                           <property name="maximumSize">
-                            <size>
-                             <width>80</width>
-                             <height>16777215</height>
-                            </size>
-                           </property>
-                           <property name="text">
-                            <string>15</string>
-                           </property>
-                          </widget>
-                         </item>
-                        </layout>
-                       </item>
-                       <item>
-                        <layout class="QHBoxLayout" name="horizontalLayout_121">
-                         <item>
-                          <widget class="QLabel" name="label_28">
-                           <property name="maximumSize">
-                            <size>
-                             <width>16777215</width>
-                             <height>25</height>
-                            </size>
-                           </property>
-                           <property name="text">
-                            <string>Index number</string>
-                           </property>
-                           <property name="alignment">
-                            <set>Qt::AlignCenter</set>
-                           </property>
-                          </widget>
-                         </item>
-                         <item>
-                          <widget class="QLineEdit" name="le_waypoint_number">
-                           <property name="minimumSize">
-                            <size>
-                             <width>80</width>
-                             <height>0</height>
-                            </size>
-                           </property>
-                           <property name="maximumSize">
-                            <size>
-                             <width>80</width>
-                             <height>16777215</height>
-                            </size>
-                           </property>
-                           <property name="text">
-                            <string>0</string>
-                           </property>
-                          </widget>
-                         </item>
-                        </layout>
-                       </item>
-                       <item>
-                        <layout class="QHBoxLayout" name="horizontalLayout_135">
-                         <item>
-                          <widget class="QLabel" name="label_78">
-                           <property name="maximumSize">
-                            <size>
-                             <width>16777215</width>
-                             <height>25</height>
-                            </size>
-                           </property>
-                           <property name="text">
-                            <string>Execution</string>
-                           </property>
-                           <property name="alignment">
-                            <set>Qt::AlignCenter</set>
-                           </property>
-                          </widget>
-                         </item>
-                         <item>
-                          <widget class="QLineEdit" name="le_wp_exec">
-                           <property name="minimumSize">
-                            <size>
-                             <width>80</width>
-                             <height>0</height>
-                            </size>
-                           </property>
-                           <property name="maximumSize">
-                            <size>
-                             <width>80</width>
-                             <height>16777215</height>
-                            </size>
-                           </property>
-                           <property name="text">
-                            <string>1</string>
-                           </property>
-                          </widget>
-                         </item>
-                        </layout>
-                       </item>
-                      </layout>
-                     </item>
-                     <item>
-                      <layout class="QVBoxLayout" name="verticalLayout_62">
-                       <item>
-                        <layout class="QHBoxLayout" name="horizontalLayout_123">
-                         <item>
-                          <widget class="QPushButton" name="btn_wp_ivset">
-                           <property name="minimumSize">
-                            <size>
-                             <width>80</width>
-                             <height>0</height>
-                            </size>
-                           </property>
-                           <property name="text">
-                            <string>Set</string>
-                           </property>
-                          </widget>
-                         </item>
-                         <item>
-                          <widget class="QPushButton" name="btn_wp_ivRead">
-                           <property name="minimumSize">
-                            <size>
-                             <width>100</width>
-                             <height>0</height>
-                            </size>
-                           </property>
-                           <property name="maximumSize">
-                            <size>
-                             <width>100</width>
-                             <height>16777215</height>
-                            </size>
-                           </property>
-                           <property name="text">
-                            <string>Read</string>
-                           </property>
-                          </widget>
-                         </item>
-                        </layout>
-                       </item>
-                       <item>
-                        <layout class="QHBoxLayout" name="horizontalLayout_128">
-                         <item>
-                          <widget class="QLabel" name="label_46">
-                           <property name="maximumSize">
-                            <size>
-                             <width>16777215</width>
-                             <height>25</height>
-                            </size>
-                           </property>
-                           <property name="text">
-                            <string>RC lost</string>
-                           </property>
-                           <property name="alignment">
-                            <set>Qt::AlignCenter</set>
-                           </property>
-                          </widget>
-                         </item>
-                         <item>
-                          <widget class="QComboBox" name="cb_wp_rcl">
-                           <property name="minimumSize">
-                            <size>
-                             <width>100</width>
-                             <height>0</height>
-                            </size>
-                           </property>
-                           <property name="maximumSize">
-                            <size>
-                             <width>100</width>
-                             <height>16777215</height>
-                            </size>
-                           </property>
-                           <item>
-                            <property name="text">
-                             <string>Quit mission</string>
-                            </property>
-                           </item>
-                           <item>
-                            <property name="text">
-                             <string>Keep going</string>
-                            </property>
-                           </item>
-                          </widget>
-                         </item>
-                        </layout>
-                       </item>
-                       <item>
-                        <layout class="QHBoxLayout" name="horizontalLayout_129">
-                         <item>
-                          <widget class="QLabel" name="label_52">
-                           <property name="maximumSize">
-                            <size>
-                             <width>16777215</width>
-                             <height>25</height>
-                            </size>
-                           </property>
-                           <property name="text">
-                            <string>Gimbal</string>
-                           </property>
-                           <property name="alignment">
-                            <set>Qt::AlignCenter</set>
-                           </property>
-                          </widget>
-                         </item>
-                         <item>
-                          <widget class="QComboBox" name="cb_wp_gb">
-                           <property name="minimumSize">
-                            <size>
-                             <width>100</width>
-                             <height>0</height>
-                            </size>
-                           </property>
-                           <property name="maximumSize">
-                            <size>
-                             <width>100</width>
-                             <height>16777215</height>
-                            </size>
-                           </property>
-                           <item>
-                            <property name="text">
-                             <string>Free</string>
-                            </property>
-                           </item>
-                           <item>
-                            <property name="text">
-                             <string>Auto</string>
-                            </property>
-                           </item>
-                          </widget>
-                         </item>
-                        </layout>
-                       </item>
-                       <item>
-                        <layout class="QHBoxLayout" name="horizontalLayout_131">
-                         <item>
-                          <widget class="QLabel" name="label_76">
-                           <property name="maximumSize">
-                            <size>
-                             <width>16777215</width>
-                             <height>25</height>
-                            </size>
-                           </property>
-                           <property name="text">
-                            <string>Movement</string>
-                           </property>
-                           <property name="alignment">
-                            <set>Qt::AlignCenter</set>
-                           </property>
-                          </widget>
-                         </item>
-                         <item>
-                          <widget class="QComboBox" name="cb_wp_mov">
-                           <property name="enabled">
-                            <bool>false</bool>
-                           </property>
-                           <property name="minimumSize">
-                            <size>
-                             <width>100</width>
-                             <height>0</height>
-                            </size>
-                           </property>
-                           <property name="maximumSize">
-                            <size>
-                             <width>100</width>
-                             <height>16777215</height>
-                            </size>
-                           </property>
-                           <item>
-                            <property name="text">
-                             <string>P2P</string>
-                            </property>
-                           </item>
-                           <item>
-                            <property name="text">
-                             <string>Reserved</string>
-                            </property>
-                           </item>
-                          </widget>
-                         </item>
-                        </layout>
-                       </item>
-                      </layout>
-                     </item>
-                     <item>
-                      <layout class="QVBoxLayout" name="verticalLayout_64">
-                       <item>
-                        <layout class="QHBoxLayout" name="horizontalLayout_134">
-                         <item>
-                          <widget class="QLabel" name="label_77">
-                           <property name="maximumSize">
-                            <size>
-                             <width>16777215</width>
-                             <height>25</height>
-                            </size>
-                           </property>
-                           <property name="text">
-                            <string>Finish</string>
-                           </property>
-                           <property name="alignment">
-                            <set>Qt::AlignCenter</set>
-                           </property>
-                          </widget>
-                         </item>
-                         <item>
-                          <widget class="QComboBox" name="cb_wp_fa">
-                           <property name="minimumSize">
-                            <size>
-                             <width>80</width>
-                             <height>0</height>
-                            </size>
-                           </property>
-                           <property name="maximumSize">
-                            <size>
-                             <width>80</width>
-                             <height>16777215</height>
-                            </size>
-                           </property>
-                           <item>
-                            <property name="text">
-                             <string>No action</string>
-                            </property>
-                           </item>
-                           <item>
-                            <property name="text">
-                             <string>Go home</string>
-                            </property>
-                           </item>
-                           <item>
-                            <property name="text">
-                             <string>Landing</string>
-                            </property>
-                           </item>
-                           <item>
-                            <property name="text">
-                             <string>To first point</string>
-                            </property>
-                           </item>
-                          </widget>
-                         </item>
-                        </layout>
-                       </item>
-                       <item>
-                        <layout class="QHBoxLayout" name="horizontalLayout_130">
-                         <item>
-                          <widget class="QLabel" name="label_75">
-                           <property name="maximumSize">
-                            <size>
-                             <width>16777215</width>
-                             <height>25</height>
-                            </size>
-                           </property>
-                           <property name="text">
-                            <string>Yaw logic</string>
-                           </property>
-                           <property name="alignment">
-                            <set>Qt::AlignCenter</set>
-                           </property>
-                          </widget>
-                         </item>
-                         <item>
-                          <widget class="QComboBox" name="cb_wp_yaw">
-                           <property name="minimumSize">
-                            <size>
-                             <width>80</width>
-                             <height>0</height>
-                            </size>
-                           </property>
-                           <property name="maximumSize">
-                            <size>
-                             <width>80</width>
-                             <height>16777215</height>
-                            </size>
-                           </property>
-                           <item>
-                            <property name="text">
-                             <string>Auto yaw</string>
-                            </property>
-                           </item>
-                           <item>
-                            <property name="text">
-                             <string>No yaw</string>
-                            </property>
-                           </item>
-                           <item>
-                            <property name="text">
-                             <string>RC yaw</string>
-                            </property>
-                           </item>
-                           <item>
-                            <property name="text">
-                             <string>Waypoint</string>
-                            </property>
-                           </item>
-                          </widget>
-                         </item>
-                        </layout>
-                       </item>
-                       <item>
-                        <spacer name="verticalSpacer_10">
-                         <property name="orientation">
-                          <enum>Qt::Vertical</enum>
-                         </property>
-                         <property name="sizeHint" stdset="0">
-                          <size>
-                           <width>20</width>
-                           <height>40</height>
-                          </size>
-                         </property>
-                        </spacer>
-                       </item>
-                      </layout>
-                     </item>
-                     <item>
-                      <layout class="QVBoxLayout" name="verticalLayout_10">
-                       <item>
-                        <layout class="QHBoxLayout" name="horizontalLayout_125">
-                         <item>
-                          <widget class="QLabel" name="label_66">
-                           <property name="text">
-                            <string>Latitude </string>
-                           </property>
-                           <property name="alignment">
-                            <set>Qt::AlignCenter</set>
-                           </property>
-                          </widget>
-                         </item>
-                         <item>
-                          <widget class="QLineEdit" name="le_wp_la">
-                           <property name="enabled">
-                            <bool>false</bool>
-                           </property>
-                           <property name="maximumSize">
-                            <size>
-                             <width>150</width>
-                             <height>16777215</height>
-                            </size>
-                           </property>
-                           <property name="text">
-                            <string>0</string>
-                           </property>
-                          </widget>
-                         </item>
-                        </layout>
-                       </item>
-                       <item>
-                        <layout class="QHBoxLayout" name="horizontalLayout_126">
-                         <item>
-                          <widget class="QLabel" name="label_74">
-                           <property name="text">
-                            <string>Longitude</string>
-                           </property>
-                           <property name="alignment">
-                            <set>Qt::AlignCenter</set>
-                           </property>
-                          </widget>
-                         </item>
-                         <item>
-                          <widget class="QLineEdit" name="le_wp_lo">
-                           <property name="enabled">
-                            <bool>false</bool>
-                           </property>
-                           <property name="maximumSize">
-                            <size>
-                             <width>150</width>
-                             <height>16777215</height>
-                            </size>
-                           </property>
-                           <property name="text">
-                            <string>0</string>
-                           </property>
-                          </widget>
-                         </item>
-                        </layout>
-                       </item>
-                       <item>
-                        <layout class="QHBoxLayout" name="horizontalLayout_124">
-                         <item>
-                          <widget class="QLabel" name="label_63">
-                           <property name="text">
-                            <string>Altitude </string>
-                           </property>
-                           <property name="alignment">
-                            <set>Qt::AlignCenter</set>
-                           </property>
-                          </widget>
-                         </item>
-                         <item>
-                          <widget class="QLineEdit" name="le_wp_al">
-                           <property name="enabled">
-                            <bool>false</bool>
-                           </property>
-                           <property name="maximumSize">
-                            <size>
-                             <width>150</width>
-                             <height>16777215</height>
-                            </size>
-                           </property>
-                           <property name="text">
-                            <string>0</string>
-                           </property>
-                          </widget>
-                         </item>
-                        </layout>
-                       </item>
-                       <item>
-                        <widget class="QPushButton" name="btn_waypoint_viewPoint">
-                         <property name="minimumSize">
-                          <size>
-                           <width>150</width>
-                           <height>0</height>
-                          </size>
-                         </property>
-                         <property name="text">
-                          <string>Read position as view point</string>
-                         </property>
-                        </widget>
-                       </item>
-                      </layout>
-                     </item>
-                     <item>
-                      <spacer name="horizontalSpacer_6">
-                       <property name="orientation">
-                        <enum>Qt::Horizontal</enum>
-                       </property>
-                       <property name="sizeHint" stdset="0">
-                        <size>
-                         <width>40</width>
-                         <height>20</height>
-                        </size>
-                       </property>
-                      </spacer>
-                     </item>
-                     <item>
-                      <spacer name="horizontalSpacer_8">
-                       <property name="orientation">
-                        <enum>Qt::Horizontal</enum>
-                       </property>
-                       <property name="sizeHint" stdset="0">
-                        <size>
-                         <width>40</width>
-                         <height>20</height>
-                        </size>
-                       </property>
-                      </spacer>
-                     </item>
-                     <item>
-                      <spacer name="horizontalSpacer_7">
-                       <property name="orientation">
-                        <enum>Qt::Horizontal</enum>
-                       </property>
-                       <property name="sizeHint" stdset="0">
-                        <size>
-                         <width>40</width>
-                         <height>20</height>
-                        </size>
-                       </property>
-                      </spacer>
-                     </item>
-                    </layout>
-                   </widget>
-                   <widget class="QWidget" name="InitData">
-                    <attribute name="title">
-                     <string>InitData</string>
-                    </attribute>
-                    <layout class="QHBoxLayout" name="horizontalLayout_38">
-                     <item>
-                      <widget class="QTableView" name="tv_waypoint_data">
-                       <property name="sortingEnabled">
-                        <bool>false</bool>
-                       </property>
-                      </widget>
-                     </item>
-                    </layout>
-                   </widget>
-                   <widget class="QWidget" name="PointActions">
-                    <attribute name="title">
-                     <string>PointActions</string>
-                    </attribute>
-                    <layout class="QHBoxLayout" name="horizontalLayout_47">
-                     <item>
-                      <layout class="QVBoxLayout" name="verticalLayout_60">
-                       <item>
-                        <layout class="QHBoxLayout" name="horizontalLayout_62">
-                         <item>
-                          <widget class="QLabel" name="label_27">
-                           <property name="text">
-                            <string>Point</string>
-                           </property>
-                          </widget>
-                         </item>
-                         <item>
-                          <widget class="QComboBox" name="cb_waypoint_point"/>
-                         </item>
-                        </layout>
-                       </item>
-                       <item>
-                        <widget class="QPushButton" name="btn_waypoint_action">
-                         <property name="text">
-                          <string>Add action</string>
-                         </property>
-                        </widget>
-                       </item>
-                       <item>
-                        <widget class="QPushButton" name="btn_waypoint_removeAction">
-                         <property name="enabled">
-                          <bool>false</bool>
-                         </property>
-                         <property name="text">
-                          <string>Remove action</string>
-                         </property>
-                        </widget>
-                       </item>
-                       <item>
-                        <widget class="QPushButton" name="btn_wp_loadOne">
-                         <property name="text">
-                          <string>Load This</string>
-                         </property>
-                        </widget>
-                       </item>
-                      </layout>
-                     </item>
-                     <item>
-                      <widget class="QTableView" name="tv_waypoint_actions"/>
-                     </item>
-                    </layout>
-                   </widget>
-                  </widget>
-                 </item>
-                </layout>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item row="0" column="0">
-             <widget class="QGroupBox" name="groupBox_21">
-              <property name="minimumSize">
-               <size>
-                <width>270</width>
-                <height>180</height>
-               </size>
-              </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_132">
+            <item>
+             <widget class="QGroupBox" name="groupBox_34">
               <property name="maximumSize">
                <size>
-                <width>270</width>
-                <height>180</height>
+                <width>300</width>
+                <height>800</height>
                </size>
               </property>
               <property name="title">
                <string>Position</string>
               </property>
-              <layout class="QVBoxLayout" name="verticalLayout_45">
+              <layout class="QVBoxLayout" name="verticalLayout_52">
+               <property name="spacing">
+                <number>5</number>
+               </property>
+               <property name="topMargin">
+                <number>5</number>
+               </property>
+               <property name="bottomMargin">
+                <number>5</number>
+               </property>
                <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_83">
-                 <item>
-                  <widget class="QPushButton" name="pushButton_13">
-                   <property name="text">
-                    <string>Read</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QCheckBox" name="checkBox_6">
-                   <property name="text">
-                    <string>Auto Record</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
+                <widget class="QGroupBox" name="groupBox_21">
+                 <property name="minimumSize">
+                  <size>
+                   <width>270</width>
+                   <height>180</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>270</width>
+                   <height>180</height>
+                  </size>
+                 </property>
+                 <property name="title">
+                  <string>Broadcast</string>
+                 </property>
+                 <layout class="QVBoxLayout" name="verticalLayout_45">
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_83">
+                    <item>
+                     <widget class="QPushButton" name="pushButton_13">
+                      <property name="text">
+                       <string>Read</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QCheckBox" name="checkBox_6">
+                      <property name="text">
+                       <string>Auto Record</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_106">
+                    <item>
+                     <widget class="QCheckBox" name="cb_mission_hp">
+                      <property name="text">
+                       <string>HotPoint</string>
+                      </property>
+                      <property name="checked">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QCheckBox" name="cb_mission_wp">
+                      <property name="text">
+                       <string>WayPoint</string>
+                      </property>
+                      <property name="checked">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QCheckBox" name="cb_mission_follow">
+                      <property name="text">
+                       <string>Follow</string>
+                      </property>
+                      <property name="checked">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_84">
+                    <item>
+                     <widget class="QLabel" name="label_57">
+                      <property name="text">
+                       <string>Latitude </string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="lineEdit_20"/>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_85">
+                    <item>
+                     <widget class="QLabel" name="label_58">
+                      <property name="text">
+                       <string>Longitude</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="lineEdit_21"/>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_86">
+                    <item>
+                     <widget class="QLabel" name="label_59">
+                      <property name="text">
+                       <string>Altitude </string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="lineEdit_22"/>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_87">
+                    <item>
+                     <layout class="QHBoxLayout" name="horizontalLayout_88">
+                      <item>
+                       <widget class="QLabel" name="label_60">
+                        <property name="text">
+                         <string>Height</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QLineEdit" name="lineEdit_23"/>
+                      </item>
+                     </layout>
+                    </item>
+                    <item>
+                     <layout class="QHBoxLayout" name="horizontalLayout_89">
+                      <item>
+                       <widget class="QLabel" name="label_61">
+                        <property name="text">
+                         <string>Health</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QLineEdit" name="lineEdit_24"/>
+                      </item>
+                     </layout>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
+                </widget>
                </item>
                <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_106">
-                 <item>
-                  <widget class="QCheckBox" name="cb_mission_hp">
-                   <property name="text">
-                    <string>HotPoint</string>
-                   </property>
-                   <property name="checked">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QCheckBox" name="cb_mission_wp">
-                   <property name="text">
-                    <string>WayPoint</string>
-                   </property>
-                   <property name="checked">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QCheckBox" name="cb_mission_follow">
-                   <property name="text">
-                    <string>Follow</string>
-                   </property>
-                   <property name="checked">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_84">
-                 <item>
-                  <widget class="QLabel" name="label_57">
-                   <property name="text">
-                    <string>Latitude </string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLineEdit" name="lineEdit_20"/>
-                 </item>
-                </layout>
-               </item>
-               <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_85">
-                 <item>
-                  <widget class="QLabel" name="label_58">
-                   <property name="text">
-                    <string>Longitude</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLineEdit" name="lineEdit_21"/>
-                 </item>
-                </layout>
-               </item>
-               <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_86">
-                 <item>
-                  <widget class="QLabel" name="label_59">
-                   <property name="text">
-                    <string>Altitude </string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLineEdit" name="lineEdit_22"/>
-                 </item>
-                </layout>
-               </item>
-               <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_87">
-                 <item>
-                  <layout class="QHBoxLayout" name="horizontalLayout_88">
-                   <item>
-                    <widget class="QLabel" name="label_60">
-                     <property name="text">
-                      <string>Height</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QLineEdit" name="lineEdit_23"/>
-                   </item>
-                  </layout>
-                 </item>
-                 <item>
-                  <layout class="QHBoxLayout" name="horizontalLayout_89">
-                   <item>
-                    <widget class="QLabel" name="label_61">
-                     <property name="text">
-                      <string>Health</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QLineEdit" name="lineEdit_24"/>
-                   </item>
-                  </layout>
-                 </item>
-                </layout>
+                <widget class="QGroupBox" name="gb_GPS">
+                 <property name="minimumSize">
+                  <size>
+                   <width>270</width>
+                   <height>500</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>270</width>
+                   <height>600</height>
+                  </size>
+                 </property>
+                 <property name="title">
+                  <string>GPS</string>
+                 </property>
+                 <layout class="QVBoxLayout" name="verticalLayout_75">
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_148">
+                    <item>
+                     <widget class="QPushButton" name="btn_gps_read">
+                      <property name="text">
+                       <string>Read</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_149">
+                    <item>
+                     <widget class="QCheckBox" name="cb_gps">
+                      <property name="text">
+                       <string>date</string>
+                      </property>
+                      <property name="checked">
+                       <bool>true</bool>
+                      </property>
+                      <property name="autoRepeat">
+                       <bool>false</bool>
+                      </property>
+                      <property name="autoExclusive">
+                       <bool>false</bool>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="le_gps_date">
+                      <property name="readOnly">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_150">
+                    <item>
+                     <widget class="QLabel" name="label_84">
+                      <property name="text">
+                       <string> time </string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="le_gps_time">
+                      <property name="readOnly">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_151">
+                    <item>
+                     <widget class="QLabel" name="label_85">
+                      <property name="text">
+                       <string> longitude</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="le_gps_longitude">
+                      <property name="readOnly">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_152">
+                    <item>
+                     <widget class="QLabel" name="label_86">
+                      <property name="text">
+                       <string>latitude</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="le_gps_latitude">
+                      <property name="readOnly">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_153">
+                    <item>
+                     <widget class="QLabel" name="label_87">
+                      <property name="text">
+                       <string>hmsl</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="le_gps_hmsl">
+                      <property name="readOnly">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_154">
+                    <item>
+                     <widget class="QLabel" name="label_88">
+                      <property name="text">
+                       <string>VN</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="le_gps_VN">
+                      <property name="readOnly">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_155">
+                    <item>
+                     <widget class="QLabel" name="label_89">
+                      <property name="text">
+                       <string>VE</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="le_gps_VE">
+                      <property name="readOnly">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_156">
+                    <item>
+                     <widget class="QLabel" name="label_90">
+                      <property name="text">
+                       <string>VD</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="le_gps_VD">
+                      <property name="readOnly">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_166">
+                    <item>
+                     <widget class="QLabel" name="label_98">
+                      <property name="text">
+                       <string>Hdop</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="le_gps_hdop">
+                      <property name="readOnly">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_167">
+                    <item>
+                     <widget class="QLabel" name="label_99">
+                      <property name="text">
+                       <string>Pdop</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="le_gps_pdop">
+                      <property name="readOnly">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_168">
+                    <item>
+                     <widget class="QLabel" name="label_100">
+                      <property name="text">
+                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;GNSSFlag&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="le_gps_GNSSFlag">
+                      <property name="readOnly">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_169">
+                    <item>
+                     <widget class="QLabel" name="label_101">
+                      <property name="text">
+                       <string>GLNNFix </string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="le_gps_gnssFix">
+                      <property name="readOnly">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_170">
+                    <item>
+                     <widget class="QLabel" name="label_102">
+                      <property name="text">
+                       <string>Hacc</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="le_gps_hacc">
+                      <property name="readOnly">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_171">
+                    <item>
+                     <widget class="QLabel" name="label_103">
+                      <property name="text">
+                       <string>Sacc</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="le_gps_sacc">
+                      <property name="readOnly">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_172">
+                    <item>
+                     <widget class="QLabel" name="label_104">
+                      <property name="text">
+                       <string>GPSUsed</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="le_gps_guse">
+                      <property name="readOnly">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_339">
+                    <item>
+                     <widget class="QLabel" name="label_204">
+                      <property name="text">
+                       <string>GNSSUsed</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="le_gps_gnuse">
+                      <property name="readOnly">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_340">
+                    <item>
+                     <widget class="QLabel" name="label_205">
+                      <property name="text">
+                       <string>SVN</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="le_gps_svn">
+                      <property name="readOnly">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_341">
+                    <item>
+                     <widget class="QLabel" name="label_206">
+                      <property name="text">
+                       <string>GPSStatus</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="le_gps_gps">
+                      <property name="readOnly">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
+                </widget>
                </item>
               </layout>
              </widget>
             </item>
-            <item row="2" column="4">
-             <layout class="QVBoxLayout" name="verticalLayout_58">
-              <item>
-               <spacer name="verticalSpacer_9">
-                <property name="orientation">
-                 <enum>Qt::Vertical</enum>
-                </property>
-                <property name="sizeType">
-                 <enum>QSizePolicy::Minimum</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>5</width>
-                  <height>6</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
-               <widget class="QPushButton" name="btn_webLoad">
-                <property name="text">
-                 <string>View Map</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QWidget" name="widget_web" native="true">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-           </layout>
-          </widget>
-          <widget class="QWidget" name="rtk">
-           <attribute name="title">
-            <string>RTK / GPS</string>
-           </attribute>
-           <layout class="QHBoxLayout" name="horizontalLayout_157">
             <item>
-             <widget class="QGroupBox" name="groupBox_27">
+             <widget class="QGroupBox" name="gb_RTK">
               <property name="minimumSize">
                <size>
                 <width>172</width>
-                <height>800</height>
+                <height>700</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
-                <width>172</width>
+                <width>200</width>
                 <height>800</height>
                </size>
               </property>
               <property name="title">
-               <string>GPS</string>
+               <string>RTK</string>
               </property>
-              <layout class="QVBoxLayout" name="verticalLayout_75">
-               <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_148">
-                 <item>
-                  <widget class="QPushButton" name="btn_gps_read">
-                   <property name="text">
-                    <string>Read</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_149">
-                 <item>
-                  <widget class="QCheckBox" name="cb_gps">
-                   <property name="text">
-                    <string>date</string>
-                   </property>
-                   <property name="checked">
-                    <bool>true</bool>
-                   </property>
-                   <property name="autoRepeat">
-                    <bool>false</bool>
-                   </property>
-                   <property name="autoExclusive">
-                    <bool>false</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLineEdit" name="le_gps_date">
-                   <property name="readOnly">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_150">
-                 <item>
-                  <widget class="QLabel" name="label_84">
-                   <property name="text">
-                    <string>   time </string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLineEdit" name="le_gps_time">
-                   <property name="readOnly">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_151">
-                 <item>
-                  <widget class="QLabel" name="label_85">
-                   <property name="text">
-                    <string> longitude</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLineEdit" name="le_gps_longitude">
-                   <property name="readOnly">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_152">
-                 <item>
-                  <widget class="QLabel" name="label_86">
-                   <property name="text">
-                    <string> latitude </string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLineEdit" name="le_gps_latitude">
-                   <property name="readOnly">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_153">
-                 <item>
-                  <widget class="QLabel" name="label_87">
-                   <property name="text">
-                    <string>hmsl</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLineEdit" name="le_gps_hmsl">
-                   <property name="readOnly">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_154">
-                 <item>
-                  <widget class="QLabel" name="label_88">
-                   <property name="text">
-                    <string>VN</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLineEdit" name="le_gps_VN">
-                   <property name="readOnly">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_155">
-                 <item>
-                  <widget class="QLabel" name="label_89">
-                   <property name="text">
-                    <string>VE</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLineEdit" name="le_gps_VE">
-                   <property name="readOnly">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_156">
-                 <item>
-                  <widget class="QLabel" name="label_90">
-                   <property name="text">
-                    <string>VD</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLineEdit" name="le_gps_VD">
-                   <property name="readOnly">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_166">
-                 <item>
-                  <widget class="QLabel" name="label_98">
-                   <property name="text">
-                    <string>Hdop</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLineEdit" name="le_gps_hdop">
-                   <property name="readOnly">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_167">
-                 <item>
-                  <widget class="QLabel" name="label_99">
-                   <property name="text">
-                    <string>Pdop</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLineEdit" name="le_gps_pdop">
-                   <property name="readOnly">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_168">
-                 <item>
-                  <widget class="QLabel" name="label_100">
-                   <property name="text">
-                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;GNSSFlag &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLineEdit" name="le_gps_gpsfix">
-                   <property name="readOnly">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_169">
-                 <item>
-                  <widget class="QLabel" name="label_101">
-                   <property name="text">
-                    <string>GLNNFix</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLineEdit" name="le_gps_gnssFix">
-                   <property name="readOnly">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_170">
-                 <item>
-                  <widget class="QLabel" name="label_102">
-                   <property name="text">
-                    <string>Hacc</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLineEdit" name="le_gps_hacc">
-                   <property name="readOnly">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_171">
-                 <item>
-                  <widget class="QLabel" name="label_103">
-                   <property name="text">
-                    <string>Sacc</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLineEdit" name="le_gps_sacc">
-                   <property name="readOnly">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_172">
-                 <item>
-                  <widget class="QLabel" name="label_104">
-                   <property name="text">
-                    <string>GPSUsed </string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLineEdit" name="le_gps_guse">
-                   <property name="readOnly">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_339">
-                 <item>
-                  <widget class="QLabel" name="label_204">
-                   <property name="text">
-                    <string>GNSSUsed</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLineEdit" name="le_gps_gnuse">
-                   <property name="readOnly">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_340">
-                 <item>
-                  <widget class="QLabel" name="label_205">
-                   <property name="text">
-                    <string>SVN</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLineEdit" name="le_gps_svn">
-                   <property name="readOnly">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_341">
-                 <item>
-                  <widget class="QLabel" name="label_206">
-                   <property name="text">
-                    <string>GPSState</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLineEdit" name="le_gps_gps">
-                   <property name="readOnly">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
+              <layout class="QVBoxLayout" name="verticalLayout_150">
                <item>
                 <spacer name="verticalSpacer_5">
                  <property name="orientation">
@@ -6209,27 +4810,6 @@
                  </property>
                 </spacer>
                </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
-             <widget class="QGroupBox" name="groupBox_59">
-              <property name="minimumSize">
-               <size>
-                <width>172</width>
-                <height>800</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>172</width>
-                <height>800</height>
-               </size>
-              </property>
-              <property name="title">
-               <string>RTK</string>
-              </property>
-              <layout class="QVBoxLayout" name="verticalLayout_150">
                <item>
                 <layout class="QHBoxLayout" name="horizontalLayout_342">
                  <item>
@@ -6273,7 +4853,7 @@
                  <item>
                   <widget class="QLabel" name="label_207">
                    <property name="text">
-                    <string>   time </string>
+                    <string> time </string>
                    </property>
                   </widget>
                  </item>
@@ -6309,7 +4889,7 @@
                  <item>
                   <widget class="QLabel" name="label_209">
                    <property name="text">
-                    <string> latitude </string>
+                    <string>latitude</string>
                    </property>
                   </widget>
                  </item>
@@ -6345,7 +4925,7 @@
                  <item>
                   <widget class="QLabel" name="label_227">
                    <property name="text">
-                    <string> latitudeS </string>
+                    <string>latitudeS</string>
                    </property>
                   </widget>
                  </item>
@@ -6453,7 +5033,7 @@
                  <item>
                   <widget class="QLabel" name="label_214">
                    <property name="text">
-                    <string> yaw</string>
+                    <string>yaw</string>
                    </property>
                   </widget>
                  </item>
@@ -6543,7 +5123,7 @@
                  <item>
                   <widget class="QLabel" name="label_219">
                    <property name="text">
-                    <string>Flag0</string>
+                    <string>Flag</string>
                    </property>
                   </widget>
                  </item>
@@ -6561,7 +5141,7 @@
                  <item>
                   <widget class="QLabel" name="label_220">
                    <property name="text">
-                    <string>Flag1</string>
+                    <string>Flag</string>
                    </property>
                   </widget>
                  </item>
@@ -6579,7 +5159,7 @@
                  <item>
                   <widget class="QLabel" name="label_221">
                    <property name="text">
-                    <string>Flag2</string>
+                    <string>Flag</string>
                    </property>
                   </widget>
                  </item>
@@ -6597,7 +5177,7 @@
                  <item>
                   <widget class="QLabel" name="label_224">
                    <property name="text">
-                    <string>Flag3</string>
+                    <string>Flag</string>
                    </property>
                   </widget>
                  </item>
@@ -6615,7 +5195,7 @@
                  <item>
                   <widget class="QLabel" name="label_243">
                    <property name="text">
-                    <string>Flag4</string>
+                    <string>Flag</string>
                    </property>
                   </widget>
                  </item>
@@ -6633,7 +5213,7 @@
                  <item>
                   <widget class="QLabel" name="label_244">
                    <property name="text">
-                    <string>Flag5</string>
+                    <string>Flag</string>
                    </property>
                   </widget>
                  </item>
@@ -6651,12 +5231,12 @@
                  <item>
                   <widget class="QLabel" name="label_222">
                    <property name="text">
-                    <string>state</string>
+                    <string>status</string>
                    </property>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLineEdit" name="le_rtk_state">
+                  <widget class="QLineEdit" name="le_rtk_status">
                    <property name="readOnly">
                     <bool>true</bool>
                    </property>
@@ -6682,24 +5262,730 @@
                  </item>
                 </layout>
                </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="gb_Mission">
+              <property name="maximumSize">
+               <size>
+                <width>300</width>
+                <height>800</height>
+               </size>
+              </property>
+              <property name="title">
+               <string>Mission</string>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_66">
                <item>
-                <spacer name="verticalSpacer_8">
-                 <property name="orientation">
-                  <enum>Qt::Vertical</enum>
+                <widget class="QGroupBox" name="groupBox_5">
+                 <property name="enabled">
+                  <bool>true</bool>
                  </property>
-                 <property name="sizeHint" stdset="0">
+                 <property name="minimumSize">
                   <size>
-                   <width>20</width>
-                   <height>40</height>
+                   <width>270</width>
+                   <height>380</height>
                   </size>
                  </property>
-                </spacer>
+                 <property name="maximumSize">
+                  <size>
+                   <width>270</width>
+                   <height>400</height>
+                  </size>
+                 </property>
+                 <property name="title">
+                  <string>Hot Point</string>
+                 </property>
+                 <layout class="QVBoxLayout" name="verticalLayout_59">
+                  <item>
+                   <widget class="QGroupBox" name="groupBox13_2">
+                    <property name="minimumSize">
+                     <size>
+                      <width>250</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>250</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <layout class="QVBoxLayout" name="verticalLayout_35">
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_40">
+                       <item>
+                        <widget class="QPushButton" name="btn_camera_send_8">
+                         <property name="text">
+                          <string>check</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QPushButton" name="btn_camera_send_7">
+                         <property name="text">
+                          <string>reset yaw</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_37">
+                       <item>
+                        <widget class="QPushButton" name="btn_hotPoint_start">
+                         <property name="text">
+                          <string>start</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QPushButton" name="btn_hotPoint_stop">
+                         <property name="text">
+                          <string>stop</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QPushButton" name="btn_hp_pause">
+                         <property name="text">
+                          <string>pause</string>
+                         </property>
+                         <property name="checkable">
+                          <bool>true</bool>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QGroupBox" name="groupBox10">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>160</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>16777215</width>
+                      <height>160</height>
+                     </size>
+                    </property>
+                    <layout class="QVBoxLayout" name="verticalLayout_39">
+                     <item>
+                      <widget class="QPushButton" name="btn_hotPoint_current">
+                       <property name="minimumSize">
+                        <size>
+                         <width>0</width>
+                         <height>25</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>Position</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QPushButton" name="btn_hp_data">
+                       <property name="minimumSize">
+                        <size>
+                         <width>0</width>
+                         <height>25</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>Mission</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <layout class="QVBoxLayout" name="verticalLayout_34">
+                       <item>
+                        <layout class="QHBoxLayout" name="horizontalLayout_41">
+                         <item>
+                          <widget class="QLabel" name="label_29">
+                           <property name="text">
+                            <string>latitude </string>
+                           </property>
+                          </widget>
+                         </item>
+                         <item>
+                          <widget class="QLineEdit" name="le_hp_la">
+                           <property name="minimumSize">
+                            <size>
+                             <width>80</width>
+                             <height>0</height>
+                            </size>
+                           </property>
+                           <property name="focusPolicy">
+                            <enum>Qt::ClickFocus</enum>
+                           </property>
+                           <property name="text">
+                            <string/>
+                           </property>
+                          </widget>
+                         </item>
+                        </layout>
+                       </item>
+                       <item>
+                        <layout class="QHBoxLayout" name="horizontalLayout_42">
+                         <item>
+                          <widget class="QLabel" name="label_30">
+                           <property name="text">
+                            <string>longitude</string>
+                           </property>
+                          </widget>
+                         </item>
+                         <item>
+                          <widget class="QLineEdit" name="le_hp_lo">
+                           <property name="focusPolicy">
+                            <enum>Qt::ClickFocus</enum>
+                           </property>
+                           <property name="text">
+                            <string/>
+                           </property>
+                          </widget>
+                         </item>
+                        </layout>
+                       </item>
+                       <item>
+                        <layout class="QHBoxLayout" name="horizontalLayout_43">
+                         <item>
+                          <widget class="QLabel" name="label_31">
+                           <property name="text">
+                            <string>Altitude </string>
+                           </property>
+                          </widget>
+                         </item>
+                         <item>
+                          <widget class="QLineEdit" name="le_hp_al">
+                           <property name="focusPolicy">
+                            <enum>Qt::ClickFocus</enum>
+                           </property>
+                           <property name="text">
+                            <string/>
+                           </property>
+                          </widget>
+                         </item>
+                        </layout>
+                       </item>
+                      </layout>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QGroupBox" name="verticalGroupBox2">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>100</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>16777215</width>
+                      <height>100</height>
+                     </size>
+                    </property>
+                    <layout class="QVBoxLayout" name="verticalLayout_51">
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_39" stretch="0,0,0">
+                       <item>
+                        <widget class="QPushButton" name="btn_hp_setRadius">
+                         <property name="maximumSize">
+                          <size>
+                           <width>75</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
+                         <property name="text">
+                          <string>set</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QLabel" name="label_32">
+                         <property name="text">
+                          <string>  radius  </string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QLineEdit" name="le_hp_ra">
+                         <property name="focusPolicy">
+                          <enum>Qt::ClickFocus</enum>
+                         </property>
+                         <property name="text">
+                          <string>10</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_48">
+                       <item>
+                        <widget class="QPushButton" name="btn_hp_setPal">
+                         <property name="text">
+                          <string>set</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QLabel" name="label_33">
+                         <property name="text">
+                          <string> palstance</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QLineEdit" name="le_hp_pa">
+                         <property name="focusPolicy">
+                          <enum>Qt::ClickFocus</enum>
+                         </property>
+                         <property name="text">
+                          <string>15</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_53">
+                       <item>
+                        <widget class="QPushButton" name="btn_hp_setYaw">
+                         <property name="minimumSize">
+                          <size>
+                           <width>75</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>75</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
+                         <property name="text">
+                          <string>reset</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QComboBox" name="cb_hp_yaw">
+                         <item>
+                          <property name="text">
+                           <string>Auto Yaw</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>Align Inside</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>Align Outside</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>User define</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>Static</string>
+                          </property>
+                         </item>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QCheckBox" name="cb_hp_cl">
+                         <property name="text">
+                          <string>clockwise</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item>
+                <widget class="QGroupBox" name="gb_follow">
+                 <property name="enabled">
+                  <bool>true</bool>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>270</width>
+                   <height>380</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>270</width>
+                   <height>400</height>
+                  </size>
+                 </property>
+                 <property name="title">
+                  <string>Follow</string>
+                 </property>
+                 <layout class="QVBoxLayout" name="verticalLayout_50">
+                  <item>
+                   <layout class="QVBoxLayout" name="verticalLayout_38">
+                    <item>
+                     <widget class="QPushButton" name="btn_follow_start">
+                      <property name="text">
+                       <string>start</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="btn_follow_pause">
+                      <property name="text">
+                       <string>Pause</string>
+                      </property>
+                      <property name="checkable">
+                       <bool>true</bool>
+                      </property>
+                      <property name="checked">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="btn_follow_stop">
+                      <property name="text">
+                       <string>stop</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="btn_follow_update">
+                      <property name="text">
+                       <string>update</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QVBoxLayout" name="verticalLayout_36">
+                    <item>
+                     <widget class="QComboBox" name="comboBox_portName_2">
+                      <property name="enabled">
+                       <bool>false</bool>
+                      </property>
+                      <item>
+                       <property name="text">
+                        <string>Relative</string>
+                       </property>
+                      </item>
+                      <item>
+                       <property name="text">
+                        <string>Route</string>
+                       </property>
+                      </item>
+                      <item>
+                       <property name="text">
+                        <string>Smart</string>
+                       </property>
+                      </item>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QComboBox" name="comboBox_portName_6">
+                      <property name="enabled">
+                       <bool>false</bool>
+                      </property>
+                      <property name="currentIndex">
+                       <number>1</number>
+                      </property>
+                      <item>
+                       <property name="text">
+                        <string>Low Sensitivity</string>
+                       </property>
+                      </item>
+                      <item>
+                       <property name="text">
+                        <string>Mid Sensitivity</string>
+                       </property>
+                      </item>
+                      <item>
+                       <property name="text">
+                        <string>High Sensitivity</string>
+                       </property>
+                      </item>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QComboBox" name="comboBox_portName_4">
+                      <item>
+                       <property name="text">
+                        <string>Yaw to target</string>
+                       </property>
+                      </item>
+                      <item>
+                       <property name="text">
+                        <string>Yaw Custom</string>
+                       </property>
+                      </item>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <widget class="QGroupBox" name="gpx">
+                    <layout class="QVBoxLayout" name="verticalLayout_37">
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_54">
+                       <item>
+                        <widget class="QLabel" name="label_37">
+                         <property name="text">
+                          <string>latitude diff </string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QLineEdit" name="le_follow_la">
+                         <property name="focusPolicy">
+                          <enum>Qt::ClickFocus</enum>
+                         </property>
+                         <property name="text">
+                          <string>0</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QSlider" name="hs_follow_la">
+                         <property name="minimumSize">
+                          <size>
+                           <width>70</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="minimum">
+                          <number>-1000</number>
+                         </property>
+                         <property name="maximum">
+                          <number>1000</number>
+                         </property>
+                         <property name="orientation">
+                          <enum>Qt::Horizontal</enum>
+                         </property>
+                         <property name="invertedAppearance">
+                          <bool>false</bool>
+                         </property>
+                         <property name="invertedControls">
+                          <bool>false</bool>
+                         </property>
+                         <property name="tickPosition">
+                          <enum>QSlider::NoTicks</enum>
+                         </property>
+                         <property name="tickInterval">
+                          <number>0</number>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_55">
+                       <item>
+                        <widget class="QLabel" name="label_38">
+                         <property name="text">
+                          <string>longitude diff</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QLineEdit" name="le_follow_lo">
+                         <property name="focusPolicy">
+                          <enum>Qt::ClickFocus</enum>
+                         </property>
+                         <property name="text">
+                          <string>0</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QSlider" name="hs_follow_lo">
+                         <property name="minimumSize">
+                          <size>
+                           <width>70</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="minimum">
+                          <number>-1000</number>
+                         </property>
+                         <property name="maximum">
+                          <number>1000</number>
+                         </property>
+                         <property name="orientation">
+                          <enum>Qt::Horizontal</enum>
+                         </property>
+                         <property name="invertedAppearance">
+                          <bool>false</bool>
+                         </property>
+                         <property name="invertedControls">
+                          <bool>false</bool>
+                         </property>
+                         <property name="tickPosition">
+                          <enum>QSlider::NoTicks</enum>
+                         </property>
+                         <property name="tickInterval">
+                          <number>0</number>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_56">
+                       <item>
+                        <widget class="QLabel" name="label_39">
+                         <property name="text">
+                          <string> height       </string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QLineEdit" name="le_follow_hi">
+                         <property name="focusPolicy">
+                          <enum>Qt::ClickFocus</enum>
+                         </property>
+                         <property name="text">
+                          <string>0</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QSlider" name="hs_follow_al">
+                         <property name="minimumSize">
+                          <size>
+                           <width>70</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="minimum">
+                          <number>-1000</number>
+                         </property>
+                         <property name="maximum">
+                          <number>1000</number>
+                         </property>
+                         <property name="orientation">
+                          <enum>Qt::Horizontal</enum>
+                         </property>
+                         <property name="invertedAppearance">
+                          <bool>false</bool>
+                         </property>
+                         <property name="invertedControls">
+                          <bool>false</bool>
+                         </property>
+                         <property name="tickPosition">
+                          <enum>QSlider::NoTicks</enum>
+                         </property>
+                         <property name="tickInterval">
+                          <number>0</number>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_58">
+                       <item>
+                        <widget class="QLabel" name="label_42">
+                         <property name="text">
+                          <string> Angle        </string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QLineEdit" name="le_follow_an">
+                         <property name="enabled">
+                          <bool>false</bool>
+                         </property>
+                         <property name="focusPolicy">
+                          <enum>Qt::ClickFocus</enum>
+                         </property>
+                         <property name="text">
+                          <string>0</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QSlider" name="hs_follow_an">
+                         <property name="enabled">
+                          <bool>false</bool>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>70</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="minimum">
+                          <number>0</number>
+                         </property>
+                         <property name="maximum">
+                          <number>3600</number>
+                         </property>
+                         <property name="orientation">
+                          <enum>Qt::Horizontal</enum>
+                         </property>
+                         <property name="invertedAppearance">
+                          <bool>false</bool>
+                         </property>
+                         <property name="invertedControls">
+                          <bool>false</bool>
+                         </property>
+                         <property name="tickPosition">
+                          <enum>QSlider::NoTicks</enum>
+                         </property>
+                         <property name="tickInterval">
+                          <number>0</number>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="btn_follow_current">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>Reset</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
                </item>
               </layout>
              </widget>
             </item>
             <item>
-             <spacer name="horizontalSpacer_9">
+             <spacer name="horizontalSpacer_7">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
               </property>
@@ -6712,6 +5998,932 @@
              </spacer>
             </item>
            </layout>
+          </widget>
+          <widget class="QWidget" name="tbGroundStation">
+           <attribute name="title">
+            <string>GroundStation</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout_76">
+            <item>
+             <widget class="QGroupBox" name="gb_wp">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>1000</width>
+                <height>480</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>480</height>
+               </size>
+              </property>
+              <property name="title">
+               <string>Waypoint Setting</string>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_84">
+               <item>
+                <widget class="QTabWidget" name="tabWidget_2">
+                 <property name="currentIndex">
+                  <number>0</number>
+                 </property>
+                 <widget class="QWidget" name="InitData">
+                  <attribute name="title">
+                   <string>InitData</string>
+                  </attribute>
+                  <layout class="QVBoxLayout" name="verticalLayout_85">
+                   <item>
+                    <widget class="QTableView" name="tv_waypoint_data">
+                     <property name="sortingEnabled">
+                      <bool>false</bool>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                 <widget class="QWidget" name="PointActions">
+                  <attribute name="title">
+                   <string>PointActions</string>
+                  </attribute>
+                  <layout class="QHBoxLayout" name="horizontalLayout_47">
+                   <item>
+                    <layout class="QVBoxLayout" name="verticalLayout_60">
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_62">
+                       <item>
+                        <widget class="QLabel" name="label_27">
+                         <property name="text">
+                          <string>Point</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QComboBox" name="cb_waypoint_point"/>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <widget class="QPushButton" name="btn_waypoint_action">
+                       <property name="text">
+                        <string>Add action</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QPushButton" name="btn_waypoint_removeAction">
+                       <property name="enabled">
+                        <bool>false</bool>
+                       </property>
+                       <property name="text">
+                        <string>Remove action</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QPushButton" name="btn_wp_loadOne">
+                       <property name="text">
+                        <string>Load This</string>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <widget class="QTableView" name="tv_waypoint_actions"/>
+                   </item>
+                  </layout>
+                 </widget>
+                </widget>
+               </item>
+               <item>
+                <widget class="QGroupBox" name="groupBox_256">
+                 <property name="minimumSize">
+                  <size>
+                   <width>180</width>
+                   <height>150</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>9999</width>
+                   <height>150</height>
+                  </size>
+                 </property>
+                 <layout class="QHBoxLayout" name="horizontalLayout_5">
+                  <item>
+                   <widget class="QGroupBox" name="groupBox_32">
+                    <property name="minimumSize">
+                     <size>
+                      <width>180</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>180</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <layout class="QVBoxLayout" name="verticalLayout_61">
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_59">
+                       <item>
+                        <widget class="QLabel" name="label_44">
+                         <property name="minimumSize">
+                          <size>
+                           <width>0</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>100</width>
+                           <height>25</height>
+                          </size>
+                         </property>
+                         <property name="text">
+                          <string>Idle velocity</string>
+                         </property>
+                         <property name="alignment">
+                          <set>Qt::AlignCenter</set>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QLineEdit" name="le_wp_iv">
+                         <property name="minimumSize">
+                          <size>
+                           <width>50</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>50</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
+                         <property name="text">
+                          <string>3</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_122">
+                       <item>
+                        <widget class="QLabel" name="label_43">
+                         <property name="maximumSize">
+                          <size>
+                           <width>100</width>
+                           <height>25</height>
+                          </size>
+                         </property>
+                         <property name="text">
+                          <string>Max velocity</string>
+                         </property>
+                         <property name="alignment">
+                          <set>Qt::AlignCenter</set>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QLineEdit" name="le_wp_mv">
+                         <property name="minimumSize">
+                          <size>
+                           <width>50</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>50</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
+                         <property name="text">
+                          <string>15</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_121">
+                       <item>
+                        <widget class="QLabel" name="label_28">
+                         <property name="maximumSize">
+                          <size>
+                           <width>100</width>
+                           <height>25</height>
+                          </size>
+                         </property>
+                         <property name="text">
+                          <string>Index number</string>
+                         </property>
+                         <property name="alignment">
+                          <set>Qt::AlignCenter</set>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QLineEdit" name="le_waypoint_number">
+                         <property name="minimumSize">
+                          <size>
+                           <width>50</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>50</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
+                         <property name="text">
+                          <string>0</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_135">
+                       <item>
+                        <widget class="QLabel" name="label_78">
+                         <property name="maximumSize">
+                          <size>
+                           <width>100</width>
+                           <height>25</height>
+                          </size>
+                         </property>
+                         <property name="text">
+                          <string>Execution</string>
+                         </property>
+                         <property name="alignment">
+                          <set>Qt::AlignCenter</set>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QLineEdit" name="le_wp_exec">
+                         <property name="minimumSize">
+                          <size>
+                           <width>50</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>50</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
+                         <property name="text">
+                          <string>1</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QGroupBox" name="groupBox_33">
+                    <property name="maximumSize">
+                     <size>
+                      <width>180</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <layout class="QVBoxLayout" name="verticalLayout_62">
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_123">
+                       <item>
+                        <widget class="QPushButton" name="btn_wp_ivset">
+                         <property name="minimumSize">
+                          <size>
+                           <width>80</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>80</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
+                         <property name="text">
+                          <string>Set</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QPushButton" name="btn_wp_ivRead">
+                         <property name="minimumSize">
+                          <size>
+                           <width>80</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>80</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
+                         <property name="text">
+                          <string>Read</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_128">
+                       <item>
+                        <widget class="QLabel" name="label_46">
+                         <property name="maximumSize">
+                          <size>
+                           <width>16777215</width>
+                           <height>25</height>
+                          </size>
+                         </property>
+                         <property name="text">
+                          <string>RC lost</string>
+                         </property>
+                         <property name="alignment">
+                          <set>Qt::AlignCenter</set>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QComboBox" name="cb_wp_rcl">
+                         <property name="minimumSize">
+                          <size>
+                           <width>100</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>100</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
+                         <item>
+                          <property name="text">
+                           <string>Quit mission</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>Keep going</string>
+                          </property>
+                         </item>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_129">
+                       <item>
+                        <widget class="QLabel" name="label_52">
+                         <property name="maximumSize">
+                          <size>
+                           <width>16777215</width>
+                           <height>25</height>
+                          </size>
+                         </property>
+                         <property name="text">
+                          <string>Gimbal</string>
+                         </property>
+                         <property name="alignment">
+                          <set>Qt::AlignCenter</set>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QComboBox" name="cb_wp_gb">
+                         <property name="minimumSize">
+                          <size>
+                           <width>100</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>100</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
+                         <item>
+                          <property name="text">
+                           <string>Free</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>Auto</string>
+                          </property>
+                         </item>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_131">
+                       <item>
+                        <widget class="QLabel" name="label_76">
+                         <property name="maximumSize">
+                          <size>
+                           <width>16777215</width>
+                           <height>25</height>
+                          </size>
+                         </property>
+                         <property name="text">
+                          <string>Movement</string>
+                         </property>
+                         <property name="alignment">
+                          <set>Qt::AlignCenter</set>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QComboBox" name="cb_wp_mov">
+                         <property name="enabled">
+                          <bool>false</bool>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>100</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>100</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
+                         <item>
+                          <property name="text">
+                           <string>P2P</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>Reserved</string>
+                          </property>
+                         </item>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QGroupBox" name="groupBox">
+                    <layout class="QVBoxLayout" name="verticalLayout_64">
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_134">
+                       <item>
+                        <widget class="QLabel" name="label_77">
+                         <property name="maximumSize">
+                          <size>
+                           <width>16777215</width>
+                           <height>25</height>
+                          </size>
+                         </property>
+                         <property name="text">
+                          <string>Finish</string>
+                         </property>
+                         <property name="alignment">
+                          <set>Qt::AlignCenter</set>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QComboBox" name="cb_wp_fa">
+                         <property name="minimumSize">
+                          <size>
+                           <width>80</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>80</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
+                         <item>
+                          <property name="text">
+                           <string>No action</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>Go home</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>Landing</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>To first point</string>
+                          </property>
+                         </item>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_130">
+                       <item>
+                        <widget class="QLabel" name="label_75">
+                         <property name="maximumSize">
+                          <size>
+                           <width>16777215</width>
+                           <height>25</height>
+                          </size>
+                         </property>
+                         <property name="text">
+                          <string>Yaw logic</string>
+                         </property>
+                         <property name="alignment">
+                          <set>Qt::AlignCenter</set>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QComboBox" name="cb_wp_yaw">
+                         <property name="minimumSize">
+                          <size>
+                           <width>80</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>80</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
+                         <item>
+                          <property name="text">
+                           <string>Auto yaw</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>No yaw</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>RC yaw</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>Waypoint</string>
+                          </property>
+                         </item>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <spacer name="verticalSpacer_10">
+                       <property name="orientation">
+                        <enum>Qt::Vertical</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>20</width>
+                         <height>40</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QGroupBox" name="groupBox">
+                    <property name="minimumSize">
+                     <size>
+                      <width>100</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>200</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <layout class="QVBoxLayout" name="verticalLayout_10">
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_125">
+                       <item>
+                        <widget class="QLabel" name="label_66">
+                         <property name="maximumSize">
+                          <size>
+                           <width>100</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
+                         <property name="text">
+                          <string>Latitude </string>
+                         </property>
+                         <property name="alignment">
+                          <set>Qt::AlignCenter</set>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QLineEdit" name="le_wp_la">
+                         <property name="enabled">
+                          <bool>false</bool>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>150</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
+                         <property name="text">
+                          <string>0</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_126">
+                       <item>
+                        <widget class="QLabel" name="label_74">
+                         <property name="maximumSize">
+                          <size>
+                           <width>100</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
+                         <property name="text">
+                          <string>Longitude</string>
+                         </property>
+                         <property name="alignment">
+                          <set>Qt::AlignCenter</set>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QLineEdit" name="le_wp_lo">
+                         <property name="enabled">
+                          <bool>false</bool>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>150</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
+                         <property name="text">
+                          <string>0</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_124">
+                       <item>
+                        <widget class="QLabel" name="label_63">
+                         <property name="maximumSize">
+                          <size>
+                           <width>100</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
+                         <property name="text">
+                          <string>Altitude </string>
+                         </property>
+                         <property name="alignment">
+                          <set>Qt::AlignCenter</set>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QLineEdit" name="le_wp_al">
+                         <property name="enabled">
+                          <bool>false</bool>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>150</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
+                         <property name="text">
+                          <string>0</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <widget class="QPushButton" name="btn_waypoint_viewPoint">
+                       <property name="minimumSize">
+                        <size>
+                         <width>150</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>Read position as view point</string>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                  <item>
+                   <layout class="QVBoxLayout" name="verticalLayout_9">
+                    <item>
+                     <widget class="QPushButton" name="btn_waypoint_init">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>0</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string>Init</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="btn_wp_loadAll">
+                      <property name="text">
+                       <string>Load All</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="btn_wp_start_stop">
+                      <property name="text">
+                       <string>Start</string>
+                      </property>
+                      <property name="checkable">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="btn_wp_pr">
+                      <property name="text">
+                       <string>Pause</string>
+                      </property>
+                      <property name="checkable">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QVBoxLayout" name="verticalLayout_7">
+                    <item>
+                     <widget class="QPushButton" name="btn_cameraShoot_4">
+                      <property name="minimumSize">
+                       <size>
+                        <width>150</width>
+                        <height>0</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>150</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string>Download</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="btn_waypoint_add">
+                      <property name="text">
+                       <string>Add Point</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="btn_waypoint_remove">
+                      <property name="text">
+                       <string>Remove</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="btn_waypoint_reset">
+                      <property name="text">
+                       <string>Reset</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <spacer name="horizontalSpacer_6">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                     <enum>QSizePolicy::Expanding</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="groupBox_36">
+              <layout class="QVBoxLayout" name="verticalLayout_58">
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_158">
+                 <item>
+                  <widget class="QPushButton" name="btn_webLoad">
+                   <property name="text">
+                    <string>Reload Web</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="btn_webRefresh">
+                   <property name="text">
+                    <string>Refresh Map</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="btn_webTool">
+                   <property name="text">
+                    <string>Hide Setting Bar</string>
+                   </property>
+                   <property name="checkable">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <widget class="QWidget" name="widget_web" native="true">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="tbDev">
+           <attribute name="title">
+            <string>Dev</string>
+           </attribute>
           </widget>
          </widget>
         </item>
@@ -6820,18 +7032,18 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="btg_vrcGear"/>
-  <buttongroup name="btg_cameraPitch"/>
-  <buttongroup name="btg_cameraMode"/>
-  <buttongroup name="btg_cameraRoll"/>
-  <buttongroup name="btg_flightYL"/>
-  <buttongroup name="btg_flightCL"/>
-  <buttongroup name="btg_flightTask"/>
-  <buttongroup name="btg_flightVL"/>
-  <buttongroup name="btg_vrcMode"/>
-  <buttongroup name="btg_cameraAngle"/>
   <buttongroup name="btg_cameraYaw"/>
-  <buttongroup name="btg_flightHL"/>
+  <buttongroup name="btg_flightTask"/>
+  <buttongroup name="btg_cameraMode"/>
   <buttongroup name="btg_flightSM"/>
+  <buttongroup name="btg_cameraRoll"/>
+  <buttongroup name="btg_flightHL"/>
+  <buttongroup name="btg_cameraAngle"/>
+  <buttongroup name="btg_vrcGear"/>
+  <buttongroup name="btg_flightCL"/>
+  <buttongroup name="btg_vrcMode"/>
+  <buttongroup name="btg_cameraPitch"/>
+  <buttongroup name="btg_flightYL"/>
+  <buttongroup name="btg_flightVL"/>
  </buttongroups>
 </ui>

@@ -74,13 +74,14 @@ bool bdCA(Script* script, UserData data)
             switch (i)
             {
                 case 0:
-#ifndef SDK_VERSION_2_3
-                    cout << "Time: " << bd.timeStamp.time << endl;
-                    cout << "Nano: " << bd.timeStamp.nanoTime << endl;
-                    cout << "Sync: " << (int)bd.timeStamp.syncFlag << endl;
-#else
-                    cout << "Time: " << bd.timeStamp << endl;
-#endif
+                    if (script->getApi()->getSDKVersion() != versionM100_23)
+                    {
+                        cout << "Time: " << bd.timeStamp.time << endl;
+                        cout << "Nano: " << bd.timeStamp.nanoTime << endl;
+                        cout << "Sync: " << (int)bd.timeStamp.syncFlag << endl;
+                    }
+                    else
+                        cout << "Time: " << bd.timeStamp.time << endl;
                     break;
                 case 1:
                     cout << "Q0: " << bd.q.q0 << endl;
@@ -130,7 +131,7 @@ bool bdCA(Script* script, UserData data)
                     cout << "Bettery: " << (int)bd.battery << endl;
                     break;
                 case 10:
-                    cout << "Control: " << (int)Flight::MODE_NOT_SUPPORT << endl;
+                    cout << "Control: " << (int)Flight::MODE_NOT_SUPPORTED << endl;
                     cout << "Device:  " << (int)bd.ctrlInfo.deviceStatus << endl;
                     cout << "Status:  " << (int)bd.ctrlInfo.flightStatus << endl;
                     break;
@@ -198,7 +199,7 @@ bool acCA(Script* script, UserData data)
 
 bool vsCA(Script* script, UserData data)
 {
-    script->getApi()->getSDKVersion();
+    script->getApi()->getDroneVersion();
 
     __DELETE(data);
     script->addTask(waitInput);

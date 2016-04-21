@@ -6,18 +6,18 @@
 #include <QTimer>
 #include <QTextStream>
 #ifdef GROUNDSTATION
-#include <QWebView>
-//#include <QWebEngineView>
+#include <QWebEngineView>
 #endif
 #include <QHBoxLayout>
 #include <QStandardItemModel>
 #include <QList>
 #include <QFile>
-
 #include <QComboBox>
 
 #include <fstream>
-#include "conboardsdktask.h"
+#ifdef SDK_DEV
+#include "uidev.h"
+#endif
 #include "QonboardSDK.h"
 
 using namespace DJI;
@@ -72,14 +72,12 @@ class DJIonboardSDK : public QMainWindow
     void wpRemovePoint();
 
     void initSDK();
-    void initScript();
     void initFlight();
     void initCamera();
     void initFollow();
     void initDisplay();
     void initWayPoint();
     void initVirtualRC();
-    void initGroundStation();
 
   private slots:
     //! @note too much slots, tired to rename.
@@ -185,8 +183,6 @@ class DJIonboardSDK : public QMainWindow
     void on_btn_flight_dataReset_clicked();
     void filght_autosend();
 
-    void on_btn_webLoad_clicked();
-
     void on_btn_log_clean_clicked();
     void on_btn_log_save_clicked();
 
@@ -237,10 +233,22 @@ class DJIonboardSDK : public QMainWindow
     void on_btn_rtk_read_clicked();
 
     //! @todo sort
-    void on_btn_script_run_clicked();
 
-private:
-    void rangeC(float32_t &c);
+    void on_btn_webTool_clicked(bool checked);
+
+  private:
+#ifdef GROUNDSTATION
+  private:
+    void initGroundStation();
+    void initMap();
+
+  private slots:
+    void on_btn_webLoad_clicked();
+    void on_btn_webRefresh_clicked();
+
+  private:
+    QWebEngineView *webView;
+#endif // GROUNDSTATION
 
   private:
     Ui::DJIonboardSDK *ui;
@@ -252,10 +260,10 @@ private:
 
     Flight *flight;
     uint8_t flightFlag;
-    float32_t flightx;
-    float32_t flighty;
-    float32_t flightz;
-    float32_t flightyaw;
+    float32_t flightX;
+    float32_t flightY;
+    float32_t flightZ;
+    float32_t flightYaw;
     QTimer *autoSend;
 
     VirtualRC *vrc;
@@ -278,16 +286,10 @@ private:
 
     QTimer *timerBroadcast;
 
-#ifdef GROUNDSTATION
-    QWebView *webView;
-//! @note a better web engine, not available now
-//    QWebEngineView *webView;
-#endif
-
-    ConboardSDKScript *scriptSDK;
-    std::fstream *scriptlog;
-
-    size_t broadcastTimes;
+#ifdef SDK_DEV
+    UIDev *dev;
+#endif // SDK_DEV
+    void functionAlloc();
 };
 
 #endif // DJIONBOARDSDK_H

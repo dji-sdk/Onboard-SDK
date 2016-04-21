@@ -129,7 +129,7 @@ class Flight
         GPS_ATTI_CTRL_YAW_RATE = 98,
         ATTI_CTRL_YAW_RATE = 99,
         ATTI_CTRL_STOP = 100,
-        MODE_NOT_SUPPORT = 0xFF,
+        MODE_NOT_SUPPORTED = 0xFF
     };
 
     /*! @note
@@ -145,7 +145,8 @@ class Flight
 
     void task(TASK taskname, CallBack TaskCallback = 0, UserData userData = 0);
     void setArm(bool enable, CallBack ArmCallback = 0, UserData userData = 0);
-    void setFlight(FlightData *data);
+    void control(uint8_t flag, float32_t x, float32_t y, float32_t z, float32_t yaw);
+    void setFlight(FlightData *data); //! @note old interface
 
     QuaternionData getQuaternion() const;
     EulerianAngle getEulerianAngle() const;

@@ -25,11 +25,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#ifdef STM32
 #include <memory>
-#else
-#include <memory.h>
-#endif // STM32
 #include "DJI_Type.h"
 
 #define _SDK_MAX_RECV_SIZE (BUFFER_SIZE)

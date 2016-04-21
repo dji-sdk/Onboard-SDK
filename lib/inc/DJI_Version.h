@@ -47,24 +47,13 @@ namespace onboardSDK
 typedef uint32_t Version;
 
 const Version versionM100_23 = (MAKE_VERSION(2, 3, 10, 0));
-const Version versionM100_30 = (MAKE_VERSION(3, 0, 10, 0));
 const Version versionM100_31 = (MAKE_VERSION(3, 1, 10, 0));
-const Version versionA3_30 = (MAKE_VERSION(3, 0, 100, 0));
 const Version versionA3_31 = (MAKE_VERSION(3, 1, 100, 0));
+const Version SDK_VERSION = versionM100_31;
 
-#ifdef SDK_VERSION_2_3
-const Version SDK_VERSION = (MAKE_VERSION(2, 3, 10, 0));
-#endif
-
-#ifdef SDK_VERSION_3_1_M100
-const Version SDK_VERSION = (MAKE_VERSION(3, 1, 10, 0));
-#define SDK_VERSION_3_1
-#endif
-
-#ifdef SDK_VERSION_3_1_A3
-const Version SDK_VERSION = (MAKE_VERSION(3, 1, 100, 0));
-#define SDK_VERSION_3_1
-#endif
+#ifdef SDK_DEV
+#include "dev.h"
+#endif // SDK_DEV
 
 } // namespace DJI
 } // namespace onboardSDK

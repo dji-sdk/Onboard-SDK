@@ -30,3 +30,4 @@ sample/Linux-Cmdline/output/DJI_Onboard_API_Cmdline_Test
 sample/STM32/OnBoardSDK_STM32/Project/Objects/
 sample/commandline/manifoldPlatform/bin/a.out
 sample/STM32/OnBoardSDK_STM32/Project/OnBoardSDK_STM32.uvguix.oneno
+sample/commandline/build-conboardSDK-Desktop_Qt_5_4_2_MinGW_32bit-Debug/

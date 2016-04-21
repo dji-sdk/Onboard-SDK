@@ -27,29 +27,6 @@
 
 #define MSG_ENABLE_FLAG_LEN 2
 
-#define HAS_TIME 0x0001
-#define HAS_Q 0x0002
-#define HAS_A 0x0004
-#define HAS_V 0x0008
-#define HAS_W 0x0010
-#define HAS_POS 0x0020
-#ifdef SDK_VERSION_3_1_A3
-#define HAS_GPS 0x0040
-#define HAS_RTK 0x0080
-#define HAS_MAG 0x0100
-#define HAS_RC 0x0200
-#define HAS_GIMBAL 0x0400
-#define HAS_STATUS 0x0800
-#define HAS_BATTERY 0x1000
-#define HAS_DEVICE 0x2000
-#else
-#define HAS_MAG 0x0040
-#define HAS_RC 0x0080
-#define HAS_GIMBAL 0x0100
-#define HAS_STATUS 0x0200
-#define HAS_BATTERY 0x0400
-#define HAS_DEVICE 0x0800
-#endif // SDK_VERSION_3_1_A3
 //----------------------------------------------------------------------
 // App layer function
 //----------------------------------------------------------------------
@@ -90,9 +67,7 @@ typedef struct VersionData
 {
     unsigned short version_ack;
     unsigned int version_crc;
-#ifdef SDK_VERSION_3_1
     char version_ID[11];
-#endif // SDK_VERSION_3_1
     char version_name[32];
     DJI::onboardSDK::Version version;
 } VersionData;

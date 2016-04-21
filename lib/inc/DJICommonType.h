@@ -28,6 +28,17 @@ typedef struct SpaceVector
     double z;
 } SpaceVector;
 
+/*! @todo range mathematial class
+class Angle
+{
+  public:
+    Angle(double degree = 0);
+
+  private:
+    double degree;
+};
+*/
+
 typedef double Angle;
 
 typedef struct EulerianAngle

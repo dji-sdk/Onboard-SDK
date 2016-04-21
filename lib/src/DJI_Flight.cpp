@@ -38,6 +38,17 @@ void Flight::setArm(bool enable, CallBack ArmCallback, UserData userData)
               ArmCallback ? ArmCallback : Flight::armCallback, userData);
 }
 
+void Flight::control(uint8_t flag, float32_t x, float32_t y, float32_t z, float32_t yaw)
+{
+    FlightData data;
+    data.flag = flag;
+    data.x = x;
+    data.y = y;
+    data.z = z;
+    data.yaw = yaw;
+    setFlight(&data);
+}
+
 void Flight::setFlight(FlightData *data)
 {
     api->send(0, encrypt, SET_CONTROL, CODE_CONTROL, (unsigned char *)data, sizeof(FlightData));
@@ -80,11 +91,9 @@ Flight::Status Flight::getStatus() const
 
 Flight::Mode Flight::getControlMode() const
 {
-#ifndef SDK_VERSION_2_3
-    return (Flight::Mode)api->getBroadcastData().ctrlInfo.mode;
-#else
-    return MODE_NOT_SUPPORT;
-#endif // SDK_VERSION_2_3
+    if (api->getSDKVersion() != versionM100_23)
+        return (Flight::Mode)api->getBroadcastData().ctrlInfo.mode;
+    return MODE_NOT_SUPPORTED;
 }
 
 Angle Flight::getYaw() const
@@ -196,7 +205,7 @@ FlightUnitTest::FlightUnitTest()
 //! @todo implement
 bool FlightUnitTest::mathematicalMethod()
 {
-    // EulerianAngle data;
+    //    EulerianAngle data;
     // data.yaw =
     return true;
 }

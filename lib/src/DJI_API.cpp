@@ -11,17 +11,17 @@ uint8_t DJI::onboardSDK::encrypt = 1;
 uint8_t DJI::onboardSDK::encrypt = 0;
 #endif // USE_ENCRYPT
 
-CoreAPI::CoreAPI(HardDriver *Driver, bool userCallbackThread, CallBack userRecvCallback,
-                 UserData UserData)
+CoreAPI::CoreAPI(HardDriver *Driver, Version SDKVersion, bool userCallbackThread,
+                 CallBack userRecvCallback, UserData userData)
 {
     CallBackHandler handler;
     handler.callback = userRecvCallback;
-    handler.userData = UserData;
-    init(Driver, handler, userCallbackThread);
+    handler.userData = userData;
+    init(Driver, handler, userCallbackThread, SDKVersion);
 }
 
 void CoreAPI::init(HardDriver *Driver, CallBackHandler userRecvCallback,
-                   bool userCallbackThread)
+                   bool userCallbackThread, Version SDKVersion)
 {
     driver = Driver;
     // driver->init();
@@ -50,20 +50,13 @@ void CoreAPI::init(HardDriver *Driver, CallBackHandler userRecvCallback,
     recvCallback.callback = userRecvCallback.callback;
     recvCallback.userData = userRecvCallback.userData;
 
-#ifndef SDK_VERSION_2_3
-    broadcastData.timeStamp.time = 0;
-    broadcastData.timeStamp.nanoTime = 0;
-    broadcastData.timeStamp.syncFlag = 0;
-#else
-    broadcastData.timeStamp = 0;
-#endif // SDK_VERSION_2_3
-
+    callbackThread = false;
     hotPointData = false;
     followData = false;
     wayPointData = false;
     callbackThread = userCallbackThread;
 
-    versionData.version = SDK_VERSION;
+    versionData.version = SDKVersion;
 
     //! @todo siplify code above
     memset((unsigned char *)&broadcastData, 0, sizeof(broadcastData));
@@ -71,9 +64,10 @@ void CoreAPI::init(HardDriver *Driver, CallBackHandler userRecvCallback,
     setup();
 }
 
-CoreAPI::CoreAPI(HardDriver *Driver, CallBackHandler userRecvCallback, bool userCallbackThread)
+CoreAPI::CoreAPI(HardDriver *Driver, Version SDKVersion, CallBackHandler userRecvCallback,
+                 bool userCallbackThread)
 {
-    init(Driver, userRecvCallback, userCallbackThread);
+    init(Driver, userRecvCallback, userCallbackThread, SDKVersion);
     getSDKVersion();
 }
 
@@ -144,7 +138,7 @@ void CoreAPI::ack(req_id_t req_id, unsigned char *ackdata, int len)
     this->ackInterface(&param);
 }
 
-void CoreAPI::getSDKVersion(CallBack callback, UserData userData)
+void CoreAPI::getDroneVersion(CallBack callback, UserData userData)
 {
     versionData.version_ack = ACK_COMMON_NO_RESPONSE;
     versionData.version_crc = 0x0;
@@ -155,7 +149,7 @@ void CoreAPI::getSDKVersion(CallBack callback, UserData userData)
     unsigned char cmd_data = 0;
 
     send(2, 0, SET_ACTIVATION, CODE_GETVERSION, (unsigned char *)&cmd_data, 1, cmd_timeout,
-         retry_time, callback ? callback : CoreAPI::getSDKVersionCallback, userData);
+         retry_time, callback ? callback : CoreAPI::getDroneVersionCallback, userData);
 }
 
 void CoreAPI::activate(ActivateData *data, CallBack callback, UserData userData)
@@ -188,10 +182,22 @@ void CoreAPI::setBroadcastFreq(uint8_t *dataLenIs16, CallBack callback, UserData
     //! @note see also enum BROADCAST_FREQ in DJI_API.h
     for (int i = 0; i < 16; ++i)
     {
-        if (i < 12)
-            dataLenIs16[i] = (dataLenIs16[i] > 5 ? 5 : dataLenIs16[i]);
+        if (versionData.version == versionM100_31)
+            if (i < 12)
+            {
+                dataLenIs16[i] = (dataLenIs16[i] > 5 ? 5 : dataLenIs16[i]);
+            }
+            else
+                dataLenIs16[i] = 0;
         else
-            dataLenIs16[i] = 0;
+        {
+            if (i < 14)
+            {
+                dataLenIs16[i] = (dataLenIs16[i] > 5 ? 5 : dataLenIs16[i]);
+            }
+            else
+                dataLenIs16[i] = 0;
+        }
     }
     send(2, 0, SET_ACTIVATION, CODE_FREQUENCY, dataLenIs16, 16, 100, 1,
          callback ? callback : CoreAPI::setFrequencyCallback, userData);
@@ -227,7 +233,7 @@ HardDriver *CoreAPI::getDriver() const { return driver; }
 
 void CoreAPI::setDriver(HardDriver *value) { driver = value; }
 
-void CoreAPI::getSDKVersionCallback(CoreAPI *This, Header *header, UserData userData __UNUSED)
+void CoreAPI::getDroneVersionCallback(CoreAPI *This, Header *header, UserData userData __UNUSED)
 {
     unsigned char *ptemp = ((unsigned char *)header) + sizeof(Header);
 
@@ -236,17 +242,17 @@ void CoreAPI::getSDKVersionCallback(CoreAPI *This, Header *header, UserData user
     This->versionData.version_crc =
         ptemp[0] + (ptemp[1] << 8) + (ptemp[2] << 16) + (ptemp[3] << 24);
     ptemp += 4;
-#ifdef SDK_VERSION_3_1
-    memcpy(This->versionData.version_ID, ptemp, 11);
-    ptemp += 11;
-#endif
+    if (This->versionData.version != versionM100_23)
+    {
+        memcpy(This->versionData.version_ID, ptemp, 11);
+        ptemp += 11;
+    }
     memcpy(This->versionData.version_name, ptemp, 32);
 
     API_LOG(This->driver, STATUS_LOG, "version ack = %d", This->versionData.version_ack);
     API_LOG(This->driver, STATUS_LOG, "version crc = 0x%X", This->versionData.version_crc);
-#ifdef SDK_VERSION_3_1
-    API_LOG(This->driver, STATUS_LOG, "version ID = %.11s", This->versionData.version_ID);
-#endif
+    if (This->versionData.version != versionM100_23)
+        API_LOG(This->driver, STATUS_LOG, "version ID = %.11s", This->versionData.version_ID);
     API_LOG(This->driver, STATUS_LOG, "version name = %.32s\r\n",
             This->versionData.version_name);
 }
@@ -263,10 +269,6 @@ void CoreAPI::activateCallback(CoreAPI *This, Header *header, UserData userData 
         {
             case ACK_ACTIVE_SUCCESS:
                 API_LOG(This->driver, STATUS_LOG, "Activation Successfully\n");
-
-                This->getDriver()->lockMSG();
-                This->broadcastData.activation = 1;
-                This->getDriver()->freeMSG();
 
                 if (This->accountData.encKey)
                     This->setKey(This->accountData.encKey);
@@ -298,7 +300,7 @@ void CoreAPI::activateCallback(CoreAPI *This, Header *header, UserData userData 
                 break;
             case ACK_ACTIVE_VERSION_ERROR:
                 API_LOG(This->driver, ERROR_LOG, "activate SDK version did not match\n");
-                This->getSDKVersion();
+                This->getDroneVersion();
                 break;
             default:
                 if (!This->decodeACKStatus(ack_data))
@@ -307,9 +309,6 @@ void CoreAPI::activateCallback(CoreAPI *This, Header *header, UserData userData 
                 }
                 break;
         }
-        This->getDriver()->lockMSG();
-        This->broadcastData.activation = 0;
-        This->getDriver()->freeMSG();
     }
     else
     {
