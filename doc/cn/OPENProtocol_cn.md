@@ -481,6 +481,7 @@
 
 #### 命令码 0x10 设置推送数据频率
 
+M100: 
 <table>
 <tr>
   <th>数据类型</th>
@@ -553,6 +554,104 @@
 <tr>
   <td>12</td>
   <td>4</td>
+  <td>保留</td>
+</tr>
+<tr>
+  <td>应答值</td>
+  <td>0</td>
+  <td>2</td>
+  <td>返回码:<ul>
+    <li>0x0000:成功</li>
+    <li>0x0001:参数非法</li>
+    </ul></td>
+</tr>
+
+</table>
+
+A3/M600:
+
+<table>
+<tr>
+  <th>数据类型</th>
+  <th>偏移（字节）</th>
+  <th>大小（字节）</th>
+  <th>描述</th>
+</tr>
+
+<tr>
+  <td rowspan="15">命令值</td>
+  <td>0</td>
+  <td>1</td>
+  <td>时间戳</td>
+</tr>
+<tr>
+  <td>1</td>
+  <td>1</td>
+  <td>姿态四元数</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td>1</td>
+  <td>加速度</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td>1</td>
+  <td>速度</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td>1</td>
+  <td>角速度</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td>1</td>
+  <td>GPS 位置, 海拔高度, 相对地面高度</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td>1</td>
+  <td>GPS 详细信息</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td>1</td>
+  <td>RTK 详细信息</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td>1</td>
+  <td>磁感计数值</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td>1</td>
+  <td>遥控器通道值</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td>1</td>
+  <td>云台姿态</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td>1</td>
+  <td>飞行状态</td>
+</tr>
+<tr>
+  <td>12</td>
+  <td>1</td>
+  <td>剩余电池百分比</td>
+</tr>
+<tr>
+  <td>13</td>
+  <td>1</td>
+  <td>控制设备</td>
+</tr>
+<tr>
+  <td>14</td>
+  <td>2</td>
   <td>保留</td>
 </tr>
 <tr>

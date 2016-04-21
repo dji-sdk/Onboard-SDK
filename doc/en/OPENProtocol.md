@@ -479,6 +479,8 @@ Each CMD Set contains some CMD IDs for different operations.
 </table>
 #### CMD ID 0x10: Set 'Flight Data' frequency
 
+M100:
+
 <table>
 <tr>
   <th>Data Type</th>
@@ -551,6 +553,104 @@ Each CMD Set contains some CMD IDs for different operations.
 <tr>
   <td>12</td>
   <td>4</td>
+  <td>reserved</td>
+</tr>
+<tr>
+  <td>ACK Val</td>
+  <td>0</td>
+  <td>2</td>
+  <td>Return Code<ul>
+    <li>0x0000:  success</li>
+    <li>0x0001:  param error</li>
+    </ul></td>
+</tr>
+
+</table>
+
+A3:
+
+<table>
+<tr>
+  <th>Data Type</th>
+  <th>Offset (byte)</th>
+  <th>Size (byte)</th>
+  <th>Description</th>
+</tr>
+
+<tr>
+  <td rowspan="15">CMD Val</td>
+  <td>0</td>
+  <td>1</td>
+  <td>time stamp</td>
+</tr>
+<tr>
+  <td>1</td>
+  <td>1</td>
+  <td>attitude quaternion</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td>1</td>
+  <td>linear acceleration</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td>1</td>
+  <td>linear velocity</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td>1</td>
+  <td>angular velocity</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td>1</td>
+  <td>GPS location, altitude and height</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td>1</td>
+  <td>GPS detailed information</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td>1</td>
+  <td>RTK detailed information</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td>1</td>
+  <td>magnetometer</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td>1</td>
+  <td>remote controller data</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td>1</td>
+  <td>roll, pitch and yaw of gimbal </td>
+</tr>
+<tr>
+  <td>11</td>
+  <td>1</td>
+  <td>flight status</td>
+</tr>
+<tr>
+  <td>12</td>
+  <td>1</td>
+  <td>battery info</td>
+</tr>
+<tr>
+  <td>13</td>
+  <td>1</td>
+  <td>control device</td>
+</tr>
+<tr>
+  <td>14</td>
+  <td>2</td>
   <td>reserved</td>
 </tr>
 <tr>
