@@ -89,7 +89,6 @@ void DJI::onboardSDK::CoreAPI::broadcast(Header *header)
     passData(*enableFlag, dataflag, &broadcastData.v, pdata, sizeof(VelocityData), len);
     passData(*enableFlag, dataflag, &broadcastData.w, pdata, sizeof(CommonData), len);
     passData(*enableFlag, dataflag, &broadcastData.pos, pdata, sizeof(PositionData), len);
-    passData(*enableFlag, dataflag, &broadcastData.mag, pdata, sizeof(MagnetData), len);
 
     if (versionData.version == versionA3_31)
     {
@@ -100,6 +99,7 @@ void DJI::onboardSDK::CoreAPI::broadcast(Header *header)
         if (((*enableFlag) & 0x0080))
             API_LOG(driver, RTK_LOG, "receive RTK data %lld\n", driver->getTimeStamp());
     }
+    passData(*enableFlag, dataflag, &broadcastData.mag, pdata, sizeof(MagnetData), len);
     passData(*enableFlag, dataflag, &broadcastData.rc, pdata, sizeof(RadioData), len);
     passData(*enableFlag, dataflag, &broadcastData.gimbal, pdata,
              sizeof(GimbalData) - (versionData.version == versionM100_23) ? 1 : 0, len);
