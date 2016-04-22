@@ -170,7 +170,7 @@ ONBOARDSDK_SRC += \
    ../../../lib/src/DJI_HotPoint.cpp \
    ../../../lib/src/DJI_Mission.cpp \
    ../../../lib/src/DJI_Follow.cpp \
-   ../../../lib/src/DJI_Broadcast.cpp \
+   #../../../lib/src/DJI_Broadcast.cpp \
    ../../../lib/src/DJI_WayPoint.cpp
 
 ONBOARDSDK_INC += \
@@ -189,7 +189,7 @@ ONBOARDSDK_INC += \
     ../../../lib/inc/DJI_HotPoint.h \
     ../../../lib/inc/DJI_Mission.h \
     ../../../lib/inc/DJI_Follow.h \
-    ../../../lib/inc/DJI_Broadcast.h \
+    #../../../lib/inc/DJI_Broadcast.h \
     ../../../lib/inc/DJI_WayPoint.h
 
 SOURCES += $$ONBOARDSDK_SRC
