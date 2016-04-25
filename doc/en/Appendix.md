@@ -289,12 +289,12 @@ Attitude control accuracy is about 0.5 degrees, speed control accuracy of about 
   <td>0-5, 5 is the best condition</td>
 </tr>
 <tr>
-  <td rowspan="18"> GPS detailed info (A3 only)</td>
+  <td rowspan="8"> GPS detailed info (A3 only)</td>
   <td>date</td>
   <td>uint32_t</td>
   <td>date</td>
   <td>yy-mm-dd</td>
-  <td rowspan="18">50Hz</td>
+  <td rowspan="8">50Hz</td>
 </tr>
 <tr>
   <td>time</td>
@@ -339,72 +339,12 @@ Attitude control accuracy is about 0.5 degrees, speed control accuracy of about 
   <td>cm/s</td>
 </tr>
 <tr>
-  <td>HDOP</td>
-  <td>float32</td>
-  <td>horizontal dilution of precision</td>
-  <td>---</td>
-</tr>
-<tr>
-  <td>PDOP</td>
-  <td>float32</td>
-  <td>positional dilution of precision</td>
-  <td>---</td>
-</tr>
-<tr>
-  <td>gps_fix</td>
-  <td>float32</td>
-  <td>reserved as 3</td>
-  <td>---</td>
-</tr>
-<tr>
-  <td>gnss_flag</td>
-  <td>float32</td>
-  <td>vertical position accuracy, reservd as 0</td>
-  <td>---</td>
-</tr>
-<tr>
-  <td>hacc</td>
-  <td>float32</td>
-  <td>horizontal position accuracy, reservd as 0</td>
-  <td>---</td>
-</tr>
-<tr>
-  <td>sacc</td>
-  <td>float32</td>
-  <td>speed accuracy, reservd as 0</td>
-  <td>---</td>
-</tr>
-<tr>
-  <td>gps_used</td>
-  <td>uint32_t</td>
-  <td>number of GPS satellites used</td>
-  <td>number</td>
-</tr>
-<tr>
-  <td>gln_used</td>
-  <td>uint32_t</td>
-  <td>number of GLONASS satellites used</td>
-  <td>number</td>
-</tr>
-<tr>
-  <td>sv_num</td>
-  <td>uint16_t</td>
-  <td>total nuber of satellites used</td>
-  <td>number/td>
-</tr>
-<tr>
-  <td>gln_used</td>
-  <td>uint16_t</td>
-  <td>GPS state</td>
-  <td>---</td>
-</tr>
-<tr>
-  <td rowspan="19"> RTK detailed info (A3 only)</td>
+  <td rowspan="11"> RTK detailed info (A3 only)</td>
   <td>date</td>
   <td>uint32_t</td>
   <td>date</td>
   <td>yy-mm-dd</td>
-  <td rowspan="19">50Hz</td>
+  <td rowspan="11">50Hz</td>
 </tr>
 <tr>
   <td>time</td>
@@ -431,24 +371,6 @@ Attitude control accuracy is about 0.5 degrees, speed control accuracy of about 
   <td>m</td>
 </tr>
 <tr>
-  <td>longitude_single</td>
-  <td>int32_t</td>
-  <td>longitude by single point positioning</td>
-  <td>degree*10^7</td>
-</tr>
-<tr>
-  <td>latitude_single</td>
-  <td>int32_t</td>
-  <td>latitude by single point positioning</td>
-  <td>degree*10^7</td>
-</tr>
-<tr>
-  <td>AMSL_single</td>
-  <td>int32_t</td>
-  <td>AMSL by single point positioning</td>
-  <td>cm</td>
-</tr>
-<tr>
   <td>vel_N</td>
   <td>float32</td>
   <td>velocity in North direction</td>
@@ -472,46 +394,15 @@ Attitude control accuracy is about 0.5 degrees, speed control accuracy of about 
   <td>angle between antenna baseline and South</td>
   <td>degree</td>
 </tr>
-<tr>
-  <td>sv_num_RTK</td>
-  <td>uint8_t</td>
-  <td>number of satellites used by RTK</td>
-  <td>number</td>
-</tr>
-<tr>
-  <td>sv_num_Single</td>
-  <td>uint8_t</td>
-  <td>number of satellites used by single point position</td>
-  <td>number</td>
-</tr>
-<tr>
-  <td>HDOP</td>
-  <td>float32</td>
-  <td>水平分量精度因子</td>
-  <td>horizontal dilution of precision</td>
-</tr>
-<tr>
-  <td>PDOP</td>
-  <td>float32</td>
-  <td>positional dilution of precision</td>
-  <td>---</td>
-</tr>
-<tr>
   <td>position_flag</td>
-  <td>uint8_t[6]</td>
+  <td>uint8_t</td>
   <td>positioning flag</td>
-  <td>0:single point;1:RTK;2:certain direction;3:reserve</td>
+  <td></td>
 </tr>
 <tr>
-  <td>gps_state</td>
-  <td>uint16_t</td>
-  <td>GPS state</td>
-  <td>---</td>
-</tr>
-<tr>
-  <td>rtk_renew_flag</td>
-  <td>uint16_t</td>
-  <td>RTK refreshed flag</td>
+  <td>yaw_flag</td>
+  <td>uint8_t</td>
+  <td>yaw flag</td>
   <td>---</td>
 </tr>
 <tr>
