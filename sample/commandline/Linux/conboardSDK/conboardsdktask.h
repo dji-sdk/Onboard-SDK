@@ -13,6 +13,7 @@
 #include <cmdWayPoint.h>
 #include <cmdCamera.h>
 
+using namespace DJI;
 using namespace DJI::onboardSDK;
 
 class ConboardSDKScript : public Script
