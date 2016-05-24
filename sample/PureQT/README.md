@@ -83,6 +83,8 @@ Now you only need a serialport driver
 
 * cd qtserialport-build
 
+* qmake ../qtserialport/qtserialport.pro
+
 * make
 
 * sudo make install
@@ -96,8 +98,6 @@ Continue and build the 5.3 version's source code.
 * git checkout origin/5.3
 
 * cd ../qtserialport-build/
-
-* qmake ../qtserialport/qtserialport.pro
 
 * make
 
