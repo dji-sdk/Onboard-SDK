@@ -342,20 +342,13 @@ typedef struct RTKData
     float64_t longitude;
     float64_t latitude;
     float32_t Hmsl;
-    int32_t longitudeS;
-    int32_t latitudeS;
-    int32_t HmslS;
     float32_t velocityNorth;
     float32_t velocityEast;
     float32_t velocityGround;
     int16_t yaw;
-    uint8_t SVNS;
-    uint8_t SVNP;
-    float32_t Hdop;
-    float32_t Pdop;
-    uint8_t posFlag[6];
-    uint16_t status;
-    uint16_t rtkNew;
+    uint8_t posFlag;
+    uint8_t yawFlag;
+    
 } RTKData;
 
 //! @todo rename to a final version
@@ -369,16 +362,7 @@ typedef struct GPSData
     float32_t velocityNorth;
     float32_t velocityEast;
     float32_t velocityGround;
-    float32_t Hdop;
-    float32_t Pdop;
-    float32_t GNSSFlag;
-    float32_t GNSSFix;
-    float32_t hacc;
-    float32_t sacc;
-    uint32_t GPSUsed;
-    uint32_t GNSSUsed;
-    uint16_t SVNum;
-    uint16_t GPSStatus;
+
 } GPSData;
 
 #ifndef SDK_DEV
