@@ -102,11 +102,11 @@ void DJI::onboardSDK::CoreAPI::broadcast(Header *header)
     passData(*enableFlag, dataflag, &broadcastData.mag, pdata, sizeof(MagnetData), len);
     passData(*enableFlag, dataflag, &broadcastData.rc, pdata, sizeof(RadioData), len);
     passData(*enableFlag, dataflag, &broadcastData.gimbal, pdata,
-             sizeof(GimbalData) - (versionData.version == versionM100_23) ? 1 : 0, len);
+             sizeof(GimbalData) - ((versionData.version == versionM100_23) ? 1 : 0), len);
     passData(*enableFlag, dataflag, &broadcastData.status, pdata, sizeof(uint8_t), len);
     passData(*enableFlag, dataflag, &broadcastData.battery, pdata, sizeof(BatteryData), len);
     passData(*enableFlag, dataflag, &broadcastData.ctrlInfo, pdata,
-             sizeof(CtrlInfoData) - ((versionData.version) == versionM100_23) ? 1 : 0, len);
+             sizeof(CtrlInfoData) - ((versionData.version == versionM100_23) ? 1 : 0), len);
     driver->freeMSG();
 
     if (broadcastCallback.callback)
