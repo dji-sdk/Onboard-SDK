@@ -1,3 +1,4 @@
+#Do not use this sample, this sample is not maintained for a long time
 #DJI Onboard SDK Command Line Sample
 
 ##Intro
