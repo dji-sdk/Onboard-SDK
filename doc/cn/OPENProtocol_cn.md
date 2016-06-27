@@ -1,3 +1,5 @@
+#### 本文档已停止维护, 请移步到DJI开发者官网的 <https://developer.dji.com/onboard-sdk/documentation/introduction/index.html> 查看最新版本. 
+
 #Onboard SDK 开放协议说明
 ---
 

@@ -1,3 +1,5 @@
+#### 本文档已停止维护, 请移步到DJI开发者官网的 <https://developer.dji.com/onboard-sdk/documentation/application-development-guides/ground-station-programming-guide.html> 查看最新版本. 
+
 # 地面站编程指南
 
 本文档记录了如何使用地面站接口进行航点、热点和跟随飞行的工作流程。

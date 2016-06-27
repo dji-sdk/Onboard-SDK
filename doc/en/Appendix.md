@@ -1,3 +1,5 @@
+#### This documentation is now deprecated, please refer to <https://developer.dji.com/onboard-sdk/documentation/appendix/index.html> in DJI Developer Website.
+
 # Appendix
 
 ## Coordinate Frames

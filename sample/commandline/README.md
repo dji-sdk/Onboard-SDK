@@ -1,4 +1,6 @@
-#A completely revamped version of the command line sample is coming soon!
+#### This documentation is now deprecated, please refer to <https://developer.dji.com/onboard-sdk/documentation/github-platform-docs/commandline/README.html> in DJI Developer Website. 
+
+#### A completely revamped version of the command line sample is coming soon! 
 
 #DJI Onboard SDK Command Line Sample
 

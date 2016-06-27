@@ -1,4 +1,7 @@
+#### This documentation is now deprecated, please refer to <https://developer.dji.com/onboard-sdk/documentation/github-platform-docs/PureQT/README.html> in DJI Developer Website. 
+
 #DJI Onboard SDK QT Sample
+
 ##Intro
 This example, which can run in both Windows and Linux platform, aims to help you understand and play with the basic flight procedures including:
 

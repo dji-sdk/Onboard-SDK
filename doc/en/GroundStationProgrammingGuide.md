@@ -1,3 +1,5 @@
+#### This documentation is now deprecated, please refer to <https://developer.dji.com/onboard-sdk/documentation/application-development-guides/ground-station-programming-guide.html> in DJI Developer Website.
+
 # Ground Station Programming Guide
 
 This file is a simple roadmap of how to implement groudstation tasks, i.e. the waypoint task, the hotpoint task and the follow me task.

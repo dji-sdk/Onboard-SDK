@@ -1,3 +1,5 @@
+#### 本文档已停止维护, 请移步到DJI开发者官网的 <https://developer.dji.com/onboard-sdk/documentation/quick-start/index.html> 查看最新版本. 
+
 # 激活指南
 本文档的目的在于帮助开发者明白并快速对飞行平台进行激活。
 

@@ -1,3 +1,5 @@
+#### 本文档已停止维护, 请移步到DJI开发者官网的 <https://developer.dji.com/onboard-sdk/documentation/application-development-guides/programming-guide.html> 查看最新版本. 
+
 # Onboard SDK 编程指南
 ---
 本文当中数据类型及函数在`DJI_Type.h`与`DJI_API.h`中实现。具体实现方式可参阅DJI_LIB中的源代码。  

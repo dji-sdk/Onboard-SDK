@@ -1,3 +1,5 @@
+#### This documentation is now deprecated, please refer to <https://developer.dji.com/onboard-sdk/documentation/introduction/ground-station-protocol.html> in DJI Developer Website.
+
 # Ground Station Protocol
 
 This part is about Goundstation related functions(Waypoint, Hotpoint and Follow Me), which has been introduced briefly in the [OPEN Protocol](OPENProtocol.md#cmd-set-0x03-ground-station-cmd-set).

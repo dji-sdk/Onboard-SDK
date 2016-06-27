@@ -1,3 +1,5 @@
+#### This documentation is now deprecated, please refer to <https://developer.dji.com/onboard-sdk/documentation/introduction/data-transparent-transmission.html> in DJI Developer Website.
+
 # Data Transparent Transmission
 
 ## Intro

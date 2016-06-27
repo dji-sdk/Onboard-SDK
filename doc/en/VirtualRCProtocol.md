@@ -1,3 +1,5 @@
+#### This documentation is now deprecated, please refer to <https://developer.dji.com/onboard-sdk/documentation/introduction/virtual-rc-protocol.html> in DJI Developer Website.
+
 # Virtual RC
 
 ## Introduction

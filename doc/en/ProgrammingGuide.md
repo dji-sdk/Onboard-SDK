@@ -1,3 +1,5 @@
+#### This documentation is now deprecated, please refer to <https://developer.dji.com/onboard-sdk/documentation/application-development-guides/programming-guide.html> in DJI Developer Website.
+
 # Onboard SDK Programming Guide
 ---
 All structures and functions are implemented in `DJI_Type.h`and`DJI_API.h`. For more details, please refer source code.

@@ -1,3 +1,5 @@
+#### This documentation is now deprecated, please refer to <https://developer.dji.com/onboard-sdk/documentation/appendix/FAQ.html> in DJI Developer Website.
+
 ## Onboard SDK & M100 FAQ
 
 ### 1. Is M100 compatible with DJI GO?

@@ -1,3 +1,5 @@
+#### This documentation is now deprecated, please refer to <https://developer.dji.com/onboard-sdk/documentation/quick-start/index.html> in DJI Developer Website.
+
 # Activation Guide
 This document aims to help developers to understand and quickly activate the flight platform.
 

@@ -1,3 +1,5 @@
+#### 本文档已停止维护, 请移步到DJI开发者官网的 <https://developer.dji.com/onboard-sdk/documentation/introduction/ground-station-protocol.html> 查看最新版本. 
+
 # 地面站接口说明
 
 本文档旨在介绍地面站功能（航点任务、热点环绕任务、跟随任务）的协议格式与数据结构，在阅读之前推荐阅读[开放协议中的地面站部份](OPENProtocol_cn.md#命令集-0x03-地面站功能类)。

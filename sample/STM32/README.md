@@ -1,3 +1,6 @@
+
+#### This documentation is now deprecated, please refer to <https://developer.dji.com/onboard-sdk/documentation/github-platform-docs/STM32/README.html> in DJI Developer Website. 
+
 [English](#dji-onboard-stm32-example-program) |  [中文](#dji-onboard-stm32-例程)
 
 #DJI Onboard STM32 例程

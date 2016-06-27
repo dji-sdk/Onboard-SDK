@@ -1,3 +1,5 @@
+#### 本文档已停止维护, 请移步到DJI开发者官网的 <https://developer.dji.com/onboard-sdk/documentation/introduction/data-transparent-transmission.html> 查看最新版本. 
+
 # 数据透传
 
 ---

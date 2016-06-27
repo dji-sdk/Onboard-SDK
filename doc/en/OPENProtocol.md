@@ -1,6 +1,11 @@
+#### This documentation is now deprecated, please refer to <https://developer.dji.com/onboard-sdk/documentation/introduction/index.html> in DJI Developer Website.
+
 # Onboard SDK OPEN Protocol  
+
 ---
+
 ## Protocol Frame
+
 The Protocal Frame is the smallest unit for transmission. It contains the Header, Data and the Tail as follows:
    ```
    |<---------------------Header-------------------------->|<--Data-->|<--Tail-->|
