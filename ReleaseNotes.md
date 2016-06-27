@@ -1,3 +1,5 @@
+#### This documentation is now deprecated, please refer to <https://developer.dji.com/onboard-sdk/documentation/appendix/updateNotes.html> in DJI Developer Website.
+
 [English Version](#summary-of-changes-from-firmware-23-to-firmware-31) | [中文版本](#固件与sdk接口更新从23升级至31)
 
 #Summary of changes from firmware 2.3 to firmware 3.1
@@ -5,7 +7,6 @@
 **Important**: Developers who update from 2.3 to 3.1 should update their programs (or the library) accordingly as well. This file is an index about what has been changed. For the detail usages and definations of new content, please refer to its corresponding document.  
 
 Developers beginning from firmware 3.1 should ignore this file and check out the documentation directly.
-
 
 ## Protocol Updates
 
@@ -18,9 +19,7 @@ Developers beginning from firmware 3.1 should ignore this file and check out the
 |0x04|0x00|Synchronize Timestamp|
 |0x05||Virtual RC Protocol|
 
-
 ### Changed
-
 
 |CMD SET|CMD ID|Difference|2.3|3.1|
 |-------|------|---|---|---|
@@ -28,7 +27,6 @@ Developers beginning from firmware 3.1 should ignore this file and check out the
 |0x00|0x01|App Level Removed|`typedef struct{ `<br>&nbsp;&nbsp;`uint32_t app_id;`<br>&nbsp;&nbsp;`uint32_t app_level;`<br>&nbsp;&nbsp;`uint32_t app_version;`<br>&nbsp;&nbsp;`uint8_t app_bundle_id[32];`<br>`} sdk_activation_info_t;`|`typedef struct{ `<br>&nbsp;&nbsp;`uint32_t app_id;`<br>&nbsp;&nbsp;~~`uint32_t app_level;`~~<br>&nbsp;&nbsp;`uint32_t app_version;`<br>&nbsp;&nbsp;`uint8_t app_bundle_id[32];`<br>`} sdk_activation_info_t;`|
 |0x00|0x01|Activation SDK Version|0x02030a00|M100: 0x03010a00 <br>A3: 0x03016400|
 |0x01|0x03|Attitude Control Flag|`bit7&6: HORI_MODE`<br>`bit5&4: VERT_MODE`<br>`bit3: YAW_MODE`<br>`bit2&1: HORI_FRAME`<br>`bit0: YAW_FRAME`|`bit7&6: HORI_MODE`<br>`bit5&4: VERT_MODE`<br>`bit3: YAW_MODE`<br>`bit2&1: HORI_FRAME`<br>`bit0: STABLE_FLAG`|
-
 
 ## Broadcast Data Updates
 

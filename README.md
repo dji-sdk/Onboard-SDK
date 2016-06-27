@@ -2,7 +2,7 @@
 
 [![Join the chat at https://gitter.im/dji-sdk/Onboard-SDK](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/dji-sdk/Onboard-SDK?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-## What Is This?
+## What is This?
 
 DJI's Onboard SDK allows you to connect your own Onboard Embedded System (OES) to a supported DJI vehicle [Matrice 100](http://www.dji.com/product/matrice100) or [Matrice 600](http://www.dji.com/product/matrice600) or flight controller [A3](http://www.dji.com/product/a3) using a common serial port (TTL UART). This setup opens up an exciting opportunity to integrate your own hardware with DJI's flying platforms.  New applications and commercial uses for aerial robotics awaits and we can't wait to see what you build!
 
