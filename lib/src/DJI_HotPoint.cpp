@@ -1,3 +1,14 @@
+/** @file DJI_HotPoint.cpp
+ *  @version 3.1.7
+ *  @date July 1st, 2016
+ *
+ *  @brief
+ *  Hotpoint (Point of Interest) flight Control API for DJI onboardSDK library
+ *
+ *  @copyright 2016 DJI. All rights reserved.
+ *
+ */
+
 #include "DJI_HotPoint.h"
 #include <string.h>
 
@@ -6,149 +17,149 @@ using namespace DJI::onboardSDK;
 
 HotPoint::HotPoint(CoreAPI *ControlAPI)
 {
-    api = ControlAPI;
+  api = ControlAPI;
 
-    initData();
+  initData();
 }
 
 void HotPoint::initData()
 {
-    data.version = 0;
+  hotPointData.version = 0;
 
-    data.height = api->getBroadcastData().pos.altitude;
-    data.longitude = api->getBroadcastData().pos.longitude;
-    data.latitude = api->getBroadcastData().pos.latitude;
+  hotPointData.height = api->getBroadcastData().pos.altitude;
+  hotPointData.longitude = api->getBroadcastData().pos.longitude;
+  hotPointData.latitude = api->getBroadcastData().pos.latitude;
 
-    data.radius = 10;
-    data.palstance = 15;
-    data.clockwise = 1;
-    data.startPoint = HotPoint::VIEW_NEARBY;
-    data.yawMode = HotPoint::YAW_INSIDE;
+  hotPointData.radius = 10;
+  hotPointData.yawRate = 15;
+  hotPointData.clockwise = 1;
+  hotPointData.startPoint = HotPoint::VIEW_NEARBY;
+  hotPointData.yawMode = HotPoint::YAW_INSIDE;
 }
 
 void HotPoint::start(CallBack callback, UserData userData)
 {
-    api->send(2, encrypt, SET_MISSION, CODE_HOTPOINT_START, &data, sizeof(data), 500, 2,
-              callback ? callback : startCallback, userData);
+  api->send(2, encrypt, SET_MISSION, CODE_HOTPOINT_START, &hotPointData, sizeof(hotPointData), 500, 2,
+      callback ? callback : startCallback, userData);
 }
 
 void HotPoint::stop(CallBack callback, UserData userData)
 {
-    uint8_t zero = 0;
-    api->send(2, encrypt, SET_MISSION, CODE_HOTPOINT_STOP, &zero, sizeof(zero), 500, 2,
-              callback ? callback : missionCallback, userData);
+  uint8_t zero = 0;
+  api->send(2, encrypt, SET_MISSION, CODE_HOTPOINT_STOP, &zero, sizeof(zero), 500, 2,
+      callback ? callback : missionCallback, userData);
 }
 
 void HotPoint::pause(bool isPause, CallBack callback, UserData userData)
 {
-    uint8_t data = isPause ? 0 : 1;
-    api->send(2, encrypt, SET_MISSION, CODE_HOTPOINT_SETPAUSE, &data, sizeof(data), 500, 2,
-              callback ? callback : missionCallback, userData);
+  uint8_t data = isPause ? 0 : 1;
+  api->send(2, encrypt, SET_MISSION, CODE_HOTPOINT_SETPAUSE, &data, sizeof(data), 500, 2,
+      callback ? callback : missionCallback, userData);
 }
 
-void HotPoint::updatePalstance(HotPoint::Palstance &Data, CallBack callback, UserData userData)
+void HotPoint::updateYawRate(HotPoint::YawRate &Data, CallBack callback, UserData userData)
 {
-    data.palstance = Data.palstance;
-    data.clockwise = Data.clockwise ? 1 : 0;
-    api->send(2, encrypt, SET_MISSION, CODE_HOTPOINT_PALSTANCE, &Data, sizeof(Data), 500, 2,
-              callback ? callback : missionCallback, userData);
+  hotPointData.yawRate = Data.yawRate;
+  hotPointData.clockwise = Data.clockwise ? 1 : 0;
+  api->send(2, encrypt, SET_MISSION, CODE_HOTPOINT_YAWRATE, &Data, sizeof(Data), 500, 2,
+      callback ? callback : missionCallback, userData);
 }
 
-void HotPoint::updatePalstance(float32_t palstance, bool isClockwise, CallBack callback,
-                               UserData userData)
+void HotPoint::updateYawRate(float32_t yawRate, bool isClockwise, CallBack callback,
+    UserData userData)
 {
-    Palstance p;
-    p.palstance = palstance;
-    p.clockwise = isClockwise ? 1 : 0;
-    updatePalstance(p, callback, userData);
+  YawRate p;
+  p.yawRate = yawRate;
+  p.clockwise = isClockwise ? 1 : 0;
+  updateYawRate(p, callback, userData);
 }
 
 void HotPoint::updateRadius(float32_t meter, CallBack callback, UserData userData)
 {
-    api->send(2, encrypt, SET_MISSION, CODE_HOTPOINT_RADIUS, &meter, sizeof(meter), 500, 2,
-              callback ? callback : missionCallback, userData);
+  api->send(2, encrypt, SET_MISSION, CODE_HOTPOINT_RADIUS, &meter, sizeof(meter), 500, 2,
+      callback ? callback : missionCallback, userData);
 }
 
 void HotPoint::resetYaw(CallBack callback, UserData userData)
 {
-    uint8_t zero = 0;
-    api->send(2, encrypt, SET_MISSION, CODE_HOTPOINT_SETYAW, &zero, sizeof(zero), 500, 2,
-              callback ? callback : missionCallback, userData);
+  uint8_t zero = 0;
+  api->send(2, encrypt, SET_MISSION, CODE_HOTPOINT_SETYAW, &zero, sizeof(zero), 500, 2,
+      callback ? callback : missionCallback, userData);
 }
 
 void HotPoint::readData(CallBack callback, UserData userData)
 {
-    uint8_t zero = 0;
-    api->send(2, encrypt, SET_MISSION, CODE_HOTPOINT_LOAD, &zero, sizeof(zero), 500, 2,
-              callback ? callback : missionCallback, userData);
+  uint8_t zero = 0;
+  api->send(2, encrypt, SET_MISSION, CODE_HOTPOINT_LOAD, &zero, sizeof(zero), 500, 2,
+      callback ? callback : missionCallback, userData);
 }
 
 void HotPoint::setData(const HotPointData &value)
 {
-    data = value;
-    data.version = 0;
+  hotPointData = value;
+  hotPointData.version = 0;
 }
 
 void HotPoint::setHotPoint(float64_t longtitude, float64_t latitude, float64_t altitude)
 {
-    data.longitude = longtitude;
-    data.latitude = latitude;
-    data.height = altitude;
+  hotPointData.longitude = longtitude;
+  hotPointData.latitude = latitude;
+  hotPointData.height = altitude;
 }
 
 void HotPoint::setHotPoint(GPSPositionData gps)
 {
-    data.longitude = gps.longitude;
-    data.latitude = gps.latitude;
-    data.height = gps.altitude;
+  hotPointData.longitude = gps.longitude;
+  hotPointData.latitude = gps.latitude;
+  hotPointData.height = gps.altitude;
 }
 
-void HotPoint::setRadius(float64_t meter) { data.radius = meter; }
+void HotPoint::setRadius(float64_t meter) { hotPointData.radius = meter; }
 
-void HotPoint::setPalstance(float32_t defree) { data.palstance = defree; }
+void HotPoint::setYawRate(float32_t degree) { hotPointData.yawRate = degree; }
 
-void HotPoint::setClockwise(bool isClockwise) { data.clockwise = isClockwise ? 1 : 0; }
+void HotPoint::setClockwise(bool isClockwise) { hotPointData.clockwise = isClockwise ? 1 : 0; }
 
-void HotPoint::setCameraView(HotPoint::View view) { data.startPoint = view; }
+void HotPoint::setCameraView(HotPoint::View view) { hotPointData.startPoint = view; }
 
-void HotPoint::setYawMode(HotPoint::YawMode mode) { data.yawMode = mode; }
+void HotPoint::setYawMode(HotPoint::YawMode mode) { hotPointData.yawMode = mode; }
 
-HotPointData HotPoint::getData() const { return data; }
+HotPointData HotPoint::getData() const { return hotPointData; }
 
-void HotPoint::startCallback(CoreAPI *This, Header *header, UserData userdata __UNUSED)
+void HotPoint::startCallback(CoreAPI *api, Header *protocolHeader, UserData userdata __UNUSED)
 {
-    StartACK ack;
-    if (header->length - EXC_DATA_SIZE <= sizeof(StartACK))
-    {
-        memcpy((unsigned char *)&ack, (unsigned char *)header + sizeof(Header),
-               (header->length - EXC_DATA_SIZE));
-        API_LOG(This->getDriver(), STATUS_LOG, "Start ACK has Max radius %f, ack 0x%X",
-                ack.maxRadius, ack.ack);
-        if (!This->decodeMissionStatus(ack.ack))
-            API_LOG(This->getDriver(), ERROR_LOG, "decode ack error 0x%X", ack.ack);
-    }
-    else
-    {
-        API_LOG(This->getDriver(), ERROR_LOG, "ACK is exception,seesion id %d,sequence %d\n",
-                header->sessionID, header->sequenceNumber);
-    }
+  StartACK ack;
+  if (protocolHeader->length - EXC_DATA_SIZE <= sizeof(StartACK))
+  {
+    memcpy((unsigned char *)&ack, (unsigned char *)protocolHeader + sizeof(Header),
+        (protocolHeader->length - EXC_DATA_SIZE));
+    API_LOG(api->getDriver(), STATUS_LOG, "Start ACK has Max radius %f, ACK 0x%X",
+        ack.maxRadius, ack.ack);
+    if (!api->decodeMissionStatus(ack.ack))
+      API_LOG(api->getDriver(), ERROR_LOG, "Decode ACK error 0x%X", ack.ack);
+  }
+  else
+  {
+    API_LOG(api->getDriver(), ERROR_LOG, "ACK is exception,session id %d,sequence %d\n",
+        protocolHeader->sessionID, protocolHeader->sequenceNumber);
+  }
 }
 
-void HotPoint::readCallback(CoreAPI *This, Header *header, UserData userdata)
+void HotPoint::readCallback(CoreAPI *api, Header *protocolHeader, UserData userdata)
 {
-    HotPoint *hp = (HotPoint *)userdata;
-    ReadACK ack;
-    if (header->length - EXC_DATA_SIZE <= sizeof(ack))
-    {
-        memcpy((unsigned char *)&ack, (unsigned char *)header + sizeof(Header),
-               (header->length - EXC_DATA_SIZE));
-        if (!This->decodeMissionStatus(ack.ack))
-            API_LOG(This->getDriver(), ERROR_LOG, "decode ack error 0x%X", ack.ack);
-        hp->data = ack.data;
-    }
-    else
-    {
-        API_LOG(This->getDriver(), ERROR_LOG, "ACK is exception,seesion id %d,sequence %d\n",
-                header->sessionID, header->sequenceNumber);
-    }
+  HotPoint *hp = (HotPoint *)userdata;
+  ReadACK ack;
+  if (protocolHeader->length - EXC_DATA_SIZE <= sizeof(ack))
+  {
+    memcpy((unsigned char *)&ack, (unsigned char *)protocolHeader + sizeof(Header),
+        (protocolHeader->length - EXC_DATA_SIZE));
+    if (!api->decodeMissionStatus(ack.ack))
+      API_LOG(api->getDriver(), ERROR_LOG, "Decode ACK error 0x%X", ack.ack);
+    hp->hotPointData = ack.data;
+  }
+  else
+  {
+    API_LOG(api->getDriver(), ERROR_LOG, "ACK is exception,session id %d,sequence %d\n",
+        protocolHeader->sessionID, protocolHeader->sequenceNumber);
+  }
 }

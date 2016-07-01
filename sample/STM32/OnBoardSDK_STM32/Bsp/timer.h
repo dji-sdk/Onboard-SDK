@@ -1,3 +1,14 @@
+/*! @file timer.h
+ *  @version 3.1.7
+ *  @date Jul 01 2016
+ *
+ *  @brief
+ *  Timer helper functions and ISR for board STM32F4Discovery
+ *
+ *  Copyright 2016 DJI. All right reserved.
+ *
+ * */
+
 #ifndef  TIMER_H
 #define  TIMER_H
 #include "DJI_API.h"

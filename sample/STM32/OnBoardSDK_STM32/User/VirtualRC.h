@@ -1,3 +1,14 @@
+/*! @file VirtualRC.h
+ *  @version 3.1.7
+ *  @date Jul 01 2016
+ *
+ *  @brief
+ *  Test Virtual RC functionality of the onboard SDK.
+ *
+ *  Copyright 2016 DJI. All right reserved.
+ *
+ * */
+
 #ifndef VIRTUALRC_H
 #define VIRTUALRC_H
 #include "DJI_API.h"

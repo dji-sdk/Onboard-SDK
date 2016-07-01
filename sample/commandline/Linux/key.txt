@@ -1,2 +1,2 @@
 ID:1234
-KEY:asdf
+KEY:abc

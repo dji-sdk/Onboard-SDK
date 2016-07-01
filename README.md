@@ -2,9 +2,16 @@
 
 [![Join the chat at https://gitter.im/dji-sdk/Onboard-SDK](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/dji-sdk/Onboard-SDK?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-## What is This?
+## What is the DJI Onboard SDK?
 
 DJI's Onboard SDK allows you to connect your own Onboard Embedded System (OES) to a supported DJI vehicle [Matrice 100](http://www.dji.com/product/matrice100) or [Matrice 600](http://www.dji.com/product/matrice600) or flight controller [A3](http://www.dji.com/product/a3) using a common serial port (TTL UART). This setup opens up an exciting opportunity to integrate your own hardware with DJI's flying platforms.  New applications and commercial uses for aerial robotics awaits and we can't wait to see what you build!
+
+---
+## New Release
+
+A new version of DJI Onboard SDK (v3.1.7) was released on 07/01 - be sure to read the [release notes](https://developer.dji.com/onboard-sdk/documentation/appendix/releaseNotes.html)! If you're new here, please read the rest of this document.
+
+---
 
 ## Prerequisites
 
@@ -61,9 +68,11 @@ Please visit [Programming Guide](https://developer.dji.com/onboard-sdk/documenta
 
 ### Appendix
 
-- [Update Notes for Onboard SDK 3.1.5](https://developer.dji.com/onboard-sdk/documentation/appendix/updateNotes.html)
+- [Release Notes for Onboard SDK 3.1.7](https://developer.dji.com/onboard-sdk/documentation/appendix/releaseNotes.html)
 
 - [FAQ](https://developer.dji.com/onboard-sdk/documentation/appendix/FAQ.html) & [Appendix](https://developer.dji.com/onboard-sdk/documentation/appendix/index.html)
+
+- [Doxygen](doc/doxygen-doc/html/index.html) is available (beta) for code documentation of the core library. 
 
 ## Support
 

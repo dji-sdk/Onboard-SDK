@@ -52,8 +52,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>1370</width>
-         <height>1026</height>
+         <width>1350</width>
+         <height>1041</height>
         </rect>
        </property>
        <layout class="QHBoxLayout" name="horizontalLayout_137">
@@ -86,7 +86,7 @@
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_47">
                <item>
-                <widget class="QGroupBox" name="groupBo003">
+                <widget class="QGroupBox" name="groupBox03">
                  <property name="title">
                   <string>Settings</string>
                  </property>
@@ -182,7 +182,7 @@
                       <item>
                        <widget class="QLineEdit" name="lineEdit_portBaudrate">
                         <property name="text">
-                         <string>921600</string>
+                         <string>230400</string>
                         </property>
                        </widget>
                       </item>
@@ -237,7 +237,7 @@
                     <item>
                      <widget class="QPushButton" name="btn_coreActive">
                       <property name="text">
-                       <string>Active</string>
+                       <string>Activate</string>
                       </property>
                      </widget>
                     </item>
@@ -2392,7 +2392,10 @@
                      </widget>
                     </item>
                     <item>
-                     <widget class="QPushButton" name="btn_cameraShoot_6">
+                     <widget class="QPushButton" name="btn_flightCheckStatus">
+                      <property name="enabled">
+                       <bool>false</bool>
+                      </property>
                       <property name="text">
                        <string>Check Status</string>
                       </property>
@@ -4240,7 +4243,7 @@
           </widget>
           <widget class="QWidget" name="tbMission">
            <attribute name="title">
-            <string>Mission\Position</string>
+            <string>Hotpoint And Follow Missions\Position</string>
            </attribute>
            <layout class="QHBoxLayout" name="horizontalLayout_132">
             <item>
@@ -5386,7 +5389,7 @@
                         </size>
                        </property>
                        <property name="text">
-                        <string>Position</string>
+                        <string>Set Current Position As Hotpoint</string>
                        </property>
                       </widget>
                      </item>
@@ -5399,7 +5402,7 @@
                         </size>
                        </property>
                        <property name="text">
-                        <string>Mission</string>
+                        <string>Reset and Input New Hoptpoint Position</string>
                        </property>
                       </widget>
                      </item>
@@ -5410,7 +5413,7 @@
                          <item>
                           <widget class="QLabel" name="label_29">
                            <property name="text">
-                            <string>latitude </string>
+                            <string>latitude (Deg)</string>
                            </property>
                           </widget>
                          </item>
@@ -5437,7 +5440,7 @@
                          <item>
                           <widget class="QLabel" name="label_30">
                            <property name="text">
-                            <string>longitude</string>
+                            <string>longitude (Deg)</string>
                            </property>
                           </widget>
                          </item>
@@ -5458,7 +5461,7 @@
                          <item>
                           <widget class="QLabel" name="label_31">
                            <property name="text">
-                            <string>Altitude </string>
+                            <string>Altitude (Meters)</string>
                            </property>
                           </widget>
                          </item>
@@ -5540,7 +5543,7 @@
                        <item>
                         <widget class="QLabel" name="label_33">
                          <property name="text">
-                          <string> palstance</string>
+                          <string>Yaw Rate</string>
                          </property>
                         </widget>
                        </item>
@@ -6001,7 +6004,7 @@
           </widget>
           <widget class="QWidget" name="tbGroundStation">
            <attribute name="title">
-            <string>GroundStation</string>
+            <string>Waypoint Mission</string>
            </attribute>
            <layout class="QVBoxLayout" name="verticalLayout_76">
             <item>
@@ -6030,9 +6033,9 @@
                  <property name="currentIndex">
                   <number>0</number>
                  </property>
-                 <widget class="QWidget" name="InitData">
+                 <widget class="QWidget" name="WyapointData">
                   <attribute name="title">
-                   <string>InitData</string>
+                   <string>Waypoint Data</string>
                   </attribute>
                   <layout class="QVBoxLayout" name="verticalLayout_85">
                    <item>
@@ -6046,7 +6049,7 @@
                  </widget>
                  <widget class="QWidget" name="PointActions">
                   <attribute name="title">
-                   <string>PointActions</string>
+                   <string>Point Actions</string>
                   </attribute>
                   <layout class="QHBoxLayout" name="horizontalLayout_47">
                    <item>
@@ -6097,6 +6100,59 @@
                   </layout>
                  </widget>
                 </widget>
+               </item>
+               <item>
+                <layout class="QVBoxLayout" name="verticalLayout_7">
+                 <item>
+                  <widget class="QPushButton" name="btn_waypointDownload">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>150</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>150</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>Download</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="btn_waypoint_add">
+                   <property name="text">
+                    <string>#1: Add Waypoint</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="btn_waypoint_remove">
+                   <property name="enabled">
+                    <bool>true</bool>
+                   </property>
+                   <property name="text">
+                    <string>#1 Remove  Last Waypoint</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="btn_waypoint_reset">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="text">
+                    <string>Reset</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </item>
                <item>
                 <widget class="QGroupBox" name="groupBox_256">
@@ -6489,7 +6545,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QGroupBox" name="groupBox">
+                   <widget class="QGroupBox" name="groupBox50">
                     <layout class="QVBoxLayout" name="verticalLayout_64">
                      <item>
                       <layout class="QHBoxLayout" name="horizontalLayout_134">
@@ -6620,7 +6676,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QGroupBox" name="groupBox">
+                   <widget class="QGroupBox" name="groupBox51">
                     <property name="minimumSize">
                      <size>
                       <width>100</width>
@@ -6775,78 +6831,41 @@
                        </size>
                       </property>
                       <property name="text">
-                       <string>Init</string>
+                       <string>#2: Init Waypoint Mission</string>
                       </property>
                      </widget>
                     </item>
                     <item>
                      <widget class="QPushButton" name="btn_wp_loadAll">
                       <property name="text">
-                       <string>Load All</string>
+                       <string>#3: Load All Waypoints</string>
                       </property>
                      </widget>
                     </item>
                     <item>
                      <widget class="QPushButton" name="btn_wp_start_stop">
                       <property name="text">
-                       <string>Start</string>
+                       <string>#4: Start Waypoint Mission</string>
                       </property>
                       <property name="checkable">
                        <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="btn_AbortWaypoint">
+                      <property name="text">
+                       <string>#5: Abort Waypoint Mission</string>
                       </property>
                      </widget>
                     </item>
                     <item>
                      <widget class="QPushButton" name="btn_wp_pr">
                       <property name="text">
-                       <string>Pause</string>
+                       <string>Pause Flight</string>
                       </property>
                       <property name="checkable">
                        <bool>true</bool>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </item>
-                  <item>
-                   <layout class="QVBoxLayout" name="verticalLayout_7">
-                    <item>
-                     <widget class="QPushButton" name="btn_cameraShoot_4">
-                      <property name="minimumSize">
-                       <size>
-                        <width>150</width>
-                        <height>0</height>
-                       </size>
-                      </property>
-                      <property name="maximumSize">
-                       <size>
-                        <width>150</width>
-                        <height>16777215</height>
-                       </size>
-                      </property>
-                      <property name="text">
-                       <string>Download</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="btn_waypoint_add">
-                      <property name="text">
-                       <string>Add Point</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="btn_waypoint_remove">
-                      <property name="text">
-                       <string>Remove</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="btn_waypoint_reset">
-                      <property name="text">
-                       <string>Reset</string>
                       </property>
                      </widget>
                     </item>
@@ -6920,9 +6939,9 @@
             </item>
            </layout>
           </widget>
-          <widget class="QWidget" name="tbDev">
+          <widget class="QWidget" name="tbEmpty">
            <attribute name="title">
-            <string>Dev</string>
+            <string>Empty</string>
            </attribute>
           </widget>
          </widget>
@@ -6939,7 +6958,7 @@
      <x>0</x>
      <y>0</y>
      <width>1571</width>
-     <height>23</height>
+     <height>17</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile_F">
@@ -7032,18 +7051,18 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="btg_flightYL"/>
-  <buttongroup name="btg_flightSM"/>
-  <buttongroup name="btg_cameraRoll"/>
-  <buttongroup name="btg_cameraYaw"/>
-  <buttongroup name="btg_flightCL"/>
-  <buttongroup name="btg_cameraAngle"/>
-  <buttongroup name="btg_vrcGear"/>
-  <buttongroup name="btg_flightTask"/>
   <buttongroup name="btg_flightHL"/>
+  <buttongroup name="btg_flightYL"/>
+  <buttongroup name="btg_cameraRoll"/>
+  <buttongroup name="btg_flightSM"/>
   <buttongroup name="btg_cameraPitch"/>
-  <buttongroup name="btg_flightVL"/>
+  <buttongroup name="btg_cameraYaw"/>
+  <buttongroup name="btg_flightTask"/>
   <buttongroup name="btg_cameraMode"/>
   <buttongroup name="btg_vrcMode"/>
+  <buttongroup name="btg_flightCL"/>
+  <buttongroup name="btg_flightVL"/>
+  <buttongroup name="btg_vrcGear"/>
+  <buttongroup name="btg_cameraAngle"/>
  </buttongroups>
 </ui>

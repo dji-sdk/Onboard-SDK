@@ -1,21 +1,12 @@
-/*! @brief
- *  @file cmdVirtualRC.h
- *  @version 3.0
- *  @date Jan 20, 2016
+/*! @file cmdVirtualRC.h
+ *  @version 3.1.7
+ *  @date Jul 01 2016
  *
- *  @abstract
- *
- *
- *  @attention
- *  Project configuration:
- *  None
- *
- *  @version features:
- *  -* @version V3.0
- *  -* DJI-onboard-SDK for Windows,QT,STM32,ROS,Cmake
- *  -* @date Jan 20, 2016
- *  -* @author william.wu
- *
+ *  @brief
+ *  Virtual RC interface for DJI Onboard SDK command line example
+ *  
+ *  @copyright
+ *  2016 DJI. All rights reserved.
  * */
 
 #ifndef CMDVIRTUALRC_H
@@ -23,13 +14,14 @@
 
 #include "DJI_Script.h"
 
-/*! @note It is not necessary to know the meaning of each function's name.
- *  Just use it please. Maybe these names will change somehow.
- * */
+/*! @note The function names follow this format - 
+*         2-letter uppercase - Acronym for the command set (e.g. VC = Virtual RC)
+*         lowercase - The specific function (or acronym, e.g. ct = Control)
+* */
 
-bool VC         (DJI::onboardSDK::Script* script, DJI::UserData data);
-bool startVC    (DJI::onboardSDK::Script* script, DJI::UserData data);
-bool stopVC     (DJI::onboardSDK::Script* script, DJI::UserData data);
-bool ctVC       (DJI::onboardSDK::Script* script, DJI::UserData data);
+bool VC       (DJI::onboardSDK::Script* script, DJI::UserData data);
+bool startVC  (DJI::onboardSDK::Script* script, DJI::UserData data);
+bool stopVC   (DJI::onboardSDK::Script* script, DJI::UserData data);
+bool ctVC     (DJI::onboardSDK::Script* script, DJI::UserData data);
 
 #endif // CMDVIRTUALRC_H

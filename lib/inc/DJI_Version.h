@@ -1,33 +1,19 @@
-/*! @brief
- *  @file DJI_Version.h
- *  @version 3.0
- *  @date Dec 16, 2015
+/*! @file DJI_Version.h
+ *  @version 3.1.7
+ *  @date Jul 01 2016
  *
- *  @abstract
- *  Version control definition for DJI onboardSDK library
- *  Maintain officially
- *
- *  @attention
- *  Maintain officially, readonly for users
- *  Do not modify any definition in this file,
- *  if you are not sure what are you doing exactlly,
- *  or we will not provide any support.
- *
- *  Project configuration:
- *
- *  @version features:
- *  -* @version V3.0
- *  -* DJI-onboard-SDK for Windows,QT,STM32,ROS,Cmake
- *  -* @date Dec 16, 2015
- *  -* @author william.wu
- *
+ *  @brief
+ *  Drone/SDK Version definition for DJI onboardSDK library
+ *  Officially Maintained
+ *  
+ *  @copyright
+ *  Copyright 2016 DJI. All rights reserved.
  * */
 
 /*! @attention
- *  Maintain officially, readonly for users
- *  Do not modify any definition in this file,
- *  if you are not sure what are you doing exactlly,
- *  or we will not provide any support.
+ *  Do not modify any definition in this file
+ *  if you are not sure what are you doing.
+ *  DJI will not provide any support for changes made to this file.
  * */
 
 #ifndef DJI_VERSION_H
@@ -35,15 +21,15 @@
 
 #include <stdint.h>
 
-#define MAKE_VERSION(a, b, c, d)                                                               \
-    (((a << 24) & 0xff000000) | ((b << 16) & 0x00ff0000) | ((c << 8) & 0x0000ff00) |           \
-     (d & 0x000000ff))
+#define MAKE_VERSION(a, b, c, d)                                                    \
+  (((a << 24) & 0xff000000) | ((b << 16) & 0x00ff0000) | ((c << 8) & 0x0000ff00) |  \
+  (d & 0x000000ff))
 
 namespace DJI
 {
 namespace onboardSDK
 {
-//! @todo better version control structure
+//! Different version strings define SDK/Drone combination. Only the ones listed below are available.
 typedef uint32_t Version;
 
 const Version versionM100_23 = (MAKE_VERSION(2, 3, 10, 0));

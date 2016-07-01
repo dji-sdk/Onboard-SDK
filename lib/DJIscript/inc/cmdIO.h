@@ -1,3 +1,14 @@
+/*! @file cmdIO.h
+ *  @version 3.1.7
+ *  @date Jul 01 2016
+ *
+ *  @brief
+ *  I/O core interface for DJI Onboard SDK command line example
+ *  
+ *  @copyright
+ *  2016 DJI. All rights reserved.
+ * */
+
 #ifndef CMDIO_H
 #define CMDIO_H
 

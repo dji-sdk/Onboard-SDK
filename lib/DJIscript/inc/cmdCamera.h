@@ -1,21 +1,12 @@
-/*! @brief
- *  @file cmdCoreAPI.h
- *  @version 3.0
- *  @date Jan 6, 2016
+/*! @file cmdCamera.cpp
+ *  @version 3.1.7
+ *  @date Jul 01 2016
  *
- *  @abstract
- *
- *
- *  @attention
- *  Project configuration:
- *  None
- *
- *  @version features:
- *  -* @version V3.0
- *  -* DJI-onboard-SDK for Windows,QT,STM32,ROS,Cmake
- *  -* @date Jan 6, 2016
- *  -* @author william.wu
- *
+ *  @brief
+ *  Camera Command Header for DJI Onboard SDK Command line example
+ *  
+ *  @copyright
+ *  2016 DJI. All rights reserved.
  * */
 
 #ifndef CMDCAMERA_H
@@ -23,9 +14,10 @@
 
 #include "DJI_Script.h"
 
-/*! @note It is not necessary to know the meaning of each function's name.
- *  Just use it please. Maybe these names will change somehow.
- * */
+/*! @note The function names follow this format - 
+*         2-letter uppercase - Acronym for the command set (e.g. CC = Camera Control)
+*         2-letter lowercase - Acronym for the specific function (e.g. ag = Angle Gimbal)
+* */
 
 bool CC  (DJI::onboardSDK::Script* script, DJI::UserData data);
 bool cmCC(DJI::onboardSDK::Script* script, DJI::UserData data);

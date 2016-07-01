@@ -33,23 +33,23 @@ SRCS = main.cpp \
 
 OBJS = $(SRCS:.cpp=.o)
 
-TARGET = a.out
+TARGET = onboardSDK
 
 LIBDIR = ../../../lib
 DJISCRIPTDIR = $(LIBDIR)/DJIscript
 #VPATH = $(LIBDIR)/inc:$(LIBDIR)/src:$(DJISCRIPTDIR)/inc:$(DJISCRIPTDIR)/src
 
 CC = g++
-INC = -I$(LIBDIR)/inc -I$(DJISCRIPTDIR)/inc
+INC = -I$(LIBDIR)/inc -I$(DJISCRIPTDIR)/inc -Iinc
 CFLAGS = --std=c++11 $(INC) -pthread
 
 bin/$(TARGET) : $(addprefix objs/, $(OBJS))
 	$(CC) -o $@ $(CFLAGS) $^
 
-objs/main.o : conboardSDK/main.cpp
+objs/main.o : src/main.cpp 
 	$(CC) -o $@ -c $< $(CFLAGS)
 
-objs/%.o : conboardSDK/%.cpp conboardSDK/%.h
+objs/%.o : src/%.cpp inc/%.h
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 objs/%.o : $(LIBDIR)/src/%.cpp $(LIBDIR)/inc/%.h

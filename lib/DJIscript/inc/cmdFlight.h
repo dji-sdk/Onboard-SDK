@@ -1,30 +1,25 @@
-/*! @brief
- *  @file cmdFlight.h
- *  @version 3.0
- *  @date Jan 7, 2016
+/*! @file cmdFlight.h
+ *  @version 3.1.7
+ *  @date Jul 01 2016
  *
- *  @abstract
+ *  @brief
+ *  Flight Control Commands for DJI Onboard SDK Command line example
+ *  Execute tasks like takeoff/landing/RTH. Also execute movement control
  *
- *
- *  @attention
- *  Project configuration:
- *  None
- *
- *  @version features:
- *  -* @version V3.0
- *  -* DJI-onboard-SDK for Windows,QT,STM32,ROS,Cmake
- *  -* @date Jan 7, 2016
- *  -* @author william.wu
- *
+ *  @copyright
+ *  2016 DJI. All rights reserved.
  * */
+
+
 #ifndef CMDFLIGHT_H
 #define CMDFLIGHT_H
 
 #include "DJI_Script.h"
 
-/*! @note It is not necessary to know the meaning of each function's name.
- *  Just use it please. Maybe these names will change somehow.
- * */
+/*! @note The function names follow this format - 
+*         2-letter uppercase - Acronym for the command set (e.g. FC = Flight Control)
+*         2-letter lowercase - Acronym for the specific function (e.g. tk = Task)
+* */
 
 bool FC  (DJI::onboardSDK::Script* script, DJI::UserData data);
 bool tkFC(DJI::onboardSDK::Script* script, DJI::UserData data);

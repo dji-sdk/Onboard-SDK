@@ -1,3 +1,14 @@
+/*! @file BspUsart.h
+ *  @version 3.1.7
+ *  @date Jul 01 2016
+ *
+ *  @brief
+ *  Usart helper functions and ISR for board STM32F4Discovery
+ *
+ *  Copyright 2016 DJI. All right reserved.
+ *
+ * */
+
 #ifndef _BSPUSART_H
 #define _BSPUSART_H
 #include <stm32f4xx.h>

@@ -1,23 +1,13 @@
-/*! @brief
- *  @file DJI_Codec.h
- *  @version 3.0
- *  @date Dec 16, 2015
+/** @file DJI_Codec.h
+ *  @version 3.1.7
+ *  @date July 1st, 2016
  *
- *  @abstract
- *  Encode functions for DJI onboardSDK library
+ *  @brief
+ *  Encoding/Message parsing features for DJI onboardSDK library
  *
- *  @attention
- *  Project configuration:
+ *  @copyright 2016 DJI. All rights reserved.
  *
- *  @todo spilt this header into 4 header files
- *
- *  @version features:
- *  -* @version V3.0
- *  -* DJI-onboard-SDK for Windows,QT,STM32,ROS,Cmake
- *  -* @date Dec 16, 2015
- *  -* @author william.wu
- *
- * */
+ */
 
 #ifndef DJI_CODEC_H
 #define DJI_CODEC_H
@@ -38,10 +28,10 @@
 #define _SDK_U32_SET(_addr, _val) (*((unsigned int *)(_addr)) = (_val))
 #define _SDK_U16_SET(_addr, _val) (*((unsigned short *)(_addr)) = (_val))
 
-#define _SDK_CALC_CRC_HEAD(_msg, _len)                                                         \
-    sdk_stream_crc16_calc((const unsigned char *)(_msg), _len)
-#define _SDK_CALC_CRC_TAIL(_msg, _len)                                                         \
-    sdk_stream_crc32_calc((const unsigned char *)(_msg), _len)
+#define _SDK_CALC_CRC_HEAD(_msg, _len)                             \
+  sdk_stream_crc16_calc((const unsigned char *)(_msg), _len)
+#define _SDK_CALC_CRC_TAIL(_msg, _len)                             \
+  sdk_stream_crc32_calc((const unsigned char *)(_msg), _len)
 
 
 void transformTwoByte(const char *pstr, unsigned char *pdata);

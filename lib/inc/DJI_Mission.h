@@ -1,21 +1,13 @@
-/*! @brief
- *  @file DJI_Codec.h
- *  @version 3.0
- *  @date Dec 16, 2015
+/** @file DJI_Mission.h
+ *  @version 3.1.7
+ *  @date July 1st, 2016
  *
- *  @abstract
- *  Mission framework for DJI onboardSDK library
+ *  @brief
+ *  Mission Framework for DJI onboardSDK library
  *
- *  @attention
- *  Project configuration:
+ *  @copyright 2016 DJI. All right reserved.
  *
- *  @version features:
- *  -* @version V3.0
- *  -* DJI-onboard-SDK for Windows,QT,STM32,ROS,Cmake
- *  -* @date Dec 16, 2015
- *  -* @author william.wu
- *
- * */
+ */
 
 #ifndef DJI_MISSION_H
 #define DJI_MISSION_H
@@ -31,32 +23,32 @@ namespace onboardSDK
 
 typedef struct HotPointACKData
 {
-    uint8_t status;
-    uint16_t radius; // in cm
-    uint8_t failReasion;
-    uint8_t palstance;
+  uint8_t status;
+  uint16_t radius; // in cm
+  uint8_t failReasion;
+  uint8_t yawRate;
 } HotPointADKData;
 
 //! @todo unify the naming style
 typedef struct GSPushData
 {
-    uint8_t type;
-    uint8_t data_1;
-    uint8_t data_2;
-    uint8_t data_3;
-    uint8_t data_4;
-    uint8_t data_5;
+  uint8_t type;
+  uint8_t data_1;
+  uint8_t data_2;
+  uint8_t data_3;
+  uint8_t data_4;
+  uint8_t data_5;
 } GSPushData;
 
 #pragma pack()
 
 typedef struct MissionACKMap
 {
-    uint8_t code;
-    const char *meaning;
+  uint8_t code;
+  const char *meaning;
 } MissionACKMap;
 
-void missionCallback(CoreAPI *This, Header *header, UserData userdata = 0);
+void missionCallback(CoreAPI *api, Header *protocolHeader, UserData userdata = 0);
 
 } // namespace onboardSDK
 } // namespace DJI

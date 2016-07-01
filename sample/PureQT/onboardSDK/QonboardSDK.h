@@ -20,10 +20,10 @@
 
 using namespace DJI::onboardSDK;
 
-class QHardDriver : public HardDriver
+class QtOnboardsdkPortDriver : public HardDriver
 {
   public:
-    QHardDriver(QSerialPort *Port);
+    QtOnboardsdkPortDriver(QSerialPort *Port);
 
     void init();
     DJI::time_ms getTimeStamp();
@@ -44,7 +44,7 @@ class QHardDriver : public HardDriver
     void setDisplay(QTextBrowser *value);
 
   private:
-    QHardDriver();
+    QtOnboardsdkPortDriver();
 
   private:
     int baudrate;

@@ -101,7 +101,7 @@ Hotpoint is a functionality that allows the drone to circle around a given point
     float64_t height;
 
     float64_t radius;
-    float32_t palstance; // degree
+    float32_t yawRate; // degree
 
     uint8_t clockwise;
     uint8_t startPoint;

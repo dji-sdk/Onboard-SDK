@@ -20,6 +20,8 @@
 #endif
 #include "QonboardSDK.h"
 
+#define   DEG2RAD 0.01745329252
+
 using namespace DJI;
 using namespace DJI::onboardSDK;
 
@@ -236,7 +238,9 @@ class DJIonboardSDK : public QMainWindow
 
     void on_btn_webTool_clicked(bool checked);
 
-  private:
+    void on_btn_AbortWaypoint_clicked();
+
+private:
 #ifdef GROUNDSTATION
   private:
     void initGroundStation();
@@ -254,7 +258,7 @@ class DJIonboardSDK : public QMainWindow
     Ui::DJIonboardSDK *ui;
 
     CoreAPI *api;
-    QHardDriver *driver;
+    QtOnboardsdkPortDriver *driver;
     QSerialPort *port;
     QByteArray *key;
 
@@ -285,6 +289,9 @@ class DJIonboardSDK : public QMainWindow
     QList<QStandardItemModel *> actionData;
 
     QTimer *timerBroadcast;
+
+    WayPointData wayPointDataTmp;
+
 
 #ifdef SDK_DEV
     UIDev *dev;

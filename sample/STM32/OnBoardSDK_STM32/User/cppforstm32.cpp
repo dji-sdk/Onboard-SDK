@@ -9,51 +9,52 @@
 #ifdef DYNAMIC_MEMORY
 void * operator new (size_t size)
 {
-    if(NULL == size)
-    {
+  if(NULL == size)
+  {
 #ifdef DEBUG
-        printf("Error! Size is zero");
+    printf("Error! Size is zero");
 #endif//DEBUG
-        return NULL;
-    }
-    void *p = malloc(size);
+    return NULL;
+  }
+  void *p = malloc(size);
 #ifdef DEBUG
-    if(p == 0)
-        printf("Lack Memory!");
+  if(p == 0)
+  printf("Lack Memory!");
 #endif//DEBUG
-    return p;
+  return p;
 }
 
 void * operator new [](size_t size)
 {
-    return operator new(size);
+  return operator new(size);
 }
 
 void operator delete (void * pointer)
 {
-    if(NULL != pointer)
-    {
-        free(pointer);
-    }
+  if(NULL != pointer)
+  {
+    free(pointer);
+  }
 }
 
 void operator delete[](void * pointer)
 {
-    operator delete(pointer);
+  operator delete(pointer);
 }
 #endif //DYNAMIC_MEMORY
 
-
 //!@code printf link functions
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif //__cplusplus
-int fputc(int ch,FILE *f)
-{	
-		while (USART_GetFlagStatus(USART2, USART_FLAG_TC) == RESET);
-    USART_SendData(USART2,(unsigned char)ch);
-	
-	return (ch);
+int fputc(int ch, FILE *f)
+{
+  while (USART_GetFlagStatus(USART2, USART_FLAG_TC) == RESET)
+    ;
+  USART_SendData(USART2, (unsigned char) ch);
+
+  return (ch);
 }
 #ifdef __cplusplus
 }

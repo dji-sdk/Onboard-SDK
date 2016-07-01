@@ -1,3 +1,14 @@
+/*! @file bsp.h
+ *  @version 3.1.7
+ *  @date Jul 01 2016
+ *
+ *  @brief
+ *  Helper functions for board STM32F4Discovery
+ *
+ *  Copyright 2016 DJI. All right reserved.
+ *
+ * */
+
 #ifndef  BSP_H 
 #define  BSP_H
 

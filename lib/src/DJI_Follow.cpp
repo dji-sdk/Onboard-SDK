@@ -1,3 +1,14 @@
+/** @file DJI_Follow.cpp
+ *  @version 3.1.7
+ *  @date July 1st, 2016
+ *
+ *  @brief
+ *  Follow API for DJI onboardSDK library
+ *
+ *  @copyright 2016 DJI. All right reserved.
+ *
+ */
+
 #include "DJI_Follow.h"
 
 using namespace DJI;
@@ -5,78 +16,77 @@ using namespace DJI::onboardSDK;
 
 Follow::Follow(CoreAPI *ControlAPI)
 {
-    api = ControlAPI;
-    resetData();
+  api = ControlAPI;
+  resetData();
 }
 
 void Follow::resetData()
 {
-    data.mode = MODE_RELATIVE;
-    data.yaw = YAW_TOTARGET;
-    data.target.latitude = api->getBroadcastData().pos.latitude;
-    data.target.longitude = api->getBroadcastData().pos.longitude;
-    data.target.height = api->getBroadcastData().pos.altitude;
-    data.target.angle = 0;
-    data.sensitivity = 1;
+  followData.mode = MODE_RELATIVE;
+  followData.yaw = YAW_TOTARGET;
+  followData.target.latitude = api->getBroadcastData().pos.latitude;
+  followData.target.longitude = api->getBroadcastData().pos.longitude;
+  followData.target.height = api->getBroadcastData().pos.altitude;
+  followData.target.angle = 0;
+  followData.sensitivity = 1;
 }
 
 void Follow::start(FollowData *Data, CallBack callback, UserData userData)
 {
-    if (Data)
-        data = *Data;
-    else
-        resetData();
-    api->send(2, encrypt, SET_MISSION, CODE_FOLLOW_START, &data, sizeof(data), 500, 2,
-              callback ? callback : missionCallback, userData);
+  if (Data)
+    followData = *Data;
+  else
+    resetData();
+  api->send(2, encrypt, SET_MISSION, CODE_FOLLOW_START, &followData, sizeof(followData), 500, 2,
+      callback ? callback : missionCallback, userData);
 }
 
 void Follow::stop(CallBack callback, UserData userData)
 {
-    uint8_t zero = 0;
-    api->send(2, encrypt, SET_MISSION, CODE_FOLLOW_STOP, &zero, sizeof(zero), 500, 2,
-              callback ? callback : missionCallback, userData);
+  uint8_t zero = 0;
+  api->send(2, encrypt, SET_MISSION, CODE_FOLLOW_STOP, &zero, sizeof(zero), 500, 2,
+      callback ? callback : missionCallback, userData);
 }
 
 void Follow::pause(bool isPause, CallBack callback, UserData userData)
 {
-    uint8_t data = isPause ? 0 : 1;
-    api->send(2, encrypt, SET_MISSION, CODE_FOLLOW_SETPAUSE, &data, sizeof(data), 500, 2,
-              callback ? callback : missionCallback, userData);
+  uint8_t followData = isPause ? 0 : 1;
+  api->send(2, encrypt, SET_MISSION, CODE_FOLLOW_SETPAUSE, &followData, sizeof(followData), 500, 2,
+      callback ? callback : missionCallback, userData);
 }
 
 void Follow::updateTarget(FollowTarget target)
 {
-    data.target = target;
-    api->send(0, encrypt, SET_MISSION, CODE_FOLLOW_TARGET, &(data.target), sizeof(FollowTarget));
+  followData.target = target;
+  api->send(0, encrypt, SET_MISSION, CODE_FOLLOW_TARGET, &(followData.target), sizeof(FollowTarget));
 }
 
 void Follow::updateTarget(float64_t latitude, float64_t longitude, uint16_t height,
-                          uint16_t angle)
+    uint16_t angle)
 {
-    FollowTarget target;
-    target.latitude = latitude;
-    target.longitude = longitude;
-    target.height = height;
-    target.angle = angle;
-    updateTarget(target);
+  followData.target.latitude = latitude;
+  followData.target.longitude = longitude;
+  followData.target.height = height;
+  followData.target.angle = angle;
+  api->send(0, encrypt, SET_MISSION, CODE_FOLLOW_TARGET, &(followData.target), sizeof(FollowTarget));
 }
 
-FollowData Follow::getData() const { return data; }
+FollowData Follow::getData() const { return followData; }
 
-void Follow::setData(const FollowData &value) { data = value; }
+void Follow::setData(const FollowData &value) { followData = value; }
 
 void Follow::setMode(const Follow::MODE mode __UNUSED)
 {
-    API_LOG(api->getDriver(), STATUS_LOG, "no available mode but default");
-    data.mode = 0;
+  API_LOG(api->getDriver(), STATUS_LOG, "no available mode but default");
+  followData.mode = 0;
 }
 
-void Follow::setTarget(FollowTarget target) { data.target = target; }
+void Follow::setTarget(FollowTarget target) { followData.target = target; }
 
-void Follow::setYawType(const Follow::YAW_TYPE type) { data.yaw = type; }
+void Follow::setYawType(const Follow::YAW_TYPE type) { followData.yaw = type; }
 
 void Follow::setSensitivity(const Follow::SENSITIVITY sense __UNUSED)
 {
-    API_LOG(api->getDriver(), STATUS_LOG, "no available mode but default");
-    data.sensitivity = 1;
+  API_LOG(api->getDriver(), STATUS_LOG, "no available mode but default");
+  followData.sensitivity = 1;
 }

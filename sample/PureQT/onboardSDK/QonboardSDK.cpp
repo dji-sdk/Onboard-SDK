@@ -3,23 +3,23 @@
 #include <QScrollBar>
 #include <QDebug>
 
-QHardDriver::QHardDriver()
+QtOnboardsdkPortDriver::QtOnboardsdkPortDriver()
 {
     port = 0;
     baudrate = 9600;
 }
-QTextBrowser *QHardDriver::getDisplay() const { return display; }
+QTextBrowser *QtOnboardsdkPortDriver::getDisplay() const { return display; }
 
-void QHardDriver::setDisplay(QTextBrowser *value) { display = value; }
+void QtOnboardsdkPortDriver::setDisplay(QTextBrowser *value) { display = value; }
 
-QHardDriver::QHardDriver(QSerialPort *Port)
+QtOnboardsdkPortDriver::QtOnboardsdkPortDriver(QSerialPort *Port)
 {
     port = Port;
     baudrate = 9600;
     display = 0;
 }
 
-void QHardDriver::init()
+void QtOnboardsdkPortDriver::init()
 {
     if (port != 0)
     {
@@ -43,9 +43,9 @@ void QHardDriver::init()
     }
 }
 
-DJI::time_ms QHardDriver::getTimeStamp() { return QDateTime::currentMSecsSinceEpoch(); }
+DJI::time_ms QtOnboardsdkPortDriver::getTimeStamp() { return QDateTime::currentMSecsSinceEpoch(); }
 
-size_t QHardDriver::send(const uint8_t *buf, size_t len)
+size_t QtOnboardsdkPortDriver::send(const uint8_t *buf, size_t len)
 {
     sendLock.lock();
     size_t sent = 0;
@@ -69,7 +69,7 @@ size_t QHardDriver::send(const uint8_t *buf, size_t len)
     return sent;
 }
 
-size_t QHardDriver::readall(uint8_t *buf, size_t maxlen)
+size_t QtOnboardsdkPortDriver::readall(uint8_t *buf, size_t maxlen)
 {
     size_t ans = 0;
     if (port != 0)
@@ -81,15 +81,15 @@ size_t QHardDriver::readall(uint8_t *buf, size_t maxlen)
     return ans;
 }
 
-void QHardDriver::lockMemory() { memory.lock(); }
+void QtOnboardsdkPortDriver::lockMemory() { memory.lock(); }
 
-void QHardDriver::freeMemory() { memory.unlock(); }
+void QtOnboardsdkPortDriver::freeMemory() { memory.unlock(); }
 
-void QHardDriver::lockMSG() { msg.lock(); }
+void QtOnboardsdkPortDriver::lockMSG() { msg.lock(); }
 
-void QHardDriver::freeMSG() { msg.unlock(); }
+void QtOnboardsdkPortDriver::freeMSG() { msg.unlock(); }
 
-void QHardDriver::displayLog(const char *buf)
+void QtOnboardsdkPortDriver::displayLog(const char *buf)
 {
     if (buf)
         qDebug("%s", buf);
@@ -114,7 +114,7 @@ void QHardDriver::displayLog(const char *buf)
     }
 }
 
-void QHardDriver::setBaudrate(int value) { baudrate = value; }
+void QtOnboardsdkPortDriver::setBaudrate(int value) { baudrate = value; }
 
 APIThread::APIThread(CoreAPI *API, int Type, QObject *parent) : QThread(parent)
 {
