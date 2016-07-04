@@ -92,11 +92,11 @@ void DJI::onboardSDK::CoreAPI::broadcast(Header *protocolHeader)
   }
   passData(*enableFlag, DATA_FLAG, &broadcastData.mag, pdata, sizeof(MagnetData), len);
   passData(*enableFlag, DATA_FLAG, &broadcastData.rc, pdata, sizeof(RadioData), len);
-  passData(*enableFlag, dataflag, &broadcastData.gimbal, pdata,
+  passData(*enableFlag, DATA_FLAG, &broadcastData.gimbal, pdata,
       sizeof(GimbalData) - ((versionData.version == versionM100_23) ? 1 : 0), len);
   passData(*enableFlag, DATA_FLAG, &broadcastData.status, pdata, sizeof(FlightStatus), len);
   passData(*enableFlag, DATA_FLAG, &broadcastData.battery, pdata, sizeof(BatteryData), len);
-  passData(*enableFlag, dataflag, &broadcastData.ctrlInfo, pdata,
+  passData(*enableFlag, DATA_FLAG, &broadcastData.ctrlInfo, pdata,
       sizeof(CtrlInfoData) - ((versionData.version == versionM100_23) ? 1 : 0), len);
   serialDevice->freeMSG();
 
