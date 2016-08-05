@@ -9,7 +9,7 @@ DJI's Onboard SDK allows you to connect your own Onboard Embedded System (OES) t
 ---
 ## New Release
 
-A new version of DJI Onboard SDK (v3.1.7) was released on 07/01 - be sure to read the [release notes](https://developer.dji.com/onboard-sdk/documentation/appendix/releaseNotes.html)! If you're new here, please read the rest of this document.
+A new version of DJI Onboard SDK (v3.1.8) was released on 08/05 - be sure to read the [release notes](https://developer.dji.com/onboard-sdk/documentation/appendix/releaseNotes.html)! If you're new here, please read the rest of this document.
 
 ---
 
@@ -52,9 +52,9 @@ Please visit [Programming Guide](https://developer.dji.com/onboard-sdk/documenta
 
 - [Data Transparent Transmission](https://developer.dji.com/onboard-sdk/documentation/introduction/data-transparent-transmission.html)  
 
-- [Ground Station Protocol](https://developer.dji.com/onboard-sdk/documentation/introduction/ground-station-protocol.html)
+- [Ground Station Protocol](https://developer.dji.com/onboard-sdk/documentation/introduction/ground-station-protocol.html)  
 
-- [Virtual RC Protocol](https://developer.dji.com/onboard-sdk/documentation/introduction/virtual-rc-protocol.html)
+- [Virtual RC Protocol](https://developer.dji.com/onboard-sdk/documentation/introduction/virtual-rc-protocol.html)  
 
 ### Platform Guides
 
@@ -62,13 +62,13 @@ Please visit [Programming Guide](https://developer.dji.com/onboard-sdk/documenta
 
 - [STM32 Example](https://developer.dji.com/onboard-sdk/documentation/github-platform-docs/STM32/README.html)
 
-- [Command line Example](https://developer.dji.com/onboard-sdk/documentation/github-platform-docs/commandline/README.html)
+- [Linux Example](https://developer.dji.com/onboard-sdk/documentation/github-platform-docs/Linux/README.html)
 
 - [ROS Example](https://developer.dji.com/onboard-sdk/documentation/github-platform-docs/ROS/README.html)
 
 ### Appendix
 
-- [Release Notes for Onboard SDK 3.1.7](https://developer.dji.com/onboard-sdk/documentation/appendix/releaseNotes.html)
+- [Release Notes for Onboard SDK 3.1.8](https://developer.dji.com/onboard-sdk/documentation/appendix/releaseNotes.html)
 
 - [FAQ](https://developer.dji.com/onboard-sdk/documentation/appendix/FAQ.html) & [Appendix](https://developer.dji.com/onboard-sdk/documentation/appendix/index.html)
 
