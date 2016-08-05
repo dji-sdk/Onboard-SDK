@@ -90,6 +90,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="classDJI_1_1onboardSDK_1_1CoreAPI-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">DJI::onboardSDK::CoreAPI Class Reference</div>  </div>
@@ -103,6 +104,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:ac091e76795d6ce3acba33832aa25c662"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac091e76795d6ce3acba33832aa25c662"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>CoreAPI</b> (<a class="el" href="classDJI_1_1onboardSDK_1_1HardDriver.html">HardDriver</a> *Driver=0, <a class="el" href="DJI__Version_8h.html#a1621781715a8b4947de1fdbf3dd80495">Version</a> SDKVersion=0, bool userCallbackThread=false, CallBack userRecvCallback=0, <a class="el" href="namespaceDJI.html#a0988c6a482e73ea79bc55aac26729302">UserData</a> userData=0)</td></tr>
+<tr class="separator:ac091e76795d6ce3acba33832aa25c662"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7cfb5183c4a504c57b60c98537497e26"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7cfb5183c4a504c57b60c98537497e26"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>CoreAPI</b> (<a class="el" href="classDJI_1_1onboardSDK_1_1HardDriver.html">HardDriver</a> *Driver, <a class="el" href="DJI__Version_8h.html#a1621781715a8b4947de1fdbf3dd80495">Version</a> SDKVersion, <a class="el" href="structDJI_1_1onboardSDK_1_1CallBackHandler.html">CallBackHandler</a> userRecvCallback, bool userCallbackThread=false)</td></tr>
+<tr class="separator:a7cfb5183c4a504c57b60c98537497e26"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5373ef1d252b233a022cc08e7b6df96c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1onboardSDK_1_1CoreAPI.html#a5373ef1d252b233a022cc08e7b6df96c">sendPoll</a> (void)</td></tr>
 <tr class="separator:a5373ef1d252b233a022cc08e7b6df96c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9889430a05b47c9bc998964ec114bbe6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9889430a05b47c9bc998964ec114bbe6"></a>
@@ -114,21 +121,25 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>readPoll</b> (void)</
 <tr class="separator:af9269aa61bcab29c1deeee70d82ebf53"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e60c24675d8af3aee0cd275f3cd4a42"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1onboardSDK_1_1CoreAPI.html#a1e60c24675d8af3aee0cd275f3cd4a42">byteStreamHandler</a> (uint8_t *buffer, size_t size)</td></tr>
 <tr class="separator:a1e60c24675d8af3aee0cd275f3cd4a42"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac091e76795d6ce3acba33832aa25c662"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac091e76795d6ce3acba33832aa25c662"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>CoreAPI</b> (<a class="el" href="classDJI_1_1onboardSDK_1_1HardDriver.html">HardDriver</a> *Driver=0, <a class="el" href="DJI__Version_8h.html#a1621781715a8b4947de1fdbf3dd80495">Version</a> SDKVersion=0, bool userCallbackThread=false, CallBack userRecvCallback=0, <a class="el" href="namespaceDJI.html#a0988c6a482e73ea79bc55aac26729302">UserData</a> userData=0)</td></tr>
-<tr class="separator:ac091e76795d6ce3acba33832aa25c662"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7cfb5183c4a504c57b60c98537497e26"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7cfb5183c4a504c57b60c98537497e26"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>CoreAPI</b> (<a class="el" href="classDJI_1_1onboardSDK_1_1HardDriver.html">HardDriver</a> *Driver, <a class="el" href="DJI__Version_8h.html#a1621781715a8b4947de1fdbf3dd80495">Version</a> SDKVersion, <a class="el" href="structDJI_1_1onboardSDK_1_1CallBackHandler.html">CallBackHandler</a> userRecvCallback, bool userCallbackThread=false)</td></tr>
-<tr class="separator:a7cfb5183c4a504c57b60c98537497e26"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2fb857e74eeceacb4632afd465696b31"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2fb857e74eeceacb4632afd465696b31"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>ack</b> (<a class="el" href="structreq__id__t.html">req_id_t</a> req_id, unsigned char *ackdata, int len)</td></tr>
 <tr class="separator:a2fb857e74eeceacb4632afd465696b31"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8295bc2e7fc96c5c1742083a757f9ad6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8295bc2e7fc96c5c1742083a757f9ad6"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1onboardSDK_1_1CoreAPI.html#a8295bc2e7fc96c5c1742083a757f9ad6">notifyCaller</a> (<a class="el" href="structDJI_1_1onboardSDK_1_1Header.html">Header</a> *protocolHeader)</td></tr>
+<tr class="memdesc:a8295bc2e7fc96c5c1742083a757f9ad6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Notify caller ACK frame arrived. <br /></td></tr>
+<tr class="separator:a8295bc2e7fc96c5c1742083a757f9ad6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8466a9e84832b06f529b5a8c4add13c2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1onboardSDK_1_1CoreAPI.html#a8466a9e84832b06f529b5a8c4add13c2">activate</a> (<a class="el" href="structDJI_1_1onboardSDK_1_1ActivateData.html">ActivateData</a> *data, CallBack callback=0, <a class="el" href="namespaceDJI.html#a0988c6a482e73ea79bc55aac26729302">UserData</a> userData=0)</td></tr>
 <tr class="memdesc:a8466a9e84832b06f529b5a8c4add13c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Activation Control.  <a href="#a8466a9e84832b06f529b5a8c4add13c2">More...</a><br /></td></tr>
 <tr class="separator:a8466a9e84832b06f529b5a8c4add13c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa86e92debf14c980712fd2805eed70e0"><td class="memItemLeft" align="right" valign="top">unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1onboardSDK_1_1CoreAPI.html#aa86e92debf14c980712fd2805eed70e0">activate</a> (<a class="el" href="structDJI_1_1onboardSDK_1_1ActivateData.html">ActivateData</a> *data, int timeout)</td></tr>
+<tr class="memdesc:aa86e92debf14c980712fd2805eed70e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Blocking API Control.  <a href="#aa86e92debf14c980712fd2805eed70e0">More...</a><br /></td></tr>
+<tr class="separator:aa86e92debf14c980712fd2805eed70e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af619595cd224912796dc1efb6c0f5827"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af619595cd224912796dc1efb6c0f5827"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setControl</b> (bool enable, CallBack callback=0, <a class="el" href="namespaceDJI.html#a0988c6a482e73ea79bc55aac26729302">UserData</a> userData=0)</td></tr>
 <tr class="separator:af619595cd224912796dc1efb6c0f5827"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9148f90dc5a0a63511aef905d8890363"><td class="memItemLeft" align="right" valign="top">unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1onboardSDK_1_1CoreAPI.html#a9148f90dc5a0a63511aef905d8890363">setControl</a> (bool enable, int timeout)</td></tr>
+<tr class="memdesc:a9148f90dc5a0a63511aef905d8890363"><td class="mdescLeft">&#160;</td><td class="mdescRight">Blocking API Control.  <a href="#a9148f90dc5a0a63511aef905d8890363">More...</a><br /></td></tr>
+<tr class="separator:a9148f90dc5a0a63511aef905d8890363"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2a8f3380779cf660be316aa45470bb99"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1onboardSDK_1_1CoreAPI.html#a2a8f3380779cf660be316aa45470bb99">setActivation</a> (bool isActivated)</td></tr>
 <tr class="memdesc:a2a8f3380779cf660be316aa45470bb99"><td class="mdescLeft">&#160;</td><td class="mdescRight">Activation Control.  <a href="#a2a8f3380779cf660be316aa45470bb99">More...</a><br /></td></tr>
 <tr class="separator:a2a8f3380779cf660be316aa45470bb99"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -144,12 +155,27 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>sendToMobile</b> (uin
 <tr class="separator:aab14455abec31a59e43df6e1c313b682"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5490da3ad6bf7ea37f89783a4a75689a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1onboardSDK_1_1CoreAPI.html#a5490da3ad6bf7ea37f89783a4a75689a">setBroadcastFreq</a> (uint8_t *dataLenIs16, CallBack callback=0, <a class="el" href="namespaceDJI.html#a0988c6a482e73ea79bc55aac26729302">UserData</a> userData=0)</td></tr>
 <tr class="separator:a5490da3ad6bf7ea37f89783a4a75689a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afbee248a0f9c27d873028c88da2f4c60"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afbee248a0f9c27d873028c88da2f4c60"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setSessionStatus</b> (uint32_t usageFlag)</td></tr>
-<tr class="separator:afbee248a0f9c27d873028c88da2f4c60"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a387e0c598ca82188297ddfacb383d417"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a387e0c598ca82188297ddfacb383d417"></a>
-uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>getSessionStatus</b> ()</td></tr>
-<tr class="separator:a387e0c598ca82188297ddfacb383d417"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af49c3a3266e9a135f71b64c030106e7e"><td class="memItemLeft" align="right" valign="top">unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1onboardSDK_1_1CoreAPI.html#af49c3a3266e9a135f71b64c030106e7e">setBroadcastFreq</a> (uint8_t *dataLenIs16, int timeout)</td></tr>
+<tr class="separator:af49c3a3266e9a135f71b64c030106e7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac02ec7458365af90e9ea4e17ac9e08d1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1onboardSDK_1_1CoreAPI.html#ac02ec7458365af90e9ea4e17ac9e08d1">setBroadcastFreqDefaults</a> ()</td></tr>
+<tr class="separator:ac02ec7458365af90e9ea4e17ac9e08d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5938890f73c9764cb8ceea6bb7d57634"><td class="memItemLeft" align="right" valign="top">unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1onboardSDK_1_1CoreAPI.html#a5938890f73c9764cb8ceea6bb7d57634">setBroadcastFreqDefaults</a> (int timeout)</td></tr>
+<tr class="memdesc:a5938890f73c9764cb8ceea6bb7d57634"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set broadcast frequencies to their default values and block until ACK arrives from flight controller.  <a href="#a5938890f73c9764cb8ceea6bb7d57634">More...</a><br /></td></tr>
+<tr class="separator:a5938890f73c9764cb8ceea6bb7d57634"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a92ee77e17bbba258f2b9e9480b2d6360"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a92ee77e17bbba258f2b9e9480b2d6360"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setBroadcastFreqToZero</b> ()</td></tr>
+<tr class="separator:a92ee77e17bbba258f2b9e9480b2d6360"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a078feb6bf36b83eb65f5e49b1ace8801"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1onboardSDK_1_1CoreAPI.html#a078feb6bf36b83eb65f5e49b1ace8801">setACKFrameStatus</a> (uint32_t usageFlag)</td></tr>
+<tr class="separator:a078feb6bf36b83eb65f5e49b1ace8801"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a24399ad7a05d619119284478ed136152"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a24399ad7a05d619119284478ed136152"></a>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>getACKFrameStatus</b> ()</td></tr>
+<tr class="separator:a24399ad7a05d619119284478ed136152"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af3e295a5aa0edf034b8ac354b2a83dab"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af3e295a5aa0edf034b8ac354b2a83dab"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setBroadcastFrameStatus</b> (bool isFrame)</td></tr>
+<tr class="separator:af3e295a5aa0edf034b8ac354b2a83dab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95b15463d5cd418f1ecd364a2517a6c4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a95b15463d5cd418f1ecd364a2517a6c4"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>getBroadcastFrameStatus</b> ()</td></tr>
+<tr class="separator:a95b15463d5cd418f1ecd364a2517a6c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a67ae36ef3a172c1bc7e12d47e6d58696"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a67ae36ef3a172c1bc7e12d47e6d58696"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setSyncFreq</b> (uint32_t freqInHz)</td></tr>
 <tr class="separator:a67ae36ef3a172c1bc7e12d47e6d58696"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -158,6 +184,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setKey</b> (const cha
 <tr class="separator:a0b42c3b5010dea459c294a357d5f759c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab06228e965457f85ac8eebc7669a09ef"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classDJI_1_1onboardSDK_1_1HardDriver.html">HardDriver</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1onboardSDK_1_1CoreAPI.html#ab06228e965457f85ac8eebc7669a09ef">getDriver</a> () const </td></tr>
 <tr class="separator:ab06228e965457f85ac8eebc7669a09ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a445e343c9e82e4b29a529f3948b52e00"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a445e343c9e82e4b29a529f3948b52e00"></a>
+SimpleACK&#160;</td><td class="memItemRight" valign="bottom"><b>getSimpleACK</b> () const </td></tr>
+<tr class="separator:a445e343c9e82e4b29a529f3948b52e00"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aba01d2d5cc5fa9b13198312d1cc8fd5f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="DJI__Version_8h.html#a1621781715a8b4947de1fdbf3dd80495">Version</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1onboardSDK_1_1CoreAPI.html#aba01d2d5cc5fa9b13198312d1cc8fd5f">getSDKVersion</a> () const </td></tr>
 <tr class="separator:aba01d2d5cc5fa9b13198312d1cc8fd5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7be1fa967af760409494aadb779ad413"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7be1fa967af760409494aadb779ad413"></a>
@@ -202,6 +231,41 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setFollowCallback</b>
 <tr class="memitem:a21df6f96098d14cdb01a88fe079843bf"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a21df6f96098d14cdb01a88fe079843bf"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setWayPointEventCallback</b> (CallBack handler, <a class="el" href="namespaceDJI.html#a0988c6a482e73ea79bc55aac26729302">UserData</a> userData=0)</td></tr>
 <tr class="separator:a21df6f96098d14cdb01a88fe079843bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afdf9c3d84a6b4445edacff7e2e29c219"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1onboardSDK_1_1CoreAPI.html#afdf9c3d84a6b4445edacff7e2e29c219">parseFromMobileCallback</a> (<a class="el" href="classDJI_1_1onboardSDK_1_1CoreAPI.html">CoreAPI</a> *api, <a class="el" href="structDJI_1_1onboardSDK_1_1Header.html">Header</a> *protocolHeader, <a class="el" href="namespaceDJI.html#a0988c6a482e73ea79bc55aac26729302">UserData</a> userData=0)</td></tr>
+<tr class="memdesc:afdf9c3d84a6b4445edacff7e2e29c219"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mobile Data Transparent Transmission Input Servicing.  <a href="#afdf9c3d84a6b4445edacff7e2e29c219">More...</a><br /></td></tr>
+<tr class="separator:afdf9c3d84a6b4445edacff7e2e29c219"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a221c804340554e0c04b31e8eeba96b33"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1onboardSDK_1_1CoreAPI.html#a221c804340554e0c04b31e8eeba96b33">setObtainControlMobileCallback</a> (<a class="el" href="structDJI_1_1onboardSDK_1_1CallBackHandler.html">CallBackHandler</a> callback)</td></tr>
+<tr class="separator:a221c804340554e0c04b31e8eeba96b33"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5eacd73e5c42d293f810249453c977df"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5eacd73e5c42d293f810249453c977df"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setReleaseControlMobileCallback</b> (<a class="el" href="structDJI_1_1onboardSDK_1_1CallBackHandler.html">CallBackHandler</a> callback)</td></tr>
+<tr class="separator:a5eacd73e5c42d293f810249453c977df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e037317404e81ed6ed8a83f1004cabc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6e037317404e81ed6ed8a83f1004cabc"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setActivateMobileCallback</b> (<a class="el" href="structDJI_1_1onboardSDK_1_1CallBackHandler.html">CallBackHandler</a> callback)</td></tr>
+<tr class="separator:a6e037317404e81ed6ed8a83f1004cabc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e6cf130c8e3ddbdb5413e4f4c56996e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3e6cf130c8e3ddbdb5413e4f4c56996e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setArmMobileCallback</b> (<a class="el" href="structDJI_1_1onboardSDK_1_1CallBackHandler.html">CallBackHandler</a> callback)</td></tr>
+<tr class="separator:a3e6cf130c8e3ddbdb5413e4f4c56996e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad7258ab08afac26e177d1cebeab395ce"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad7258ab08afac26e177d1cebeab395ce"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setDisArmMobileCallback</b> (<a class="el" href="structDJI_1_1onboardSDK_1_1CallBackHandler.html">CallBackHandler</a> callback)</td></tr>
+<tr class="separator:ad7258ab08afac26e177d1cebeab395ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae3dc48c6ddcd628e9cb7992d2590b07b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae3dc48c6ddcd628e9cb7992d2590b07b"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setTakeOffMobileCallback</b> (<a class="el" href="structDJI_1_1onboardSDK_1_1CallBackHandler.html">CallBackHandler</a> callback)</td></tr>
+<tr class="separator:ae3dc48c6ddcd628e9cb7992d2590b07b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a240f17a727ba20d203eb5f19991e206c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a240f17a727ba20d203eb5f19991e206c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setLandingMobileCallback</b> (<a class="el" href="structDJI_1_1onboardSDK_1_1CallBackHandler.html">CallBackHandler</a> callback)</td></tr>
+<tr class="separator:a240f17a727ba20d203eb5f19991e206c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a50ccf2518a0b7ffb3a0b464368793f26"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a50ccf2518a0b7ffb3a0b464368793f26"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setGoHomeMobileCallback</b> (<a class="el" href="structDJI_1_1onboardSDK_1_1CallBackHandler.html">CallBackHandler</a> callback)</td></tr>
+<tr class="separator:a50ccf2518a0b7ffb3a0b464368793f26"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0ab582c0f9c50cec30838e4c05202c6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae0ab582c0f9c50cec30838e4c05202c6"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setTakePhotoMobileCallback</b> (<a class="el" href="structDJI_1_1onboardSDK_1_1CallBackHandler.html">CallBackHandler</a> callback)</td></tr>
+<tr class="separator:ae0ab582c0f9c50cec30838e4c05202c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4625806ed7b8e268de468ac184073b5"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae4625806ed7b8e268de468ac184073b5"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setStartVideoMobileCallback</b> (<a class="el" href="structDJI_1_1onboardSDK_1_1CallBackHandler.html">CallBackHandler</a> callback)</td></tr>
+<tr class="separator:ae4625806ed7b8e268de468ac184073b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa18a3c021c835828e7904b77e0bb1e31"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa18a3c021c835828e7904b77e0bb1e31"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setStopVideoMobileCallback</b> (<a class="el" href="structDJI_1_1onboardSDK_1_1CallBackHandler.html">CallBackHandler</a> callback)</td></tr>
+<tr class="separator:aa18a3c021c835828e7904b77e0bb1e31"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa084ce8f8847bd4c87a23c01f01d07c2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1onboardSDK_1_1CoreAPI.html#aa084ce8f8847bd4c87a23c01f01d07c2">decodeACKStatus</a> (unsigned short ack)</td></tr>
 <tr class="separator:aa084ce8f8847bd4c87a23c01f01d07c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7be9cc64e49f061947e78956da20e5ef"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1onboardSDK_1_1CoreAPI.html#a7be9cc64e49f061947e78956da20e5ef">decodeMissionStatus</a> (uint8_t ack)</td></tr>
@@ -236,6 +300,119 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="separator:af11e76e300013a8d9a229019eaf01ab8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aadeecafaad54eeabdfd6212d2b64ea3d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1onboardSDK_1_1CoreAPI.html#aadeecafaad54eeabdfd6212d2b64ea3d">setVersion</a> (const <a class="el" href="DJI__Version_8h.html#a1621781715a8b4947de1fdbf3dd80495">Version</a> &amp;value)</td></tr>
 <tr class="separator:aadeecafaad54eeabdfd6212d2b64ea3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad8fb88ea4af11dbec0e08dcff1be1709"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1onboardSDK_1_1CoreAPI.html#ad8fb88ea4af11dbec0e08dcff1be1709">getObtainControlMobileCMD</a> ()</td></tr>
+<tr class="separator:ad8fb88ea4af11dbec0e08dcff1be1709"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a24a0149afeb3426fc4623f547f0987c6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a24a0149afeb3426fc4623f547f0987c6"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>getReleaseControlMobileCMD</b> ()</td></tr>
+<tr class="separator:a24a0149afeb3426fc4623f547f0987c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a47a99ae0f97af48ee49bc798c5702ec0"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a47a99ae0f97af48ee49bc798c5702ec0"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>getActivateMobileCMD</b> ()</td></tr>
+<tr class="separator:a47a99ae0f97af48ee49bc798c5702ec0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a383f56b1704e3919a67abd9516cba853"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a383f56b1704e3919a67abd9516cba853"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>getArmMobileCMD</b> ()</td></tr>
+<tr class="separator:a383f56b1704e3919a67abd9516cba853"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a59a39d89eea4e166650b99751756a943"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a59a39d89eea4e166650b99751756a943"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>getDisArmMobileCMD</b> ()</td></tr>
+<tr class="separator:a59a39d89eea4e166650b99751756a943"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9993018edac6b83a7dd4dc8a131c14f2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9993018edac6b83a7dd4dc8a131c14f2"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>getTakeOffMobileCMD</b> ()</td></tr>
+<tr class="separator:a9993018edac6b83a7dd4dc8a131c14f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1250ba5e0e9951ef75edd2178c6a9aa0"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1250ba5e0e9951ef75edd2178c6a9aa0"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>getLandingMobileCMD</b> ()</td></tr>
+<tr class="separator:a1250ba5e0e9951ef75edd2178c6a9aa0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37d27491ff28c7f88c918f9da39fb754"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a37d27491ff28c7f88c918f9da39fb754"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>getGoHomeMobileCMD</b> ()</td></tr>
+<tr class="separator:a37d27491ff28c7f88c918f9da39fb754"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c225e99afd76ba76856bb0225036846"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1c225e99afd76ba76856bb0225036846"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>getTakePhotoMobileCMD</b> ()</td></tr>
+<tr class="separator:a1c225e99afd76ba76856bb0225036846"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c7285ab04be4c92cadc67b22ea00524"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0c7285ab04be4c92cadc67b22ea00524"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>getStartVideoMobileCMD</b> ()</td></tr>
+<tr class="separator:a0c7285ab04be4c92cadc67b22ea00524"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae5e878edd3100b096ea419330248403a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae5e878edd3100b096ea419330248403a"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>getStopVideoMobileCMD</b> ()</td></tr>
+<tr class="separator:ae5e878edd3100b096ea419330248403a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0afb5dd69ad290079486216601a7845f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0afb5dd69ad290079486216601a7845f"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>getDrawCirMobileCMD</b> ()</td></tr>
+<tr class="separator:a0afb5dd69ad290079486216601a7845f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9ef9f17dbf40a88d1caff7f5a950943e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9ef9f17dbf40a88d1caff7f5a950943e"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>getDrawSqrMobileCMD</b> ()</td></tr>
+<tr class="separator:a9ef9f17dbf40a88d1caff7f5a950943e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb239780d65f8a4fbf3c47c72428033d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aeb239780d65f8a4fbf3c47c72428033d"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>getAttiCtrlMobileCMD</b> ()</td></tr>
+<tr class="separator:aeb239780d65f8a4fbf3c47c72428033d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac044836303bdd41a0727a249b95ec205"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac044836303bdd41a0727a249b95ec205"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>getGimbalCtrlMobileCMD</b> ()</td></tr>
+<tr class="separator:ac044836303bdd41a0727a249b95ec205"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae874e78e0ccff0f53a9bb5f46de9d308"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae874e78e0ccff0f53a9bb5f46de9d308"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>getWayPointTestMobileCMD</b> ()</td></tr>
+<tr class="separator:ae874e78e0ccff0f53a9bb5f46de9d308"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a330f902846a39356d8ffe7fb3b38cd41"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a330f902846a39356d8ffe7fb3b38cd41"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>getLocalNavTestMobileCMD</b> ()</td></tr>
+<tr class="separator:a330f902846a39356d8ffe7fb3b38cd41"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac555454dcd671df9d5c98c4c25c8f3d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aac555454dcd671df9d5c98c4c25c8f3d"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>getGlobalNavTestMobileCMD</b> ()</td></tr>
+<tr class="separator:aac555454dcd671df9d5c98c4c25c8f3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af904eeab31d7ecaff5ccb9e4642a9916"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af904eeab31d7ecaff5ccb9e4642a9916"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>getVRCTestMobileCMD</b> ()</td></tr>
+<tr class="separator:af904eeab31d7ecaff5ccb9e4642a9916"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abca494d078238a1894280b68672ca1bb"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abca494d078238a1894280b68672ca1bb"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setObtainControlMobileCMD</b> (bool userInput)</td></tr>
+<tr class="separator:abca494d078238a1894280b68672ca1bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a070c4f6bd802ee9b1785e714661ecfe8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a070c4f6bd802ee9b1785e714661ecfe8"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setReleaseControlMobileCMD</b> (bool userInput)</td></tr>
+<tr class="separator:a070c4f6bd802ee9b1785e714661ecfe8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adccb9d305202f7e2a1a393797e9287ba"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="adccb9d305202f7e2a1a393797e9287ba"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setActivateMobileCMD</b> (bool userInput)</td></tr>
+<tr class="separator:adccb9d305202f7e2a1a393797e9287ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a873a14d548e7ce89f52915797f52e6f5"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a873a14d548e7ce89f52915797f52e6f5"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setArmMobileCMD</b> (bool userInput)</td></tr>
+<tr class="separator:a873a14d548e7ce89f52915797f52e6f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a83bd8f4925b400f4caf8c985116c50c3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a83bd8f4925b400f4caf8c985116c50c3"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setDisArmMobileCMD</b> (bool userInput)</td></tr>
+<tr class="separator:a83bd8f4925b400f4caf8c985116c50c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a957b4cae44c8a9e4815b83c41779b2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2a957b4cae44c8a9e4815b83c41779b2"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setTakeOffMobileCMD</b> (bool userInput)</td></tr>
+<tr class="separator:a2a957b4cae44c8a9e4815b83c41779b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b60bd9841d1d8d0a96a22f4f2a408ab"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3b60bd9841d1d8d0a96a22f4f2a408ab"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setLandingMobileCMD</b> (bool userInput)</td></tr>
+<tr class="separator:a3b60bd9841d1d8d0a96a22f4f2a408ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac211186aff1d438f61da315f6b7c30d2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac211186aff1d438f61da315f6b7c30d2"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setGoHomeMobileCMD</b> (bool userInput)</td></tr>
+<tr class="separator:ac211186aff1d438f61da315f6b7c30d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adbea19379f37d89da3e34aaa3165e54f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="adbea19379f37d89da3e34aaa3165e54f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setTakePhotoMobileCMD</b> (bool userInput)</td></tr>
+<tr class="separator:adbea19379f37d89da3e34aaa3165e54f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae03bdbf246906b58df574b9ba2a12c38"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae03bdbf246906b58df574b9ba2a12c38"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setStartVideoMobileCMD</b> (bool userInput)</td></tr>
+<tr class="separator:ae03bdbf246906b58df574b9ba2a12c38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0ce68976933174de5b3510b67f0a202"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab0ce68976933174de5b3510b67f0a202"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setStopVideoMobileCMD</b> (bool userInput)</td></tr>
+<tr class="separator:ab0ce68976933174de5b3510b67f0a202"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8dcaf9a9111d28dc9dbf6b08bc2dc7c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac8dcaf9a9111d28dc9dbf6b08bc2dc7c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setDrawCirMobileCMD</b> (bool userInput)</td></tr>
+<tr class="separator:ac8dcaf9a9111d28dc9dbf6b08bc2dc7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d8e29781a7d35ee2ce7c989992afdbf"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6d8e29781a7d35ee2ce7c989992afdbf"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setDrawSqrMobileCMD</b> (bool userInput)</td></tr>
+<tr class="separator:a6d8e29781a7d35ee2ce7c989992afdbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae61a64e8a5198937d16937fda64e7657"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae61a64e8a5198937d16937fda64e7657"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setAttiCtrlMobileCMD</b> (bool userInput)</td></tr>
+<tr class="separator:ae61a64e8a5198937d16937fda64e7657"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a779607a48d6fced5ee0a7cc24312d87a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a779607a48d6fced5ee0a7cc24312d87a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setGimbalCtrlMobileCMD</b> (bool userInput)</td></tr>
+<tr class="separator:a779607a48d6fced5ee0a7cc24312d87a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af9533e616811a4ea6f97b4555fa1ae99"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af9533e616811a4ea6f97b4555fa1ae99"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setWayPointTestMobileCMD</b> (bool userInput)</td></tr>
+<tr class="separator:af9533e616811a4ea6f97b4555fa1ae99"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3fbc9500545cbfabfe39f973d1511822"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3fbc9500545cbfabfe39f973d1511822"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setLocalNavTestMobileCMD</b> (bool userInput)</td></tr>
+<tr class="separator:a3fbc9500545cbfabfe39f973d1511822"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abdbde227c2f9b6a1408193947f730cbd"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abdbde227c2f9b6a1408193947f730cbd"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setGlobalNavTestMobileCMD</b> (bool userInput)</td></tr>
+<tr class="separator:abdbde227c2f9b6a1408193947f730cbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab551009b3904d9a6880a8568264cff53"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab551009b3904d9a6880a8568264cff53"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setVRCTestMobileCMD</b> (bool userInput)</td></tr>
+<tr class="separator:ab551009b3904d9a6880a8568264cff53"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader"></div></td></tr>
 <tr class="memitem:accec1bc503740cc4540142a2d8c403db"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1onboardSDK_1_1CoreAPI.html#accec1bc503740cc4540142a2d8c403db">send</a> (unsigned char session_mode, unsigned char is_enc, <a class="el" href="DJI__API_8h.html#a367390bac5784ce51e903df4a1d94896">CMD_SET</a> cmd_set, unsigned char cmd_id, void *pdata, int len, CallBack ack_callback, int timeout=0, int retry_time=1)</td></tr>
 <tr class="separator:accec1bc503740cc4540142a2d8c403db"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -246,6 +423,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr><td colspan="2"><div class="groupHeader"></div></td></tr>
 <tr class="memitem:ad0af34b1556ba02f25daeaf0e91d61b3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1onboardSDK_1_1CoreAPI.html#ad0af34b1556ba02f25daeaf0e91d61b3">getDroneVersion</a> (CallBack callback=0, <a class="el" href="namespaceDJI.html#a0988c6a482e73ea79bc55aac26729302">UserData</a> userData=0)</td></tr>
 <tr class="separator:ad0af34b1556ba02f25daeaf0e91d61b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94346c03fc72f0d9ca8a8709dad67f91"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structDJI_1_1onboardSDK_1_1VersionData.html">VersionData</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1onboardSDK_1_1CoreAPI.html#a94346c03fc72f0d9ca8a8709dad67f91">getDroneVersion</a> (int timeout)</td></tr>
+<tr class="memdesc:a94346c03fc72f0d9ca8a8709dad67f91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get drone version from flight controller block until ACK arrives from flight controller.  <a href="#a94346c03fc72f0d9ca8a8709dad67f91">More...</a><br /></td></tr>
+<tr class="separator:a94346c03fc72f0d9ca8a8709dad67f91"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6e28d9d1bf933ee5ccfab6ec8891e16e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structDJI_1_1onboardSDK_1_1BroadcastData.html">BroadcastData</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1onboardSDK_1_1CoreAPI.html#a6e28d9d1bf933ee5ccfab6ec8891e16e">getBroadcastData</a> () const </td></tr>
 <tr class="separator:a6e28d9d1bf933ee5ccfab6ec8891e16e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af90c4551b82a3926d9ed5316b4084bb3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structDJI_1_1onboardSDK_1_1TimeStampData.html">TimeStampData</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1onboardSDK_1_1CoreAPI.html#af90c4551b82a3926d9ed5316b4084bb3">getTime</a> () const </td></tr>
@@ -275,6 +455,25 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><b>sendToMobileCa
 <tr class="memitem:ae2a42832570ba3df08810c155b7c158d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae2a42832570ba3df08810c155b7c158d"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>setFrequencyCallback</b> (<a class="el" href="classDJI_1_1onboardSDK_1_1CoreAPI.html">CoreAPI</a> *api, <a class="el" href="structDJI_1_1onboardSDK_1_1Header.html">Header</a> *protocolHeader, <a class="el" href="namespaceDJI.html#a0988c6a482e73ea79bc55aac26729302">UserData</a> userData=0)</td></tr>
 <tr class="separator:ae2a42832570ba3df08810c155b7c158d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a0b5f3dbc0a3113b89ffec5f9bc47609b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1onboardSDK_1_1CoreAPI.html#a0b5f3dbc0a3113b89ffec5f9bc47609b">stopCond</a></td></tr>
+<tr class="separator:a0b5f3dbc0a3113b89ffec5f9bc47609b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aadc5da4d57b8eaa5b7bdb5ed29a0bf69"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1onboardSDK_1_1CoreAPI.html#aadc5da4d57b8eaa5b7bdb5ed29a0bf69">ack_data</a></td></tr>
+<tr class="separator:aadc5da4d57b8eaa5b7bdb5ed29a0bf69"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae324c9c136862ab9daa457f9663f790f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae324c9c136862ab9daa457f9663f790f"></a>
+<a class="el" href="structDJI_1_1onboardSDK_1_1HotPointReadACK.html">HotPointReadACK</a>&#160;</td><td class="memItemRight" valign="bottom"><b>hotpointReadACK</b></td></tr>
+<tr class="separator:ae324c9c136862ab9daa457f9663f790f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa9a142ba653989ed55e5559b068567c1"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa9a142ba653989ed55e5559b068567c1"></a>
+<a class="el" href="structDJI_1_1onboardSDK_1_1WayPointInitACK.html">WayPointInitACK</a>&#160;</td><td class="memItemRight" valign="bottom"><b>waypointInitACK</b></td></tr>
+<tr class="separator:aa9a142ba653989ed55e5559b068567c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a146e8c2715f07b6ecda41ed08daaeb02"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a146e8c2715f07b6ecda41ed08daaeb02"></a>
+<a class="el" href="unionDJI_1_1onboardSDK_1_1MissionACKUnion.html">MissionACKUnion</a>&#160;</td><td class="memItemRight" valign="bottom"><b>missionACKUnion</b></td></tr>
+<tr class="separator:a146e8c2715f07b6ecda41ed08daaeb02"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab1a1af9a5c356b86c408b308548b82f5"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab1a1af9a5c356b86c408b308548b82f5"></a>
+<a class="el" href="classDJI_1_1onboardSDK_1_1HardDriver.html">HardDriver</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>serialDevice</b></td></tr>
+<tr class="separator:ab1a1af9a5c356b86c408b308548b82f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="classDJI_1_1onboardSDK_1_1CoreAPI.html" title="CoreAPI implements core Open Protocol communication between M100/M600/A3 and your onboard embedded pl...">CoreAPI</a> implements core Open Protocol communication between M100/M600/A3 and your onboard embedded platform. </p>
@@ -329,6 +528,43 @@ Proceed to programming if activation successful. </p>
 
 </div>
 </div>
+<a class="anchor" id="aa86e92debf14c980712fd2805eed70e0"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned short CoreAPI::activate </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structDJI_1_1onboardSDK_1_1ActivateData.html">ActivateData</a> *&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>timeout</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Blocking API Control. </p>
+<dl class="section remark"><dt>Remarks</dt><dd>Blocks until ACK frame arrives or timeout occurs</dd></dl>
+<p>Send activation control to your flight controller to check if: <br />
+ a) your application registered in your developer account <br />
+ b) API Control enabled in the Assistant software<br />
+<br />
+Proceed to programming if activation successful.</p>
+<dl class="section return"><dt>Returns</dt><dd>ACK from flight controller</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000019">Todo:</a></b></dt><dd>Implement high resolution timer to catch ACK timeout </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>for ios verification </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="af9269aa61bcab29c1deeee70d82ebf53"></a>
 <div class="memitem">
 <div class="memproto">
@@ -342,7 +578,7 @@ Proceed to programming if activation successful. </p>
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000015">Todo:</a></b></dt><dd>Pipeline refactoring </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000017">Todo:</a></b></dt><dd>Pipeline refactoring </dd></dl>
 <dl class="section note"><dt>Note</dt><dd>Just think a command as below</dd></dl>
 <p>[123456HHD1234567===HHHH------------&mdash;&mdash;] &mdash; is buf un-used part</p>
 <p>if after recv full of above, but crc failed, we throw all data? NO! Just throw ONE BYTE, we move like below</p>
@@ -380,7 +616,7 @@ Proceed to programming if activation successful. </p>
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000016">Todo:</a></b></dt><dd>Implement stream handler </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000018">Todo:</a></b></dt><dd>Implement stream handler </dd></dl>
 
 </div>
 </div>
@@ -397,8 +633,8 @@ Proceed to programming if activation successful. </p>
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000014">Todo:</a></b></dt><dd>Implement callback poll handler </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000010">Todo:</a></b></dt><dd>Implement callback poll here </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000016">Todo:</a></b></dt><dd>Implement callback poll handler </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000012">Todo:</a></b></dt><dd>Implement callback poll here </dd></dl>
 
 </div>
 </div>
@@ -433,7 +669,7 @@ Proceed to programming if activation successful. </p>
       </table>
 </div><div class="memdoc">
 <p><a class="el" href="classDJI_1_1onboardSDK_1_1Flight.html" title="Flight class encapsulates all flight control related functions provided by the DJI OnboardSDK...">Flight</a> mission decoder. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000011">Todo:</a></b></dt><dd>Fix memory leak issue </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000013">Todo:</a></b></dt><dd>Fix memory leak issue </dd></dl>
 
 </div>
 </div>
@@ -532,6 +768,27 @@ Proceed to programming if activation successful. </p>
 
 </div>
 </div>
+<a class="anchor" id="a94346c03fc72f0d9ca8a8709dad67f91"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structDJI_1_1onboardSDK_1_1VersionData.html">VersionData</a> CoreAPI::getDroneVersion </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>timeout</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get drone version from flight controller block until ACK arrives from flight controller. </p>
+<p>Blocking API Control</p>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structDJI_1_1onboardSDK_1_1VersionData.html">VersionData</a> containing ACK value, CRC of the protocol version and protocol version itself</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000022">Todo:</a></b></dt><dd>Implement high resolution timer to catch ACK timeout </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="ab7fa0d20a6e4bf39a43a1c8a4841667f"></a>
 <div class="memitem">
 <div class="memproto">
@@ -566,6 +823,30 @@ Proceed to programming if activation successful. </p>
 
 </div>
 </div>
+<a class="anchor" id="ad8fb88ea4af11dbec0e08dcff1be1709"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool DJI::onboardSDK::CoreAPI::getObtainControlMobileCMD </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Setters and getters for Mobile CMD variables - these are used when interacting with a Data Transparent Transmission App </p>
+
+</div>
+</div>
 <a class="anchor" id="aba01d2d5cc5fa9b13198312d1cc8fd5f"></a>
 <div class="memitem">
 <div class="memproto">
@@ -597,6 +878,42 @@ Proceed to programming if activation successful. </p>
 <p>Get timestamp from flight controller.</p>
 <dl class="section note"><dt>Note</dt><dd>Make sure you are using appropriate timestamp broadcast frequency. See setBroadcastFreq<br />
 function for more details. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="afdf9c3d84a6b4445edacff7e2e29c219"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CoreAPI::parseFromMobileCallback </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classDJI_1_1onboardSDK_1_1CoreAPI.html">CoreAPI</a> *&#160;</td>
+          <td class="paramname"><em>api</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structDJI_1_1onboardSDK_1_1Header.html">Header</a> *&#160;</td>
+          <td class="paramname"><em>protocolHeader</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceDJI.html#a0988c6a482e73ea79bc55aac26729302">UserData</a> userData&#160;</td>
+          <td class="paramname"><em>__UNUSED</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Mobile Data Transparent Transmission Input Servicing. </p>
+<p>MOS Protocol parsing lirbary functions. Default MOS Protocol Parser. Calls other callback functions based on data </p>
+<p>The next few are only polling based and do not use callbacks. See usage in Linux Sample. </p>
 
 </div>
 </div>
@@ -796,6 +1113,23 @@ Please be careful when passing in UserData, there might have memory leak problem
 
 </div>
 </div>
+<a class="anchor" id="a078feb6bf36b83eb65f5e49b1ace8801"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DJI::onboardSDK::CoreAPI::setACKFrameStatus </td>
+          <td>(</td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>usageFlag</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Let user know when ACK and Broadcast messages processed </p>
+
+</div>
+</div>
 <a class="anchor" id="a2a8f3380779cf660be316aa45470bb99"></a>
 <div class="memitem">
 <div class="memproto">
@@ -864,6 +1198,102 @@ Please be careful when passing in UserData, there might have memory leak problem
 
 </div>
 </div>
+<a class="anchor" id="af49c3a3266e9a135f71b64c030106e7e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned short CoreAPI::setBroadcastFreq </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramname"><em>dataLenIs16</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>timeout</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section note"><dt>Note</dt><dd>see also enum BROADCAST_FREQ in <a class="el" href="DJI__API_8h.html" title="Core API for DJI onboardSDK library. ">DJI_API.h</a> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ac02ec7458365af90e9ea4e17ac9e08d1"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CoreAPI::setBroadcastFreqDefaults </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Reset all broadcast frequencies to their default values </p>
+
+</div>
+</div>
+<a class="anchor" id="a5938890f73c9764cb8ceea6bb7d57634"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned short CoreAPI::setBroadcastFreqDefaults </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>timeout</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set broadcast frequencies to their default values and block until ACK arrives from flight controller. </p>
+<p>Blocking API Control</p>
+<dl class="section return"><dt>Returns</dt><dd>ACK from flight controller</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000021">Todo:</a></b></dt><dd>Implement high resolution timer to catch ACK timeout </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a9148f90dc5a0a63511aef905d8890363"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned short CoreAPI::setControl </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>enable</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>timeout</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Blocking API Control. </p>
+<dl class="section remark"><dt>Remarks</dt><dd>Blocks until ACK frame arrives or timeout occurs</dd></dl>
+<p>Obtain control</p>
+<dl class="section return"><dt>Returns</dt><dd>ACK from flight controller</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000020">Todo:</a></b></dt><dd>Implement high resolution timer to catch ACK timeout </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="af11e76e300013a8d9a229019eaf01ab8"></a>
 <div class="memitem">
 <div class="memproto">
@@ -878,6 +1308,31 @@ Please be careful when passing in UserData, there might have memory leak problem
       </table>
 </div><div class="memdoc">
 <p>Initialize serial device </p>
+
+</div>
+</div>
+<a class="anchor" id="a221c804340554e0c04b31e8eeba96b33"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DJI::onboardSDK::CoreAPI::setObtainControlMobileCallback </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structDJI_1_1onboardSDK_1_1CallBackHandler.html">CallBackHandler</a>&#160;</td>
+          <td class="paramname"><em>callback</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Mobile Callback handler functions </p>
 
 </div>
 </div>
@@ -898,6 +1353,33 @@ Please be careful when passing in UserData, there might have memory leak problem
 
 </div>
 </div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a class="anchor" id="aadc5da4d57b8eaa5b7bdb5ed29a0bf69"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t DJI::onboardSDK::CoreAPI::ack_data</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section note"><dt>Note</dt><dd>Thread data </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a0b5f3dbc0a3113b89ffec5f9bc47609b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool DJI::onboardSDK::CoreAPI::stopCond</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section note"><dt>Note</dt><dd>Thread data </dd></dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>lib/inc/<a class="el" href="DJI__API_8h_source.html">DJI_API.h</a></li>
 <li>lib/src/<a class="el" href="DJI__API_8cpp.html">DJI_API.cpp</a></li>
@@ -910,7 +1392,7 @@ Please be careful when passing in UserData, there might have memory leak problem
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jul 1 2016 12:18:58 for onboardsdk by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Aug 5 2016 13:26:07 for onboardsdk by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.11
 </small></address>

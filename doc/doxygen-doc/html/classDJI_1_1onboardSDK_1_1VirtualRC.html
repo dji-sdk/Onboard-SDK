@@ -268,7 +268,7 @@ It would be realy dangous if you keep calling <a class="el" href="classDJI_1_1on
 <p>Global: <a class="el" href="structDJI_1_1onboardSDK_1_1VirtualRCData.html">VirtualRCData</a> myData;</p>
 <p>Thread 1: while(1) { myData = myAPIToSetupDataFromGroundStation(); }</p>
 <p>Thread 2: while(1) { sendData(myData); msleep(200); }</p>
-<p>When your drone lose signal, it will keep the recent command sent by your API: myAPIToSetupDataFromGroundStation(); Somehow, you will never get your drone back in one pice, if this tragedy happend.</p>
+<p>When your drone lose signal, it will keep the recent command sent by your API: myAPIToSetupDataFromGroundStation(); This may result in a catastrophic crash.</p>
 <dl class="section note"><dt>Note</dt><dd>API "sendData();" need to be called above 2Hz, and not greater than 25hz. </dd>
 <dd>
 API "sendSafeModeData();" will lead your drone hover; </dd></dl>
@@ -309,7 +309,7 @@ This function will be deprecated in a future release. Please use toRCData instea
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jul 1 2016 12:18:58 for onboardsdk by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Aug 5 2016 13:26:07 for onboardsdk by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.11
 </small></address>

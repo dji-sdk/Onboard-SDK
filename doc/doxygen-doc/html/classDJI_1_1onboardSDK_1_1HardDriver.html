@@ -121,6 +121,18 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>lockMSG</b> (
 <tr class="memitem:ae1ff91f12f1ac4a5dcf8301d44c6d2d9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae1ff91f12f1ac4a5dcf8301d44c6d2d9"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>freeMSG</b> ()=0</td></tr>
 <tr class="separator:ae1ff91f12f1ac4a5dcf8301d44c6d2d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1345cacb82312afbe652c784fc23907"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad1345cacb82312afbe652c784fc23907"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>lockACK</b> ()=0</td></tr>
+<tr class="separator:ad1345cacb82312afbe652c784fc23907"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c99f1d353e9608e31da26e9441f22a2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7c99f1d353e9608e31da26e9441f22a2"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>freeACK</b> ()=0</td></tr>
+<tr class="separator:a7c99f1d353e9608e31da26e9441f22a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a14b641ee120947e6780d5ac2249f5f2e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a14b641ee120947e6780d5ac2249f5f2e"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>notify</b> ()=0</td></tr>
+<tr class="separator:a14b641ee120947e6780d5ac2249f5f2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a469196f918efbfe6943fad0b6d1acc59"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a469196f918efbfe6943fad0b6d1acc59"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>wait</b> (int timeout)=0</td></tr>
+<tr class="separator:a469196f918efbfe6943fad0b6d1acc59"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a98d8e8ee10a64dcd880f694f6cf6b137"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a98d8e8ee10a64dcd880f694f6cf6b137"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>displayLog</b> (const char *buf=0)</td></tr>
 <tr class="separator:a98d8e8ee10a64dcd880f694f6cf6b137"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -156,6 +168,7 @@ function descriptions:</dd></dl>
 <p>size_t readall(uint8_t *buf, size_t maxlen) = 0; return read data length.</p>
 <p>void lockMemory();/ void freeMemory(); provide a mutex for multi-thread. when operating memory.</p>
 <p>void lockMSG();/ void freeMSG(); provide a mutex for multi-thread. when operating messages.</p>
+<p>void notify();/ void wait(); use conditional variable to signal controller thread about arrival of ACK frame.</p>
 <p>void displayLog(char *buf); Micro "API_LOG" invoked this function, to pass datalog. In order to pass data through different stream or channel. We abstract this virtual function for user. And different from others, this interface is not a pure virtual funcion. The default data-passing channel is stdout (printf). See also "DJI_HardDriver.cpp".</p>
 <dl class="section attention"><dt>Attention</dt><dd>when writting and reading data, there might have multi-thread problems. Abstract class <a class="el" href="classDJI_1_1onboardSDK_1_1HardDriver.html">HardDriver</a> did not consider these issue. Please be careful when you are going to implement send and readall funtions.</dd></dl>
 <dl class="section note"><dt>Note</dt><dd>we strongly suggest you to inherit this class in your own file, not just implement it in <a class="el" href="DJI__HardDriver_8cpp.html" title="Serial device driver abstraction. See DJI_HardDriver.h for more info. ">DJI_HardDriver.cpp</a> or inside this class </dd></dl>
@@ -169,7 +182,7 @@ function descriptions:</dd></dl>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jul 1 2016 12:18:58 for onboardsdk by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Aug 5 2016 13:26:07 for onboardsdk by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.11
 </small></address>

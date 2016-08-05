@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['ack_5fcommon_5fcode',['ACK_COMMON_CODE',['../DJI__API_8h.html#aec259c8a8cf384789e0726ecf0773cbd',1,'DJI::onboardSDK']]]
+  ['ack_5ferror_5fcode',['ACK_ERROR_CODE',['../DJI__API_8h.html#ae9b83ce82c2006a3c98b5564354985c9',1,'DJI::onboardSDK']]]
 ];

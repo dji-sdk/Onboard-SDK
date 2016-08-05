@@ -5,7 +5,6 @@ var searchData=
   ['rc',['rc',['../structDJI_1_1onboardSDK_1_1BroadcastData.html#a9f939c4413767acefca0c2b162eecf8a',1,'DJI::onboardSDK::BroadcastData']]],
   ['rcdata',['RCData',['../structDJI_1_1onboardSDK_1_1RCData.html',1,'DJI::onboardSDK']]],
   ['rcdata',['RCData',['../DJI__Type_8h.html#a5643d95a442bf936449b7c191e95c7cf',1,'DJI::onboardSDK']]],
-  ['readack',['ReadACK',['../structDJI_1_1onboardSDK_1_1HotPoint_1_1ReadACK.html',1,'DJI::onboardSDK::HotPoint']]],
   ['readidlevelocity',['readIdleVelocity',['../classDJI_1_1onboardSDK_1_1WayPoint.html#a3393f8aa0e40460ca897e137f54aa403',1,'DJI::onboardSDK::WayPoint']]],
   ['readindexdata',['readIndexData',['../classDJI_1_1onboardSDK_1_1WayPoint.html#ae08206461380c81a6aa6c13525ff0020',1,'DJI::onboardSDK::WayPoint']]],
   ['req_5fid_5ft',['req_id_t',['../structreq__id__t.html',1,'']]],
