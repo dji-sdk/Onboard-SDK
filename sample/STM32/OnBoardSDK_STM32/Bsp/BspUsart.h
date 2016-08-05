@@ -1,6 +1,6 @@
 /*! @file BspUsart.h
- *  @version 3.1.7
- *  @date Jul 01 2016
+ *  @version 3.1.8
+ *  @date Aug 05 2016
  *
  *  @brief
  *  Usart helper functions and ISR for board STM32F4Discovery
@@ -12,7 +12,6 @@
 #ifndef _BSPUSART_H
 #define _BSPUSART_H
 #include <stm32f4xx.h>
-//#include "stdarg.h"
 #include "stdio.h"
 void USART2_Config(void);
 void USART3_Config(void);

@@ -1,9 +1,12 @@
-/*! @brief *********************************
- * ****************************************** Copyright (c) ******************************************
- * @author: William Wu
- * @e-mail: DJI@justwillim.com
- * @date  : 2015-08-16
- * ****************************************** Copyright (c) ******************************************/
+/*! @file cppforstm32.h
+ *  @version 3.1.8
+ *  @date Aug 05 2016
+ *
+ *  @brief Support for printf to USART2 on STM32 platform
+ *
+ *  Copyright 2016 DJI. All right reserved.
+ *
+ * */
 #ifndef CPPFORSTM32_H
 #define CPPFORSTM32_H
 #include <stdio.h>

@@ -1,6 +1,6 @@
 /*! @file main.cpp
- *  @version 3.1.7
- *  @date Jul 01 2016
+*  @version 3.1.8
+ *  @date Aug 05 2016
  *
  *  @brief
  *  An exmaple program of DJI-onboard-SDK portable for stm32
@@ -30,13 +30,11 @@
 #include "HotPoint.h"
 #include "Receive.h"
 #include "bsp.h"
+#include "LocalNavigation.h"
+#include "MobileCommand.h"
 
 extern uint32_t tick; //tick is the time stamp,which record how many ms since u initialize the system.
 //warnning: after 49 days of non-reset running, tick will RESET to ZERO.
-extern int Rx_Handle_Flag;
-
-void
-delay_nms (u16 time);
 
 #endif //MAIN_H
 

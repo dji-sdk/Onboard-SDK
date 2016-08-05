@@ -67,9 +67,12 @@ class Follow
   Follow(CoreAPI *ControlAPI = 0);
   void resetData();      
   void start(FollowData *Data = 0, CallBack callback = 0, UserData userData = 0);
+  MissionACK start(FollowData *Data, int timeout);
   void stop(CallBack callback = 0, UserData userData = 0);
+  MissionACK stop(int timer);
   //! @note true for pause, false for resume
   void pause(bool isPause, CallBack callback = 0, UserData userData = 0);
+  MissionACK pause(bool isPause, int timer);
   void updateTarget(FollowTarget target); //! @note no ack command
   void updateTarget(float64_t latitude, float64_t longitude, uint16_t height,
       uint16_t angle); //! @note no ack command

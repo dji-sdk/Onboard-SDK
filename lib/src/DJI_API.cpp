@@ -38,7 +38,8 @@ void CoreAPI::init(HardDriver *sDevice, CallBackHandler userRecvCallback,
   // serialDevice->init();
 
   seq_num = 0;
-  sessionStatus = 11;
+  ackFrameStatus = 11;
+  broadcastFrameStatus = false;
 
   filter.recvIndex = 0;
   filter.reuseCount = 0;
@@ -69,6 +70,7 @@ void CoreAPI::init(HardDriver *sDevice, CallBackHandler userRecvCallback,
   wayPointData = false;
   callbackThread = userCallbackThread;
 
+  ack_data = 99;
   versionData.version = SDKVersion;
 
   //! @todo simplify code above
@@ -165,6 +167,41 @@ void CoreAPI::getDroneVersion(CallBack callback, UserData userData)
     retry_time, callback ? callback : CoreAPI::getDroneVersionCallback, userData);
 }
 
+VersionData CoreAPI::getDroneVersion(int timeout)
+{
+  versionData.version_ack = ACK_COMMON_NO_RESPONSE;
+  versionData.version_crc = 0x0;
+  versionData.version_name[0] = 0;
+
+  unsigned cmd_timeout = 100; // unit is ms
+  unsigned retry_time = 3;
+  unsigned char cmd_data = 0;
+
+  send(2, 0, SET_ACTIVATION, CODE_GETVERSION, (unsigned char *)&cmd_data, 1, cmd_timeout,
+  retry_time, 0, 0);
+
+  // Wait for end of ACK frame to arrive
+  serialDevice->lockACK();
+  serialDevice->wait(timeout);
+  serialDevice->freeACK();
+
+  // Parse return value
+
+  versionData.version_ack = version_ack_data[0] + (version_ack_data[1] << 8);
+  version_ack_data += 2;
+  versionData.version_crc =
+      version_ack_data[0] + (version_ack_data[1] << 8) + (version_ack_data[2] << 16) + (version_ack_data[3] << 24);
+  ack_data += 4;
+  if (versionData.version != versionM100_23)
+  {
+    memcpy(versionData.version_ID, version_ack_data, 11);
+    ack_data += 11;
+  }
+  memcpy(versionData.version_name, version_ack_data, 32);
+
+  return versionData;
+}
+
 void CoreAPI::activate(ActivateData *data, CallBack callback, UserData userData)
 {
   data->version = versionData.version;
@@ -179,6 +216,29 @@ void CoreAPI::activate(ActivateData *data, CallBack callback, UserData userData)
     callback ? callback : CoreAPI::activateCallback, userData);
 }
 
+unsigned short CoreAPI::activate(ActivateData *data, int timeout)
+{
+  data->version = versionData.version;
+  accountData = *data;
+  accountData.reserved = 2;
+
+  for (int i = 0; i < 32; ++i) accountData.iosID[i] = '0'; //! @note for ios verification
+  API_LOG(serialDevice, DEBUG_LOG, "version 0x%X/n", versionData.version);
+  API_LOG(serialDevice, DEBUG_LOG, "%.32s", accountData.iosID);
+  send(2, 0, SET_ACTIVATION, CODE_ACTIVATE, (unsigned char *)&accountData,
+    sizeof(accountData) - sizeof(char *), 1000, 3, 0, 0);
+
+  // Wait for end of ACK frame to arrive
+  serialDevice->lockACK();
+  serialDevice->wait(timeout);
+  serialDevice->freeACK();
+  ack_data = missionACKUnion.simpleACK;
+  if(ack_data == ACK_ACTIVE_SUCCESS && accountData.encKey)
+    setKey(accountData.encKey);
+
+  return ack_data;
+}
+
 void CoreAPI::sendToMobile(uint8_t *data, uint8_t len, CallBack callback, UserData userData)
 {
   if (len > 100)
@@ -186,7 +246,7 @@ void CoreAPI::sendToMobile(uint8_t *data, uint8_t len, CallBack callback, UserDa
     API_LOG(serialDevice, ERROR_LOG, "Too much data to send");
     return;
   }
-  send(2, 0, SET_ACTIVATION, CODE_TOMOBILE, data, len, 500, 1,
+  send(0, 0, SET_ACTIVATION, CODE_TOMOBILE, data, len, 500, 1,
     callback ? callback : CoreAPI::sendToMobileCallback, userData);
 }
 
@@ -216,6 +276,144 @@ void CoreAPI::setBroadcastFreq(uint8_t *dataLenIs16, CallBack callback, UserData
      callback ? callback : CoreAPI::setFrequencyCallback, userData);
 }
 
+unsigned short CoreAPI::setBroadcastFreq(uint8_t *dataLenIs16, int timeout)
+{
+  //! @note see also enum BROADCAST_FREQ in DJI_API.h
+  for (int i = 0; i < 16; ++i)
+  {
+    if (versionData.version == versionM100_31)
+      if (i < 12)
+      {
+        dataLenIs16[i] = (dataLenIs16[i] > 5 ? 5 : dataLenIs16[i]);
+      }
+      else
+        dataLenIs16[i] = 0;
+    else
+    {
+      if (i < 14)
+      {
+        dataLenIs16[i] = (dataLenIs16[i] > 5 ? 5 : dataLenIs16[i]);
+      }
+      else
+        dataLenIs16[i] = 0;
+    }
+  }
+  send(2, 0, SET_ACTIVATION, CODE_FREQUENCY, dataLenIs16, 16, 100, 1, 0, 0);
+
+  // Wait for end of ACK frame to arrive
+  serialDevice->lockACK();
+  serialDevice->wait(timeout);
+  serialDevice->freeACK();
+
+  return missionACKUnion.simpleACK;
+}
+
+void CoreAPI::setBroadcastFreqDefaults()
+{
+  uint8_t freq[16];
+
+  /* Channels definition:
+  * 0 - Timestamp
+  * 1 - Attitude Quaterniouns
+  * 2 - Acceleration
+  * 3 - Velocity (Ground Frame)
+  * 4 - Angular Velocity (Body Frame)
+  * 5 - Position
+  * 6 - Magnetometer
+  * 7 - RC Channels Data
+  * 8 - Gimbal Data
+  * 9 - Flight Status
+  * 10 - Battery Level
+  * 11 - Control Information
+  */
+
+  freq[0] = BROADCAST_FREQ_1HZ;
+  freq[1] = BROADCAST_FREQ_10HZ;
+  freq[2] = BROADCAST_FREQ_50HZ;
+  freq[3] = BROADCAST_FREQ_100HZ;
+  freq[4] = BROADCAST_FREQ_50HZ;
+  freq[5] = BROADCAST_FREQ_10HZ;
+  freq[6] = BROADCAST_FREQ_1HZ;
+  freq[7] = BROADCAST_FREQ_10HZ;
+  freq[8] = BROADCAST_FREQ_50HZ;
+  freq[9] = BROADCAST_FREQ_100HZ;
+  freq[10] = BROADCAST_FREQ_50HZ;
+  freq[11] = BROADCAST_FREQ_10HZ;
+
+  setBroadcastFreq(freq);
+}
+
+void CoreAPI::setBroadcastFreqToZero()
+{
+  uint8_t freq[16];
+
+  /* Channels definition:
+  * 0 - Timestamp
+  * 1 - Attitude Quaterniouns
+  * 2 - Acceleration
+  * 3 - Velocity (Ground Frame)
+  * 4 - Angular Velocity (Body Frame)
+  * 5 - Position
+  * 6 - Magnetometer
+  * 7 - RC Channels Data
+  * 8 - Gimbal Data
+  * 9 - Flight Status
+  * 10 - Battery Level
+  * 11 - Control Information
+  */
+
+  freq[0] = BROADCAST_FREQ_1HZ;
+  freq[1] = BROADCAST_FREQ_10HZ;
+  freq[2] = BROADCAST_FREQ_50HZ;
+  freq[3] = BROADCAST_FREQ_100HZ;
+  freq[4] = BROADCAST_FREQ_50HZ;
+  freq[5] = BROADCAST_FREQ_10HZ;
+  freq[6] = BROADCAST_FREQ_1HZ;
+  freq[7] = BROADCAST_FREQ_10HZ;
+  freq[8] = BROADCAST_FREQ_50HZ;
+  freq[9] = BROADCAST_FREQ_100HZ;
+  freq[10] = BROADCAST_FREQ_50HZ;
+  freq[11] = BROADCAST_FREQ_10HZ;
+
+  setBroadcastFreq(freq);
+}
+
+
+unsigned short CoreAPI::setBroadcastFreqDefaults(int timeout)
+{
+  uint8_t freq[16];
+
+  /* Channels definition:
+  * 0 - Timestamp
+  * 1 - Attitude Quaterniouns
+  * 2 - Acceleration
+  * 3 - Velocity (Ground Frame)
+  * 4 - Angular Velocity (Body Frame)
+  * 5 - Position
+  * 6 - Magnetometer
+  * 7 - RC Channels Data
+  * 8 - Gimbal Data
+  * 9 - Flight Status
+  * 10 - Battery Level
+  * 11 - Control Information
+  */
+
+  freq[0] = BROADCAST_FREQ_1HZ;
+  freq[1] = BROADCAST_FREQ_10HZ;
+  freq[2] = BROADCAST_FREQ_50HZ;
+  freq[3] = BROADCAST_FREQ_100HZ;
+  freq[4] = BROADCAST_FREQ_50HZ;
+  freq[5] = BROADCAST_FREQ_10HZ;
+  freq[6] = BROADCAST_FREQ_1HZ;
+  freq[7] = BROADCAST_FREQ_10HZ;
+  freq[8] = BROADCAST_FREQ_50HZ;
+  freq[9] = BROADCAST_FREQ_100HZ;
+  freq[10] = BROADCAST_FREQ_50HZ;
+  freq[11] = BROADCAST_FREQ_10HZ;
+
+  return setBroadcastFreq(freq, timeout);
+}
+
 TimeStampData CoreAPI::getTime() const { return broadcastData.timeStamp; }
 
 FlightStatus CoreAPI::getFlightStatus() const { return broadcastData.status; }
@@ -224,6 +422,7 @@ void CoreAPI::setFromMobileCallback(CallBackHandler FromMobileEntrance)
 {
   fromMobileCallback = FromMobileEntrance;
 }
+
 
 ActivateData CoreAPI::getAccountData() const { return accountData; }
 
@@ -242,7 +441,22 @@ void CoreAPI::setControl(bool enable, CallBack callback, UserData userData)
     callback ? callback : CoreAPI::setControlCallback, userData);
 }
 
+unsigned short CoreAPI::setControl(bool enable, int timeout)
+{
+  unsigned char data = enable ? 1 : 0;
+  send(2, DJI::onboardSDK::encrypt, SET_CONTROL, CODE_SETCONTROL, &data, 1, 500, 2, 0, 0);
+
+  // Wait for end of ACK frame to arrive
+  serialDevice->lockACK();
+  serialDevice->wait(timeout);
+  serialDevice->freeACK();
+
+  return missionACKUnion.simpleACK;
+}
+
 HardDriver *CoreAPI::getDriver() const { return serialDevice; }
+
+SimpleACK CoreAPI::getSimpleACK () const { return missionACKUnion.simpleACK; }
 
 void CoreAPI::setDriver(HardDriver *sDevice) { serialDevice = sDevice; }
 
@@ -348,6 +562,166 @@ void CoreAPI::sendToMobileCallback(CoreAPI *api, Header *protocolHeader, UserDat
   }
 }
 
+//! Mobile Data Transparent Transmission Input Servicing 
+void CoreAPI::parseFromMobileCallback(CoreAPI *api, Header *protocolHeader, UserData userData __UNUSED)
+{
+  uint16_t mobile_data_id;
+  
+  if (protocolHeader->length - EXC_DATA_SIZE <= 4)
+  {
+    mobile_data_id = *((unsigned char*)protocolHeader + sizeof(Header) + 2);
+
+    switch (mobile_data_id)
+    {
+      case 2: 
+        if (obtainControlMobileCallback.callback)
+        {
+          obtainControlMobileCallback.callback(api, protocolHeader, obtainControlMobileCallback.userData);          
+        }
+        else
+        {
+          obtainControlMobileCMD = true; 
+        }
+        break;
+
+      case 3: 
+        if (releaseControlMobileCallback.callback)
+        {
+          releaseControlMobileCallback.callback(api, protocolHeader, releaseControlMobileCallback.userData);          
+        }
+        else
+        {
+          releaseControlMobileCMD = true;
+        }
+        break;
+
+      case 4: 
+        if (activateMobileCallback.callback)
+        {
+          activateMobileCallback.callback(api, protocolHeader, activateMobileCallback.userData);          
+        }
+        else
+        {
+          activateMobileCMD = true;
+        }
+        break;
+
+      case 5: 
+        if (armMobileCallback.callback)
+        {
+          armMobileCallback.callback(api, protocolHeader, armMobileCallback.userData);
+        }
+        else
+        {
+          armMobileCMD = true;
+        }
+        break;
+
+      case 6: 
+        if (disArmMobileCallback.callback)
+        {
+          disArmMobileCallback.callback(api, protocolHeader, disArmMobileCallback.userData);     
+        }
+        else
+        {
+          disArmMobileCMD = true;
+        }
+        break;
+
+      case 7: 
+        if (takeOffMobileCallback.callback)
+        {
+          takeOffMobileCallback.callback(api, protocolHeader, takeOffMobileCallback.userData);   
+        }
+        else
+        {
+          takeOffMobileCMD = true;
+        }
+        break;
+
+      case 8: 
+        if (landingMobileCallback.callback)
+        {
+          landingMobileCallback.callback(api, protocolHeader, landingMobileCallback.userData);  
+        }
+        else
+        {
+          landingMobileCMD = true;
+        }
+        break;
+
+      case 9: 
+        if (goHomeMobileCallback.callback)
+        {
+          goHomeMobileCallback.callback(api, protocolHeader, goHomeMobileCallback.userData); 
+        }
+        else
+        {
+          goHomeMobileCMD = true;
+        }
+        break;
+
+      case 10: 
+        if (takePhotoMobileCallback.callback)
+        {
+          takePhotoMobileCallback.callback(api, protocolHeader, takePhotoMobileCallback.userData);     
+        }
+        else
+        {
+          takePhotoMobileCMD = true;
+        }
+        break;
+
+      case 11: 
+        if (startVideoMobileCallback.callback)
+        {
+          startVideoMobileCallback.callback(api, protocolHeader, startVideoMobileCallback.userData);   
+        }
+        else
+        {
+          startVideoMobileCMD = true;
+        }
+        break;
+
+      case 13: 
+        if (stopVideoMobileCallback.callback)
+        {
+          stopVideoMobileCallback.callback(api, protocolHeader, stopVideoMobileCallback.userData); 
+        }
+        else
+        {
+          stopVideoMobileCMD = true;
+        }
+        break;
+      //! The next few are only polling based and do not use callbacks. See usage in Linux Sample.
+      case 61:
+        drawCirMobileCMD = true;
+        break;
+      case 62:
+        drawSqrMobileCMD = true;
+        break;
+      case 63:
+        attiCtrlMobileCMD = true;
+        break;
+      case 64:
+        gimbalCtrlMobileCMD = true;
+        break;
+      case 65:
+        wayPointTestMobileCMD = true;
+        break;
+      case 66:
+        localNavTestMobileCMD = true;
+        break;
+      case 67:
+        globalNavTestMobileCMD = true;
+        break;
+      case 68:
+        VRCTestMobileCMD = true;
+        break;
+    }
+  }
+}
+
 void CoreAPI::setFrequencyCallback(CoreAPI *api __UNUSED, Header *protocolHeader,
     UserData userData __UNUSED)
 {
@@ -361,19 +735,20 @@ void CoreAPI::setFrequencyCallback(CoreAPI *api __UNUSED, Header *protocolHeader
   switch (ack_data)
   {
     case 0x0000:
-      API_LOG(api->serialDevice, STATUS_LOG, "Frequency set successfully");
+      API_LOG(api->serialDevice, STATUS_LOG, "Frequency set successfully\n");
       break;
     case 0x0001:
-      API_LOG(api->serialDevice, ERROR_LOG, "Frequency parameter error");
+      API_LOG(api->serialDevice, ERROR_LOG, "Frequency parameter error\n");
       break;
     default:
       if (!api->decodeACKStatus(ack_data))
       {
-        API_LOG(api->serialDevice, ERROR_LOG, "While calling this function");
+        API_LOG(api->serialDevice, ERROR_LOG, "While calling this function\n");
       }
       break;
   }
 }
+
 Version CoreAPI::getSDKVersion() const { return versionData.version; }
 
 SDKFilter CoreAPI::getFilter() const { return filter; }

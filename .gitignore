@@ -22,7 +22,7 @@ sample/commandline/build-conboardSDK-msvc2013-Release/
 sample/commandline/build-conboardSDK-msvc2013-Debug/
 
 
-
+sample/Linux/bin
 sample/commandline/Linux/bin/onboardSDK
 sample/commandline/build-conboardSDK-Desktop_Qt_5_4_2_MinGW_32bit-Debug/
 
@@ -30,3 +30,10 @@ sample/STM32/OnBoardSDK_STM32/Project/Objects/
 sample/STM32/OnBoardSDK_STM32/Project/OnBoardSDK_STM32.uvguix.*
 sample/STM32/OnBoardSDK_STM32/Project/Listings
 sample/STM32/OnBoardSDK_STM32/Project/DebugConfig
+
+sample/Linux/bin/onboardSDK
+
+*.sw*
+tags
+/.cproject
+/.project

@@ -43,4 +43,5 @@ typedef struct
 #define STATUS_CMD_EXE_FAIL 0x0004
 #define STATUS_CMD_EXE_SUCCESS 0x0005
 
+
 #endif // DJI_APP_H

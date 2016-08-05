@@ -215,8 +215,10 @@ typedef struct Ack
 #pragma pack(1)
 
 typedef uint8_t BatteryData;
-typedef uint8_t MissionACK;
 
+/**
+ * Gimbal Data
+ */
 typedef struct GimbalAngleData
 {  
   int16_t yaw;
@@ -236,6 +238,121 @@ typedef struct GimbalSpeedData
 
 typedef float float32_t;
 typedef double float64_t;
+
+/**
+ * HotPoint Data
+ */
+typedef struct HotPointData
+{
+  uint8_t version;
+
+  float64_t latitude;
+  float64_t longitude;
+  float64_t height;
+
+  float64_t radius;
+  float32_t yawRate; // degree
+
+  uint8_t clockwise;
+  uint8_t startPoint;
+  uint8_t yawMode;
+  uint8_t reserved[11];
+} HotPointData;
+
+/**
+ * WayPoint Data
+ */
+typedef struct WayPointInitData
+{
+  uint8_t indexNumber;
+  float32_t maxVelocity;
+  float32_t idleVelocity;
+
+  uint8_t finishAction;
+  uint8_t executiveTimes;
+  uint8_t yawMode;
+  uint8_t traceMode;
+  uint8_t RCLostAction;
+  uint8_t gimbalPitch;
+  float64_t latitude;  //! @note For Camera to recording
+  float64_t longitude; //! not supported yet
+  float32_t altitude;
+
+  uint8_t reserved[16];
+} WayPointInitData;
+
+typedef struct WayPointData
+{
+  uint8_t index;
+
+  float64_t latitude;
+  float64_t longitude;
+  float32_t altitude;
+  float32_t damping;
+
+  int16_t yaw;
+  int16_t gimbalPitch;
+  uint8_t turnMode;
+
+  uint8_t reserved[8];
+  uint8_t hasAction;
+  uint16_t actionTimeLimit;
+
+  uint8_t actionNumber : 4;
+  uint8_t actionRepeat : 4;
+
+  uint8_t commandList[16];//! @note issues here list number is 15
+  int16_t commandParameter[16];
+} WayPointData;
+
+/**
+ * ACK Data
+ */
+
+typedef uint8_t MissionACK;
+typedef uint32_t SimpleACK;
+
+typedef struct HotPointStartACK
+{
+  uint8_t ack;
+  float32_t maxRadius;
+} HotpointStartACK;
+
+typedef struct WayPointDataACK
+{
+  uint8_t ack;
+  uint8_t index;
+} WayPointDataACK;
+
+typedef struct WayPointVelocityACK
+{
+  uint8_t ack;
+  float32_t idleVelocity;
+} WayPointVelocityACK;
+
+
+typedef union MissionACKUnion
+{ 
+  uint8_t raw_ack_array[5];
+  MissionACK missionACK;
+  SimpleACK simpleACK;
+  HotPointStartACK hotpointStartACK;
+  WayPointDataACK waypointDataACK; 
+  WayPointVelocityACK waypointVelocityACK;
+} MissionACKUnion; 
+
+// These big structs have structs within and don't seem to be used 
+typedef struct HotPointReadACK
+{
+  MissionACK ack;
+  HotPointData data;
+} HotpointReadACK;
+
+typedef struct WayPointInitACK
+{
+  uint8_t ack;
+  WayPointInitData data;
+} WayPointInitACK;
 
 typedef struct QuaternionData
 {

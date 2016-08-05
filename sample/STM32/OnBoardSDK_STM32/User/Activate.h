@@ -1,6 +1,6 @@
 /*! @file Activate.h
- *  @version 3.1.7
- *  @date Jul 01 2016
+ *  @version 3.1.8
+ *  @date Aug 05 2016
  *
  *  @brief
  *  Activation process for the STM32 example App.

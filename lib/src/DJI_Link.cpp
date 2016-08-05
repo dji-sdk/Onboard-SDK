@@ -55,16 +55,23 @@ void CoreAPI::appHandler(Header *protocolHeader)
           callBack = CMDSessionTab[protocolHeader->sessionID].handler;
           data = CMDSessionTab[protocolHeader->sessionID].userData;
           freeSession(&CMDSessionTab[protocolHeader->sessionID]);
-
           serialDevice->freeMemory();
+
+          // Notify caller end of ACK frame arrived
+          notifyCaller(protocolHeader);
+
           if (callBack)
           {
             //! @todo new algorithm call in a thread
             callBack(this, protocolHeader, data);
 
-            //! End of session
-            setSessionStatus((&CMDSessionTab[protocolHeader->sessionID])->usageFlag);
+            /**
+             * Set end of ACK frame
+             * @todo Implement proper notification mechanism
+             */
+            // setACKFrameStatus((&CMDSessionTab[protocolHeader->sessionID])->usageFlag);
           }
+          setACKFrameStatus((&CMDSessionTab[protocolHeader->sessionID])->usageFlag);
         }
         else
           serialDevice->freeMemory();
@@ -104,7 +111,7 @@ void CoreAPI::appHandler(Header *protocolHeader)
           p2protocolHeader = (Header *)ACKSessionTab[protocolHeader->sessionID - 1].mmu->pmem;
           if (p2protocolHeader->sequenceNumber == protocolHeader->sequenceNumber)
           {
-            API_LOG(serialDevice, DEBUG_LOG, "repeat ACK to remote,session "
+            API_LOG(serialDevice, DEBUG_LOG, "Repeat ACK to remote,session "
                 "id=%d,seq_num=%d\n",
                 protocolHeader->sessionID, protocolHeader->sequenceNumber);
             sendData(ACKSessionTab[protocolHeader->sessionID - 1].mmu->pmem);
@@ -113,7 +120,7 @@ void CoreAPI::appHandler(Header *protocolHeader)
           else
           {
             API_LOG(serialDevice, DEBUG_LOG,
-                "same session,but new seq_num pkg,session id=%d,"
+                "Same session,but new seq_num pkg,session id=%d,"
                 "pre seq_num=%d,cur seq_num=%d\n",
                 protocolHeader->sessionID, p2protocolHeader->sequenceNumber,
                 protocolHeader->sequenceNumber);
@@ -126,6 +133,27 @@ void CoreAPI::appHandler(Header *protocolHeader)
         break;
     }
   }
+}
+
+void CoreAPI::notifyCaller(Header *protocolHeader)
+{
+  serialDevice->lockACK();
+
+  // In case of getDroneVersion? Should be only one case.
+  if(protocolHeader->length < 64)
+  {
+    memcpy(missionACKUnion.raw_ack_array, ((unsigned char *)protocolHeader) + sizeof(Header),
+	    (protocolHeader->length - EXC_DATA_SIZE));
+  } 
+  else
+  {
+    // Special case for getDroneVersion API call
+    version_ack_data = ((unsigned char *)protocolHeader) + sizeof(Header);
+  }
+
+  // Notify caller end of ACK frame arrived
+  serialDevice->notify();
+  serialDevice->freeACK();
 }
 
 void CoreAPI::sendPoll()
@@ -160,7 +188,7 @@ void CoreAPI::sendPoll()
         }
         else
         {
-          API_LOG(serialDevice, DEBUG_LOG, "send once %d\n", i);
+          API_LOG(serialDevice, DEBUG_LOG, "Send once %d\n", i);
           sendData(CMDSessionTab[i].mmu->pmem);
           CMDSessionTab[i].preTimestamp = curTimestamp;
         }
@@ -168,7 +196,7 @@ void CoreAPI::sendPoll()
       }
       else
       {
-        API_LOG(serialDevice, DEBUG_LOG, "timeout Session: %d \n", i);
+        API_LOG(serialDevice, DEBUG_LOG, "Timeout Session: %d \n", i);
       }
     }
   }
@@ -213,14 +241,14 @@ void CoreAPI::setActivation(bool isActivated)
     broadcastData.activation = 0;
 }
 
-void DJI::onboardSDK::CoreAPI::setSessionStatus(uint32_t usageFlag)
+void DJI::onboardSDK::CoreAPI::setACKFrameStatus(uint32_t usageFlag)
 {
-  sessionStatus = usageFlag;
+  ackFrameStatus = usageFlag;
 }
 
-uint32_t DJI::onboardSDK::CoreAPI::getSessionStatus()
+uint32_t DJI::onboardSDK::CoreAPI::getACKFrameStatus()
 {
-  return sessionStatus;
+  return ackFrameStatus;
 }
 
 void CoreAPI::setSyncFreq(uint32_t freqInHz)
@@ -290,7 +318,7 @@ int CoreAPI::sendInterface(Command *parameter)
   CMDSession *cmdSession = (CMDSession *)NULL;
   if (parameter->length > PRO_PURE_DATA_MAX_SIZE)
   {
-    API_LOG(serialDevice, ERROR_LOG, "ERROR,length=%d is over-sized\n", parameter->length);
+    API_LOG(serialDevice, ERROR_LOG, "ERROR,length=%lu is over-sized\n", parameter->length);
     return -1;
   }
 

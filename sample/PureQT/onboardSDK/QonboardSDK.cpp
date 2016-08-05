@@ -89,6 +89,12 @@ void QtOnboardsdkPortDriver::lockMSG() { msg.lock(); }
 
 void QtOnboardsdkPortDriver::freeMSG() { msg.unlock(); }
 
+void QtOnboardsdkPortDriver::lockACK() {ack.lock();}
+void QtOnboardsdkPortDriver::freeACK() {ack.unlock();}
+
+void QtOnboardsdkPortDriver::notify() {};
+void QtOnboardsdkPortDriver::wait(int timeout) {};
+
 void QtOnboardsdkPortDriver::displayLog(const char *buf)
 {
     if (buf)

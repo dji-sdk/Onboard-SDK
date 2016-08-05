@@ -51,6 +51,16 @@ BatteryData DJI::onboardSDK::CoreAPI::getBatteryCapacity() const
 
 CtrlInfoData DJI::onboardSDK::CoreAPI::getCtrlInfo() const { return broadcastData.ctrlInfo; }
 
+void DJI::onboardSDK::CoreAPI::setBroadcastFrameStatus(bool isFrame)
+{
+  broadcastFrameStatus = isFrame;
+}
+
+bool DJI::onboardSDK::CoreAPI::getBroadcastFrameStatus()
+{
+  return broadcastFrameStatus;
+}
+
 #ifdef SDK_DEV
 #include "devApp.cpp"
 #else
@@ -86,9 +96,9 @@ void DJI::onboardSDK::CoreAPI::broadcast(Header *protocolHeader)
     passData(*enableFlag, DATA_FLAG, &broadcastData.gps, pdata, sizeof(GPSData), len);
     passData(*enableFlag, DATA_FLAG, &broadcastData.rtk, pdata, sizeof(RTKData), len);
     if (((*enableFlag) & 0x0040))
-      API_LOG(serialDevice, RTK_LOG, "receive GPS data %lld\n", serialDevice->getTimeStamp());
+      API_LOG(serialDevice, RTK_LOG, "receive GPS data %llu\n", (unsigned long long)serialDevice->getTimeStamp());
     if (((*enableFlag) & 0x0080))
-      API_LOG(serialDevice, RTK_LOG, "receive RTK data %lld\n", serialDevice->getTimeStamp());
+      API_LOG(serialDevice, RTK_LOG, "receive RTK data %llu\n", (unsigned long long)serialDevice->getTimeStamp());
   }
   passData(*enableFlag, DATA_FLAG, &broadcastData.mag, pdata, sizeof(MagnetData), len);
   passData(*enableFlag, DATA_FLAG, &broadcastData.rc, pdata, sizeof(RadioData), len);
@@ -99,6 +109,12 @@ void DJI::onboardSDK::CoreAPI::broadcast(Header *protocolHeader)
   passData(*enableFlag, DATA_FLAG, &broadcastData.ctrlInfo, pdata,
       sizeof(CtrlInfoData) - ((versionData.version == versionM100_23) ? 1 : 0), len);
   serialDevice->freeMSG();
+
+  /**
+   * Set broadcast frame status
+   * @todo Implement proper notification mechanism
+   */
+  setBroadcastFrameStatus(true);
 
   if (broadcastCallback.callback)
     broadcastCallback.callback(this, protocolHeader, broadcastCallback.userData);
@@ -117,10 +133,14 @@ void DJI::onboardSDK::CoreAPI::recvReqData(Header *protocolHeader)
         broadcast(protocolHeader);
         break;
       case CODE_FROMMOBILE:
+        API_LOG(serialDevice, STATUS_LOG, "Receive data from mobile\n");
         if (fromMobileCallback.callback)
         {
-          API_LOG(serialDevice, STATUS_LOG, "Receive data from mobile\n")
           fromMobileCallback.callback(this, protocolHeader, fromMobileCallback.userData);
+        }
+        else
+        {
+          parseFromMobileCallback(this, protocolHeader);
         }
         break;
       case CODE_LOSTCTRL:

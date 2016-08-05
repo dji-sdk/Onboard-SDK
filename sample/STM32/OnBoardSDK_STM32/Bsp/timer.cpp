@@ -1,6 +1,6 @@
 /*! @file timer.cpp
- *  @version 3.1.7
- *  @date Jul 01 2016
+ *  @version 3.1.8
+ *  @date Aug 05 2016
  *
  *  @brief
  *  Timer helper functions and ISR for board STM32F4Discovery
@@ -19,7 +19,9 @@ extern VirtualRC virtualrc;
 extern VirtualRCData myVRCdata;
 extern FlightData flightData;
 extern Flight flight;
-extern unsigned char Rx_buff[];
+//extern unsigned char Rx_buff[];
+extern TerminalCommand myTerminal;
+
 void Timer1Config()
 {
   TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStructure;
@@ -79,6 +81,19 @@ void SystickConfig()
   }
 }
 
+
+void delay_nms(uint16_t time)
+{
+  u32 i = 0;
+  while (time--)
+  {
+    i = 30000;
+    while (i--)
+      ;
+  }
+}
+
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -105,7 +120,7 @@ void TIM2_IRQHandler()
 {
   if (TIM_GetITStatus(TIM2, TIM_IT_Update) == SET)
   {
-    if ((Rx_buff[2] == 0x04) && (Rx_buff[3] == 0x01))
+    if ((myTerminal.cmdIn[2] == 0x04) && (myTerminal.cmdIn[3] == 0x01))
     {
       flight.setFlight(&flightData);
     }

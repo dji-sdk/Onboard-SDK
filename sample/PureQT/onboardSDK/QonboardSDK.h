@@ -36,6 +36,12 @@ class QtOnboardsdkPortDriver : public HardDriver
     void lockMSG();
     void freeMSG();
 
+    void lockACK();
+    void freeACK();
+
+    void notify();
+    void wait(int timeout);
+
     void displayLog(const char *buf = 0);
 
     void setBaudrate(int value);
@@ -51,6 +57,7 @@ class QtOnboardsdkPortDriver : public HardDriver
     QSerialPort *port;
     QMutex memory;
     QMutex msg;
+    QMutex ack;
     QMutex sendLock;
     QMutex bufferLock;
     QTextBrowser *display;

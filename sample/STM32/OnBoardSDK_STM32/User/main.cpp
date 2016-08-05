@@ -1,6 +1,6 @@
 /*! @file main.cpp
- *  @version 3.1.7
- *  @date Jul 01 2016
+ *  @version 3.1.8
+ *  @date Aug 05 2016
  *
  *  @brief
  *  An exmaple program of DJI-onboard-SDK portable for stm32
@@ -22,18 +22,26 @@
 
 #include "main.h"
 
+
 #undef USE_ENCRYPT
 /*-----------------------DJI_LIB VARIABLE-----------------------------*/
 using namespace DJI::onboardSDK;
-DJI::onboardSDK::HardDriver* driver = new STM32F4;
+
+HardDriver* driver = new STM32F4;
 CoreAPI defaultAPI = CoreAPI(driver);
 CoreAPI *coreApi = &defaultAPI;
+
 Flight flight = Flight(coreApi);
 FlightData flightData;
+
 VirtualRC virtualrc = VirtualRC(coreApi);
 VirtualRCData myVRCdata =
 { 1024, 1024, 1024, 1024, 1024, 1024, 1024, 1024, 1024, 1024, 1024, 1024, 1024,
     1024, 1024 };
+
+extern TerminalCommand myTerminal;
+extern LocalNavigationStatus droneState;
+extern uint8_t myFreq[16];
 
 int main()
 {
@@ -43,35 +51,47 @@ int main()
   printf("Refer to \r\n");
   printf("https://developer.dji.com/onboard-sdk/documentation/github-platform-docs/STM32/README.html \r\n");
   printf("for supported commands!\r\n");
-  printf("Initializing...\r\n");
+  printf("Board Initialization Done!\r\n");
   delay_nms(1000);
 
   //! Change the version string to your platform/version as defined in DJI_Version.h
   coreApi->setVersion(versionM100_31);
-  delay_nms(1000);
-  coreApi->getDroneVersion();
-  delay_nms(20);
-  printf("Done~!\r\n");
+  delay_nms(200);
+  printf("API Version Set Done!\r\n");
 
+  uint32_t runOnce = 1;
+  uint32_t next500MilTick;
   while (1)
   {
-    if (Rx_Handle_Flag == 1)
+    // One time automatic activation
+    if (runOnce)
     {
-      Rx_Handle_Flag = 0;
-      Rx_buff_Handler();
-    }
-    delay_nms(50);
-  }
-}
+      runOnce = 0;
+      coreApi->setBroadcastFreq(myFreq);
+      delay_nms(50);
 
-void delay_nms(u16 time)
-{
-  u32 i = 0;
-  while (time--)
-  {
-    i = 30000;
-    while (i--)
-      ;
+      // The Local navigation example will run in broadcast call back function,
+      // immediate after GPS position is updated
+      coreApi->setBroadcastCallback(myRecvCallback,(DJI::UserData)(&droneState));
+
+      User_Activate();      
+      delay_nms(50);
+
+      next500MilTick = driver->getTimeStamp() + 500;
+    }
+
+    if (driver->getTimeStamp() >= next500MilTick)
+    {
+      next500MilTick = driver->getTimeStamp() + 500;
+
+      // Handle user commands from mobile device
+      mobileCommandHandler(coreApi, &flight);
+
+      // Handle user commands from serial (USART2)
+      myTerminal.terminalCommandHandler(coreApi, &flight);
+    }
+
+    coreApi->sendPoll();
   }
 }
 

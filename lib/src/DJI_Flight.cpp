@@ -43,11 +43,39 @@ void Flight::task(TASK taskname, CallBack TaskCallback, UserData userData)
       100, 3, TaskCallback ? TaskCallback : Flight::taskCallback, userData);
 }
 
+unsigned short Flight::task(TASK taskname, int timeout)
+{
+  taskData.cmdData = taskname;
+  taskData.cmdSequence++;
+
+  api->send(2, encrypt, SET_CONTROL, CODE_TASK, (unsigned char *)&taskData, sizeof(taskData),
+      100, 3, 0, 0);
+
+  api->serialDevice->lockACK();
+  api->serialDevice->wait(timeout);
+  api->serialDevice->freeACK();
+
+  return api->missionACKUnion.simpleACK;
+}
+
 void Flight::setArm(bool enable, CallBack ArmCallback, UserData userData)
 {
   uint8_t data = enable ? 1 : 0;
   api->send(2, encrypt, SET_CONTROL, CODE_SETARM, &data, 1, 0, 1,
       ArmCallback ? ArmCallback : Flight::armCallback, userData);
+}
+
+unsigned short Flight::setArm(bool enable, int timeout)
+{
+  uint8_t data = enable ? 1 : 0;
+  api->send(2, encrypt, SET_CONTROL, CODE_SETARM, &data, 1, 0, 1, 0, 0);
+
+
+  api->serialDevice->lockACK();
+  api->serialDevice->wait(timeout);
+  api->serialDevice->freeACK();
+
+  return api->missionACKUnion.simpleACK;
 }
 
 void Flight::control(uint8_t flag, float32_t x, float32_t y, float32_t z, float32_t yaw)
@@ -194,7 +222,7 @@ void Flight::taskCallback(CoreAPI *api, Header *protocolHeader, UserData userDat
         (protocolHeader->length - EXC_DATA_SIZE));
     API_LOG(api->getDriver(), STATUS_LOG, "Task running successfully,%d\n", ack_data);
   }
-  else
+ else
   {
     API_LOG(api->getDriver(), ERROR_LOG, "ACK is exception,session id %d,sequence %d\n",
         protocolHeader->sessionID, protocolHeader->sequenceNumber);

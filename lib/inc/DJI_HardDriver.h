@@ -53,6 +53,10 @@ class HardDriver
    *  void lockMSG();/ void freeMSG();
    *  @brief provide a mutex for multi-thread. when operating messages.
    *
+   *  void notify();/ void wait();
+   *  @brief use conditional variable to signal controller thread about
+   *  arrival of ACK frame.
+   *
    *  void displayLog(char *buf);
    *  @brief Micro "API_LOG" invoked this function, to pass datalog.
    *  In order to pass data through different stream or channel.
@@ -85,6 +89,12 @@ class HardDriver
 
   virtual void lockMSG() = 0;
   virtual void freeMSG() = 0;
+
+  virtual void lockACK() = 0;
+  virtual void freeACK() = 0;
+
+  virtual void notify() = 0;
+  virtual void wait(int timeout) = 0;
 
   public:
   virtual void displayLog(const char *buf = 0);

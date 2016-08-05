@@ -89,6 +89,7 @@ class Flight
     STATUS_FINISHING_LANDING = 5,
   };
 
+
   enum Device
   {
     DEVICE_RC = 0,
@@ -137,7 +138,9 @@ class Flight
   Flight(CoreAPI *ControlAPI = 0);
 
   void task(TASK taskname, CallBack TaskCallback = 0, UserData userData = 0);
+  unsigned short task(TASK taskname, int timer);
   void setArm(bool enable, CallBack ArmCallback = 0, UserData userData = 0);
+  unsigned short setArm(bool enable, int timer);
   void control(uint8_t flag, float32_t x, float32_t y, float32_t z, float32_t yaw); //! @deprecated This function will be deprecated, please use setMovementControl instead. 
   void setMovementControl(uint8_t flag, float32_t x, float32_t y, float32_t z, float32_t yaw);
   void setFlight(FlightData *data); //! @deprecated old interface. PLease use setMovementControl instead. 

@@ -615,7 +615,7 @@ bool CoreAPI::decodeACKStatus(unsigned short ack)
       API_LOG(serialDevice, ERROR_LOG, "Wrong encode Key, Activate again.");
       return false;
     case ACK_COMMON_NO_AUTHORIZATION:
-      API_LOG(serialDevice, ERROR_LOG, "Pleasd obtain control and retry.");
+      API_LOG(serialDevice, ERROR_LOG, "Please obtain control and retry.");
       return false;
     case ACK_COMMON_NO_RIGHTS:
       API_LOG(serialDevice, ERROR_LOG, "Need higher Level access.");
@@ -862,7 +862,7 @@ unsigned short DJI::onboardSDK::CoreAPI::encrypt(unsigned char *pdest,
   if (filter.encode == 0 && is_enc)
   {
     API_LOG(serialDevice, ERROR_LOG,
-        "Can not send encode data, Please active your device to get an available key.");
+        "Can not send encode data, Please activate your device to get an available key.\n");
     return 0;
   }
   if (w_len == 0 || psrc == 0)

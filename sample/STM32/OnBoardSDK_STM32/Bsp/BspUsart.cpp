@@ -1,6 +1,6 @@
 /*! @file BspUsart.cpp
- *  @version 3.1.7
- *  @date Jul 01 2016
+ *  @version 3.1.8
+ *  @date Aug 05 2016
  *
  *  @brief
  *  Usart helper functions and ISR for board STM32F4Discovery
@@ -40,8 +40,8 @@ void USART2_Gpio_Config(void)
   GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
   GPIO_Init(GPIOA, &GPIO_InitStructure);
 
-  GPIO_PinAFConfig(GPIOA, GPIO_PinSource2, GPIO_AF_USART2);		//tx
-  GPIO_PinAFConfig(GPIOA, GPIO_PinSource3, GPIO_AF_USART2);		//rx
+  GPIO_PinAFConfig(GPIOA, GPIO_PinSource2, GPIO_AF_USART2);     //tx
+  GPIO_PinAFConfig(GPIOA, GPIO_PinSource3, GPIO_AF_USART2);     //rx
 
 }
 
@@ -58,11 +58,14 @@ void USART3_Gpio_Config(void)
   GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
   GPIO_Init(GPIOB, &GPIO_InitStructure);
 
-  GPIO_PinAFConfig(GPIOB, GPIO_PinSource10, GPIO_AF_USART3);		//tx
-  GPIO_PinAFConfig(GPIOB, GPIO_PinSource11, GPIO_AF_USART3);		//rx
-
+  GPIO_PinAFConfig(GPIOB, GPIO_PinSource10, GPIO_AF_USART3);        //tx
+  GPIO_PinAFConfig(GPIOB, GPIO_PinSource11, GPIO_AF_USART3);        //rx
 }
 
+/*
+ * USART2 is used for receiving commands from PC and
+ * printing debug information to PC
+ */
 void USART2_Config(void)
 {
   USART2_Gpio_Config();
@@ -84,9 +87,12 @@ void USART2_Config(void)
 
   while (USART_GetFlagStatus(USART2, USART_FLAG_TXE) != SET)
     ;
-
 }
 
+/*
+ * USART3 is used for communicating with the DJI flight controller
+ * The Baud rate needs to match the Baud rate used by the flight controller
+ */
 void USART3_Config(void)
 {
   USART3_Gpio_Config();
@@ -109,26 +115,24 @@ void USART3_Config(void)
     ;
 
 }
+
 void USARTxNVIC_Config()
 {
-  NVIC_InitTypeDef NVIC_InitStructure;
-  NVIC_InitTypeDef NVIC_InitStructure2;
-
   NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x04;
-  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x03;
-  NVIC_InitStructure.NVIC_IRQChannel = USART3_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+  NVIC_InitTypeDef NVIC_InitStructure_USART3;
+  NVIC_InitStructure_USART3.NVIC_IRQChannelPreemptionPriority = 0x04;
+  NVIC_InitStructure_USART3.NVIC_IRQChannelSubPriority = 0x03;
+  NVIC_InitStructure_USART3.NVIC_IRQChannel = USART3_IRQn;
+  NVIC_InitStructure_USART3.NVIC_IRQChannelCmd = ENABLE;
+  NVIC_Init(&NVIC_InitStructure_USART3);
 
-  NVIC_Init(&NVIC_InitStructure);
-
-  NVIC_InitStructure2.NVIC_IRQChannelPreemptionPriority = 0x03;
-  NVIC_InitStructure2.NVIC_IRQChannelSubPriority = 0x02;
-  NVIC_InitStructure2.NVIC_IRQChannel = USART2_IRQn;
-  NVIC_InitStructure2.NVIC_IRQChannelCmd = ENABLE;
-
-  NVIC_Init(&NVIC_InitStructure2);
+  NVIC_InitTypeDef NVIC_InitStructure_USART2;
+  NVIC_InitStructure_USART2.NVIC_IRQChannelPreemptionPriority = 0x03;
+  NVIC_InitStructure_USART2.NVIC_IRQChannelSubPriority = 0x02;
+  NVIC_InitStructure_USART2.NVIC_IRQChannel = USART2_IRQn;
+  NVIC_InitStructure_USART2.NVIC_IRQChannelCmd = ENABLE;
+  NVIC_Init(&NVIC_InitStructure_USART2);
 }
 
 void UsartConfig()
@@ -151,41 +155,6 @@ void USART3_IRQHandler(void)
   }
 }
 
-//command from PC would be handle here
-void USART2_IRQHandler(void)
-{
-  if (USART_GetFlagStatus(USART2, USART_FLAG_RXNE) == SET)
-  {
-    come_data = USART_ReceiveData(USART2); //come_data is a ONE-BYTE temp-container
-
-    if (Rx_adr == 0)
-    {
-      if (come_data == 0xFA)
-      {
-        Rx_buff[0] = 0xFA;
-        Rx_adr = 1;
-      }
-      else
-      {
-      }
-    }
-    else
-    {
-      if (come_data == 0xfe)	//receive a 0xfe would lead to a command-execution
-      {
-        Rx_buff[Rx_adr] = come_data;
-        Rx_length = Rx_adr + 1;
-        Rx_adr = 0;
-        Rx_Handle_Flag = 1;
-      }
-      else
-      {
-        Rx_buff[Rx_adr] = come_data;
-        Rx_adr++;
-      }
-    }
-  }
-}
 
 #ifdef __cplusplus
 }

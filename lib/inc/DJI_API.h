@@ -42,6 +42,12 @@ class HotPoint;
 
 //! @todo sort enum and move to a new file
 
+enum ACK_ERROR_CODE
+{
+  ACK_SUCCESS = 0x0000,
+  ACK_PARAM_ERROR = 0x0001
+};
+
 enum ACK_COMMON_CODE
 {
   ACK_COMMON_SUCCESS = 0x0000,
@@ -82,6 +88,13 @@ enum ACK_ARM_CODE
   ACK_ARM_ALREADY_ARMED = 0x0002,
   ACK_ARM_IN_AIR = 0x0003,
 };
+
+enum TASK_ACK_CODE
+{ 
+  TASK_FAILURE = 0x01,
+  TASK_SUCCESS = 0x02
+};
+
 
 //! @note end of ACKs
 
@@ -197,6 +210,10 @@ enum BROADCAST_FREQ
 class CoreAPI
 {
   public:
+  CoreAPI(HardDriver *Driver = 0, Version SDKVersion = 0, bool userCallbackThread = false,
+        CallBack userRecvCallback = 0, UserData userData = 0);
+  CoreAPI(HardDriver *Driver, Version SDKVersion, CallBackHandler userRecvCallback,
+        bool userCallbackThread = false);
   void sendPoll(void);
   void readPoll(void);
   //! @todo Implement callback poll handler
@@ -207,13 +224,10 @@ class CoreAPI
   //! @todo Implement stream handler
   void byteStreamHandler(uint8_t *buffer, size_t size);
 
-  public:
-  CoreAPI(HardDriver *Driver = 0, Version SDKVersion = 0, bool userCallbackThread = false,
-      CallBack userRecvCallback = 0, UserData userData = 0);
-  CoreAPI(HardDriver *Driver, Version SDKVersion, CallBackHandler userRecvCallback,
-      bool userCallbackThread = false);
-
   void ack(req_id_t req_id, unsigned char *ackdata, int len);
+
+  //! Notify caller ACK frame arrived
+  void notifyCaller(Header *protocolHeader);
 
   //@{
   /**
@@ -249,7 +263,41 @@ class CoreAPI
    * Proceed to programming if activation successful.
    */
   void activate(ActivateData *data, CallBack callback = 0, UserData userData = 0);
+
+  /// Blocking API Control
+  /**
+  * @remark
+  * Blocks until ACK frame arrives or timeout occurs
+  *
+  * @brief
+  * Send activation control to your flight controller to check if: \n a)
+  * your application registered in your developer
+  * account \n b) API Control enabled in the Assistant software\n\n
+  * Proceed to programming if activation successful.
+  *
+  * @return ACK from flight controller
+  *
+  * @todo
+  * Implement high resolution timer to catch ACK timeout
+  */
+  unsigned short activate(ActivateData *data, int timeout);
+
   void setControl(bool enable, CallBack callback = 0, UserData userData = 0);
+
+  /// Blocking API Control
+  /**
+  * @remark
+  * Blocks until ACK frame arrives or timeout occurs
+  *
+  * @brief
+  * Obtain control
+  *
+  * @return ACK from flight controller
+  *
+  * @todo
+  * Implement high resolution timer to catch ACK timeout
+  */
+  unsigned short setControl(bool enable, int timeout);
 
   /// Activation Control
   /**
@@ -289,8 +337,40 @@ class CoreAPI
    * 11 - Control Information\n
    */
   void setBroadcastFreq(uint8_t *dataLenIs16, CallBack callback = 0, UserData userData = 0);
-  void setSessionStatus(uint32_t usageFlag);
-  uint32_t getSessionStatus();
+  unsigned short setBroadcastFreq(uint8_t *dataLenIs16, int timeout);
+
+  /**
+   * Reset all broadcast frequencies to their default values
+   */
+  void setBroadcastFreqDefaults();
+
+  /**
+   * Blocking API Control
+   *
+   * @brief
+   * Set broadcast frequencies to their default values and block until
+   * ACK arrives from flight controller
+   *
+   * @return ACK from flight controller
+   *
+   * @todo
+   * Implement high resolution timer to catch ACK timeout
+   */
+  unsigned short setBroadcastFreqDefaults(int timeout);
+   
+  /*
+   * Set all broadcast frequencies to zero. Only ACK data will stay on the line.
+   */
+  void setBroadcastFreqToZero();
+
+  /**
+   * Let user know when ACK and Broadcast messages processed
+   */
+  void setACKFrameStatus(uint32_t usageFlag);
+  uint32_t getACKFrameStatus();
+  void setBroadcastFrameStatus(bool isFrame);
+  bool getBroadcastFrameStatus();
+
   void setSyncFreq(uint32_t freqInHz);
   void setKey(const char *key);
 
@@ -302,6 +382,21 @@ class CoreAPI
    * You can query your flight controller prior to activation.
    */
   void getDroneVersion(CallBack callback = 0, UserData userData = 0);
+
+  /**
+   * Blocking API Control
+   *
+   * @brief
+   * Get drone version from flight controller block until
+   * ACK arrives from flight controller
+   *
+   * @return VersionData containing ACK value, CRC of the
+   * protocol version and protocol version itself
+   *
+   * @todo
+   * Implement high resolution timer to catch ACK timeout
+   */
+  VersionData getDroneVersion(int timeout);
 
   /**Get broadcasted data values from flight controller.*/
   BroadcastData getBroadcastData() const;
@@ -338,11 +433,11 @@ class CoreAPI
    */
   HardDriver *getDriver() const;
 
+  SimpleACK getSimpleACK() const;
   /**
    * Get SDK version
    */
   Version getSDKVersion() const;
-  public:
   void setBroadcastCallback(CallBackHandler callback) { broadcastCallback = callback; }
   void setFromMobileCallback(CallBackHandler FromMobileEntrance);
 
@@ -368,77 +463,30 @@ class CoreAPI
   static void sendToMobileCallback(CoreAPI *api, Header *protocolHeader, UserData userData = 0);
   static void setFrequencyCallback(CoreAPI *api, Header *protocolHeader, UserData userData = 0);
 
-  private:
-  BroadcastData broadcastData;
-  uint32_t sessionStatus;
+  /** 
+   * MOS Protocol parsing lirbary functions. 
+   */
 
-  private:
-  unsigned char encodeSendData[BUFFER_SIZE];
-  unsigned char encodeACK[ACK_SIZE];
+  /**
+   * Default MOS Protocol Parser. Calls other callback functions based on data
+   */
+  void parseFromMobileCallback(CoreAPI *api, Header *protocolHeader, UserData userData = 0);
+  
+  /**
+   * Mobile Callback handler functions
+   */
+  void setObtainControlMobileCallback(CallBackHandler callback) {obtainControlMobileCallback = callback;}
+  void setReleaseControlMobileCallback(CallBackHandler callback) {releaseControlMobileCallback = callback;}
+  void setActivateMobileCallback(CallBackHandler callback) {activateMobileCallback = callback;}
+  void setArmMobileCallback(CallBackHandler callback) {armMobileCallback = callback;}
+  void setDisArmMobileCallback(CallBackHandler callback) {disArmMobileCallback = callback;}
+  void setTakeOffMobileCallback(CallBackHandler callback) {takeOffMobileCallback = callback;}
+  void setLandingMobileCallback(CallBackHandler callback) {landingMobileCallback = callback;}
+  void setGoHomeMobileCallback(CallBackHandler callback) {goHomeMobileCallback = callback;}
+  void setTakePhotoMobileCallback(CallBackHandler callback) {takePhotoMobileCallback = callback;}
+  void setStartVideoMobileCallback(CallBackHandler callback) {startVideoMobileCallback = callback;}
+  void setStopVideoMobileCallback(CallBackHandler callback) {stopVideoMobileCallback = callback;}
 
-//  uint8_t cblistTail;
-//  CallBackHandler cbList[CALLBACK_LIST_NUM];
-  CallBackHandler fromMobileCallback;
-  CallBackHandler broadcastCallback;
-  CallBackHandler hotPointCallback;
-  CallBackHandler wayPointCallback;
-  CallBackHandler wayPointEventCallback;
-  CallBackHandler followCallback;
-  CallBackHandler missionCallback;
-  CallBackHandler recvCallback;
-
-  VersionData versionData;
-  ActivateData accountData;
-
-  unsigned short seq_num;
-
-  SDKFilter filter;
-
-  private:
-
-  /// Serial Device Initialization
-  void init(HardDriver *Driver, CallBackHandler userRecvCallback, bool userCallbackThread,
-      Version SDKVersion);
-  void recvReqData(Header *protocolHeader);
-  void appHandler(Header *protocolHeader);
-  void broadcast(Header *protocolHeader);
-
-  int sendInterface(Command *parameter);
-  int ackInterface(Ack *parameter);
-  void sendData(unsigned char *buf);
-
-  private:
-  void setup(void);
-  void setupMMU(void);
-  void setupSession(void);
-
-  MMU_Tab *allocMemory(unsigned short size);
-
-  void freeSession(CMDSession *session);
-  CMDSession *allocSession(unsigned short session_id, unsigned short size);
-
-  void freeACK(ACKSession *session);
-  ACKSession *allocACK(unsigned short session_id, unsigned short size);
-
-  private:
-  MMU_Tab MMU[MMU_TABLE_NUM];
-  CMDSession CMDSessionTab[SESSION_TABLE_NUM];
-  ACKSession ACKSessionTab[SESSION_TABLE_NUM - 1];
-  unsigned char memory[MEMORY_SIZE];
-
-  private:
-  unsigned short encrypt(unsigned char *pdest, const unsigned char *psrc,
-      unsigned short w_len, unsigned char is_ack, unsigned char is_enc,
-      unsigned char session_id, unsigned short seq_num);
-
-  void streamHandler(SDKFilter *p_filter, unsigned char in_data);
-  void checkStream(SDKFilter *p_filter);
-  void verifyHead(SDKFilter *p_filter);
-  void verifyData(SDKFilter *p_filter);
-  void callApp(SDKFilter *p_filter);
-  void storeData(SDKFilter *p_filter, unsigned char in_data);
-
-  public:
   /**
    * ACK decoder.
    */
@@ -449,7 +497,19 @@ class CoreAPI
    */
   bool decodeMissionStatus(uint8_t ack);
 
-  public:
+  /**
+   *@note  Thread data
+   */
+  bool stopCond;
+
+  /**
+   *@note  Thread data
+   */
+
+  uint32_t ack_data;
+  HotPointReadACK hotpointReadACK;
+  WayPointInitACK waypointInitACK;
+  MissionACKUnion missionACKUnion;
 
   /// Open Protocol Control
   /**
@@ -485,8 +545,151 @@ class CoreAPI
    */
   void setVersion(const Version &value);
 
+  /**
+   * Setters and getters for Mobile CMD variables - these are used 
+   * when interacting with a Data Transparent Transmission App 
+   */
+  bool getObtainControlMobileCMD() {return obtainControlMobileCMD;}
+  bool getReleaseControlMobileCMD() {return releaseControlMobileCMD;}
+  bool getActivateMobileCMD() {return activateMobileCMD;}
+  bool getArmMobileCMD() {return armMobileCMD;}
+  bool getDisArmMobileCMD() {return disArmMobileCMD;}
+  bool getTakeOffMobileCMD() {return takeOffMobileCMD;}
+  bool getLandingMobileCMD() {return landingMobileCMD;}
+  bool getGoHomeMobileCMD() {return goHomeMobileCMD;}
+  bool getTakePhotoMobileCMD() {return takePhotoMobileCMD;}
+  bool getStartVideoMobileCMD() {return startVideoMobileCMD;}
+  bool getStopVideoMobileCMD() {return stopVideoMobileCMD;}
+
+  bool getDrawCirMobileCMD() {return drawCirMobileCMD;}
+  bool getDrawSqrMobileCMD() {return drawSqrMobileCMD;}
+  bool getAttiCtrlMobileCMD() {return attiCtrlMobileCMD;}
+  bool getGimbalCtrlMobileCMD() {return gimbalCtrlMobileCMD;}
+  bool getWayPointTestMobileCMD() {return wayPointTestMobileCMD;}
+  bool getLocalNavTestMobileCMD() {return localNavTestMobileCMD;}
+  bool getGlobalNavTestMobileCMD() {return globalNavTestMobileCMD;}
+  bool getVRCTestMobileCMD() {return VRCTestMobileCMD;} 
+
+  void setObtainControlMobileCMD(bool userInput) {obtainControlMobileCMD = userInput;}
+  void setReleaseControlMobileCMD(bool userInput) {releaseControlMobileCMD= userInput;}
+  void setActivateMobileCMD(bool userInput) {activateMobileCMD= userInput;}
+  void setArmMobileCMD(bool userInput) {armMobileCMD= userInput;}
+  void setDisArmMobileCMD(bool userInput) {disArmMobileCMD= userInput;}
+  void setTakeOffMobileCMD(bool userInput) {takeOffMobileCMD= userInput;}
+  void setLandingMobileCMD(bool userInput) {landingMobileCMD= userInput;}
+  void setGoHomeMobileCMD(bool userInput) {goHomeMobileCMD= userInput;}
+  void setTakePhotoMobileCMD(bool userInput) {takePhotoMobileCMD= userInput;}
+  void setStartVideoMobileCMD(bool userInput) {startVideoMobileCMD= userInput;}
+  void setStopVideoMobileCMD(bool userInput) {stopVideoMobileCMD= userInput;}
+
+  void setDrawCirMobileCMD(bool userInput) {drawCirMobileCMD = userInput;}
+  void setDrawSqrMobileCMD(bool userInput) {drawSqrMobileCMD = userInput;}
+  void setAttiCtrlMobileCMD(bool userInput) {attiCtrlMobileCMD = userInput;}
+  void setGimbalCtrlMobileCMD(bool userInput) {gimbalCtrlMobileCMD = userInput;}
+  void setWayPointTestMobileCMD(bool userInput) {wayPointTestMobileCMD = userInput;}
+  void setLocalNavTestMobileCMD(bool userInput) {localNavTestMobileCMD = userInput;}
+  void setGlobalNavTestMobileCMD(bool userInput) {globalNavTestMobileCMD = userInput;}
+  void setVRCTestMobileCMD(bool userInput) {VRCTestMobileCMD = userInput;} 
+
+
   private:
+  BroadcastData broadcastData;
+  uint32_t ackFrameStatus;
+  bool broadcastFrameStatus;
+  unsigned char encodeSendData[BUFFER_SIZE];
+  unsigned char encodeACK[ACK_SIZE];
+
+  //! Mobile Data Transparent Transmission - callbacks
+  CallBackHandler fromMobileCallback;
+  CallBackHandler broadcastCallback;
+  CallBackHandler hotPointCallback;
+  CallBackHandler wayPointCallback;
+  CallBackHandler wayPointEventCallback;
+  CallBackHandler followCallback;
+  CallBackHandler missionCallback;
+  CallBackHandler recvCallback;
+
+  CallBackHandler obtainControlMobileCallback;
+  CallBackHandler releaseControlMobileCallback;
+  CallBackHandler activateMobileCallback;
+  CallBackHandler armMobileCallback;
+  CallBackHandler disArmMobileCallback;
+  CallBackHandler takeOffMobileCallback;
+  CallBackHandler landingMobileCallback;
+  CallBackHandler goHomeMobileCallback;
+  CallBackHandler takePhotoMobileCallback;
+  CallBackHandler startVideoMobileCallback;
+  CallBackHandler stopVideoMobileCallback;
+
+  //! Mobile Data Transparent Transmission - flags
+
+  bool obtainControlMobileCMD;
+  bool releaseControlMobileCMD;
+  bool activateMobileCMD;
+  bool armMobileCMD;
+  bool disArmMobileCMD;
+  bool takeOffMobileCMD;
+  bool landingMobileCMD;
+  bool goHomeMobileCMD;
+  bool takePhotoMobileCMD;
+  bool startVideoMobileCMD;
+  bool stopVideoMobileCMD;
+
+  bool drawCirMobileCMD;
+  bool drawSqrMobileCMD;
+  bool attiCtrlMobileCMD;
+  bool gimbalCtrlMobileCMD;
+  bool wayPointTestMobileCMD;
+  bool localNavTestMobileCMD;
+  bool globalNavTestMobileCMD;
+  bool VRCTestMobileCMD;
+
+  VersionData versionData;
+  ActivateData accountData;
+
+  unsigned short seq_num;
+  unsigned char *version_ack_data;
+
+  SDKFilter filter;
+
+  /// Serial Device Initialization
+  void init(HardDriver *Driver, CallBackHandler userRecvCallback, bool userCallbackThread,
+      Version SDKVersion);
+  void recvReqData(Header *protocolHeader);
+  void appHandler(Header *protocolHeader);
+  void broadcast(Header *protocolHeader);
+
+  int sendInterface(Command *parameter);
+  int ackInterface(Ack *parameter);
+  void sendData(unsigned char *buf);
+  void setup(void);
+  void setupMMU(void);
+  void setupSession(void);
+
+  MMU_Tab *allocMemory(unsigned short size);
+
+  void freeSession(CMDSession *session);
+  CMDSession *allocSession(unsigned short session_id, unsigned short size);
+
+  void freeACK(ACKSession *session);
+  ACKSession *allocACK(unsigned short session_id, unsigned short size);
+  MMU_Tab MMU[MMU_TABLE_NUM];
+  CMDSession CMDSessionTab[SESSION_TABLE_NUM];
+  ACKSession ACKSessionTab[SESSION_TABLE_NUM - 1];
+  unsigned char memory[MEMORY_SIZE];
+  unsigned short encrypt(unsigned char *pdest, const unsigned char *psrc,
+      unsigned short w_len, unsigned char is_ack, unsigned char is_enc,
+      unsigned char session_id, unsigned short seq_num);
+
+  void streamHandler(SDKFilter *p_filter, unsigned char in_data);
+  void checkStream(SDKFilter *p_filter);
+  void verifyHead(SDKFilter *p_filter);
+  void verifyData(SDKFilter *p_filter);
+  void callApp(SDKFilter *p_filter);
+  void storeData(SDKFilter *p_filter, unsigned char in_data);
+public:
   HardDriver *serialDevice;
+private:
   bool callbackThread;
   bool hotPointData;
   bool wayPointData;

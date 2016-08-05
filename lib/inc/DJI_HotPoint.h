@@ -19,48 +19,15 @@ namespace DJI
 namespace onboardSDK
 {
 
-#pragma pack(1)
-
-typedef struct HotPointData
-{
-  uint8_t version;
-
-  float64_t latitude;
-  float64_t longitude;
-  float64_t height;
-
-  float64_t radius;
-  float32_t yawRate; // degree
-
-  uint8_t clockwise;
-  uint8_t startPoint;
-  uint8_t yawMode;
-  uint8_t reserved[11];
-} HotPointData;
-
-#pragma pack()
-
 class HotPoint
 {
   public:
 #pragma pack(1)
-  typedef struct StartACK
-  {
-    uint8_t ack;
-    float32_t maxRadius;
-  } StartACK;
-
   typedef struct YawRate
   {
     uint8_t clockwise;
     float32_t yawRate;
   } YawRate;
-
-  typedef struct ReadACK
-  {
-    MissionACK ack;
-    HotPointData data;
-  } ReadACK;
 #pragma pack()
 
   enum View
@@ -93,16 +60,23 @@ class HotPoint
    * */
 
   void start(CallBack callback = 0, UserData userData = 0);
+  HotPointStartACK start(int timer);
   void stop(CallBack callback = 0, UserData userData = 0);
+  MissionACK stop(int timer);
   void pause(bool isPause, CallBack callback = 0, UserData userData = 0);
+  MissionACK pause(bool isPause, int timer);
 
   void updateYawRate(YawRate &Data, CallBack callback = 0, UserData userData = 0);
+  MissionACK updateYawRate(YawRate &Data, int timer);
   void updateYawRate(float32_t yawRate, bool isClockwise, CallBack callback = 0,
       UserData userData = 0);
   void updateRadius(float32_t meter, CallBack callback = 0, UserData userData = 0);
+  MissionACK updateRadius(float32_t meter, int timer);
   void resetYaw(CallBack callback = 0, UserData userData = 0);
+  MissionACK resetYaw(int timer);
 
   void readData(CallBack callback = 0, UserData userData = 0);
+  MissionACK readData(int timer);
 
   public:
   //! @note data access functions

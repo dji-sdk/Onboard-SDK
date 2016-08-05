@@ -43,11 +43,34 @@ void HotPoint::start(CallBack callback, UserData userData)
       callback ? callback : startCallback, userData);
 }
 
+HotPointStartACK HotPoint::start(int timeout)
+{
+  api->send(2, encrypt, SET_MISSION, CODE_HOTPOINT_START, &hotPointData, sizeof(hotPointData), 500, 2, 0, 0);
+
+  api->serialDevice->lockACK();
+  api->serialDevice->wait(timeout);
+  api->serialDevice->freeACK();
+
+  return api->missionACKUnion.hotpointStartACK;
+}
+
 void HotPoint::stop(CallBack callback, UserData userData)
 {
   uint8_t zero = 0;
   api->send(2, encrypt, SET_MISSION, CODE_HOTPOINT_STOP, &zero, sizeof(zero), 500, 2,
       callback ? callback : missionCallback, userData);
+}
+
+MissionACK HotPoint::stop(int timeout)
+{
+  uint8_t zero = 0;
+  api->send(2, encrypt, SET_MISSION, CODE_HOTPOINT_STOP, &zero, sizeof(zero), 500, 2, 0, 0);
+
+  api->serialDevice->lockACK();
+  api->serialDevice->wait(timeout);
+  api->serialDevice->freeACK();
+
+  return api->missionACKUnion.missionACK;
 }
 
 void HotPoint::pause(bool isPause, CallBack callback, UserData userData)
@@ -57,12 +80,37 @@ void HotPoint::pause(bool isPause, CallBack callback, UserData userData)
       callback ? callback : missionCallback, userData);
 }
 
+MissionACK HotPoint::pause(bool isPause, int timeout)
+{
+  uint8_t data = isPause ? 0 : 1;
+  api->send(2, encrypt, SET_MISSION, CODE_HOTPOINT_SETPAUSE, &data, sizeof(data), 500, 2, 0, 0);
+
+  api->serialDevice->lockACK();
+  api->serialDevice->wait(timeout);
+  api->serialDevice->freeACK();
+
+  return api->missionACKUnion.missionACK;
+}
+
 void HotPoint::updateYawRate(HotPoint::YawRate &Data, CallBack callback, UserData userData)
 {
   hotPointData.yawRate = Data.yawRate;
   hotPointData.clockwise = Data.clockwise ? 1 : 0;
   api->send(2, encrypt, SET_MISSION, CODE_HOTPOINT_YAWRATE, &Data, sizeof(Data), 500, 2,
       callback ? callback : missionCallback, userData);
+}
+
+MissionACK HotPoint::updateYawRate(HotPoint::YawRate &Data, int timeout)
+{
+  hotPointData.yawRate = Data.yawRate;
+  hotPointData.clockwise = Data.clockwise ? 1 : 0;
+  api->send(2, encrypt, SET_MISSION, CODE_HOTPOINT_YAWRATE, &Data, sizeof(Data), 500, 2, 0, 0);
+
+  api->serialDevice->lockACK();
+  api->serialDevice->wait(timeout);
+  api->serialDevice->freeACK();
+
+  return api->missionACKUnion.missionACK;
 }
 
 void HotPoint::updateYawRate(float32_t yawRate, bool isClockwise, CallBack callback,
@@ -80,6 +128,17 @@ void HotPoint::updateRadius(float32_t meter, CallBack callback, UserData userDat
       callback ? callback : missionCallback, userData);
 }
 
+MissionACK HotPoint::updateRadius(float32_t meter, int timeout)
+{
+  api->send(2, encrypt, SET_MISSION, CODE_HOTPOINT_RADIUS, &meter, sizeof(meter), 500, 2, 0, 0);
+
+  api->serialDevice->lockACK();
+  api->serialDevice->wait(timeout);
+  api->serialDevice->freeACK();
+
+  return api->missionACKUnion.missionACK;
+}
+
 void HotPoint::resetYaw(CallBack callback, UserData userData)
 {
   uint8_t zero = 0;
@@ -87,11 +146,35 @@ void HotPoint::resetYaw(CallBack callback, UserData userData)
       callback ? callback : missionCallback, userData);
 }
 
+MissionACK HotPoint::resetYaw(int timeout)
+{
+  uint8_t zero = 0;
+  api->send(2, encrypt, SET_MISSION, CODE_HOTPOINT_SETYAW, &zero, sizeof(zero), 500, 2, 0, 0);
+
+  api->serialDevice->lockACK();
+  api->serialDevice->wait(timeout);
+  api->serialDevice->freeACK();
+
+  return api->missionACKUnion.missionACK;
+}
+
 void HotPoint::readData(CallBack callback, UserData userData)
 {
   uint8_t zero = 0;
   api->send(2, encrypt, SET_MISSION, CODE_HOTPOINT_LOAD, &zero, sizeof(zero), 500, 2,
       callback ? callback : missionCallback, userData);
+}
+
+MissionACK HotPoint::readData(int timeout)
+{
+  uint8_t zero = 0;
+  api->send(2, encrypt, SET_MISSION, CODE_HOTPOINT_LOAD, &zero, sizeof(zero), 500, 2, 0, 0);
+
+  api->serialDevice->lockACK();
+  api->serialDevice->wait(timeout);
+  api->serialDevice->freeACK();
+
+  return api->missionACKUnion.missionACK;
 }
 
 void HotPoint::setData(const HotPointData &value)
@@ -128,8 +211,8 @@ HotPointData HotPoint::getData() const { return hotPointData; }
 
 void HotPoint::startCallback(CoreAPI *api, Header *protocolHeader, UserData userdata __UNUSED)
 {
-  StartACK ack;
-  if (protocolHeader->length - EXC_DATA_SIZE <= sizeof(StartACK))
+  HotPointStartACK ack;
+  if (protocolHeader->length - EXC_DATA_SIZE <= sizeof(HotPointStartACK))
   {
     memcpy((unsigned char *)&ack, (unsigned char *)protocolHeader + sizeof(Header),
         (protocolHeader->length - EXC_DATA_SIZE));
@@ -148,8 +231,8 @@ void HotPoint::startCallback(CoreAPI *api, Header *protocolHeader, UserData user
 void HotPoint::readCallback(CoreAPI *api, Header *protocolHeader, UserData userdata)
 {
   HotPoint *hp = (HotPoint *)userdata;
-  ReadACK ack;
-  if (protocolHeader->length - EXC_DATA_SIZE <= sizeof(ack))
+  HotPointReadACK ack;
+  if (protocolHeader->length - EXC_DATA_SIZE <= sizeof(HotPointReadACK))
   {
     memcpy((unsigned char *)&ack, (unsigned char *)protocolHeader + sizeof(Header),
         (protocolHeader->length - EXC_DATA_SIZE));

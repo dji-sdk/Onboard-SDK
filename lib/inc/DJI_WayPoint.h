@@ -11,6 +11,7 @@
 */
 
 #include "DJI_Mission.h"
+#include <stdexcept>
 
 #ifndef DJI_WAYPOINT_H
 #define DJI_WAYPOINT_H
@@ -19,72 +20,6 @@ namespace DJI
 {
 namespace onboardSDK
 {
-
-class WayPoint;
-
-#pragma pack(1)
-typedef struct WayPointInitData
-{
-  uint8_t indexNumber;
-  float32_t maxVelocity;
-  float32_t idleVelocity;
-
-  uint8_t finishAction;
-  uint8_t executiveTimes;
-  uint8_t yawMode;
-  uint8_t traceMode;
-  uint8_t RCLostAction;
-  uint8_t gimbalPitch;
-  float64_t latitude;  //! @note For Camera to recording
-  float64_t longitude; //! not supported yet
-  float32_t altitude;
-
-  uint8_t reserved[16];
-} WayPointInitData;
-
-typedef struct WayPointData
-{
-  uint8_t index;
-
-  float64_t latitude;
-  float64_t longitude;
-  float32_t altitude;
-  float32_t damping;
-
-  int16_t yaw;
-  int16_t gimbalPitch;
-  uint8_t turnMode;
-
-  uint8_t reserved[8];
-  uint8_t hasAction;
-  uint16_t actionTimeLimit;
-
-  uint8_t actionNumber : 4;
-  uint8_t actionRepeat : 4;
-
-  uint8_t commandList[16];//! @note issues here list number is 15
-  int16_t commandParameter[16];
-} WayPointData;
-
-typedef struct WayPointVelocityACK
-{
-  uint8_t ack;
-  float32_t idleVelocity;
-} WayPointVelocityACK;
-
-typedef struct WayPointInitACK
-{
-  uint8_t ack;
-  WayPointInitData data;
-} WayPointInitACK;
-
-typedef struct WayPointDataACK
-{
-  uint8_t ack;
-  uint8_t index;
-} WayPointDataACK;
-
-#pragma pack()
 
 class WayPoint
 {
@@ -95,16 +30,21 @@ class WayPoint
   WayPoint(WayPointData *list, uint8_t len, CoreAPI *ControlAPI = 0);
 #endif // STATIC_MEMORY
   void init(WayPointInitData *Info = 0, CallBack callback = 0, UserData userData = 0);
+  MissionACK init(WayPointInitData *Info, int timer);
   void start(CallBack callback = 0, UserData userData = 0);
+  MissionACK start(int timer);
   void stop(CallBack callback = 0, UserData userData = 0);
+  MissionACK stop(int timer);
   //! @note true for pause, false for resume
   void pause(bool isPause, CallBack callback = 0, UserData userData = 0);
+  MissionACK pause(bool isPause, int timer);
   void readInitData(CallBack callback = 0, UserData userData = 0);//! @todo implement
   void readIndexData(uint8_t index, CallBack callback = 0, UserData userData = 0); //! @todo implement
   void readIdleVelocity(CallBack callback = 0, UserData userData = 0);
   //! @todo uploadAll
   //void uploadAll(CallBack callback = 0, UserData userData = 0);
   bool uploadIndexData(WayPointData *data, CallBack callback = 0, UserData userData = 0);
+  WayPointDataACK uploadIndexData(WayPointData *data, int timer);
   bool uploadIndexData(uint8_t pos, CallBack callback = 0, UserData userData = 0);
   void updateIdleVelocity(float32_t meterPreSecond, CallBack callback = 0,
       UserData userData = 0);

@@ -18,7 +18,7 @@ namespace DJI
 namespace onboardSDK
 {
 
-MissionACKMap missionACK[] = {
+MissionACKMap missionACKMAP[] = {
   //! @note common ACK code
   { 0x00, " 0x00 Success" },
   { 0x01, " 0x01 Wrong WayPoint Index" },
@@ -88,11 +88,11 @@ MissionACKMap missionACK[] = {
 
 bool CoreAPI::decodeMissionStatus(uint8_t ack)
 {
-  for (uint8_t i = 0; i < sizeof(missionACK); ++i)
-    if (missionACK[i].code == ack)
+  for (uint8_t i = 0; i < sizeof(missionACKMAP); ++i)
+    if (missionACKMAP[i].code == ack)
     {
       //! @todo Fix memory leak issue
-      API_LOG(serialDevice, STATUS_LOG, "0x%X %s\n", missionACK[i].code, missionACK[i].meaning);
+      API_LOG(serialDevice, STATUS_LOG, "0x%X %s\n", missionACKMAP[i].code, missionACKMAP[i].meaning);
       return true;
     }
   return false;
