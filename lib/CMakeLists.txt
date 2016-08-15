@@ -79,7 +79,7 @@ INSTALL(TARGETS dji_sdk_lib
 if(GTEST_FOUND)
   set(CMAKE_PREFIX_PATH "~/Documents/json11/")
   find_package(json11)
-  add_executable(DJI_APITest test/DJI_APITest.cpp test/DJI_FlightTest.cpp test/DJI_VirtualRCTest.cpp test/DJI_HotPointTest.cpp test/DJI_WayPointTest.cpp )
+  add_executable(DJI_APITest test/DJI_APITest.cpp test/DJI_HotPointTest.cpp test/DJI_WayPointTest.cpp test/DJI_FlightTest.cpp test/DJI_VirtualRCTest.cpp )
   if(TARGET DJI_APITest)
     if(MSVC)
       qt5_use_modules(DJI_APITest Core SerialPort)
