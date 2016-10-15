@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+
+set -exv
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd $DIR/..
+PROJECT_DIR=$PWD
+
+function usage() {
+  echo "USAGE: $(basename $0) [--build-type BUILD_TYPE] [--clean true|false] [--lidar-logging ON|OFF]"
+}
+
+if [[ $# = 0 ]]
+then
+  usage
+  exit 0
+fi
+
+BUILD_TYPE=Debug
+CLEAN=true
+
+CMAKE_ARGS=""
+
+while [[ $# > 1 ]]
+do
+  key="$1"
+
+  case $key in
+  	  --build-type)
+      BUILD_TYPE="$2"
+      shift
+      ;;
+      --clean)
+      CLEAN=$2
+      shift
+      ;;
+      --lidar-logging)
+      CMAKE_ARGS+="-DLIDAR_LOGGING=$2"
+      shift
+      ;;
+      *)
+        # unknown option
+      ;;
+  esac
+shift
+done
+
+BUILD_DIR=build/$BUILD_TYPE
+
+if [[ "$CLEAN" == "true" ]]
+then
+	rm -rf $BUILD_DIR
+fi
+
+CMAKE_ARGS+=" -DCMAKE_BUILD_TYPE=${BUILD_TYPE}"
+
+mkdir -p $BUILD_DIR
+cd $BUILD_DIR
+cmake ${CMAKE_ARGS} $PROJECT_DIR
+make

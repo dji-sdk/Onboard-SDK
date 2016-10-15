@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+set -exv
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd $DIR/..
+PROJECT_DIR=$PWD
+
+BUILD_TYPE=Debug
+CLEAN=true
+BUILD_DIR=build/$BUILD_TYPE
+
+if [[ "$CLEAN" == "true" ]]
+then
+	rm -rf $BUILD_DIR
+fi
+
+mkdir -p $BUILD_DIR
+cd $BUILD_DIR
+cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE $PROJECT_DIR
+make

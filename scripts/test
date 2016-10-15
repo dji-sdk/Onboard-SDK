@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+set -exv
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd $DIR/..
+
+cmake lib/ -DGTEST=ON

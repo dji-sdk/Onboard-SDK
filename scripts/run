@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+set -exv
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd $SCRIPT_DIR/..
+PROJECT_DIR=$PWD
+
+#rm -rf build
+mkdir -p build
+cd build
+cmake .. -DGTEST=ON
+make
+cd $PROJECT_DIR/sample/Linux
+$PROJECT_DIR/build/sample/Linux/onboardsdk_sample_linux -interactive
+

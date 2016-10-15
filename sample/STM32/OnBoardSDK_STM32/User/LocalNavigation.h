@@ -54,16 +54,17 @@ typedef struct
 
 } LocalNavigationStatus;
 
-void gps_convert_ned_deg(float32_t &ned_x, float32_t &ned_y,
-    float32_t gps_t_lon, float32_t gps_t_lat,
-    float32_t gps_r_lon, float32_t gps_r_lat);
+
+//void gps_convert_ned_deg(float32_t &ned_x, float32_t &ned_y,
+//    float32_t gps_t_lon, float32_t gps_t_lat,
+//    float32_t gps_r_lon, float32_t gps_r_lat);
 
 
-void gps_convert_ned_rad(float32_t &ned_x, float32_t &ned_y,
-    float32_t gps_t_lon, float32_t gps_t_lat,
-    float32_t gps_r_lon, float32_t gps_r_lat);
+//void gps_convert_ned_rad(float32_t &ned_x, float32_t &ned_y,
+//    float32_t gps_t_lon, float32_t gps_t_lat,
+//    float32_t gps_r_lon, float32_t gps_r_lat);
 
-LocalPosition gps_convert_ned(PositionData loc, PositionData homeLocationLLA);
+//LocalPosition gps_convert_ned(PositionData loc, PositionData homeLocationLLA);
 
 uint32_t startLocalNavExample();
 uint32_t stopLocalNavExample();

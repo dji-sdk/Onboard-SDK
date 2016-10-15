@@ -1,0 +1,5 @@
+ID:12345
+KEY:1234ThisisYourKey
+DeviceName: /dev/ttyUSB0
+BaudRate: 230400
+Version: versionM100_31

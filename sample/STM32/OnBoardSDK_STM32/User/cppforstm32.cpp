@@ -52,7 +52,8 @@ void operator delete[](void * pointer)
 extern "C"
 {
 #endif //__cplusplus
-int fputc(int ch, FILE *f)
+//int fputc(int ch, FILE *f)
+PUTCHAR_PROTOTYPE
 {
   while (USART_GetFlagStatus(USART2, USART_FLAG_TC) == RESET)
     ;

@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+set -exv
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd $SCRIPT_DIR/..
+PROJECT_DIR=$PWD
+
+rm -rf build
+mkdir -p build
+cd build
+cmake -DGTEST=ON -DCOVERAGE=ON ..
+make
+cd $PROJECT_DIR
+echo $PWD
+$PROJECT_DIR/build/lib/bin/DJI_APITest lib/config.json
+
+# gcovr must be provisioned to do this, sudo apt-get install gcovr
+gcovr -r $PROJECT_DIR --filter=".*DJI.*" --exclude=".*Test.*" --xml
