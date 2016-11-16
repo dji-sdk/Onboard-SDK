@@ -217,6 +217,9 @@ DJIonboardSDK::DJIonboardSDK(QWidget *parent) : QMainWindow(parent), ui(new Ui::
     devLayout->addWidget(dev);
     ui->tbDev->setLayout(devLayout);
 #endif // SDK_DEV
+
+    versionIndex=0;
+
 }
 
 DJIonboardSDK::~DJIonboardSDK()
@@ -277,9 +280,13 @@ void DJIonboardSDK::setControlCallback(CoreAPI *This, Header *header, UserData u
 
     switch (ack_data)
     {
-        case ACK_SETCONTROL_NEED_MODE_F:
-            if (sdk)
-                sdk->ui->btn_coreSetControl->setText("Swtich to mod F");
+        case ACK_SETCONTROL_ERROR_MODE:
+            if (sdk)  {
+                if (sdk->versionIndex ==3)
+                     sdk->ui->btn_coreSetControl->setText("Switch to mod P");
+                 else
+                    sdk->ui->btn_coreSetControl->setText("Switch to mod F");
+            }
             else
                 API_LOG(sdk->driver, ERROR_LOG, "known SDK pointer 0.");
             break;
@@ -1671,12 +1678,19 @@ void DJIonboardSDK::on_cb_core_mechine_activated(int index)
     {
         case 0:
             api->setVersion(versionM100_31);
+            versionIndex=0;
             break;
         case 1:
             api->setVersion(versionM100_23);
+            versionIndex=1;
             break;
         case 2:
             api->setVersion(versionA3_31);
+            versionIndex=2;
+            break;
+        case 3:
+            api->setVersion(versionA3_32);
+            versionIndex=3;
             break;
     }
     functionAlloc();
@@ -1773,3 +1787,6 @@ void DJIonboardSDK::on_btn_AbortWaypoint_clicked()
     wp->stop();
 
 }
+
+
+

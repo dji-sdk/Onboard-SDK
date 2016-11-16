@@ -33,7 +33,7 @@
 #define API_STATUS_DATA
 
 //! @note if you do NOT want to use AES encrypt, comment this macro below
-#define USE_ENCRYPT
+//#define USE_ENCRYPT
 
 //! @todo Not supported in this release.
 //#define USE_SIMULATION

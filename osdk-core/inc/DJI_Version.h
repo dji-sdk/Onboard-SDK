@@ -35,6 +35,7 @@ typedef uint32_t Version;
 const Version versionM100_23 = (MAKE_VERSION(2, 3, 10, 0));
 const Version versionM100_31 = (MAKE_VERSION(3, 1, 10, 0));
 const Version versionA3_31 = (MAKE_VERSION(3, 1, 100, 0));
+const Version versionA3_32 = (MAKE_VERSION(3, 2, 0, 0));
 
 #ifdef SDK_DEV
 #include "dev.h"

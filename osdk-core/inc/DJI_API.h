@@ -25,11 +25,11 @@
 
 #ifndef DJI_API_H
 #define DJI_API_H
-#include "DJI_Type.h"
-//#include "DJI_Mission.h"
 
+#include "DJI_Type.h"
 #include "DJI_HardDriver.h"
 #include "DJI_App.h"
+
 namespace DJI
 {
 namespace onboardSDK
@@ -72,11 +72,13 @@ enum ACK_ACTIVE_CODE
 
 enum ACK_SETCONTROL_CODE
 {
-  ACK_SETCONTROL_NEED_MODE_F = 0x0000,
+  ACK_SETCONTROL_ERROR_MODE = 0x0000,
   ACK_SETCONTROL_RELEASE_SUCCESS = 0x0001,
   ACK_SETCONTROL_OBTAIN_SUCCESS = 0x0002,
   ACK_SETCONTROL_OBTAIN_RUNNING = 0x0003,
   ACK_SETCONTROL_RELEASE_RUNNING = 0x0004,
+  ACK_SETCONTROL_NEED_MODE_F = 0x0006,
+  ACK_SETCONTROL_NEED_MODE_P = 0x0005,
   ACK_SETCONTROL_IOC = 0x00C9,
 
 };
@@ -227,6 +229,7 @@ class CoreAPI
   void ack(req_id_t req_id, unsigned char *ackdata, int len);
 
   //! Notify caller ACK frame arrived
+  void allocateACK(Header *protocolHeader);
   void notifyCaller(Header *protocolHeader);
   void notifyNonBlockingCaller(Header *protocolHeader);
 
@@ -658,7 +661,6 @@ class CoreAPI
   ActivateData accountData;
 
   unsigned short seq_num;
-  unsigned char *version_ack_data;
 
   SDKFilter filter;
 

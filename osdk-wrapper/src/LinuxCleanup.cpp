@@ -78,6 +78,11 @@ ackReturnData releaseControl(CoreAPI* api)
       controlAck.status = -1;
       return controlAck;
       break;
+    case ACK_SETCONTROL_NEED_MODE_P:
+      std::cout << "Failed to release control.\nFor A3 v3.2, your RC needs to be in P mode. (Is the RC connected and paired?)" << std::endl;
+      controlAck.status = -1;
+      return controlAck;
+      break;
     case ACK_SETCONTROL_RELEASE_SUCCESS:
       std::cout << "Released control successfully."<< std::endl;
       break;
@@ -91,9 +96,7 @@ ackReturnData releaseControl(CoreAPI* api)
       return controlAck;
       break;
     default:
-      {
-        std::cout << "Error in setControl API function." << std::endl;
-      }
+      std::cout << "Error in setControl API function." << std::endl;
       break;
   }
   controlAck.status = 1;
@@ -106,23 +109,25 @@ void releaseControlCallback(CoreAPI* api, Header *protHeader, DJI::UserData data
   uint16_t simpAck = api->missionACKUnion.simpleACK;
   switch (simpAck)
   {
-    case ACK_SETCONTROL_NEED_MODE_F:
-      std::cout << "Failed to release control.\nYour RC mode switch is not in mode F. (Is the RC still connected and paired?)" << std::endl;
-          break;
+    case ACK_SETCONTROL_ERROR_MODE:
+      if(api->getSDKVersion() != versionA3_32)
+        std::cout << "Failed to release control.\nYour RC mode switch is not in mode F. (Is the RC still connected and paired?)" << std::endl;
+      else
+        std::cout << "Failed to release control.\nYour RC mode switch is not in mode P. (Is the RC still connected and paired?)" << std::endl;
+      break;
     case ACK_SETCONTROL_RELEASE_SUCCESS:
       std::cout << "Released control successfully."<< std::endl;
-          break;
+      break;
     case ACK_SETCONTROL_RELEASE_RUNNING:
       std::cout << "Release control running.."<< std::endl;
-          releaseControlNonBlocking(api);
-          break;
+      releaseControlNonBlocking(api);
+      break;
     case ACK_SETCONTROL_IOC:
       std::cout << "The aircraft is in IOC mode. Cannot release control.\nGo to DJI GO and stop all intelligent flight modes before trying this." << std::endl;
-          break;
+      break;
     default:
-    {
       std::cout << "Error in setControl API function." << std::endl;
-    }break;
+      break;
   }
 }
 
@@ -133,3 +138,4 @@ void releaseControlNonBlocking(CoreAPI* api)
   pointerreleaseControlCallback = releaseControlCallback;
   api->setControl(false, pointerreleaseControlCallback, NULL);
 }
+

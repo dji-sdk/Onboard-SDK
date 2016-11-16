@@ -91,7 +91,7 @@ void DJI::onboardSDK::CoreAPI::broadcast(Header *protocolHeader)
   passData(*enableFlag, DATA_FLAG, &broadcastData.w, pdata, sizeof(CommonData), len);
   passData(*enableFlag, DATA_FLAG, &broadcastData.pos, pdata, sizeof(PositionData), len);
 
-  if (versionData.version == versionA3_31)
+  if (versionData.version == versionA3_31 || versionData.version == versionA3_32)
   {
     passData(*enableFlag, DATA_FLAG, &broadcastData.gps, pdata, sizeof(GPSData), len);
     passData(*enableFlag, DATA_FLAG, &broadcastData.rtk, pdata, sizeof(RTKData), len);

@@ -154,7 +154,7 @@ WayPointDataACK WayPoint::uploadIndexData(WayPointData *data, int timeout)
   if (data->index < info.indexNumber)
      wpData = index[data->index];
    else
-     std::runtime_error("Range error.\n");
+     throw std::runtime_error("Range error\n");
 
   api->send(2, encrypt, SET_MISSION, CODE_WAYPOINT_ADDPOINT, &wpData, sizeof(wpData), 1000, 4, 0, 0);
 

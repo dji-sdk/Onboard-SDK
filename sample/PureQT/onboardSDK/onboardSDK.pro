@@ -20,7 +20,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 
 HEADERS  += djionboardsdk.h \
-            QonboardSDK.h \
+            QonboardSDK.h
 
 SOURCES += main.cpp\
            djionboardsdk.cpp \
@@ -152,39 +152,40 @@ HEADERS += $$GRIDMAP_INC
 contains(DJILIB,ONBOARDSDK){
 QT += serialport
 ONBOARDSDK_SRC += \
-   ../../../lib/src/DJI_API.cpp \
-   ../../../lib/src/DJI_App.cpp \
-   ../../../lib/src/DJI_Codec.cpp \
-   ../../../lib/src/DJI_Flight.cpp \
-   ../../../lib/src/DJI_HardDriver.cpp \
-   ../../../lib/src/DJI_Link.cpp \
-   ../../../lib/src/DJI_Memory.cpp \
-   ../../../lib/src/DJI_VirtualRC.cpp \
-   ../../../lib/src/DJI_Camera.cpp \
-   ../../../lib/src/DJI_HotPoint.cpp \
-   ../../../lib/src/DJI_Mission.cpp \
-   ../../../lib/src/DJI_Follow.cpp \
-   #../../../lib/src/DJI_Broadcast.cpp \
-   ../../../lib/src/DJI_WayPoint.cpp
+    ../../../osdk-core/src/DJI_API.cpp \
+    ../../../osdk-core/src/DJI_App.cpp \
+    ../../../osdk-core/src/DJI_Camera.cpp \
+    ../../../osdk-core/src/DJI_Codec.cpp \
+    ../../../osdk-core/src/DJI_Flight.cpp \
+    ../../../osdk-core/src/DJI_Follow.cpp \
+    ../../../osdk-core/src/DJI_HardDriver.cpp \
+    ../../../osdk-core/src/DJI_HotPoint.cpp \
+    ../../../osdk-core/src/DJI_Link.cpp \
+    ../../../osdk-core/src/DJI_Logging.cpp \
+    ../../../osdk-core/src/DJI_Memory.cpp \
+    ../../../osdk-core/src/DJI_Mission.cpp \
+    ../../../osdk-core/src/DJI_VirtualRC.cpp \
+    ../../../osdk-core/src/DJI_WayPoint.cpp
 
-ONBOARDSDK_INC += \
-    ../../../lib/inc/DJI_API.h \
-    ../../../lib/inc/DJI_App.h \
-    ../../../lib/inc/DJI_Codec.h \
-    ../../../lib/inc/DJI_Config.h \
-    ../../../lib/inc/DJI_HardDriver.h \
-    ../../../lib/inc/DJI_Link.h \
-    ../../../lib/inc/DJI_Memory.h \
-    ../../../lib/inc/DJI_Type.h \
-    ../../../lib/inc/DJI_Version.h \
-    ../../../lib/inc/DJI_Camera.h \
-    ../../../lib/inc/DJI_Flight.h \
-    ../../../lib/inc/DJI_VirtualRC.h \
-    ../../../lib/inc/DJI_HotPoint.h \
-    ../../../lib/inc/DJI_Mission.h \
-    ../../../lib/inc/DJI_Follow.h \
-    #../../../lib/inc/DJI_Broadcast.h \
-    ../../../lib/inc/DJI_WayPoint.h
+HEADERS  += \
+    ../../../osdk-core/inc/DJI_API.h \
+    ../../../osdk-core/inc/DJI_App.h \
+    ../../../osdk-core/inc/DJI_Camera.h \
+    ../../../osdk-core/inc/DJI_Codec.h \
+    ../../../osdk-core/inc/DJI_Config.h \
+    ../../../osdk-core/inc/DJI_Flight.h \
+    ../../../osdk-core/inc/DJI_Follow.h \
+    ../../../osdk-core/inc/DJI_HardDriver.h \
+    ../../../osdk-core/inc/DJI_HotPoint.h \
+    ../../../osdk-core/inc/DJI_Link.h \
+    ../../../osdk-core/inc/DJI_Logging.h \
+    ../../../osdk-core/inc/DJI_Memory.h \
+    ../../../osdk-core/inc/DJI_Mission.h \
+    ../../../osdk-core/inc/DJI_Type.h \
+    ../../../osdk-core/inc/DJI_Version.h \
+    ../../../osdk-core/inc/DJI_VirtualRC.h \
+    ../../../osdk-core/inc/DJI_WayPoint.h \
+    ../../../osdk-core/inc/DJICommonType.h
 
 SOURCES += $$ONBOARDSDK_SRC
 
@@ -201,13 +202,13 @@ FORMS    += djionboardsdk.ui
 
 
 INCLUDEPATH += \
-            ../../../lib/ \
-            ../../../lib/inc \
-            ../../../lib/onboardSDK/inc
+            ../../../osdk-core/ \
+            ../../../osdk-core/inc
 
 RESOURCES +=
 
-DISTFILES +=
+DISTFILES += \
+    CMakeLists.txt
 
 
 message("finish compile")

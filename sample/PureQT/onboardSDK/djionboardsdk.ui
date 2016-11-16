@@ -128,7 +128,12 @@
                       </item>
                       <item>
                        <property name="text">
-                        <string>A3</string>
+                        <string>A3_V3.1</string>
+                       </property>
+                      </item>
+                      <item>
+                       <property name="text">
+                        <string>A3_V3.2</string>
                        </property>
                       </item>
                      </widget>

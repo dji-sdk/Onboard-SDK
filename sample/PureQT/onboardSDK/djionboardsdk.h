@@ -297,6 +297,9 @@ private:
     UIDev *dev;
 #endif // SDK_DEV
     void functionAlloc();
+
+    unsigned int versionIndex;
+
 };
 
 #endif // DJIONBOARDSDK_H

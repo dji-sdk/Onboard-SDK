@@ -1,6 +1,6 @@
 /** @file DJI_API.cpp
- *  @version 3.1.7
- *  @date July 1st, 2016
+ *  @version 3.1.9
+ *  @date November 10, 2016
  *
  *  @brief
  *  Core API for DJI onboardSDK library
@@ -179,7 +179,7 @@ VersionData CoreAPI::getDroneVersion(int timeout)
   unsigned char cmd_data = 0;
 
   send(2, 0, SET_ACTIVATION, CODE_GETVERSION, (unsigned char *)&cmd_data, 1, cmd_timeout,
-  retry_time, 0, 0);
+    retry_time, 0, 0);
 
   // Wait for end of ACK frame to arrive
   serialDevice->lockACK();
@@ -187,18 +187,23 @@ VersionData CoreAPI::getDroneVersion(int timeout)
   serialDevice->freeACK();
 
   // Parse return value
+  unsigned char *ptemp = &(missionACKUnion.droneVersion.ack[0]);
 
-  versionData.version_ack = version_ack_data[0] + (version_ack_data[1] << 8);
-  version_ack_data += 2;
-  versionData.version_crc =
-      version_ack_data[0] + (version_ack_data[1] << 8) + (version_ack_data[2] << 16) + (version_ack_data[3] << 24);
-  ack_data += 4;
-  if (versionData.version != versionM100_23)
-  {
-    memcpy(versionData.version_ID, version_ack_data, 11);
-    ack_data += 11;
+  if(versionData.version != versionA3_32){
+    versionData.version_ack = ptemp[0] + (ptemp[1] << 8);
+    ptemp += 2;
+    versionData.version_crc = ptemp[0] + (ptemp[1] << 8) + (ptemp[2] << 16) + (ptemp[3] << 24);
+    ptemp += 4;
+    if (versionData.version != versionM100_23)
+    {
+      memcpy(versionData.version_ID, ptemp, 11);
+      ptemp += 11;
+    }
+    memcpy(versionData.version_name, ptemp, 32);
+  }else{
+    versionData.version_ack = missionACKUnion.missionACK;
+    memcpy(versionData.version_name, "versionA3_32", strlen("versionA3_32")+1);
   }
-  memcpy(versionData.version_name, version_ack_data, 32);
 
   return versionData;
 }
@@ -316,7 +321,8 @@ void CoreAPI::setBroadcastFreqDefaults()
 {
   uint8_t freq[16];
 
-  /* Channels definition:
+ /* Channels definition:
+  * M100:
   * 0 - Timestamp
   * 1 - Attitude Quaterniouns
   * 2 - Acceleration
@@ -329,21 +335,55 @@ void CoreAPI::setBroadcastFreqDefaults()
   * 9 - Flight Status
   * 10 - Battery Level
   * 11 - Control Information
+  *
+  * A3:
+  * 0 - Timestamp
+  * 1 - Attitude Quaterniouns
+  * 2 - Acceleration
+  * 3 - Velocity (Ground Frame)
+  * 4 - Angular Velocity (Body Frame)
+  * 5 - Position
+  * 6 - GPS Detailed Information
+  * 7 - RTK Detailed Information
+  * 8 - Magnetometer
+  * 9 - RC Channels Data
+  * 10 - Gimbal Data
+  * 11 - Flight Status
+  * 12 - Battery Level
+  * 13 - Control Information
+  *
   */
 
-  freq[0] = BROADCAST_FREQ_1HZ;
-  freq[1] = BROADCAST_FREQ_10HZ;
-  freq[2] = BROADCAST_FREQ_50HZ;
-  freq[3] = BROADCAST_FREQ_100HZ;
-  freq[4] = BROADCAST_FREQ_50HZ;
-  freq[5] = BROADCAST_FREQ_10HZ;
-  freq[6] = BROADCAST_FREQ_1HZ;
-  freq[7] = BROADCAST_FREQ_10HZ;
-  freq[8] = BROADCAST_FREQ_50HZ;
-  freq[9] = BROADCAST_FREQ_100HZ;
-  freq[10] = BROADCAST_FREQ_50HZ;
-  freq[11] = BROADCAST_FREQ_10HZ;
-
+  if (versionData.version == versionM100_31 || versionData.version == versionM100_23) {
+    freq[0] = BROADCAST_FREQ_1HZ;
+    freq[1] = BROADCAST_FREQ_10HZ;
+    freq[2] = BROADCAST_FREQ_50HZ;
+    freq[3] = BROADCAST_FREQ_100HZ;
+    freq[4] = BROADCAST_FREQ_50HZ;
+    freq[5] = BROADCAST_FREQ_10HZ;
+    freq[6] = BROADCAST_FREQ_1HZ;
+    freq[7] = BROADCAST_FREQ_10HZ;
+    freq[8] = BROADCAST_FREQ_50HZ;
+    freq[9] = BROADCAST_FREQ_100HZ;
+    freq[10] = BROADCAST_FREQ_50HZ;
+    freq[11] = BROADCAST_FREQ_10HZ;
+  }
+  else if (versionData.version == versionA3_31 || versionData.version == versionA3_32) {
+    freq[0] = BROADCAST_FREQ_1HZ;
+    freq[1] = BROADCAST_FREQ_10HZ;
+    freq[2] = BROADCAST_FREQ_50HZ;
+    freq[3] = BROADCAST_FREQ_100HZ;
+    freq[4] = BROADCAST_FREQ_50HZ;
+    freq[5] = BROADCAST_FREQ_10HZ;
+    freq[6] = BROADCAST_FREQ_0HZ;
+    freq[7] = BROADCAST_FREQ_0HZ;
+    freq[8] = BROADCAST_FREQ_1HZ;
+    freq[9] = BROADCAST_FREQ_10HZ;
+    freq[10] = BROADCAST_FREQ_50HZ;
+    freq[11] = BROADCAST_FREQ_100HZ;
+    freq[12] = BROADCAST_FREQ_50HZ;
+    freq[13] = BROADCAST_FREQ_10HZ;
+  }
   setBroadcastFreq(freq);
 }
 
@@ -352,19 +392,37 @@ void CoreAPI::setBroadcastFreqToZero()
   uint8_t freq[16];
 
   /* Channels definition:
-  * 0 - Timestamp
-  * 1 - Attitude Quaterniouns
-  * 2 - Acceleration
-  * 3 - Velocity (Ground Frame)
-  * 4 - Angular Velocity (Body Frame)
-  * 5 - Position
-  * 6 - Magnetometer
-  * 7 - RC Channels Data
-  * 8 - Gimbal Data
-  * 9 - Flight Status
-  * 10 - Battery Level
-  * 11 - Control Information
-  */
+   * M100:
+   * 0 - Timestamp
+   * 1 - Attitude Quaterniouns
+   * 2 - Acceleration
+   * 3 - Velocity (Ground Frame)
+   * 4 - Angular Velocity (Body Frame)
+   * 5 - Position
+   * 6 - Magnetometer
+   * 7 - RC Channels Data
+   * 8 - Gimbal Data
+   * 9 - Flight Status
+   * 10 - Battery Level
+   * 11 - Control Information
+   *
+   * A3:
+   * 0 - Timestamp
+   * 1 - Attitude Quaterniouns
+   * 2 - Acceleration
+   * 3 - Velocity (Ground Frame)
+   * 4 - Angular Velocity (Body Frame)
+   * 5 - Position
+   * 6 - GPS Detailed Information
+   * 7 - RTK Detailed Information
+   * 8 - Magnetometer
+   * 9 - RC Channels Data
+   * 10 - Gimbal Data
+   * 11 - Flight Status
+   * 12 - Battery Level
+   * 13 - Control Information
+   *
+   */
 
   freq[0] = BROADCAST_FREQ_0HZ;
   freq[1] = BROADCAST_FREQ_0HZ;
@@ -378,7 +436,11 @@ void CoreAPI::setBroadcastFreqToZero()
   freq[9] = BROADCAST_FREQ_0HZ;
   freq[10] = BROADCAST_FREQ_0HZ;
   freq[11] = BROADCAST_FREQ_0HZ;
-
+  if(versionData.version == versionA3_31 || versionData.version == versionA3_32)
+  {
+    freq[12] = BROADCAST_FREQ_0HZ;
+    freq[13] = BROADCAST_FREQ_0HZ;
+  }
   setBroadcastFreq(freq);
 }
 
@@ -388,32 +450,68 @@ unsigned short CoreAPI::setBroadcastFreqDefaults(int timeout)
   uint8_t freq[16];
 
   /* Channels definition:
-  * 0 - Timestamp
-  * 1 - Attitude Quaterniouns
-  * 2 - Acceleration
-  * 3 - Velocity (Ground Frame)
-  * 4 - Angular Velocity (Body Frame)
-  * 5 - Position
-  * 6 - Magnetometer
-  * 7 - RC Channels Data
-  * 8 - Gimbal Data
-  * 9 - Flight Status
-  * 10 - Battery Level
-  * 11 - Control Information
-  */
+   * M100:
+   * 0 - Timestamp
+   * 1 - Attitude Quaterniouns
+   * 2 - Acceleration
+   * 3 - Velocity (Ground Frame)
+   * 4 - Angular Velocity (Body Frame)
+   * 5 - Position
+   * 6 - Magnetometer
+   * 7 - RC Channels Data
+   * 8 - Gimbal Data
+   * 9 - Flight Status
+   * 10 - Battery Level
+   * 11 - Control Information
+   *
+   * A3:
+   * 0 - Timestamp
+   * 1 - Attitude Quaterniouns
+   * 2 - Acceleration
+   * 3 - Velocity (Ground Frame)
+   * 4 - Angular Velocity (Body Frame)
+   * 5 - Position
+   * 6 - GPS Detailed Information
+   * 7 - RTK Detailed Information
+   * 8 - Magnetometer
+   * 9 - RC Channels Data
+   * 10 - Gimbal Data
+   * 11 - Flight Status
+   * 12 - Battery Level
+   * 13 - Control Information
+   *
+   */
 
-  freq[0] = BROADCAST_FREQ_1HZ;
-  freq[1] = BROADCAST_FREQ_10HZ;
-  freq[2] = BROADCAST_FREQ_50HZ;
-  freq[3] = BROADCAST_FREQ_100HZ;
-  freq[4] = BROADCAST_FREQ_50HZ;
-  freq[5] = BROADCAST_FREQ_10HZ;
-  freq[6] = BROADCAST_FREQ_1HZ;
-  freq[7] = BROADCAST_FREQ_10HZ;
-  freq[8] = BROADCAST_FREQ_50HZ;
-  freq[9] = BROADCAST_FREQ_100HZ;
-  freq[10] = BROADCAST_FREQ_50HZ;
-  freq[11] = BROADCAST_FREQ_10HZ;
+  if (versionData.version == versionM100_31 || versionData.version == versionM100_23) {
+    freq[0] = BROADCAST_FREQ_1HZ;
+    freq[1] = BROADCAST_FREQ_10HZ;
+    freq[2] = BROADCAST_FREQ_50HZ;
+    freq[3] = BROADCAST_FREQ_100HZ;
+    freq[4] = BROADCAST_FREQ_50HZ;
+    freq[5] = BROADCAST_FREQ_10HZ;
+    freq[6] = BROADCAST_FREQ_1HZ;
+    freq[7] = BROADCAST_FREQ_10HZ;
+    freq[8] = BROADCAST_FREQ_50HZ;
+    freq[9] = BROADCAST_FREQ_100HZ;
+    freq[10] = BROADCAST_FREQ_50HZ;
+    freq[11] = BROADCAST_FREQ_10HZ;
+  }
+  else if (versionData.version == versionA3_31 || versionData.version == versionA3_32) {
+    freq[0] = BROADCAST_FREQ_1HZ;
+    freq[1] = BROADCAST_FREQ_10HZ;
+    freq[2] = BROADCAST_FREQ_50HZ;
+    freq[3] = BROADCAST_FREQ_100HZ;
+    freq[4] = BROADCAST_FREQ_50HZ;
+    freq[5] = BROADCAST_FREQ_10HZ;
+    freq[6] = BROADCAST_FREQ_0HZ;
+    freq[7] = BROADCAST_FREQ_0HZ;
+    freq[8] = BROADCAST_FREQ_1HZ;
+    freq[9] = BROADCAST_FREQ_10HZ;
+    freq[10] = BROADCAST_FREQ_50HZ;
+    freq[11] = BROADCAST_FREQ_100HZ;
+    freq[12] = BROADCAST_FREQ_50HZ;
+    freq[13] = BROADCAST_FREQ_10HZ;
+  }
 
   return setBroadcastFreq(freq, timeout);
 }
@@ -455,6 +553,14 @@ unsigned short CoreAPI::setControl(bool enable, int timeout)
   serialDevice->wait(timeout);
   serialDevice->freeACK();
 
+  if (missionACKUnion.simpleACK == ACK_SETCONTROL_ERROR_MODE)
+  {
+    if(versionData.version != versionA3_32)
+      missionACKUnion.simpleACK = ACK_SETCONTROL_NEED_MODE_F;
+    else
+      missionACKUnion.simpleACK = ACK_SETCONTROL_NEED_MODE_P;
+  }
+
   return missionACKUnion.simpleACK;
 }
 
@@ -467,23 +573,33 @@ void CoreAPI::setDriver(HardDriver *sDevice) { serialDevice = sDevice; }
 void CoreAPI::getDroneVersionCallback(CoreAPI *api, Header *protocolHeader, UserData userData __UNUSED)
 {
   unsigned char *ptemp = ((unsigned char *)protocolHeader) + sizeof(Header);
+  size_t ack_length = protocolHeader->length - EXC_DATA_SIZE;
 
-  api->versionData.version_ack = ptemp[0] + (ptemp[1] << 8);
-  ptemp += 2;
-  api->versionData.version_crc =
-    ptemp[0] + (ptemp[1] << 8) + (ptemp[2] << 16) + (ptemp[3] << 24);
-  ptemp += 4;
-  if (api->versionData.version != versionM100_23)
-  {
-    memcpy(api->versionData.version_ID, ptemp, 11);
-    ptemp += 11;
+  if(ack_length > 1){
+    api->versionData.version_ack = ptemp[0] + (ptemp[1] << 8);
+    ptemp += 2;
+    api->versionData.version_crc =
+      ptemp[0] + (ptemp[1] << 8) + (ptemp[2] << 16) + (ptemp[3] << 24);
+    ptemp += 4;
+    if (api->versionData.version != versionM100_23)
+    {
+      memcpy(api->versionData.version_ID, ptemp, 11);
+      ptemp += 11;
+    }
+    memcpy(api->versionData.version_name, ptemp, 32);
+  }else{
+    api->versionData.version_ack = ptemp[0];
+    memcpy(api->versionData.version_name, "versionA3_32", strlen("versionA3_32")+1);
   }
-  memcpy(api->versionData.version_name, ptemp, 32);
 
   API_LOG(api->serialDevice, STATUS_LOG, "version ack = %d\n", api->versionData.version_ack);
-  API_LOG(api->serialDevice, STATUS_LOG, "version crc = 0x%X\n", api->versionData.version_crc);
-  if (api->versionData.version != versionM100_23)
-    API_LOG(api->serialDevice, STATUS_LOG, "version ID = %.11s\n", api->versionData.version_ID);
+
+  if(api->versionData.version != versionA3_32){
+    API_LOG(api->serialDevice, STATUS_LOG, "version crc = 0x%X\n", api->versionData.version_crc);
+    if (api->versionData.version != versionM100_23)
+      API_LOG(api->serialDevice, STATUS_LOG, "version ID = %.11s\n", api->versionData.version_ID);
+  }
+
   API_LOG(api->serialDevice, STATUS_LOG, "version name = %.32s\n",
       api->versionData.version_name);
 }
@@ -780,9 +896,15 @@ void CoreAPI::setControlCallback(CoreAPI *api, Header *protocolHeader, UserData 
 
   switch (ack_data)
   {
-    case ACK_SETCONTROL_NEED_MODE_F:
-      API_LOG(api->serialDevice, STATUS_LOG, "Obtain control failed, conditions did not "
-          "satisfied");
+    case ACK_SETCONTROL_ERROR_MODE:
+      if(api->versionData.version != versionA3_32)
+      {
+        API_LOG(api->serialDevice, STATUS_LOG, "Obtain control failed: switch to F mode\n");
+      }
+      else
+      {
+	API_LOG(api->serialDevice, STATUS_LOG, "Obtain control failed: switch to P mode\n");
+      }
       break;
     case ACK_SETCONTROL_RELEASE_SUCCESS:
       API_LOG(api->serialDevice, STATUS_LOG, "Released control successfully\n");

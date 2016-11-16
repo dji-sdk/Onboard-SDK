@@ -79,6 +79,8 @@ void readUserConfig()
             UserConfig::targetVersion = versionM100_23;
           if (!strcmp(droneVer,"versionA3_31"))
             UserConfig::targetVersion = versionA3_31;
+          if (!strcmp(droneVer,"versionA3_32"))
+            UserConfig::targetVersion = versionA3_32;
           set_Drone_Version = true;
         }
         if (sscanf(line, "BaudRate:%d", &UserConfig::baudRate))

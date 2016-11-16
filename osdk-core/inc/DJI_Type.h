@@ -1,6 +1,6 @@
 /*! @file DJI_Type.h
- *  @version 3.1.7
- *  @date Jul 01 2016
+ *  @version 3.1.9
+ *  @date November 10, 2016
  *
  *  @brief
  *  Type definition for DJI onboardSDK library.
@@ -22,6 +22,8 @@
 #include "DJI_Config.h"
 #include "DJICommonType.h"
 #include <stdio.h>
+#include <exception>
+#include <stdexcept>
 
 #define NAME(x) #x
 
@@ -121,6 +123,13 @@ extern uint8_t encrypt;
 
 const size_t SESSION_TABLE_NUM = 32;
 const size_t CALLBACK_LIST_NUM = 10;
+
+/**
+ * @note size is in Bytes
+ */
+const size_t MAX_ACK_SIZE = 64;
+const size_t M100_MAX_ACK_SIZE = 64;
+const size_t A3_MAX_ACK_SIZE = 63;
 
 //! The CoreAPI class definition is detailed in DJI_API.h 
 class CoreAPI;
@@ -337,18 +346,7 @@ typedef struct WayPointVelocityACK
   float32_t idleVelocity;
 } WayPointVelocityACK;
 
-
-typedef union MissionACKUnion
-{ 
-  uint8_t raw_ack_array[5];
-  MissionACK missionACK;
-  SimpleACK simpleACK;
-  HotPointStartACK hotpointStartACK;
-  WayPointDataACK waypointDataACK; 
-  WayPointVelocityACK waypointVelocityACK;
-} MissionACKUnion; 
-
-// These big structs have structs within and don't seem to be used 
+// HotPoint data read from flight controller
 typedef struct HotPointReadACK
 {
   MissionACK ack;
@@ -360,6 +358,33 @@ typedef struct WayPointInitACK
   uint8_t ack;
   WayPointInitData data;
 } WayPointInitACK;
+
+typedef struct DroneVersionACK
+{
+  unsigned char ack[MAX_ACK_SIZE];
+};
+
+typedef union MissionACKUnion
+{ 
+  uint8_t raw_ack_array[MAX_ACK_SIZE];
+  DroneVersionACK droneVersion;
+  MissionACK missionACK;
+
+  SimpleACK simpleACK;
+
+  HotPointStartACK hotpointStartACK;
+
+  // Contains 1-Byte ACK plus hotpoint mission
+  // information read from flight controller
+  HotpointReadACK hotpointReadACK;
+
+  // Contains 1-Byte ACK plus waypoint mission
+  // information read from flight controller
+  WayPointInitACK waypointInitACK;
+
+  WayPointDataACK waypointDataACK;
+  WayPointVelocityACK waypointVelocityACK;
+} MissionACKUnion; 
 
 typedef struct QuaternionData
 {

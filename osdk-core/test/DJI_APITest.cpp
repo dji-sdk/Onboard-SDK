@@ -15,9 +15,11 @@ void DJI_APITest::SetUp() {
     targetVersion = versionM100_31;
   } else if (environment->getVersion() == "versionA3_31") {
     targetVersion = versionA3_31;
-  } else {
-    std::cout << "Invalid version: " << environment->getVersion() << std::endl;
-    FAIL();
+  } else if(environment->getVersion() == "versionA3_32" ||
+      environment->getVersion().empty()) {
+    targetVersion = versionA3_32;
+  }else{
+    FAIL() << "Invalid version: " << environment->getVersion();
   }
 
   app_id = environment->getApp_id();
@@ -48,6 +50,7 @@ void DJI_APITest::SetUp() {
   readThread = new LinuxThread(api, 2);
   readThread->createThread();
 
+  api->setVersion(targetVersion);
   ack = api->setBroadcastFreqDefaults(wait_timeout);
   ASSERT_EQ(ack, ACK_SUCCESS);
 }
@@ -138,7 +141,7 @@ void DJI_APITest::activateDroneStandard() {
   user_ack_data.encKey = app_key;
   strcpy(user_ack_data.encKey, enc_key.c_str());
   user_ack_data.ID = app_id;
-  api->setVersion(targetVersion);
+
   ack = api->activate(&user_ack_data, wait_timeout);
   ASSERT_EQ(ack, ACK_ACTIVE_SUCCESS);
 }
@@ -154,7 +157,9 @@ unsigned short DJI_APITest::activateDroneStandard(int l_app_id,
   testActivateData.encKey = app_key;
   strcpy(testActivateData.encKey, l_enc_key.c_str());
   testActivateData.ID = l_app_id;
+
   api->setVersion(version);
+
   return api->activate(&testActivateData, wait_timeout);
 }
 
@@ -167,9 +172,13 @@ TEST_F(DJI_APITest, activate) {
 
 TEST_F(DJI_APITest, activate_invalid_version) {
   // Set invalid target version
-  Version targetVersion = 230451;
-  ack = activateDroneStandard(app_id, enc_key, targetVersion);
-  ASSERT_EQ(ack, ACK_ACTIVE_VERSION_ERROR);
+  Version invalidTargetVersion = 230451;
+  ack = activateDroneStandard(app_id, enc_key, invalidTargetVersion);
+
+  if(targetVersion != versionA3_32)
+    ASSERT_EQ(ack, ACK_ACTIVE_VERSION_ERROR);
+  else
+    ASSERT_EQ(ack, ACK_SUCCESS);
 }
 
 TEST_F(DJI_APITest, activate_invalid_key) {
@@ -180,17 +189,33 @@ TEST_F(DJI_APITest, activate_invalid_key) {
   ASSERT_EQ(ack, ACK_ACTIVE_NEW_DEVICE);
 }
 
-TEST_F(DJI_APITest, DISABLED_getDroneVersion) {
+TEST_F(DJI_APITest, getDroneVersion) {
   versionData = api->getDroneVersion(wait_timeout);
   ASSERT_EQ(versionData.version_ack, 0);
+
+  if(api->getSDKVersion() == versionM100_31){
+    EXPECT_STREQ(versionData.version_name, M100_31.VERSION_NAME);
+  }else if(api->getSDKVersion() == versionA3_32) {
+    EXPECT_STREQ(versionData.version_name, A3_32.VERSION_NAME);
+  }
+
+  API_LOG(api->serialDevice, STATUS_LOG, "version ack = %d\n", versionData.version_ack);
+
+  if(api->getSDKVersion() != versionA3_32){
+   API_LOG(api->serialDevice, STATUS_LOG, "version crc = 0x%X\n", versionData.version_crc);
+   if ( api->getSDKVersion() != versionM100_23)
+     API_LOG(api->serialDevice, STATUS_LOG, "version ID = %.11s\n", versionData.version_ID);
+  }
+
+  API_LOG(api->serialDevice, STATUS_LOG, "version name = %.32s\n", versionData.version_name);
 }
 
 /**
  * Preconditions:
  *
  * 1. "Enable API Control" box checked in the Assistant software
- * 2. Mode selection bar of the remote controller is placed at the
- * F position
+ * 2. Mode selection bar of the remote controller is placed at the:
+ * F position for M100_31, A3_31 and P position for A3_32
  *
  */
 TEST_F(DJI_APITest, obtainControl) {
@@ -202,8 +227,8 @@ TEST_F(DJI_APITest, obtainControl) {
  * Preconditions:
  *
  * 1. "Enable API Control" box checked in the Assistant software
- * 2. Mode selection bar of the remote controller is placed at the
- * F position
+ * 2. Mode selection bar of the remote controller is placed at the:
+ * F position for M100_31, A3_31 and P position for A3_32
  *
  */
 TEST_F(DJI_APITest, releaseControl) {

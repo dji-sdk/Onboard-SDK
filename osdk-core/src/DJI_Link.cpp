@@ -1,6 +1,6 @@
 /** @file DJI_Link.cpp
- *  @version 3.1.7
- *  @date July 1st, 2016
+ *  @version 3.1.9
+ *  @date November 10, 2016
  *
  *  @brief
  *  Implement send/read, app handling and data link layer for Core API of DJI onboardSDK library
@@ -72,32 +72,35 @@ void CoreAPI::appHandler(Header *protocolHeader)
           freeSession(&CMDSessionTab[protocolHeader->sessionID]);
           serialDevice->freeMemory();
 
-          if (callBack) {
-              //! Non-blocking callback thread
-              if (nonBlockingCBThreadEnable == true) {
-                  notifyNonBlockingCaller(protocolHeader);
-              } else if (nonBlockingCBThreadEnable == false) {
-                  callBack(this, protocolHeader, data);
-              }
+          if (callBack)
+          {
+	    //! Non-blocking callback thread
+	    if (nonBlockingCBThreadEnable == true)
+	    {
+	      notifyNonBlockingCaller(protocolHeader);
+	    }
+	    else if (nonBlockingCBThreadEnable == false)
+	    {
+	      callBack(this, protocolHeader, data);
+	    }
           }
-
           else
           {
            // Notify caller end of ACK frame arrived
            notifyCaller(protocolHeader);
           }
 
-            /**
-             * Set end of ACK frame
-             * @todo Implement proper notification mechanism
-             */
-            // setACKFrameStatus((&CMDSessionTab[protocolHeader->sessionID])->usageFlag);
-
+          /**
+           * Set end of ACK frame
+           * @todo Implement proper notification mechanism
+           */
           setACKFrameStatus((&CMDSessionTab[protocolHeader->sessionID])->usageFlag);
         }
         else
+        {
           serialDevice->freeMemory();
-      }
+        }
+      }  
     }
   }
   else
@@ -157,21 +160,27 @@ void CoreAPI::appHandler(Header *protocolHeader)
   }
 }
 
+void CoreAPI::allocateACK(Header *protocolHeader) {
+
+  const size_t MAX_ACK_SIZE = (versionData.version == versionM100_31) ?
+    M100_MAX_ACK_SIZE : A3_MAX_ACK_SIZE;
+
+  if (protocolHeader->length <= MAX_ACK_SIZE)
+  {
+    memcpy(missionACKUnion.raw_ack_array, ((unsigned char *)protocolHeader) + sizeof(Header),
+	(protocolHeader->length - EXC_DATA_SIZE));
+  }
+  else
+  {
+    throw std::runtime_error("Unknown ACK");
+  }
+}
+
 void CoreAPI::notifyCaller(Header *protocolHeader)
 {
   serialDevice->lockACK();
 
-  // In case of getDroneVersion? Should be only one case.
-  if(protocolHeader->length < 64)
-  {
-    memcpy(missionACKUnion.raw_ack_array, ((unsigned char *)protocolHeader) + sizeof(Header),
-	    (protocolHeader->length - EXC_DATA_SIZE));
-  } 
-  else
-  {
-    // Special case for getDroneVersion API call
-    version_ack_data = ((unsigned char *)protocolHeader) + sizeof(Header);
-  }
+  allocateACK(protocolHeader);
 
   // Notify caller end of ACK frame arrived
   serialDevice->notify();
@@ -185,16 +194,8 @@ void CoreAPI::notifyNonBlockingCaller(Header *protocolHeader)
     //! This version of non-blocking can be limited in performance since the
     //! read thread waits for the callback thread to return before the read thread continues.
 
-    if(protocolHeader->length < 64)
-    {
-        memcpy(missionACKUnion.raw_ack_array, ((unsigned char *)protocolHeader) + sizeof(Header),
-               (protocolHeader->length - EXC_DATA_SIZE));
-    }
-    else
-    {
-        //! Special case for getDroneVersion API call
-        version_ack_data = ((unsigned char *)protocolHeader) + sizeof(Header);
-    }
+    allocateACK(protocolHeader);
+
     //! Copying protocol header to a global variable - will be passed to the Callback thread.
     //! protHeader is not thread safe and is passed to Callback for legacy purposes.
     //! Ack is available in the callback via MissionACKUnion.
@@ -204,9 +205,7 @@ void CoreAPI::notifyNonBlockingCaller(Header *protocolHeader)
     serialDevice->lockProtocolHeader();
     serialDevice->notifyNonBlockCBAckRecv();
     serialDevice->freeProtocolHeader();
-
 }
-
 
 void CoreAPI::sendPoll()
 {

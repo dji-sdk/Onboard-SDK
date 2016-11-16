@@ -60,6 +60,8 @@ int setup(LinuxSerialDevice* serialDevice, CoreAPI* api, LinuxThread* read)
   //! Start read thread
   read->createThread();
 
+  VersionData vData = api->getDroneVersion(1);
+
   //! Attempt Activation
   ackReturnData activationStatus = activate(api);
   if (activationStatus.status == -1)
@@ -73,7 +75,7 @@ int setup(LinuxSerialDevice* serialDevice, CoreAPI* api, LinuxThread* read)
   {
     return controlStatus.status;
   }
-
+  api->getDroneVersion();
   //! Setup completed sucessfully.
   return 1;
 }
@@ -148,6 +150,10 @@ int parseUserConfig()
     case DJI::onboardSDK::versionA3_31:
       droneVerStr = "A3";
       SdkVerStr = "3.1";
+      break;
+    case DJI::onboardSDK::versionA3_32:
+      droneVerStr = "A3";
+      SdkVerStr = "3.2";
       break;
     case DJI::onboardSDK::versionM100_31:
       droneVerStr = "M100";
@@ -267,11 +273,14 @@ ackReturnData takeControl(CoreAPI* api)
   takeControlData.ack = api->setControl(true, 1);
   switch (takeControlData.ack)
   {
-    case ACK_SETCONTROL_NEED_MODE_F:
+    case  ACK_SETCONTROL_NEED_MODE_F:
       std::cout << "Failed to obtain control.\nYour RC mode switch is not in mode F. (Is the RC connected and paired?)" << std::endl;
       takeControlData.status = -1;
       return takeControlData;
-      break;
+    case  ACK_SETCONTROL_NEED_MODE_P:
+      std::cout << "Failed to obtain control.\nFor A3 v3.2, your RC needs to be in P mode. (Is the RC connected and paired?)" << std::endl;
+      takeControlData.status = -1;
+      return takeControlData;
     case ACK_SETCONTROL_OBTAIN_SUCCESS:
       std::cout << "Obtained control successfully."<< std::endl;
       break;
@@ -415,9 +424,12 @@ void takeControlCallback(CoreAPI* api, Header *protHeader, DJI::UserData data) {
   uint16_t simpAck = api->missionACKUnion.simpleACK;
   switch (simpAck)
   {
-    case ACK_SETCONTROL_NEED_MODE_F:
-      std::cout << "Failed to obtain control.\nYour RC mode switch is not in mode F. (Is the RC connected and paired?)" << std::endl;
-          break;
+    case ACK_SETCONTROL_ERROR_MODE:
+      if(api->getSDKVersion() != versionA3_32)
+        std::cout << "Failed to obtain control.\nYour RC mode switch is not in mode F. (Is the RC connected and paired?)" << std::endl;
+      else
+        std::cout << "Failed to obtain control.\nYour RC mode switch is not in mode P. (Is the RC connected and paired?)" << std::endl;
+      break;
     case ACK_SETCONTROL_OBTAIN_SUCCESS:
       std::cout << "Obtained control successfully."<< std::endl;
           break;

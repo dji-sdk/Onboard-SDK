@@ -80,6 +80,7 @@ ackReturnData takeoff(Flight* flight, int timeout)
 !*/ 
 ackReturnData monitoredTakeoff(CoreAPI* api, Flight* flight, int timeout)
 {
+
   //Start takeoff
   ackReturnData takeoffStatus = takeoff(flight, timeout);
   if (takeoffStatus.status == -1) {return takeoffStatus;}
@@ -87,29 +88,61 @@ ackReturnData monitoredTakeoff(CoreAPI* api, Flight* flight, int timeout)
   //Start broadcasting flight status as well as position info 
   uint8_t freq[16];
 
-  freq[0] = BROADCAST_FREQ_0HZ;
-  freq[1] = BROADCAST_FREQ_0HZ;
-  freq[2] = BROADCAST_FREQ_0HZ;
-  freq[3] = BROADCAST_FREQ_50HZ;
-  freq[4] = BROADCAST_FREQ_0HZ;
-  freq[5] = BROADCAST_FREQ_50HZ;
-  freq[6] = BROADCAST_FREQ_0HZ;
-  freq[7] = BROADCAST_FREQ_0HZ;
-  freq[8] = BROADCAST_FREQ_0HZ;
-  freq[9] = BROADCAST_FREQ_10HZ;
-  freq[10] = BROADCAST_FREQ_0HZ;
-  freq[11] = BROADCAST_FREQ_0HZ; 
+  if (UserConfig::targetVersion == versionM100_31 || UserConfig::targetVersion == versionM100_23) {
 
+    freq[0] = BROADCAST_FREQ_0HZ;
+    freq[1] = BROADCAST_FREQ_0HZ;
+    freq[2] = BROADCAST_FREQ_0HZ;
+    freq[3] = BROADCAST_FREQ_50HZ;
+    freq[4] = BROADCAST_FREQ_0HZ;
+    freq[5] = BROADCAST_FREQ_50HZ;
+    freq[6] = BROADCAST_FREQ_0HZ;
+    freq[7] = BROADCAST_FREQ_0HZ;
+    freq[8] = BROADCAST_FREQ_0HZ;
+    freq[9] = BROADCAST_FREQ_10HZ;
+    freq[10] = BROADCAST_FREQ_0HZ;
+    freq[11] = BROADCAST_FREQ_0HZ;
+
+  } else if (UserConfig::targetVersion == versionA3_31 || UserConfig::targetVersion == versionA3_32) {
+
+    freq[0] = BROADCAST_FREQ_0HZ;
+    freq[1] = BROADCAST_FREQ_0HZ;
+    freq[2] = BROADCAST_FREQ_0HZ;
+    freq[3] = BROADCAST_FREQ_50HZ;
+    freq[4] = BROADCAST_FREQ_0HZ;
+    freq[5] = BROADCAST_FREQ_50HZ;
+    //! Fields 6 and 7 correspond to detailed GPS and RTK info
+    freq[6] = BROADCAST_FREQ_0HZ;
+    freq[7] = BROADCAST_FREQ_0HZ;
+    freq[8] = BROADCAST_FREQ_0HZ;
+    freq[9] = BROADCAST_FREQ_0HZ;
+    freq[10] = BROADCAST_FREQ_0HZ;
+    freq[11] = BROADCAST_FREQ_10HZ;
+    freq[12] = BROADCAST_FREQ_0HZ;
+    freq[13] = BROADCAST_FREQ_0HZ;
+
+  }
   unsigned short broadcastAck = api->setBroadcastFreq(freq, timeout);
   //If ACK = true, then start monitoring broadcastData. 
 
   //! First check: See if the aircraft actually got off the ground
   int stillOnGround = 0;
-  int timeoutCycles = 20;
-  while (api->getBroadcastData().status != 3 && stillOnGround < timeoutCycles)
+  int timeoutCycles = 40;
+  if (UserConfig::targetVersion != versionA3_32)
   {
-    stillOnGround++;
-    usleep (100000);
+    while (api->getBroadcastData().status != 3 && stillOnGround < timeoutCycles)
+    {
+      stillOnGround++;
+      usleep(100000);
+    }
+  }
+  else
+  {
+    while (api->getBroadcastData().status != 2 && stillOnGround < timeoutCycles)
+    {
+      stillOnGround++;
+      usleep(100000);
+    }
   }
   if (stillOnGround == timeoutCycles)
   {
@@ -118,10 +151,21 @@ ackReturnData monitoredTakeoff(CoreAPI* api, Flight* flight, int timeout)
     //Try again
     takeoffStatus = takeoff(flight, timeout);
     stillOnGround = 0;
-    while (api->getBroadcastData().status != 3 && stillOnGround < timeoutCycles)
+    if (UserConfig::targetVersion != versionA3_32)
     {
-      stillOnGround++;
-      usleep (100000);
+      while (api->getBroadcastData().status != 3 && stillOnGround < timeoutCycles)
+      {
+        stillOnGround++;
+        usleep(100000);
+      }
+    }
+    else
+    {
+      while (api->getBroadcastData().status != 2 && stillOnGround < timeoutCycles)
+      {
+        stillOnGround++;
+        usleep(100000);
+      }
     }
     if (stillOnGround == timeoutCycles)
     {
@@ -454,6 +498,7 @@ ackReturnData disArm(Flight* flight, int timeout)
 !*/
 ackReturnData landing(CoreAPI* api, Flight* flight, int timeout)
 {
+
   //Call landing task
   ackReturnData landingAck;
   landingAck.ack = flight->task(Flight::TASK_LANDING, timeout);
@@ -488,32 +533,49 @@ ackReturnData landing(CoreAPI* api, Flight* flight, int timeout)
     //Set a timeout to make sure the system doesn't freeze in case landing does not kick in
     float landingStartTimeout = 3; //seconds 
     float landingTimer = 0;
-    while (api->getBroadcastData().status != 4 && landingTimer < landingStartTimeout)
+    if (UserConfig::targetVersion != versionA3_32)
     {
-      usleep(50000);
-      landingTimer += 0.05;
+      while (api->getBroadcastData().status != 4 && landingTimer < landingStartTimeout)
+      {
+        usleep(50000);
+        landingTimer += 0.05;
+      }
+      if (landingTimer >= landingStartTimeout)
+      {
+        landingTimer = 0;
+        std::cout << "Did not enter landing mode. Please land manually.\n";
+        landingAck.status = -1;
+        return landingAck;
+      }
+      std::cout << "Descending..\n";
+      while (api->getBroadcastData().status == 4)
+      {
+        usleep(500000);
+      }
+      std::cout << "Landed. Wait until system is ready to accept new commands..\n";
     }
-    if (landingTimer >= landingStartTimeout)
+    else
     {
-      landingTimer = 0;
-      std::cout << "Did not enter landing mode. Please land manually.\n";
-      landingAck.status = -1;
-      return landingAck;
+      while (api->getBroadcastData().status != 0)
+      {
+        usleep(500000);
+      }
+      std::cout << "Landed. Wait until system is ready to accept new commands..\n";
     }
-
-    std::cout << "Descending..\n";
-    while (api->getBroadcastData().status == 4)
-    {
-      usleep(500000);
-    }
-    std::cout << "Landed. Wait until system is ready to accept new commands..\n";
-    
     //Set a timeout to make sure the system doesn't freeze in case landing cleanup does not finish
     float landingFinishTimeout = 4; //Seconds
-    while (api->getBroadcastData().status == 5 && landingTimer < landingFinishTimeout)
+
+    if (UserConfig::targetVersion != versionA3_32)
     {
-      usleep(500000);
-      landingFinishTimeout += 0.5;
+      while (api->getBroadcastData().status == 5 && landingTimer < landingFinishTimeout)
+      {
+        usleep(500000);
+        landingFinishTimeout += 0.5;
+      }
+    }
+    else
+    {
+      usleep(2000000);
     }
     if (landingTimer >= landingFinishTimeout)
     {
@@ -524,6 +586,7 @@ ackReturnData landing(CoreAPI* api, Flight* flight, int timeout)
     }
     std::cout << "Landing completed successfully.\n";
   }
+
   landingAck.status = 1;
   return landingAck;
 }
@@ -576,10 +639,21 @@ void localOffsetFromGpsOffset(DJI::Vector3dData& deltaNed,
 int drawSqrPosCtrlSample(CoreAPI* api, Flight* flight)
 {
   //Check if in air
-  if (api->getBroadcastData().status != 3)
+  if (UserConfig::targetVersion != versionA3_32)
   {
-    std::cout << "Please takeoff and then try this sample.\n";
-    return -1;
+    if (api->getBroadcastData().status != 3)
+    {
+      std::cout << "Please takeoff and then try this sample.\n";
+      return -1;
+    }
+  }
+  else
+  {
+    if (api->getBroadcastData().status != 2)
+    {
+      std::cout << "Please takeoff and then try this sample.\n";
+      return -1;
+    }
   }
   int positionControlStatus = moveByPositionOffset(api, flight, 0, 0, 10, 0);
   positionControlStatus = moveByPositionOffset(api, flight, 0, 10, 0, 0);
