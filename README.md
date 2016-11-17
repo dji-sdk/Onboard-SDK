@@ -9,8 +9,9 @@ DJI's Onboard SDK allows you to connect your own Onboard Embedded System (OES) t
 ---
 ## New Release
 
-A new version of DJI Onboard SDK (v3.1.8) was released on 08/05 - be sure to read the [release notes](https://developer.dji.com/onboard-sdk/documentation/appendix/releaseNotes.html)! If you're new here, please read the rest of this document.
+A new version of DJI Onboard SDK (v3.1.9) was released on 10/14 - be sure to read the [release notes](https://developer.dji.com/onboard-sdk/documentation/appendix/releaseNotes.html)! If you're new here, please read the rest of this document.
 
+> Note: A hotfix release (v3.1.9.1) for new A3 FW 1.5.0.0 has been released on 11/16 - please upgrade to this
 ---
 
 ## Prerequisites
