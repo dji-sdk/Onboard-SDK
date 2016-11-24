@@ -362,7 +362,7 @@ typedef struct WayPointInitACK
 typedef struct DroneVersionACK
 {
   unsigned char ack[MAX_ACK_SIZE];
-};
+} DroneVersionACK;
 
 typedef union MissionACKUnion
 { 
