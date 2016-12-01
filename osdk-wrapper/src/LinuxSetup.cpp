@@ -60,8 +60,6 @@ int setup(LinuxSerialDevice* serialDevice, CoreAPI* api, LinuxThread* read)
   //! Start read thread
   read->createThread();
 
-  VersionData vData = api->getDroneVersion(1);
-
   //! Attempt Activation
   ackReturnData activationStatus = activate(api);
   if (activationStatus.status == -1)
