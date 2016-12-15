@@ -25,10 +25,10 @@ boost::thread workerThread1;
 boost::thread workerThread2;
 #endif
 
-int setup(LinuxSerialDevice* serialDevice, CoreAPI* api, LinuxThread* read)
+int setup(LinuxSerialDevice* serialDevice, CoreAPI* api, LinuxThread* read, std::string userConfigPath)
 {
   //! Configuration parsing
-  int configStatus = parseUserConfig(); 
+  int configStatus = parseUserConfig(userConfigPath);
 
   if (configStatus == -1)
   {
@@ -139,9 +139,9 @@ bool validateSerialDevice(LinuxSerialDevice* serialDevice, CoreAPI* api)
 }
 
 
-int parseUserConfig()
+int parseUserConfig(string userConfigPath)
 {
-  readUserConfig();
+  readUserConfig(userConfigPath);
 
   std::string droneVerStr, SdkVerStr; 
   switch (UserConfig::targetVersion){
@@ -303,10 +303,11 @@ ackReturnData takeControl(CoreAPI* api)
 
 //! Non-Blocking
 
-int setupNonBlocking(LinuxSerialDevice* serialDevice, CoreAPI* api, LinuxThread* read, LinuxThread* callback)
+int setupNonBlocking(LinuxSerialDevice* serialDevice, CoreAPI* api, LinuxThread* read, LinuxThread* callback,
+		std::string userConfigPath)
 {
   //! Configuration parsing
-  int configStatus = parseUserConfig();
+  int configStatus = parseUserConfig(userConfigPath);
 
   if (configStatus == -1)
   {

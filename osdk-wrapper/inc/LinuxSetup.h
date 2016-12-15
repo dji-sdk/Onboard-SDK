@@ -31,15 +31,16 @@ typedef struct ackReturnToMobile{
   uint16_t ack;
 } ackReturnToMobile;
 
-int setup(LinuxSerialDevice* serialDevice, CoreAPI* api, LinuxThread* read);
+int setup(LinuxSerialDevice* serialDevice, CoreAPI* api, LinuxThread* read, std::string userConfigPath = UserConfig::defaultUserConfigPath);
 bool validateSerialDevice(LinuxSerialDevice* serialDevice, CoreAPI* api);
-int parseUserConfig();
+int parseUserConfig(std::string userConfigPath = UserConfig::defaultUserConfigPath);
 ackReturnData activate(CoreAPI* api);
 ackReturnData takeControl(CoreAPI* api);
 
 
 //! Non-Blocking calls
-int setupNonBlocking(LinuxSerialDevice* serialDevice, CoreAPI* api, LinuxThread* read, LinuxThread* callback);
+int setupNonBlocking(LinuxSerialDevice* serialDevice, CoreAPI* api, LinuxThread* read, LinuxThread* callback,
+		std::string userConfigPath = UserConfig::defaultUserConfigPath);
 void activateNonBlocking(CoreAPI* api);
 void activateCallback(CoreAPI* api, Header *protHeader, DJI::UserData data);
 void takeControlNonBlocking(CoreAPI* api);

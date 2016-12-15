@@ -36,7 +36,7 @@ namespace UserConfig{
   DJI::onboardSDK::Version targetVersion; 
 }
 
-void readUserConfig()
+void readUserConfig(string UserConfigPath)
 {
   char line[1024];
 
@@ -48,7 +48,7 @@ void readUserConfig()
 
   bool set_ID, set_KEY, set_Baud, set_Serial_Device, set_Drone_Version;
 
-  ifstream read("UserConfig.txt");
+  ifstream read(UserConfigPath);
 
   if (read.is_open())
   {
@@ -100,3 +100,4 @@ void readUserConfig()
          << "and have sufficient permissions." << endl;
   read.close();
 }
+

@@ -32,7 +32,9 @@ using namespace DJI::onboardSDK;
 
 namespace UserConfig
 {
-  //! If using Manifold, the UART2 port shows up as /dev/ttyTHS1. 
+  const std::string defaultUserConfigPath = "UserConfig.txt";
+
+  //! If using Manifold, the UART2 port shows up as /dev/ttyTHS1.
   //! The Expansion I/O port shows up as /dev/ttyTHS0. 
   //! If using a USB-Serial adapter, use /dev/ttyUSB0 
   //! (may differ if you have other USB-Serial devices plugged in)
@@ -48,7 +50,6 @@ namespace UserConfig
   extern Version targetVersion; 
 }
 
-void readUserConfig();
-
+void readUserConfig(std::string UserConfigPath = UserConfig::defaultUserConfigPath);
 
 #endif //USER_CONFIG_H
