@@ -41,19 +41,21 @@ endif ()
 ## Build ##
 ###########
 
+set(OSDK_PLATFORM_SRCS ${CMAKE_SOURCE_DIR}/platform/linux)
+
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
   inc
   test
-  ../platform/linux/inc
+  ${OSDK_PLATFORM_SRCS}/inc
 )
 
 ## Declare a C++ library
-FILE(GLOB DJI_SDK_LIB_SOURCES src/*.cpp inc/*.h)
+FILE(GLOB OSDK_LIB_SRCS src/*.cpp inc/*.h)
 add_library(${PROJECT_NAME}
   STATIC
-  ${DJI_SDK_LIB_SOURCES})
+  ${OSDK_LIB_SRCS})
 
 INSTALL(TARGETS ${PROJECT_NAME}
   RUNTIME DESTINATION ${EXECUTABLE_OUTPUT_PATH}
@@ -70,20 +72,31 @@ INSTALL(TARGETS ${PROJECT_NAME}
   COMPONENT library)
 
 if(GTEST)
-	## Add gtest based cpp test target and link libraries
-	if (CMAKE_SYSTEM_NAME MATCHES Linux)
-	#    FILE(GLOB DJI_SDK_LIB_TEST_SOURCES test/*.cpp test/*.h)
-	#    add_executable(DJI_APITest ${DJI_SDK_LIB_TEST_SOURCES})
-    add_executable(DJI_APITest
-      test/DJI_APITest.cpp
-      test/DJI_CameraTest.cpp
-      test/DJI_Environment.cpp
-      test/DJI_HotPointTest.cpp
-      test/DJI_Main.cpp
-      test/DJI_WayPointTest.cpp
-      test/DJI_FlightTest.cpp
-      test/DJI_VirtualRCTest.cpp
-    )
+  # Add gtest based cpp test target and link libraries
+  if (CMAKE_SYSTEM_NAME MATCHES Linux)
+    if(DJI_API_TEST_LIBRARY)
+      add_library(DJI_APITest STATIC
+        test/DJI_APITest.cpp
+        test/DJI_Environment.cpp
+        ${OSDK_LIB_SRCS}
+        ${OSDK_PLATFORM_SRCS}/src/LinuxSerialDevice.cpp
+        ${OSDK_PLATFORM_SRCS}/src/LinuxThread.cpp)
+    else()
+      add_executable(DJI_APITest
+        test/DJI_APITest.cpp
+        test/DJI_ActivateTest.cpp
+        test/DJI_CameraTest.cpp
+        test/DJI_Environment.cpp
+        test/DJI_HotPointTest.cpp
+        test/DJI_Main.cpp
+        test/DJI_SDKVersionTest.cpp
+        test/DJI_WayPointTest.cpp
+        test/DJI_FlightTest.cpp
+        test/DJI_Utility.cpp
+        test/DJI_VirtualRCTest.cpp
+      )
+    endif()
+
     add_dependencies(DJI_APITest googletest)
     add_dependencies(DJI_APITest rapidjson)
 
@@ -101,13 +114,14 @@ if(GTEST)
       if (CMAKE_SYSTEM_NAME MATCHES Linux)
           target_link_libraries(DJI_APITest
                   ${PROJECT_NAME}
-                  ${binary_dir}/googlemock/gtest/libgtest.a
-                  ${binary_dir}/googlemock/gtest/libgtest_main.a
+                  ${gtest_binary_dir}/googlemock/gtest/libgtest.a
+                  ${gtest_binary_dir}/googlemock/gtest/libgtest_main.a
                   ${RAPIDJSON_LIBRARIES}
                   pthread)
       endif ()
     endif ()
 
     add_test(${EXECUTABLE_OUTPUT_PATH}/DJI_APITest ${EXECUTABLE_OUTPUT_PATH}/DJI_APITest)
-	endif ()
+  endif ()
 endif()
+

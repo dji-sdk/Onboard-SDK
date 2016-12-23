@@ -21,6 +21,12 @@ if(GTEST)
     )
    ExternalProject_Get_Property(googletest source_dir)
    ExternalProject_Get_Property(googletest binary_dir)
-   include_directories("${source_dir}/googletest/include")
+
+   # Make sure src/bin directory names do not collide
+   # with other external projects built within trajectory
+   set(gtest_source_dir ${source_dir})
+   set(gtest_binary_dir ${binary_dir})
+
+   include_directories("${gtest_source_dir}/googletest/include")
   endif ()
 endif ()

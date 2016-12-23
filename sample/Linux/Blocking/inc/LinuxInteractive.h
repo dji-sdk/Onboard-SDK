@@ -24,11 +24,13 @@
 #include "LinuxCamera.h"
 
 //Local Mission Planning Suite Headers
-#include <MissionplanHeaders.h>
+#ifdef USE_PRECISION_MISSIONS
+  #include <MissionplanHeaders.h>
+#endif
 /*! Poll at 10Hz, waiting for commands from the user.
     The spin runs indefinitely until the user sends the exit command.
 !*/
-void interactiveSpin(CoreAPI* api, Flight* flight, WayPoint* waypointObj, Camera* camera, std::string pathToSpiral);
+void interactiveSpin(CoreAPI* api, Flight* flight, WayPoint* waypointObj, Camera* camera, std::string pathToSpiral, std::string paramTuningFile);
 
 
 #endif // LINUXINTERACTIVE_H

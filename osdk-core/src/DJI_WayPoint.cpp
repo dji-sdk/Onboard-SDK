@@ -154,7 +154,9 @@ WayPointDataACK WayPoint::uploadIndexData(WayPointData *data, int timeout)
   if (data->index < info.indexNumber)
      wpData = index[data->index];
    else
-     throw std::runtime_error("Range error\n");
+#ifndef STM32
+    throw std::runtime_error("Range error\n");
+#endif
 
   api->send(2, encrypt, SET_MISSION, CODE_WAYPOINT_ADDPOINT, &wpData, sizeof(wpData), 1000, 4, 0, 0);
 
@@ -165,6 +167,48 @@ WayPointDataACK WayPoint::uploadIndexData(WayPointData *data, int timeout)
   return api->missionACKUnion.waypointDataACK;
 }
 
+/**
+ * @note Read Waypoint mission settings from the flight controller
+ *
+ * @return Information about uploaded Waypoint(s)
+ *
+ */
+WayPointInitACK WayPoint::getWaypointSettings(int timeout)
+{
+  uint8_t arbNumber = 0;
+  api->send(2, encrypt, SET_MISSION, CODE_WAYPOINT_INFO_READ, &arbNumber, sizeof(arbNumber), 1000, 4, 0, 0);
+
+  api->serialDevice->lockACK();
+  api->serialDevice->wait(timeout);
+  api->serialDevice->freeACK();
+
+  return api->missionACKUnion.waypointInitACK;
+}
+
+void WayPoint::getWaypointSettings(CallBack callback, UserData userData)
+{
+  uint8_t arbNumber = 0;
+  api->send(2, encrypt, SET_MISSION, CODE_WAYPOINT_INFO_READ, &arbNumber, sizeof(arbNumber), 1000, 4,
+    callback ? callback : getWaypointSettingsCallback, userData ? userData : this);
+}
+
+WayPointDataACK WayPoint::getIndex(uint8_t index, int timeout)
+{
+  api->send(2, encrypt, SET_MISSION, CODE_WAYPOINT_INDEX_READ, &index, sizeof(index), 1000, 4, 0, 0);
+
+  api->serialDevice->lockACK();
+  api->serialDevice->wait(timeout);
+  api->serialDevice->freeACK();
+
+  return api->missionACKUnion.waypointDataACK;
+}
+
+void WayPoint::getIndex(uint8_t index, CallBack callback, UserData userData)
+{
+  api->send(2, encrypt, SET_MISSION, CODE_WAYPOINT_INDEX_READ, &index, sizeof(index), 1000, 4,
+    callback ? callback : uploadIndexDataCallback, userData ? userData : this);
+}
+
 void WayPoint::updateIdleVelocity(float32_t meterPreSecond, CallBack callback,
                                   UserData userData)
 {
@@ -173,7 +217,7 @@ void WayPoint::updateIdleVelocity(float32_t meterPreSecond, CallBack callback,
     userData ? userData : this);
 }
 
-WayPointInitData WayPoint::getInfo() const 
+WayPointInitData WayPoint::getInfo() const
 { 
   return info; 
 }
@@ -191,16 +235,6 @@ void WayPoint::setInfo(const WayPointInitData &value)
   if (maxIndex < info.indexNumber)
     index = 0;
 #endif // STATIC_MEMORY
-}
-
-WayPointData *WayPoint::getIndex() const 
-{ 
-  return index;
-}
-
-WayPointData *WayPoint::getIndex(size_t pos) const 
-{
-  return &(index[pos]); 
 }
 
 void WayPoint::idleVelocityCallback(CoreAPI *api, Header *protocolHeader, UserData wpapi)
@@ -222,7 +256,7 @@ void WayPoint::idleVelocityCallback(CoreAPI *api, Header *protocolHeader, UserDa
   API_LOG(api->getDriver(), STATUS_LOG, "Current idle velocity: %f", wp->info.idleVelocity);
 }
 
-void WayPoint::readInitDataCallback(CoreAPI *api, Header *protocolHeader, UserData wpapi)
+void WayPoint::getWaypointSettingsCallback(CoreAPI *api, Header *protocolHeader, UserData wpapi)
 {
   WayPoint *wp = (WayPoint *)wpapi;
   WayPointInitACK ack;
@@ -256,7 +290,13 @@ void WayPoint::uploadIndexDataCallback(CoreAPI *api, Header *protocolHeader, Use
     return;
   }
   api->decodeMissionStatus(ack.ack);
-  API_LOG(api->getDriver(), STATUS_LOG, "Index number: %d\n", ack.index);
+  API_LOG(api->getDriver(), STATUS_LOG, "Index number: %d\n", ack.data.index);
+  API_LOG(api->getDriver(), STATUS_LOG, "Action number: %d\n", ack.data.actionNumber);
+  API_LOG(api->getDriver(), STATUS_LOG, "Latitude: %f\n", ack.data.latitude);
+  API_LOG(api->getDriver(), STATUS_LOG, "Longitude: %f\n", ack.data.longitude);
+  API_LOG(api->getDriver(), STATUS_LOG, "Altitude: %f\n", ack.data.altitude);
+  API_LOG(api->getDriver(), STATUS_LOG, "Yaw: %d\n", ack.data.yaw);
+  API_LOG(api->getDriver(), STATUS_LOG, "Gimbal pitch: %d\n", ack.data.gimbalPitch);
 }
 
 void WayPoint::setIndex(WayPointData *value, size_t pos)

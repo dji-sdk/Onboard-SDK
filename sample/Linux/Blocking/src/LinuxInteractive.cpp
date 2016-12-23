@@ -38,7 +38,6 @@ char userInput()
   cout << "| [e] Takeoff                                                    |" << endl;
   cout << "| [f] Waypoint Sample                                            |" << endl;
   cout << "| [g] Position Control Sample: Draw Square                       |" << endl;
-  cout << "| [z] Local Mission Plan: Execute a pre-planned spiral           |" << endl;
   cout << "| [h] Landing                                                    |" << endl;
   cout << "| [i] Go Home                                                    |" << endl;
   cout << "| [j] Set Gimbal Angle                                           |" << endl;
@@ -66,14 +65,21 @@ char userInput()
   cout << "|                                                                |" << endl;
   cout << "|------------------LiDAR Logging Sample--------------------------|" << endl;
 #endif
-
-
+#ifdef USE_PRECISION_MISSIONS
+  cout << "                                                                  " << endl;
+  cout << "                                                                  " << endl;
+  cout << "|------------------Precision Trajectories------------------------|" << endl;
+  cout << "|                                                                |" << endl;
+  cout << "| [z] Precision Mission Plan: Execute a pre-planned spiral       |" << endl;
+  cout << "|                                                                |" << endl;
+  cout << "|------------------Precision Trajectories------------------------|" << endl;
+#endif
   char inputChar;
   cin >> inputChar;
   return inputChar;
 }
 
-void interactiveSpin(CoreAPI* api, Flight* flight, WayPoint* waypointObj, Camera* camera, std::string pathToSpiral)
+void interactiveSpin(CoreAPI* api, Flight* flight, WayPoint* waypointObj, Camera* camera, std::string pathToSpiral, std::string paramTuningFile)
 {
   bool userExitCommand = false;
 
@@ -85,12 +91,44 @@ void interactiveSpin(CoreAPI* api, Flight* flight, WayPoint* waypointObj, Camera
   ackReturnData landingStatus;
   ackReturnData goHomeStatus;
   int drawSqrPosCtrlStatus;
+  uint16_t trajectoryStatus;
 
+#ifdef USE_PRECISION_MISSIONS
   //! Instantiate a local frame for trajectory following
   BroadcastData data = api->getBroadcastData();
   Eigen::Vector3d originLLA(data.pos.latitude, data.pos.longitude, data.pos.altitude);
   CartesianFrame localFrame(originLLA);
+  TrajectoryFollower* follower;
+  Trajectory* trajectory;
 
+  //! Extract the drone version from the UserConfig params
+  std::string droneVer;
+
+  if (UserConfig::targetVersion == versionM100_23 || UserConfig::targetVersion == versionM100_31)
+    droneVer = "M100";
+  else if (UserConfig::targetVersion == versionA3_31)
+    droneVer = "A3";
+  else {
+    // default case - M100
+    droneVer = "M100";
+  }
+
+  //! Set up the follower using the tuning parameters supplied
+  if (!pathToSpiral.empty()) {
+    TrajectoryInfrastructure::startStateBroadcast(api);
+    follower = TrajectoryInfrastructure::setupFollower(api,
+                                                       flight,
+                                                       &localFrame,
+                                                       camera,
+                                                       droneVer,
+                                                       paramTuningFile);
+  } else {
+    follower = NULL;
+    std::cout << "You have chosen to enable precision missions at compile time, but to run a precision mission, you need to supply a trajectory as a program argument.\n";
+  }
+  //! Set up the trajectory using the trajectory parameters supplied
+  trajectory = TrajectoryInfrastructure::setupTrajectory(pathToSpiral);
+#endif
 
   while (!userExitCommand)
   {
@@ -146,13 +184,29 @@ void interactiveSpin(CoreAPI* api, Flight* flight, WayPoint* waypointObj, Camera
         stopLiDARlogging();
         break;
     #endif
+    #ifdef USE_PRECISION_MISSIONS
       case 'z':
+
+        //! Check if the aircraft has taken off. If not, make it do so.
+        data = api->getBroadcastData();
+        if (data.status < 2) {
+          std::cout << "Aircraft has not taken off. Taking off now...\n";
+          takeoffStatus = monitoredTakeoff(api, flight, 1);
+          if (takeoffStatus.status == -1) {
+            break;
+          }
+        }
+        //! Start the trajectory
         if (!pathToSpiral.empty()) {
           TrajectoryInfrastructure::startStateBroadcast(api);
-          TrajectoryInfrastructure::executeFromParams(api, flight, &localFrame, originLLA, camera, pathToSpiral);
+          trajectoryStatus = TrajectoryInfrastructure::executeFromParams(api, &localFrame, originLLA, trajectory, follower);
         }
         else
           std::cout << "You need to supply a parameters file as an argument to the program.\n";
+        break;
+    #endif
+      default:
+        std::cout << "Invalid option entered - please enter a letter from the choices in the prompt.\n";
         break;
     }
     usleep(1000000);

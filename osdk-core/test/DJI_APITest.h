@@ -73,19 +73,15 @@ class DJI_APITest : public ::testing::Test {
 
   struct M100_31{
     char VERSION_NAME[32] = "SDK-v1.0 BETA M100-03.01.01.00";
-    char VERSION_ID[11] = "041D350365";
   }M100_31;
 
-  //TODO add definitions
   struct A3_31{
-    char VERSION_NAME[32];
-    char VERSION_ID[11];
+    char VERSION_NAME[32] = "SDK-v1.0 BETA A3-03.01.100.00";
   }A3_31;
 
-  //TODO add defintions
+  //TODO add definitions
   struct A3_32{
     char VERSION_NAME[32] = "versionA3_32";
-    char VERSION_ID[11];
   }A3_32;
 };
 

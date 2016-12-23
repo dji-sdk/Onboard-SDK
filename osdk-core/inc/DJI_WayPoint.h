@@ -38,29 +38,37 @@ class WayPoint
   //! @note true for pause, false for resume
   void pause(bool isPause, CallBack callback = 0, UserData userData = 0);
   MissionACK pause(bool isPause, int timer);
-  void readInitData(CallBack callback = 0, UserData userData = 0);//! @todo implement
-  void readIndexData(uint8_t index, CallBack callback = 0, UserData userData = 0); //! @todo implement
   void readIdleVelocity(CallBack callback = 0, UserData userData = 0);
   //! @todo uploadAll
-  //void uploadAll(CallBack callback = 0, UserData userData = 0);
+  void uploadAll(CallBack callback = 0, UserData userData = 0);
   bool uploadIndexData(WayPointData *data, CallBack callback = 0, UserData userData = 0);
   WayPointDataACK uploadIndexData(WayPointData *data, int timer);
+
+  /*
+   * Read information about WayPoint mission from flight controller
+   */
+  WayPointInitACK getWaypointSettings(int timeout);
+  // Callback example
+  void getWaypointSettings(CallBack callback, UserData userData);
+
+  /*
+   * @note Get Waypoint status/settings at a given index
+   */
+  WayPointDataACK getIndex(uint8_t index, int timeout);
+  // Callback example
+  void getIndex(uint8_t index, CallBack callback, UserData userData);
+
   bool uploadIndexData(uint8_t pos, CallBack callback = 0, UserData userData = 0);
   void updateIdleVelocity(float32_t meterPreSecond, CallBack callback = 0,
       UserData userData = 0);
 
   void setInfo(const WayPointInitData &value);
-  void setIndex(WayPointData *value, size_t pos);
   WayPointInitData getInfo() const;
-  WayPointData *getIndex() const;
-  WayPointData *getIndex(size_t pos) const;
-
-  public:
+  void setIndex(WayPointData *value, size_t pos);
   static void idleVelocityCallback(CoreAPI *api, Header *protocolHeader, UserData wpapi);
-  static void readInitDataCallback(CoreAPI *api, Header *protocolHeader, UserData wpapi);
+  static void getWaypointSettingsCallback(CoreAPI *api, Header *protocolHeader, UserData wpapi);
   static void uploadIndexDataCallback(CoreAPI *api, Header *protocolHeader, UserData wpapi);
   //! @todo add uploadAllCallback
-  //! @todo add readIndexCallback
 
   private:
   CoreAPI *api;

@@ -8,6 +8,26 @@ DJI_Environment::~DJI_Environment() {}
 void DJI_Environment::SetUp() {}
 void DJI_Environment::TearDown() {}
 
+/**
+ * @note Find file within osdk-core directory
+ */
+std::string DJI_Environment::findFile(std::string file) {
+  char cwd[1024];
+  std::string jsonFile;
+
+  if(getcwd(cwd, sizeof(cwd)) == NULL)
+    throw std::runtime_error("Error getting current directory");
+
+  std::string strCWD(cwd);
+  jsonFile = strCWD + "/osdk-core/" + file;
+  std::ifstream fStream(jsonFile.c_str());
+
+  if(!fStream.good())
+    jsonFile.clear();
+
+  return jsonFile;
+}
+
 void DJI_Environment::read_config_file() {
   std::ifstream ifs(config_file_path.c_str());
   std::string content((std::istreambuf_iterator<char>(ifs)),

@@ -30,7 +30,6 @@ LinuxSerialDevice::LinuxSerialDevice(std::string device, unsigned int baudrate) 
   m_nbAckLock = PTHREAD_MUTEX_INITIALIZER;
   m_headerLock = PTHREAD_MUTEX_INITIALIZER;
   pthread_cond_init(&m_nbAckRecv, NULL);
-
 }
 
 

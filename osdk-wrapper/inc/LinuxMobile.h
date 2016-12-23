@@ -26,7 +26,9 @@
 #include "LinuxWaypoint.h"
 #include "LinuxCamera.h"
 //Local Mission Planning Suite Headers
-#include <MissionplanHeaders.h>
+#ifdef USE_PRECISION_MISSIONS
+  #include <MissionplanHeaders.h>
+#endif
 
 using namespace DJI;
 using namespace DJI::onboardSDK;
@@ -38,7 +40,7 @@ using namespace DJI::onboardSDK;
 
     The spin exits after ~15 mins.
 !*/
-void mobileCommandSpin(CoreAPI* api, Flight* flight, WayPoint* waypointObj, Camera* camera, char **trajFiles);
+void mobileCommandSpin(CoreAPI *api, Flight *flight, WayPoint *waypointObj, Camera *camera, char **trajFiles, int argc);
 void mobileCommandSpinNonBlocking(CoreAPI* api, Flight* flight, WayPoint* waypointObj);
 
 #endif //LINUXMOBILE_H

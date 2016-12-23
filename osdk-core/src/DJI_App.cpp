@@ -42,14 +42,16 @@ unsigned char getCmdCode(Header *protocolHeader)
   return *ptemp;
 }
 
-BroadcastData DJI::onboardSDK::CoreAPI::getBroadcastData() const { return broadcastData; }
-
-BatteryData DJI::onboardSDK::CoreAPI::getBatteryCapacity() const
-{
-  return broadcastData.battery;
+BroadcastData DJI::onboardSDK::CoreAPI::getBroadcastData() const {
+  serialDevice->lockMSG();
+  BroadcastData data = broadcastData;
+  serialDevice->freeMSG();
+  return data;
 }
 
-CtrlInfoData DJI::onboardSDK::CoreAPI::getCtrlInfo() const { return broadcastData.ctrlInfo; }
+BatteryData DJI::onboardSDK::CoreAPI::getBatteryCapacity() const { return getBroadcastData().battery; }
+
+CtrlInfoData DJI::onboardSDK::CoreAPI::getCtrlInfo() const { return getBroadcastData().ctrlInfo; }
 
 void DJI::onboardSDK::CoreAPI::setBroadcastFrameStatus(bool isFrame)
 {
@@ -77,6 +79,16 @@ void DJI::onboardSDK::CoreAPI::broadcast(Header *protocolHeader)
   //! @warning Change to const (+change interface for passData) in next release
   uint16_t DATA_FLAG = 0x0001;
   //! @todo better algorithm
+
+  /** 
+   *@note Write activation status
+   *
+   * Default value: 0xFF
+   * Activation successful: 0x00
+   * Activation error codes: 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08
+   * (see DJI_API.h for detailed description of the error codes)
+   */
+  broadcastData.activation = ack_activation;
 
   if (versionData.version != versionM100_23)
     passData(*enableFlag, DATA_FLAG, &broadcastData.timeStamp, pdata, sizeof(TimeStampData),

@@ -12,6 +12,7 @@ class DJI_Environment : public testing::Environment {
   virtual ~DJI_Environment();
   virtual void SetUp();
   virtual void TearDown();
+  std::string findFile(std::string file);
   const std::string &getVersion() const;
   int getApp_id() const;
   const std::string &getEnc_key() const;

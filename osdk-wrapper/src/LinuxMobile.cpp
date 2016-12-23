@@ -25,12 +25,60 @@ using namespace DJI::onboardSDK;
 
     The spin exits after ~150 mins.
 !*/
-void mobileCommandSpin(CoreAPI* api, Flight* flight, WayPoint* waypointObj, Camera *camera, char **trajFiles)
+void mobileCommandSpin(CoreAPI *api, Flight *flight, WayPoint *waypointObj, Camera *camera, char **trajFiles, int argc)
 {
+#ifdef USE_PRECISION_MISSIONS
   //! Set up a local frame for Trajectory following
   BroadcastData data = api->getBroadcastData();
   Eigen::Vector3d originLLA(data.pos.latitude, data.pos.longitude, data.pos.altitude);
   CartesianFrame localFrame(originLLA);
+  TrajectoryFollower* follower;
+  Trajectory* trajectory;
+
+  //! Extract the drone version from the UserConfig params
+  std::string droneVer;
+
+  if (UserConfig::targetVersion == versionM100_23 || UserConfig::targetVersion == versionM100_31)
+    droneVer = "M100";
+  else if (UserConfig::targetVersion == versionA3_31)
+    droneVer = "A3";
+  else {
+    // default case - M100
+    droneVer = "M100";
+  }
+
+  //! Read the runtime args and populate variables
+  std::string pathToSpiral;
+  std::string paramTuningFile;
+
+  if (argc > 3) {
+    pathToSpiral = std::string(trajFiles[2]);
+    paramTuningFile = std::string(trajFiles[3]);
+  } else if (argc == 3) {
+    pathToSpiral = std::string(trajFiles[2]);
+    paramTuningFile = std::string("");
+  } else {
+    pathToSpiral = std::string("");
+    paramTuningFile = std::string("");
+  }
+
+  //! Set up the follower using the tuning parameters supplied
+  if (!pathToSpiral.empty()) {
+    TrajectoryInfrastructure::startStateBroadcast(api);
+    follower = TrajectoryInfrastructure::setupFollower(api,
+                                                       flight,
+                                                       &localFrame,
+                                                       camera,
+                                                       droneVer,
+                                                       paramTuningFile);
+  } else {
+    follower = NULL;
+    std::cout << "You need to supply a trajectory as a program argument.\n";
+  }
+
+  //! Set up the trajectory using the trajectory parameters supplied
+  trajectory = TrajectoryInfrastructure::setupTrajectory(pathToSpiral);
+#endif //! USE_PRECISION_MISSIONS
 
   int t = 0;
   ackReturnToMobile returnACKMobile;
@@ -124,25 +172,178 @@ void mobileCommandSpin(CoreAPI* api, Flight* flight, WayPoint* waypointObj, Came
       returnACKMobile.ack = 1; //Always true since example does not return an ACK
       api->sendToMobile((uint8_t*)(&returnACKMobile),sizeof(returnACKMobile));
     }
-    if (api->getLocalMissionPlanCMD()) {
-      api->setLocalMissionPlanCMD(false);
-      TrajectoryInfrastructure::startStateBroadcast(api);
-      if (trajFiles[2] != NULL) {
-        TrajectoryInfrastructure::executeFromParams(api,
-                                                    flight,
-                                                    &localFrame,
-                                                    originLLA,
-                                                    camera,
-                                                    std::string(trajFiles[2]));
-        returnACKMobile.cmdID = 69;
-        returnACKMobile.ack = 1;
-      }
-      else {
-        returnACKMobile.cmdID = 69;
-        returnACKMobile.ack = 2;
-      }
-      api->sendToMobile((uint8_t *) (&returnACKMobile), sizeof(returnACKMobile));
+
+    if (api->getStartLASMapLoggingCMD())
+    {
+      api->setStartLASMapLoggingCMD(false);
+      system("roslaunch point_cloud_las start_velodyne_and_loam.launch &");
+      system("rosrun point_cloud_las write _topic:=/laser_cloud_surround _folder_path:= . &");
+      returnACKMobile.cmdID = 20;
+      returnACKMobile.ack = 1;
+      api->sendToMobile((uint8_t*)(&returnACKMobile),sizeof(returnACKMobile));
     }
+
+    if (api->getStopLASMapLoggingCMD())
+    {
+      api->setStopLASMapLoggingCMD(false);
+      system("rosnode kill /write_LAS /scanRegistration /laserMapping /transformMaintenance /laserOdometry   &");
+      returnACKMobile.cmdID = 21;
+      returnACKMobile.ack = 1;
+      api->sendToMobile((uint8_t*)(&returnACKMobile),sizeof(returnACKMobile));
+    }
+
+#ifdef USE_PRECISION_MISSIONS
+    if (api->getPrecisionMissionsCMD()) {
+
+      api->setPrecisionMissionsCMD(false);
+
+      //! Return ACK as an indication that we got the signal - NOT as a successful completion indication
+      returnACKMobile.cmdID = 24;
+      returnACKMobile.ack = 1;
+      api->sendToMobile((uint8_t *) (&returnACKMobile), sizeof(returnACKMobile));
+
+      //! Check if the aircraft has taken off. If not, make it do so.
+      data = api->getBroadcastData();
+      if (data.status < 2) {
+        std::cout << "Aircraft has not taken off. Taking off now...\n";
+        ackReturnData takeoffStatus = monitoredTakeoff(api, flight, 1);
+        if (takeoffStatus.status == -1) {
+          //! Return ACK as return value from the trajectory execution : 2 = SUCCESS and 3 = FAILURE
+          returnACKMobile.cmdID = 24;
+          returnACKMobile.ack = 3;
+          api->sendToMobile((uint8_t *) (&returnACKMobile), sizeof(returnACKMobile));
+          continue;
+        }
+      }
+
+      TrajectoryInfrastructure::startStateBroadcast(api);
+
+      //! Run precision missions without LiDAR features
+      uint16_t trajectoryAck = TrajectoryInfrastructure::executeFromParams(api, &localFrame, originLLA, trajectory, follower);
+
+      //! Return ACK as return value from the trajectory execution : 2 = SUCCESS and 3 = FAILURE
+      returnACKMobile.cmdID = 24;
+      returnACKMobile.ack = trajectoryAck;
+      api->sendToMobile((uint8_t *) (&returnACKMobile), sizeof(returnACKMobile));
+
+    }
+    if (api->getPrecisionMissionsCollisionAvoidanceCMD()) {
+
+      api->setPrecisionMissionsCollisionAvoidanceCMD(false);
+
+      //! Return ACK as an indication that we got the signal - NOT as a successful completion indication
+      returnACKMobile.cmdID = 25;
+      returnACKMobile.ack = 1;
+      api->sendToMobile((uint8_t *) (&returnACKMobile), sizeof(returnACKMobile));
+
+      //! Check if the aircraft has taken off. If not, make it do so.
+      data = api->getBroadcastData();
+      if (data.status < 2) {
+        std::cout << "Aircraft has not taken off. Taking off now...\n";
+        ackReturnData takeoffStatus = monitoredTakeoff(api, flight, 1);
+        if (takeoffStatus.status == -1) {
+          //! Return ACK as return value from the trajectory execution : 2 = SUCCESS and 3 = FAILURE
+          returnACKMobile.cmdID = 25;
+          returnACKMobile.ack = 3;
+          api->sendToMobile((uint8_t *) (&returnACKMobile), sizeof(returnACKMobile));
+          continue;
+        }
+      }
+
+      TrajectoryInfrastructure::startStateBroadcast(api);
+
+      //! Run precision missions with Collision Avoidance
+      trajectory->enableCollisionAvoidance(true);
+      uint16_t trajectoryAck = TrajectoryInfrastructure::executeFromParams(api, &localFrame, originLLA, trajectory, follower);
+
+      //! Un-set the flag in case you want to do another mission
+      trajectory->enableCollisionAvoidance(false);
+
+      //! Return ACK as return value from the trajectory execution : 2 = SUCCESS and 3 = FAILURE
+      returnACKMobile.cmdID = 25;
+      returnACKMobile.ack = trajectoryAck;
+      api->sendToMobile((uint8_t *) (&returnACKMobile), sizeof(returnACKMobile));
+
+    }
+    if (api->getPrecisionMissionsLidarMappingCMD()) {
+
+      api->setPrecisionMissionsLidarMappingCMD(false);
+
+      //! Return ACK as an indication that we got the signal - NOT as a successful completion indication
+      returnACKMobile.cmdID = 26;
+      returnACKMobile.ack = 1;
+      api->sendToMobile((uint8_t *) (&returnACKMobile), sizeof(returnACKMobile));
+
+      //! Check if the aircraft has taken off. If not, make it do so.
+      data = api->getBroadcastData();
+      if (data.status < 2) {
+        std::cout << "Aircraft has not taken off. Taking off now...\n";
+        ackReturnData takeoffStatus = monitoredTakeoff(api, flight, 1);
+        if (takeoffStatus.status == -1) {
+          //! Return ACK as return value from the trajectory execution : 2 = SUCCESS and 3 = FAILURE
+          returnACKMobile.cmdID = 26;
+          returnACKMobile.ack = 3;
+          api->sendToMobile((uint8_t *) (&returnACKMobile), sizeof(returnACKMobile));
+          continue;
+        }
+      }
+
+      TrajectoryInfrastructure::startStateBroadcast(api);
+
+      //! Run precision missions with LiDAR Mapping
+      trajectory->enableLidarMapping(true);
+      uint16_t trajectoryAck = TrajectoryInfrastructure::executeFromParams(api, &localFrame, originLLA, trajectory, follower);
+
+      //! Un-set the flag in case you want to do another mission with different settings
+      trajectory->enableLidarMapping(false);
+
+      //! Return ACK as return value from the trajectory execution : 2 = SUCCESS and 3 = FAILURE
+      returnACKMobile.cmdID = 26;
+      returnACKMobile.ack = trajectoryAck;
+      api->sendToMobile((uint8_t *) (&returnACKMobile), sizeof(returnACKMobile));
+
+    }
+    if (api->getPrecisionMissionsCollisionAvoidanceLidarMappingCMD()) {
+
+      api->setPrecisionMissionsCollisionAvoidanceLidarMappingCMD(false);
+
+      //! Return ACK as an indication that we got the signal - NOT as a successful completion indication
+      returnACKMobile.cmdID = 27;
+      returnACKMobile.ack = 1;
+      api->sendToMobile((uint8_t *) (&returnACKMobile), sizeof(returnACKMobile));
+
+      //! Check if the aircraft has taken off. If not, make it do so.
+      data = api->getBroadcastData();
+      if (data.status < 2) {
+        std::cout << "Aircraft has not taken off. Taking off now...\n";
+        ackReturnData takeoffStatus = monitoredTakeoff(api, flight, 1);
+        if (takeoffStatus.status == -1) {
+          //! Return ACK as return value from the trajectory execution : 2 = SUCCESS and 3 = FAILURE
+          returnACKMobile.cmdID = 27;
+          returnACKMobile.ack = 3;
+          api->sendToMobile((uint8_t *) (&returnACKMobile), sizeof(returnACKMobile));
+          continue;
+        }
+      }
+
+      TrajectoryInfrastructure::startStateBroadcast(api);
+
+      //! Run precision missions with Collision Avoidance AND LiDAR Mapping
+      trajectory->enableCollisionAvoidance(true);
+      trajectory->enableLidarMapping(true);
+      uint16_t trajectoryAck = TrajectoryInfrastructure::executeFromParams(api, &localFrame, originLLA, trajectory, follower);
+
+      //! Un-set the flag in case you want to do another mission with different settings
+      trajectory->enableCollisionAvoidance(false);
+      trajectory->enableLidarMapping(false);
+
+      //! Return ACK as return value from the trajectory execution : 2 = SUCCESS and 3 = FAILURE
+      returnACKMobile.cmdID = 27;
+      returnACKMobile.ack = trajectoryAck;
+      api->sendToMobile((uint8_t *) (&returnACKMobile), sizeof(returnACKMobile));
+
+    }
+#endif
     usleep(100000);
     t++;
   }

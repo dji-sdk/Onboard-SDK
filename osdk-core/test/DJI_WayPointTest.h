@@ -2,9 +2,11 @@
 #define ONBOARDSDK_DJI_WAYPOINTTEST_H
 
 #include "DJI_APITest.h"
+#include "DJI_FlightTest.h"
 #include <vector>
+#include <stdexcept>
 
-class DJI_WayPointTest : public DJI_APITest {
+class DJI_WayPointTest : public DJI_FlightTest {
  protected:
   virtual void SetUp();
   virtual void TearDown();
@@ -23,7 +25,6 @@ class DJI_WayPointTest : public DJI_APITest {
   } e_wp_acks;
 
   WayPoint* waypoint;
-  Flight* flight;
   uint8_t wp_ack;
 
   std::vector<WayPointData> wp_list;

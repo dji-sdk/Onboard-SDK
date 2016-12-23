@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
 project(djiosdk-wrapper)
-include(ExternalProject)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread -g -O0")
 
@@ -18,80 +17,43 @@ if (LIDAR_LOGGING)
   include_directories(../sensor-integration/velodyne_vlp16puck_lite_API_example/vlp16lidar-driver/inc)
 endif ()
 
-
-# Local Mission Planning Includes
-include_directories(../tools/localMissionPlanning/inc)
-include_directories(../tools/localMissionPlanning/inc/gps2local)
-include_directories(../tools/localMissionPlanning/inc/trajectory-generator)
-include_directories(../tools/localMissionPlanning/inc/trajectory-recorder)
-include_directories(../tools/localMissionPlanning/inc/trajectory-follower)
-include_directories(../tools/localMissionPlanning/inc/se3controller)
-include_directories(../tools/localMissionPlanning/inc/twopoint-trajectory-generator)
-include_directories(../tools/localMissionPlanning/inc/trajectory-infrastructure)
-
-# Local Mission Planning libraries
-include_directories(../tools/localMissionPlanning/dependencies)
-include_directories(../tools/localMissionPlanning/dependencies/csv)
-
-if(NOT TARGET rapidjson)
-    ExternalProject_Add(
-            rapidjson
-            # Disable update step
-            UPDATE_COMMAND ""
-            GIT_REPOSITORY https://github.com/miloyip/rapidjson.git
-            CMAKE_ARGS -DRAPIDJSON_BUILD_TESTS=OFF
-            -DRAPIDJSON_BUILD_DOC=OFF
-            -DRAPIDJSON_BUILD_EXAMPLES=OFF
-            PREFIX ${CMAKE_CURRENT_BINARY_DIR}
-            # Disable install step
-            INSTALL_COMMAND ""
-            TEST_COMMAND ""
-            # UPDATE_DISCONNECTED
-    )
-endif()
-ExternalProject_Get_Property(rapidjson source_dir)
-include_directories("${source_dir}/include")
-
-#Detecting target architecture to decide which precompiled library to link against
-if (CMAKE_SYSTEM_PROCESSOR MATCHES "(x86)|(X86)|(amd64)|(AMD64)")
-    set (X86 TRUE)
-else ()
-    set (X86 FALSE)
-endif ()
-
-#Detect platform - from https://gist.github.com/CoolerVoid/1781717
-EXECUTE_PROCESS(
-        COMMAND cat /etc/lsb-release
-        COMMAND grep DISTRIB_RELEASE
-        COMMAND awk -F= "{ print $2 }"
-        COMMAND tr "\n" " "
-        COMMAND sed "s/ //"
-        OUTPUT_VARIABLE LSB_VER
-)
-if( ${LSB_VER} STREQUAL "16.04")
-    if (X86)
-        find_library(MISSIONPLAN missionplan HINTS ../tools/localMissionPlanning/lib/x86_64/1604)
-    else ()
-        message("ARM running ubuntu 16.04 is not supported.")
-    endif()
-elseif(${LSB_VER} STREQUAL "14.04")
-    if (X86)
-	message("Warning! Precision Trajectory Features do not work in Ubuntu 14.04 on x86. Please upgrade to Ubuntu 16.04 to use these features. Your program WILL SEGFAULT if you try to run precision trajectories.")
-        find_library(MISSIONPLAN missionplan HINTS ../tools/localMissionPlanning/lib/x86_64/1404)
-    else ()
-        find_library(MISSIONPLAN missionplan HINTS ../tools/localMissionPlanning/lib/arm)
-    endif()
-endif()
-
-
-
 FILE(GLOB SOURCE_FILES inc/*.h src/*.cpp)
 add_library(${PROJECT_NAME} ${SOURCE_FILES})
-if (LIDAR_LOGGING)
- target_link_libraries(${PROJECT_NAME}  djiosdk-core vlp16lidar-driver djiosdk-platform ${MISSIONPLAN})
-else()
- target_link_libraries(${PROJECT_NAME}  djiosdk-core djiosdk-platform ${MISSIONPLAN})
+
+if (USE_PRECISION_MISSIONS AND (${DISTRO_VERSION} STREQUAL "1604"))
+  add_dependencies(${PROJECT_NAME} rapidjson)
+  include_directories("${rapidjson_source_dir}/include")
+
+  add_dependencies(${PROJECT_NAME} PrecisionMissions)
+  include_directories("${precision_missions_source_dir}/inc")
+
+  # Local Mission Planning libraries
+  include_directories("${precision_missions_source_dir}/dependencies")
+  include_directories("${precision_missions_source_dir}/dependencies/csv")
+
+  set(MISSIONPLAN_LIBRARY 
+   "${precision_missions_source_dir}/lib/${TARGET_ARCH}/${DISTRO_VERSION}/libmissionplan.a")
 endif()
 
-add_dependencies(${PROJECT_NAME} rapidjson)
+if (USE_COLLISION_AVOIDANCE)
+  add_dependencies(${PROJECT_NAME} dji-ros-collision-avoidance)
+endif()
+
+if (USE_POINTCLOUD2LAS)
+  add_dependencies(${PROJECT_NAME} dji-ros-pointcloud2las)
+endif()
+
+
+set (WRAPPER_LINK_LIBRARIES djiosdk-core djiosdk-platform)
+
+if (LIDAR_LOGGING)
+  set(WRAPPER_LINK_LIBRARIES ${WRAPPER_LINK_LIBRARIES} vlp16lidar-driver)
+  #target_link_libraries(${PROJECT_NAME}  djiosdk-core vlp16lidar-driver djiosdk-platform ${MISSIONPLAN})
+endif()
+
+if (USE_PRECISION_MISSIONS)
+  set(WRAPPER_LINK_LIBRARIES ${WRAPPER_LINK_LIBRARIES} ${MISSIONPLAN_LIBRARY})
+endif ()
+
+target_link_libraries(${PROJECT_NAME}  ${WRAPPER_LINK_LIBRARIES})
 

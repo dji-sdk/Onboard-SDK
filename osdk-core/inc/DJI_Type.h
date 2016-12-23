@@ -127,9 +127,7 @@ const size_t CALLBACK_LIST_NUM = 10;
 /**
  * @note size is in Bytes
  */
-const size_t MAX_ACK_SIZE = 64;
-const size_t M100_MAX_ACK_SIZE = 64;
-const size_t A3_MAX_ACK_SIZE = 63;
+const size_t MAX_ACK_SIZE = 107;
 
 //! The CoreAPI class definition is detailed in DJI_API.h 
 class CoreAPI;
@@ -334,10 +332,17 @@ typedef struct HotPointStartACK
   float32_t maxRadius;
 } HotpointStartACK;
 
+typedef struct WayPointInitACK
+{
+  uint8_t ack;
+  WayPointInitData data;
+} WayPointInitACK;
+
 typedef struct WayPointDataACK
 {
   uint8_t ack;
   uint8_t index;
+  WayPointData data;
 } WayPointDataACK;
 
 typedef struct WayPointVelocityACK
@@ -352,12 +357,6 @@ typedef struct HotPointReadACK
   MissionACK ack;
   HotPointData data;
 } HotpointReadACK;
-
-typedef struct WayPointInitACK
-{
-  uint8_t ack;
-  WayPointInitData data;
-} WayPointInitACK;
 
 typedef struct DroneVersionACK
 {
@@ -382,7 +381,10 @@ typedef union MissionACKUnion
   // information read from flight controller
   WayPointInitACK waypointInitACK;
 
+  // Contains 1-Byte ACK plus waypoint mission
+  // information read from flight controller
   WayPointDataACK waypointDataACK;
+
   WayPointVelocityACK waypointVelocityACK;
 } MissionACKUnion; 
 
@@ -588,8 +590,7 @@ typedef struct BroadcastData
   BatteryData battery;
   CtrlInfoData ctrlInfo;
 
-  //! @note these variables are not sent from FC,
-  //! just a record for user.
+  //! @note this variable is not set by the FC but populated by the API
   uint8_t activation;
 } BroadcastData;
 #endif // SDK_DEV

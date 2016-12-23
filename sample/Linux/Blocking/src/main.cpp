@@ -39,7 +39,7 @@
 #include <DJI_WayPoint.h>
 
 //Local Mission Planning Suite Headers
-#include <MissionplanHeaders.h>
+//#include <MissionplanHeaders.h>
 
 using namespace std;
 using namespace DJI;
@@ -70,15 +70,17 @@ int main(int argc, char *argv[])
   if (argv[1] && !strcmp(argv[1],"-mobile"))
   {
     std::cout << "Listening to Mobile Commands\n";
-    mobileCommandSpin(api, flight, waypointObj, camera, argv);
+    mobileCommandSpin(api, flight, waypointObj, camera, argv, argc);
   }
   //! Interactive Mode
   else if (argv[1] && !strcmp(argv[1], "-interactive"))
   {
-    if (argc > 2)
-      interactiveSpin(api, flight, waypointObj, camera, std::string(argv[2]));
+    if (argc > 3)
+      interactiveSpin(api, flight, waypointObj, camera, std::string(argv[2]), std::string(argv[3]));
+    else if (argc == 3)
+      interactiveSpin(api, flight, waypointObj, camera, std::string(argv[2]), std::string(""));
     else
-      interactiveSpin(api, flight, waypointObj, camera, std::string(""));
+      interactiveSpin(api, flight, waypointObj, camera, std::string(""), std::string(""));
   }
   //! Programmatic Mode - execute everything here without any interactivity. Useful for automation.
   else if (argv[1] && !strcmp(argv[1], "-programmatic"))
@@ -118,7 +120,7 @@ int main(int argc, char *argv[])
   }
   //! No mode specified or invalid mode specified" 
   else
-    std::cout << "\n Usage: ./onboardsdk_sample_linux [MODE] [TRAJECTORY]\n"
+    std::cout << "\n Usage: ./djiosdk-linux-sample [MODE] [TRAJECTORY] [GAIN TUNING]\n"
                  "\n"
                  "[MODE] : \n"
                  "-mobile      : Run in Mobile Data Transparent Transmission mode\n"
@@ -130,6 +132,9 @@ int main(int argc, char *argv[])
                  "[TRAJECTORY] : \n"
                  "path_to_json_file : Optionally, supply a json file with parameters for executing a\n"
                  "                    trajectory planned with the DJI Trajectory SketchUp Plugin\n\n";
+                 "[GAIN TUNING] : \n"
+                 "path_to_json_file : Optionally, supply a json file with custom controller gains for\n"
+                 "                    executing precision missions on loaded aircraft\n\n";
   //! Cleanup
   int cleanupStatus = cleanup(serialDevice, api, flight, &read);
   if (cleanupStatus == -1)

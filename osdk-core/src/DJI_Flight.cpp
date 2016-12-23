@@ -68,7 +68,7 @@ void Flight::setArm(bool enable, CallBack ArmCallback, UserData userData)
 unsigned short Flight::setArm(bool enable, int timeout)
 {
   uint8_t data = enable ? 1 : 0;
-  api->send(2, encrypt, SET_CONTROL, CODE_SETARM, &data, 1, 0, 1, 0, 0);
+  api->send(2, encrypt, SET_CONTROL, CODE_SETARM, &data, 1, 10, 10, 0, 0);
 
 
   api->serialDevice->lockACK();

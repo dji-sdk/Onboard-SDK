@@ -58,9 +58,10 @@ void CoreAPI::appHandler(Header *protocolHeader)
   {
     if (protocolHeader->sessionID > 1 && protocolHeader->sessionID < 32)
     {
-      if (CMDSessionTab[protocolHeader->sessionID].usageFlag == 1)
+      serialDevice->lockMemory();
+      uint32_t usageFlag = CMDSessionTab[protocolHeader->sessionID].usageFlag;
+      if (usageFlag == 1)
       {
-        serialDevice->lockMemory();
         p2protocolHeader = (Header *)CMDSessionTab[protocolHeader->sessionID].mmu->pmem;
         if (p2protocolHeader->sessionID == protocolHeader->sessionID &&
             p2protocolHeader->sequenceNumber == protocolHeader->sequenceNumber)
@@ -162,9 +163,6 @@ void CoreAPI::appHandler(Header *protocolHeader)
 
 void CoreAPI::allocateACK(Header *protocolHeader) {
 
-  const size_t MAX_ACK_SIZE = (versionData.version == versionM100_31) ?
-    M100_MAX_ACK_SIZE : A3_MAX_ACK_SIZE;
-
   if (protocolHeader->length <= MAX_ACK_SIZE)
   {
     memcpy(missionACKUnion.raw_ack_array, ((unsigned char *)protocolHeader) + sizeof(Header),
@@ -172,7 +170,9 @@ void CoreAPI::allocateACK(Header *protocolHeader) {
   }
   else
   {
+#ifndef STM32
     throw std::runtime_error("Unknown ACK");
+#endif
   }
 }
 
@@ -294,10 +294,13 @@ void CoreAPI::setKey(const char *key)
 
 void CoreAPI::setActivation(bool isActivated)
 {
-  if (isActivated)
+  serialDevice->lockMSG();
+  if (isActivated) {
     broadcastData.activation = 1;
-  else
+  } else {
     broadcastData.activation = 0;
+  }
+  serialDevice->freeMSG();
 }
 
 void DJI::onboardSDK::CoreAPI::setACKFrameStatus(uint32_t usageFlag)

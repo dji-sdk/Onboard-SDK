@@ -7,11 +7,10 @@
 DJI's Onboard SDK allows you to connect your own Onboard Embedded System (OES) to a supported DJI vehicle [Matrice 100](http://www.dji.com/product/matrice100) or [Matrice 600](http://www.dji.com/product/matrice600) or flight controller [A3](http://www.dji.com/product/a3) using a common serial port (TTL UART). This setup opens up an exciting opportunity to integrate your own hardware with DJI's flying platforms.  New applications and commercial uses for aerial robotics awaits and we can't wait to see what you build!
 
 ---
-## New Release
+## New Major Release
 
-A new version of DJI Onboard SDK (v3.1.9) was released on 10/14 - be sure to read the [release notes](https://developer.dji.com/onboard-sdk/documentation/appendix/releaseNotes.html)! If you're new here, please read the rest of this document.
+A new major version of DJI Onboard SDK (v3.2.0) was released on 12/23. This version brings all the advanced features first unveiled at the [DJI Airworks](http://www.dji.com/newsroom/news/dji-enterprise-launches-airworks-conference) conference. Be sure to read the [release notes](https://developer.dji.com/onboard-sdk/documentation/appendix/releaseNotes.html)! If you're new here, please read the rest of this document.
 
-> Note: A hotfix release (v3.1.9.1) for new A3 FW 1.5.0.0 has been released on 11/16 - please upgrade to this
 ---
 
 ## Prerequisites
@@ -24,6 +23,7 @@ This SDK is for developers with:
 - your own Onboard Embedded System (OES) with an available com port (TTL UART)
 - Windows PC to run the required software tools
 - an iOS or Android mobile device to run DJI Go
+- (optional) an iOS device to run the [DJI Mobile-Onboard SDK](https://github.com/dji-sdk/Mobile-OSDK-iOS-App) App
 
 ## Get Started Immediately
 
@@ -69,7 +69,7 @@ Please visit [Programming Guide](https://developer.dji.com/onboard-sdk/documenta
 
 ### Appendix
 
-- [Release Notes for Onboard SDK 3.1.8](https://developer.dji.com/onboard-sdk/documentation/appendix/releaseNotes.html)
+- [Release Notes for Onboard SDK 3.2.0](https://developer.dji.com/onboard-sdk/documentation/appendix/releaseNotes.html)
 
 - [FAQ](https://developer.dji.com/onboard-sdk/documentation/appendix/FAQ.html) & [Appendix](https://developer.dji.com/onboard-sdk/documentation/appendix/index.html)
 
@@ -79,7 +79,7 @@ Please visit [Programming Guide](https://developer.dji.com/onboard-sdk/documenta
 
 You can get support from DJI with the following methods:
 
-- [**DJI Forum**](http://forum.dev.dji.com/en)
+- Send email to dev@dji.com describing your problem and a clear description of your setup
 - Post questions in [**Stackoverflow**](http://stackoverflow.com) using [**dji-sdk**](http://stackoverflow.com/questions/tagged/dji-sdk) tag
-- Github Issues
-- dev@dji.com
+- Github Issues or [gitter.im](https://gitter.im/dji-sdk/Onboard-SDK)
+- [**DJI Forum**](http://forum.dev.dji.com/en)

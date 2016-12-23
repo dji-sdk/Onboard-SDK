@@ -73,9 +73,13 @@ void CoreAPI::init(HardDriver *sDevice, CallBackHandler userRecvCallback,
   nonBlockingCBThreadEnable = false;
   ack_data = 99;
   versionData.version = SDKVersion;
+  ack_activation = 0xFF;
+
 
   //! @todo simplify code above
+  serialDevice->lockMSG();
   memset((unsigned char *)&broadcastData, 0, sizeof(broadcastData));
+  serialDevice->freeMSG();
 
   setup();
 }
@@ -516,9 +520,9 @@ unsigned short CoreAPI::setBroadcastFreqDefaults(int timeout)
   return setBroadcastFreq(freq, timeout);
 }
 
-TimeStampData CoreAPI::getTime() const { return broadcastData.timeStamp; }
+TimeStampData CoreAPI::getTime() const { return getBroadcastData().timeStamp; }
 
-FlightStatus CoreAPI::getFlightStatus() const { return broadcastData.status; }
+FlightStatus CoreAPI::getFlightStatus() const { return getBroadcastData().status; }
 
 void CoreAPI::setFromMobileCallback(CallBackHandler FromMobileEntrance)
 {
@@ -612,6 +616,10 @@ void CoreAPI::activateCallback(CoreAPI *api, Header *protocolHeader, UserData us
   {
     memcpy((unsigned char *)&ack_data, ((unsigned char *)protocolHeader) + sizeof(Header),
         (protocolHeader->length - EXC_DATA_SIZE));
+    
+    // Write activation status to the broadcast data
+    api->setBroadcastActivation(ack_data);
+
     switch (ack_data)
     {
       case ACK_ACTIVE_SUCCESS:
@@ -813,6 +821,26 @@ void CoreAPI::parseFromMobileCallback(CoreAPI *api, Header *protocolHeader, User
           stopVideoMobileCMD = true;
         }
         break;
+      //! Advanced features: LiDAR Mapping, Collision Avoidance, Precision Missions
+      case 20:
+          startLASMapLoggingCMD = true;
+        break;
+      case 21:
+          stopLASMapLoggingCMD = true;
+        break;
+      case 24:
+          precisionMissionCMD = true;
+        break;
+      case 25:
+          precisionMissionsCollisionAvoidanceCMD = true;
+        break;
+      case 26:
+          precisionMissionsLidarMappingCMD = true;
+        break;
+      case 27:
+          precisionMissionsCollisionAvoidanceLidarMappingCMD = true;
+        break;
+
       //! The next few are only polling based and do not use callbacks. See usage in Linux Sample.
       case 61:
         drawCirMobileCMD = true;
@@ -839,7 +867,7 @@ void CoreAPI::parseFromMobileCallback(CoreAPI *api, Header *protocolHeader, User
         VRCTestMobileCMD = true;
         break;
       case 69:
-        localMissionPlanCMD = true;
+        precisionMissionCMD = true;
         break;
     }
   }

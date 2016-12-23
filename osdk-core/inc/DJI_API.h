@@ -140,8 +140,8 @@ enum WAYPOINT_CODE
   CODE_WAYPOINT_ADDPOINT = 0x11,
   CODE_WAYPOINT_SETSTART = 0x12,
   CODE_WAYPOINT_SETPAUSE = 0x13,
-  CODE_WAYPOINT_DOWNLOAD = 0x14,
-  CODE_WAYPOINT_INDEX = 0x15,
+  CODE_WAYPOINT_INFO_READ = 0x14,
+  CODE_WAYPOINT_INDEX_READ = 0x15,
   CODE_WAYPOINT_SETVELOCITY = 0x16,
   CODE_WAYPOINT_GETVELOCITY = 0x17,
 };
@@ -497,6 +497,7 @@ class CoreAPI
    * ACK decoder.
    */
   bool decodeACKStatus(unsigned short ack);
+  void setBroadcastActivation(uint32_t ack);
 
   /**
    * Flight mission decoder.
@@ -516,6 +517,12 @@ class CoreAPI
   HotPointReadACK hotpointReadACK;
   WayPointInitACK waypointInitACK;
   MissionACKUnion missionACKUnion;
+
+  /**
+   *@note Activation status to override BroadcastData activation flag
+   *
+   */
+  uint32_t ack_activation;
 
   /// Open Protocol Control
   /**
@@ -578,7 +585,15 @@ class CoreAPI
   bool getLocalNavTestMobileCMD() {return localNavTestMobileCMD;}
   bool getGlobalNavTestMobileCMD() {return globalNavTestMobileCMD;}
   bool getVRCTestMobileCMD() {return VRCTestMobileCMD;}
-  bool getLocalMissionPlanCMD() {return localMissionPlanCMD;}
+
+
+  /** Advanced features: LiDAR Mapping, Collision Avoidance, Precision Missions */
+  bool getStartLASMapLoggingCMD() {return startLASMapLoggingCMD;}
+  bool getStopLASMapLoggingCMD() {return stopLASMapLoggingCMD;}
+  bool getPrecisionMissionsCMD() {return precisionMissionCMD;}
+  bool getPrecisionMissionsCollisionAvoidanceCMD() {return precisionMissionsCollisionAvoidanceCMD;}
+  bool getPrecisionMissionsLidarMappingCMD() {return precisionMissionsLidarMappingCMD;}
+  bool getPrecisionMissionsCollisionAvoidanceLidarMappingCMD() {return precisionMissionsCollisionAvoidanceLidarMappingCMD;}
 
   /** Core functions - setters */
   void setObtainControlMobileCMD(bool userInput) {obtainControlMobileCMD = userInput;}
@@ -593,6 +608,15 @@ class CoreAPI
   void setStartVideoMobileCMD(bool userInput) {startVideoMobileCMD= userInput;}
   void setStopVideoMobileCMD(bool userInput) {stopVideoMobileCMD= userInput;}
 
+  /** Advanced features: LiDAR Mapping, Collision Avoidance, Precision Missions */
+  void setStartLASMapLoggingCMD(bool userInput) {startLASMapLoggingCMD = userInput;}
+  void setStopLASMapLoggingCMD(bool userInput) {stopLASMapLoggingCMD = userInput;}
+  void setPrecisionMissionsCMD(bool userInput) {precisionMissionCMD = userInput;}
+  void setPrecisionMissionsCollisionAvoidanceCMD(bool userInput) {precisionMissionsCollisionAvoidanceCMD = userInput;}
+  void setPrecisionMissionsLidarMappingCMD(bool userInput) {precisionMissionsLidarMappingCMD = userInput;}
+  void setPrecisionMissionsCollisionAvoidanceLidarMappingCMD(bool userInput) {precisionMissionsCollisionAvoidanceLidarMappingCMD = userInput;}
+
+
   /** Custom missions - setters */
   void setDrawCirMobileCMD(bool userInput) {drawCirMobileCMD = userInput;}
   void setDrawSqrMobileCMD(bool userInput) {drawSqrMobileCMD = userInput;}
@@ -602,7 +626,8 @@ class CoreAPI
   void setLocalNavTestMobileCMD(bool userInput) {localNavTestMobileCMD = userInput;}
   void setGlobalNavTestMobileCMD(bool userInput) {globalNavTestMobileCMD = userInput;}
   void setVRCTestMobileCMD(bool userInput) {VRCTestMobileCMD = userInput;}
-  void setLocalMissionPlanCMD(bool userInput) {localMissionPlanCMD = userInput;}
+
+
 
   private:
   BroadcastData broadcastData;
@@ -635,6 +660,7 @@ class CoreAPI
 
   //! Mobile Data Transparent Transmission - flags
 
+  //! Core functions
   bool obtainControlMobileCMD;
   bool releaseControlMobileCMD;
   bool activateMobileCMD;
@@ -647,6 +673,7 @@ class CoreAPI
   bool startVideoMobileCMD;
   bool stopVideoMobileCMD;
 
+  //! Custom Mission examples
   bool drawCirMobileCMD;
   bool drawSqrMobileCMD;
   bool attiCtrlMobileCMD;
@@ -655,7 +682,17 @@ class CoreAPI
   bool localNavTestMobileCMD;
   bool globalNavTestMobileCMD;
   bool VRCTestMobileCMD;
-  bool localMissionPlanCMD;
+
+
+  //! Advanced features: LiDAR Mapping, Collision Avoidance, Precision Missions
+  bool startLASMapLoggingCMD;
+  bool stopLASMapLoggingCMD;
+  //! Various flavors of precision missions
+  bool precisionMissionCMD;
+  bool precisionMissionsCollisionAvoidanceCMD;
+  bool precisionMissionsLidarMappingCMD;
+  bool precisionMissionsCollisionAvoidanceLidarMappingCMD;
+
 
   VersionData versionData;
   ActivateData accountData;

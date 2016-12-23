@@ -37,19 +37,12 @@ message(STATUS " Boost include dir set to ${Boost_INCLUDE_DIRS}")
 mark_as_advanced(CLEAR Boost_INCLUDE_DIR) 
 mark_as_advanced(CLEAR Boost_LIBRARY_DIRS) 
 
-# Try to find VTK in your system (install if does not exist)
-set(VTK_CMAKE_PATHS /lib/cmake /usr/lib/cmake /usr/local/lib/cmake /opt/VTK-7.0.0/lib/cmake)
-find_package(VTK 7.0 QUIET 
-  HINTS ${VTK_CMAKE_PATHS}
-  NO_DEFAULT_PATH)
-
-if(NOT VTK_FOUND)
-  # Download and installation will take up to 15min
-  include(External_VTK.cmake)
-  find_package(VTK 7.0 REQUIRED)
-endif()
-include(${VTK_USE_FILE})
-message(STATUS " VTK include dir set to ${VTK_INCLUDE_DIRS}")
+# Find VTK in your system 
+set(VTK_CMAKE_PATHS 
+  /lib/cmake 
+  /usr/lib/cmake 
+  /usr/local/lib/cmake 
+  /opt/VTK-7.0.0/lib/cmake)
 
 # Set compiler flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread -g -O0")
@@ -62,5 +55,12 @@ FILE(GLOB SIMULATOR_SOURCE_FILES src/*.cxx src/*.cpp inc/*.h)
 include_directories(inc)
 
 add_executable(${PROJECT_NAME} ${SIMULATOR_SOURCE_FILES})
+
+add_dependencies(${PROJECT_NAME} VTK)
+if(VTK_FOUND)
+  include(${VTK_USE_FILE})
+  message(STATUS " VTK include dir set to ${VTK_INCLUDE_DIRS}")
+endif()
+
 target_link_libraries(${PROJECT_NAME} ${PCAP_LIBRARY} boost_thread boost_system ${VTK_LIBRARIES} Qt5::Core)
 

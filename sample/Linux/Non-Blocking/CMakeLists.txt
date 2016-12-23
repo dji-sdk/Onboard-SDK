@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
 project(djiosdk-linux-sample-nonblock)
-include(ExternalProject)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread -g -O0")
 
@@ -19,41 +18,21 @@ if (LIDAR_LOGGING)
   include_directories(../../../sensor-integration/velodyne_vlp16puck_lite_API_example/vlp16lidar-driver/inc)
 endif ()
 
+if (USE_PRECISION_MISSIONS)
+  include_directories("${precision_missions_source_dir}/inc")
 
-# Local Mission Planning Includes
-include_directories(../../../tools/localMissionPlanning/inc)
-include_directories(../../../tools/localMissionPlanning/inc/gps2local)
-include_directories(../../../tools/localMissionPlanning/inc/trajectory-generator)
-include_directories(../../../tools/localMissionPlanning/inc/trajectory-recorder)
-include_directories(../../../tools/localMissionPlanning/inc/trajectory-follower)
-include_directories(../../../tools/localMissionPlanning/inc/se3controller)
-include_directories(../../../tools/localMissionPlanning/inc/twopoint-trajectory-generator)
-include_directories(../../../tools/localMissionPlanning/inc/trajectory-infrastructure)
-
-# Local Mission Planning libraries
-include_directories(../../../tools/localMissionPlanning/dependencies)
-include_directories(../../../tools/localMissionPlanning/dependencies/csv)
-
-if(NOT TARGET rapidjson)
-  ExternalProject_Add(
-          rapidjson
-          # Disable update step
-          UPDATE_COMMAND ""
-          GIT_REPOSITORY https://github.com/miloyip/rapidjson.git
-          CMAKE_ARGS -DRAPIDJSON_BUILD_TESTS=OFF
-          -DRAPIDJSON_BUILD_DOC=OFF
-          -DRAPIDJSON_BUILD_EXAMPLES=OFF
-          PREFIX ${CMAKE_CURRENT_BINARY_DIR}
-          # Disable install step
-          INSTALL_COMMAND ""
-          TEST_COMMAND ""
-          # UPDATE_DISCONNECTED
-  )
+  # Local Mission Planning libraries
+  include_directories("${precision_missions_source_dir}/dependencies")
+  include_directories("${precision_missions_source_dir}/dependencies/csv")
 endif()
-
-ExternalProject_Get_Property(rapidjson source_dir)
-include_directories("${source_dir}/include")
 
 FILE(GLOB SOURCE_FILES inc/*.h src/*.cpp)
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
-target_link_libraries(${PROJECT_NAME} djiosdk-core djiosdk-platform djiosdk-wrapper)
+
+add_dependencies(${PROJECT_NAME} djiosdk-wrapper)
+
+target_link_libraries(${PROJECT_NAME} 
+  djiosdk-core 
+  djiosdk-platform 
+  djiosdk-wrapper)
+

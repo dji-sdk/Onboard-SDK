@@ -73,7 +73,9 @@ class LinuxSerialDevice : public HardDriver {
 
     void wait(int timeoutInSeconds);
     void nonBlockWait();
+
     //! End of HardDriver virtual function implementations
+
 
     //! Implemented here because ..
     DJI::time_ms getTimeStamp();

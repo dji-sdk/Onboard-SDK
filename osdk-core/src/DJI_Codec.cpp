@@ -604,6 +604,11 @@ void DJI::onboardSDK::CoreAPI::callApp(SDKFilter *p_filter)
   sdk_stream_prepare_lambda(p_filter);
 }
 
+void CoreAPI::setBroadcastActivation(uint32_t ack) 
+{
+  ack_activation = ack;
+}
+
 bool CoreAPI::decodeACKStatus(unsigned short ack)
 {
   switch (ack)
