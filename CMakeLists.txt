@@ -17,23 +17,18 @@ option(GTEST "Build with Google Test framework" OFF)
 # Allow to build additional modules
 option(LIDAR_LOGGING "Build VLP16 Puck LiDAR logging" OFF)
 
-if(NOT ${DISTRO_VERSION} STREQUAL "1604")
-  message("Precision missions, collision avoidance and pointcloud to LAS converter BETA works only on Ubuntu 16.04")
-else()
-  option(USE_PRECISION_MISSIONS "Use DJI precision-missions library" OFF)
-  if(USE_PRECISION_MISSIONS)
-    add_definitions(-DUSE_PRECISION_MISSIONS)
-    include(${CMAKE_MODULE_PATH}/External_PrecisionMissions.cmake)
-  endif()
+# Use External DJI Modules
+option(USE_PRECISION_MISSIONS "Use DJI precision-missions library" OFF)
+option(USE_COLLISION_AVOIDANCE "Use DJI collision avoidance library" OFF)
+option(USE_POINTCLOUD2LAS "Use DJI pointcloud to LAS converter library" OFF)
 
-  option(USE_COLLISION_AVOIDANCE "Use DJI collision avoidance library" OFF)
-  if(USE_COLLISION_AVOIDANCE)
-    include(${CMAKE_MODULE_PATH}/External_CollisionAvoidance.cmake)
-  endif()
-
-  option(USE_POINTCLOUD2LAS "Use DJI pointcloud to LAS converter library" OFF)
-  if(USE_POINTCLOUD2LAS)
-    include(${CMAKE_MODULE_PATH}/External_Pointcloud2Las.cmake)
+if(USE_PRECISION_MISSIONS OR
+  USE_COLLISION_AVOIDANCE OR
+  USE_POINTCLOUD2LAS)
+  if(NOT ${DISTRO_VERSION} STREQUAL "1604")
+    message(FATAL_ERROR "Precision missions, collision avoidance and pointcloud to LAS converter BETA works only on Ubuntu 16.04")
+  else()
+    include(${CMAKE_MODULE_PATH}/External_DJIModules.cmake)
   endif()
 endif()
 
@@ -47,7 +42,7 @@ if(GTEST)
   include(${CMAKE_MODULE_PATH}/External_GTest.cmake)
 endif()
 
-if(GTEST OR USE_PRECISION_MISSIONS)
+if(GTEST OR (USE_PRECISION_MISSIONS AND (${DISTRO_VERSION} STREQUAL "1604")))
   include(${CMAKE_MODULE_PATH}/External_RapidJSON.cmake)
 endif()
 

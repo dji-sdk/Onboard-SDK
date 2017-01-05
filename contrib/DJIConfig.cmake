@@ -10,18 +10,18 @@ endif()
 #Detect platform - from https://gist.github.com/CoolerVoid/1781717
 EXECUTE_PROCESS(
   COMMAND cat /etc/lsb-release
-  COMMAND grep DISTRIB_RELEASE
+  COMMAND grep DISTRIB_DESCRIPTION
   COMMAND awk -F= "{ print $2 }"
   COMMAND tr "\n" " "
   COMMAND sed "s/ //"
   OUTPUT_VARIABLE LSB_VER
   )
 
-if( ${LSB_VER} STREQUAL "16.04")
+if( ${LSB_VER} MATCHES "Ubuntu16.04 LTS")
   set(DISTRO_VERSION 1604)
-elseif(${LSB_VER} STREQUAL "14.04")
+elseif(${LSB_VER} MATCHES "Ubuntu14.04 LTS")
   set(DISTRO_VERSION 1404)
-elseif(${LSB_VER} STREQUAL "18")
+elseif(${LSB_VER} MATCHES "Linux Mint 18 Sarah")
   set(DISTRO_VERSION 1604)
 endif()
 
