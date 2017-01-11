@@ -26,6 +26,10 @@ using namespace DJI::onboardSDK;
 
 extern DJI_Environment* environment;
 
+const char M100_31_FW_VERSION[32] = "SDK-v1.0 BETA M100-03.01.01.00";
+const char A3_31_FW_VERSION[32] = "SDK-v1.0 BETA A3-03.01.100.00";
+const char A3_32_FW_VERSION[32] = "versionA3_32";
+ 
 class DJI_APITest : public ::testing::Test {
  public:
   DJI_APITest();
@@ -58,31 +62,19 @@ class DJI_APITest : public ::testing::Test {
   std::string sim_args;
   std::string sim_path;
   unsigned int sim_timeout_s;
-  bool sim_control_enabled = false;
+  bool sim_control_enabled;
 
   /*
    * Test data
    */
 
-  // TODO implement high resolution timeout
-  int wait_timeout = 10;
+  static const int wait_timeout = 10;
   unsigned short ack;
   HardDriver* serialDevice;
   std::string sDevice;
   unsigned int baudrate;
 
-  struct M100_31{
-    char VERSION_NAME[32] = "SDK-v1.0 BETA M100-03.01.01.00";
-  }M100_31;
-
-  struct A3_31{
-    char VERSION_NAME[32] = "SDK-v1.0 BETA A3-03.01.100.00";
-  }A3_31;
-
-  //TODO add definitions
-  struct A3_32{
-    char VERSION_NAME[32] = "versionA3_32";
-  }A3_32;
 };
 
 #endif
+

@@ -198,7 +198,7 @@ ackReturnData activate(CoreAPI* api)
   activationData.encKey = userKeyCstr; 
 
   //! Tell the SDK our hardware and software versions
-  api->setVersion(UserConfig::targetVersion);
+  //api->setVersion(UserConfig::targetVersion);
 
 
   //! Set all broadcast data to zero since we are currently interested only in the activation ACK

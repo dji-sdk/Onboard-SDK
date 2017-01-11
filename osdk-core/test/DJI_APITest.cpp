@@ -176,11 +176,11 @@ TEST_F(DJI_APITest, getDroneVersion) {
   ASSERT_EQ(versionData.version_ack, 0);
 
   if(api->getSDKVersion() == versionM100_31){
-    EXPECT_STREQ(versionData.version_name, M100_31.VERSION_NAME);
+    EXPECT_STREQ(versionData.version_name, M100_31_FW_VERSION);
   }else if(api->getSDKVersion() == versionA3_31) {
-    EXPECT_STREQ(versionData.version_name, A3_31.VERSION_NAME);
+    EXPECT_STREQ(versionData.version_name, A3_31_FW_VERSION);
   }else if(api->getSDKVersion() == versionA3_32) {
-    EXPECT_STREQ(versionData.version_name, A3_32.VERSION_NAME);
+    EXPECT_STREQ(versionData.version_name, A3_32_FW_VERSION);
   }
 
   API_LOG(api->serialDevice, STATUS_LOG, "version ack = %d\n", versionData.version_ack);

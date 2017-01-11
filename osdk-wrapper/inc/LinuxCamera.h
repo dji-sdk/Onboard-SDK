@@ -24,33 +24,45 @@ struct RotationAngle{
    float32_t pitch;
    float32_t yaw;
  };
-
-struct GimbalContainer{
-  int roll = 0;
-  int pitch = 0;
-  int yaw = 0;
-  int duration = 0;
-  int isAbsolute = 0;
-  bool yaw_cmd_ignore = false;
-  bool pitch_cmd_ignore = false;
-  bool roll_cmd_ignore = false;
+class GimbalContainer{
+ public:
+  int roll;
+  int pitch;
+  int yaw;
+  int duration;
+  int isAbsolute;
+  bool yaw_cmd_ignore;
+  bool pitch_cmd_ignore;
+  bool roll_cmd_ignore;
   RotationAngle initialAngle;
   RotationAngle currentAngle;
-  GimbalContainer( int roll = 0,
-		   int pitch = 0,
-		   int yaw = 0,
-		   int duration = 0,
-		   int isAbsolute = 0,
-		   RotationAngle initialAngle = {},
-		   RotationAngle currentAngle = {}):
-		     roll(roll), pitch(pitch), yaw(yaw),
-		     duration(duration),isAbsolute(isAbsolute),
-		     initialAngle(initialAngle), currentAngle(currentAngle){}
+  
+  void set(int roll,
+	  int pitch,
+	  int yaw,
+	  int duration,
+	  int isAbsolute,
+	  bool yaw_cmd_ignore,
+          bool pitch_cmd_ignore,
+          bool roll_cmd_ignore,
+          RotationAngle initialAngle,
+	  RotationAngle currentAngle){
+    this->roll = roll;
+    this->pitch = pitch; 
+    this->yaw = yaw;
+    this->duration = duration;
+    this->isAbsolute = isAbsolute;
+    this->yaw_cmd_ignore = yaw_cmd_ignore;
+    this->pitch_cmd_ignore = yaw_cmd_ignore;
+    this->roll_cmd_ignore = roll_cmd_ignore;
+    this->initialAngle = initialAngle; 
+    this->currentAngle = currentAngle;
+  }
 };
 
 struct ResultContainer{
-  int angle[3] = {0};
-  int error[3] = {0};
+  int angle[3];
+  int error[3];
 };
 
 void gimbalAngleControlSample(Camera *camera, int timeout = 1);
@@ -60,9 +72,10 @@ void takeVideoControl(Camera *camera, int timeout = 1);
 
 // Helper functions
 void waitForGimbal(Camera *camera);
-void doSetGimbalAngle(Camera *camera, GimbalContainer *gimbal);
+void doSetGimbalAngle(Camera *camera, GimbalContainer gimbal);
 ResultContainer calculatePrecisionError(Camera *camera, GimbalContainer *gimbal);
 int calculateAngle(int currentAngle, int newAngle);
 void displayResult(ResultContainer *resultContainer);
 
 #endif //LINUXCAMERA_H
+

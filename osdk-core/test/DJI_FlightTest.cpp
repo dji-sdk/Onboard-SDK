@@ -8,7 +8,10 @@ void DJI_FlightTest::SetUp() {
   activateDroneStandard();
   setControlStandard();
   flight = new Flight(DJI_APITest::api);
-
+  
+  // Set defaults 
+  ack = 0xFF;
+  
   /*
    * Check battery status
    *
@@ -29,7 +32,7 @@ void DJI_FlightTest::TearDown() {
 }
 
 void DJI_FlightTest::doTask(Flight::TASK task){
-  ack = flight->task(task, wait_timeout);
+  ack = flight->task(task, 1);
   /*
    * In simulation mode, sometimes returns with TASK_SUCCESS
    * but does not take off

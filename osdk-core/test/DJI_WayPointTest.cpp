@@ -480,7 +480,7 @@ TEST_F(DJI_WayPointTest, DISABLED_FarWayPoint) {
   std_sleep();
 }
 
-TEST_F(DJI_WayPointTest, PauseTest) {
+TEST_F(DJI_WayPointTest, DISABLED_PauseTest) {
   uint8_t upload_ack_array[3] = {0x00, 0x00, 0x00};
   e_wp_acks.init_ack = 0x00;
   e_wp_acks.upload_acks = upload_ack_array;
@@ -522,7 +522,7 @@ TEST_F(DJI_WayPointTest, PauseTest) {
     EXPECT_EQ(wp_ack, 0x00);
 }
 
-TEST_F(DJI_WayPointTest, NotRunningPauseTest) {
+TEST_F(DJI_WayPointTest, DISABLED_NotRunningPauseTest) {
   uint8_t upload_ack_array[3] = {0x00, 0x00, 0x00};
   e_wp_acks.init_ack = 0x00;
   e_wp_acks.upload_acks = upload_ack_array;

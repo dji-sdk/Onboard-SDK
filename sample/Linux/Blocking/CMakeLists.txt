@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(djiosdk-linux-sample)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread -g -O0")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COMPILER} -pthread -g -O0")
 
 if (COVERAGE)
   set(GCC_COVERAGE_COMPILE_FLAGS "-fprofile-arcs -ftest-coverage -fPIC")

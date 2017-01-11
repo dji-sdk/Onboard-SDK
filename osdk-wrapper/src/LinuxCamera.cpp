@@ -11,13 +11,13 @@
 #include <LinuxCamera.h>
 
 void gimbalAngleControlSample(Camera *camera, int timeout) {
-
-  GimbalContainer gimbal;
+ 
+  GimbalContainer gimbal;  
   GimbalAngleData gimbalAngle;
   ResultContainer result;
-  RotationAngle initialAngle;
-  RotationAngle currentAngle;
-
+  RotationAngle initialAngle = {};
+  RotationAngle currentAngle = {};
+  
   // Set control of the camera
   camera->setCamera(Camera::CAMERA_CODE::CODE_GIMBAL_ANGLE);
 
@@ -40,8 +40,8 @@ void gimbalAngleControlSample(Camera *camera, int timeout) {
       ", " << initialAngle.yaw << "]\n\n";
 
   // Re-set Gimbal to initial values
-  gimbal = GimbalContainer(0,0,0,20,1,initialAngle);
-  doSetGimbalAngle(camera, &gimbal);
+  gimbal.set(0,0,0,20,1,false,false,false,initialAngle,currentAngle);
+  doSetGimbalAngle(camera, gimbal);
   result = calculatePrecisionError(camera,&gimbal);
 
   std::cout << "Setting new Gimbal rotation angle to [0,20,200] using incremental control:\n";
@@ -49,21 +49,21 @@ void gimbalAngleControlSample(Camera *camera, int timeout) {
   currentAngle.roll = camera->getGimbal().roll;
   currentAngle.pitch = camera->getGimbal().pitch;
   currentAngle.yaw = camera->getGimbal().yaw;
-
-  gimbal = GimbalContainer(0,200,2000,20,0,initialAngle,currentAngle);
-  doSetGimbalAngle(camera, &gimbal);
+  
+  gimbal.set(0,200,200,20,0,false,false,false,initialAngle,currentAngle);
+  doSetGimbalAngle(camera, gimbal);
   result = calculatePrecisionError(camera,&gimbal);
   displayResult(&result);
 
   std::cout << "Setting new Gimbal rotation angle to [0,-50,-200] using absolute control:\n";
-  gimbal = GimbalContainer(0,-500,-2000,20,1,initialAngle);
-  doSetGimbalAngle(camera, &gimbal);
+  gimbal.set(0,-500,-200,20,1,false,false,false,initialAngle,currentAngle);
+  doSetGimbalAngle(camera, gimbal);
   result = calculatePrecisionError(camera,&gimbal);
   displayResult(&result);
 
   std::cout << "Setting new Gimbal rotation angle to [25,0,150] using absolute control:\n";
-  gimbal = GimbalContainer(250,0,1500,20,1,initialAngle);
-  doSetGimbalAngle(camera, &gimbal);
+  gimbal.set(25,0,150,20,1,false,false,false,initialAngle,currentAngle);
+  doSetGimbalAngle(camera, gimbal);
   result = calculatePrecisionError(camera,&gimbal);
   displayResult(&result);
 
@@ -73,18 +73,18 @@ void gimbalAngleControlSample(Camera *camera, int timeout) {
   currentAngle.pitch = camera->getGimbal().pitch;
   currentAngle.yaw = camera->getGimbal().yaw;
 
-  gimbal = GimbalContainer(50,0,1000,20,0,initialAngle, currentAngle);
-  doSetGimbalAngle(camera, &gimbal);
+  gimbal.set(5,0,100,20,0,false,false,false,initialAngle,currentAngle);
+  doSetGimbalAngle(camera, gimbal);
   result = calculatePrecisionError(camera,&gimbal);
   displayResult(&result);
 
   // Re-set Gimbal to initial values so that current Gimbal rotation 
   // angle does not effect further Linux samples and a use does not
   // have to power cycle an aircraft to re-set the rotation angle  
-  gimbal = GimbalContainer(0,0,0,20,1,initialAngle);
-  doSetGimbalAngle(camera, &gimbal);
+  gimbal.set(0,0,0,20,1,false,false,false,initialAngle,currentAngle);
+  doSetGimbalAngle(camera, gimbal);
   result = calculatePrecisionError(camera,&gimbal);
-
+  
   // Re-set struct values
   gimbal = {};
   result = {};
@@ -175,17 +175,17 @@ void waitForGimbal(Camera *camera) {
       fabs(camera->getGimbal().yaw - rAngle.yaw) >= 0.099);
 }
 
-void doSetGimbalAngle(Camera *camera, GimbalContainer *gimbal) {
+void doSetGimbalAngle(Camera *camera, GimbalContainer gimbal) {
   GimbalAngleData gimbalAngle;
-  gimbalAngle.roll = gimbal->roll;
-  gimbalAngle.pitch = gimbal->pitch;
-  gimbalAngle.yaw = gimbal->yaw;
-  gimbalAngle.duration = gimbal->duration;
+  gimbalAngle.roll = gimbal.roll;
+  gimbalAngle.pitch = gimbal.pitch;
+  gimbalAngle.yaw = gimbal.yaw;
+  gimbalAngle.duration = gimbal.duration;
   gimbalAngle.mode |= 0;
-  gimbalAngle.mode |= gimbal->isAbsolute;
-  gimbalAngle.mode |= gimbal->yaw_cmd_ignore << 1;
-  gimbalAngle.mode |= gimbal->roll_cmd_ignore << 2;
-  gimbalAngle.mode |= gimbal->pitch_cmd_ignore << 3;
+  gimbalAngle.mode |= gimbal.isAbsolute;
+  gimbalAngle.mode |= gimbal.yaw_cmd_ignore << 1;
+  gimbalAngle.mode |= gimbal.roll_cmd_ignore << 2;
+  gimbalAngle.mode |= gimbal.pitch_cmd_ignore << 3;
 
   camera->setGimbalAngle(&gimbalAngle);
   // Give time for gimbal to sync
@@ -252,3 +252,4 @@ void displayResult(ResultContainer *resultContainer) {
 
   std::cout << "]\n\n";
 }
+

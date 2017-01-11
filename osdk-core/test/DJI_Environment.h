@@ -34,7 +34,7 @@ class DJI_Environment : public testing::Environment {
   std::string sim_hash;
   std::string sim_path;
   unsigned int sim_timeout_s;
-  bool sim_control_enabled = false;
+  bool sim_control_enabled;
   std::string device;
   unsigned int baudrate;
 };
