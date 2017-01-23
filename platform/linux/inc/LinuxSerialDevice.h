@@ -49,10 +49,10 @@ class LinuxSerialDevice : public HardDriver {
     void setDevice(std::string device);
     
     //! Public interfaces to private functions. Use these functions to validate your serial connection
-    int checkBaudRate(uint8_t (&buf)[BUFFER_SIZE]) {_checkBaudRate(buf);}
-    int setSerialPureTimedRead() {_serialConfig(m_baudrate,8,'N',1, true);}
-    int unsetSerialPureTimedRead() {_serialConfig(m_baudrate,8,'N',1, false);}
-    int serialRead(unsigned char *buf, int len) {_serialRead(buf,len);}
+    int checkBaudRate(uint8_t (&buf)[BUFFER_SIZE]) {return _checkBaudRate(buf);}
+    bool setSerialPureTimedRead() {return _serialConfig(m_baudrate,8,'N',1, true);}
+    bool unsetSerialPureTimedRead() {return _serialConfig(m_baudrate,8,'N',1, false);}
+    int serialRead(unsigned char *buf, int len) {return _serialRead(buf,len);}
     
     //! Start of DJI_HardDriver virtual function implementations
     size_t send(const uint8_t *buf, size_t len);

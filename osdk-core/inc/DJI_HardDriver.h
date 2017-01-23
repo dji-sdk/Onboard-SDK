@@ -25,6 +25,7 @@ class HardDriver
 {
   public:
   HardDriver() {}
+  virtual ~HardDriver() {}
 
   /*! @note How to use
    *  In order to provide platform crossable DJI onboardSDK library,
