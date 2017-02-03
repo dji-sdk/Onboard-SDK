@@ -634,14 +634,22 @@ typedef struct ActivateData
   char *encKey;
 } ActivateData;
 
+/**
+ * Versioning. VersionData struct updated @ FW 3.2.15.73
+ */
+
 typedef struct VersionData
 {
   unsigned short version_ack;
   unsigned int version_crc;
-  char version_ID[11];
+  char hw_serial_num[16];
+  char hwVersion[12]; //! Current longest product code: pm820v3pro
+  DJI::onboardSDK::Version fwVersion;
+
+  //! Legacy member
   char version_name[32];
-  DJI::onboardSDK::Version version;
 } VersionData;
+
 
 #pragma pack()
 #ifdef SDK_DEV

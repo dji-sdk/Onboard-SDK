@@ -52,8 +52,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>1350</width>
-         <height>1041</height>
+         <width>1422</width>
+         <height>974</height>
         </rect>
        </property>
        <layout class="QHBoxLayout" name="horizontalLayout_137">
@@ -107,38 +107,7 @@
                    <number>0</number>
                   </property>
                   <item>
-                   <layout class="QHBoxLayout" name="horizontalLayout_136">
-                    <item>
-                     <widget class="QComboBox" name="cb_core_mechine">
-                      <property name="enabled">
-                       <bool>true</bool>
-                      </property>
-                      <property name="currentIndex">
-                       <number>0</number>
-                      </property>
-                      <item>
-                       <property name="text">
-                        <string>M100</string>
-                       </property>
-                      </item>
-                      <item>
-                       <property name="text">
-                        <string>M100_V2.3</string>
-                       </property>
-                      </item>
-                      <item>
-                       <property name="text">
-                        <string>A3_V3.1</string>
-                       </property>
-                      </item>
-                      <item>
-                       <property name="text">
-                        <string>A3_V3.2</string>
-                       </property>
-                      </item>
-                     </widget>
-                    </item>
-                   </layout>
+                   <layout class="QHBoxLayout" name="horizontalLayout_136"/>
                   </item>
                   <item>
                    <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -6963,7 +6932,7 @@
      <x>0</x>
      <y>0</y>
      <width>1571</width>
-     <height>17</height>
+     <height>32</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile_F">
@@ -7056,18 +7025,18 @@
  <resources/>
  <connections/>
  <buttongroups>
+  <buttongroup name="btg_vrcGear"/>
+  <buttongroup name="btg_cameraPitch"/>
+  <buttongroup name="btg_flightSM"/>
+  <buttongroup name="btg_cameraAngle"/>
+  <buttongroup name="btg_cameraRoll"/>
+  <buttongroup name="btg_cameraMode"/>
+  <buttongroup name="btg_flightCL"/>
+  <buttongroup name="btg_vrcMode"/>
+  <buttongroup name="btg_flightTask"/>
+  <buttongroup name="btg_cameraYaw"/>
+  <buttongroup name="btg_flightVL"/>
   <buttongroup name="btg_flightHL"/>
   <buttongroup name="btg_flightYL"/>
-  <buttongroup name="btg_cameraRoll"/>
-  <buttongroup name="btg_flightSM"/>
-  <buttongroup name="btg_cameraPitch"/>
-  <buttongroup name="btg_cameraYaw"/>
-  <buttongroup name="btg_flightTask"/>
-  <buttongroup name="btg_cameraMode"/>
-  <buttongroup name="btg_vrcMode"/>
-  <buttongroup name="btg_flightCL"/>
-  <buttongroup name="btg_flightVL"/>
-  <buttongroup name="btg_vrcGear"/>
-  <buttongroup name="btg_cameraAngle"/>
  </buttongroups>
 </ui>

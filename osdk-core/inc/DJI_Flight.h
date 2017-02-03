@@ -82,6 +82,7 @@ class Flight
 
   enum Status
   {
+    STATUS_MOTOR_OFF = 0,
     STATUS_GROUND_STANDBY = 1,
     STATUS_TAKE_OFF = 2,
     STATUS_SKY_STANDBY = 3,

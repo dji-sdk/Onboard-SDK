@@ -102,16 +102,7 @@ void interactiveSpin(CoreAPI* api, Flight* flight, WayPoint* waypointObj, Camera
   Trajectory* trajectory;
 
   //! Extract the drone version from the UserConfig params
-  std::string droneVer;
-
-  if (UserConfig::targetVersion == versionM100_23 || UserConfig::targetVersion == versionM100_31)
-    droneVer = "M100";
-  else if (UserConfig::targetVersion == versionA3_31)
-    droneVer = "A3";
-  else {
-    // default case - M100
-    droneVer = "M100";
-  }
+  std::string hardwareVersion = std::string(api->getHwVersion());
 
   //! Set up the follower using the tuning parameters supplied
   if (!pathToSpiral.empty()) {
@@ -120,7 +111,7 @@ void interactiveSpin(CoreAPI* api, Flight* flight, WayPoint* waypointObj, Camera
                                                        flight,
                                                        &localFrame,
                                                        camera,
-                                                       droneVer,
+                                                       hardwareVersion,
                                                        paramTuningFile);
   } else {
     follower = NULL;

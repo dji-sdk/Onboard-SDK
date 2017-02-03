@@ -11,7 +11,6 @@
 
 #include "DJI_API.h"
 #include <string.h>
-#include <stdio.h>
 
 using namespace DJI;
 using namespace DJI::onboardSDK;
@@ -22,17 +21,18 @@ uint8_t DJI::onboardSDK::encrypt = 1;
 uint8_t DJI::onboardSDK::encrypt = 0;
 #endif // USE_ENCRYPT
 
-CoreAPI::CoreAPI(HardDriver *sDevice, Version SDKVersion, bool userCallbackThread,
-    CallBack userRecvCallback, UserData userData)
+CoreAPI::CoreAPI(HardDriver *sDevice,
+                 bool userCallbackThread,
+                 CallBack userRecvCallback,
+                 UserData userData)
 {
   CallBackHandler handler;
   handler.callback = userRecvCallback;
   handler.userData = userData;
-  init(sDevice, handler, userCallbackThread, SDKVersion);
+  init(sDevice, handler, userCallbackThread);
 }
 
-void CoreAPI::init(HardDriver *sDevice, CallBackHandler userRecvCallback,
-    bool userCallbackThread, Version SDKVersion)
+void CoreAPI::init(HardDriver *sDevice, CallBackHandler userRecvCallback, bool userCallbackThread)
 {
   serialDevice = sDevice;
   // serialDevice->init();
@@ -72,7 +72,7 @@ void CoreAPI::init(HardDriver *sDevice, CallBackHandler userRecvCallback,
 
   nonBlockingCBThreadEnable = false;
   ack_data = 99;
-  versionData.version = SDKVersion;
+  versionData.fwVersion = 0; //! Default init value
   ack_activation = 0xFF;
 
 
@@ -82,13 +82,16 @@ void CoreAPI::init(HardDriver *sDevice, CallBackHandler userRecvCallback,
   serialDevice->freeMSG();
 
   setup();
+
+
 }
 
-CoreAPI::CoreAPI(HardDriver *sDevice, Version SDKVersion, CallBackHandler userRecvCallback,
-    bool userCallbackThread)
+CoreAPI::CoreAPI(HardDriver *sDevice,
+                 CallBackHandler userRecvCallback,
+                 bool userCallbackThread)
 {
-  init(sDevice, userRecvCallback, userCallbackThread, SDKVersion);
-  getSDKVersion();
+  init(sDevice, userRecvCallback, userCallbackThread);
+  getFwVersion();
 }
 
 void CoreAPI::send(unsigned char session, unsigned char is_enc, CMD_SET cmdSet,
@@ -176,6 +179,7 @@ VersionData CoreAPI::getDroneVersion(int timeout)
 {
   versionData.version_ack = ACK_COMMON_NO_RESPONSE;
   versionData.version_crc = 0x0;
+  versionData.fwVersion = 0;
   versionData.version_name[0] = 0;
 
   unsigned cmd_timeout = 100; // unit is ms
@@ -185,59 +189,225 @@ VersionData CoreAPI::getDroneVersion(int timeout)
   send(2, 0, SET_ACTIVATION, CODE_GETVERSION, (unsigned char *)&cmd_data, 1, cmd_timeout,
     retry_time, 0, 0);
 
-  // Wait for end of ACK frame to arrive
+  //! Wait for end of ACK frame to arrive
   serialDevice->lockACK();
   serialDevice->wait(timeout);
   serialDevice->freeACK();
 
-  // Parse return value
+  //! Pointer to ACK
   unsigned char *ptemp = &(missionACKUnion.droneVersion.ack[0]);
 
-  if(versionData.version != versionA3_32){
-    versionData.version_ack = ptemp[0] + (ptemp[1] << 8);
-    ptemp += 2;
-    versionData.version_crc = ptemp[0] + (ptemp[1] << 8) + (ptemp[2] << 16) + (ptemp[3] << 24);
-    ptemp += 4;
-    if (versionData.version != versionM100_23)
-    {
-      memcpy(versionData.version_ID, ptemp, 11);
-      ptemp += 11;
-    }
-    memcpy(versionData.version_name, ptemp, 32);
-  }else{
-    versionData.version_ack = missionACKUnion.missionACK;
-    memcpy(versionData.version_name, "versionA3_32", strlen("versionA3_32")+1);
+  //! Parse the HW & SW version, Serial no. and ACK. Discard return value, we don't process it right now.
+  if(!parseDroneVersionInfo(ptemp)) {
+    versionData.version_crc = 0x0;
+    versionData.fwVersion = 0;
+    versionData.version_name[0] = 0;
   }
 
   return versionData;
 }
 
+bool CoreAPI::parseDroneVersionInfo(unsigned char *ackPtrIncoming) {
+
+  //! Local copy to prevent overwriting the ACK store
+  unsigned char buf[64] = {};
+  memcpy(buf, ackPtrIncoming, 64);
+  unsigned char* ackPtr = &buf[0];
+
+  //! Note down our starting point as a sanity check
+  unsigned char* startPtr = ackPtr;
+  //! 2b ACK.
+  versionData.version_ack = ackPtr[0] + (ackPtr[1] << 8);
+  ackPtr += 2;
+
+  //! Next, we might have CRC or ID; Put them into a variable that we will parse later. Find next \0
+  unsigned char crc_id[16] = {};
+  int i = 0;
+  while(*ackPtr != '\0') {
+    crc_id[i] = *ackPtr;
+    i++;
+    ackPtr++;
+    if (ackPtr - startPtr > 18) {
+      API_LOG(serialDevice, ERROR_LOG, "Drone version was not obtained. Please restart the program or call getDroneVersion\n");
+      return false;
+    }
+  }
+  //! Fill in the termination character
+  crc_id[i] = *ackPtr;
+  ackPtr++;
+
+  //! Now we're at the name. First, let's fill up the name field.
+  memcpy(versionData.version_name, ackPtr, 32);
+
+  //! Now, we start parsing the name. Let's find the second space character.
+  while (*ackPtr != ' ') {
+    ackPtr++;
+    if (ackPtr - startPtr > 64) {
+      API_LOG(serialDevice, ERROR_LOG, "Drone version was not obtained. Please restart the program or call getDroneVersion\n");
+      return false;
+    }
+  } //! Found first space ("SDK-v1.x")
+  ackPtr++;
+
+  while (*ackPtr != ' ') {
+    ackPtr++;
+    if (ackPtr - startPtr > 64) {
+      API_LOG(serialDevice, ERROR_LOG, "Drone version was not obtained. Please restart the program or call getDroneVersion\n");
+      return false;
+    }
+  } //! Found second space ("BETA")
+  ackPtr++;
+
+  //! Next is the HW version
+  int j = 0;
+  while (*ackPtr != '-') {
+    this->versionData.hwVersion[j] = *ackPtr;
+    ackPtr++;
+    j++;
+    if (ackPtr - startPtr > 64) {
+      API_LOG(serialDevice, ERROR_LOG, "Drone version was not obtained. Please restart the program or call getDroneVersion\n");
+      return false;
+    }
+  }
+  //! Fill in the termination character
+  this->versionData.hwVersion[j] = '\0';
+  ackPtr++;
+
+  //! Finally, we come to the FW version. We don't know if each clause is 2 or 3 digits long.
+  int ver1 = 0, ver2 = 0, ver3 = 0, ver4 = 0;
+
+  while (*ackPtr != '.') {
+    ver1 = (*ackPtr - 48) + 10*ver1;
+    ackPtr++;
+    if (ackPtr - startPtr > 64) {
+      API_LOG(serialDevice, ERROR_LOG, "Drone version was not obtained. Please restart the program or call getDroneVersion\n");
+      return false;
+    }
+  }
+  ackPtr++;
+  while (*ackPtr != '.') {
+    ver2 = (*ackPtr - 48) + 10*ver2;
+    ackPtr++;
+    if (ackPtr - startPtr > 64) {
+      API_LOG(serialDevice, ERROR_LOG, "Drone version was not obtained. Please restart the program or call getDroneVersion\n");
+      return false;
+    }
+  }
+  ackPtr++;
+  while (*ackPtr != '.') {
+    ver3 = (*ackPtr - 48) + 10*ver3;
+    ackPtr++;
+    if (ackPtr - startPtr > 64) {
+      API_LOG(serialDevice, ERROR_LOG, "Drone version was not obtained. Please restart the program or call getDroneVersion\n");
+      return false;
+    }
+  }
+  ackPtr++;
+  while (*ackPtr != '\0') {
+    ver4 = (*ackPtr - 48) + 10*ver4;
+    ackPtr++;
+    if (ackPtr - startPtr > 64) {
+      API_LOG(serialDevice, ERROR_LOG, "Drone version was not obtained. Please restart the program or call getDroneVersion\n");
+      return false;
+    }
+  }
+
+  this->versionData.fwVersion = MAKE_VERSION(ver1, ver2, ver3, ver4);
+
+  //! Special cases
+  //! M100:
+  if (strcmp(versionData.hwVersion,"M100") == 0) {
+    //! Bug in M100 does not report the right FW.
+    ver3 = 10*ver3;
+    this->versionData.fwVersion = MAKE_VERSION(ver1, ver2, ver3, ver4);
+  }
+
+  //! Now, we can parse the CRC and ID based on FW version. If it's older than 3.2 then it'll have a CRC, else not.
+  if (this->versionData.fwVersion < MAKE_VERSION(3,2,0,0)) {
+    this->versionData.version_crc = crc_id[0] + (crc_id[1] << 8) + (crc_id[2] << 16) + (crc_id[3] << 24)  ;
+    unsigned char *id_ptr = &crc_id[4];
+
+    int i = 0;
+    while (*id_ptr != '\0') {
+      this->versionData.hw_serial_num[i] = *id_ptr;
+      i++;
+      id_ptr++;
+      if (id_ptr - &crc_id[4] > 12) {
+        API_LOG(serialDevice, ERROR_LOG, "Drone ID was not obtained.");
+        return false; //!Not catastrophic error
+      }
+    }
+    //! Fill in the termination character
+    this->versionData.hw_serial_num[i] = *id_ptr;
+  } else {
+    versionData.version_crc = 0;
+    unsigned char *id_ptr = &crc_id[0];
+
+    int i = 0;
+    while (*id_ptr != '\0') {
+      this->versionData.hw_serial_num[i] = *id_ptr;
+      i++;
+      id_ptr++;
+      if (id_ptr - &crc_id[0] > 16) {
+        API_LOG(serialDevice, ERROR_LOG, "Drone ID was not obtained.");
+        return false; //!Not catastrophic error
+      }
+    }
+    //! Fill in the termination character
+    this->versionData.hw_serial_num[i] = *id_ptr;
+  }
+
+  //! Finally, we print stuff out.
+  /*
+  if (this->versionData.fwVersion > MAKE_VERSION(3,1,0,0)) {
+    API_LOG(this->serialDevice, STATUS_LOG, "Device Serial No. = %.16s\n", this->versionData.hw_serial_num);
+  }
+  API_LOG(this->serialDevice, STATUS_LOG, "Hardware = %.12s\n",
+          this->versionData.hwVersion);
+  API_LOG(this->serialDevice, STATUS_LOG, "Firmware = %d.%d.%d.%d\n",
+          ver1, ver2, ver3, ver4);
+  if (this->versionData.fwVersion < MAKE_VERSION(3,2,0,0)) {
+    API_LOG(this->serialDevice, STATUS_LOG, "Version CRC = 0x%X\n", this->versionData.version_crc);
+  }
+  */
+  return true;
+}
+
+
+
 void CoreAPI::activate(ActivateData *data, CallBack callback, UserData userData)
 {
-  data->version = versionData.version;
+  //! First, we need to check if getDroneVersion has been called
+  if (versionData.fwVersion == 0) {
+    API_LOG(serialDevice, ERROR_LOG, "Please call getDroneVersion first.\n");
+    return;
+  }
+  data->version = versionData.fwVersion;
   accountData = *data;
   accountData.reserved = 2;
 
   for (int i = 0; i < 32; ++i) accountData.iosID[i] = '0'; //! @note for ios verification
-  API_LOG(serialDevice, DEBUG_LOG, "version 0x%X/n", versionData.version);
+  API_LOG(serialDevice, DEBUG_LOG, "version 0x%X\n", versionData.fwVersion);
   API_LOG(serialDevice, DEBUG_LOG, "%.32s", accountData.iosID);
   send(2, 0, SET_ACTIVATION, CODE_ACTIVATE, (unsigned char *)&accountData,
     sizeof(accountData) - sizeof(char *), 1000, 3,
     callback ? callback : CoreAPI::activateCallback, userData);
 
-  ack_data = missionACKUnion.simpleACK;
-  if(ack_data == ACK_ACTIVE_SUCCESS && accountData.encKey)
-   setKey(accountData.encKey);
 }
 
 unsigned short CoreAPI::activate(ActivateData *data, int timeout)
 {
-  data->version = versionData.version;
+  //! First, we need to check if getDroneVersion has been called
+  if (versionData.fwVersion == 0) {
+    this->getDroneVersion(1);
+  }
+  //! Now, look into versionData and set for activation.
+  data->version = versionData.fwVersion;
   accountData = *data;
   accountData.reserved = 2;
 
   for (int i = 0; i < 32; ++i) accountData.iosID[i] = '0'; //! @note for ios verification
-  API_LOG(serialDevice, DEBUG_LOG, "version 0x%X/n", versionData.version);
+  API_LOG(serialDevice, DEBUG_LOG, "version 0x%X\n", versionData.fwVersion);
   API_LOG(serialDevice, DEBUG_LOG, "%.32s", accountData.iosID);
   send(2, 0, SET_ACTIVATION, CODE_ACTIVATE, (unsigned char *)&accountData,
     sizeof(accountData) - sizeof(char *), 1000, 3, 0, 0);
@@ -269,7 +439,7 @@ void CoreAPI::setBroadcastFreq(uint8_t *dataLenIs16, CallBack callback, UserData
   //! @note see also enum BROADCAST_FREQ in DJI_API.h
   for (int i = 0; i < 16; ++i)
   {
-    if (versionData.version == versionM100_31)
+    if (strcmp(versionData.hwVersion, "M100") == 0)
       if (i < 12)
       {
         dataLenIs16[i] = (dataLenIs16[i] > 5 ? 5 : dataLenIs16[i]);
@@ -295,7 +465,7 @@ unsigned short CoreAPI::setBroadcastFreq(uint8_t *dataLenIs16, int timeout)
   //! @note see also enum BROADCAST_FREQ in DJI_API.h
   for (int i = 0; i < 16; ++i)
   {
-    if (versionData.version == versionM100_31)
+    if (strcmp(versionData.hwVersion, "M100") == 0)
       if (i < 12)
       {
         dataLenIs16[i] = (dataLenIs16[i] > 5 ? 5 : dataLenIs16[i]);
@@ -352,13 +522,13 @@ void CoreAPI::setBroadcastFreqDefaults()
   * 8 - Magnetometer
   * 9 - RC Channels Data
   * 10 - Gimbal Data
-  * 11 - Flight Status
+  * 11 - Flight Statusack
   * 12 - Battery Level
   * 13 - Control Information
   *
   */
 
-  if (versionData.version == versionM100_31 || versionData.version == versionM100_23) {
+  if (strcmp(versionData.hwVersion, "M100") == 0) {
     freq[0] = BROADCAST_FREQ_1HZ;
     freq[1] = BROADCAST_FREQ_10HZ;
     freq[2] = BROADCAST_FREQ_50HZ;
@@ -372,7 +542,7 @@ void CoreAPI::setBroadcastFreqDefaults()
     freq[10] = BROADCAST_FREQ_50HZ;
     freq[11] = BROADCAST_FREQ_10HZ;
   }
-  else if (versionData.version == versionA3_31 || versionData.version == versionA3_32) {
+  else {//! A3/N3/M600
     freq[0] = BROADCAST_FREQ_1HZ;
     freq[1] = BROADCAST_FREQ_10HZ;
     freq[2] = BROADCAST_FREQ_50HZ;
@@ -440,11 +610,8 @@ void CoreAPI::setBroadcastFreqToZero()
   freq[9] = BROADCAST_FREQ_0HZ;
   freq[10] = BROADCAST_FREQ_0HZ;
   freq[11] = BROADCAST_FREQ_0HZ;
-  if(versionData.version == versionA3_31 || versionData.version == versionA3_32)
-  {
-    freq[12] = BROADCAST_FREQ_0HZ;
-    freq[13] = BROADCAST_FREQ_0HZ;
-  }
+  freq[12] = BROADCAST_FREQ_0HZ;
+  freq[13] = BROADCAST_FREQ_0HZ;
   setBroadcastFreq(freq);
 }
 
@@ -486,7 +653,7 @@ unsigned short CoreAPI::setBroadcastFreqDefaults(int timeout)
    *
    */
 
-  if (versionData.version == versionM100_31 || versionData.version == versionM100_23) {
+  if (strcmp(versionData.hwVersion, "M100") == 0) {
     freq[0] = BROADCAST_FREQ_1HZ;
     freq[1] = BROADCAST_FREQ_10HZ;
     freq[2] = BROADCAST_FREQ_50HZ;
@@ -500,7 +667,7 @@ unsigned short CoreAPI::setBroadcastFreqDefaults(int timeout)
     freq[10] = BROADCAST_FREQ_50HZ;
     freq[11] = BROADCAST_FREQ_10HZ;
   }
-  else if (versionData.version == versionA3_31 || versionData.version == versionA3_32) {
+  else { //! A3/N3/M600
     freq[0] = BROADCAST_FREQ_1HZ;
     freq[1] = BROADCAST_FREQ_10HZ;
     freq[2] = BROADCAST_FREQ_50HZ;
@@ -559,7 +726,7 @@ unsigned short CoreAPI::setControl(bool enable, int timeout)
 
   if (missionACKUnion.simpleACK == ACK_SETCONTROL_ERROR_MODE)
   {
-    if(versionData.version != versionA3_32)
+    if(versionData.fwVersion < MAKE_VERSION(3,2,0,0))
       missionACKUnion.simpleACK = ACK_SETCONTROL_NEED_MODE_F;
     else
       missionACKUnion.simpleACK = ACK_SETCONTROL_NEED_MODE_P;
@@ -577,35 +744,11 @@ void CoreAPI::setDriver(HardDriver *sDevice) { serialDevice = sDevice; }
 void CoreAPI::getDroneVersionCallback(CoreAPI *api, Header *protocolHeader, UserData userData __UNUSED)
 {
   unsigned char *ptemp = ((unsigned char *)protocolHeader) + sizeof(Header);
-  size_t ack_length = protocolHeader->length - EXC_DATA_SIZE;
-
-  if(ack_length > 1){
-    api->versionData.version_ack = ptemp[0] + (ptemp[1] << 8);
-    ptemp += 2;
-    api->versionData.version_crc =
-      ptemp[0] + (ptemp[1] << 8) + (ptemp[2] << 16) + (ptemp[3] << 24);
-    ptemp += 4;
-    if (api->versionData.version != versionM100_23)
-    {
-      memcpy(api->versionData.version_ID, ptemp, 11);
-      ptemp += 11;
-    }
-    memcpy(api->versionData.version_name, ptemp, 32);
-  }else{
-    api->versionData.version_ack = ptemp[0];
-    memcpy(api->versionData.version_name, "versionA3_32", strlen("versionA3_32")+1);
+  if(!api->parseDroneVersionInfo(ptemp)) {
+    api->versionData.version_crc = 0x0;
+    api->versionData.fwVersion = 0;
+    api->versionData.version_name[0] = 0;
   }
-
-  API_LOG(api->serialDevice, STATUS_LOG, "version ack = %d\n", api->versionData.version_ack);
-
-  if(api->versionData.version != versionA3_32){
-    API_LOG(api->serialDevice, STATUS_LOG, "version crc = 0x%X\n", api->versionData.version_crc);
-    if (api->versionData.version != versionM100_23)
-      API_LOG(api->serialDevice, STATUS_LOG, "version ID = %.11s\n", api->versionData.version_ID);
-  }
-
-  API_LOG(api->serialDevice, STATUS_LOG, "version name = %.32s\n",
-      api->versionData.version_name);
 }
 
 void CoreAPI::activateCallback(CoreAPI *api, Header *protocolHeader, UserData userData __UNUSED)
@@ -654,7 +797,6 @@ void CoreAPI::activateCallback(CoreAPI *api, Header *protocolHeader, UserData us
         break;
       case ACK_ACTIVE_VERSION_ERROR:
         API_LOG(api->serialDevice, ERROR_LOG, "SDK version did not match\n");
-        api->getDroneVersion();
         break;
       default:
         if (!api->decodeACKStatus(ack_data))
@@ -900,11 +1042,11 @@ void CoreAPI::setFrequencyCallback(CoreAPI *api __UNUSED, Header *protocolHeader
   }
 }
 
-Version CoreAPI::getSDKVersion() const { return versionData.version; }
+Version CoreAPI::getFwVersion() const { return versionData.fwVersion; }
+char * CoreAPI::getHwVersion() const { return (char *)versionData.hwVersion; }
+char * CoreAPI::getHwSerialNum() const { return (char *)versionData.hw_serial_num; }
 
 SDKFilter CoreAPI::getFilter() const { return filter; }
-
-void CoreAPI::setVersion(const Version &value) { versionData.version = value; }
 
 void CoreAPI::setControlCallback(CoreAPI *api, Header *protocolHeader, UserData userData __UNUSED)
 {
@@ -925,13 +1067,13 @@ void CoreAPI::setControlCallback(CoreAPI *api, Header *protocolHeader, UserData 
   switch (ack_data)
   {
     case ACK_SETCONTROL_ERROR_MODE:
-      if(api->versionData.version != versionA3_32)
+      if(api->versionData.fwVersion < MAKE_VERSION(3,2,0,0))
       {
         API_LOG(api->serialDevice, STATUS_LOG, "Obtain control failed: switch to F mode\n");
       }
       else
       {
-	API_LOG(api->serialDevice, STATUS_LOG, "Obtain control failed: switch to P mode\n");
+        API_LOG(api->serialDevice, STATUS_LOG, "Obtain control failed: switch to P mode\n");
       }
       break;
     case ACK_SETCONTROL_RELEASE_SUCCESS:

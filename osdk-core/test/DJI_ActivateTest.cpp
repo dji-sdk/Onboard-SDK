@@ -17,6 +17,6 @@ INSTANTIATE_TEST_CASE_P(
 
 TEST_P(DJI_ActivateTest, DISABLED_invalid_enc_key) {
 
-  ack = activateDroneStandard(app_id, GetParam(), targetVersion);
+  ack = activateDroneStandard(app_id, GetParam());
   ASSERT_EQ(ack, ACK_ACTIVE_NEW_DEVICE);
 }

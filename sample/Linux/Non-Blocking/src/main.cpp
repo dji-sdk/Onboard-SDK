@@ -65,6 +65,14 @@ int main(int argc, char *argv[])
     std::cout << "This program will exit now. \n";
     return 0;
   }
+
+  api->getDroneVersion(1);
+
+  activateNonBlocking(api);
+  usleep(100000);
+  //! We are successfully activated. Try to take control.
+  takeControlNonBlocking(api);
+  usleep(100000);
   //! Set broadcast Freq Defaults
   unsigned short broadcastAck = api->setBroadcastFreqDefaults(1);
 

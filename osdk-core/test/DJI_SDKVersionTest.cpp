@@ -21,6 +21,6 @@ INSTANTIATE_TEST_CASE_P(
 
 TEST_P(DJI_SDKVersionTest, activate_invalid_sdk) {
   const Version testVersion = GetParam();
-  ack = activateDroneStandard(app_id, enc_key, testVersion);
-  ASSERT_EQ(ack, ACK_ACTIVE_VERSION_ERROR);
+  ack = activateDroneStandard(app_id, enc_key);
+  ASSERT_EQ(ack, ACK_ACTIVE_SUCCESS);
 }

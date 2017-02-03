@@ -60,14 +60,16 @@ void DJI_WayPointTest::run_init_provide_test(int init_count, int prov_count) {
   // Read WayPoint status at given index
   WayPointDataACK indexACK;
 
-  // Some negative tests: No data uploaded yet
-  initACK  = waypoint->getWaypointSettings(wait_timeout);
-  // Waypoint settings not uploaded
-  EXPECT_EQ(initACK.ack, 0xEA);
+  if (api->getFwVersion() < MAKE_VERSION(3,2,0,0)) {
+    // Some negative tests: No data uploaded yet
+    initACK = waypoint->getWaypointSettings(wait_timeout);
+    // Waypoint settings not uploaded
+    EXPECT_EQ(initACK.ack, 0xEA);
 
-  indexACK = waypoint->getIndex(0, wait_timeout);
-  // Waypoint index not uploaded
-  EXPECT_EQ(indexACK.ack, 0xEB);
+    indexACK = waypoint->getIndex(0, wait_timeout);
+    // Waypoint index not uploaded
+    EXPECT_EQ(indexACK.ack, 0xEB);
+  }
 
   wp_ack = waypoint->init(&fdata, wait_timeout);
   api->decodeMissionStatus(wp_ack);
@@ -79,13 +81,15 @@ void DJI_WayPointTest::run_init_provide_test(int init_count, int prov_count) {
   initACK  = waypoint->getWaypointSettings(wait_timeout);
   indexACK = waypoint->getIndex(0, wait_timeout);
 
-  // Must be more then one waypoint
-  if(init_count > 1) {
-    EXPECT_EQ(initACK.ack, 0x00);
-    EXPECT_EQ(indexACK.ack, 0x00);
-  } else {
-    EXPECT_EQ(initACK.ack, 0xEA);
-    EXPECT_EQ(indexACK.ack, 0xEB);
+  if (api->getFwVersion() < MAKE_VERSION(3,2,0,0)) {
+    // Must be more then one waypoint
+    if (init_count > 1) {
+      EXPECT_EQ(initACK.ack, 0x00);
+      EXPECT_EQ(indexACK.ack, 0x00);
+    } else {
+      EXPECT_EQ(initACK.ack, 0xEA);
+      EXPECT_EQ(indexACK.ack, 0xEB);
+    }
   }
 
   wp_ack = waypoint->start(wait_timeout);

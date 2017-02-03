@@ -40,13 +40,11 @@ class DJI_APITest : public ::testing::Test {
   void setControlStandard();
   void releaseControlStandard();
   void activateDroneStandard();
-  unsigned short activateDroneStandard(int l_app_id, std::string l_enc_key,
-                                       Version version);
+  unsigned short activateDroneStandard(int l_app_id, std::string l_enc_key);
   void std_sleep();
 
   CoreAPI* api;
   ActivateData user_ack_data;
-  Version targetVersion;
   VersionData versionData;
   LinuxThread* readThread;
 
@@ -80,8 +78,9 @@ class DJI_APITest : public ::testing::Test {
   }A3_31;
 
   //TODO add definitions
+  // Test for A3 FW 1.7.0.0
   struct A3_32{
-    char VERSION_NAME[32] = "versionA3_32";
+    char VERSION_NAME[32] = "SDK-v1.0 BETA A3-03.02.15.37";
   }A3_32;
 };
 

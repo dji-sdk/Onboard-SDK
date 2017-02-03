@@ -88,7 +88,7 @@ ackReturnData monitoredTakeoff(CoreAPI* api, Flight* flight, int timeout)
   //Start broadcasting flight status as well as position info 
   uint8_t freq[16];
 
-  if (UserConfig::targetVersion == versionM100_31 || UserConfig::targetVersion == versionM100_23) {
+  if (strcmp(api->getHwVersion(), "M100") == 0) {
 
     freq[0] = BROADCAST_FREQ_0HZ;
     freq[1] = BROADCAST_FREQ_0HZ;
@@ -103,7 +103,7 @@ ackReturnData monitoredTakeoff(CoreAPI* api, Flight* flight, int timeout)
     freq[10] = BROADCAST_FREQ_0HZ;
     freq[11] = BROADCAST_FREQ_0HZ;
 
-  } else if (UserConfig::targetVersion == versionA3_31 || UserConfig::targetVersion == versionA3_32) {
+  } else {
 
     freq[0] = BROADCAST_FREQ_0HZ;
     freq[1] = BROADCAST_FREQ_0HZ;
@@ -127,9 +127,11 @@ ackReturnData monitoredTakeoff(CoreAPI* api, Flight* flight, int timeout)
 
   //! First check: See if the aircraft actually got off the ground
   int stillOnGround = 0;
-  int timeoutCycles = 40;
-  if (UserConfig::targetVersion != versionA3_32)
+
+  int timeoutCycles;
+  if (api->getFwVersion() < MAKE_VERSION(3,2,0,0))
   {
+    timeoutCycles = 40;
     while (api->getBroadcastData().status != 3 && stillOnGround < timeoutCycles)
     {
       stillOnGround++;
@@ -138,6 +140,8 @@ ackReturnData monitoredTakeoff(CoreAPI* api, Flight* flight, int timeout)
   }
   else
   {
+    //! Starting from FW 3.2.0.0 takeoff takes longer.
+    timeoutCycles = 100;
     while (api->getBroadcastData().status != 2 && stillOnGround < timeoutCycles)
     {
       stillOnGround++;
@@ -151,7 +155,7 @@ ackReturnData monitoredTakeoff(CoreAPI* api, Flight* flight, int timeout)
     //Try again
     takeoffStatus = takeoff(flight, timeout);
     stillOnGround = 0;
-    if (UserConfig::targetVersion != versionA3_32)
+    if (api->getFwVersion() < MAKE_VERSION(3,2,0,0))
     {
       while (api->getBroadcastData().status != 3 && stillOnGround < timeoutCycles)
       {
@@ -533,7 +537,7 @@ ackReturnData landing(CoreAPI* api, Flight* flight, int timeout)
     //Set a timeout to make sure the system doesn't freeze in case landing does not kick in
     float landingStartTimeout = 3; //seconds 
     float landingTimer = 0;
-    if (UserConfig::targetVersion != versionA3_32)
+    if (api->getFwVersion() < MAKE_VERSION(3,2,0,0))
     {
       while (api->getBroadcastData().status != 4 && landingTimer < landingStartTimeout)
       {
@@ -565,7 +569,7 @@ ackReturnData landing(CoreAPI* api, Flight* flight, int timeout)
     //Set a timeout to make sure the system doesn't freeze in case landing cleanup does not finish
     float landingFinishTimeout = 4; //Seconds
 
-    if (UserConfig::targetVersion != versionA3_32)
+    if (api->getFwVersion() < MAKE_VERSION(3,2,0,0))
     {
       while (api->getBroadcastData().status == 5 && landingTimer < landingFinishTimeout)
       {
@@ -638,8 +642,8 @@ void localOffsetFromGpsOffset(DJI::Vector3dData& deltaNed,
 
 int drawSqrPosCtrlSample(CoreAPI* api, Flight* flight)
 {
-  //Check if in air
-  if (UserConfig::targetVersion != versionA3_32)
+  //! Check if in air
+  if (api->getFwVersion() < MAKE_VERSION(3,2,0,0))
   {
     if (api->getBroadcastData().status != 3)
     {

@@ -36,16 +36,8 @@ void mobileCommandSpin(CoreAPI *api, Flight *flight, WayPoint *waypointObj, Came
   Trajectory* trajectory;
 
   //! Extract the drone version from the UserConfig params
-  std::string droneVer;
+  std::string hardwareVersion = std::string(api->getHwVersion());
 
-  if (UserConfig::targetVersion == versionM100_23 || UserConfig::targetVersion == versionM100_31)
-    droneVer = "M100";
-  else if (UserConfig::targetVersion == versionA3_31)
-    droneVer = "A3";
-  else {
-    // default case - M100
-    droneVer = "M100";
-  }
 
   //! Read the runtime args and populate variables
   std::string pathToSpiral;
@@ -69,7 +61,7 @@ void mobileCommandSpin(CoreAPI *api, Flight *flight, WayPoint *waypointObj, Came
                                                        flight,
                                                        &localFrame,
                                                        camera,
-                                                       droneVer,
+                                                       hardwareVersion,
                                                        paramTuningFile);
   } else {
     follower = NULL;

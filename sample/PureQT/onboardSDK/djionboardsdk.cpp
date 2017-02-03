@@ -132,7 +132,7 @@ void DJIonboardSDK::initCamera()
 
 void DJIonboardSDK::functionAlloc()
 {
-    if (api->getSDKVersion() == versionM100_23)
+    if (api->getFwVersion() < MAKE_VERSION(3,1,0,0))
     {
         ui->gb_CoreData->setEnabled(false);
         ui->gb_VRC->setEnabled(false);
@@ -141,7 +141,7 @@ void DJIonboardSDK::functionAlloc()
         ui->gb_Mission->setEnabled(false);
         ui->gb_wp->setEnabled(false);
     }
-    else if (api->getSDKVersion() == versionM100_31)
+    else if (api->getFwVersion() < MAKE_VERSION(3,1,50,0))
     {
         ui->gb_CoreData->setEnabled(true);
         ui->gb_VRC->setEnabled(true);
@@ -199,7 +199,8 @@ DJIonboardSDK::DJIonboardSDK(QWidget *parent) : QMainWindow(parent), ui(new Ui::
 
     //! @code version control
     timerBroadcast = new QTimer();
-    on_cb_core_mechine_activated(ui->cb_core_mechine->currentIndex());
+
+    //on_cb_core_mechine_activated(ui->cb_core_mechine->currentIndex());
     functionAlloc();
     //! @endcode
 
@@ -260,6 +261,7 @@ void DJIonboardSDK::timerEvent(QTimerEvent *)
     //    scriptSDK->addTask("addTask");
     //    scriptSDK->run();
 }
+//on_cb_core_mechine_activated(ui->cb_core_mechine->currentIndex());
 
 void DJIonboardSDK::setControlCallback(CoreAPI *This, Header *header, UserData userData)
 {
@@ -282,10 +284,10 @@ void DJIonboardSDK::setControlCallback(CoreAPI *This, Header *header, UserData u
     {
         case ACK_SETCONTROL_ERROR_MODE:
             if (sdk)  {
-                if (sdk->versionIndex ==3)
-                     sdk->ui->btn_coreSetControl->setText("Switch to mod P");
+                if (sdk->api->getFwVersion() > MAKE_VERSION(3,2,0,0))
+                     sdk->ui->btn_coreSetControl->setText("Switch to mode P");
                  else
-                    sdk->ui->btn_coreSetControl->setText("Switch to mod F");
+                    sdk->ui->btn_coreSetControl->setText("Switch to mode F");
             }
             else
                 API_LOG(sdk->driver, ERROR_LOG, "known SDK pointer 0.");
@@ -343,6 +345,7 @@ void DJIonboardSDK::activationCallback(CoreAPI *This, Header *header, UserData u
         sdk->ui->btn_coreActive->setText("Decode Error");
     }
     This->activateCallback(This, header);
+    sdk->functionAlloc();
 }
 
 void DJIonboardSDK::hotpintReadCallback(CoreAPI *This, Header *header, UserData userData)
@@ -423,6 +426,7 @@ void DJIonboardSDK::on_comboBox_portName_currentIndexChanged(int index)
 
 void DJIonboardSDK::on_btn_coreActive_clicked()
 {
+
     ActivateData data;
     data.ID = ui->lineEdit_ID->text().toInt();
     *key = ui->lineEdit_Key->text().toLocal8Bit();
@@ -542,7 +546,7 @@ void DJIonboardSDK::on_btg_flight_CL(QAbstractButton *button)
 
 void DJIonboardSDK::on_btg_flight_SM(QAbstractButton *button)
 {
-    if (api->getSDKVersion() != versionM100_23)
+    if (api->getFwVersion() > MAKE_VERSION(3,1,0,0))
     {
         QString name = button->text();
         flightFlag &= 0xFE;
@@ -736,7 +740,7 @@ void DJIonboardSDK::on_btn_coreSet_clicked()
     data[4] = ui->comboBox_5->currentIndex();
     data[5] = ui->comboBox_6->currentIndex();
     data[6] = ui->comboBox_7->currentIndex();
-    if (api->getSDKVersion() == versionM100_31)
+    if (strcmp(api->getHwVersion(), "M100") == 0)
     {
         data[7] = ui->comboBox_8->currentIndex();
         data[8] = ui->comboBox_9->currentIndex();
@@ -748,7 +752,7 @@ void DJIonboardSDK::on_btn_coreSet_clicked()
         data[14] = 0;
         data[15] = 0;
     }
-    else if (api->getSDKVersion() == versionA3_31)
+    else
     {
         data[7] = ui->comboBox_13->currentIndex(); // rtk
         data[8] = ui->comboBox_14->currentIndex(); // gps
@@ -963,7 +967,7 @@ void DJIonboardSDK::on_cb_camera_send_clicked(bool checked)
 
 void DJIonboardSDK::upDateTime()
 {
-    if (api->getSDKVersion() == versionM100_23)
+    if (api->getFwVersion() < MAKE_VERSION(3,1,0,0))
     {
         ui->le_coreTimeStamp->setText(QString::number(api->getTime().time));
     }
@@ -1674,25 +1678,7 @@ void DJIonboardSDK::on_btn_hp_pause_clicked(bool checked)
 
 void DJIonboardSDK::on_cb_core_mechine_activated(int index)
 {
-    switch (index)
-    {
-        case 0:
-            api->setVersion(versionM100_31);
-            versionIndex=0;
-            break;
-        case 1:
-            api->setVersion(versionM100_23);
-            versionIndex=1;
-            break;
-        case 2:
-            api->setVersion(versionA3_31);
-            versionIndex=2;
-            break;
-        case 3:
-            api->setVersion(versionA3_32);
-            versionIndex=3;
-            break;
-    }
+
     functionAlloc();
 }
 

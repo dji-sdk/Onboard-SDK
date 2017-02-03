@@ -212,10 +212,13 @@ enum BROADCAST_FREQ
 class CoreAPI
 {
   public:
-  CoreAPI(HardDriver *Driver = 0, Version SDKVersion = 0, bool userCallbackThread = false,
-        CallBack userRecvCallback = 0, UserData userData = 0);
-  CoreAPI(HardDriver *Driver, Version SDKVersion, CallBackHandler userRecvCallback,
-        bool userCallbackThread = false);
+  CoreAPI(HardDriver *Driver = 0,
+            bool userCallbackThread = false,
+            CallBack userRecvCallback = 0,
+            UserData userData = 0);
+  CoreAPI(HardDriver *Driver,
+            CallBackHandler userRecvCallback,
+            bool userCallbackThread = false);
   void sendPoll(void);
   void readPoll(void);
   //! @todo Implement callback poll handler
@@ -362,7 +365,7 @@ class CoreAPI
    */
   unsigned short setBroadcastFreqDefaults(int timeout);
    
-  /*
+  /**
    * Set all broadcast frequencies to zero. Only ACK data will stay on the line.
    */
   void setBroadcastFreqToZero();
@@ -402,6 +405,18 @@ class CoreAPI
    */
   VersionData getDroneVersion(int timeout);
 
+  /**
+   * Get SDK version
+   */
+  Version getFwVersion() const;
+  char * getHwVersion() const;
+  char * getHwSerialNum() const;
+
+  /**
+   * Parse SDK version returned from drone, and populate the API versionData member
+   */
+  bool parseDroneVersionInfo(unsigned char *ackPtr);
+
   /**Get broadcasted data values from flight controller.*/
   BroadcastData getBroadcastData() const;
 
@@ -440,10 +455,7 @@ class CoreAPI
   HardDriver *getDriver() const;
 
   SimpleACK getSimpleACK() const;
-  /**
-   * Get SDK version
-   */
-  Version getSDKVersion() const;
+
   void setBroadcastCallback(CallBackHandler callback) { broadcastCallback = callback; }
   void setFromMobileCallback(CallBackHandler FromMobileEntrance);
 
@@ -552,11 +564,6 @@ class CoreAPI
    * Initialize serial device
    */
   void setDriver(HardDriver *value);
-
-  /**
-   * Set SDK version.
-   */
-  void setVersion(const Version &value);
 
   /**
    * Setters and getters for Mobile CMD variables - these are used 
@@ -693,7 +700,7 @@ class CoreAPI
   bool precisionMissionsLidarMappingCMD;
   bool precisionMissionsCollisionAvoidanceLidarMappingCMD;
 
-
+  //! Versioning and activation
   VersionData versionData;
   ActivateData accountData;
 
@@ -702,8 +709,7 @@ class CoreAPI
   SDKFilter filter;
 
   /// Serial Device Initialization
-  void init(HardDriver *Driver, CallBackHandler userRecvCallback, bool userCallbackThread,
-      Version SDKVersion);
+  void init(HardDriver *Driver, CallBackHandler userRecvCallback, bool userCallbackThread);
   void recvReqData(Header *protocolHeader);
   void appHandler(Header *protocolHeader);
   void broadcast(Header *protocolHeader);

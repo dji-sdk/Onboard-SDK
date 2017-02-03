@@ -14,8 +14,8 @@ void DJI_HotPointTest::SetUp() {
 }
 
 void DJI_HotPointTest::TearDown() {
-  DJI_FlightTest::TearDown();
   delete hotpoint;
+  DJI_FlightTest::TearDown();
 }
 
 TEST_F(DJI_HotPointTest, HotPointTest) {

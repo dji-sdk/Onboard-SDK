@@ -35,7 +35,6 @@ void DJI_Environment::read_config_file() {
   rapidjson::Document document;
   document.Parse(content.c_str());
 
-  version = document["version"].GetString();
   app_id = document["api_id"].GetInt();
   enc_key = document["api_key"].GetString();
   device = document["device"].GetString();
@@ -50,8 +49,6 @@ void DJI_Environment::read_config_file() {
     }
   }
 }
-
-const std::string &DJI_Environment::getVersion() const { return version; }
 
 int DJI_Environment::getApp_id() const { return app_id; }
 

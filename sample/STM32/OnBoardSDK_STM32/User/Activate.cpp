@@ -26,6 +26,7 @@ User_Activate ()
 
 
   //! Change the version string to your platform/version as defined in DJI_Version.h
+  //! Starting from OSDK 3.2.1, you do not need to do this. Instead, call droneVersion before activation.
   user_act_data.version = versionM100_31;
 
   user_act_data.encKey = key_buf;

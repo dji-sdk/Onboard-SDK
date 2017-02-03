@@ -32,8 +32,7 @@ namespace UserConfig{
   //! Default baudRate is 230400. If you want to change this value, also go to 
   //! DJI Assistant 2's SDK tab and change it to match this value.
   unsigned int baudRate ;
-  //! Available choices for targetVersion are versionM100_23, versionA3_31 and versionM100_31
-  DJI::onboardSDK::Version targetVersion; 
+
 }
 
 void readUserConfig(string UserConfigPath)
@@ -42,7 +41,6 @@ void readUserConfig(string UserConfigPath)
 
   static char key[70];
   char devName[20];
-  char droneVer[20];
   int id;
 
 
@@ -71,25 +69,13 @@ void readUserConfig(string UserConfigPath)
           UserConfig::deviceName = std::string(devName);
           set_Serial_Device = true;
         }
-        if (sscanf(line, "Version:%s", droneVer))
-        {
-          if (!strcmp(droneVer,"versionM100_31"))
-            UserConfig::targetVersion = versionM100_31;
-          if (!strcmp(droneVer,"versionM100_23"))
-            UserConfig::targetVersion = versionM100_23;
-          if (!strcmp(droneVer,"versionA3_31"))
-            UserConfig::targetVersion = versionA3_31;
-          if (!strcmp(droneVer,"versionA3_32"))
-            UserConfig::targetVersion = versionA3_32;
-          set_Drone_Version = true;
-        }
         if (sscanf(line, "BaudRate:%d", &UserConfig::baudRate))
         {
           set_Baud = true;
         }
       }
     }
-    if (set_Baud && set_ID && set_KEY && set_Drone_Version && set_Serial_Device)
+    if (set_Baud && set_ID && set_KEY && set_Serial_Device)
       cout << "User Configuration read successfully. \n\n";
     else
       cout << "There's an error with your UserConfig.txt file.\n";

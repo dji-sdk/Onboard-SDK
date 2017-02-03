@@ -54,11 +54,6 @@ int main()
   printf("Board Initialization Done!\r\n");
   delay_nms(1000);
 
-  //! Change the version string to your platform/version as defined in DJI_Version.h
-  coreApi->setVersion(versionM100_31);
-  delay_nms(200);
-  printf("API Version Set Done!\r\n");
-
   uint32_t runOnce = 1;
   uint32_t next500MilTick;
   while (1)
@@ -73,6 +68,11 @@ int main()
       // The Local navigation example will run in broadcast call back function,
       // immediate after GPS position is updated
       coreApi->setBroadcastCallback(myRecvCallback,(DJI::UserData)(&droneState));
+
+      //! Since OSDK 3.2.1, the new versioning system does not require you to set version.
+      //! It automatically sets activation version through a call to getDroneVersion.
+      coreApi->getDroneVersion();
+      delay_nms(1000);
 
       User_Activate();      
       delay_nms(50);

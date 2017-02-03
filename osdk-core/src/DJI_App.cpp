@@ -90,7 +90,7 @@ void DJI::onboardSDK::CoreAPI::broadcast(Header *protocolHeader)
    */
   broadcastData.activation = ack_activation;
 
-  if (versionData.version != versionM100_23)
+  if (versionData.fwVersion > MAKE_VERSION(3,1,0,0))
     passData(*enableFlag, DATA_FLAG, &broadcastData.timeStamp, pdata, sizeof(TimeStampData),
         len);
   else
@@ -103,7 +103,7 @@ void DJI::onboardSDK::CoreAPI::broadcast(Header *protocolHeader)
   passData(*enableFlag, DATA_FLAG, &broadcastData.w, pdata, sizeof(CommonData), len);
   passData(*enableFlag, DATA_FLAG, &broadcastData.pos, pdata, sizeof(PositionData), len);
 
-  if (versionData.version == versionA3_31 || versionData.version == versionA3_32)
+  if (strcmp(versionData.hwVersion, "M100") != 0) //! N3/A3/M600
   {
     passData(*enableFlag, DATA_FLAG, &broadcastData.gps, pdata, sizeof(GPSData), len);
     passData(*enableFlag, DATA_FLAG, &broadcastData.rtk, pdata, sizeof(RTKData), len);
@@ -115,11 +115,11 @@ void DJI::onboardSDK::CoreAPI::broadcast(Header *protocolHeader)
   passData(*enableFlag, DATA_FLAG, &broadcastData.mag, pdata, sizeof(MagnetData), len);
   passData(*enableFlag, DATA_FLAG, &broadcastData.rc, pdata, sizeof(RadioData), len);
   passData(*enableFlag, DATA_FLAG, &broadcastData.gimbal, pdata,
-      sizeof(GimbalData) - ((versionData.version == versionM100_23) ? 1 : 0), len);
+      sizeof(GimbalData) - ((versionData.fwVersion < MAKE_VERSION(3,1,0,0)) ? 1 : 0), len);
   passData(*enableFlag, DATA_FLAG, &broadcastData.status, pdata, sizeof(FlightStatus), len);
   passData(*enableFlag, DATA_FLAG, &broadcastData.battery, pdata, sizeof(BatteryData), len);
   passData(*enableFlag, DATA_FLAG, &broadcastData.ctrlInfo, pdata,
-      sizeof(CtrlInfoData) - ((versionData.version == versionM100_23) ? 1 : 0), len);
+      sizeof(CtrlInfoData) - ((versionData.fwVersion < MAKE_VERSION(3,1,0,0)) ? 1 : 0), len);
   serialDevice->freeMSG();
 
   /**

@@ -148,7 +148,7 @@ Flight::Status Flight::getStatus() const
 
 Flight::Mode Flight::getControlMode() const
 {
-  if (api->getSDKVersion() != versionM100_23)
+  if (api->getFwVersion() != versionM100_23)
     return (Flight::Mode)api->getBroadcastData().ctrlInfo.mode;
   return MODE_NOT_SUPPORTED;
 }

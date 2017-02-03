@@ -11,17 +11,6 @@ void DJI_APITest::SetUp() {
   sDevice = environment->getDevice();
   baudrate = environment->getBaudrate();
 
-  if (environment->getVersion() == "versionM100_31") {
-    targetVersion = versionM100_31;
-  } else if (environment->getVersion() == "versionA3_31") {
-    targetVersion = versionA3_31;
-  } else if(environment->getVersion() == "versionA3_32" ||
-      environment->getVersion().empty()) {
-    targetVersion = versionA3_32;
-  }else{
-    FAIL() << "Invalid version: " << environment->getVersion();
-  }
-
   app_id = environment->getApp_id();
   enc_key = environment->getEnc_key();
   sim_control_enabled = environment->isSim_control_enabled();
@@ -49,8 +38,9 @@ void DJI_APITest::SetUp() {
 
   readThread = new LinuxThread(api, 2);
   readThread->createThread();
-
-  api->setVersion(targetVersion);
+  usleep(100000);
+  api->getDroneVersion(wait_timeout);
+  usleep(100000);
   ack = api->setBroadcastFreqDefaults(wait_timeout);
   ASSERT_EQ(ack, ACK_SUCCESS);
 
@@ -151,15 +141,12 @@ void DJI_APITest::activateDroneStandard() {
 * Authentication method with params
 */
 unsigned short DJI_APITest::activateDroneStandard(int l_app_id,
-                                                  std::string l_enc_key,
-                                                  Version version) {
+                                                  std::string l_enc_key) {
   ActivateData testActivateData;
   char app_key[65];
   testActivateData.encKey = app_key;
   strcpy(testActivateData.encKey, l_enc_key.c_str());
   testActivateData.ID = l_app_id;
-
-  api->setVersion(version);
 
   return api->activate(&testActivateData, wait_timeout);
 }
@@ -167,7 +154,7 @@ unsigned short DJI_APITest::activateDroneStandard(int l_app_id,
 void DJI_APITest::std_sleep() { sleep(30); }
 
 TEST_F(DJI_APITest, activate) {
-  ack = activateDroneStandard(app_id, enc_key, targetVersion);
+  ack = activateDroneStandard(app_id, enc_key);
   ASSERT_EQ(ack, ACK_ACTIVE_SUCCESS);
 }
 
@@ -175,22 +162,19 @@ TEST_F(DJI_APITest, getDroneVersion) {
   versionData = api->getDroneVersion(wait_timeout);
   ASSERT_EQ(versionData.version_ack, 0);
 
-  if(api->getSDKVersion() == versionM100_31){
+  if(api->getFwVersion() == versionM100_31){
     EXPECT_STREQ(versionData.version_name, M100_31.VERSION_NAME);
-  }else if(api->getSDKVersion() == versionA3_31) {
+  }else if(api->getFwVersion() == versionA3_31) {
     EXPECT_STREQ(versionData.version_name, A3_31.VERSION_NAME);
-  }else if(api->getSDKVersion() == versionA3_32) {
+  }else if(api->getFwVersion() == versionA3_32) {
     EXPECT_STREQ(versionData.version_name, A3_32.VERSION_NAME);
   }
 
   API_LOG(api->serialDevice, STATUS_LOG, "version ack = %d\n", versionData.version_ack);
-
-  if(api->getSDKVersion() != versionA3_32){
-   API_LOG(api->serialDevice, STATUS_LOG, "version crc = 0x%X\n", versionData.version_crc);
-   if ( api->getSDKVersion() != versionM100_23)
-     API_LOG(api->serialDevice, STATUS_LOG, "version ID = %.11s\n", versionData.version_ID);
-  }
-
+  if ( api->getFwVersion() < MAKE_VERSION(3,2,0,0))
+  API_LOG(api->serialDevice, STATUS_LOG, "version crc = 0x%X\n", versionData.version_crc);
+  if ( api->getFwVersion() > MAKE_VERSION(2,3,10,0))
+    API_LOG(api->serialDevice, STATUS_LOG, "version ID = %.16s\n", versionData.hw_serial_num);
   API_LOG(api->serialDevice, STATUS_LOG, "version name = %.32s\n", versionData.version_name);
 }
 

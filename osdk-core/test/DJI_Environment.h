@@ -13,7 +13,6 @@ class DJI_Environment : public testing::Environment {
   virtual void SetUp();
   virtual void TearDown();
   std::string findFile(std::string file);
-  const std::string &getVersion() const;
   int getApp_id() const;
   const std::string &getEnc_key() const;
   const std::string &getSim_ip() const;
@@ -27,7 +26,6 @@ class DJI_Environment : public testing::Environment {
  private:
   void read_config_file();
   std::string config_file_path;
-  std::string version;
   int app_id;
   std::string enc_key;
   std::string sim_ip;

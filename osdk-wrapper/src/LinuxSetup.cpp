@@ -48,6 +48,9 @@ int setup(LinuxSerialDevice* serialDevice, CoreAPI* api, LinuxThread* read, std:
     return(-1);
   }
 
+  //! Start read thread
+  read->createThread();
+
   //! Validate the serial connection
   #ifdef __x86_64__
     serialStatus = validateSerialDevice(serialDevice, api); 
@@ -57,10 +60,8 @@ int setup(LinuxSerialDevice* serialDevice, CoreAPI* api, LinuxThread* read, std:
     } 
   #endif
 
-  //! Start read thread
-  read->createThread();
-
-  VersionData vData = api->getDroneVersion(1);
+  api->getDroneVersion(1);
+  usleep(5000);
 
   //! Attempt Activation
   ackReturnData activationStatus = activate(api);
@@ -75,7 +76,6 @@ int setup(LinuxSerialDevice* serialDevice, CoreAPI* api, LinuxThread* read, std:
   {
     return controlStatus.status;
   }
-  api->getDroneVersion();
   //! Setup completed sucessfully.
   return 1;
 }
@@ -90,7 +90,7 @@ bool validateSerialDevice(LinuxSerialDevice* serialDevice, CoreAPI* api)
 
   freq[0] = BROADCAST_FREQ_100HZ;
   freq[1] = BROADCAST_FREQ_0HZ;
-  freq[2] = BROADCAST_FREQ_0HZ;
+  freq[2] = BROADCAST_FREQ_100HZ;
   freq[3] = BROADCAST_FREQ_0HZ;
   freq[4] = BROADCAST_FREQ_0HZ;
   freq[5] = BROADCAST_FREQ_0HZ;
@@ -99,13 +99,20 @@ bool validateSerialDevice(LinuxSerialDevice* serialDevice, CoreAPI* api)
   freq[8] = BROADCAST_FREQ_0HZ;
   freq[9] = BROADCAST_FREQ_0HZ;
   freq[10] = BROADCAST_FREQ_0HZ;
-  freq[11] = BROADCAST_FREQ_0HZ; 
+  freq[11] = BROADCAST_FREQ_0HZ;
+  freq[12] = BROADCAST_FREQ_0HZ;
+  freq[13] = BROADCAST_FREQ_0HZ;
+  freq[14] = BROADCAST_FREQ_0HZ;
+  freq[15] = BROADCAST_FREQ_0HZ;
 
   api->setBroadcastFreq(freq);
 
   //! Check the serial channel for data
   uint8_t buf[BUFFER_SIZE];
-  serialDevice->setSerialPureTimedRead();
+  if (!serialDevice->setSerialPureTimedRead()) {
+    API_LOG(serialDevice, ERROR_LOG, "Failed to set up port for timed read\n");
+  };
+  usleep(100000);
   if(serialDevice->serialRead(buf, BUFFER_SIZE))
   {
     API_LOG(serialDevice, STATUS_LOG, "Succeeded to read from serial device\n");
@@ -122,7 +129,7 @@ bool validateSerialDevice(LinuxSerialDevice* serialDevice, CoreAPI* api)
     return (false);
   }
 
-  //If we reach here, _serialRead succeeded. 
+  //If we reach here, _serialRead succeeded.
   int baudCheckStatus = serialDevice->checkBaudRate(buf);
   if (baudCheckStatus == -1)
   {
@@ -145,38 +152,10 @@ int parseUserConfig(string userConfigPath)
 {
   readUserConfig(userConfigPath);
 
-  std::string droneVerStr, SdkVerStr; 
-  switch (UserConfig::targetVersion){
-    case DJI::onboardSDK::versionA3_31:
-      droneVerStr = "A3";
-      SdkVerStr = "3.1";
-      break;
-    case DJI::onboardSDK::versionA3_32:
-      droneVerStr = "A3";
-      SdkVerStr = "3.2";
-      break;
-    case DJI::onboardSDK::versionM100_31:
-      droneVerStr = "M100";
-      SdkVerStr = "3.1";
-      break;
-    case DJI::onboardSDK::versionM100_23:
-      droneVerStr = "M100";
-      SdkVerStr = "2.3";
-      break;
-    default:
-      std::cout << "Invalid Drone version. Please check your UserConfig file.\n";
-      std::cout << "Invalid SDK version. Please check your UserConfig file.\n";
-      return -1;
-      break;
-  }
-
-  //Make blocking call to getDroneVersion to see if this setting is correct.
-  //We will figure out in the serial config if the baud/port is correct. 
+  //! We will figure out in the serial config if the baud/port is correct.
   std::cout << "These are your User_Config settings.\n"
       "Serial port = " << UserConfig::deviceName << "\n"
       "Baudrate = "<< UserConfig::baudRate << "\n"
-      "Drone/FC Version: " << droneVerStr << "\n"
-      "SDK Version: " << SdkVerStr << "\n"
       "App ID: " << UserConfig::userAppID << "\n"
       "App Key: " << UserConfig::userKey << "\n"
       "\nDoes everything look correct? If not, navigate to Linux/UserConfig.txt and make changes.\n\n";
@@ -196,14 +175,6 @@ ackReturnData activate(CoreAPI* api)
   strcpy(userKeyCstr,UserConfig::userKey.c_str());
   activationData.ID = UserConfig::userAppID;
   activationData.encKey = userKeyCstr; 
-
-  //! Tell the SDK our hardware and software versions
-  api->setVersion(UserConfig::targetVersion);
-
-
-  //! Set all broadcast data to zero since we are currently interested only in the activation ACK
-  //api->setBroadcastFreqToZero();
-  //usleep(5000);
 
   //! Init variable for return value of blocking activation
   ackReturnData activateAck;
@@ -242,7 +213,7 @@ ackReturnData activate(CoreAPI* api)
       usleep(1000000);
       break;
     case ACK_ACTIVE_SERVER_REFUSED:
-      std::cout << "Your activation did not go through. \nThe server refused your credentials. \nPlease check your DJI developer account details in User_Config.h. \n Rebuild (do a `make clean` first) and try again." << std::endl;
+      std::cout << "Your activation did not go through. \nThe server refused your credentials. \nPlease check your DJI developer account details in UserConfig.txt \n Rebuild (do a `make clean` first) and try again." << std::endl;
       usleep(1000000);
       break;
     case ACK_ACTIVE_ACCESS_LEVEL_ERROR:
@@ -250,11 +221,11 @@ ackReturnData activate(CoreAPI* api)
       usleep(1000000);
       break;
     case ACK_ACTIVE_VERSION_ERROR:
-      std::cout << "Your activation did not go through. \nYour SDK version in User_Config.h does not match the one reported by the drone. \nPlease correct that, rebuild (do a `make clean` first) and try again." << std::endl;
+      std::cout << "Your activation did not go through. \nYour drone did not report its version correctly." << std::endl;
       usleep(1000000);
       break;
     default:
-      std::cout << "There was an error with the activation command. This can happen due to a variety of reasons. \n (1)Make sure the baud rate settings in DJI Assistant 2 match those in User_config.h. \n (2) Make sure API control is enabled in DJI Assitant 2. \n If the error persists, raise an issue on Github specifying your onboard platform and a snapshot of DJI Assistant 2 as well as User_Config.h." << std::endl;
+      std::cout << "There was an error with the activation command. This can happen due to a variety of reasons. \n (1)Make sure the baud rate settings in DJI Assistant 2 match those in UserConfig.txt \n (2) Make sure API control is enabled in DJI Assitant 2. \n If the error persists, raise an issue on Github specifying your onboard platform and a snapshot of DJI Assistant 2 as well as UserConfig.txt." << std::endl;
       usleep(1000000);
       break;
   }
@@ -278,7 +249,7 @@ ackReturnData takeControl(CoreAPI* api)
       takeControlData.status = -1;
       return takeControlData;
     case  ACK_SETCONTROL_NEED_MODE_P:
-      std::cout << "Failed to obtain control.\nFor A3 v3.2, your RC needs to be in P mode. (Is the RC connected and paired?)" << std::endl;
+      std::cout << "Failed to obtain control.\nFor newer firmware, your RC needs to be in P mode. (Is the RC connected and paired?)" << std::endl;
       takeControlData.status = -1;
       return takeControlData;
     case ACK_SETCONTROL_OBTAIN_SUCCESS:
@@ -342,9 +313,7 @@ int setupNonBlocking(LinuxSerialDevice* serialDevice, CoreAPI* api, LinuxThread*
   read->createThread();
   callback->createThread();
 
-  activateNonBlocking(api);
-  //! We are successfully activated. Try to take control.
-  takeControlNonBlocking(api);
+
   //! Setup completed sucessfully.
   return 1;
 }
@@ -387,11 +356,11 @@ void activateCallback(CoreAPI* api, Header *protHeader, DJI::UserData data) {
           usleep(1000000);
           break;
     case ACK_ACTIVE_VERSION_ERROR:
-      std::cout << "Your activation did not go through. \nYour SDK version in User_Config.h does not match the one reported by the drone. \nPlease correct that, rebuild (do a `make clean` first) and try again." << std::endl;
+      std::cout << "Your activation did not go through because your firmware version could not be determined. If you are using A3/N3 FW 1.5.0.0 or 1.6.0.0, please upgrade." << std::endl;
           usleep(1000000);
           break;
     default:
-      std::cout << "There was an error with the activation command. This can happen due to a variety of reasons. \n (1)Make sure the baud rate settings in DJI Assistant 2 match those in User_config.h. \n (2) Make sure API control is enabled in DJI Assitant 2. \n If the error persists, raise an issue on Github specifying your onboard platform and a snapshot of DJI Assistant 2 as well as User_Config.h." << std::endl;
+      std::cout << "There was an error with the activation command. This can happen due to a variety of reasons. \n (1)Make sure the baud rate settings in DJI Assistant 2 match those in UserConfig.txt. \n (2) Make sure API control is enabled in DJI Assitant 2. \n If the error persists, raise an issue on Github specifying your onboard platform and a snapshot of DJI Assistant 2 as well as terminal output." << std::endl;
           usleep(1000000);
           break;
   }
@@ -409,8 +378,7 @@ void activateNonBlocking(CoreAPI* api)
   activationData.ID = UserConfig::userAppID;
   activationData.encKey = userKeyCstr;
 
-  //! Tell the SDK our hardware and software versions
-  api->setVersion(UserConfig::targetVersion);
+
 
   void (*pointerActivationCallback)(CoreAPI*, Header*, DJI::UserData);
   pointerActivationCallback = activateCallback;
@@ -426,7 +394,7 @@ void takeControlCallback(CoreAPI* api, Header *protHeader, DJI::UserData data) {
   switch (simpAck)
   {
     case ACK_SETCONTROL_ERROR_MODE:
-      if(api->getSDKVersion() != versionA3_32)
+      if(api->getFwVersion() < MAKE_VERSION(3,2,0,0))
         std::cout << "Failed to obtain control.\nYour RC mode switch is not in mode F. (Is the RC connected and paired?)" << std::endl;
       else
         std::cout << "Failed to obtain control.\nYour RC mode switch is not in mode P. (Is the RC connected and paired?)" << std::endl;

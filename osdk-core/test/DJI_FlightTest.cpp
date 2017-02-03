@@ -41,19 +41,28 @@ int DJI_FlightTest::processTask() {
   FlightStatus RESULT_STATUS;
   Timer timer;
   double elapsed;
-
-  RESULT_STATUS = (task == Flight::TASK_TAKEOFF) ?
-      Flight::STATUS_SKY_STANDBY : Flight::STATUS_GROUND_STANDBY;
-
-  // Wait for 15 seconds to task to process
+  if (api->getFwVersion() < MAKE_VERSION(3,2,0,0)) {
+    RESULT_STATUS = (task == Flight::TASK_TAKEOFF) ?
+                    Flight::STATUS_SKY_STANDBY : Flight::STATUS_GROUND_STANDBY;
+  } else {
+    RESULT_STATUS = (task == Flight::TASK_TAKEOFF) ?
+                    Flight::STATUS_TAKE_OFF : Flight::STATUS_MOTOR_OFF;
+  }
+  // Wait for 25/75 seconds to task to process
   timer.start();
   do{
     sleep(1);
-    elapsed = elapsed + timer.elapsed().count();
-    if((elapsed >= TASK_TIMEOUT) && (task == Flight::TASK_TAKEOFF))
-      return -1;
+    elapsed = timer.elapsed().count();
+    if (api->getFwVersion() < MAKE_VERSION(3,2,0,0)) {
+      if ((elapsed >= TASK_TIMEOUT))
+        return -1;
+    } else {
+      if ((elapsed >= TASK_TIMEOUT_32))
+        return -1;
+    }
 
     status = flight->getStatus();
+
   }while(status != RESULT_STATUS);
 
   return 0;
@@ -97,7 +106,7 @@ void DJI_FlightTest::takeOffWithRetry(){
 }
 
 float32_t DJI_FlightTest::getHeight() {
-  if(DJI_APITest::targetVersion != versionM100_31)
+  if(api->getFwVersion() > MAKE_VERSION(3,1,10,0)) //! i.e. A3 FW's
     return DJI_APITest::api->getBroadcastData().pos.height;
   else
     return DJI_APITest::api->getBroadcastData().pos.altitude;

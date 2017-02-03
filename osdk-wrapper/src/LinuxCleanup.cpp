@@ -79,7 +79,7 @@ ackReturnData releaseControl(CoreAPI* api)
       return controlAck;
       break;
     case ACK_SETCONTROL_NEED_MODE_P:
-      std::cout << "Failed to release control.\nFor A3 v3.2, your RC needs to be in P mode. (Is the RC connected and paired?)" << std::endl;
+      std::cout << "Failed to release control.\nFor newer firmware, your RC needs to be in P mode. (Is the RC connected and paired?)" << std::endl;
       controlAck.status = -1;
       return controlAck;
       break;
@@ -110,7 +110,7 @@ void releaseControlCallback(CoreAPI* api, Header *protHeader, DJI::UserData data
   switch (simpAck)
   {
     case ACK_SETCONTROL_ERROR_MODE:
-      if(api->getSDKVersion() != versionA3_32)
+      if(api->getFwVersion() < MAKE_VERSION(3,2,0,0))
         std::cout << "Failed to release control.\nYour RC mode switch is not in mode F. (Is the RC still connected and paired?)" << std::endl;
       else
         std::cout << "Failed to release control.\nYour RC mode switch is not in mode P. (Is the RC still connected and paired?)" << std::endl;
