@@ -321,6 +321,12 @@ bool CoreAPI::parseDroneVersionInfo(unsigned char *ackPtrIncoming) {
     ver3 = 10*ver3;
     this->versionData.fwVersion = MAKE_VERSION(ver1, ver2, ver3, ver4);
   }
+  //! M600/A3 FW 3.2.10
+  if (versionData.fwVersion == MAKE_VERSION(3,2,10,0)) {
+    //! Bug in M600 does not report the right FW.
+    ver3 = 10*ver3;
+    this->versionData.fwVersion = MAKE_VERSION(ver1, ver2, ver3, ver4);
+  }
 
   //! Now, we can parse the CRC and ID based on FW version. If it's older than 3.2 then it'll have a CRC, else not.
   if (this->versionData.fwVersion < MAKE_VERSION(3,2,0,0)) {
