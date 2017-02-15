@@ -173,6 +173,7 @@ void USART2_IRQHandler(void)
     {
       if (oneByte == 0xFA)
       {
+        TIM_Cmd(TIM2, DISABLE);
         myTerminal.cmdIn[myTerminal.rxIndex] = oneByte;
         myTerminal.rxIndex = 1;
       }
@@ -187,6 +188,7 @@ void USART2_IRQHandler(void)
         myTerminal.rxLength = myTerminal.rxIndex + 1;
         myTerminal.rxIndex = 0;
         myTerminal.cmdReadyFlag = 1;
+        TIM_Cmd(TIM2, ENABLE);
       }
       else
       {
