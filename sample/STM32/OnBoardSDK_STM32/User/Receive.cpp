@@ -188,7 +188,7 @@ void USART2_IRQHandler(void)
         myTerminal.rxLength = myTerminal.rxIndex + 1;
         myTerminal.rxIndex = 0;
         myTerminal.cmdReadyFlag = 1;
-        TIM_Cmd(TIM2, ENABLE);
+       
       }
       else
       {
