@@ -1,4 +1,7 @@
-if(USE_PRECISION_MISSIONS)
+# Check if custom binaries were given
+find_package(PrecisionMissions QUIET)
+
+if(NOT PrecisionMissions_FOUND AND USE_PRECISION_MISSIONS)
   add_definitions(-DUSE_PRECISION_MISSIONS)
   include(${CMAKE_MODULE_PATH}/External_PrecisionMissions.cmake)
 endif()

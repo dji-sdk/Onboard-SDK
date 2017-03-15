@@ -19,11 +19,9 @@ if (LIDAR_LOGGING)
 endif ()
 
 if (USE_PRECISION_MISSIONS)
-  include_directories("${precision_missions_source_dir}/inc")
-
-  # Local Mission Planning libraries
-  include_directories("${precision_missions_source_dir}/dependencies")
-  include_directories("${precision_missions_source_dir}/dependencies/csv")
+  include_directories("${PRECISION_MISSIONS_INCLUDE_DIR}")
+  include_directories("${PRECISION_MISSIONS_DEPENDENCIES_DIR}")
+  include_directories("${PRECISION_MISSIONS_DEPENDENCIES_DIR}/csv")
 endif()
 
 FILE(GLOB SOURCE_FILES inc/*.h src/*.cpp)

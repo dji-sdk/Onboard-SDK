@@ -23,6 +23,5 @@ ExternalProject_Get_Property(PrecisionMissions source_dir)
 
 # Make sure src/bin directory names do not collide
 # with other external projects
-set(precision_missions_source_dir ${source_dir}/precision-missions-${VERSION})
-include_directories("${precision_missions_source_dir}/inc")
+set(precision_missions_source_dir ${source_dir}/precision-missions-${VERSION} CACHE PATH "")
 

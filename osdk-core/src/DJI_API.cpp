@@ -75,6 +75,9 @@ void CoreAPI::init(HardDriver *sDevice, CallBackHandler userRecvCallback, bool u
   versionData.fwVersion = 0; //! Default init value
   ack_activation = 0xFF;
 
+  //! This handles hotfix for Movement Control issue with Z position Control
+  homepointAltitude = 999999;
+
 
   //! @todo simplify code above
   serialDevice->lockMSG();

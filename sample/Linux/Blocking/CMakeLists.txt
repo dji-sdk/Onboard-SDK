@@ -18,24 +18,22 @@ if (LIDAR_LOGGING)
   include_directories(../../../sensor-integration/velodyne_vlp16puck_lite_API_example/vlp16lidar-driver/inc)
 endif ()
 
-if (USE_PRECISION_MISSIONS)
-  include_directories("${precision_missions_source_dir}/inc")
-
-  # Local Mission Planning libraries
-  include_directories("${precision_missions_source_dir}/dependencies")
-  include_directories("${precision_missions_source_dir}/dependencies/csv")
-endif()
-
 FILE(GLOB SOURCE_FILES inc/*.h src/*.cpp)
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
 add_dependencies(${PROJECT_NAME} djiosdk-wrapper)
 
+if(USE_PRECISION_MISSIONS)
+  include_directories("${PRECISION_MISSIONS_INCLUDE_DIR}")
+  include_directories("${PRECISION_MISSIONS_DEPENDENCIES_DIR}")
+  include_directories("${PRECISION_MISSIONS_DEPENDENCIES_DIR}/csv")
+endif()
+
 set(BLOCKING_LINK_LIBRARIES djiosdk-core djiosdk-platform djiosdk-wrapper)
 
 if(LIDAR_LOGGING)
   set(BLOCKING_LINK_LIBRARIES ${BLOCKING_LINK_LIBRARIES} vlp16lidar-driver)
-  #target_link_libraries(${PROJECT_NAME} vlp16lidar-driver djiosdk-core djiosdk-platform djiosdk-wrapper ${MISSIONPLAN})
+  #target_link_libraries(${PROJECT_NAME} vlp16lidar-driver djiosdk-core djiosdk-platform djiosdk-wrapper ${PRECISION_MISSIONS_LIBRARY})
 endif()
 
 target_link_libraries(${PROJECT_NAME} ${BLOCKING_LINK_LIBRARIES})

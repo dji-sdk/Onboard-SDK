@@ -11,6 +11,7 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <DJI_Flight.h>
 #include "DJI_App.h"
 #include "DJI_API.h"
 
@@ -75,6 +76,8 @@ void DJI::onboardSDK::CoreAPI::broadcast(Header *protocolHeader)
   enableFlag = (unsigned short *)pdata;
   broadcastData.dataFlag = *enableFlag;
   size_t len = MSG_ENABLE_FLAG_LEN;
+  static int currentState = 0;
+  static int prevState = 0;
 
   //! @warning Change to const (+change interface for passData) in next release
   uint16_t DATA_FLAG = 0x0001;
@@ -121,13 +124,40 @@ void DJI::onboardSDK::CoreAPI::broadcast(Header *protocolHeader)
   passData(*enableFlag, DATA_FLAG, &broadcastData.ctrlInfo, pdata,
       sizeof(CtrlInfoData) - ((versionData.fwVersion < MAKE_VERSION(3,1,0,0)) ? 1 : 0), len);
   serialDevice->freeMSG();
-
   /**
    * Set broadcast frame status
    * @todo Implement proper notification mechanism
    */
   setBroadcastFrameStatus(true);
+  static int counter=0;
 
+  //! State Machine for MSL Altitude bug in A3 and M600
+  //! Handles the case if users start OSDK after arming aircraft (STATUS_ON_GROUND)/after takeoff (STATUS_IN_AIR)
+  //! Transition from STATUS_MOTOR_STOPPED to STATUS_ON_GROUND can be seen with Takeoff command with 1hz flight status data
+  //! Transition from STATUS_ON_GROUND to STATUS_MOTOR_STOPPED can be seen with Landing command only for frequencies >= 50Hz
+  if (strcmp(getHwVersion(), "M100") != 0)
+  {//! Only runs if Flight status is available
+  if((*enableFlag) & (1<<11)) {
+    if (getBroadcastData().pos.health > 3) {
+      if (getFlightStatus() != currentState) {
+        prevState = currentState;
+        currentState = getFlightStatus();
+        if (prevState == Flight::STATUS_MOTOR_OFF && currentState == Flight::STATUS_GROUND_STANDBY) {
+          homepointAltitude = getBroadcastData().pos.altitude;
+        }
+        if (prevState == Flight::STATUS_TAKE_OFF && currentState == Flight::STATUS_GROUND_STANDBY) {
+          homepointAltitude = getBroadcastData().pos.altitude;
+        }
+        //! This case would exist if the user starts OSDK after take off.
+        else if (prevState == Flight::STATUS_MOTOR_OFF && currentState == Flight::STATUS_TAKE_OFF) {
+          homepointAltitude = 999999;
+        }
+      }
+    } else {
+      homepointAltitude = 999999;
+    }
+   }
+  }
   if (broadcastCallback.callback)
     broadcastCallback.callback(this, protocolHeader, broadcastCallback.userData);
 }

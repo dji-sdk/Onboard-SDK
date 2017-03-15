@@ -21,18 +21,26 @@ FILE(GLOB SOURCE_FILES inc/*.h src/*.cpp)
 add_library(${PROJECT_NAME} ${SOURCE_FILES})
 
 if (USE_PRECISION_MISSIONS AND (${DISTRO_VERSION} STREQUAL "1604"))
+  # Precision-Missions library requiers RapidJSON
   add_dependencies(${PROJECT_NAME} rapidjson)
   include_directories("${rapidjson_source_dir}/include")
 
-  add_dependencies(${PROJECT_NAME} PrecisionMissions)
-  include_directories("${precision_missions_source_dir}/inc")
+  # If you are not using cutom binaries, CMake will download
+  # pre-duilt binaries and place them in the CMake build directory
+  if(NOT EXISTS ${PRECISION_MISSIONS_INCLUDE_DIR})
+    add_dependencies(${PROJECT_NAME} PrecisionMissions)
+    set(PRECISION_MISSIONS_INCLUDE_DIR "${precision_missions_source_dir}/inc" CACHE INTERNAL "" FORCE)
+    set(PRECISION_MISSIONS_DEPENDENCIES_DIR "${precision_missions_source_dir}/dependencies" CACHE INTERNAL "" FORCE)
+ endif()
 
-  # Local Mission Planning libraries
-  include_directories("${precision_missions_source_dir}/dependencies")
-  include_directories("${precision_missions_source_dir}/dependencies/csv")
+  if(NOT EXISTS ${PRECISION_MISSIONS_LIBRARY})
+     set(PRECISION_MISSIONS_LIBRARY
+     "${precision_missions_source_dir}/lib/${TARGET_ARCH}/${DISTRO_VERSION}/libmissionplan.a")
+  endif()
 
-  set(MISSIONPLAN_LIBRARY 
-   "${precision_missions_source_dir}/lib/${TARGET_ARCH}/${DISTRO_VERSION}/libmissionplan.a")
+  include_directories("${PRECISION_MISSIONS_INCLUDE_DIR}")
+  include_directories("${PRECISION_MISSIONS_DEPENDENCIES_DIR}")
+  include_directories("${PRECISION_MISSIONS_DEPENDENCIES_DIR}/csv")
 endif()
 
 if (USE_COLLISION_AVOIDANCE)
@@ -43,16 +51,15 @@ if (USE_POINTCLOUD2LAS)
   add_dependencies(${PROJECT_NAME} dji-ros-pointcloud2las)
 endif()
 
-
 set (WRAPPER_LINK_LIBRARIES djiosdk-core djiosdk-platform)
 
 if (LIDAR_LOGGING)
   set(WRAPPER_LINK_LIBRARIES ${WRAPPER_LINK_LIBRARIES} vlp16lidar-driver)
-  #target_link_libraries(${PROJECT_NAME}  djiosdk-core vlp16lidar-driver djiosdk-platform ${MISSIONPLAN})
+  #target_link_libraries(${PROJECT_NAME}  djiosdk-core vlp16lidar-driver djiosdk-platform ${PRECISION_MISSIONS_LIBRARY})
 endif()
 
 if (USE_PRECISION_MISSIONS)
-  set(WRAPPER_LINK_LIBRARIES ${WRAPPER_LINK_LIBRARIES} ${MISSIONPLAN_LIBRARY})
+  set(WRAPPER_LINK_LIBRARIES ${WRAPPER_LINK_LIBRARIES} ${PRECISION_MISSIONS_LIBRARY})
 endif ()
 
 target_link_libraries(${PROJECT_NAME}  ${WRAPPER_LINK_LIBRARIES})

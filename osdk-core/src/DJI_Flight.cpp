@@ -38,7 +38,6 @@ void Flight::task(TASK taskname, CallBack TaskCallback, UserData userData)
 {
   taskData.cmdData = taskname;
   taskData.cmdSequence++;
-
   api->send(2, encrypt, SET_CONTROL, CODE_TASK, (unsigned char *)&taskData, sizeof(taskData),
       100, 3, TaskCallback ? TaskCallback : Flight::taskCallback, userData);
 }
@@ -48,14 +47,12 @@ unsigned short Flight::task(TASK taskname, int timeout)
   taskData.cmdData = taskname;
   taskData.cmdSequence++;
 
-  api->send(2, encrypt, SET_CONTROL, CODE_TASK, (unsigned char *)&taskData, sizeof(taskData),
-      100, 3, 0, 0);
-
-  api->serialDevice->lockACK();
-  api->serialDevice->wait(timeout);
-  api->serialDevice->freeACK();
-
-  return api->missionACKUnion.simpleACK;
+    api->send(2, encrypt, SET_CONTROL, CODE_TASK, (unsigned char *) &taskData, sizeof(taskData),
+              100, 3, 0, 0);
+    api->serialDevice->lockACK();
+    api->serialDevice->wait(timeout);
+    api->serialDevice->freeACK();
+    return api->missionACKUnion.simpleACK;
 }
 
 void Flight::setArm(bool enable, CallBack ArmCallback, UserData userData)
@@ -96,9 +93,36 @@ void Flight::setMovementControl(uint8_t flag, float32_t x, float32_t y, float32_
   data.flag = flag;
   data.x = x;
   data.y = y;
-  data.z = z;
   data.yaw = yaw;
-  api->send(0, encrypt, SET_CONTROL, CODE_CONTROL, &data, sizeof(FlightData));
+  if(api->getFwVersion() > MAKE_VERSION(3,2,0,0) && api->getFwVersion() < MAKE_VERSION(3,2,15,39)) {
+    if (flag & (1 << 4)) {
+      if (api->getBroadcastData().pos.health > 3) {
+        if(api->homepointAltitude!= 999999) {
+          data.z = z + api->homepointAltitude;
+          api->send(0, encrypt, SET_CONTROL, CODE_CONTROL, &data, sizeof(FlightData));
+        }
+      } else {
+        API_LOG(api->getDriver(), STATUS_LOG, "Not enough GPS locks, cannot run Movement Control \n");
+      }
+    }
+  }
+  else if(api->getFwVersion() == MAKE_VERSION(3,2,100,0)) {
+    if (flag & (1 << 4)) {
+      if (api->getBroadcastData().pos.health > 3) {
+        if(api->homepointAltitude!= 999999) {
+          data.z = z + api->homepointAltitude;
+          api->send(0, encrypt, SET_CONTROL, CODE_CONTROL, &data, sizeof(FlightData));
+        }
+      } else {
+        API_LOG(api->getDriver(), STATUS_LOG, "Not enough GPS locks, cannot run Movement Control \n");
+      }
+    }
+  }
+  else
+  {
+    data.z = z;
+    api->send(0, encrypt, SET_CONTROL, CODE_CONTROL, &data, sizeof(FlightData));
+  }
 }
 
 
@@ -213,7 +237,7 @@ void Flight::armCallback(CoreAPI *api, Header *protocolHeader, UserData userData
   }
 }
 
-void Flight::taskCallback(CoreAPI *api, Header *protocolHeader, UserData userData __UNUSED)
+void Flight::taskCallback(CoreAPI *api, Header *protocolHeader, UserData userData)
 {
   unsigned short ack_data;
   if (protocolHeader->length - EXC_DATA_SIZE <= 2)

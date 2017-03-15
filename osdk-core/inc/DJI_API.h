@@ -634,7 +634,7 @@ class CoreAPI
   void setGlobalNavTestMobileCMD(bool userInput) {globalNavTestMobileCMD = userInput;}
   void setVRCTestMobileCMD(bool userInput) {VRCTestMobileCMD = userInput;}
 
-
+  float32_t homepointAltitude;
 
   private:
   BroadcastData broadcastData;

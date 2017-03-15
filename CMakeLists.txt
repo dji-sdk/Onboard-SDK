@@ -4,7 +4,9 @@ project(onboardsdk)
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 
 # Add module path for <name>.cmake conf files
-set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/contrib/)
+if(NOT CMAKE_MODULE_PATH)
+  set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/contrib/)
+endif()
 
 include(${CMAKE_MODULE_PATH}/DJIConfig.cmake)
 
@@ -17,8 +19,15 @@ option(GTEST "Build with Google Test framework" OFF)
 # Allow to build additional modules
 option(LIDAR_LOGGING "Build VLP16 Puck LiDAR logging" OFF)
 
-# Use External DJI Modules
+#### Use External DJI Modules ####
+
 option(USE_PRECISION_MISSIONS "Use DJI precision-missions library" OFF)
+# If you are using custom precision-missions library
+option(PRECISION_MISSIONS_LIBRARY "WARNING: for custom precision-missions Library only, point to a library location" PATH)
+option(PRECISION_MISSIONS_INCLUDE_DIR "WARNING: for custom precision-missions library only, point to headers location" PATH)
+# Dependencies include Eigen and csv
+option(PRECISION_MISSIONS_DEPENDENCIES_DIR "WARNING: for custom precision-missions library only, point to dependencies location" PATH)
+
 option(USE_COLLISION_AVOIDANCE "Use DJI collision avoidance library" OFF)
 option(USE_POINTCLOUD2LAS "Use DJI pointcloud to LAS converter library" OFF)
 
