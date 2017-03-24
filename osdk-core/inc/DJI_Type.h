@@ -425,7 +425,8 @@ typedef struct VelocityData
 
 typedef struct PositionData
 {
-  float64_t latitude;
+  //@note latitude and longitude are expressed in radians
+  float64_t latitude; 
   float64_t longitude;
   //! @warning the 'altitude' field will be renamed in a future release.
   //! @note the altitude value can be configured to output GPS-only data
