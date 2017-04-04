@@ -9,6 +9,7 @@
  * */
 
 #include <LinuxCamera.h>
+#include <cmath>
 
 void gimbalAngleControlSample(Camera *camera, int timeout) {
 
@@ -170,9 +171,9 @@ void waitForGimbal(Camera *camera) {
       rAngle.yaw = camera->getGimbal().yaw;
       sleep(1);
   }
-  while(fabs(camera->getGimbal().roll - rAngle.roll) >= 0.099 ||
-      fabs(camera->getGimbal().pitch - rAngle.pitch) >= 0.099 ||
-      fabs(camera->getGimbal().yaw - rAngle.yaw) >= 0.099);
+  while(std::fabs(camera->getGimbal().roll - rAngle.roll) >= 0.099 ||
+      std::fabs(camera->getGimbal().pitch - rAngle.pitch) >= 0.099 ||
+      std::fabs(camera->getGimbal().yaw - rAngle.yaw) >= 0.099);
 }
 
 void doSetGimbalAngle(Camera *camera, GimbalContainer *gimbal) {
