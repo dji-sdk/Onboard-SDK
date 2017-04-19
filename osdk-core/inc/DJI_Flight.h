@@ -84,10 +84,12 @@ class Flight
   {
     STATUS_MOTOR_OFF = 0,
     STATUS_GROUND_STANDBY = 1,
-    STATUS_TAKE_OFF = 2,
-    STATUS_SKY_STANDBY = 3,
-    STATUS_LANDING = 4,
-    STATUS_FINISHING_LANDING = 5,
+    STATUS_SKY_STANDBY = 2,
+
+    STATUS_TAKE_OFF_M100ONLY = 2,
+    STATUS_SKY_STANDBY_M100ONLY = 3,
+    STATUS_LANDING_M100ONLY = 4,
+    STATUS_FINISHING_LANDING_M100ONLY = 5
   };
 
 
@@ -142,9 +144,9 @@ class Flight
   unsigned short task(TASK taskname, int timer);
   void setArm(bool enable, CallBack ArmCallback = 0, UserData userData = 0);
   unsigned short setArm(bool enable, int timer);
-  void control(uint8_t flag, float32_t x, float32_t y, float32_t z, float32_t yaw); //! @deprecated This function will be deprecated, please use setMovementControl instead. 
+  void control(uint8_t flag, float32_t x, float32_t y, float32_t z, float32_t yaw); //! @deprecated This function will be deprecated, please use setMovementControl instead.
   void setMovementControl(uint8_t flag, float32_t x, float32_t y, float32_t z, float32_t yaw);
-  void setFlight(FlightData *data); //! @deprecated old interface. PLease use setMovementControl instead. 
+  void setFlight(FlightData *data); //! @deprecated old interface. PLease use setMovementControl instead.
 
   QuaternionData getQuaternion() const;
 
@@ -156,7 +158,7 @@ class Flight
   CommonData getAcceleration() const;
   CommonData getYawRate() const;
 
-  //! @warning old interface. Will be replaced by MagData getMagData() in the next release.      
+  //! @warning old interface. Will be replaced by MagData getMagData() in the next release.
   MagnetData getMagnet() const;
 
   Device getControlDevice() const;
@@ -173,7 +175,7 @@ class Flight
 
   public: //! @note mathematical method
 
-  //! @deprecated old interface. Please use toEulerAngle instead.   
+  //! @deprecated old interface. Please use toEulerAngle instead.
   static EulerianAngle toEulerianAngle(QuaternionData data);
   static EulerAngle toEulerAngle(QuaternionData quaternionData);
   static QuaternionData toQuaternion(EulerianAngle eulerAngleData);

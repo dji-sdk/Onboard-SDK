@@ -46,7 +46,7 @@ class DJI_FlightTest : public DJI_APITest {
    * @note
    * Task timeout in milliseconds
    */
-  const double TASK_TIMEOUT = 25000;
+  const double TASK_TIMEOUT = 30000;
   const double TASK_TIMEOUT_32 = 75000; //! For new FW, landing is extremely slow.
   const uint32_t TAKEOFF_MAX_RETRY = 3;
 };

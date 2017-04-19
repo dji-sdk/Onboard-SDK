@@ -4,9 +4,10 @@
  *
  *  @brief
  *  Serial device hardware implementation for Linux machines.
- *  This is a generic Linux serial device implementation along with basic memory lock implementations.
+ *  This is a generic Linux serial device implementation along with basic memory
+ * lock implementations.
  *
- *  Use this in your own Linux-based DJI Onboard SDK implementations.  
+ *  Use this in your own Linux-based DJI Onboard SDK implementations.
  *
  *  @copyright
  *  2016 DJI. All rights reserved.
@@ -15,104 +16,114 @@
 #ifndef LINUXSERIALDEVICE_H
 #define LINUXSERIALDEVICE_H
 
-
-#include <stdio.h>
-#include <string>
-#include <iostream>
-#include <string.h>
-#include <unistd.h>
-#include <sys/ioctl.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <pthread.h>
-#include <fcntl.h>
-#include <termios.h>
-#include <sys/time.h>
-#include <algorithm>
-#include <iterator>
 #include "DJI_HardDriver.h"
+#include <algorithm>
+#include <fcntl.h>
+#include <iostream>
+#include <iterator>
+#include <pthread.h>
+#include <stdio.h>
+#include <string.h>
+#include <string>
+#include <sys/ioctl.h>
+#include <sys/stat.h>
+#include <sys/time.h>
+#include <sys/types.h>
+#include <termios.h>
+#include <unistd.h>
 
-namespace DJI {
+namespace DJI
+{
 
-namespace onboardSDK {
+namespace onboardSDK
+{
 
-class LinuxSerialDevice : public HardDriver {
+class LinuxSerialDevice : public HardDriver
+{
 
-  public:
-    LinuxSerialDevice(std::string device, unsigned int baudrate);
-    ~LinuxSerialDevice();
+public:
+  LinuxSerialDevice(std::string device, unsigned int baudrate);
+  virtual ~LinuxSerialDevice();
 
-    void init();
-    bool getDeviceStatus();
+  void init();
+  bool getDeviceStatus();
 
-    void setBaudrate(unsigned int baudrate);
-    void setDevice(std::string device);
-    
-    //! Public interfaces to private functions. Use these functions to validate your serial connection
-    int checkBaudRate(uint8_t (&buf)[BUFFER_SIZE]) {return _checkBaudRate(buf);}
-    bool setSerialPureTimedRead() {return _serialConfig(m_baudrate,8,'N',1, true);}
-    bool unsetSerialPureTimedRead() {return _serialConfig(m_baudrate,8,'N',1, false);}
-    int serialRead(unsigned char *buf, int len) {return _serialRead(buf,len);}
-    
-    //! Start of DJI_HardDriver virtual function implementations
-    size_t send(const uint8_t *buf, size_t len);
-    size_t readall(uint8_t *buf, size_t maxlen);
+  void setBaudrate(unsigned int baudrate);
+  void setDevice(std::string device);
 
-    void lockMemory();
-    void freeMemory();
-    void lockMSG();
-    void freeMSG();
-    void lockACK();
-    void freeACK();
-    void notify();
-    void lockProtocolHeader();
-    void freeProtocolHeader();
-    void lockNonBlockCBAck();
-    void freeNonBlockCBAck();
-    void notifyNonBlockCBAckRecv();
+  //! Public interfaces to private functions. Use these functions to validate
+  //! your serial connection
+  int checkBaudRate(uint8_t (&buf)[BUFFER_SIZE])
+  {
+    return _checkBaudRate(buf);
+  }
+  bool setSerialPureTimedRead()
+  {
+    return _serialConfig(m_baudrate, 8, 'N', 1, true);
+  }
+  bool unsetSerialPureTimedRead()
+  {
+    return _serialConfig(m_baudrate, 8, 'N', 1, false);
+  }
+  int serialRead(unsigned char* buf, int len)
+  {
+    return _serialRead(buf, len);
+  }
 
-    void wait(int timeoutInSeconds);
-    void nonBlockWait();
+  //! Start of DJI_HardDriver virtual function implementations
+  size_t send(const uint8_t* buf, size_t len);
+  size_t readall(uint8_t* buf, size_t maxlen);
 
-    //! End of HardDriver virtual function implementations
+  void lockMemory();
+  void freeMemory();
+  void lockMSG();
+  void freeMSG();
+  void lockACK();
+  void freeACK();
+  void notify();
+  void lockProtocolHeader();
+  void freeProtocolHeader();
+  void lockNonBlockCBAck();
+  void freeNonBlockCBAck();
+  void notifyNonBlockCBAckRecv();
 
+  void wait(int timeoutInSeconds);
+  void nonBlockWait();
 
-    //! Implemented here because ..
-    DJI::time_ms getTimeStamp();
+  //! End of HardDriver virtual function implementations
 
-  private:
-    std::string m_device;
-    unsigned int m_baudrate;
-    pthread_mutex_t m_memLock;
-    pthread_mutex_t m_msgLock;
-    pthread_mutex_t m_ackLock;
-    pthread_cond_t m_ackRecvCv;
+  //! Implemented here because ..
+  DJI::time_ms getTimeStamp();
 
-    pthread_mutex_t m_headerLock;
-    pthread_mutex_t m_nbAckLock;
-    pthread_cond_t m_nbAckRecv;
+private:
+  std::string     m_device;
+  unsigned int    m_baudrate;
+  pthread_mutex_t m_memLock;
+  pthread_mutex_t m_msgLock;
+  pthread_mutex_t m_ackLock;
+  pthread_cond_t  m_ackRecvCv;
 
-    int m_serial_fd;
-    fd_set m_serial_fd_set;
-    bool deviceStatus;
+  pthread_mutex_t m_headerLock;
+  pthread_mutex_t m_nbAckLock;
+  pthread_cond_t  m_nbAckRecv;
 
-    bool _serialOpen(const char* dev);
-    bool _serialClose();
-    bool _serialFlush();
-    bool _serialConfig(int baudrate, char data_bits, char parity_bits, char stop_bits, bool testForData = false);
+  int    m_serial_fd;
+  fd_set m_serial_fd_set;
+  bool   deviceStatus;
 
-    int _serialStart(const char *dev_name, int baud_rate);
-    int _serialWrite(const unsigned char *buf, int len);
-    int _serialRead(unsigned char *buf, int len);
+  bool _serialOpen(const char* dev);
+  bool _serialClose();
+  bool _serialFlush();
+  bool _serialConfig(int baudrate, char data_bits, char parity_bits,
+                     char stop_bits, bool testForData = false);
 
-    int _checkBaudRate(uint8_t (&buf)[BUFFER_SIZE]);
+  int _serialStart(const char* dev_name, int baud_rate);
+  int _serialWrite(const unsigned char* buf, int len);
+  int _serialRead(unsigned char* buf, int len);
 
-
+  int _checkBaudRate(uint8_t (&buf)[BUFFER_SIZE]);
 };
-
+}
 }
 
-}
-
-
-#endif //LINUXSERIALDEVICE_H
+#endif // LINUXSERIALDEVICE_H

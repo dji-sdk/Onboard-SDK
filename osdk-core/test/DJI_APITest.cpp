@@ -3,21 +3,28 @@
 using namespace DJI;
 using namespace DJI::onboardSDK;
 
-DJI_APITest::DJI_APITest() {}
+DJI_APITest::DJI_APITest()
+{
+}
 
-DJI_APITest::~DJI_APITest() {}
+DJI_APITest::~DJI_APITest()
+{
+}
 
-void DJI_APITest::SetUp() {
-  sDevice = environment->getDevice();
+void
+DJI_APITest::SetUp()
+{
+  sDevice  = environment->getDevice();
   baudrate = environment->getBaudrate();
 
-  app_id = environment->getApp_id();
-  enc_key = environment->getEnc_key();
+  app_id              = environment->getApp_id();
+  enc_key             = environment->getEnc_key();
   sim_control_enabled = environment->isSim_control_enabled();
-  if (sim_control_enabled) {
+  if (sim_control_enabled)
+  {
     sim_path = environment->getSim_path();
     sim_args =
-        " " + environment->getSim_ip() + " " + environment->getSim_hash() + " ";
+      " " + environment->getSim_ip() + " " + environment->getSim_hash() + " ";
     sim_timeout_s = environment->getSim_timeout_s();
   }
 
@@ -43,10 +50,11 @@ void DJI_APITest::SetUp() {
   usleep(100000);
   ack = api->setBroadcastFreqDefaults(wait_timeout);
   ASSERT_EQ(ack, ACK_SUCCESS);
-
 }
 
-void DJI_APITest::TearDown() {
+void
+DJI_APITest::TearDown()
+{
   ack = api->setBroadcastFreqDefaults(wait_timeout);
   ASSERT_EQ(ack, ACK_SUCCESS);
   stop_simulator();
@@ -57,14 +65,18 @@ void DJI_APITest::TearDown() {
   delete serialDevice;
 }
 
-::testing::AssertionResult DJI_APITest::read() {
-  int read_len = 0;
-  int last_read = 0;
+::testing::AssertionResult
+DJI_APITest::read()
+{
+  int     read_len  = 0;
+  int     last_read = 0;
   uint8_t buf[BUFFER_SIZE];
 
-  while (true) {
+  while (true)
+  {
     // End of ACK frame
-    if (api->getACKFrameStatus() == 0) {
+    if (api->getACKFrameStatus() == 0)
+    {
       //! Reset ACK status
       api->setACKFrameStatus(DEFAULT_STATUS);
       return ::testing::AssertionSuccess();
@@ -79,7 +91,8 @@ void DJI_APITest::TearDown() {
         }
     */
     read_len = serialDevice->readall(buf, BUFFER_SIZE);
-    for (int i = 0; i < read_len; i++) {
+    for (int i = 0; i < read_len; i++)
+    {
       // TODO re-evaluate recv buffer handler
       api->byteHandler(buf[i]);
     }
@@ -87,8 +100,11 @@ void DJI_APITest::TearDown() {
   return ::testing::AssertionFailure() << "No response from flight controller";
 }
 
-void DJI_APITest::start_simulator() {
-  if (sim_control_enabled) {
+void
+DJI_APITest::start_simulator()
+{
+  if (sim_control_enabled)
+  {
     std::string cmd = sim_path + sim_args + "start";
     std::cout << cmd << std::endl << std::flush;
     ASSERT_EQ(0, system(cmd.c_str()));
@@ -96,8 +112,11 @@ void DJI_APITest::start_simulator() {
   }
 }
 
-void DJI_APITest::stop_simulator() {
-  if (sim_control_enabled) {
+void
+DJI_APITest::stop_simulator()
+{
+  if (sim_control_enabled)
+  {
     std::string cmd = sim_path + sim_args + "stop";
     std::cout << cmd << std::endl << std::flush;
     ASSERT_EQ(0, system(cmd.c_str()));
@@ -105,7 +124,9 @@ void DJI_APITest::stop_simulator() {
   }
 }
 
-void DJI_APITest::setControlStandard() {
+void
+DJI_APITest::setControlStandard()
+{
   ack = api->setControl(true, wait_timeout);
 
   if (ack == ACK_SETCONTROL_OBTAIN_RUNNING)
@@ -114,10 +135,13 @@ void DJI_APITest::setControlStandard() {
   ASSERT_EQ(ack, ACK_SETCONTROL_OBTAIN_SUCCESS);
 }
 
-void DJI_APITest::releaseControlStandard() {
+void
+DJI_APITest::releaseControlStandard()
+{
   ack = api->setControl(false, wait_timeout);
 
-  if (ack == ACK_SETCONTROL_RELEASE_RUNNING) {
+  if (ack == ACK_SETCONTROL_RELEASE_RUNNING)
+  {
     ack = api->setControl(false, wait_timeout);
   }
 
@@ -127,7 +151,9 @@ void DJI_APITest::releaseControlStandard() {
 /*
  * Authentication standard method
  */
-void DJI_APITest::activateDroneStandard() {
+void
+DJI_APITest::activateDroneStandard()
+{
   char app_key[65];
   user_ack_data.encKey = app_key;
   strcpy(user_ack_data.encKey, enc_key.c_str());
@@ -140,10 +166,11 @@ void DJI_APITest::activateDroneStandard() {
 /*
 * Authentication method with params
 */
-unsigned short DJI_APITest::activateDroneStandard(int l_app_id,
-                                                  std::string l_enc_key) {
+unsigned short
+DJI_APITest::activateDroneStandard(int l_app_id, std::string l_enc_key)
+{
   ActivateData testActivateData;
-  char app_key[65];
+  char         app_key[65];
   testActivateData.encKey = app_key;
   strcpy(testActivateData.encKey, l_enc_key.c_str());
   testActivateData.ID = l_app_id;
@@ -151,31 +178,46 @@ unsigned short DJI_APITest::activateDroneStandard(int l_app_id,
   return api->activate(&testActivateData, wait_timeout);
 }
 
-void DJI_APITest::std_sleep() { sleep(30); }
-
-TEST_F(DJI_APITest, activate) {
-  ack = activateDroneStandard(app_id, enc_key);
-  ASSERT_EQ(ack, ACK_ACTIVE_SUCCESS);
+void
+DJI_APITest::std_sleep()
+{
+  sleep(50);
 }
 
-TEST_F(DJI_APITest, getDroneVersion) {
+TEST_F(DJI_APITest, getDroneVersion)
+{
   versionData = api->getDroneVersion(wait_timeout);
   ASSERT_EQ(versionData.version_ack, 0);
 
-  if(api->getFwVersion() == versionM100_31){
+  if (api->getFwVersion() == versionM100_31)
+  {
     EXPECT_STREQ(versionData.version_name, M100_31.VERSION_NAME);
-  }else if(api->getFwVersion() == versionA3_31) {
+  }
+  else if (api->getFwVersion() == versionA3_31)
+  {
     EXPECT_STREQ(versionData.version_name, A3_31.VERSION_NAME);
-  }else if(api->getFwVersion() == versionA3_32) {
+  }
+  else if (api->getFwVersion() == versionA3_32)
+  {
     EXPECT_STREQ(versionData.version_name, A3_32.VERSION_NAME);
   }
 
-  API_LOG(api->serialDevice, STATUS_LOG, "version ack = %d\n", versionData.version_ack);
-  if ( api->getFwVersion() < MAKE_VERSION(3,2,0,0))
-  API_LOG(api->serialDevice, STATUS_LOG, "version crc = 0x%X\n", versionData.version_crc);
-  if ( api->getFwVersion() > MAKE_VERSION(2,3,10,0))
-    API_LOG(api->serialDevice, STATUS_LOG, "version ID = %.16s\n", versionData.hw_serial_num);
-  API_LOG(api->serialDevice, STATUS_LOG, "version name = %.32s\n", versionData.version_name);
+  API_LOG(api->serialDevice, STATUS_LOG, "version ack = %d\n",
+          versionData.version_ack);
+  if (api->getFwVersion() < MAKE_VERSION(3, 2, 0, 0))
+    API_LOG(api->serialDevice, STATUS_LOG, "version crc = 0x%X\n",
+            versionData.version_crc);
+  if (api->getFwVersion() > MAKE_VERSION(2, 3, 10, 0))
+    API_LOG(api->serialDevice, STATUS_LOG, "version ID = %.16s\n",
+            versionData.hw_serial_num);
+  API_LOG(api->serialDevice, STATUS_LOG, "version name = %.32s\n",
+          versionData.version_name);
+}
+
+TEST_F(DJI_APITest, activate)
+{
+  ack = activateDroneStandard(app_id, enc_key);
+  ASSERT_EQ(ack, ACK_ACTIVE_SUCCESS);
 }
 
 /**
@@ -186,7 +228,8 @@ TEST_F(DJI_APITest, getDroneVersion) {
  * F position for M100_31, A3_31 and P position for A3_32
  *
  */
-TEST_F(DJI_APITest, obtainControl) {
+TEST_F(DJI_APITest, obtainControl)
+{
   activateDroneStandard();
   setControlStandard();
 }
@@ -199,12 +242,14 @@ TEST_F(DJI_APITest, obtainControl) {
  * F position for M100_31, A3_31 and P position for A3_32
  *
  */
-TEST_F(DJI_APITest, releaseControl) {
+TEST_F(DJI_APITest, releaseControl)
+{
   activateDroneStandard();
   releaseControlStandard();
 }
 
-TEST_F(DJI_APITest, setBroadcastFreq_01){
+TEST_F(DJI_APITest, setBroadcastFreq_01)
+{
   //! TODO add more functionality to test
   //! given frequency rate. At the moment, if
   //! you use test as it is you can use
@@ -241,4 +286,6 @@ TEST_F(DJI_APITest, setBroadcastFreq_01){
   ASSERT_EQ(ack, ACK_SUCCESS);
 }
 
-TEST_F(DJI_APITest, DISABLED_setSyncFreq) {}
+TEST_F(DJI_APITest, DISABLED_setSyncFreq)
+{
+}

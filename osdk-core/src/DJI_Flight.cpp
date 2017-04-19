@@ -167,7 +167,20 @@ Flight::Device Flight::getControlDevice() const
 
 Flight::Status Flight::getStatus() const
 {
-  return (Flight::Status)api->getBroadcastData().status;
+  /*! Handle separately since same numbers map to different enums depending on version
+   * Logic: Since the new enums are defined before the old ones,
+   * numbers will by default get mapped to new enums.
+   * So we only have to take care of the case when you want status mapped to an old enum for M100
+   * And the only overlapping enum is STATUS_SKY_STANDBY = STATUS_TAKE_OFF_M100ONLY
+   */
+
+  Flight::Status cur_status;
+  cur_status = (Flight::Status)api->getBroadcastData().status;
+  if (api->getFwVersion() < MAKE_VERSION(3,2,0,0)) {
+    if (cur_status == STATUS_SKY_STANDBY)
+      cur_status = STATUS_TAKE_OFF_M100ONLY;
+  }
+  return cur_status;
 }
 
 Flight::Mode Flight::getControlMode() const

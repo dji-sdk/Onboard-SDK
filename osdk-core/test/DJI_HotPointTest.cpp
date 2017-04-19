@@ -5,12 +5,20 @@ void DJI_HotPointTest::SetUp() {
   hotpoint = new HotPoint(DJI_APITest::api);
 
   FlightStatus status = DJI_FlightTest::flight->getStatus();
-  if (status == Flight::STATUS_LANDING ||
-      status == Flight::STATUS_FINISHING_LANDING)
-    waitToSyncHeight();
-  else if (status == Flight::STATUS_SKY_STANDBY ||
-      status == Flight::STATUS_TAKE_OFF)
-    land(Flight::TASK_LANDING);
+
+  //! @note Landing and Finishing landing is not exist anymore
+  //  if (status == Flight::STATUS_LANDING ||
+  //      status == Flight::STATUS_FINISHING_LANDING)
+  //    waitToSyncHeight();
+  //! @note Take off Flight::Status is not exist anymore
+  //  else
+  if (api->getFwVersion() > MAKE_VERSION(3,2,0,0)) {
+    if (status == Flight::STATUS_SKY_STANDBY )
+      land(task = Flight::TASK_GOHOME);
+  } else { //! M100 Compatibility
+    if (status == Flight::STATUS_SKY_STANDBY_M100ONLY || status == Flight::STATUS_TAKE_OFF_M100ONLY)
+      land(task = Flight::TASK_GOHOME);
+  }
 }
 
 void DJI_HotPointTest::TearDown() {
@@ -39,4 +47,3 @@ TEST_F(DJI_HotPointTest, HotPointTest) {
 
   land(task = Flight::TASK_GOHOME);
 }
-

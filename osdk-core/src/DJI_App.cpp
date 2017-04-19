@@ -124,6 +124,7 @@ void DJI::onboardSDK::CoreAPI::broadcast(Header *protocolHeader)
   passData(*enableFlag, DATA_FLAG, &broadcastData.ctrlInfo, pdata,
       sizeof(CtrlInfoData) - ((versionData.fwVersion < MAKE_VERSION(3,1,0,0)) ? 1 : 0), len);
   serialDevice->freeMSG();
+
   /**
    * Set broadcast frame status
    * @todo Implement proper notification mechanism
@@ -145,11 +146,11 @@ void DJI::onboardSDK::CoreAPI::broadcast(Header *protocolHeader)
         if (prevState == Flight::STATUS_MOTOR_OFF && currentState == Flight::STATUS_GROUND_STANDBY) {
           homepointAltitude = getBroadcastData().pos.altitude;
         }
-        if (prevState == Flight::STATUS_TAKE_OFF && currentState == Flight::STATUS_GROUND_STANDBY) {
+        if (prevState == Flight::STATUS_SKY_STANDBY && currentState == Flight::STATUS_GROUND_STANDBY) {
           homepointAltitude = getBroadcastData().pos.altitude;
         }
         //! This case would exist if the user starts OSDK after take off.
-        else if (prevState == Flight::STATUS_MOTOR_OFF && currentState == Flight::STATUS_TAKE_OFF) {
+        else if (prevState == Flight::STATUS_MOTOR_OFF && currentState == Flight::STATUS_SKY_STANDBY) {
           homepointAltitude = 999999;
         }
       }

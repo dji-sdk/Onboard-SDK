@@ -21,10 +21,8 @@ uint8_t DJI::onboardSDK::encrypt = 1;
 uint8_t DJI::onboardSDK::encrypt = 0;
 #endif // USE_ENCRYPT
 
-CoreAPI::CoreAPI(HardDriver *sDevice,
-                 bool userCallbackThread,
-                 CallBack userRecvCallback,
-                 UserData userData)
+CoreAPI::CoreAPI(HardDriver* sDevice, bool userCallbackThread,
+                 CallBack userRecvCallback, UserData userData)
 {
   CallBackHandler handler;
   handler.callback = userRecvCallback;
@@ -32,87 +30,86 @@ CoreAPI::CoreAPI(HardDriver *sDevice,
   init(sDevice, handler, userCallbackThread);
 }
 
-void CoreAPI::init(HardDriver *sDevice, CallBackHandler userRecvCallback, bool userCallbackThread)
+void
+CoreAPI::init(HardDriver* sDevice, CallBackHandler userRecvCallback,
+              bool userCallbackThread)
 {
   serialDevice = sDevice;
   // serialDevice->init();
 
-  seq_num = 0;
-  ackFrameStatus = 11;
+  seq_num              = 0;
+  ackFrameStatus       = 11;
   broadcastFrameStatus = false;
 
-  filter.recvIndex = 0;
+  filter.recvIndex  = 0;
   filter.reuseCount = 0;
   filter.reuseIndex = 0;
-  filter.encode = 0;
+  filter.encode     = 0;
 
-  broadcastCallback.callback = 0;
-  broadcastCallback.userData = 0;
-  fromMobileCallback.callback = 0;
-  fromMobileCallback.userData = 0;
-  hotPointCallback.callback = 0;
-  wayPointCallback.callback = 0;
-  hotPointCallback.userData = 0;
+  broadcastCallback.callback     = 0;
+  broadcastCallback.userData     = 0;
+  fromMobileCallback.callback    = 0;
+  fromMobileCallback.userData    = 0;
+  hotPointCallback.callback      = 0;
+  wayPointCallback.callback      = 0;
+  hotPointCallback.userData      = 0;
   wayPointEventCallback.callback = 0;
   wayPointEventCallback.userData = 0;
-  wayPointCallback.userData = 0;
-  followCallback.callback = 0;
-  followCallback.userData = 0;
-  missionCallback.callback = 0;
-  missionCallback.userData = 0;
+  wayPointCallback.userData      = 0;
+  followCallback.callback        = 0;
+  followCallback.userData        = 0;
+  missionCallback.callback       = 0;
+  missionCallback.userData       = 0;
 
   recvCallback.callback = userRecvCallback.callback;
   recvCallback.userData = userRecvCallback.userData;
 
   callbackThread = false;
-  hotPointData = false;
-  followData = false;
-  wayPointData = false;
+  hotPointData   = false;
+  followData     = false;
+  wayPointData   = false;
   callbackThread = userCallbackThread;
 
   nonBlockingCBThreadEnable = false;
-  ack_data = 99;
-  versionData.fwVersion = 0; //! Default init value
-  ack_activation = 0xFF;
+  ack_data                  = 99;
+  versionData.fwVersion     = 0; //! Default init value
+  ack_activation            = 0xFF;
 
   //! This handles hotfix for Movement Control issue with Z position Control
   homepointAltitude = 999999;
 
-
   //! @todo simplify code above
   serialDevice->lockMSG();
-  memset((unsigned char *)&broadcastData, 0, sizeof(broadcastData));
+  memset((unsigned char*)&broadcastData, 0, sizeof(broadcastData));
   serialDevice->freeMSG();
 
   setup();
-
-
 }
 
-CoreAPI::CoreAPI(HardDriver *sDevice,
-                 CallBackHandler userRecvCallback,
+CoreAPI::CoreAPI(HardDriver* sDevice, CallBackHandler userRecvCallback,
                  bool userCallbackThread)
 {
   init(sDevice, userRecvCallback, userCallbackThread);
   getFwVersion();
 }
 
-void CoreAPI::send(unsigned char session, unsigned char is_enc, CMD_SET cmdSet,
-    unsigned char cmdID, void *pdata, int len, CallBack ackCallback, int timeout,
-    int retry)
+void
+CoreAPI::send(unsigned char session, unsigned char is_enc, CMD_SET cmdSet,
+              unsigned char cmdID, void* pdata, int len, CallBack ackCallback,
+              int timeout, int retry)
 {
-  Command param;
-  unsigned char *ptemp = (unsigned char *)encodeSendData;
-  *ptemp++ = cmdSet;
-  *ptemp++ = cmdID;
+  Command        param;
+  unsigned char* ptemp = (unsigned char*)encodeSendData;
+  *ptemp++             = cmdSet;
+  *ptemp++             = cmdID;
 
   memcpy(encodeSendData + SET_CMD_SIZE, pdata, len);
 
-  param.handler = ackCallback;
+  param.handler     = ackCallback;
   param.sessionMode = session;
-  param.length = len + SET_CMD_SIZE;
-  param.buf = encodeSendData;
-  param.retry = retry;
+  param.length      = len + SET_CMD_SIZE;
+  param.buf         = encodeSendData;
+  param.retry       = retry;
 
   param.timeout = timeout;
   param.encrypt = is_enc;
@@ -122,22 +119,23 @@ void CoreAPI::send(unsigned char session, unsigned char is_enc, CMD_SET cmdSet,
   sendInterface(&param);
 }
 
-void CoreAPI::send(unsigned char session_mode, bool is_enc, CMD_SET cmd_set,
-    unsigned char cmd_id, void *pdata, size_t len, int timeout, int retry_time,
-    CallBack ack_handler, UserData userData)
+void
+CoreAPI::send(unsigned char session_mode, bool is_enc, CMD_SET cmd_set,
+              unsigned char cmd_id, void* pdata, size_t len, int timeout,
+              int retry_time, CallBack ack_handler, UserData userData)
 {
-  Command param;
-  unsigned char *ptemp = (unsigned char *)encodeSendData;
-  *ptemp++ = cmd_set;
-  *ptemp++ = cmd_id;
+  Command        param;
+  unsigned char* ptemp = (unsigned char*)encodeSendData;
+  *ptemp++             = cmd_set;
+  *ptemp++             = cmd_id;
 
   memcpy(encodeSendData + SET_CMD_SIZE, pdata, len);
 
-  param.handler = ack_handler;
+  param.handler     = ack_handler;
   param.sessionMode = session_mode;
-  param.length = len + SET_CMD_SIZE;
-  param.buf = encodeSendData;
-  param.retry = retry_time;
+  param.length      = len + SET_CMD_SIZE;
+  param.buf         = encodeSendData;
+  param.retry       = retry_time;
 
   param.timeout = timeout;
   param.encrypt = is_enc ? 1 : 0;
@@ -147,50 +145,58 @@ void CoreAPI::send(unsigned char session_mode, bool is_enc, CMD_SET cmd_set,
   sendInterface(&param);
 }
 
-void CoreAPI::send(Command *parameter) { sendInterface(parameter); }
+void
+CoreAPI::send(Command* parameter)
+{
+  sendInterface(parameter);
+}
 
-void CoreAPI::ack(req_id_t req_id, unsigned char *ackdata, int len)
+void
+CoreAPI::ack(req_id_t req_id, unsigned char* ackdata, int len)
 {
   Ack param;
 
   memcpy(encodeACK, ackdata, len);
 
   param.sessionID = req_id.session_id;
-  param.seqNum = req_id.sequence_number;
-  param.encrypt = req_id.need_encrypt;
-  param.buf = encodeACK;
-  param.length = len;
+  param.seqNum    = req_id.sequence_number;
+  param.encrypt   = req_id.need_encrypt;
+  param.buf       = encodeACK;
+  param.length    = len;
 
   this->ackInterface(&param);
 }
 
-void CoreAPI::getDroneVersion(CallBack callback, UserData userData)
+void
+CoreAPI::getDroneVersion(CallBack callback, UserData userData)
 {
-  versionData.version_ack = ACK_COMMON_NO_RESPONSE;
-  versionData.version_crc = 0x0;
+  versionData.version_ack     = ACK_COMMON_NO_RESPONSE;
+  versionData.version_crc     = 0x0;
   versionData.version_name[0] = 0;
 
-  unsigned cmd_timeout = 100; // unit is ms
-  unsigned retry_time = 3;
-  unsigned char cmd_data = 0;
+  unsigned      cmd_timeout = 100; // unit is ms
+  unsigned      retry_time  = 3;
+  unsigned char cmd_data    = 0;
 
-  send(2, 0, SET_ACTIVATION, CODE_GETVERSION, (unsigned char *)&cmd_data, 1, cmd_timeout,
-    retry_time, callback ? callback : CoreAPI::getDroneVersionCallback, userData);
+  send(2, 0, SET_ACTIVATION, CODE_GETVERSION, (unsigned char*)&cmd_data, 1,
+       cmd_timeout, retry_time,
+       callback ? callback : CoreAPI::getDroneVersionCallback, userData);
 }
 
-VersionData CoreAPI::getDroneVersion(int timeout)
+VersionData
+CoreAPI::getDroneVersion(int timeout)
 {
-  versionData.version_ack = ACK_COMMON_NO_RESPONSE;
-  versionData.version_crc = 0x0;
-  versionData.fwVersion = 0;
+  versionData.version_ack     = ACK_COMMON_NO_RESPONSE;
+  versionData.version_crc     = 0x0;
+  versionData.fwVersion       = 0;
   versionData.version_name[0] = 0;
 
-  unsigned cmd_timeout = 100; // unit is ms
-  unsigned retry_time = 3;
-  unsigned char cmd_data = 0;
+  unsigned      cmd_timeout = 100; // unit is ms
+  unsigned      retry_time  = 3;
+  unsigned char cmd_data    = 0;
 
-  send(2, 0, SET_ACTIVATION, CODE_GETVERSION, (unsigned char *)&cmd_data, 1, cmd_timeout,
-    retry_time, 0, 0);
+  send(2, 0, SET_ACTIVATION, CODE_GETVERSION, (unsigned char*)&cmd_data, 1,
+       cmd_timeout, retry_time, 0, 0);
 
   //! Wait for end of ACK frame to arrive
   serialDevice->lockACK();
@@ -198,19 +204,24 @@ VersionData CoreAPI::getDroneVersion(int timeout)
   serialDevice->freeACK();
 
   //! Pointer to ACK
-  unsigned char *ptemp = &(missionACKUnion.droneVersion.ack[0]);
+  unsigned char* ptemp = &(missionACKUnion.droneVersion.ack[0]);
 
-  //! Parse the HW & SW version, Serial no. and ACK. Discard return value, we don't process it right now.
-  if(!parseDroneVersionInfo(ptemp)) {
-    versionData.version_crc = 0x0;
-    versionData.fwVersion = 0;
+  //! Parse the HW & SW version, Serial no. and ACK. Discard return value, we
+  //! don't process it right now.
+
+  if (!parseDroneVersionInfo(ptemp))
+  {
+    versionData.version_crc     = 0x0;
+    versionData.fwVersion       = 0;
     versionData.version_name[0] = 0;
   }
 
   return versionData;
 }
 
-bool CoreAPI::parseDroneVersionInfo(unsigned char *ackPtrIncoming) {
+bool
+CoreAPI::parseDroneVersionInfo(unsigned char* ackPtrIncoming)
+{
 
   //! Local copy to prevent overwriting the ACK store
   unsigned char buf[64] = {};
@@ -223,15 +234,20 @@ bool CoreAPI::parseDroneVersionInfo(unsigned char *ackPtrIncoming) {
   versionData.version_ack = ackPtr[0] + (ackPtr[1] << 8);
   ackPtr += 2;
 
-  //! Next, we might have CRC or ID; Put them into a variable that we will parse later. Find next \0
+  //! Next, we might have CRC or ID; Put them into a variable that we will parse
+  //! later. Find next \0
   unsigned char crc_id[16] = {};
-  int i = 0;
-  while(*ackPtr != '\0') {
+  int           i          = 0;
+  while (*ackPtr != '\0')
+  {
     crc_id[i] = *ackPtr;
     i++;
     ackPtr++;
-    if (ackPtr - startPtr > 18) {
-      API_LOG(serialDevice, ERROR_LOG, "Drone version was not obtained. Please restart the program or call getDroneVersion\n");
+    if (ackPtr - startPtr > 18)
+    {
+      API_LOG(serialDevice, ERROR_LOG, "Drone version was not obtained. Please "
+                                       "restart the program or call "
+                                       "getDroneVersion\n");
       return false;
     }
   }
@@ -243,19 +259,27 @@ bool CoreAPI::parseDroneVersionInfo(unsigned char *ackPtrIncoming) {
   memcpy(versionData.version_name, ackPtr, 32);
 
   //! Now, we start parsing the name. Let's find the second space character.
-  while (*ackPtr != ' ') {
+  while (*ackPtr != ' ')
+  {
     ackPtr++;
-    if (ackPtr - startPtr > 64) {
-      API_LOG(serialDevice, ERROR_LOG, "Drone version was not obtained. Please restart the program or call getDroneVersion\n");
+    if (ackPtr - startPtr > 64)
+    {
+      API_LOG(serialDevice, ERROR_LOG, "Drone version was not obtained. Please "
+                                       "restart the program or call "
+                                       "getDroneVersion\n");
       return false;
     }
   } //! Found first space ("SDK-v1.x")
   ackPtr++;
 
-  while (*ackPtr != ' ') {
+  while (*ackPtr != ' ')
+  {
     ackPtr++;
-    if (ackPtr - startPtr > 64) {
-      API_LOG(serialDevice, ERROR_LOG, "Drone version was not obtained. Please restart the program or call getDroneVersion\n");
+    if (ackPtr - startPtr > 64)
+    {
+      API_LOG(serialDevice, ERROR_LOG, "Drone version was not obtained. Please "
+                                       "restart the program or call "
+                                       "getDroneVersion\n");
       return false;
     }
   } //! Found second space ("BETA")
@@ -263,12 +287,16 @@ bool CoreAPI::parseDroneVersionInfo(unsigned char *ackPtrIncoming) {
 
   //! Next is the HW version
   int j = 0;
-  while (*ackPtr != '-') {
+  while (*ackPtr != '-')
+  {
     this->versionData.hwVersion[j] = *ackPtr;
     ackPtr++;
     j++;
-    if (ackPtr - startPtr > 64) {
-      API_LOG(serialDevice, ERROR_LOG, "Drone version was not obtained. Please restart the program or call getDroneVersion\n");
+    if (ackPtr - startPtr > 64)
+    {
+      API_LOG(serialDevice, ERROR_LOG, "Drone version was not obtained. Please "
+                                       "restart the program or call "
+                                       "getDroneVersion\n");
       return false;
     }
   }
@@ -276,41 +304,58 @@ bool CoreAPI::parseDroneVersionInfo(unsigned char *ackPtrIncoming) {
   this->versionData.hwVersion[j] = '\0';
   ackPtr++;
 
-  //! Finally, we come to the FW version. We don't know if each clause is 2 or 3 digits long.
+  //! Finally, we come to the FW version. We don't know if each clause is 2 or 3
+  //! digits long.
   int ver1 = 0, ver2 = 0, ver3 = 0, ver4 = 0;
 
-  while (*ackPtr != '.') {
-    ver1 = (*ackPtr - 48) + 10*ver1;
+  while (*ackPtr != '.')
+  {
+    ver1 = (*ackPtr - 48) + 10 * ver1;
     ackPtr++;
-    if (ackPtr - startPtr > 64) {
-      API_LOG(serialDevice, ERROR_LOG, "Drone version was not obtained. Please restart the program or call getDroneVersion\n");
+    if (ackPtr - startPtr > 64)
+    {
+      API_LOG(serialDevice, ERROR_LOG, "Drone version was not obtained. Please "
+                                       "restart the program or call "
+                                       "getDroneVersion\n");
       return false;
     }
   }
   ackPtr++;
-  while (*ackPtr != '.') {
-    ver2 = (*ackPtr - 48) + 10*ver2;
+  while (*ackPtr != '.')
+  {
+    ver2 = (*ackPtr - 48) + 10 * ver2;
     ackPtr++;
-    if (ackPtr - startPtr > 64) {
-      API_LOG(serialDevice, ERROR_LOG, "Drone version was not obtained. Please restart the program or call getDroneVersion\n");
+    if (ackPtr - startPtr > 64)
+    {
+      API_LOG(serialDevice, ERROR_LOG, "Drone version was not obtained. Please "
+                                       "restart the program or call "
+                                       "getDroneVersion\n");
       return false;
     }
   }
   ackPtr++;
-  while (*ackPtr != '.') {
-    ver3 = (*ackPtr - 48) + 10*ver3;
+  while (*ackPtr != '.')
+  {
+    ver3 = (*ackPtr - 48) + 10 * ver3;
     ackPtr++;
-    if (ackPtr - startPtr > 64) {
-      API_LOG(serialDevice, ERROR_LOG, "Drone version was not obtained. Please restart the program or call getDroneVersion\n");
+    if (ackPtr - startPtr > 64)
+    {
+      API_LOG(serialDevice, ERROR_LOG, "Drone version was not obtained. Please "
+                                       "restart the program or call "
+                                       "getDroneVersion\n");
       return false;
     }
   }
   ackPtr++;
-  while (*ackPtr != '\0') {
-    ver4 = (*ackPtr - 48) + 10*ver4;
+  while (*ackPtr != '\0')
+  {
+    ver4 = (*ackPtr - 48) + 10 * ver4;
     ackPtr++;
-    if (ackPtr - startPtr > 64) {
-      API_LOG(serialDevice, ERROR_LOG, "Drone version was not obtained. Please restart the program or call getDroneVersion\n");
+    if (ackPtr - startPtr > 64)
+    {
+      API_LOG(serialDevice, ERROR_LOG, "Drone version was not obtained. Please "
+                                       "restart the program or call "
+                                       "getDroneVersion\n");
       return false;
     }
   }
@@ -319,47 +364,58 @@ bool CoreAPI::parseDroneVersionInfo(unsigned char *ackPtrIncoming) {
 
   //! Special cases
   //! M100:
-  if (strcmp(versionData.hwVersion,"M100") == 0) {
+  if (strcmp(versionData.hwVersion, "M100") == 0)
+  {
     //! Bug in M100 does not report the right FW.
-    ver3 = 10*ver3;
+    ver3                        = 10 * ver3;
     this->versionData.fwVersion = MAKE_VERSION(ver1, ver2, ver3, ver4);
   }
   //! M600/A3 FW 3.2.10
-  if (versionData.fwVersion == MAKE_VERSION(3,2,10,0)) {
+  if (versionData.fwVersion == MAKE_VERSION(3, 2, 10, 0))
+  {
     //! Bug in M600 does not report the right FW.
-    ver3 = 10*ver3;
+    ver3                        = 10 * ver3;
     this->versionData.fwVersion = MAKE_VERSION(ver1, ver2, ver3, ver4);
   }
 
-  //! Now, we can parse the CRC and ID based on FW version. If it's older than 3.2 then it'll have a CRC, else not.
-  if (this->versionData.fwVersion < MAKE_VERSION(3,2,0,0)) {
-    this->versionData.version_crc = crc_id[0] + (crc_id[1] << 8) + (crc_id[2] << 16) + (crc_id[3] << 24)  ;
-    unsigned char *id_ptr = &crc_id[4];
+  //! Now, we can parse the CRC and ID based on FW version. If it's older than
+  //! 3.2 then it'll have a CRC, else not.
+  if (this->versionData.fwVersion < MAKE_VERSION(3, 2, 0, 0))
+  {
+    this->versionData.version_crc =
+      crc_id[0] + (crc_id[1] << 8) + (crc_id[2] << 16) + (crc_id[3] << 24);
+    unsigned char* id_ptr = &crc_id[4];
 
     int i = 0;
-    while (*id_ptr != '\0') {
+    while (*id_ptr != '\0')
+    {
       this->versionData.hw_serial_num[i] = *id_ptr;
       i++;
       id_ptr++;
-      if (id_ptr - &crc_id[4] > 12) {
+      if (id_ptr - &crc_id[4] > 12)
+      {
         API_LOG(serialDevice, ERROR_LOG, "Drone ID was not obtained.");
-        return false; //!Not catastrophic error
+        return false; //! Not catastrophic error
       }
     }
     //! Fill in the termination character
     this->versionData.hw_serial_num[i] = *id_ptr;
-  } else {
+  }
+  else
+  {
     versionData.version_crc = 0;
-    unsigned char *id_ptr = &crc_id[0];
+    unsigned char* id_ptr   = &crc_id[0];
 
     int i = 0;
-    while (*id_ptr != '\0') {
+    while (*id_ptr != '\0')
+    {
       this->versionData.hw_serial_num[i] = *id_ptr;
       i++;
       id_ptr++;
-      if (id_ptr - &crc_id[0] > 16) {
+      if (id_ptr - &crc_id[0] > 16)
+      {
         API_LOG(serialDevice, ERROR_LOG, "Drone ID was not obtained.");
-        return false; //!Not catastrophic error
+        return false; //! Not catastrophic error
       }
     }
     //! Fill in the termination character
@@ -367,72 +423,81 @@ bool CoreAPI::parseDroneVersionInfo(unsigned char *ackPtrIncoming) {
   }
 
   //! Finally, we print stuff out.
-  /*
-  if (this->versionData.fwVersion > MAKE_VERSION(3,1,0,0)) {
-    API_LOG(this->serialDevice, STATUS_LOG, "Device Serial No. = %.16s\n", this->versionData.hw_serial_num);
+
+  if (this->versionData.fwVersion > MAKE_VERSION(3, 1, 0, 0))
+  {
+    API_LOG(this->serialDevice, STATUS_LOG, "Device Serial No. = %.16s\n",
+            this->versionData.hw_serial_num);
   }
   API_LOG(this->serialDevice, STATUS_LOG, "Hardware = %.12s\n",
           this->versionData.hwVersion);
-  API_LOG(this->serialDevice, STATUS_LOG, "Firmware = %d.%d.%d.%d\n",
-          ver1, ver2, ver3, ver4);
-  if (this->versionData.fwVersion < MAKE_VERSION(3,2,0,0)) {
-    API_LOG(this->serialDevice, STATUS_LOG, "Version CRC = 0x%X\n", this->versionData.version_crc);
+  API_LOG(this->serialDevice, STATUS_LOG, "Firmware = %d.%d.%d.%d\n", ver1,
+          ver2, ver3, ver4);
+  if (this->versionData.fwVersion < MAKE_VERSION(3, 2, 0, 0))
+  {
+    API_LOG(this->serialDevice, STATUS_LOG, "Version CRC = 0x%X\n",
+            this->versionData.version_crc);
   }
-  */
+
   return true;
 }
 
-
-
-void CoreAPI::activate(ActivateData *data, CallBack callback, UserData userData)
+void
+CoreAPI::activate(ActivateData* data, CallBack callback, UserData userData)
 {
   //! First, we need to check if getDroneVersion has been called
-  if (versionData.fwVersion == 0) {
+  if (versionData.fwVersion == 0)
+  {
     API_LOG(serialDevice, ERROR_LOG, "Please call getDroneVersion first.\n");
     return;
   }
-  data->version = versionData.fwVersion;
-  accountData = *data;
+  data->version        = versionData.fwVersion;
+  accountData          = *data;
   accountData.reserved = 2;
 
-  for (int i = 0; i < 32; ++i) accountData.iosID[i] = '0'; //! @note for ios verification
+  for (int i             = 0; i < 32; ++i)
+    accountData.iosID[i] = '0'; //! @note for ios verification
   API_LOG(serialDevice, DEBUG_LOG, "version 0x%X\n", versionData.fwVersion);
   API_LOG(serialDevice, DEBUG_LOG, "%.32s", accountData.iosID);
-  send(2, 0, SET_ACTIVATION, CODE_ACTIVATE, (unsigned char *)&accountData,
-    sizeof(accountData) - sizeof(char *), 1000, 3,
-    callback ? callback : CoreAPI::activateCallback, userData);
-
+  send(2, 0, SET_ACTIVATION, CODE_ACTIVATE, (unsigned char*)&accountData,
+       sizeof(accountData) - sizeof(char*), 1000, 3,
+       callback ? callback : CoreAPI::activateCallback, userData);
 }
 
-unsigned short CoreAPI::activate(ActivateData *data, int timeout)
+unsigned short
+CoreAPI::activate(ActivateData* data, int timeout)
 {
   //! First, we need to check if getDroneVersion has been called
-  if (versionData.fwVersion == 0) {
+  if (versionData.fwVersion == 0)
+  {
     this->getDroneVersion(1);
   }
   //! Now, look into versionData and set for activation.
-  data->version = versionData.fwVersion;
-  accountData = *data;
+  data->version        = versionData.fwVersion;
+  accountData          = *data;
   accountData.reserved = 2;
 
-  for (int i = 0; i < 32; ++i) accountData.iosID[i] = '0'; //! @note for ios verification
+  for (int i             = 0; i < 32; ++i)
+    accountData.iosID[i] = '0'; //! @note for ios verification
   API_LOG(serialDevice, DEBUG_LOG, "version 0x%X\n", versionData.fwVersion);
   API_LOG(serialDevice, DEBUG_LOG, "%.32s", accountData.iosID);
-  send(2, 0, SET_ACTIVATION, CODE_ACTIVATE, (unsigned char *)&accountData,
-    sizeof(accountData) - sizeof(char *), 1000, 3, 0, 0);
+  send(2, 0, SET_ACTIVATION, CODE_ACTIVATE, (unsigned char*)&accountData,
+       sizeof(accountData) - sizeof(char*), 1000, 3, 0, 0);
 
   // Wait for end of ACK frame to arrive
   serialDevice->lockACK();
   serialDevice->wait(timeout);
   serialDevice->freeACK();
   ack_data = missionACKUnion.simpleACK;
-  if(ack_data == ACK_ACTIVE_SUCCESS && accountData.encKey)
+  if (ack_data == ACK_ACTIVE_SUCCESS && accountData.encKey)
     setKey(accountData.encKey);
 
   return ack_data;
 }
 
-void CoreAPI::sendToMobile(uint8_t *data, uint8_t len, CallBack callback, UserData userData)
+void
+CoreAPI::sendToMobile(uint8_t* data, uint8_t len, CallBack callback,
+                      UserData userData)
 {
   if (len > 100)
   {
@@ -440,10 +505,12 @@ void CoreAPI::sendToMobile(uint8_t *data, uint8_t len, CallBack callback, UserDa
     return;
   }
   send(0, 0, SET_ACTIVATION, CODE_TOMOBILE, data, len, 500, 1,
-    callback ? callback : CoreAPI::sendToMobileCallback, userData);
+       callback ? callback : CoreAPI::sendToMobileCallback, userData);
 }
 
-void CoreAPI::setBroadcastFreq(uint8_t *dataLenIs16, CallBack callback, UserData userData)
+void
+CoreAPI::setBroadcastFreq(uint8_t* dataLenIs16, CallBack callback,
+                          UserData userData)
 {
   //! @note see also enum BROADCAST_FREQ in DJI_API.h
   for (int i = 0; i < 16; ++i)
@@ -466,10 +533,11 @@ void CoreAPI::setBroadcastFreq(uint8_t *dataLenIs16, CallBack callback, UserData
     }
   }
   send(2, 0, SET_ACTIVATION, CODE_FREQUENCY, dataLenIs16, 16, 100, 1,
-     callback ? callback : CoreAPI::setFrequencyCallback, userData);
+       callback ? callback : CoreAPI::setFrequencyCallback, userData);
 }
 
-unsigned short CoreAPI::setBroadcastFreq(uint8_t *dataLenIs16, int timeout)
+unsigned short
+CoreAPI::setBroadcastFreq(uint8_t* dataLenIs16, int timeout)
 {
   //! @note see also enum BROADCAST_FREQ in DJI_API.h
   for (int i = 0; i < 16; ++i)
@@ -500,68 +568,71 @@ unsigned short CoreAPI::setBroadcastFreq(uint8_t *dataLenIs16, int timeout)
   return missionACKUnion.simpleACK;
 }
 
-void CoreAPI::setBroadcastFreqDefaults()
+void
+CoreAPI::setBroadcastFreqDefaults()
 {
   uint8_t freq[16];
 
- /* Channels definition:
-  * M100:
-  * 0 - Timestamp
-  * 1 - Attitude Quaterniouns
-  * 2 - Acceleration
-  * 3 - Velocity (Ground Frame)
-  * 4 - Angular Velocity (Body Frame)
-  * 5 - Position
-  * 6 - Magnetometer
-  * 7 - RC Channels Data
-  * 8 - Gimbal Data
-  * 9 - Flight Status
-  * 10 - Battery Level
-  * 11 - Control Information
-  *
-  * A3:
-  * 0 - Timestamp
-  * 1 - Attitude Quaterniouns
-  * 2 - Acceleration
-  * 3 - Velocity (Ground Frame)
-  * 4 - Angular Velocity (Body Frame)
-  * 5 - Position
-  * 6 - GPS Detailed Information
-  * 7 - RTK Detailed Information
-  * 8 - Magnetometer
-  * 9 - RC Channels Data
-  * 10 - Gimbal Data
-  * 11 - Flight Statusack
-  * 12 - Battery Level
-  * 13 - Control Information
-  *
-  */
+  /* Channels definition:
+   * M100:
+   * 0 - Timestamp
+   * 1 - Attitude Quaterniouns
+   * 2 - Acceleration
+   * 3 - Velocity (Ground Frame)
+   * 4 - Angular Velocity (Body Frame)
+   * 5 - Position
+   * 6 - Magnetometer
+   * 7 - RC Channels Data
+   * 8 - Gimbal Data
+   * 9 - Flight Status
+   * 10 - Battery Level
+   * 11 - Control Information
+   *
+   * A3:
+   * 0 - Timestamp
+   * 1 - Attitude Quaterniouns
+   * 2 - Acceleration
+   * 3 - Velocity (Ground Frame)
+   * 4 - Angular Velocity (Body Frame)
+   * 5 - Position
+   * 6 - GPS Detailed Information
+   * 7 - RTK Detailed Information
+   * 8 - Magnetometer
+   * 9 - RC Channels Data
+   * 10 - Gimbal Data
+   * 11 - Flight Statusack
+   * 12 - Battery Level
+   * 13 - Control Information
+   *
+   */
 
-  if (strcmp(versionData.hwVersion, "M100") == 0) {
-    freq[0] = BROADCAST_FREQ_1HZ;
-    freq[1] = BROADCAST_FREQ_10HZ;
-    freq[2] = BROADCAST_FREQ_50HZ;
-    freq[3] = BROADCAST_FREQ_100HZ;
-    freq[4] = BROADCAST_FREQ_50HZ;
-    freq[5] = BROADCAST_FREQ_10HZ;
-    freq[6] = BROADCAST_FREQ_1HZ;
-    freq[7] = BROADCAST_FREQ_10HZ;
-    freq[8] = BROADCAST_FREQ_50HZ;
-    freq[9] = BROADCAST_FREQ_100HZ;
+  if (strcmp(versionData.hwVersion, "M100") == 0)
+  {
+    freq[0]  = BROADCAST_FREQ_1HZ;
+    freq[1]  = BROADCAST_FREQ_10HZ;
+    freq[2]  = BROADCAST_FREQ_50HZ;
+    freq[3]  = BROADCAST_FREQ_100HZ;
+    freq[4]  = BROADCAST_FREQ_50HZ;
+    freq[5]  = BROADCAST_FREQ_10HZ;
+    freq[6]  = BROADCAST_FREQ_1HZ;
+    freq[7]  = BROADCAST_FREQ_10HZ;
+    freq[8]  = BROADCAST_FREQ_50HZ;
+    freq[9]  = BROADCAST_FREQ_100HZ;
     freq[10] = BROADCAST_FREQ_50HZ;
     freq[11] = BROADCAST_FREQ_10HZ;
   }
-  else {//! A3/N3/M600
-    freq[0] = BROADCAST_FREQ_1HZ;
-    freq[1] = BROADCAST_FREQ_10HZ;
-    freq[2] = BROADCAST_FREQ_50HZ;
-    freq[3] = BROADCAST_FREQ_100HZ;
-    freq[4] = BROADCAST_FREQ_50HZ;
-    freq[5] = BROADCAST_FREQ_10HZ;
-    freq[6] = BROADCAST_FREQ_0HZ;
-    freq[7] = BROADCAST_FREQ_0HZ;
-    freq[8] = BROADCAST_FREQ_1HZ;
-    freq[9] = BROADCAST_FREQ_10HZ;
+  else
+  { //! A3/N3/M600
+    freq[0]  = BROADCAST_FREQ_1HZ;
+    freq[1]  = BROADCAST_FREQ_10HZ;
+    freq[2]  = BROADCAST_FREQ_50HZ;
+    freq[3]  = BROADCAST_FREQ_100HZ;
+    freq[4]  = BROADCAST_FREQ_50HZ;
+    freq[5]  = BROADCAST_FREQ_10HZ;
+    freq[6]  = BROADCAST_FREQ_0HZ;
+    freq[7]  = BROADCAST_FREQ_0HZ;
+    freq[8]  = BROADCAST_FREQ_1HZ;
+    freq[9]  = BROADCAST_FREQ_10HZ;
     freq[10] = BROADCAST_FREQ_50HZ;
     freq[11] = BROADCAST_FREQ_100HZ;
     freq[12] = BROADCAST_FREQ_50HZ;
@@ -570,7 +641,8 @@ void CoreAPI::setBroadcastFreqDefaults()
   setBroadcastFreq(freq);
 }
 
-void CoreAPI::setBroadcastFreqToZero()
+void
+CoreAPI::setBroadcastFreqToZero()
 {
   uint8_t freq[16];
 
@@ -607,16 +679,16 @@ void CoreAPI::setBroadcastFreqToZero()
    *
    */
 
-  freq[0] = BROADCAST_FREQ_0HZ;
-  freq[1] = BROADCAST_FREQ_0HZ;
-  freq[2] = BROADCAST_FREQ_0HZ;
-  freq[3] = BROADCAST_FREQ_0HZ;
-  freq[4] = BROADCAST_FREQ_0HZ;
-  freq[5] = BROADCAST_FREQ_0HZ;
-  freq[6] = BROADCAST_FREQ_0HZ;
-  freq[7] = BROADCAST_FREQ_0HZ;
-  freq[8] = BROADCAST_FREQ_0HZ;
-  freq[9] = BROADCAST_FREQ_0HZ;
+  freq[0]  = BROADCAST_FREQ_0HZ;
+  freq[1]  = BROADCAST_FREQ_0HZ;
+  freq[2]  = BROADCAST_FREQ_0HZ;
+  freq[3]  = BROADCAST_FREQ_0HZ;
+  freq[4]  = BROADCAST_FREQ_0HZ;
+  freq[5]  = BROADCAST_FREQ_0HZ;
+  freq[6]  = BROADCAST_FREQ_0HZ;
+  freq[7]  = BROADCAST_FREQ_0HZ;
+  freq[8]  = BROADCAST_FREQ_0HZ;
+  freq[9]  = BROADCAST_FREQ_0HZ;
   freq[10] = BROADCAST_FREQ_0HZ;
   freq[11] = BROADCAST_FREQ_0HZ;
   freq[12] = BROADCAST_FREQ_0HZ;
@@ -624,8 +696,8 @@ void CoreAPI::setBroadcastFreqToZero()
   setBroadcastFreq(freq);
 }
 
-
-unsigned short CoreAPI::setBroadcastFreqDefaults(int timeout)
+unsigned short
+CoreAPI::setBroadcastFreqDefaults(int timeout)
 {
   uint8_t freq[16];
 
@@ -662,31 +734,33 @@ unsigned short CoreAPI::setBroadcastFreqDefaults(int timeout)
    *
    */
 
-  if (strcmp(versionData.hwVersion, "M100") == 0) {
-    freq[0] = BROADCAST_FREQ_1HZ;
-    freq[1] = BROADCAST_FREQ_10HZ;
-    freq[2] = BROADCAST_FREQ_50HZ;
-    freq[3] = BROADCAST_FREQ_100HZ;
-    freq[4] = BROADCAST_FREQ_50HZ;
-    freq[5] = BROADCAST_FREQ_10HZ;
-    freq[6] = BROADCAST_FREQ_1HZ;
-    freq[7] = BROADCAST_FREQ_10HZ;
-    freq[8] = BROADCAST_FREQ_50HZ;
-    freq[9] = BROADCAST_FREQ_100HZ;
+  if (strcmp(versionData.hwVersion, "M100") == 0)
+  {
+    freq[0]  = BROADCAST_FREQ_1HZ;
+    freq[1]  = BROADCAST_FREQ_10HZ;
+    freq[2]  = BROADCAST_FREQ_50HZ;
+    freq[3]  = BROADCAST_FREQ_100HZ;
+    freq[4]  = BROADCAST_FREQ_50HZ;
+    freq[5]  = BROADCAST_FREQ_10HZ;
+    freq[6]  = BROADCAST_FREQ_1HZ;
+    freq[7]  = BROADCAST_FREQ_10HZ;
+    freq[8]  = BROADCAST_FREQ_50HZ;
+    freq[9]  = BROADCAST_FREQ_100HZ;
     freq[10] = BROADCAST_FREQ_50HZ;
     freq[11] = BROADCAST_FREQ_10HZ;
   }
-  else { //! A3/N3/M600
-    freq[0] = BROADCAST_FREQ_1HZ;
-    freq[1] = BROADCAST_FREQ_10HZ;
-    freq[2] = BROADCAST_FREQ_50HZ;
-    freq[3] = BROADCAST_FREQ_100HZ;
-    freq[4] = BROADCAST_FREQ_50HZ;
-    freq[5] = BROADCAST_FREQ_10HZ;
-    freq[6] = BROADCAST_FREQ_0HZ;
-    freq[7] = BROADCAST_FREQ_0HZ;
-    freq[8] = BROADCAST_FREQ_1HZ;
-    freq[9] = BROADCAST_FREQ_10HZ;
+  else
+  { //! A3/N3/M600
+    freq[0]  = BROADCAST_FREQ_1HZ;
+    freq[1]  = BROADCAST_FREQ_10HZ;
+    freq[2]  = BROADCAST_FREQ_50HZ;
+    freq[3]  = BROADCAST_FREQ_100HZ;
+    freq[4]  = BROADCAST_FREQ_50HZ;
+    freq[5]  = BROADCAST_FREQ_10HZ;
+    freq[6]  = BROADCAST_FREQ_0HZ;
+    freq[7]  = BROADCAST_FREQ_0HZ;
+    freq[8]  = BROADCAST_FREQ_1HZ;
+    freq[9]  = BROADCAST_FREQ_10HZ;
     freq[10] = BROADCAST_FREQ_50HZ;
     freq[11] = BROADCAST_FREQ_100HZ;
     freq[12] = BROADCAST_FREQ_50HZ;
@@ -696,37 +770,80 @@ unsigned short CoreAPI::setBroadcastFreqDefaults(int timeout)
   return setBroadcastFreq(freq, timeout);
 }
 
-TimeStampData CoreAPI::getTime() const { return getBroadcastData().timeStamp; }
+TimeStampData
+CoreAPI::getTime() const
+{
+  return getBroadcastData().timeStamp;
+}
 
-FlightStatus CoreAPI::getFlightStatus() const { return getBroadcastData().status; }
+FlightStatus
+CoreAPI::getFlightStatus() const
+{
+  return getBroadcastData().status;
+}
 
-void CoreAPI::setFromMobileCallback(CallBackHandler FromMobileEntrance)
+void
+CoreAPI::setFromMobileCallback(CallBackHandler FromMobileEntrance)
 {
   fromMobileCallback = FromMobileEntrance;
 }
 
-
-ActivateData CoreAPI::getAccountData() const { return accountData; }
-
-void CoreAPI::setAccountData(const ActivateData &value) { accountData = value; }
-void CoreAPI::setHotPointData(bool value) { hotPointData = value; }
-void CoreAPI::setWayPointData(bool value) { wayPointData = value; }
-void CoreAPI::setFollowData(bool value) { followData = value; }
-bool CoreAPI::getHotPointData() const { return hotPointData; }
-bool CoreAPI::getWayPointData() const { return wayPointData; }
-bool CoreAPI::getFollowData() const { return followData; }
-
-void CoreAPI::setControl(bool enable, CallBack callback, UserData userData)
+ActivateData
+CoreAPI::getAccountData() const
 {
-  unsigned char data = enable ? 1 : 0;
-  send(2, DJI::onboardSDK::encrypt, SET_CONTROL, CODE_SETCONTROL, &data, 1, 500, 2,
-    callback ? callback : CoreAPI::setControlCallback, userData);
+  return accountData;
 }
 
-unsigned short CoreAPI::setControl(bool enable, int timeout)
+void
+CoreAPI::setAccountData(const ActivateData& value)
+{
+  accountData = value;
+}
+void
+CoreAPI::setHotPointData(bool value)
+{
+  hotPointData = value;
+}
+void
+CoreAPI::setWayPointData(bool value)
+{
+  wayPointData = value;
+}
+void
+CoreAPI::setFollowData(bool value)
+{
+  followData = value;
+}
+bool
+CoreAPI::getHotPointData() const
+{
+  return hotPointData;
+}
+bool
+CoreAPI::getWayPointData() const
+{
+  return wayPointData;
+}
+bool
+CoreAPI::getFollowData() const
+{
+  return followData;
+}
+
+void
+CoreAPI::setControl(bool enable, CallBack callback, UserData userData)
 {
   unsigned char data = enable ? 1 : 0;
-  send(2, DJI::onboardSDK::encrypt, SET_CONTROL, CODE_SETCONTROL, &data, 1, 500, 2, 0, 0);
+  send(2, DJI::onboardSDK::encrypt, SET_CONTROL, CODE_SETCONTROL, &data, 1, 500,
+       2, callback ? callback : CoreAPI::setControlCallback, userData);
+}
+
+unsigned short
+CoreAPI::setControl(bool enable, int timeout)
+{
+  unsigned char data = enable ? 1 : 0;
+  send(2, DJI::onboardSDK::encrypt, SET_CONTROL, CODE_SETCONTROL, &data, 1, 500,
+       2, 0, 0);
 
   // Wait for end of ACK frame to arrive
   serialDevice->lockACK();
@@ -735,7 +852,7 @@ unsigned short CoreAPI::setControl(bool enable, int timeout)
 
   if (missionACKUnion.simpleACK == ACK_SETCONTROL_ERROR_MODE)
   {
-    if(versionData.fwVersion < MAKE_VERSION(3,2,0,0))
+    if (versionData.fwVersion < MAKE_VERSION(3, 2, 0, 0))
       missionACKUnion.simpleACK = ACK_SETCONTROL_NEED_MODE_F;
     else
       missionACKUnion.simpleACK = ACK_SETCONTROL_NEED_MODE_P;
@@ -744,31 +861,49 @@ unsigned short CoreAPI::setControl(bool enable, int timeout)
   return missionACKUnion.simpleACK;
 }
 
-HardDriver *CoreAPI::getDriver() const { return serialDevice; }
-
-SimpleACK CoreAPI::getSimpleACK () const { return missionACKUnion.simpleACK; }
-
-void CoreAPI::setDriver(HardDriver *sDevice) { serialDevice = sDevice; }
-
-void CoreAPI::getDroneVersionCallback(CoreAPI *api, Header *protocolHeader, UserData userData __UNUSED)
+HardDriver*
+CoreAPI::getDriver() const
 {
-  unsigned char *ptemp = ((unsigned char *)protocolHeader) + sizeof(Header);
-  if(!api->parseDroneVersionInfo(ptemp)) {
-    api->versionData.version_crc = 0x0;
-    api->versionData.fwVersion = 0;
+  return serialDevice;
+}
+
+SimpleACK
+CoreAPI::getSimpleACK() const
+{
+  return missionACKUnion.simpleACK;
+}
+
+void
+CoreAPI::setDriver(HardDriver* sDevice)
+{
+  serialDevice = sDevice;
+}
+
+void
+CoreAPI::getDroneVersionCallback(CoreAPI* api, Header* protocolHeader,
+                                 UserData userData __UNUSED)
+{
+  unsigned char* ptemp = ((unsigned char*)protocolHeader) + sizeof(Header);
+  if (!api->parseDroneVersionInfo(ptemp))
+  {
+    api->versionData.version_crc     = 0x0;
+    api->versionData.fwVersion       = 0;
     api->versionData.version_name[0] = 0;
   }
 }
 
-void CoreAPI::activateCallback(CoreAPI *api, Header *protocolHeader, UserData userData __UNUSED)
+void
+CoreAPI::activateCallback(CoreAPI* api, Header* protocolHeader,
+                          UserData userData __UNUSED)
 {
 
   unsigned short ack_data;
   if (protocolHeader->length - EXC_DATA_SIZE <= 2)
   {
-    memcpy((unsigned char *)&ack_data, ((unsigned char *)protocolHeader) + sizeof(Header),
-        (protocolHeader->length - EXC_DATA_SIZE));
-    
+    memcpy((unsigned char*)&ack_data,
+           ((unsigned char*)protocolHeader) + sizeof(Header),
+           (protocolHeader->length - EXC_DATA_SIZE));
+
     // Write activation status to the broadcast data
     api->setBroadcastActivation(ack_data);
 
@@ -781,8 +916,9 @@ void CoreAPI::activateCallback(CoreAPI *api, Header *protocolHeader, UserData us
           api->setKey(api->accountData.encKey);
         return;
       case ACK_ACTIVE_NEW_DEVICE:
-        API_LOG(api->serialDevice, STATUS_LOG, "New device, please link DJIGO to your "
-            "remote controller and try again\n");
+        API_LOG(api->serialDevice, STATUS_LOG,
+                "New device, please link DJIGO to your "
+                "remote controller and try again\n");
         break;
       case ACK_ACTIVE_PARAMETER_ERROR:
         API_LOG(api->serialDevice, ERROR_LOG, "Wrong parameter\n");
@@ -795,11 +931,12 @@ void CoreAPI::activateCallback(CoreAPI *api, Header *protocolHeader, UserData us
         break;
       case ACK_ACTIVE_NO_INTERNET:
         API_LOG(api->serialDevice, ERROR_LOG, "DJIGO not "
-            "connected to the internet\n");
+                                              "connected to the internet\n");
         break;
       case ACK_ACTIVE_SERVER_REFUSED:
-        API_LOG(api->serialDevice, ERROR_LOG, "DJI server rejected "
-            "your request, please use your SDK ID\n");
+        API_LOG(api->serialDevice, ERROR_LOG,
+                "DJI server rejected "
+                "your request, please use your SDK ID\n");
         break;
       case ACK_ACTIVE_ACCESS_LEVEL_ERROR:
         API_LOG(api->serialDevice, ERROR_LOG, "Wrong SDK permission\n");
@@ -817,18 +954,22 @@ void CoreAPI::activateCallback(CoreAPI *api, Header *protocolHeader, UserData us
   }
   else
   {
-    API_LOG(api->serialDevice, ERROR_LOG, "ACK is exception, session id %d,sequence %d\n",
-        protocolHeader->sessionID, protocolHeader->sequenceNumber);
+    API_LOG(api->serialDevice, ERROR_LOG,
+            "ACK is exception, session id %d,sequence %d\n",
+            protocolHeader->sessionID, protocolHeader->sequenceNumber);
   }
 }
 
-void CoreAPI::sendToMobileCallback(CoreAPI *api, Header *protocolHeader, UserData userData __UNUSED)
+void
+CoreAPI::sendToMobileCallback(CoreAPI* api, Header* protocolHeader,
+                              UserData userData __UNUSED)
 {
   unsigned short ack_data = ACK_COMMON_NO_RESPONSE;
   if (protocolHeader->length - EXC_DATA_SIZE <= 2)
   {
-    memcpy((unsigned char *)&ack_data, ((unsigned char *)protocolHeader) + sizeof(Header),
-        (protocolHeader->length - EXC_DATA_SIZE));
+    memcpy((unsigned char*)&ack_data,
+           ((unsigned char*)protocolHeader) + sizeof(Header),
+           (protocolHeader->length - EXC_DATA_SIZE));
     if (!api->decodeACKStatus(ack_data))
     {
       API_LOG(api->serialDevice, ERROR_LOG, "While calling this function");
@@ -836,37 +977,42 @@ void CoreAPI::sendToMobileCallback(CoreAPI *api, Header *protocolHeader, UserDat
   }
   else
   {
-    API_LOG(api->serialDevice, ERROR_LOG, "ACK is exception, session id %d,sequence %d\n",
-        protocolHeader->sessionID, protocolHeader->sequenceNumber);
+    API_LOG(api->serialDevice, ERROR_LOG,
+            "ACK is exception, session id %d,sequence %d\n",
+            protocolHeader->sessionID, protocolHeader->sequenceNumber);
   }
 }
 
-//! Mobile Data Transparent Transmission Input Servicing 
-void CoreAPI::parseFromMobileCallback(CoreAPI *api, Header *protocolHeader, UserData userData __UNUSED)
+//! Mobile Data Transparent Transmission Input Servicing
+void
+CoreAPI::parseFromMobileCallback(CoreAPI* api, Header* protocolHeader,
+                                 UserData userData __UNUSED)
 {
   uint16_t mobile_data_id;
-  
+
   if (protocolHeader->length - EXC_DATA_SIZE <= 4)
   {
     mobile_data_id = *((unsigned char*)protocolHeader + sizeof(Header) + 2);
 
     switch (mobile_data_id)
     {
-      case 2: 
+      case 2:
         if (obtainControlMobileCallback.callback)
         {
-          obtainControlMobileCallback.callback(api, protocolHeader, obtainControlMobileCallback.userData);          
+          obtainControlMobileCallback.callback(
+            api, protocolHeader, obtainControlMobileCallback.userData);
         }
         else
         {
-          obtainControlMobileCMD = true; 
+          obtainControlMobileCMD = true;
         }
         break;
 
-      case 3: 
+      case 3:
         if (releaseControlMobileCallback.callback)
         {
-          releaseControlMobileCallback.callback(api, protocolHeader, releaseControlMobileCallback.userData);          
+          releaseControlMobileCallback.callback(
+            api, protocolHeader, releaseControlMobileCallback.userData);
         }
         else
         {
@@ -874,10 +1020,11 @@ void CoreAPI::parseFromMobileCallback(CoreAPI *api, Header *protocolHeader, User
         }
         break;
 
-      case 4: 
+      case 4:
         if (activateMobileCallback.callback)
         {
-          activateMobileCallback.callback(api, protocolHeader, activateMobileCallback.userData);          
+          activateMobileCallback.callback(api, protocolHeader,
+                                          activateMobileCallback.userData);
         }
         else
         {
@@ -885,10 +1032,11 @@ void CoreAPI::parseFromMobileCallback(CoreAPI *api, Header *protocolHeader, User
         }
         break;
 
-      case 5: 
+      case 5:
         if (armMobileCallback.callback)
         {
-          armMobileCallback.callback(api, protocolHeader, armMobileCallback.userData);
+          armMobileCallback.callback(api, protocolHeader,
+                                     armMobileCallback.userData);
         }
         else
         {
@@ -896,10 +1044,11 @@ void CoreAPI::parseFromMobileCallback(CoreAPI *api, Header *protocolHeader, User
         }
         break;
 
-      case 6: 
+      case 6:
         if (disArmMobileCallback.callback)
         {
-          disArmMobileCallback.callback(api, protocolHeader, disArmMobileCallback.userData);     
+          disArmMobileCallback.callback(api, protocolHeader,
+                                        disArmMobileCallback.userData);
         }
         else
         {
@@ -907,10 +1056,11 @@ void CoreAPI::parseFromMobileCallback(CoreAPI *api, Header *protocolHeader, User
         }
         break;
 
-      case 7: 
+      case 7:
         if (takeOffMobileCallback.callback)
         {
-          takeOffMobileCallback.callback(api, protocolHeader, takeOffMobileCallback.userData);   
+          takeOffMobileCallback.callback(api, protocolHeader,
+                                         takeOffMobileCallback.userData);
         }
         else
         {
@@ -918,10 +1068,11 @@ void CoreAPI::parseFromMobileCallback(CoreAPI *api, Header *protocolHeader, User
         }
         break;
 
-      case 8: 
+      case 8:
         if (landingMobileCallback.callback)
         {
-          landingMobileCallback.callback(api, protocolHeader, landingMobileCallback.userData);  
+          landingMobileCallback.callback(api, protocolHeader,
+                                         landingMobileCallback.userData);
         }
         else
         {
@@ -929,10 +1080,11 @@ void CoreAPI::parseFromMobileCallback(CoreAPI *api, Header *protocolHeader, User
         }
         break;
 
-      case 9: 
+      case 9:
         if (goHomeMobileCallback.callback)
         {
-          goHomeMobileCallback.callback(api, protocolHeader, goHomeMobileCallback.userData); 
+          goHomeMobileCallback.callback(api, protocolHeader,
+                                        goHomeMobileCallback.userData);
         }
         else
         {
@@ -940,10 +1092,11 @@ void CoreAPI::parseFromMobileCallback(CoreAPI *api, Header *protocolHeader, User
         }
         break;
 
-      case 10: 
+      case 10:
         if (takePhotoMobileCallback.callback)
         {
-          takePhotoMobileCallback.callback(api, protocolHeader, takePhotoMobileCallback.userData);     
+          takePhotoMobileCallback.callback(api, protocolHeader,
+                                           takePhotoMobileCallback.userData);
         }
         else
         {
@@ -951,10 +1104,11 @@ void CoreAPI::parseFromMobileCallback(CoreAPI *api, Header *protocolHeader, User
         }
         break;
 
-      case 11: 
+      case 11:
         if (startVideoMobileCallback.callback)
         {
-          startVideoMobileCallback.callback(api, protocolHeader, startVideoMobileCallback.userData);   
+          startVideoMobileCallback.callback(api, protocolHeader,
+                                            startVideoMobileCallback.userData);
         }
         else
         {
@@ -962,37 +1116,40 @@ void CoreAPI::parseFromMobileCallback(CoreAPI *api, Header *protocolHeader, User
         }
         break;
 
-      case 13: 
+      case 13:
         if (stopVideoMobileCallback.callback)
         {
-          stopVideoMobileCallback.callback(api, protocolHeader, stopVideoMobileCallback.userData); 
+          stopVideoMobileCallback.callback(api, protocolHeader,
+                                           stopVideoMobileCallback.userData);
         }
         else
         {
           stopVideoMobileCMD = true;
         }
         break;
-      //! Advanced features: LiDAR Mapping, Collision Avoidance, Precision Missions
+      //! Advanced features: LiDAR Mapping, Collision Avoidance, Precision
+      //! Missions
       case 20:
-          startLASMapLoggingCMD = true;
+        startLASMapLoggingCMD = true;
         break;
       case 21:
-          stopLASMapLoggingCMD = true;
+        stopLASMapLoggingCMD = true;
         break;
       case 24:
-          precisionMissionCMD = true;
+        precisionMissionCMD = true;
         break;
       case 25:
-          precisionMissionsCollisionAvoidanceCMD = true;
+        precisionMissionsCollisionAvoidanceCMD = true;
         break;
       case 26:
-          precisionMissionsLidarMappingCMD = true;
+        precisionMissionsLidarMappingCMD = true;
         break;
       case 27:
-          precisionMissionsCollisionAvoidanceLidarMappingCMD = true;
+        precisionMissionsCollisionAvoidanceLidarMappingCMD = true;
         break;
 
-      //! The next few are only polling based and do not use callbacks. See usage in Linux Sample.
+      //! The next few are only polling based and do not use callbacks. See
+      //! usage in Linux Sample.
       case 61:
         drawCirMobileCMD = true;
         break;
@@ -1024,15 +1181,17 @@ void CoreAPI::parseFromMobileCallback(CoreAPI *api, Header *protocolHeader, User
   }
 }
 
-void CoreAPI::setFrequencyCallback(CoreAPI *api __UNUSED, Header *protocolHeader,
-    UserData userData __UNUSED)
+void
+CoreAPI::setFrequencyCallback(CoreAPI* api __UNUSED, Header* protocolHeader,
+                              UserData userData __UNUSED)
 {
   unsigned short ack_data = ACK_COMMON_NO_RESPONSE;
 
   if (protocolHeader->length - EXC_DATA_SIZE <= 2)
   {
-    memcpy((unsigned char *)&ack_data, ((unsigned char *)protocolHeader) + sizeof(Header),
-        (protocolHeader->length - EXC_DATA_SIZE));
+    memcpy((unsigned char*)&ack_data,
+           ((unsigned char*)protocolHeader) + sizeof(Header),
+           (protocolHeader->length - EXC_DATA_SIZE));
   }
   switch (ack_data)
   {
@@ -1051,38 +1210,60 @@ void CoreAPI::setFrequencyCallback(CoreAPI *api __UNUSED, Header *protocolHeader
   }
 }
 
-Version CoreAPI::getFwVersion() const { return versionData.fwVersion; }
-char * CoreAPI::getHwVersion() const { return (char *)versionData.hwVersion; }
-char * CoreAPI::getHwSerialNum() const { return (char *)versionData.hw_serial_num; }
+Version
+CoreAPI::getFwVersion() const
+{
+  return versionData.fwVersion;
+}
+char*
+CoreAPI::getHwVersion() const
+{
+  return (char*)versionData.hwVersion;
+}
+char*
+CoreAPI::getHwSerialNum() const
+{
+  return (char*)versionData.hw_serial_num;
+}
 
-SDKFilter CoreAPI::getFilter() const { return filter; }
+SDKFilter
+CoreAPI::getFilter() const
+{
+  return filter;
+}
 
-void CoreAPI::setControlCallback(CoreAPI *api, Header *protocolHeader, UserData userData __UNUSED)
+void
+CoreAPI::setControlCallback(CoreAPI* api, Header* protocolHeader,
+                            UserData userData __UNUSED)
 {
   unsigned short ack_data = ACK_COMMON_NO_RESPONSE;
-  unsigned char data = 0x1;
+  unsigned char  data     = 0x1;
 
   if (protocolHeader->length - EXC_DATA_SIZE <= sizeof(ack_data))
   {
-    memcpy((unsigned char *)&ack_data, ((unsigned char *)protocolHeader) + sizeof(Header),
-        (protocolHeader->length - EXC_DATA_SIZE));
+    memcpy((unsigned char*)&ack_data,
+           ((unsigned char*)protocolHeader) + sizeof(Header),
+           (protocolHeader->length - EXC_DATA_SIZE));
   }
   else
   {
-    API_LOG(api->serialDevice, ERROR_LOG, "ACK is exception, session id %d,sequence %d\n",
-        protocolHeader->sessionID, protocolHeader->sequenceNumber);
+    API_LOG(api->serialDevice, ERROR_LOG,
+            "ACK is exception, session id %d,sequence %d\n",
+            protocolHeader->sessionID, protocolHeader->sequenceNumber);
   }
 
   switch (ack_data)
   {
     case ACK_SETCONTROL_ERROR_MODE:
-      if(api->versionData.fwVersion < MAKE_VERSION(3,2,0,0))
+      if (api->versionData.fwVersion < MAKE_VERSION(3, 2, 0, 0))
       {
-        API_LOG(api->serialDevice, STATUS_LOG, "Obtain control failed: switch to F mode\n");
+        API_LOG(api->serialDevice, STATUS_LOG,
+                "Obtain control failed: switch to F mode\n");
       }
       else
       {
-        API_LOG(api->serialDevice, STATUS_LOG, "Obtain control failed: switch to P mode\n");
+        API_LOG(api->serialDevice, STATUS_LOG,
+                "Obtain control failed: switch to P mode\n");
       }
       break;
     case ACK_SETCONTROL_RELEASE_SUCCESS:
@@ -1093,17 +1274,18 @@ void CoreAPI::setControlCallback(CoreAPI *api, Header *protocolHeader, UserData 
       break;
     case ACK_SETCONTROL_OBTAIN_RUNNING:
       API_LOG(api->serialDevice, STATUS_LOG, "Obtain control running\n");
-      api->send(2, DJI::onboardSDK::encrypt, SET_CONTROL, CODE_SETCONTROL, &data, 1, 500,
-          2, CoreAPI::setControlCallback);
+      api->send(2, DJI::onboardSDK::encrypt, SET_CONTROL, CODE_SETCONTROL,
+                &data, 1, 500, 2, CoreAPI::setControlCallback);
       break;
     case ACK_SETCONTROL_RELEASE_RUNNING:
       API_LOG(api->serialDevice, STATUS_LOG, "Release control running\n");
       data = 0;
-      api->send(2, DJI::onboardSDK::encrypt, SET_CONTROL, CODE_SETCONTROL, &data, 1, 500,
-          2, CoreAPI::setControlCallback);
+      api->send(2, DJI::onboardSDK::encrypt, SET_CONTROL, CODE_SETCONTROL,
+                &data, 1, 500, 2, CoreAPI::setControlCallback);
       break;
     case ACK_SETCONTROL_IOC:
-      API_LOG(api->serialDevice, STATUS_LOG, "IOC mode opening can not obtain control\n");
+      API_LOG(api->serialDevice, STATUS_LOG,
+              "IOC mode opening can not obtain control\n");
       break;
     default:
       if (!api->decodeACKStatus(ack_data))
