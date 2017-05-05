@@ -105,6 +105,11 @@ void Flight::setMovementControl(uint8_t flag, float32_t x, float32_t y, float32_
         API_LOG(api->getDriver(), STATUS_LOG, "Not enough GPS locks, cannot run Movement Control \n");
       }
     }
+    else
+    {
+      data.z = z;
+      api->send(0, encrypt, SET_CONTROL, CODE_CONTROL, &data, sizeof(FlightData));
+    }
   }
   else if(api->getFwVersion() == MAKE_VERSION(3,2,100,0)) {
     if (flag & (1 << 4)) {
@@ -116,6 +121,11 @@ void Flight::setMovementControl(uint8_t flag, float32_t x, float32_t y, float32_
       } else {
         API_LOG(api->getDriver(), STATUS_LOG, "Not enough GPS locks, cannot run Movement Control \n");
       }
+    }
+    else
+    {
+      data.z = z;
+      api->send(0, encrypt, SET_CONTROL, CODE_CONTROL, &data, sizeof(FlightData));
     }
   }
   else

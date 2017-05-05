@@ -257,7 +257,7 @@ LinuxSerialDevice::_serialClose()
 {
   close(m_serial_fd);
   m_serial_fd = -1;
-  API_LOG(this, STATUS_LOG, "device closed %d\n", m_serial_fd);
+  API_LOG(this, DEBUG_LOG, "device closed %d\n", m_serial_fd);
   return true;
 }
 
