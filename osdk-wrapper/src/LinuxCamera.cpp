@@ -9,6 +9,7 @@
  * */
 
 #include <LinuxCamera.h>
+#include <cmath>
 
 void gimbalAngleControlSample(Camera *camera, int timeout) {
 
