@@ -36,7 +36,7 @@ void DJI::onboardSDK::CoreAPI::setupMMU()
   }
   MMU[MMU_TABLE_NUM - 1].tabIndex = MMU_TABLE_NUM - 1;
   MMU[MMU_TABLE_NUM - 1].usageFlag = 1;
-  MMU[MMU_TABLE_NUM - 1].pmem = memory + MEMORY_SIZE;
+  MMU[MMU_TABLE_NUM - 1].pmem = memory + DJI_MEMORY_SIZE;
   MMU[MMU_TABLE_NUM - 1].memSize = 0;
 }
 
@@ -63,7 +63,7 @@ MMU_Tab *DJI::onboardSDK::CoreAPI::allocMemory(unsigned short size)
   unsigned int record_temp32 = 0;
   unsigned char magic_flag = 0;
 
-  if (size > PRO_PURE_DATA_MAX_SIZE || size > MEMORY_SIZE)
+  if (size > PRO_PURE_DATA_MAX_SIZE || size > DJI_MEMORY_SIZE)
     return (MMU_Tab *)0;
 
   for (i = 0; i < MMU_TABLE_NUM; i++)
@@ -73,7 +73,7 @@ MMU_Tab *DJI::onboardSDK::CoreAPI::allocMemory(unsigned short size)
       mmu_tab_used_index[mmu_tab_used_num++] = MMU[i].tabIndex;
     }
 
-  if (MEMORY_SIZE < (mem_used + size))
+  if (DJI_MEMORY_SIZE < (mem_used + size))
     return (MMU_Tab *)0;
 
   if (mem_used == 0)
@@ -188,7 +188,7 @@ CMDSession *DJI::onboardSDK::CoreAPI::allocSession(unsigned short session_id,
     unsigned short size)
 {
   unsigned int i;
-  API_LOG(serialDevice, DEBUG_LOG, "Allocation size %d", size);
+  API_LOG(serialDevice, DJI_DEBUG_LOG, "Allocation size %d", size);
   MMU_Tab *mmu = NULL;
 
   if (session_id == 0 || session_id == 1)
@@ -198,7 +198,7 @@ CMDSession *DJI::onboardSDK::CoreAPI::allocSession(unsigned short session_id,
     else
     {
       /* session is busy */
-      API_LOG(serialDevice, ERROR_LOG, "session %d is busy\n", session_id);
+      API_LOG(serialDevice, DJI_ERROR_LOG, "session %d is busy\n", session_id);
       return NULL;
     }
   }
@@ -227,7 +227,7 @@ void DJI::onboardSDK::CoreAPI::freeSession(CMDSession *session)
 {
   if (session->usageFlag == 1)
   {
-    API_LOG(serialDevice, DEBUG_LOG, "session id %d\n", session->sessionID);
+    API_LOG(serialDevice, DJI_DEBUG_LOG, "session id %d\n", session->sessionID);
     freeMemory(session->mmu);
     session->usageFlag = 0;
   }
@@ -243,7 +243,7 @@ ACKSession *DJI::onboardSDK::CoreAPI::allocACK(unsigned short session_id, unsign
     mmu = allocMemory(size);
     if (mmu == NULL)
     {
-      API_LOG(serialDevice, ERROR_LOG, "there is not enough memory\n");
+      API_LOG(serialDevice, DJI_ERROR_LOG, "there is not enough memory\n");
       return NULL;
     }
     else
@@ -252,7 +252,7 @@ ACKSession *DJI::onboardSDK::CoreAPI::allocACK(unsigned short session_id, unsign
       return &ACKSessionTab[session_id - 1];
     }
   }
-  API_LOG(serialDevice, ERROR_LOG, "wrong Ack session ID: 0x%X\n", session_id);
+  API_LOG(serialDevice, DJI_ERROR_LOG, "wrong Ack session ID: 0x%X\n", session_id);
   return NULL;
 }
 

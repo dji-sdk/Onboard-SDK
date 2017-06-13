@@ -92,7 +92,7 @@ bool CoreAPI::decodeMissionStatus(uint8_t ack)
     if (missionACKMAP[i].code == ack)
     {
       //! @todo Fix memory leak issue
-      API_LOG(serialDevice, STATUS_LOG, "0x%X %s\n", missionACKMAP[i].code, missionACKMAP[i].meaning);
+      API_LOG(serialDevice, DJI_STATUS_LOG, "0x%X %s\n", missionACKMAP[i].code, missionACKMAP[i].meaning);
       return true;
     }
   return false;
@@ -106,11 +106,11 @@ void missionCallback(CoreAPI *api, Header *protocolHeader, UserData userdata __U
     memcpy((unsigned char *)&ack, (unsigned char *)protocolHeader + sizeof(Header),
         (protocolHeader->length - EXC_DATA_SIZE));
     if (!api->decodeMissionStatus(ack))
-      API_LOG(api->getDriver(), ERROR_LOG, "Decode ACK error 0x%X\n", ack);
+      API_LOG(api->getDriver(), DJI_ERROR_LOG, "Decode ACK error 0x%X\n", ack);
   }
   else
   {
-    API_LOG(api->getDriver(), ERROR_LOG, "ACK is exception,session id %d,sequence %d\n",
+    API_LOG(api->getDriver(), DJI_ERROR_LOG, "ACK is exception,session id %d,sequence %d\n",
         protocolHeader->sessionID, protocolHeader->sequenceNumber);
   }
 }

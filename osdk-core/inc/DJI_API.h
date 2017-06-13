@@ -640,8 +640,8 @@ class CoreAPI
   BroadcastData broadcastData;
   uint32_t ackFrameStatus;
   bool broadcastFrameStatus;
-  unsigned char encodeSendData[BUFFER_SIZE];
-  unsigned char encodeACK[ACK_SIZE];
+  unsigned char encodeSendData[DJI_BUFFER_SIZE];
+  unsigned char encodeACK[DJI_ACK_SIZE];
 
   //! Mobile Data Transparent Transmission - callbacks
   CallBackHandler fromMobileCallback;
@@ -731,7 +731,7 @@ class CoreAPI
   MMU_Tab MMU[MMU_TABLE_NUM];
   CMDSession CMDSessionTab[SESSION_TABLE_NUM];
   ACKSession ACKSessionTab[SESSION_TABLE_NUM - 1];
-  unsigned char memory[MEMORY_SIZE];
+  unsigned char memory[DJI_MEMORY_SIZE];
   unsigned short encrypt(unsigned char *pdest, const unsigned char *psrc,
       unsigned short w_len, unsigned char is_ack, unsigned char is_enc,
       unsigned char session_id, unsigned short seq_num);
@@ -750,7 +750,7 @@ private:
   bool wayPointData;
   bool followData;
 
-#ifdef API_BUFFER_DATA
+#ifdef DJI_API_BUFFER_DATA
   public:
   void setTotalRead(const size_t &value) { totalRead = value; }
   void setOnceRead(const size_t &value) { onceRead = value; }
@@ -761,7 +761,7 @@ private:
   private:
   size_t onceRead;
   size_t totalRead;
-#endif // API_BUFFER_DATA
+#endif // DJI_API_BUFFER_DATA
 };
 
 } // namespace onboardSDK

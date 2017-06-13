@@ -111,9 +111,9 @@ void DJI::onboardSDK::CoreAPI::broadcast(Header *protocolHeader)
     passData(*enableFlag, DATA_FLAG, &broadcastData.gps, pdata, sizeof(GPSData), len);
     passData(*enableFlag, DATA_FLAG, &broadcastData.rtk, pdata, sizeof(RTKData), len);
     if (((*enableFlag) & 0x0040))
-      API_LOG(serialDevice, RTK_LOG, "receive GPS data %llu\n", (unsigned long long)serialDevice->getTimeStamp());
+      API_LOG(serialDevice, DJI_RTK_LOG, "receive GPS data %llu\n", (unsigned long long)serialDevice->getTimeStamp());
     if (((*enableFlag) & 0x0080))
-      API_LOG(serialDevice, RTK_LOG, "receive RTK data %llu\n", (unsigned long long)serialDevice->getTimeStamp());
+      API_LOG(serialDevice, DJI_RTK_LOG, "receive RTK data %llu\n", (unsigned long long)serialDevice->getTimeStamp());
   }
   passData(*enableFlag, DATA_FLAG, &broadcastData.mag, pdata, sizeof(MagnetData), len);
   passData(*enableFlag, DATA_FLAG, &broadcastData.rc, pdata, sizeof(RadioData), len);
@@ -176,7 +176,7 @@ void DJI::onboardSDK::CoreAPI::recvReqData(Header *protocolHeader)
         broadcast(protocolHeader);
         break;
       case CODE_FROMMOBILE:
-        API_LOG(serialDevice, STATUS_LOG, "Receive data from mobile\n");
+        API_LOG(serialDevice, DJI_STATUS_LOG, "Receive data from mobile\n");
         if (fromMobileCallback.callback)
         {
           fromMobileCallback.callback(this, protocolHeader, fromMobileCallback.userData);
@@ -187,7 +187,7 @@ void DJI::onboardSDK::CoreAPI::recvReqData(Header *protocolHeader)
         }
         break;
       case CODE_LOSTCTRL:
-        API_LOG(serialDevice, STATUS_LOG, "onboardSDK lost control\n");
+        API_LOG(serialDevice, DJI_STATUS_LOG, "onboardSDK lost control\n");
         Ack param;
         if (protocolHeader->sessionID > 0)
         {
@@ -217,7 +217,7 @@ void DJI::onboardSDK::CoreAPI::recvReqData(Header *protocolHeader)
                   wayPointCallback.callback(this, protocolHeader,
                       wayPointCallback.userData);
                 else
-                  API_LOG(serialDevice, STATUS_LOG, "Mode waypoint \n");
+                  API_LOG(serialDevice, DJI_STATUS_LOG, "Mode waypoint \n");
               }
               break;
             case MISSION_HOTPOINT:
@@ -227,7 +227,7 @@ void DJI::onboardSDK::CoreAPI::recvReqData(Header *protocolHeader)
                   hotPointCallback.callback(this, protocolHeader,
                       hotPointCallback.userData);
                 else
-                  API_LOG(serialDevice, STATUS_LOG, "Mode HP \n");
+                  API_LOG(serialDevice, DJI_STATUS_LOG, "Mode HP \n");
               }
               break;
             case MISSION_FOLLOW:
@@ -237,15 +237,15 @@ void DJI::onboardSDK::CoreAPI::recvReqData(Header *protocolHeader)
                   followCallback.callback(this, protocolHeader,
                       followCallback.userData);
                 else
-                  API_LOG(serialDevice, STATUS_LOG, "Mode Follow \n");
+                  API_LOG(serialDevice, DJI_STATUS_LOG, "Mode Follow \n");
               }
               break;
             case MISSION_IOC:
               //! @todo compare IOC with other mission modes comprehensively
-              API_LOG(serialDevice, STATUS_LOG, "Mode IOC \n");
+              API_LOG(serialDevice, DJI_STATUS_LOG, "Mode IOC \n");
               break;
             default:
-              API_LOG(serialDevice, ERROR_LOG, "Unknown mission code 0x%X \n", ack);
+              API_LOG(serialDevice, DJI_ERROR_LOG, "Unknown mission code 0x%X \n", ack);
               break;
           }
         }
@@ -256,15 +256,15 @@ void DJI::onboardSDK::CoreAPI::recvReqData(Header *protocolHeader)
           wayPointEventCallback.callback(this, protocolHeader,
               wayPointEventCallback.userData);
         else
-          API_LOG(serialDevice, STATUS_LOG, "WAYPOINT DATA");
+          API_LOG(serialDevice, DJI_STATUS_LOG, "WAYPOINT DATA");
         break;
       default:
-        API_LOG(serialDevice, STATUS_LOG, "Unknown BROADCAST command code\n");
+        API_LOG(serialDevice, DJI_STATUS_LOG, "Unknown BROADCAST command code\n");
         break;
     }
   }
   else
-    API_LOG(serialDevice, DEBUG_LOG, "Received unknown command\n");
+    API_LOG(serialDevice, DJI_DEBUG_LOG, "Received unknown command\n");
   if (recvCallback.callback)
     recvCallback.callback(this, protocolHeader, recvCallback.userData);
 }

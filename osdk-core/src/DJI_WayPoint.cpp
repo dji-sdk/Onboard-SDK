@@ -16,7 +16,7 @@
 using namespace DJI;
 using namespace DJI::onboardSDK;
 
-#ifndef STATIC_MEMORY
+#ifndef DJI_STATIC_MEMORY
 WayPoint::WayPoint(CoreAPI *ControlAPI)
 {
   api = ControlAPI;
@@ -29,7 +29,7 @@ WayPoint::WayPoint(WayPointData *list, uint8_t len, CoreAPI *ControlAPI)
   index = list;
   maxIndex = len;
 }
-#endif // STATIC_MEMORY
+#endif // DJI_STATIC_MEMORY
 
 void WayPoint::init(WayPointInitData *Info, CallBack callback, UserData userData)
 {
@@ -227,14 +227,14 @@ void WayPoint::setInfo(const WayPointInitData &value)
   //! @todo set information for way point
   info = value;
   for (int i = 0; i < 16; ++i) info.reserved[i] = 0;
-#ifndef STATIC_MEMORY
+#ifndef DJI_STATIC_MEMORY
   if (index != 0)
     delete index;
   index = 0;
 #else
   if (maxIndex < info.indexNumber)
     index = 0;
-#endif // STATIC_MEMORY
+#endif // DJI_STATIC_MEMORY
 }
 
 void WayPoint::idleVelocityCallback(CoreAPI *api, Header *protocolHeader, UserData wpapi)
@@ -247,13 +247,13 @@ void WayPoint::idleVelocityCallback(CoreAPI *api, Header *protocolHeader, UserDa
             (protocolHeader->length - EXC_DATA_SIZE));
   else
   {
-    API_LOG(api->getDriver(), ERROR_LOG, "ACK is exception, session id %d,sequence %d\n",
+    API_LOG(api->getDriver(), DJI_ERROR_LOG, "ACK is exception, session id %d,sequence %d\n",
             protocolHeader->sessionID, protocolHeader->sequenceNumber);
     return;
   }
   api->decodeMissionStatus(ack.ack);
   wp->info.idleVelocity = ack.idleVelocity;
-  API_LOG(api->getDriver(), STATUS_LOG, "Current idle velocity: %f", wp->info.idleVelocity);
+  API_LOG(api->getDriver(), DJI_STATUS_LOG, "Current idle velocity: %f", wp->info.idleVelocity);
 }
 
 void WayPoint::getWaypointSettingsCallback(CoreAPI *api, Header *protocolHeader, UserData wpapi)
@@ -266,14 +266,14 @@ void WayPoint::getWaypointSettingsCallback(CoreAPI *api, Header *protocolHeader,
             (protocolHeader->length - EXC_DATA_SIZE));
   else
   {
-    API_LOG(api->getDriver(), ERROR_LOG, "ACK is exception, session id %d,sequence %d\n",
+    API_LOG(api->getDriver(), DJI_ERROR_LOG, "ACK is exception, session id %d,sequence %d\n",
             protocolHeader->sessionID, protocolHeader->sequenceNumber);
     return;
   }
 
   api->decodeMissionStatus(ack.ack);
   wp->info = ack.data;
-  API_LOG(api->getDriver(), STATUS_LOG, "Index number: %d\n", wp->info.indexNumber);
+  API_LOG(api->getDriver(), DJI_STATUS_LOG, "Index number: %d\n", wp->info.indexNumber);
 }
 
 void WayPoint::uploadIndexDataCallback(CoreAPI *api, Header *protocolHeader, UserData wpapi __UNUSED)
@@ -285,18 +285,18 @@ void WayPoint::uploadIndexDataCallback(CoreAPI *api, Header *protocolHeader, Use
             (protocolHeader->length - EXC_DATA_SIZE));
   else
   {
-    API_LOG(api->getDriver(), ERROR_LOG, "ACK is exception, session id %d,sequence %d\n",
+    API_LOG(api->getDriver(), DJI_ERROR_LOG, "ACK is exception, session id %d,sequence %d\n",
             protocolHeader->sessionID, protocolHeader->sequenceNumber);
     return;
   }
   api->decodeMissionStatus(ack.ack);
-  API_LOG(api->getDriver(), STATUS_LOG, "Index number: %d\n", ack.data.index);
-  API_LOG(api->getDriver(), STATUS_LOG, "Action number: %d\n", ack.data.actionNumber);
-  API_LOG(api->getDriver(), STATUS_LOG, "Latitude: %f\n", ack.data.latitude);
-  API_LOG(api->getDriver(), STATUS_LOG, "Longitude: %f\n", ack.data.longitude);
-  API_LOG(api->getDriver(), STATUS_LOG, "Altitude: %f\n", ack.data.altitude);
-  API_LOG(api->getDriver(), STATUS_LOG, "Yaw: %d\n", ack.data.yaw);
-  API_LOG(api->getDriver(), STATUS_LOG, "Gimbal pitch: %d\n", ack.data.gimbalPitch);
+  API_LOG(api->getDriver(), DJI_STATUS_LOG, "Index number: %d\n", ack.data.index);
+  API_LOG(api->getDriver(), DJI_STATUS_LOG, "Action number: %d\n", ack.data.actionNumber);
+  API_LOG(api->getDriver(), DJI_STATUS_LOG, "Latitude: %f\n", ack.data.latitude);
+  API_LOG(api->getDriver(), DJI_STATUS_LOG, "Longitude: %f\n", ack.data.longitude);
+  API_LOG(api->getDriver(), DJI_STATUS_LOG, "Altitude: %f\n", ack.data.altitude);
+  API_LOG(api->getDriver(), DJI_STATUS_LOG, "Yaw: %d\n", ack.data.yaw);
+  API_LOG(api->getDriver(), DJI_STATUS_LOG, "Gimbal pitch: %d\n", ack.data.gimbalPitch);
 }
 
 void WayPoint::setIndex(WayPointData *value, size_t pos)
@@ -306,7 +306,7 @@ void WayPoint::setIndex(WayPointData *value, size_t pos)
     index = new WayPointData[info.indexNumber];
     if (index == NULL)
     {
-      API_LOG(api->getDriver(), ERROR_LOG, "Lack of memory\n");
+      API_LOG(api->getDriver(), DJI_ERROR_LOG, "Lack of memory\n");
       return;
     }
   }

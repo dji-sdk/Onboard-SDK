@@ -116,7 +116,7 @@ void Follow::setData(const FollowData &value) { followData = value; }
 
 void Follow::setMode(const Follow::MODE mode __UNUSED)
 {
-  API_LOG(api->getDriver(), STATUS_LOG, "no available mode but default");
+  API_LOG(api->getDriver(), DJI_STATUS_LOG, "no available mode but default");
   followData.mode = 0;
 }
 
@@ -126,6 +126,6 @@ void Follow::setYawType(const Follow::YAW_TYPE type) { followData.yaw = type; }
 
 void Follow::setSensitivity(const Follow::SENSITIVITY sense __UNUSED)
 {
-  API_LOG(api->getDriver(), STATUS_LOG, "no available mode but default");
+  API_LOG(api->getDriver(), DJI_STATUS_LOG, "no available mode but default");
   followData.sensitivity = 1;
 }

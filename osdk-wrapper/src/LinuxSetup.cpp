@@ -108,21 +108,21 @@ bool validateSerialDevice(LinuxSerialDevice* serialDevice, CoreAPI* api)
   api->setBroadcastFreq(freq);
 
   //! Check the serial channel for data
-  uint8_t buf[BUFFER_SIZE];
+  uint8_t buf[DJI_BUFFER_SIZE];
   if (!serialDevice->setSerialPureTimedRead()) {
-    API_LOG(serialDevice, ERROR_LOG, "Failed to set up port for timed read\n");
+    API_LOG(serialDevice, DJI_ERROR_LOG, "Failed to set up port for timed read\n");
   };
   usleep(100000);
-  if(serialDevice->serialRead(buf, BUFFER_SIZE))
+  if(serialDevice->serialRead(buf, DJI_BUFFER_SIZE))
   {
-    API_LOG(serialDevice, STATUS_LOG, "Succeeded to read from serial device\n");
+    API_LOG(serialDevice, DJI_STATUS_LOG, "Succeeded to read from serial device\n");
     //! Cleanup - set broadcast frequencies to default once again.
     //api->setBroadcastFreqDefaults();
     //api->setBroadcastFreqToZero();
   }
   else
   {
-    API_LOG(serialDevice, ERROR_LOG, "Failed to read from serial device. The Onboard SDK is not communicating with your drone.\n");
+    API_LOG(serialDevice, DJI_ERROR_LOG, "Failed to read from serial device. The Onboard SDK is not communicating with your drone.\n");
     //! Cleanup - set broadcast frequencies to default once again.
     api->setBroadcastFreqDefaults();
     serialDevice->unsetSerialPureTimedRead();
@@ -133,12 +133,12 @@ bool validateSerialDevice(LinuxSerialDevice* serialDevice, CoreAPI* api)
   int baudCheckStatus = serialDevice->checkBaudRate(buf);
   if (baudCheckStatus == -1)
   {
-    API_LOG(serialDevice, ERROR_LOG, "No data on the line. Is your drone powered on?\n");
+    API_LOG(serialDevice, DJI_ERROR_LOG, "No data on the line. Is your drone powered on?\n");
     return false;
   }
   if (baudCheckStatus == -2)
   {
-    API_LOG(serialDevice, ERROR_LOG, "Baud rate mismatch found. Make sure DJI Assistant 2 has the same baud setting as the one in User_Config.h\n")
+    API_LOG(serialDevice, DJI_ERROR_LOG, "Baud rate mismatch found. Make sure DJI Assistant 2 has the same baud setting as the one in User_Config.h\n")
     return (false);
   }
 

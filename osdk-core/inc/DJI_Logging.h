@@ -15,7 +15,7 @@
 #include "DJI_API.h"
 #include "DJI_Type.h"
 
-#ifdef API_TRACE_DATA
+#ifdef DJI_API_TRACE_DATA
 namespace DJI {
 namespace onboardSDK {
 
@@ -44,5 +44,5 @@ typedef struct __ActivationGetProtocolVersionAck {
 void printFrame(HardDriver *hardDriver, Header *header, bool toAircraft);
 }
 }
-#endif  // API_TRACE_DATA
+#endif  // DJI_API_TRACE_DATA
 #endif  // ONBOARDSDK_DJI_LOGGING_H

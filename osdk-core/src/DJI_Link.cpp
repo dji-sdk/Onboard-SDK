@@ -36,25 +36,25 @@ CoreAPI::sendData(unsigned char* buf)
   size_t  ans;
   Header* pHeader = (Header*)buf;
 
-#ifdef API_TRACE_DATA
+#ifdef DJI_API_TRACE_DATA
   printFrame(serialDevice, pHeader, true);
 #endif
 
   ans = serialDevice->send(buf, pHeader->length);
   if (ans == 0)
   {
-    API_LOG(serialDevice, STATUS_LOG, "Port not send");
+    API_LOG(serialDevice, DJI_STATUS_LOG, "Port not send");
   }
   if (ans == (size_t)-1)
   {
-    API_LOG(serialDevice, ERROR_LOG, "Port closed");
+    API_LOG(serialDevice, DJI_ERROR_LOG, "Port closed");
   }
 }
 
 void
 CoreAPI::appHandler(Header* protocolHeader)
 {
-#ifdef API_TRACE_DATA
+#ifdef DJI_API_TRACE_DATA
   printFrame(serialDevice, protocolHeader, false);
 #endif
 
@@ -73,7 +73,7 @@ CoreAPI::appHandler(Header* protocolHeader)
         if (p2protocolHeader->sessionID == protocolHeader->sessionID &&
             p2protocolHeader->sequenceNumber == protocolHeader->sequenceNumber)
         {
-          API_LOG(serialDevice, DEBUG_LOG, "Recv Session %d ACK\n",
+          API_LOG(serialDevice, DJI_DEBUG_LOG, "Recv Session %d ACK\n",
                   p2protocolHeader->sessionID);
 
           callBack = CMDSessionTab[protocolHeader->sessionID].handler;
@@ -128,12 +128,12 @@ CoreAPI::appHandler(Header* protocolHeader)
       //! @todo unnecessary ack in case 1. Maybe add code later
       //! @todo check algorithm
       default: //! @note session id is 2
-        API_LOG(serialDevice, STATUS_LOG, "ACK %d", protocolHeader->sessionID);
+        API_LOG(serialDevice, DJI_STATUS_LOG, "ACK %d", protocolHeader->sessionID);
 
         if (ACKSessionTab[protocolHeader->sessionID - 1].sessionStatus ==
             ACK_SESSION_PROCESS)
         {
-          API_LOG(serialDevice, DEBUG_LOG,
+          API_LOG(serialDevice, DJI_DEBUG_LOG,
                   "This session is waiting for App ACK:"
                   "session id=%d,seq_num=%d\n",
                   protocolHeader->sessionID, protocolHeader->sequenceNumber);
@@ -155,7 +155,7 @@ CoreAPI::appHandler(Header* protocolHeader)
           if (p2protocolHeader->sequenceNumber ==
               protocolHeader->sequenceNumber)
           {
-            API_LOG(serialDevice, DEBUG_LOG, "Repeat ACK to remote,session "
+            API_LOG(serialDevice, DJI_DEBUG_LOG, "Repeat ACK to remote,session "
                                              "id=%d,seq_num=%d\n",
                     protocolHeader->sessionID, protocolHeader->sequenceNumber);
             sendData(ACKSessionTab[protocolHeader->sessionID - 1].mmu->pmem);
@@ -163,7 +163,7 @@ CoreAPI::appHandler(Header* protocolHeader)
           }
           else
           {
-            API_LOG(serialDevice, DEBUG_LOG,
+            API_LOG(serialDevice, DJI_DEBUG_LOG,
                     "Same session,but new seq_num pkg,session id=%d,"
                     "pre seq_num=%d,cur seq_num=%d\n",
                     protocolHeader->sessionID, p2protocolHeader->sequenceNumber,
@@ -251,14 +251,14 @@ CoreAPI::sendPoll()
         {
           if (CMDSessionTab[i].sent >= CMDSessionTab[i].retry)
           {
-            API_LOG(serialDevice, DEBUG_LOG, "Free session %d\n",
+            API_LOG(serialDevice, DJI_DEBUG_LOG, "Free session %d\n",
                     CMDSessionTab[i].sessionID);
 
             freeSession(&CMDSessionTab[i]);
           }
           else
           {
-            API_LOG(serialDevice, DEBUG_LOG, "Retry session %d\n",
+            API_LOG(serialDevice, DJI_DEBUG_LOG, "Retry session %d\n",
                     CMDSessionTab[i].sessionID);
             sendData(CMDSessionTab[i].mmu->pmem);
             CMDSessionTab[i].preTimestamp = curTimestamp;
@@ -267,7 +267,7 @@ CoreAPI::sendPoll()
         }
         else
         {
-          API_LOG(serialDevice, DEBUG_LOG, "Send once %d\n", i);
+          API_LOG(serialDevice, DJI_DEBUG_LOG, "Send once %d\n", i);
           sendData(CMDSessionTab[i].mmu->pmem);
           CMDSessionTab[i].preTimestamp = curTimestamp;
         }
@@ -275,7 +275,7 @@ CoreAPI::sendPoll()
       }
       else
       {
-        API_LOG(serialDevice, DEBUG_LOG, "Timeout Session: %d \n", i);
+        API_LOG(serialDevice, DJI_DEBUG_LOG, "Timeout Session: %d \n", i);
       }
     }
   }
@@ -286,12 +286,12 @@ void
 CoreAPI::readPoll()
 {
   int     read_len;
-  uint8_t buf[BUFFER_SIZE];
-  read_len = serialDevice->readall(buf, BUFFER_SIZE);
-#ifdef API_BUFFER_DATA
+  uint8_t buf[DJI_BUFFER_SIZE];
+  read_len = serialDevice->readall(buf, DJI_BUFFER_SIZE);
+#ifdef DJI_API_BUFFER_DATA
   onceRead = read_len;
   totalRead += onceRead;
-#endif // API_BUFFER_DATA
+#endif // DJI_API_BUFFER_DATA
   for (int i = 0; i < read_len; i++)
   {
     byteHandler(buf[i]);
@@ -377,7 +377,7 @@ CoreAPI::ackInterface(Ack* parameter)
 
   if (parameter->length > PRO_PURE_DATA_MAX_SIZE)
   {
-    API_LOG(serialDevice, ERROR_LOG, "length=%d is over-sized\n",
+    API_LOG(serialDevice, DJI_ERROR_LOG, "length=%d is over-sized\n",
             parameter->length);
     return -1;
   }
@@ -403,12 +403,12 @@ CoreAPI::ackInterface(Ack* parameter)
                   parameter->encrypt, parameter->sessionID, parameter->seqNum);
     if (ret == 0)
     {
-      API_LOG(serialDevice, ERROR_LOG, "encrypt ERROR\n");
+      API_LOG(serialDevice, DJI_ERROR_LOG, "encrypt ERROR\n");
       serialDevice->freeMemory();
       return -1;
     }
 
-    API_LOG(serialDevice, DEBUG_LOG, "Sending data!");
+    API_LOG(serialDevice, DJI_DEBUG_LOG, "Sending data!");
     sendData(ack_session->mmu->pmem);
     serialDevice->freeMemory();
     ack_session->sessionStatus = ACK_SESSION_USING;
@@ -425,7 +425,7 @@ CoreAPI::sendInterface(Command* parameter)
   CMDSession*    cmdSession = (CMDSession*)NULL;
   if (parameter->length > PRO_PURE_DATA_MAX_SIZE)
   {
-    API_LOG(serialDevice, ERROR_LOG, "ERROR,length=%lu is over-sized\n",
+    API_LOG(serialDevice, DJI_ERROR_LOG, "ERROR,length=%lu is over-sized\n",
             parameter->length);
     return -1;
   }
@@ -440,20 +440,20 @@ CoreAPI::sendInterface(Command* parameter)
       if (cmdSession == (CMDSession*)NULL)
       {
         serialDevice->freeMemory();
-        API_LOG(serialDevice, ERROR_LOG, "ERROR,there is not enough memory\n");
+        API_LOG(serialDevice, DJI_ERROR_LOG, "ERROR,there is not enough memory\n");
         return -1;
       }
       ret = encrypt(cmdSession->mmu->pmem, parameter->buf, parameter->length, 0,
                     parameter->encrypt, cmdSession->sessionID, seq_num);
       if (ret == 0)
       {
-        API_LOG(serialDevice, ERROR_LOG, "encrypt ERROR\n");
+        API_LOG(serialDevice, DJI_ERROR_LOG, "encrypt ERROR\n");
         freeSession(cmdSession);
         serialDevice->freeMemory();
         return -1;
       }
 
-      API_LOG(serialDevice, DEBUG_LOG, "send data in session mode 0\n");
+      API_LOG(serialDevice, DJI_DEBUG_LOG, "send data in session mode 0\n");
 
       sendData(cmdSession->mmu->pmem);
       seq_num++;
@@ -467,7 +467,7 @@ CoreAPI::sendInterface(Command* parameter)
       if (cmdSession == (CMDSession*)NULL)
       {
         serialDevice->freeMemory();
-        API_LOG(serialDevice, ERROR_LOG, "ERROR,there is not enough memory\n");
+        API_LOG(serialDevice, DJI_ERROR_LOG, "ERROR,there is not enough memory\n");
         return -1;
       }
       if (seq_num == cmdSession->preSeqNum)
@@ -478,7 +478,7 @@ CoreAPI::sendInterface(Command* parameter)
                     parameter->encrypt, cmdSession->sessionID, seq_num);
       if (ret == 0)
       {
-        API_LOG(serialDevice, ERROR_LOG, "encrypt ERROR\n");
+        API_LOG(serialDevice, DJI_ERROR_LOG, "encrypt ERROR\n");
         freeSession(cmdSession);
         serialDevice->freeMemory();
         return -1;
@@ -492,7 +492,7 @@ CoreAPI::sendInterface(Command* parameter)
       cmdSession->preTimestamp = serialDevice->getTimeStamp();
       cmdSession->sent         = 1;
       cmdSession->retry        = 1;
-      API_LOG(serialDevice, DEBUG_LOG, "sending session %d\n",
+      API_LOG(serialDevice, DJI_DEBUG_LOG, "sending session %d\n",
               cmdSession->sessionID);
       sendData(cmdSession->mmu->pmem);
       serialDevice->freeMemory();
@@ -508,7 +508,7 @@ CoreAPI::sendInterface(Command* parameter)
       if (cmdSession == (CMDSession*)NULL)
       {
         serialDevice->freeMemory();
-        API_LOG(serialDevice, ERROR_LOG, "ERROR,there is not enough memory\n");
+        API_LOG(serialDevice, DJI_ERROR_LOG, "ERROR,there is not enough memory\n");
         return -1;
       }
       if (seq_num == cmdSession->preSeqNum)
@@ -520,7 +520,7 @@ CoreAPI::sendInterface(Command* parameter)
 
       if (ret == 0)
       {
-        API_LOG(serialDevice, ERROR_LOG, "encrypt ERROR");
+        API_LOG(serialDevice, DJI_ERROR_LOG, "encrypt ERROR");
         freeSession(cmdSession);
         serialDevice->freeMemory();
         return -1;
@@ -533,13 +533,13 @@ CoreAPI::sendInterface(Command* parameter)
       cmdSession->preTimestamp = serialDevice->getTimeStamp();
       cmdSession->sent         = 1;
       cmdSession->retry        = parameter->retry;
-      API_LOG(serialDevice, DEBUG_LOG, "Sending session %d\n",
+      API_LOG(serialDevice, DJI_DEBUG_LOG, "Sending session %d\n",
               cmdSession->sessionID);
       sendData(cmdSession->mmu->pmem);
       serialDevice->freeMemory();
       break;
     default:
-      API_LOG(serialDevice, ERROR_LOG, "Unknown mode:%d\n",
+      API_LOG(serialDevice, DJI_ERROR_LOG, "Unknown mode:%d\n",
               parameter->sessionMode);
       break;
   }

@@ -65,46 +65,46 @@
       (driver)->displayLog("ERROR: log printer inner fault\n");           \
   }
 
-#ifdef API_TRACE_DATA
-#define TRACE_LOG "TRACE"
+#ifdef DJI_API_TRACE_DATA
+#define DJI_TRACE_LOG "TRACE"
 #else
-#define TRACE_LOG 0
+#define DJI_TRACE_LOG 0
 #endif
 
-#ifdef API_DEBUG_DATA
-#define DEBUG_LOG "DEBUG"
+#ifdef DJI_API_DEBUG_DATA
+#define DJI_DEBUG_LOG "DEBUG"
 #else
-#define DEBUG_LOG 0
+#define DJI_DEBUG_LOG 0
 #endif
 
-#ifdef API_ERROR_DATA
-#define ERROR_LOG "ERROR"
+#ifdef DJI_API_ERROR_DATA
+#define DJI_ERROR_LOG "ERROR"
 #else
-#define ERROR_LOG 0
+#define DJI_ERROR_LOG 0
 #endif
 
-#ifdef API_BUFFER_DATA
-#define BUFFER_LOG "BUFFER"
+#ifdef DJI_API_BUFFER_DATA
+#define DJI_BUFFER_LOG "BUFFER"
 #else
-#define BUFFER_LOG 0
+#define DJI_BUFFER_LOG 0
 #endif
 
-#ifdef API_STATUS_DATA
-#define STATUS_LOG "STATUS"
+#ifdef DJI_API_STATUS_DATA
+#define DJI_STATUS_LOG "STATUS"
 #else
-#define STATUS_LOG 0
+#define DJI_STATUS_LOG 0
 #endif
 
-#ifdef API_MISSION_DATA
-#define MISSION_LOG "MISSION"
+#ifdef DJI_API_MISSION_DATA
+#define DJI_MISSION_LOG "MISSION"
 #else
-#define MISSION_LOG 0
+#define DJI_MISSION_LOG 0
 #endif
 
-#ifdef API_RTK_DEBUG
-#define RTK_LOG "MISSION"
+#ifdef DJI_API_RTK_DEBUG
+#define DJI_RTK_LOG "MISSION"
 #else
-#define RTK_LOG 0
+#define DJI_RTK_LOG 0
 #endif
 
 //! @note for ARMCC-5.0 compiler
@@ -180,7 +180,7 @@ typedef struct SDKFilter
   unsigned short reuseIndex;
   unsigned short reuseCount;
   unsigned short recvIndex;
-  unsigned char recvBuf[BUFFER_SIZE];
+  unsigned char recvBuf[DJI_BUFFER_SIZE];
   // for encrypt
   unsigned char sdkKey[32];
   unsigned char encode;

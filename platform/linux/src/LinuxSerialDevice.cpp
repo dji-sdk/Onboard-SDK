@@ -51,18 +51,18 @@ LinuxSerialDevice::~LinuxSerialDevice()
 void
 LinuxSerialDevice::init()
 {
-  API_LOG(this, STATUS_LOG,
+  API_LOG(this, DJI_STATUS_LOG,
           "Attempting to open device %s with baudrate %u...\n",
           m_device.c_str(), m_baudrate);
   if (_serialStart(m_device.c_str(), m_baudrate) < 0)
   {
     _serialClose();
-    API_LOG(this, ERROR_LOG, "...Failed to start serial\n");
+    API_LOG(this, DJI_ERROR_LOG, "...Failed to start serial\n");
     deviceStatus = false;
   }
   else
   {
-    API_LOG(this, STATUS_LOG, "...Serial started successfully.\r\n");
+    API_LOG(this, DJI_STATUS_LOG, "...Serial started successfully.\r\n");
     deviceStatus = true;
   }
 }
@@ -202,7 +202,7 @@ LinuxSerialDevice::setDevice(std::string device)
   m_device = device;
 }
 
-int LinuxSerialDevice::_checkBaudRate(uint8_t (&buf)[BUFFER_SIZE])
+int LinuxSerialDevice::_checkBaudRate(uint8_t (&buf)[DJI_BUFFER_SIZE])
 {
   int lengthForCheck   = 200;
   int timeoutInSeconds = 2;
@@ -246,7 +246,7 @@ LinuxSerialDevice::_serialOpen(const char* dev)
 #endif
   if (m_serial_fd < 0)
   {
-    API_LOG(this, ERROR_LOG, "cannot open device %s\n", dev);
+    API_LOG(this, DJI_ERROR_LOG, "cannot open device %s\n", dev);
     return false;
   }
   return true;
@@ -257,7 +257,7 @@ LinuxSerialDevice::_serialClose()
 {
   close(m_serial_fd);
   m_serial_fd = -1;
-  API_LOG(this, DEBUG_LOG, "device closed %d\n", m_serial_fd);
+  API_LOG(this, DJI_DEBUG_LOG, "device closed %d\n", m_serial_fd);
   return true;
 }
 
@@ -266,7 +266,7 @@ LinuxSerialDevice::_serialFlush()
 {
   if (m_serial_fd < 0)
   {
-    API_LOG(this, ERROR_LOG, "flushing fail because no device is opened\n");
+    API_LOG(this, DJI_ERROR_LOG, "flushing fail because no device is opened\n");
     return false;
   }
   else
@@ -290,7 +290,7 @@ LinuxSerialDevice::_serialConfig(int baudrate, char data_bits, char parity_bits,
   /* save current port parameter */
   if (tcgetattr(m_serial_fd, &oldtio) != 0)
   {
-    API_LOG(this, ERROR_LOG, "fail to save current port\n");
+    API_LOG(this, DJI_ERROR_LOG, "fail to save current port\n");
     return false;
   }
   memset(&newtio, 0, sizeof(newtio));
@@ -373,7 +373,7 @@ LinuxSerialDevice::_serialConfig(int baudrate, char data_bits, char parity_bits,
   /* activite the configuration */
   if ((tcsetattr(m_serial_fd, TCSANOW, &newtio)) != 0)
   {
-    API_LOG(this, ERROR_LOG, "failed to activate serial configuration\n");
+    API_LOG(this, DJI_ERROR_LOG, "failed to activate serial configuration\n");
     return false;
   }
   return true;

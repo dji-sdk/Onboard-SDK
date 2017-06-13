@@ -60,7 +60,7 @@ bool LinuxThread::createThread()
 
   if(0 != ret)
   {
-    API_LOG(api->getDriver(), ERROR_LOG, "fail to create thread for %s!\n",
+    API_LOG(api->getDriver(), DJI_ERROR_LOG, "fail to create thread for %s!\n",
     infoStr.c_str());
     return false;
   }
@@ -68,7 +68,7 @@ bool LinuxThread::createThread()
   ret = pthread_setname_np(threadID, infoStr.c_str());
   if(0 != ret)
   {
-    API_LOG(api->getDriver(), ERROR_LOG, "fail to set thread name for %s!\n",
+    API_LOG(api->getDriver(), DJI_ERROR_LOG, "fail to set thread name for %s!\n",
             infoStr.c_str());
     return false;
   }
@@ -92,7 +92,7 @@ int LinuxThread::stopThread()
     return ret;
   }
 
-  API_LOG(api->getDriver(), DEBUG_LOG, "Main: completed join with thread\n");
+  API_LOG(api->getDriver(), DJI_DEBUG_LOG, "Main: completed join with thread\n");
   return 0;
 }
 

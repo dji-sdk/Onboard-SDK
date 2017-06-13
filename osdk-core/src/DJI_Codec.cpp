@@ -614,22 +614,22 @@ bool CoreAPI::decodeACKStatus(unsigned short ack)
   switch (ack)
   {
     case ACK_COMMON_SUCCESS:
-      API_LOG(serialDevice, STATUS_LOG, "SUCCESS.");
+      API_LOG(serialDevice, DJI_STATUS_LOG, "SUCCESS.");
       return true;
     case ACK_COMMON_KEYERROR:
-      API_LOG(serialDevice, ERROR_LOG, "Wrong encode Key, Activate again.");
+      API_LOG(serialDevice, DJI_ERROR_LOG, "Wrong encode Key, Activate again.");
       return false;
     case ACK_COMMON_NO_AUTHORIZATION:
-      API_LOG(serialDevice, ERROR_LOG, "Please obtain control and retry.");
+      API_LOG(serialDevice, DJI_ERROR_LOG, "Please obtain control and retry.");
       return false;
     case ACK_COMMON_NO_RIGHTS:
-      API_LOG(serialDevice, ERROR_LOG, "Need higher Level access.");
+      API_LOG(serialDevice, DJI_ERROR_LOG, "Need higher Level access.");
       return false;
     case ACK_COMMON_NO_RESPONSE:
-      API_LOG(serialDevice, ERROR_LOG, "Check your Hardware connection and retry.");
+      API_LOG(serialDevice, DJI_ERROR_LOG, "Check your Hardware connection and retry.");
       return false;
     default:
-      API_LOG(serialDevice, ERROR_LOG, "Unkown ACK code: 0x%x", ack);
+      API_LOG(serialDevice, DJI_ERROR_LOG, "Unkown ACK code: 0x%x", ack);
       return false;
   }
 }
@@ -656,7 +656,7 @@ void CoreAPI::storeData(SDKFilter *p_filter, unsigned char in_data)
   }
   else
   {
-    API_LOG(serialDevice, ERROR_LOG, "buffer overflow");
+    API_LOG(serialDevice, DJI_ERROR_LOG, "buffer overflow");
     memset(p_filter->recvBuf, 0, p_filter->recvIndex);
     p_filter->recvIndex = 0;
   }
@@ -866,7 +866,7 @@ unsigned short DJI::onboardSDK::CoreAPI::encrypt(unsigned char *pdest,
 
   if (filter.encode == 0 && is_enc)
   {
-    API_LOG(serialDevice, ERROR_LOG,
+    API_LOG(serialDevice, DJI_ERROR_LOG,
         "Can not send encode data, Please activate your device to get an available key.\n");
     return 0;
   }
@@ -878,7 +878,7 @@ unsigned short DJI::onboardSDK::CoreAPI::encrypt(unsigned char *pdest,
   if (is_enc)
     data_len = data_len + (16 - w_len % 16);
 
-  API_LOG(serialDevice, DEBUG_LOG, "data len: %d\n", data_len);
+  API_LOG(serialDevice, DJI_DEBUG_LOG, "data len: %d\n", data_len);
 
   p_head->sof = _SDK_SOF;
   p_head->length = data_len;

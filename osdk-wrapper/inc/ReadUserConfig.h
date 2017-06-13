@@ -16,12 +16,12 @@
 #ifndef USER_CONFIG_H
 #define USER_CONFIG_H
 
-//#define API_TRACE_DATA
-//#define API_DEBUG_DATA
-//#define API_ERROR_DATA
-//#define API_BUFFER_DATA
-//#define API_MISSION_DATA
-//#define API_RTK_DEBUG
+//#define DJI_API_TRACE_DATA
+//#define DJI_API_DEBUG_DATA
+//#define DJI_API_ERROR_DATA
+//#define DJI_API_BUFFER_DATA
+//#define DJI_API_MISSION_DATA
+//#define DJI_API_RTK_DEBUG
 
 #include <DJI_Version.h>
 #include <string>

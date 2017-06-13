@@ -53,7 +53,7 @@ public:
 
   //! Public interfaces to private functions. Use these functions to validate
   //! your serial connection
-  int checkBaudRate(uint8_t (&buf)[BUFFER_SIZE])
+  int checkBaudRate(uint8_t (&buf)[DJI_BUFFER_SIZE])
   {
     return _checkBaudRate(buf);
   }
@@ -121,7 +121,7 @@ private:
   int _serialWrite(const unsigned char* buf, int len);
   int _serialRead(unsigned char* buf, int len);
 
-  int _checkBaudRate(uint8_t (&buf)[BUFFER_SIZE]);
+  int _checkBaudRate(uint8_t (&buf)[DJI_BUFFER_SIZE]);
 };
 }
 }

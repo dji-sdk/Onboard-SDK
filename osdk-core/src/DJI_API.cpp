@@ -15,11 +15,11 @@
 using namespace DJI;
 using namespace DJI::onboardSDK;
 
-#ifdef USE_ENCRYPT
+#ifdef DJI_USE_ENCRYPT
 uint8_t DJI::onboardSDK::encrypt = 1;
 #else
 uint8_t DJI::onboardSDK::encrypt = 0;
-#endif // USE_ENCRYPT
+#endif // DJI_USE_ENCRYPT
 
 CoreAPI::CoreAPI(HardDriver* sDevice, bool userCallbackThread,
                  CallBack userRecvCallback, UserData userData)
@@ -245,7 +245,7 @@ CoreAPI::parseDroneVersionInfo(unsigned char* ackPtrIncoming)
     ackPtr++;
     if (ackPtr - startPtr > 18)
     {
-      API_LOG(serialDevice, ERROR_LOG, "Drone version was not obtained. Please "
+      API_LOG(serialDevice, DJI_ERROR_LOG, "Drone version was not obtained. Please "
                                        "restart the program or call "
                                        "getDroneVersion\n");
       return false;
@@ -264,7 +264,7 @@ CoreAPI::parseDroneVersionInfo(unsigned char* ackPtrIncoming)
     ackPtr++;
     if (ackPtr - startPtr > 64)
     {
-      API_LOG(serialDevice, ERROR_LOG, "Drone version was not obtained. Please "
+      API_LOG(serialDevice, DJI_ERROR_LOG, "Drone version was not obtained. Please "
                                        "restart the program or call "
                                        "getDroneVersion\n");
       return false;
@@ -277,7 +277,7 @@ CoreAPI::parseDroneVersionInfo(unsigned char* ackPtrIncoming)
     ackPtr++;
     if (ackPtr - startPtr > 64)
     {
-      API_LOG(serialDevice, ERROR_LOG, "Drone version was not obtained. Please "
+      API_LOG(serialDevice, DJI_ERROR_LOG, "Drone version was not obtained. Please "
                                        "restart the program or call "
                                        "getDroneVersion\n");
       return false;
@@ -294,7 +294,7 @@ CoreAPI::parseDroneVersionInfo(unsigned char* ackPtrIncoming)
     j++;
     if (ackPtr - startPtr > 64)
     {
-      API_LOG(serialDevice, ERROR_LOG, "Drone version was not obtained. Please "
+      API_LOG(serialDevice, DJI_ERROR_LOG, "Drone version was not obtained. Please "
                                        "restart the program or call "
                                        "getDroneVersion\n");
       return false;
@@ -314,7 +314,7 @@ CoreAPI::parseDroneVersionInfo(unsigned char* ackPtrIncoming)
     ackPtr++;
     if (ackPtr - startPtr > 64)
     {
-      API_LOG(serialDevice, ERROR_LOG, "Drone version was not obtained. Please "
+      API_LOG(serialDevice, DJI_ERROR_LOG, "Drone version was not obtained. Please "
                                        "restart the program or call "
                                        "getDroneVersion\n");
       return false;
@@ -327,7 +327,7 @@ CoreAPI::parseDroneVersionInfo(unsigned char* ackPtrIncoming)
     ackPtr++;
     if (ackPtr - startPtr > 64)
     {
-      API_LOG(serialDevice, ERROR_LOG, "Drone version was not obtained. Please "
+      API_LOG(serialDevice, DJI_ERROR_LOG, "Drone version was not obtained. Please "
                                        "restart the program or call "
                                        "getDroneVersion\n");
       return false;
@@ -340,7 +340,7 @@ CoreAPI::parseDroneVersionInfo(unsigned char* ackPtrIncoming)
     ackPtr++;
     if (ackPtr - startPtr > 64)
     {
-      API_LOG(serialDevice, ERROR_LOG, "Drone version was not obtained. Please "
+      API_LOG(serialDevice, DJI_ERROR_LOG, "Drone version was not obtained. Please "
                                        "restart the program or call "
                                        "getDroneVersion\n");
       return false;
@@ -353,7 +353,7 @@ CoreAPI::parseDroneVersionInfo(unsigned char* ackPtrIncoming)
     ackPtr++;
     if (ackPtr - startPtr > 64)
     {
-      API_LOG(serialDevice, ERROR_LOG, "Drone version was not obtained. Please "
+      API_LOG(serialDevice, DJI_ERROR_LOG, "Drone version was not obtained. Please "
                                        "restart the program or call "
                                        "getDroneVersion\n");
       return false;
@@ -394,7 +394,7 @@ CoreAPI::parseDroneVersionInfo(unsigned char* ackPtrIncoming)
       id_ptr++;
       if (id_ptr - &crc_id[4] > 12)
       {
-        API_LOG(serialDevice, ERROR_LOG, "Drone ID was not obtained.");
+        API_LOG(serialDevice, DJI_ERROR_LOG, "Drone ID was not obtained.");
         return false; //! Not catastrophic error
       }
     }
@@ -414,7 +414,7 @@ CoreAPI::parseDroneVersionInfo(unsigned char* ackPtrIncoming)
       id_ptr++;
       if (id_ptr - &crc_id[0] > 16)
       {
-        API_LOG(serialDevice, ERROR_LOG, "Drone ID was not obtained.");
+        API_LOG(serialDevice, DJI_ERROR_LOG, "Drone ID was not obtained.");
         return false; //! Not catastrophic error
       }
     }
@@ -426,16 +426,16 @@ CoreAPI::parseDroneVersionInfo(unsigned char* ackPtrIncoming)
 
   if (this->versionData.fwVersion > MAKE_VERSION(3, 1, 0, 0))
   {
-    API_LOG(this->serialDevice, STATUS_LOG, "Device Serial No. = %.16s\n",
+    API_LOG(this->serialDevice, DJI_STATUS_LOG, "Device Serial No. = %.16s\n",
             this->versionData.hw_serial_num);
   }
-  API_LOG(this->serialDevice, STATUS_LOG, "Hardware = %.12s\n",
+  API_LOG(this->serialDevice, DJI_STATUS_LOG, "Hardware = %.12s\n",
           this->versionData.hwVersion);
-  API_LOG(this->serialDevice, STATUS_LOG, "Firmware = %d.%d.%d.%d\n", ver1,
+  API_LOG(this->serialDevice, DJI_STATUS_LOG, "Firmware = %d.%d.%d.%d\n", ver1,
           ver2, ver3, ver4);
   if (this->versionData.fwVersion < MAKE_VERSION(3, 2, 0, 0))
   {
-    API_LOG(this->serialDevice, STATUS_LOG, "Version CRC = 0x%X\n",
+    API_LOG(this->serialDevice, DJI_STATUS_LOG, "Version CRC = 0x%X\n",
             this->versionData.version_crc);
   }
 
@@ -448,7 +448,7 @@ CoreAPI::activate(ActivateData* data, CallBack callback, UserData userData)
   //! First, we need to check if getDroneVersion has been called
   if (versionData.fwVersion == 0)
   {
-    API_LOG(serialDevice, ERROR_LOG, "Please call getDroneVersion first.\n");
+    API_LOG(serialDevice, DJI_ERROR_LOG, "Please call getDroneVersion first.\n");
     return;
   }
   data->version        = versionData.fwVersion;
@@ -457,8 +457,8 @@ CoreAPI::activate(ActivateData* data, CallBack callback, UserData userData)
 
   for (int i             = 0; i < 32; ++i)
     accountData.iosID[i] = '0'; //! @note for ios verification
-  API_LOG(serialDevice, DEBUG_LOG, "version 0x%X\n", versionData.fwVersion);
-  API_LOG(serialDevice, DEBUG_LOG, "%.32s", accountData.iosID);
+  API_LOG(serialDevice, DJI_DEBUG_LOG, "version 0x%X\n", versionData.fwVersion);
+  API_LOG(serialDevice, DJI_DEBUG_LOG, "%.32s", accountData.iosID);
   send(2, 0, SET_ACTIVATION, CODE_ACTIVATE, (unsigned char*)&accountData,
        sizeof(accountData) - sizeof(char*), 1000, 3,
        callback ? callback : CoreAPI::activateCallback, userData);
@@ -479,8 +479,8 @@ CoreAPI::activate(ActivateData* data, int timeout)
 
   for (int i             = 0; i < 32; ++i)
     accountData.iosID[i] = '0'; //! @note for ios verification
-  API_LOG(serialDevice, DEBUG_LOG, "version 0x%X\n", versionData.fwVersion);
-  API_LOG(serialDevice, DEBUG_LOG, "%.32s", accountData.iosID);
+  API_LOG(serialDevice, DJI_DEBUG_LOG, "version 0x%X\n", versionData.fwVersion);
+  API_LOG(serialDevice, DJI_DEBUG_LOG, "%.32s", accountData.iosID);
   send(2, 0, SET_ACTIVATION, CODE_ACTIVATE, (unsigned char*)&accountData,
        sizeof(accountData) - sizeof(char*), 1000, 3, 0, 0);
 
@@ -501,7 +501,7 @@ CoreAPI::sendToMobile(uint8_t* data, uint8_t len, CallBack callback,
 {
   if (len > 100)
   {
-    API_LOG(serialDevice, ERROR_LOG, "Too much data to send");
+    API_LOG(serialDevice, DJI_ERROR_LOG, "Too much data to send");
     return;
   }
   send(0, 0, SET_ACTIVATION, CODE_TOMOBILE, data, len, 500, 1,
@@ -910,51 +910,51 @@ CoreAPI::activateCallback(CoreAPI* api, Header* protocolHeader,
     switch (ack_data)
     {
       case ACK_ACTIVE_SUCCESS:
-        API_LOG(api->serialDevice, STATUS_LOG, "Activated successfully\n");
+        API_LOG(api->serialDevice, DJI_STATUS_LOG, "Activated successfully\n");
 
         if (api->accountData.encKey)
           api->setKey(api->accountData.encKey);
         return;
       case ACK_ACTIVE_NEW_DEVICE:
-        API_LOG(api->serialDevice, STATUS_LOG,
+        API_LOG(api->serialDevice, DJI_STATUS_LOG,
                 "New device, please link DJIGO to your "
                 "remote controller and try again\n");
         break;
       case ACK_ACTIVE_PARAMETER_ERROR:
-        API_LOG(api->serialDevice, ERROR_LOG, "Wrong parameter\n");
+        API_LOG(api->serialDevice, DJI_ERROR_LOG, "Wrong parameter\n");
         break;
       case ACK_ACTIVE_ENCODE_ERROR:
-        API_LOG(api->serialDevice, ERROR_LOG, "Encode error\n");
+        API_LOG(api->serialDevice, DJI_ERROR_LOG, "Encode error\n");
         break;
       case ACK_ACTIVE_APP_NOT_CONNECTED:
-        API_LOG(api->serialDevice, ERROR_LOG, "DJIGO not connected\n");
+        API_LOG(api->serialDevice, DJI_ERROR_LOG, "DJIGO not connected\n");
         break;
       case ACK_ACTIVE_NO_INTERNET:
-        API_LOG(api->serialDevice, ERROR_LOG, "DJIGO not "
+        API_LOG(api->serialDevice, DJI_ERROR_LOG, "DJIGO not "
                                               "connected to the internet\n");
         break;
       case ACK_ACTIVE_SERVER_REFUSED:
-        API_LOG(api->serialDevice, ERROR_LOG,
+        API_LOG(api->serialDevice, DJI_ERROR_LOG,
                 "DJI server rejected "
                 "your request, please use your SDK ID\n");
         break;
       case ACK_ACTIVE_ACCESS_LEVEL_ERROR:
-        API_LOG(api->serialDevice, ERROR_LOG, "Wrong SDK permission\n");
+        API_LOG(api->serialDevice, DJI_ERROR_LOG, "Wrong SDK permission\n");
         break;
       case ACK_ACTIVE_VERSION_ERROR:
-        API_LOG(api->serialDevice, ERROR_LOG, "SDK version did not match\n");
+        API_LOG(api->serialDevice, DJI_ERROR_LOG, "SDK version did not match\n");
         break;
       default:
         if (!api->decodeACKStatus(ack_data))
         {
-          API_LOG(api->serialDevice, ERROR_LOG, "While calling this function");
+          API_LOG(api->serialDevice, DJI_ERROR_LOG, "While calling this function");
         }
         break;
     }
   }
   else
   {
-    API_LOG(api->serialDevice, ERROR_LOG,
+    API_LOG(api->serialDevice, DJI_ERROR_LOG,
             "ACK is exception, session id %d,sequence %d\n",
             protocolHeader->sessionID, protocolHeader->sequenceNumber);
   }
@@ -972,12 +972,12 @@ CoreAPI::sendToMobileCallback(CoreAPI* api, Header* protocolHeader,
            (protocolHeader->length - EXC_DATA_SIZE));
     if (!api->decodeACKStatus(ack_data))
     {
-      API_LOG(api->serialDevice, ERROR_LOG, "While calling this function");
+      API_LOG(api->serialDevice, DJI_ERROR_LOG, "While calling this function");
     }
   }
   else
   {
-    API_LOG(api->serialDevice, ERROR_LOG,
+    API_LOG(api->serialDevice, DJI_ERROR_LOG,
             "ACK is exception, session id %d,sequence %d\n",
             protocolHeader->sessionID, protocolHeader->sequenceNumber);
   }
@@ -1196,15 +1196,15 @@ CoreAPI::setFrequencyCallback(CoreAPI* api __UNUSED, Header* protocolHeader,
   switch (ack_data)
   {
     case 0x0000:
-      API_LOG(api->serialDevice, STATUS_LOG, "Frequency set successfully\n");
+      API_LOG(api->serialDevice, DJI_STATUS_LOG, "Frequency set successfully\n");
       break;
     case 0x0001:
-      API_LOG(api->serialDevice, ERROR_LOG, "Frequency parameter error\n");
+      API_LOG(api->serialDevice, DJI_ERROR_LOG, "Frequency parameter error\n");
       break;
     default:
       if (!api->decodeACKStatus(ack_data))
       {
-        API_LOG(api->serialDevice, ERROR_LOG, "While calling this function\n");
+        API_LOG(api->serialDevice, DJI_ERROR_LOG, "While calling this function\n");
       }
       break;
   }
@@ -1247,7 +1247,7 @@ CoreAPI::setControlCallback(CoreAPI* api, Header* protocolHeader,
   }
   else
   {
-    API_LOG(api->serialDevice, ERROR_LOG,
+    API_LOG(api->serialDevice, DJI_ERROR_LOG,
             "ACK is exception, session id %d,sequence %d\n",
             protocolHeader->sessionID, protocolHeader->sequenceNumber);
   }
@@ -1257,40 +1257,40 @@ CoreAPI::setControlCallback(CoreAPI* api, Header* protocolHeader,
     case ACK_SETCONTROL_ERROR_MODE:
       if (api->versionData.fwVersion < MAKE_VERSION(3, 2, 0, 0))
       {
-        API_LOG(api->serialDevice, STATUS_LOG,
+        API_LOG(api->serialDevice, DJI_STATUS_LOG,
                 "Obtain control failed: switch to F mode\n");
       }
       else
       {
-        API_LOG(api->serialDevice, STATUS_LOG,
+        API_LOG(api->serialDevice, DJI_STATUS_LOG,
                 "Obtain control failed: switch to P mode\n");
       }
       break;
     case ACK_SETCONTROL_RELEASE_SUCCESS:
-      API_LOG(api->serialDevice, STATUS_LOG, "Released control successfully\n");
+      API_LOG(api->serialDevice, DJI_STATUS_LOG, "Released control successfully\n");
       break;
     case ACK_SETCONTROL_OBTAIN_SUCCESS:
-      API_LOG(api->serialDevice, STATUS_LOG, "Obtained control successfully\n");
+      API_LOG(api->serialDevice, DJI_STATUS_LOG, "Obtained control successfully\n");
       break;
     case ACK_SETCONTROL_OBTAIN_RUNNING:
-      API_LOG(api->serialDevice, STATUS_LOG, "Obtain control running\n");
+      API_LOG(api->serialDevice, DJI_STATUS_LOG, "Obtain control running\n");
       api->send(2, DJI::onboardSDK::encrypt, SET_CONTROL, CODE_SETCONTROL,
                 &data, 1, 500, 2, CoreAPI::setControlCallback);
       break;
     case ACK_SETCONTROL_RELEASE_RUNNING:
-      API_LOG(api->serialDevice, STATUS_LOG, "Release control running\n");
+      API_LOG(api->serialDevice, DJI_STATUS_LOG, "Release control running\n");
       data = 0;
       api->send(2, DJI::onboardSDK::encrypt, SET_CONTROL, CODE_SETCONTROL,
                 &data, 1, 500, 2, CoreAPI::setControlCallback);
       break;
     case ACK_SETCONTROL_IOC:
-      API_LOG(api->serialDevice, STATUS_LOG,
+      API_LOG(api->serialDevice, DJI_STATUS_LOG,
               "IOC mode opening can not obtain control\n");
       break;
     default:
       if (!api->decodeACKStatus(ack_data))
       {
-        API_LOG(api->serialDevice, ERROR_LOG, "While calling this function");
+        API_LOG(api->serialDevice, DJI_ERROR_LOG, "While calling this function");
       }
       break;
   }

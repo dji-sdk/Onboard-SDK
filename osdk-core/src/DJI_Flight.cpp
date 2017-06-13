@@ -20,19 +20,19 @@ using namespace DJI::onboardSDK;
 Flight::Flight(DJI::onboardSDK::CoreAPI *ControlAPI)
 {
   api = ControlAPI;
-#ifdef USE_SIMULATION  //! @note This functionality is not supported in this release.  
+#ifdef DJI_USE_SIMULATION  //! @note This functionality is not supported in this release.
   simulating = 0;
-#endif // USE_SIMULATION
+#endif // DJI_USE_SIMULATION
 }
 
 CoreAPI *Flight::getApi() const { return api; }
 
 void Flight::setApi(CoreAPI *value) { api = value; }
 
-#ifdef USE_SIMULATION   //! @note This functionality is not supported in this release.  
+#ifdef DJI_USE_SIMULATION   //! @note This functionality is not supported in this release.
 bool Flight::isSimulating() const { return simulating; }
 void Flight::setSimulating(bool value) { simulating = value; }
-#endif // USE_SIMULATION
+#endif // DJI_USE_SIMULATION
 
 void Flight::task(TASK taskname, CallBack TaskCallback, UserData userData)
 {
@@ -102,7 +102,7 @@ void Flight::setMovementControl(uint8_t flag, float32_t x, float32_t y, float32_
           api->send(0, encrypt, SET_CONTROL, CODE_CONTROL, &data, sizeof(FlightData));
         }
       } else {
-        API_LOG(api->getDriver(), STATUS_LOG, "Not enough GPS locks, cannot run Movement Control \n");
+        API_LOG(api->getDriver(), DJI_STATUS_LOG, "Not enough GPS locks, cannot run Movement Control \n");
       }
     }
     else
@@ -119,7 +119,7 @@ void Flight::setMovementControl(uint8_t flag, float32_t x, float32_t y, float32_
           api->send(0, encrypt, SET_CONTROL, CODE_CONTROL, &data, sizeof(FlightData));
         }
       } else {
-        API_LOG(api->getDriver(), STATUS_LOG, "Not enough GPS locks, cannot run Movement Control \n");
+        API_LOG(api->getDriver(), DJI_STATUS_LOG, "Not enough GPS locks, cannot run Movement Control \n");
       }
     }
     else
@@ -143,7 +143,7 @@ void Flight::setFlight(FlightData *data)
 
 QuaternionData Flight::getQuaternion() const
 {
-#ifdef USE_SIMULATION    
+#ifdef DJI_USE_SIMULATION
   if (simulating)
   {
     QuaternionData ans;
@@ -152,7 +152,7 @@ QuaternionData Flight::getQuaternion() const
     return ans;
   }
   else
-#endif // USE_SIMULATION
+#endif // DJI_USE_SIMULATION
   return api->getBroadcastData().q;
 }
 
@@ -202,31 +202,31 @@ Flight::Mode Flight::getControlMode() const
 
 Angle Flight::getYaw() const
 {
-#ifdef USE_SIMULATION
+#ifdef DJI_USE_SIMULATION
   if (simulating)
     return AngularSim.yaw;
   else
-#endif // USE_SIMULATION
+#endif // DJI_USE_SIMULATION
   return toEulerAngle(api->getBroadcastData().q).yaw;
 }
 
 Angle Flight::getRoll() const
 {
-#ifdef USE_SIMULATION
+#ifdef DJI_USE_SIMULATION
   if (simulating)
     return AngularSim.roll;
   else
-#endif // USE_SIMULATION
+#endif // DJI_USE_SIMULATION
   return toEulerAngle(api->getBroadcastData().q).roll;
 }
 
 Angle Flight::getPitch() const
 {
-#ifdef USE_SIMULATION
+#ifdef DJI_USE_SIMULATION
   if (simulating)
     return AngularSim.pitch;
   else
-#endif // USE_SIMULATION
+#endif // DJI_USE_SIMULATION
   return toEulerAngle(api->getBroadcastData().q).pitch;
 }
 
@@ -240,22 +240,22 @@ void Flight::armCallback(CoreAPI *api, Header *protocolHeader, UserData userData
     switch (ack_data)
     {
       case ACK_ARM_SUCCESS:
-        API_LOG(api->getDriver(), STATUS_LOG, "Success,0x000%x\n", ack_data);
+        API_LOG(api->getDriver(), DJI_STATUS_LOG, "Success,0x000%x\n", ack_data);
         break;
       case ACK_ARM_NEED_CONTROL:
-        API_LOG(api->getDriver(), STATUS_LOG, "Need to obtain control first, 0x000%x\n", ack_data);
+        API_LOG(api->getDriver(), DJI_STATUS_LOG, "Need to obtain control first, 0x000%x\n", ack_data);
         break;
       case ACK_ARM_ALREADY_ARMED:
-        API_LOG(api->getDriver(), STATUS_LOG, "Already done, 0x000%x\n", ack_data);
+        API_LOG(api->getDriver(), DJI_STATUS_LOG, "Already done, 0x000%x\n", ack_data);
         break;
       case ACK_ARM_IN_AIR:
-        API_LOG(api->getDriver(), STATUS_LOG, "Cannot execute while in air, 0x000%x\n", ack_data);
+        API_LOG(api->getDriver(), DJI_STATUS_LOG, "Cannot execute while in air, 0x000%x\n", ack_data);
         break;
     }
   }
   else
   {
-    API_LOG(api->getDriver(), ERROR_LOG, "ACK is exception,session id %d,sequence %d\n",
+    API_LOG(api->getDriver(), DJI_ERROR_LOG, "ACK is exception,session id %d,sequence %d\n",
         protocolHeader->sessionID, protocolHeader->sequenceNumber);
   }
 }
@@ -267,11 +267,11 @@ void Flight::taskCallback(CoreAPI *api, Header *protocolHeader, UserData userDat
   {
     memcpy((unsigned char *)&ack_data, ((unsigned char *)protocolHeader) + sizeof(Header),
         (protocolHeader->length - EXC_DATA_SIZE));
-    API_LOG(api->getDriver(), STATUS_LOG, "Task running successfully,%d\n", ack_data);
+    API_LOG(api->getDriver(), DJI_STATUS_LOG, "Task running successfully,%d\n", ack_data);
   }
  else
   {
-    API_LOG(api->getDriver(), ERROR_LOG, "ACK is exception,session id %d,sequence %d\n",
+    API_LOG(api->getDriver(), DJI_ERROR_LOG, "ACK is exception,session id %d,sequence %d\n",
         protocolHeader->sessionID, protocolHeader->sequenceNumber);
   }
 }

@@ -194,7 +194,7 @@ class Flight
  * just a simple simulator
  *
  * */
-#ifdef USE_SIMULATION
+#ifdef DJI_USE_SIMULATION
   public:
   bool isSimulating() const;
   void setSimulating(bool value);
@@ -204,7 +204,7 @@ class Flight
   Vector3dData position;
   Vector3dData speed;
   EulerAngle AngularSim;
-#endif // USE_SIMULATION
+#endif // DJI_USE_SIMULATION
 };
 
 } //namespace OnboardSDK

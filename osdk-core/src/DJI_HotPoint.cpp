@@ -216,14 +216,14 @@ void HotPoint::startCallback(CoreAPI *api, Header *protocolHeader, UserData user
   {
     memcpy((unsigned char *)&ack, (unsigned char *)protocolHeader + sizeof(Header),
         (protocolHeader->length - EXC_DATA_SIZE));
-    API_LOG(api->getDriver(), STATUS_LOG, "Start ACK has Max radius %f, ACK 0x%X",
+    API_LOG(api->getDriver(), DJI_STATUS_LOG, "Start ACK has Max radius %f, ACK 0x%X",
         ack.maxRadius, ack.ack);
     if (!api->decodeMissionStatus(ack.ack))
-      API_LOG(api->getDriver(), ERROR_LOG, "Decode ACK error 0x%X", ack.ack);
+      API_LOG(api->getDriver(), DJI_ERROR_LOG, "Decode ACK error 0x%X", ack.ack);
   }
   else
   {
-    API_LOG(api->getDriver(), ERROR_LOG, "ACK is exception,session id %d,sequence %d\n",
+    API_LOG(api->getDriver(), DJI_ERROR_LOG, "ACK is exception,session id %d,sequence %d\n",
         protocolHeader->sessionID, protocolHeader->sequenceNumber);
   }
 }
@@ -237,12 +237,12 @@ void HotPoint::readCallback(CoreAPI *api, Header *protocolHeader, UserData userd
     memcpy((unsigned char *)&ack, (unsigned char *)protocolHeader + sizeof(Header),
         (protocolHeader->length - EXC_DATA_SIZE));
     if (!api->decodeMissionStatus(ack.ack))
-      API_LOG(api->getDriver(), ERROR_LOG, "Decode ACK error 0x%X", ack.ack);
+      API_LOG(api->getDriver(), DJI_ERROR_LOG, "Decode ACK error 0x%X", ack.ack);
     hp->hotPointData = ack.data;
   }
   else
   {
-    API_LOG(api->getDriver(), ERROR_LOG, "ACK is exception,session id %d,sequence %d\n",
+    API_LOG(api->getDriver(), DJI_ERROR_LOG, "ACK is exception,session id %d,sequence %d\n",
         protocolHeader->sessionID, protocolHeader->sequenceNumber);
   }
 }

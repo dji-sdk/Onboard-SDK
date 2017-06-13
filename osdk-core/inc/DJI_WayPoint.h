@@ -24,11 +24,11 @@ namespace onboardSDK
 class WayPoint
 {
   public:
-#ifndef STATIC_MEMORY
+#ifndef DJI_STATIC_MEMORY
   WayPoint(CoreAPI *ControlAPI = 0);
 #else
   WayPoint(WayPointData *list, uint8_t len, CoreAPI *ControlAPI = 0);
-#endif // STATIC_MEMORY
+#endif // DJI_STATIC_MEMORY
   void init(WayPointInitData *Info = 0, CallBack callback = 0, UserData userData = 0);
   MissionACK init(WayPointInitData *Info, int timer);
   void start(CallBack callback = 0, UserData userData = 0);
@@ -74,9 +74,9 @@ class WayPoint
   CoreAPI *api;
   WayPointInitData info;
   WayPointData *index;
-#ifdef STATIC_MEMORY
+#ifdef DJI_STATIC_MEMORY
   uint8_t maxIndex;
-#endif // STATIC_MEMORY
+#endif // DJI_STATIC_MEMORY
 };
 
 } // namespace onboardSDK
