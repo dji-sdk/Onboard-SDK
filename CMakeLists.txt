@@ -9,6 +9,8 @@ set(DJIOSDK_PATCH_VERSION 0)
 set(DJIOSDK_VERSION
   ${DJIOSDK_MAJOR_VERSION}.${DJIOSDK_MINOR_VERSION}.${DJIOSDK_PATCH_VERSION})
 
+add_subdirectory(osdk-core)
+
 if (${CMAKE_SYSTEM_NAME} MATCHES Linux)
   add_subdirectory(sample/linux)
 endif()
