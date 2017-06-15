@@ -1,4 +1,0 @@
-ID:EnterAppID
-KEY:EnterKey1234
-DeviceName: /dev/ttyUSB0
-BaudRate: 230400

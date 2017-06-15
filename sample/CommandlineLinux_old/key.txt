@@ -1,2 +1,0 @@
-ID:1234567 
-KEY:1234thisisthedefaultkey1234
