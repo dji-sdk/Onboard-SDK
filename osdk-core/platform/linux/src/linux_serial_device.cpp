@@ -14,6 +14,8 @@
 
 #include "linux_serial_device.hpp"
 #include <algorithm>
+#include <iterator>
+
 using namespace DJI::OSDK;
 
 /*! Implementing inherited functions from abstract class DJI_HardDriver */
@@ -93,19 +95,19 @@ LinuxSerialDevice::setDevice(const char* device)
 int
 LinuxSerialDevice::setSerialPureTimedRead()
 {
-  _serialConfig(m_baudrate, 8, 'N', 1, true);
+ return _serialConfig(m_baudrate, 8, 'N', 1, true);
 }
 
 int
 LinuxSerialDevice::unsetSerialPureTimedRead()
 {
-  _serialConfig(m_baudrate, 8, 'N', 1, false);
+  return _serialConfig(m_baudrate, 8, 'N', 1, false);
 }
 
 int
 LinuxSerialDevice::serialRead(uint8_t* buf, int len)
 {
-  _serialRead(buf, len);
+  return _serialRead(buf, len);
 }
 
 int LinuxSerialDevice::_checkBaudRate(uint8_t (&buf)[BUFFER_SIZE])

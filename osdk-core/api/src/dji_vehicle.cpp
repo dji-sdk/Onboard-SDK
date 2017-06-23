@@ -778,7 +778,7 @@ Vehicle::processReceivedData(RecvContainer receivedFrame)
 int
 Vehicle::callbackIdIndex()
 {
-  if (callbackId == 200)
+  if (callbackId == 199)
   {
     callbackId = 0;
     return 0;

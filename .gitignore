@@ -50,3 +50,6 @@ CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
 Makefile
+
+osdk-core/test
+contrib

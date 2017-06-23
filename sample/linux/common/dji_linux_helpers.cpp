@@ -100,13 +100,7 @@ validateSerialDevice(LinuxSerialDevice* serialDevice)
   if (!serialDevice->setSerialPureTimedRead())
   {
     DERROR(
-      "Failed to set up port for timed read.\n"
-      "This usually means the serial port is not correctly set up; \n"
-      "however on a small number of machines this error can come up\n"
-      "even when the port is correctly set up. If you are absolutely certain\n"
-      "your connections are okay, try commenting out L38-L53 in "
-      "dji_linux_helpers.cpp\n"
-      "and run the program again.\n");
+      "Failed to set up port for timed read.\n");
     return (false);
   };
   usleep(100000);
