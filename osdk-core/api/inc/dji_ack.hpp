@@ -57,13 +57,22 @@ public:
   {
     uint8_t          ack;
     HotPointSettings data;
+
+    //TODO fix/remove once verified with FC team
+    uint8_t extraByte;
   } HotPointReadInternal; // pack(1)
 
-  typedef struct WayPointDataInternal
+  typedef struct WayPointAddPointInternal
   {
     uint8_t ack;
     uint8_t index;
-  } WayPointDataInternal; // pack(1)
+  } WayPointAddPointInternal; // pack(1)
+
+  typedef struct WayPointIndexInternal
+  {
+    uint8_t ack;
+    WayPointSettings data;
+  } WayPointIndexInternal; // pack(1)
 
   typedef struct WayPointVelocityInternal
   {
@@ -123,17 +132,30 @@ public:
   {
     ErrorCode        ack;
     HotPointSettings data;
+
+    //TODO fix/remove once verified with FC team
+    uint8_t extraByte;
   } HotPointRead; // pack(1)
 
   /*! @brief This struct is returned from the
-   * DJI::OSDK::WaypointMission::uploadIndexData blocking API
+   * DJI::OSDK::WaypointMission::waypointIndexDownload blocking API
    *
    */
   typedef struct WayPointIndex
   {
     ErrorCode ack;
-    uint8_t   index;
+    WayPointSettings data;
   } WayPointIndex; // pack(1)
+
+  /*! @brief This struct is returned from the
+   * DJI::OSDK::WaypointMission::uploadIndexData blocking API
+   *
+   */
+  typedef struct WayPointAddPoint
+  {
+    ErrorCode ack;
+    uint8_t   index;
+  } WayPointAddPoint; // pack(1)
 
   /*! @brief This struct is returned from the
    * DJI::OSDK::WaypointMission::updateIdleVelocity blocking API
@@ -152,7 +174,7 @@ public:
   {
     ErrorCode            ack;
     WayPointInitSettings data;
-  } WaypointInit; // pack(1)
+  } WayPointInit; // pack(1)
 
   /*! @brief This struct is returned from the
    * DJI::OSDK::Vehicle::getDroneVersion blocking API
@@ -192,7 +214,8 @@ public:
     HotPointStartInternal    hpStartACK;
     HotPointReadInternal     hpReadACK;
     WayPointInitInternal     wpInitACK;
-    WayPointDataInternal     wpDataACK;
+    WayPointAddPointInternal wpAddPointACK;
+    WayPointIndexInternal    wpIndexACK;
     WayPointVelocityInternal wpVelocityACK;
     MFIOGetInternal          mfioGetACK;
 
@@ -268,6 +291,9 @@ private:
   static const std::map<const uint32_t, const char*>
   createMissionErrorCodeMap();
   static const std::map<const uint32_t, const char*> createMFIOErrorCodeMap();
+  static const std::map<const uint32_t, const char*> createSetArmErrorCodeMap();
+  static const std::map<const uint32_t, const char*>
+  createM100TaskErrorCodeMap();
 }; // class ACK
 
 } // namespace OSDK

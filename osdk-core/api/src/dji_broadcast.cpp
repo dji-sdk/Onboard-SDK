@@ -20,10 +20,21 @@ DataBroadcast::unpackCallback(Vehicle* vehicle, RecvContainer recvFrame,
                               UserData data)
 {
   DataBroadcast* broadcastPtr = (DataBroadcast*)data;
-  broadcastPtr->unpackData(&recvFrame);
+
+  if (broadcastPtr->getVehicle()->getFwVersion() != Version::M100_31)
+  {
+    broadcastPtr->unpackData(&recvFrame);
+  }
+  else
+  {
+    broadcastPtr->unpackM100Data(&recvFrame);
+  }
+
   if (broadcastPtr->userCbHandler.callback)
+  {
     broadcastPtr->userCbHandler.callback(vehicle, recvFrame,
                                          broadcastPtr->userCbHandler.userData);
+  }
 }
 
 DataBroadcast::DataBroadcast(Vehicle* vehiclePtr)
@@ -47,23 +58,231 @@ DataBroadcast::~DataBroadcast()
 }
 
 // clang-format off
-Telemetry::TimeStamp           DataBroadcast::getTimeStamp()          const {  vehicle->protocolLayer->getThreadHandle()->lockMSG(); Telemetry::TimeStamp           ans = timeStamp;  vehicle->protocolLayer->getThreadHandle()->freeMSG();  return ans;}
-Telemetry::SyncStamp           DataBroadcast::getSyncStamp()          const {  vehicle->protocolLayer->getThreadHandle()->lockMSG(); Telemetry::SyncStamp           ans = syncStamp;  vehicle->protocolLayer->getThreadHandle()->freeMSG();  return ans;}
-Telemetry::Quaternion          DataBroadcast::getQuaternion()         const {  vehicle->protocolLayer->getThreadHandle()->lockMSG(); Telemetry::Quaternion          ans = q;          vehicle->protocolLayer->getThreadHandle()->freeMSG();  return ans;}
-Telemetry::Vector3f            DataBroadcast::getAcceleration()       const {  vehicle->protocolLayer->getThreadHandle()->lockMSG(); Telemetry::Vector3f            ans = a;          vehicle->protocolLayer->getThreadHandle()->freeMSG();  return ans;}
-Telemetry::Vector3f            DataBroadcast::getVelocity()           const {  vehicle->protocolLayer->getThreadHandle()->lockMSG(); Telemetry::Vector3f            ans = v;          vehicle->protocolLayer->getThreadHandle()->freeMSG();  return ans;}
-Telemetry::Vector3f            DataBroadcast::getAngularRate()        const {  vehicle->protocolLayer->getThreadHandle()->lockMSG(); Telemetry::Vector3f            ans = w;          vehicle->protocolLayer->getThreadHandle()->freeMSG();  return ans;}
-Telemetry::VelocityInfo        DataBroadcast::getVelocityInfo()       const {  vehicle->protocolLayer->getThreadHandle()->lockMSG(); Telemetry::VelocityInfo        ans = vi;         vehicle->protocolLayer->getThreadHandle()->freeMSG();  return ans;}
-Telemetry::GlobalPosition      DataBroadcast::getGlobalPosition()     const {  vehicle->protocolLayer->getThreadHandle()->lockMSG(); Telemetry::GlobalPosition      ans = gp;         vehicle->protocolLayer->getThreadHandle()->freeMSG();  return ans;}
-Telemetry::RelativePosition    DataBroadcast::getRelativePosition()   const {  vehicle->protocolLayer->getThreadHandle()->lockMSG(); Telemetry::RelativePosition    ans = rp;         vehicle->protocolLayer->getThreadHandle()->freeMSG();  return ans;}
-Telemetry::GPSInfo             DataBroadcast::getGPSInfo()            const {  vehicle->protocolLayer->getThreadHandle()->lockMSG(); Telemetry::GPSInfo             ans = gps;        vehicle->protocolLayer->getThreadHandle()->freeMSG();  return ans;}
-Telemetry::RTK                 DataBroadcast::getRTKInfo()            const {  vehicle->protocolLayer->getThreadHandle()->lockMSG(); Telemetry::RTK                 ans = rtk;        vehicle->protocolLayer->getThreadHandle()->freeMSG();  return ans;}
-Telemetry::Mag                 DataBroadcast::getMag()                const {  vehicle->protocolLayer->getThreadHandle()->lockMSG(); Telemetry::Mag                 ans = mag;        vehicle->protocolLayer->getThreadHandle()->freeMSG();  return ans;}
-Telemetry::RC                  DataBroadcast::getRC()                 const {  vehicle->protocolLayer->getThreadHandle()->lockMSG(); Telemetry::RC                  ans = rc;         vehicle->protocolLayer->getThreadHandle()->freeMSG();  return ans;}
-Telemetry::Gimbal              DataBroadcast::getGimbal()             const {  vehicle->protocolLayer->getThreadHandle()->lockMSG(); Telemetry::Gimbal              ans = gimbal;     vehicle->protocolLayer->getThreadHandle()->freeMSG();  return ans;}
-Telemetry::Status              DataBroadcast::getStatus()             const {  vehicle->protocolLayer->getThreadHandle()->lockMSG(); Telemetry::Status              ans = status;     vehicle->protocolLayer->getThreadHandle()->freeMSG();  return ans;}
-Telemetry::Battery             DataBroadcast::getBatteryInfo()        const {  vehicle->protocolLayer->getThreadHandle()->lockMSG(); Telemetry::Battery             ans = battery;    vehicle->protocolLayer->getThreadHandle()->freeMSG();  return ans;}
-Telemetry::SDKInfo             DataBroadcast::getSDKInfo()            const {  vehicle->protocolLayer->getThreadHandle()->lockMSG(); Telemetry::SDKInfo             ans = info;       vehicle->protocolLayer->getThreadHandle()->freeMSG();  return ans;}
+Telemetry::TimeStamp
+DataBroadcast::getTimeStamp()
+{
+  Telemetry::TimeStamp  data;
+  vehicle->protocolLayer->getThreadHandle()->lockMSG();
+  if(vehicle->getFwVersion() != Version::M100_31)
+  {
+    data = timeStamp;
+  }
+  else
+  {
+    // Supported Broadcast data in Matrice 100
+    data.time_ms = m100TimeStamp.time;
+    data.time_ns = m100TimeStamp.nanoTime;
+  }
+  vehicle->protocolLayer->getThreadHandle()->freeMSG();
+  return data;
+}
+
+Telemetry::SyncStamp
+DataBroadcast::getSyncStamp()
+{
+  Telemetry::SyncStamp data;
+  vehicle->protocolLayer->getThreadHandle()->lockMSG();
+  if(vehicle->getFwVersion() != Version::M100_31)
+  {
+    data = syncStamp;
+  }
+  else
+  {
+    // Supported Broadcast data in Matrice 100
+    data.flag = m100TimeStamp.syncFlag;
+  }
+  vehicle->protocolLayer->getThreadHandle()->freeMSG();
+  return data;
+}
+
+Telemetry::Quaternion
+DataBroadcast::getQuaternion()
+{
+  Telemetry::Quaternion data;
+  vehicle->protocolLayer->getThreadHandle()->lockMSG();
+  data = q;
+  vehicle->protocolLayer->getThreadHandle()->freeMSG();
+  return data;
+}
+
+Telemetry::Vector3f
+DataBroadcast::getAcceleration()
+{
+  Telemetry::Vector3f data;
+  vehicle->protocolLayer->getThreadHandle()->lockMSG();
+  data = a;
+  vehicle->protocolLayer->getThreadHandle()->freeMSG();
+  return data;
+}
+
+Telemetry::Vector3f
+DataBroadcast::getVelocity()
+{
+  Telemetry::Vector3f data;
+  vehicle->protocolLayer->getThreadHandle()->lockMSG();
+  if(vehicle->getFwVersion() != Version::M100_31)
+  {
+    data = v;
+  }
+  else
+  {
+    // Supported Broadcast data in Matrice 100
+    data.x = m100Velocity.x;
+    data.y = m100Velocity.y;
+    data.z = m100Velocity.z;
+  }
+  vehicle->protocolLayer->getThreadHandle()->freeMSG();
+  return data;
+}
+
+Telemetry::VelocityInfo
+DataBroadcast::getVelocityInfo()
+{
+  Telemetry::VelocityInfo data;
+  vehicle->protocolLayer->getThreadHandle()->lockMSG();
+  if(vehicle->getFwVersion() != Version::M100_31)
+  {
+    data = vi;
+  }
+  else
+  {
+    // Supported Broadcast data in Matrice 100
+    data.health = m100Velocity.health;
+    data.reserve = m100Velocity.reserve;
+    // TODO add sensorID (only M100)
+  }
+  vehicle->protocolLayer->getThreadHandle()->freeMSG();
+  return data;
+}
+
+Telemetry::Vector3f
+DataBroadcast::getAngularRate()
+{
+  Telemetry::Vector3f data;
+  vehicle->protocolLayer->getThreadHandle()->lockMSG();
+  data = w;
+  vehicle->protocolLayer->getThreadHandle()->freeMSG();
+  return data;
+}
+
+Telemetry::GlobalPosition
+DataBroadcast::getGlobalPosition()
+{
+  Telemetry::GlobalPosition data;
+  vehicle->protocolLayer->getThreadHandle()->lockMSG();
+  data = gp;
+  vehicle->protocolLayer->getThreadHandle()->freeMSG();
+  return data;
+}
+
+// Not supported on Matrice 100
+Telemetry::RelativePosition
+DataBroadcast::getRelativePosition()
+{
+  Telemetry::RelativePosition data;
+  vehicle->protocolLayer->getThreadHandle()->lockMSG();
+  data = rp;
+  vehicle->protocolLayer->getThreadHandle()->freeMSG();
+  return data;
+}
+
+// Not supported on Matrice 100
+Telemetry::GPSInfo
+DataBroadcast::getGPSInfo()
+{
+  Telemetry::GPSInfo data;
+  vehicle->protocolLayer->getThreadHandle()->lockMSG();
+  data = gps;
+  vehicle->protocolLayer->getThreadHandle()->freeMSG();
+  return data;
+}
+
+// Not supported on Matrice 100
+Telemetry::RTK
+DataBroadcast::getRTKInfo()
+{
+  Telemetry::RTK data;
+  vehicle->protocolLayer->getThreadHandle()->lockMSG();
+  data = rtk;
+  vehicle->protocolLayer->getThreadHandle()->freeMSG();
+  return data;
+}
+
+Telemetry::Mag
+DataBroadcast::getMag()
+{
+  Telemetry::Mag data;
+  vehicle->protocolLayer->getThreadHandle()->lockMSG();
+  data = mag;
+  vehicle->protocolLayer->getThreadHandle()->freeMSG();
+  return data;
+}
+
+Telemetry::RC
+DataBroadcast::getRC()
+{
+  Telemetry::RC data;
+  vehicle->protocolLayer->getThreadHandle()->lockMSG();
+  data = rc;
+  vehicle->protocolLayer->getThreadHandle()->freeMSG();
+  return data;
+}
+
+Telemetry::Gimbal
+DataBroadcast::getGimbal()
+{
+  Telemetry::Gimbal data;
+  vehicle->protocolLayer->getThreadHandle()->lockMSG();
+  data = gimbal;
+  vehicle->protocolLayer->getThreadHandle()->freeMSG();
+  return data;
+}
+
+Telemetry::Status
+DataBroadcast::getStatus()
+{
+  Telemetry::Status data;
+  vehicle->protocolLayer->getThreadHandle()->lockMSG();
+  if(vehicle->getFwVersion() != Version::M100_31)
+  {
+    data = status;
+  }
+  else
+  {
+    // Supported Broadcast data in Matrice 100
+    data.flight = m100FlightStatus;
+  }
+  vehicle->protocolLayer->getThreadHandle()->freeMSG();
+  return data;
+}
+
+Telemetry::Battery
+DataBroadcast::getBatteryInfo()
+{
+  Telemetry::Battery data;
+  vehicle->protocolLayer->getThreadHandle()->lockMSG();
+  if(vehicle->getFwVersion() != Version::M100_31)
+  {
+    data = battery;
+  }
+  else
+  {
+    // Supported Broadcast data in Matrice 100
+    data.capacity = m100Battery;
+  }
+  vehicle->protocolLayer->getThreadHandle()->freeMSG();
+  return data;
+}
+
+Telemetry::SDKInfo
+DataBroadcast::getSDKInfo()
+{
+  Telemetry::SDKInfo data;
+  vehicle->protocolLayer->getThreadHandle()->lockMSG();
+  data = info;
+  vehicle->protocolLayer->getThreadHandle()->freeMSG();
+  return data;
+}
 // clang-format on
 
 Vehicle*
@@ -82,7 +301,6 @@ void
 DataBroadcast::setBroadcastFreq(uint8_t* dataLenIs16, VehicleCallBack callback,
                                 UserData userData)
 {
-  //! @note see also enum BROADCAST_FREQ in DJI_API.h
   for (int i = 0; i < 16; ++i)
   {
     dataLenIs16[i] = (dataLenIs16[i] > 7 ? 5 : dataLenIs16[i]);
@@ -158,6 +376,30 @@ DataBroadcast::unpackData(RecvContainer* pRecvFrame)
 }
 
 void
+DataBroadcast::unpackM100Data(RecvContainer* pRecvFrame)
+{
+  uint8_t* pdata = pRecvFrame->recvData.raw_ack_array;
+  vehicle->protocolLayer->getThreadHandle()->lockMSG();
+  passFlag = *(uint16_t*)pdata;
+  pdata += sizeof(uint16_t);
+  // clang-format off
+  unpackOne(FLAG_TIME        ,&m100TimeStamp   ,pdata,sizeof(m100TimeStamp   ));
+  unpackOne(FLAG_QUATERNION  ,&q               ,pdata,sizeof(q               ));
+  unpackOne(FLAG_ACCELERATION,&a               ,pdata,sizeof(a               ));
+  unpackOne(FLAG_VELOCITY    ,&m100Velocity    ,pdata,sizeof(m100Velocity    ));
+  unpackOne(FLAG_ANGULAR_RATE,&w               ,pdata,sizeof(w               ));
+  unpackOne(FLAG_POSITION    ,&gp              ,pdata,sizeof(gp              ));
+  unpackOne(FLAG_M100_MAG    ,&mag             ,pdata,sizeof(mag             ));
+  unpackOne(FLAG_M100_RC     ,&rc              ,pdata,sizeof(rc              ));
+  unpackOne(FLAG_M100_GIMBAL ,&gimbal          ,pdata,sizeof(gimbal          ));
+  unpackOne(FLAG_M100_STATUS ,&m100FlightStatus,pdata,sizeof(m100FlightStatus));
+  unpackOne(FLAG_M100_BATTERY,&m100Battery     ,pdata,sizeof(m100Battery     ));
+  unpackOne(FLAG_M100_DEVICE ,&info            ,pdata,sizeof(info            ));
+  // clang-format on
+  vehicle->protocolLayer->getThreadHandle()->freeMSG();
+}
+
+void
 DataBroadcast::unpackOne(DataBroadcast::FLAG flag, void* data, uint8_t*& buf,
                          size_t size)
 {
@@ -171,7 +413,7 @@ DataBroadcast::unpackOne(DataBroadcast::FLAG flag, void* data, uint8_t*& buf,
 void
 DataBroadcast::setVersionDefaults(uint8_t* frequencyBuffer)
 {
-  if (vehicle->getFwVersion() >= Version::A3_3_2_20_test)
+  if (vehicle->getFwVersion() != Version::M100_31)
   {
     setFreqDefaults(frequencyBuffer);
   }
@@ -200,57 +442,62 @@ DataBroadcast::setBroadcastFreqDefaults(int timeout)
 void
 DataBroadcast::setFreqDefaultsM100_31(uint8_t* freq)
 {
-  freq[0]  = FREQ_1HZ;
-  freq[1]  = FREQ_10HZ;
-  freq[2]  = FREQ_50HZ;
-  freq[3]  = FREQ_100HZ;
-  freq[4]  = FREQ_50HZ;
-  freq[5]  = FREQ_10HZ;
-  freq[6]  = FREQ_0HZ;
-  freq[7]  = FREQ_0HZ;
-  freq[8]  = FREQ_1HZ;
-  freq[9]  = FREQ_10HZ;
-  freq[10] = FREQ_50HZ;
-  freq[11] = FREQ_100HZ;
-  freq[12] = FREQ_50HZ;
-  freq[13] = FREQ_10HZ;
-}
-
-void
-DataBroadcast::setFreqDefaults(uint8_t* freq)
-{
-  /* Channels definition:
+  /* Channels definition for M100
    * 0 - Timestamp
    * 1 - Attitude Quaterniouns
    * 2 - Acceleration
    * 3 - Velocity (Ground Frame)
    * 4 - Angular Velocity (Body Frame)
    * 5 - Position
-   * 6 - Remote Controller Channel Data
-   * 7 - Gimbal Data
-   * 8 - Flight Status
-   * 9 - Battery Level
-   * 10 - Control Information
+   * 6 - Magnetometer
+   * 7 - RC Channels Data
+   * 8 - Gimbal Data
+   * 9 - Flight Status
+   * 10 - Battery Level
+   * 11 - Control Information
    */
+  freq[0]  = FREQ_1HZ;
+  freq[1]  = FREQ_10HZ;
+  freq[2]  = FREQ_50HZ;
+  freq[3]  = FREQ_100HZ;
+  freq[4]  = FREQ_50HZ;
+  freq[5]  = FREQ_10HZ;
+  freq[6]  = FREQ_1HZ;
+  freq[7]  = FREQ_10HZ;
+  freq[8]  = FREQ_50HZ;
+  freq[9]  = FREQ_100HZ;
+  freq[10] = FREQ_50HZ;
+  freq[11] = FREQ_10HZ;
+}
 
-  freq[0] = FREQ_50HZ;
-  freq[1] = FREQ_50HZ;
-  freq[2] = FREQ_50HZ;
-  freq[3] = FREQ_50HZ;
-  freq[4] = FREQ_50HZ;
-  freq[5] = FREQ_50HZ;
-  /*
-   * GPS: DON'T SEND
+void
+DataBroadcast::setFreqDefaults(uint8_t* freq)
+{
+  /* Channels definition for A3/N3
+   * 0 - Timestamp
+   * 1 - Attitude Quaterniouns
+   * 2 - Acceleration
+   * 3 - Velocity (Ground Frame)
+   * 4 - Angular Velocity (Body Frame)
+   * 5 - Position
+   * 6 - GPS Detailed Information
+   * 7 - RTK Detailed Information
+   * 8 - Magnetometer
+   * 9 - RC Channels Data
+   * 10 - Gimbal Data
+   * 11 - Flight Statusack
+   * 12 - Battery Level
+   * 13 - Control Information
    */
-  freq[6] = FREQ_0HZ;
-  /*
-   * RTK: DON'T SEND
-   */
-  freq[7] = FREQ_0HZ;
-  /*
-   * Magnetometer: DON'T SEND
-   */
-  freq[8]  = FREQ_0HZ;
+  freq[0]  = FREQ_50HZ;
+  freq[1]  = FREQ_50HZ;
+  freq[2]  = FREQ_50HZ;
+  freq[3]  = FREQ_50HZ;
+  freq[4]  = FREQ_50HZ;
+  freq[5]  = FREQ_50HZ;
+  freq[6]  = FREQ_0HZ; // Don't send GPS details
+  freq[7]  = FREQ_0HZ; // Don't send RTK
+  freq[8]  = FREQ_0HZ; // Don't send Mag
   freq[9]  = FREQ_50HZ;
   freq[10] = FREQ_50HZ;
   freq[11] = FREQ_10HZ;
@@ -313,4 +560,16 @@ uint16_t
 DataBroadcast::getPassFlag()
 {
   return passFlag;
+}
+
+uint16_t
+DataBroadcast::getBroadcastLength()
+{
+  return this->broadcastLength;
+}
+
+void
+DataBroadcast::setBroadcastLength(uint16_t length)
+{
+  this->broadcastLength = length;
 }

@@ -55,6 +55,9 @@ const uint8_t DJI::OSDK::OpenProtocol::CMDSet::Control::status[] = {
 const uint8_t DJI::OSDK::OpenProtocol::CMDSet::Control::control[] = {
   OpenProtocol::CMDSet::control, 0x03
 };
+const uint8_t DJI::OSDK::OpenProtocol::CMDSet::Control::setArm[] = {
+  OpenProtocol::CMDSet::control, 0x05
+};
 const uint8_t DJI::OSDK::OpenProtocol::CMDSet::Control::cameraShot[] = {
   OpenProtocol::CMDSet::control, 0x20
 };
@@ -85,7 +88,7 @@ const uint8_t DJI::OSDK::OpenProtocol::CMDSet::Mission::waypointSetPause[] = {
 const uint8_t DJI::OSDK::OpenProtocol::CMDSet::Mission::waypointDownload[] = {
   OpenProtocol::CMDSet::mission, 0x14
 };
-const uint8_t DJI::OSDK::OpenProtocol::CMDSet::Mission::waypointIndex[] = {
+const uint8_t DJI::OSDK::OpenProtocol::CMDSet::Mission::waypointIndexDownload[] = {
   OpenProtocol::CMDSet::mission, 0x15
 };
 const uint8_t DJI::OSDK::OpenProtocol::CMDSet::Mission::waypointSetVelocity[] =

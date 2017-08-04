@@ -25,12 +25,26 @@ parseFromMobileCallback(DJI::OSDK::Vehicle*      vehicle,
       v->releaseCtrlAuthority(controlAuthorityMobileCallback);
       break;
     case 5:
-      v->control->action(Control::FlightCommand::startMotor,
-                         actionMobileCallback);
+      if(v->getFwVersion() != Version::M100_31)
+      {
+	v->control->action(Control::FlightCommand::startMotor,
+        actionMobileCallback);
+      }
+      else
+      {
+        v->control->armMotors(actionMobileCallback);
+      }
       break;
     case 6:
-      v->control->action(Control::FlightCommand::stopMotor,
-                         actionMobileCallback);
+      if(v->getFwVersion() != Version::M100_31)
+      {
+        v->control->action(Control::FlightCommand::stopMotor,
+        actionMobileCallback);
+      }
+      else
+      {
+	v->control->disArmMotors(actionMobileCallback);
+      }
       break;
     default:
       break;
@@ -97,22 +111,35 @@ actionMobileCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
   {
 
     ack.info = recvFrame.recvInfo;
-    ack.data = recvFrame.recvData.commandACK;
+
+    if (vehiclePtr->getFwVersion() != Version::M100_31)
+      ack.data = recvFrame.recvData.commandACK;
+    else
+      ack.data = recvFrame.recvData.ack;
 
     if (ACK::getError(ack))
       ACK::getErrorCodeMessage(ack, __func__);
 
     AckReturnToMobile mobileAck;
-    if (recvFrame.recvInfo.buf[2] == Control::FlightCommand::startMotor)
+    const uint8_t     cmd[] = { recvFrame.recvInfo.cmd_set,
+                            recvFrame.recvInfo.cmd_id };
+
+    // startMotor supported in FW version >= 3.3
+    // setArm supported only on Matrice 100
+    if (recvFrame.recvInfo.buf[2] == Control::FlightCommand::startMotor ||
+        (memcmp(cmd, OpenProtocol::CMDSet::Control::setArm, sizeof(cmd)) &&
+         recvFrame.recvInfo.buf[2] == true))
     {
       mobileAck.cmdID = 0x05;
       mobileAck.ack   = static_cast<uint16_t>(ack.data);
       vehiclePtr->moc->sendDataToMSDK(reinterpret_cast<uint8_t*>(&mobileAck),
                                       sizeof(mobileAck));
     }
-    else if (recvFrame.recvInfo.buf[2] == Control::FlightCommand::stopMotor)
+    else if (recvFrame.recvInfo.buf[2] == Control::FlightCommand::stopMotor ||
+             (memcmp(cmd, OpenProtocol::CMDSet::Control::setArm, sizeof(cmd)) &&
+              recvFrame.recvInfo.buf[2] == false))
     {
-      mobileAck.cmdID = 0x06;
+			mobileAck.cmdID = 0x06;
       mobileAck.ack   = static_cast<uint16_t>(ack.data);
       vehiclePtr->moc->sendDataToMSDK(reinterpret_cast<uint8_t*>(&mobileAck),
                                       sizeof(mobileAck));

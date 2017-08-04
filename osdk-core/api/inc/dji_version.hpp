@@ -47,15 +47,12 @@ public:
 public:
   //! @todo clean up
   // clang-format off
-  static const FirmWare M100_23           = 0x02030A00;//Version::FW(2, 3, 10,  0  );
+
+  // Matrice 100 Firmware version supported by DJI OSDK Core library
   static const FirmWare M100_31           = 0x03010A00;//Version::FW(3, 1, 10,  0  );
   static const FirmWare A3_31             = 0x03016400;//Version::FW(3, 1, 100, 0  );
   static const FirmWare A3_32             = 0x03026400;//Version::FW(3, 2, 100, 0  );
-  static const FirmWare A3_3_2_20_test    = 0x030214FF;//Version::FW(3, 2, 20,  255);
-  static const FirmWare A3_3_2_22_test    = 0x03021616;//Version::FW(3, 2, 22,  22 );
-  static const FirmWare A3_3_2_80_test    = 0x03025012;//Version::FW(3, 2, 80,  18 );
-  static const FirmWare A3_3_2_80_13_test = 0x0302500D;//Version::FW(3, 2, 80,  13 );
-  static const FirmWare A3_3_3_00_release = 0x030300FF;//Version::FW(3, 3, 00,  255);
+
   // clang-format on
 }; // class version
 
@@ -66,7 +63,7 @@ public:
  *
  * Supported products: M100, M210, M600, A3, N3
  */
-const Version::FirmWare mandatoryVersionBase = (Version::FW(3, 2, 36, 1));
+const Version::FirmWare mandatoryVersionBase = (Version::FW(3, 1, 10, 0));
 
 /*!
  * @brief Define FW version that supports "extended" CMD_SET
@@ -75,7 +72,7 @@ const Version::FirmWare mandatoryVersionBase = (Version::FW(3, 2, 36, 1));
  *
  * Supported products: M210, A3, N3
  */
-const Version::FirmWare extendedVersionBase = (Version::FW(3, 2, 36, 1));
+const Version::FirmWare extendedVersionBase = (Version::FW(3, 2, 36, 6));
 
 /*!
  * @brief Define CMD_SET support matrix

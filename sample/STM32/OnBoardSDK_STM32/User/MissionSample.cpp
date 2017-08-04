@@ -6,10 +6,10 @@ extern Vehicle  vehicle;
 extern Vehicle* v;
 
 bool
-runWaypointMission(uint8_t numWaypoints)
+setUpSubscription(DJI::OSDK::Vehicle* vehicle)
 {
   // Telemetry: Subscribe to flight status and mode at freq 10 Hz
-  int                  pkgIndex        = 0;
+  int                  pkgIndex        = DEFAULT_PACKAGE_INDEX;
   int                  freq            = 10;
   Telemetry::TopicName topicList10Hz[] = { Telemetry::TOPIC_GPS_FUSED,
                                            Telemetry::TOPIC_ALTITUDE_FUSIONED };
@@ -24,7 +24,22 @@ runWaypointMission(uint8_t numWaypoints)
   }
 
   v->subscribe->startPackage(pkgIndex);
-  delay_nms(500);
+  delay_nms(8000);
+
+  return true;
+}
+
+bool
+runWaypointMission(uint8_t numWaypoints)
+{
+  if (v->getFwVersion() != Version::M100_31)
+  {
+    if (!setUpSubscription(v))
+    {
+      printf("Failed to set up Subscription!\n");
+      return false;
+    }
+  }
 
   // Waypoint Mission : Initialization
   WayPointInitSettings fdata;
@@ -59,7 +74,7 @@ runWaypointMission(uint8_t numWaypoints)
 
   // Cleanup before return. The mission isn't done yet, but it doesn't need any
   // more input from our side.
-  v->subscribe->removePackage(pkgIndex);
+  v->subscribe->removePackage(DEFAULT_PACKAGE_INDEX);
   delay_nms(3000);
 
   return true;
@@ -105,19 +120,35 @@ createWaypoints(int numWaypoints, float64_t distanceIncrement,
 {
   delay_nms(8000);
 
-  Telemetry::TypeMap<Telemetry::TOPIC_GPS_FUSED>::type gPosition =
-    v->subscribe->getValue<Telemetry::TOPIC_GPS_FUSED>();
-
   // Create Start Waypoint
   WayPointSettings start_wp;
   setWaypointDefaults(&start_wp);
-  start_wp.latitude  = gPosition.latitude;
-  start_wp.longitude = gPosition.longitude;
-  start_wp.altitude  = start_alt;
 
-  printf("Waypoint created at (LLA): %f \t%f \t%f\n", gPosition.latitude,
-         gPosition.longitude, start_alt);
+  // Global position retrieved via subscription
+  Telemetry::TypeMap<Telemetry::TOPIC_GPS_FUSED>::type subscribeGPosition;
+  // Global position retrieved via broadcast
+  Telemetry::GlobalPosition broadcastGPosition;
 
+  if (v->getFwVersion() != Version::M100_31)
+  {
+    subscribeGPosition = v->subscribe->getValue<Telemetry::TOPIC_GPS_FUSED>();
+    start_wp.latitude  = subscribeGPosition.latitude;
+    start_wp.longitude = subscribeGPosition.longitude;
+    start_wp.altitude  = start_alt;
+    printf("Waypoint created at (LLA): %f \t%f \t%f\n",
+           subscribeGPosition.latitude, subscribeGPosition.longitude,
+           start_alt);
+  }
+  else
+  {
+    broadcastGPosition = v->broadcast->getGlobalPosition();
+    start_wp.latitude  = broadcastGPosition.latitude;
+    start_wp.longitude = broadcastGPosition.longitude;
+    start_wp.altitude  = start_alt;
+    printf("Waypoint created at (LLA): %f \t%f \t%f\n",
+           broadcastGPosition.latitude, broadcastGPosition.longitude,
+           start_alt);
+  }
   std::vector<DJI::OSDK::WayPointSettings> wpVector =
     generateWaypointsPolygon(&start_wp, distanceIncrement, numWaypoints);
   return wpVector;
@@ -176,36 +207,39 @@ runHotpointMission(int initialRadius)
 {
   ACK::ErrorCode ack;
 
-  // Takeoff
-  monitoredTakeOff();
-
-  int                  pkgIndex        = 0;
-  int                  freq            = 10;
-  Telemetry::TopicName topicList10Hz[] = { Telemetry::TOPIC_GPS_FUSED };
-  int  numTopic        = sizeof(topicList10Hz) / sizeof(topicList10Hz[0]);
-  bool enableTimestamp = false;
-
-  bool pkgStatus = v->subscribe->initPackageFromTopicList(
-    pkgIndex, numTopic, topicList10Hz, enableTimestamp, freq);
-  if (!(pkgStatus))
+  if (v->getFwVersion() != Version::M100_31)
   {
-    return pkgStatus;
+    if (!setUpSubscription(v))
+    {
+      printf("Failed to set up Subscription!\n");
+      return false;
+    }
   }
 
-  v->subscribe->startPackage(pkgIndex);
-  delay_nms(500);
-
-  // Wait for data to arrive
-  delay_nms(8000);
+  // Global position retrieved via subscription
+  Telemetry::TypeMap<Telemetry::TOPIC_GPS_FUSED>::type subscribeGPosition;
+  // Global position retrieved via broadcast
+  Telemetry::GlobalPosition broadcastGPosition;
 
   // Hotpoint Mission Initialize
   v->missionManager->init(HOTPOINT, 1, NULL);
-
   v->missionManager->printInfo();
-  Telemetry::TypeMap<Telemetry::TOPIC_GPS_FUSED>::type gPosition =
-    v->subscribe->getValue<Telemetry::TOPIC_GPS_FUSED>();
-  v->missionManager->hpMission->setHotPoint(gPosition.longitude,
-                                            gPosition.latitude, initialRadius);
+
+  if (v->getFwVersion() != Version::M100_31)
+  {
+    subscribeGPosition = v->subscribe->getValue<Telemetry::TOPIC_GPS_FUSED>();
+    v->missionManager->hpMission->setHotPoint(
+      subscribeGPosition.longitude, subscribeGPosition.latitude, initialRadius);
+  }
+  else
+  {
+    broadcastGPosition = v->broadcast->getGlobalPosition();
+    v->missionManager->hpMission->setHotPoint(
+      broadcastGPosition.longitude, broadcastGPosition.latitude, initialRadius);
+  }
+
+  // Takeoff
+  monitoredTakeOff();
 
   // Start
   printf("Start with default rotation rate: 15 deg/s");
@@ -273,14 +307,17 @@ runHotpointMission(int initialRadius)
   printf("Land\n");
 
   // Free existing packages
-  v->subscribe->removePackage(pkgIndex);
-  delay_nms(3000);
-  /*ack = waitForACK();
-  if (ACK::getError(ack))
+  if (v->getFwVersion() != Version::M100_31)
   {
-    printf("Error unsubscribing; please restart the drone/FC to get back "
+    v->subscribe->removePackage(DEFAULT_PACKAGE_INDEX);
+    delay_nms(3000);
+    /*ack = waitForACK();
+    if (ACK::getError(ack))
+    {
+      printf("Error unsubscribing; please restart the drone/FC to get back "
                    "to a clean state.\n");
-  }*/
+    }*/
+  }
 
   return monitoredLanding() ? true : false;
 }

@@ -6,14 +6,14 @@
 
 void controlAuthorityMobileCallback(DJI::OSDK::Vehicle*      vehiclePtr,
                                     DJI::OSDK::RecvContainer recvFrame,
-                                    DJI::OSDK::UserData            userData);
+                                    DJI::OSDK::UserData      userData);
 void actionMobileCallback(DJI::OSDK::Vehicle*      vehiclePtr,
                           DJI::OSDK::RecvContainer recvFrame,
-                          DJI::OSDK::UserData            userData);
+                          DJI::OSDK::UserData      userData);
 
 void parseFromMobileCallback(DJI::OSDK::Vehicle*      vehicle,
                              DJI::OSDK::RecvContainer recvFrame,
-                             DJI::OSDK::UserData            userData);
+                             DJI::OSDK::UserData      userData);
 
 bool setupMSDKParsing();
 

@@ -12,6 +12,8 @@
 #define M_PI 3.14159265358979323846
 #endif
 
+bool setUpSubscription(DJI::OSDK::Vehicle* vehicle);
+
 bool runWaypointMission(uint8_t numWaypoints = 6);
 
 void setWaypointDefaults(DJI::OSDK::WayPointSettings* wp);
@@ -28,5 +30,7 @@ std::vector<DJI::OSDK::WayPointSettings> generateWaypointsPolygon(
 void uploadWaypoints(std::vector<DJI::OSDK::WayPointSettings>& wp_list);
 
 bool runHotpointMission(int initialRadius = 10);
+
+const int DEFAULT_PACKAGE_INDEX = 1;
 
 #endif // MISSIONSAMPLE_H

@@ -117,15 +117,40 @@ public:
    *  @param value user specified WayPointInitData
    */
   void setInfo(const WayPointInitSettings& value);
-  /*! @brief
+  /*!
+   * @brief Read WayPoint mission settings from the flight controller
    *
-   *  getting waypt init data
+   * @return Information about uploaded WayPoint mission, error if
+   * mission settings not uploaded.
    *
    */
-  WayPointInitSettings getInfo() const;
+  ACK::WayPointInit getWaypointSettings(int timer);
+  /*!
+   * @brief Read WayPoint mission settings from the flight controller
+   *
+   * Information about uploaded WayPoint mission, error if
+   * mission settings not uploaded will be handled in a user defined or
+   * default callback.
+   */
+  void getWaypointSettings(VehicleCallBack callback, UserData userData);
+  /*!
+   * @brief Read WayPoint index settings from the flight controller
+   *
+   * @return Information about uploaded WayPoint index, error if
+   * index not uploaded.
+   */
+  ACK::WayPointIndex getIndex(uint8_t index, int timer);
+  /*!
+   * @brief Read WayPoint index settings from the flight controller
+   *
+   * Information about uploaded WayPoint index, error if
+   * index not uploaded will be handled in a user defined or
+   * default callback.
+   */
+  void getIndex(uint8_t index, VehicleCallBack callback, UserData userData);
   /*! @brief
    *
-   *  setting waypt data to the waypt container wiht specified idx
+   *  setting waypt data to the waypt container with specified idx
    *
    *  @param value user specified WayPointData
    *  @param pos the index of the waypt
@@ -133,23 +158,10 @@ public:
   void setIndex(WayPointSettings* value, size_t pos);
   /*! @brief
    *
-   *  getting waypt data
+   *  setting waypt init data
    *
+   *  @param value user specified WayPointInitData
    */
-  WayPointSettings* getIndex() const;
-  /*! @brief
-   *
-   *  getting waypt data
-   *
-   *  @param pos idx of the specified watpt data
-   */
-  WayPointSettings* getIndex(size_t pos) const;
-  /*! @brief
-     *
-     *  setting waypt init data
-     *
-     *  @param value user specified WayPointInitData
-     */
   bool uploadIndexData(WayPointSettings* data, VehicleCallBack callback = 0,
                        UserData userData = 0);
   /*! @brief
@@ -203,6 +215,24 @@ public:
    */
   static void idleVelocityCallback(Vehicle* vehicle, RecvContainer recvFrame,
                                    UserData userData);
+  /*! @brief
+   *
+   *  A callback function for reading initialization data non-blocking calls
+   *
+   *  @param recvFrame the data comes with the callback function
+   *  @param userData a void ptr that user can manipulate inside the callback
+   */
+  static void getWaypointSettingsCallback(Vehicle* vehicle, RecvContainer recvFrame,
+                                   UserData userData);
+  /*! @brief
+   *
+   *  A callback function for getting waypoint information for a specified index (non-blocking call)
+   *
+   *  @param recvFrame the data comes with the callback function
+   *  @param userData a void ptr that user can manipulate inside the callback
+   */
+  static void getIndexCallback(Vehicle* vehicle, RecvContainer recvFrame,
+				   UserData userData);
   /*! @brief
    *
    *  A callback function for uploading waypt index non-blocking calls

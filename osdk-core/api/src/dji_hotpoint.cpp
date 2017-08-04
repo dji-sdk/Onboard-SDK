@@ -321,7 +321,7 @@ HotpointMission::resetYaw(int timeout)
 }
 
 void
-HotpointMission::readData(VehicleCallBack callback, UserData userData)
+HotpointMission::getHotpointSettings(VehicleCallBack callback, UserData userData)
 {
   uint8_t zero    = 0;
   int     cbIndex = vehicle->callbackIdIndex();
@@ -333,7 +333,7 @@ HotpointMission::readData(VehicleCallBack callback, UserData userData)
   else
   {
     vehicle->nbCallbackFunctions[cbIndex] =
-      (void*)&MissionManager::missionCallback;
+      (void*)&getHotpointSettingsCallback;
     vehicle->nbUserData[cbIndex] = NULL;
   }
   vehicle->protocolLayer->send(2, encrypt,
@@ -341,44 +341,8 @@ HotpointMission::readData(VehicleCallBack callback, UserData userData)
                                &zero, sizeof(zero), 500, 2, true, cbIndex);
 }
 
-ACK::ErrorCode
-HotpointMission::readData(int timeout)
-{
-  ACK::ErrorCode ack;
-  uint8_t        zero = 0;
-
-  vehicle->protocolLayer->send(2, encrypt,
-                               OpenProtocol::CMDSet::Mission::hotpointDownload,
-                               &zero, sizeof(zero), 500, 2, false, 2);
-
-  ack = *((ACK::ErrorCode*)vehicle->waitForACK(
-    OpenProtocol::CMDSet::Mission::hotpointDownload, timeout));
-
-  return ack;
-}
-
-void
-HotpointMission::startCallback(RecvContainer recvFrame, UserData userData)
-{
-  HotpointMission*           hp = (HotpointMission*)userData;
-  ACK::HotPointStartInternal hpStartInfo;
-
-  if (recvFrame.recvInfo.len - Protocol::PackageMin <=
-      sizeof(ACK::HotPointStartInternal))
-  {
-    hpStartInfo = recvFrame.recvData.hpStartACK;
-
-    DSTATUS("Start ack has max radius: %f, ACK 0x%X\n", hpStartInfo.maxRadius,
-            hpStartInfo.ack);
-  }
-  else
-  {
-    DERROR("ACK is exception, sequence %d\n", recvFrame.recvInfo.seqNumber);
-  }
-}
-
-void
-HotpointMission::readCallback(RecvContainer recvFrame, UserData userData)
+void HotpointMission::getHotpointSettingsCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
+			                          UserData userData)
 {
   HotpointMission*          hp = (HotpointMission*)userData;
   ACK::HotPointReadInternal hpReadInfo;
@@ -403,6 +367,42 @@ HotpointMission::readCallback(RecvContainer recvFrame, UserData userData)
     ACK::getErrorCodeMessage(ack, __func__);
 
     DERROR("Decod ACK error 0x%X\n", hpReadInfo.ack);
+  }
+}
+
+ACK::HotPointRead
+HotpointMission::getHotpointSettings(int timeout)
+{
+  ACK::HotPointRead ack;
+  uint8_t        zero = 0;
+
+  vehicle->protocolLayer->send(2, encrypt,
+                               OpenProtocol::CMDSet::Mission::hotpointDownload,
+                               &zero, sizeof(zero), 500, 2, false, 2);
+
+  ack = *((ACK::HotPointRead*)vehicle->waitForACK(
+    OpenProtocol::CMDSet::Mission::hotpointDownload, timeout));
+
+  return ack;
+}
+
+void
+HotpointMission::startCallback(RecvContainer recvFrame, UserData userData)
+{
+  HotpointMission*           hp = (HotpointMission*)userData;
+  ACK::HotPointStartInternal hpStartInfo;
+
+  if (recvFrame.recvInfo.len - Protocol::PackageMin <=
+      sizeof(ACK::HotPointStartInternal))
+  {
+    hpStartInfo = recvFrame.recvData.hpStartACK;
+
+    DSTATUS("Start ack has max radius: %f, ACK 0x%X\n", hpStartInfo.maxRadius,
+            hpStartInfo.ack);
+  }
+  else
+  {
+    DERROR("ACK is exception, sequence %d\n", recvFrame.recvInfo.seqNumber);
   }
 }
 

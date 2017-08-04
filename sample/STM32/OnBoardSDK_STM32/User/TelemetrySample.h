@@ -13,10 +13,11 @@
 #ifndef TELEMETRYSAMPLE_H
 #define TELEMETRYSAMPLE_H
 
+#include "dji_vehicle.hpp"
 #include "stdio.h"
 #include "timer.h"
-#include "dji_vehicle.hpp"
 
+bool getBroadcastData();
 bool subscribeToData();
 
 #endif // TELEMETRYSAMPLE_H

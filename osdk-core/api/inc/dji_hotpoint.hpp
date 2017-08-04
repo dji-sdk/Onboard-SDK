@@ -200,19 +200,19 @@ public:
   ACK::ErrorCode resetYaw(int timer);
   /*! @brief
    *
-   *  read hotpt mission info from flight controller
+   *  Read hotpoint mission information from flight controller
    *
    *  @param callback callback function
    *  @param userData user data (void ptr)
    */
-  void readData(VehicleCallBack callback = 0, UserData userData = 0);
+  void getHotpointSettings(VehicleCallBack callback = 0, UserData userData = 0);
   /*! @brief
    *
-   *  read hotpt mission info from flight controller
+   *  Read hotpoint mission information from flight controller
    *
    *  @param timer timeout to wait for ACK
    */
-  ACK::ErrorCode readData(int timer);
+  ACK::HotPointRead getHotpointSettings(int timer);
   /*! @brief
    *
    *  A callback function for start non-blocking calls
@@ -228,7 +228,8 @@ public:
    *  @param recvFrame the data comes with the callback function
    *  @param userData a void ptr that user can manipulate inside the callback
    */
-  static void readCallback(RecvContainer recvFrame, UserData userData);
+  static void getHotpointSettingsCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
+		                          UserData userData);
   /*! @brief
    *
    *  Set hotpoint callback

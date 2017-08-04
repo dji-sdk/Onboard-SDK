@@ -99,68 +99,68 @@ public:
 
   /*! Get timestamp from local cache
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
-   *  @return Telemetry::TimeStamp data structure with the newest value
+   *  @return Telemetry::TimeStamp data structure with the newest value.
    */
-  Telemetry::TimeStamp           getTimeStamp()          const;
+  Telemetry::TimeStamp    getTimeStamp()          ;
 
   /*! Get software sync timestamp from local cache
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *  @details Note that this is unrelated to the hardware sync subscription.
-   *  @return Telemetry::SyncStamp data structure with the newest value
+   *  @return Telemetry::SyncStamp data structure with the newest value.
    */
-  Telemetry::SyncStamp           getSyncStamp()          const;
+  Telemetry::SyncStamp    getSyncStamp()          ;
 
   /*! Get quaternion data from local cache
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *
-   *  @return Quaternion data structure with the newest value
+   *  @return Telemetry::Quaternion data structure with the newest value.
    */
-  Telemetry::Quaternion          getQuaternion()         const;
+  Telemetry::Quaternion    getQuaternion()         ;
 
   /*! Get acceleration from local cache
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *  @details The acceleration may be in body or ground frame, fused or raw,
    *           based on settings on DJI Assistant 2's SDK page.
-   *  @return Telemetry::Vector3f data structure with the newest value
+   *  @return Telemetry::Vector3f data structure with the newest value.
    */
-  Telemetry::Vector3f            getAcceleration()       const;
+  Telemetry::Vector3f    getAcceleration()       ;
 
   /*! Get velocity from local cache
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *  @details The velocity may be in body or ground frame
    *           based on settings on DJI Assistant 2's SDK page.
-   *  @return Telemetry::Vector3f data structure with the newest value
+   *  @return Telemetry::Vector3f data structure with the newest value.
    */
-  Telemetry::Vector3f            getVelocity()           const;
+  Telemetry::Vector3f    getVelocity()           ;
 
   /*! Get Angular Rates from local cache
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *  @details The angular rates may be in body or ground frame, fused or raw,
    *           based on settings on DJI Assistant 2's SDK page.
-   *  @return Telemetry::Vector3f data structure with the newest value
+   *  @return Telemetry::Vector3f data structure with the newest value.
    */
-  Telemetry::Vector3f            getAngularRate()          const;
+  Telemetry::Vector3f   getAngularRate()          ;
 
   /*! Get Velocity Info (health) from local cache
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *  @details This data is received along with velocity.
-   *  @return Telemetry::VelocityInfo data structure with the newest value
+   *  @return Telemetry::VelocityInfo data structure with the newest value.
    */
-  Telemetry::VelocityInfo        getVelocityInfo()       const;
+  Telemetry::VelocityInfo    getVelocityInfo()       ;
 
   /*! Get Globalc Position (LLA and metadata) from local cache
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *  @details The returned Lat/Lon values are in rad.
-   *  @return Telemetry::GlobalPosition data structure with the newest value
+   *  @return Telemetry::GlobalPosition data structure with the newest value.
    */
-  Telemetry::GlobalPosition      getGlobalPosition()     const;
+  Telemetry::GlobalPosition    getGlobalPosition()     ;
 
   /*! Get Obstacle info around the vehicle from local cache
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *  @details The returned value is relative to your home location.
-   *  @return Telemetry::RelativePosition data strucutre with the newest value
+   *  @return Telemetry::RelativePosition data structure with the newest value.
    */
-  Telemetry::RelativePosition    getRelativePosition()   const;
+  Telemetry::RelativePosition    getRelativePosition()   ;
 
   /*! Get GPS Info from local cache
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
@@ -168,7 +168,7 @@ public:
    *           You need to enable it separately on DJI Assistant 2's SDK page.
    *  @return Telemetry::GPSInfo data structure with the newest value.
    */
-  Telemetry::GPSInfo             getGPSInfo()            const;
+  Telemetry::GPSInfo     getGPSInfo()            ;
 
   /*! Get RTK data from local cache
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
@@ -176,7 +176,7 @@ public:
    *           You need to enable it separately on DJI Assistant 2's SDK page.
    *  @return Telemetry::RTK data structure with the newest value.
    */
-  Telemetry::RTK                 getRTKInfo()            const;
+  Telemetry::RTK     getRTKInfo()            ;
 
   /*! Get Magnetometer data from local cache
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
@@ -184,41 +184,41 @@ public:
    *           1000 < |mag| < 2000 for normal operation
    *  @return Telemetry::Mag data structure with the newest value.
    */
-  Telemetry::Mag                 getMag()                const;
+  Telemetry::Mag     getMag()                ;
 
   /*! Get RC channel data from local cache
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *  @return Telemetry::RC data structure with the newest value.
    */
-  Telemetry::RC                  getRC()                 const;
+  Telemetry::RC     getRC()                 ;
 
   /*! Get Gimbal data from local cache
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *
-   *  @return Telemetry::Gimbal data structure with the newest value
+   *  @return Telemetry::Gimbal data structure with the newest value.
    */
-  Telemetry::Gimbal              getGimbal()             const;
+  Telemetry::Gimbal     getGimbal()             ;
 
   /*! Get Status (flight status, mode, gear and error) from local cache
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *
-   *  @return Telemetry::Status data structure with the newest value
+   *  @return Telemetry::Status data structure with the newest value.
    */
-  Telemetry::Status              getStatus()             const;
+  Telemetry::Status     getStatus()             ;
 
   /*! Get Battery Info from local cache
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *
-   *  @return Telemetry::Battery data structure with the newest value
+   *  @return Telemetry::Battery data structure with the newest value.
    */
-  Telemetry::Battery             getBatteryInfo()        const;
+  Telemetry::Battery     getBatteryInfo()        ;
 
   /*! Get SDK Control Mode/Authority info from local cache
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *
-   *  @return Telemetry::SDKInfo data structure with the newest value
+   *  @return Telemetry::SDKInfo data structure with the newest value.
    */
-  Telemetry::SDKInfo             getSDKInfo()            const;
+  Telemetry::SDKInfo     getSDKInfo()            ;
   // clang-format on
 
 public:
@@ -287,12 +287,15 @@ public:
 private:
   // clang-format off
   typedef enum FLAG {
+    // Common to A3/N3 and M100
     FLAG_TIME           = 0X0001,
     FLAG_QUATERNION     = 0X0002,
     FLAG_ACCELERATION   = 0X0004,
     FLAG_VELOCITY       = 0X0008,
     FLAG_ANGULAR_RATE   = 0X0010,
     FLAG_POSITION       = 0X0020,
+
+    // Following are A3/N3 specific
     FLAG_GPSINFO        = 0X0040,
     FLAG_RTKINFO        = 0X0080,
     FLAG_MAG            = 0X0100,
@@ -301,14 +304,36 @@ private:
     FLAG_STATUS         = 0X0800,
     FLAG_BATTERY        = 0X1000,
     FLAG_DEVICE         = 0X2000,
-    FLAG_END            = 0X4000
+
+    // Following are M100 specific
+    FLAG_M100_MAG       = 0x0040,
+    FLAG_M100_RC        = 0x0080,
+    FLAG_M100_GIMBAL    = 0x0100,
+    FLAG_M100_STATUS    = 0x0200,
+    FLAG_M100_BATTERY   = 0x0400,
+    FLAG_M100_DEVICE    = 0x0800
   } FLAG;
   // clang-format on
 
 private:
+  /*!
+   * @brief Extract broadcast data for A3/N3
+   * @param recvFrame: the raw data payload
+   */
   void unpackData(RecvContainer* recvFrame);
 
+  /*!
+   * @brief Extract broadcast data for M100
+   * @param recvFrame: the raw data payload
+   */
+  void unpackM100Data(RecvContainer* pRecvFrame);
+
   inline void unpackOne(FLAG flag, void* data, uint8_t*& buf, size_t size);
+
+public:
+
+  void setBroadcastLength(uint16_t length);
+  uint16_t getBroadcastLength();
 
 private:
   // clang-format off
@@ -329,11 +354,19 @@ private:
   Telemetry::Status              status      ;
   Telemetry::Battery             battery     ;
   Telemetry::SDKInfo             info        ;
+  /*
+   * @note Broadcast data for Matrice 100 that is fundamentally
+   * different from the A3/N3
+   */
+  Telemetry::M100TimeStamp	    m100TimeStamp;
+  Telemetry::M100Velocity       m100Velocity;
+  Telemetry::M100Status         m100FlightStatus;
+  Telemetry::M100Battery        m100Battery;
   // clang-format on
-
 private:
   Vehicle* vehicle;
   uint16_t passFlag;
+  uint16_t broadcastLength;
 
   VehicleCallBackHandler userCbHandler;
 };

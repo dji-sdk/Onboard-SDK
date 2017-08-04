@@ -32,7 +32,7 @@ main(int argc, char** argv)
     << "| Available commands:                                            |"
     << std::endl;
   std::cout
-    << "| [a] Subscribe to telemetry and print                           |"
+    << "| [a] Get telemetry data and print                               |"
     << std::endl;
   char inputChar;
   std::cin >> inputChar;
@@ -40,7 +40,14 @@ main(int argc, char** argv)
   switch (inputChar)
   {
     case 'a':
-      subscribeToData(vehicle);
+      if (vehicle->getFwVersion() == Version::M100_31)
+      {
+        getBroadcastData(vehicle);
+      }
+      else
+      {
+        subscribeToData(vehicle);
+      }
       break;
     default:
       break;
@@ -48,6 +55,68 @@ main(int argc, char** argv)
 
   delete (vehicle);
   return 0;
+}
+
+bool
+getBroadcastData(DJI::OSDK::Vehicle* vehicle, int responseTimeout)
+{
+  // Counters
+  int elapsedTimeInMs = 0;
+  int timeToPrintInMs = 2000;
+
+  // We will listen to five broadcast data sets:
+  // 1. Flight Status
+  // 2. Global Position
+  // 3. RC Channels
+  // 4. Velocity
+  // 5. Quaternion
+
+  // Please make sure your drone is in simulation mode. You can
+  // fly the drone with your RC to get different values.
+
+  Telemetry::Status         status;
+  Telemetry::GlobalPosition globalPosition;
+  Telemetry::RC             rc;
+  Telemetry::Vector3f       velocity;
+  Telemetry::Quaternion     quaternion;
+
+  const int TIMEOUT = 20;
+
+  // Re-set Broadcast frequencies to their default values
+  ACK::ErrorCode ack = vehicle->broadcast->setBroadcastFreqDefaults(TIMEOUT);
+
+  // Print in a loop for 2 seconds
+  while (elapsedTimeInMs < timeToPrintInMs)
+  {
+    // Matrice 100 broadcasts only flight status
+    status         = vehicle->broadcast->getStatus();
+    globalPosition = vehicle->broadcast->getGlobalPosition();
+    rc             = vehicle->broadcast->getRC();
+    velocity       = vehicle->broadcast->getVelocity();
+    quaternion     = vehicle->broadcast->getQuaternion();
+
+    std::cout << "Counter = " << elapsedTimeInMs << ":\n";
+    std::cout << "-------\n";
+    std::cout << "Flight Status                         = "
+              << (unsigned)status.flight << "\n";
+    std::cout << "Position              (LLA)           = "
+              << globalPosition.latitude << ", " << globalPosition.longitude
+              << ", " << globalPosition.altitude << "\n";
+    std::cout << "RC Commands           (r/p/y/thr)     = " << rc.roll << ", "
+              << rc.pitch << ", " << rc.yaw << ", " << rc.throttle << "\n";
+    std::cout << "Velocity              (vx,vy,vz)      = " << velocity.x
+              << ", " << velocity.y << ", " << velocity.z << "\n";
+    std::cout << "Attitude Quaternion   (w,x,y,z)       = " << quaternion.q0
+              << ", " << quaternion.q1 << ", " << quaternion.q2 << ", "
+              << quaternion.q3 << "\n";
+    std::cout << "-------\n\n";
+
+    usleep(5000);
+    elapsedTimeInMs += 5;
+  }
+
+  std::cout << "Done printing!\n";
+  return true;
 }
 
 bool

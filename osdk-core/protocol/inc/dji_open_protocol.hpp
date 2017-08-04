@@ -22,7 +22,10 @@
  *  This set of macros figures out which files to include based on your
  *  platform.
  */
-#ifdef __linux__
+#ifdef QT
+#include "qt_serial_device.hpp"
+#include "qt_thread.hpp"
+#elif defined(__linux__)
 //! handle array of characters
 #include "linux_serial_device.hpp"
 #include "posix_thread_manager.hpp"
@@ -33,8 +36,6 @@
 #include <STM32F4SerialDriver.h>
 #include <stdlib.h>
 #include <string.h>
-#elif defined(qt)
-#include <QHardDriver.h>
 #endif
 
 namespace DJI
@@ -226,6 +227,7 @@ public:
 
   RecvContainer receive();
   /************************Getters and setters*******************************/
+
   /**
    * Get serial device handler.
    */
@@ -270,10 +272,15 @@ private:
 
   //! Lowest-level function interfaces with SerialDevice
   bool readPoll(RecvContainer* allocatedRecvObject);
+
   //! Handle incoming data - byte level
   //! STM32 uses it directly
 public:
   bool byteHandler(const uint8_t in_data, RecvContainer* allocatedRecvObject);
+  //! Get the bufReadPos variable that tracks how much of the current serial buffer we have consumed
+  int getBufReadPos();
+  //! Get the readLen variable that tracks how many bytes were last read from the serialDevice
+  int getReadLen();
 
 private:
   //! Integrity checks for incoming data.
@@ -375,6 +382,7 @@ private:
 
   int buf_read_pos;
   int read_len;
+  int readPollCount;
 };
 
 } // namespace OSDK

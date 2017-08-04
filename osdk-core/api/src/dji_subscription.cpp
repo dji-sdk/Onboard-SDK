@@ -32,7 +32,7 @@ TopicInfo Telemetry::TopicDataBase[] =
   {TOPIC_ANGULAR_RATE_RAW          , UID_ANGULAR_RATE_RAW         , sizeof(TypeMap<TOPIC_ANGULAR_RATE_RAW        >::type), 400 ,   0,  255,  0},
   {TOPIC_ALTITUDE_FUSIONED         , UID_ALTITUDE_FUSIONED        , sizeof(TypeMap<TOPIC_ALTITUDE_FUSIONED       >::type), 200 ,   0,  255,  0},
   {TOPIC_ALTITUDE_BAROMETER        , UID_ALTITUDE_BAROMETER       , sizeof(TypeMap<TOPIC_ALTITUDE_BAROMETER      >::type), 200 ,   0,  255,  0},
-  {TOPIC_HEIGHT_HOMEPOOINT         , UID_HEIGHT_HOMEPOOINT        , sizeof(TypeMap<TOPIC_HEIGHT_HOMEPOOINT       >::type), 1   ,   0,  255,  0},
+  {TOPIC_HEIGHT_HOMEPOINT          , UID_HEIGHT_HOMEPOINT         , sizeof(TypeMap<TOPIC_HEIGHT_HOMEPOINT        >::type), 1   ,   0,  255,  0},
   {TOPIC_HEIGHT_FUSION             , UID_HEIGHT_FUSION            , sizeof(TypeMap<TOPIC_HEIGHT_FUSION           >::type), 100 ,   0,  255,  0},
   {TOPIC_GPS_FUSED                 , UID_GPS_FUSED                , sizeof(TypeMap<TOPIC_GPS_FUSED               >::type), 50  ,   0,  255,  0},
   {TOPIC_GPS_DATE                  , UID_GPS_DATE                 , sizeof(TypeMap<TOPIC_GPS_DATE                >::type), 50  ,   0,  255,  0},

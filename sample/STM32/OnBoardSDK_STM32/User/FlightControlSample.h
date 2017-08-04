@@ -13,8 +13,8 @@
 #define FLIGHTCONTROLSAMPLE_H
 
 #include "BspUsart.h"
-#include "timer.h"
 #include "dji_vehicle.hpp"
+#include "timer.h"
 #include <math.h>
 
 using namespace DJI::OSDK;
@@ -30,10 +30,8 @@ int moveByPositionOffset(float xOffsetDesired, float yOffsetDesired,
                          float yawThresholdInDeg = 1.0);
 
 //! Helper functions
-void localOffsetFromGpsOffset(Telemetry::Vector3f&     deltaNed,
-                              Telemetry::GPSFused& target,
-                              Telemetry::GPSFused& origin);
-Telemetry::Vector3f toEulerAngle(
-  Telemetry::TypeMap<Telemetry::TOPIC_QUATERNION>::type &quaternionData);
+void localOffsetFromGpsOffset(Vehicle* vehicle, Telemetry::Vector3f& deltaNed,
+                              void* target, void* origin);
+Telemetry::Vector3f toEulerAngle(void* quaternionData);
 
 #endif // FLIGHTCONTROLSAMPLE_H

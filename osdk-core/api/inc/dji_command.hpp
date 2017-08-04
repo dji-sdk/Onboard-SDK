@@ -53,6 +53,9 @@ public:
       // CMD_ID_STATUS Not used at all
       const static uint8_t status[MAX_CMD_ARRAY_SIZE];
       const static uint8_t control[MAX_CMD_ARRAY_SIZE];
+      // CMD_ID_SETARM Supported on Matrice 100, A3, N3
+      // with firmware version < 3.3
+      const static uint8_t setArm[MAX_CMD_ARRAY_SIZE];
       const static uint8_t gimbalSpeed[MAX_CMD_ARRAY_SIZE];
       const static uint8_t gimbalAngle[MAX_CMD_ARRAY_SIZE];
       const static uint8_t cameraShot[MAX_CMD_ARRAY_SIZE];
@@ -68,7 +71,7 @@ public:
       const static uint8_t waypointSetStart[MAX_CMD_ARRAY_SIZE];
       const static uint8_t waypointSetPause[MAX_CMD_ARRAY_SIZE];
       const static uint8_t waypointDownload[MAX_CMD_ARRAY_SIZE];
-      const static uint8_t waypointIndex[MAX_CMD_ARRAY_SIZE];
+      const static uint8_t waypointIndexDownload[MAX_CMD_ARRAY_SIZE];
       const static uint8_t waypointSetVelocity[MAX_CMD_ARRAY_SIZE];
       const static uint8_t waypointGetVelocity[MAX_CMD_ARRAY_SIZE];
       // Hotpint mission commands

@@ -71,10 +71,11 @@ main(int argc, char** argv)
 }
 
 bool
-runWaypointMission(Vehicle* vehicle, uint8_t numWaypoints, int responseTimeout)
+setUpSubscription(DJI::OSDK::Vehicle* vehicle, int responseTimeout)
 {
   // Telemetry: Verify the subscription
   ACK::ErrorCode subscribeStatus;
+
   subscribeStatus = vehicle->subscribe->verify(responseTimeout);
   if (ACK::getError(subscribeStatus) != ACK::SUCCESS)
   {
@@ -83,25 +84,27 @@ runWaypointMission(Vehicle* vehicle, uint8_t numWaypoints, int responseTimeout)
   }
 
   // Telemetry: Subscribe to flight status and mode at freq 10 Hz
-  int       pkgIndex        = 0;
   int       freq            = 10;
-  TopicName topicList10Hz[] = { TOPIC_GPS_FUSED, TOPIC_ALTITUDE_FUSIONED };
+  TopicName topicList10Hz[] = { TOPIC_GPS_FUSED };
   int       numTopic        = sizeof(topicList10Hz) / sizeof(topicList10Hz[0]);
   bool      enableTimestamp = false;
 
   bool pkgStatus = vehicle->subscribe->initPackageFromTopicList(
-    pkgIndex, numTopic, topicList10Hz, enableTimestamp, freq);
+    DEFAULT_PACKAGE_INDEX, numTopic, topicList10Hz, enableTimestamp, freq);
   if (!(pkgStatus))
   {
     return pkgStatus;
   }
-  subscribeStatus = vehicle->subscribe->startPackage(pkgIndex, responseTimeout);
+
+  // Start listening to the telemetry data
+  subscribeStatus =
+    vehicle->subscribe->startPackage(DEFAULT_PACKAGE_INDEX, responseTimeout);
   if (ACK::getError(subscribeStatus) != ACK::SUCCESS)
   {
     ACK::getErrorCodeMessage(subscribeStatus, __func__);
-    // Cleanup before return
+    // Cleanup
     ACK::ErrorCode ack =
-      vehicle->subscribe->removePackage(pkgIndex, responseTimeout);
+      vehicle->subscribe->removePackage(DEFAULT_PACKAGE_INDEX, responseTimeout);
     if (ACK::getError(ack))
     {
       std::cout << "Error unsubscribing; please restart the drone/FC to get "
@@ -109,21 +112,54 @@ runWaypointMission(Vehicle* vehicle, uint8_t numWaypoints, int responseTimeout)
     }
     return false;
   }
-  sleep(1);
+  return true;
+}
+
+bool
+teardownSubscription(DJI::OSDK::Vehicle* vehicle, const int pkgIndex,
+                     int responseTimeout)
+{
+  ACK::ErrorCode ack =
+    vehicle->subscribe->removePackage(pkgIndex, responseTimeout);
+  if (ACK::getError(ack))
+  {
+    std::cout << "Error unsubscribing; please restart the drone/FC to get back "
+                 "to a clean state.\n";
+    return false;
+  }
+  return true;
+}
+
+bool
+runWaypointMission(Vehicle* vehicle, uint8_t numWaypoints, int responseTimeout)
+{
+  if (vehicle->getFwVersion() != Version::M100_31)
+  {
+    if (!setUpSubscription(vehicle, responseTimeout))
+    {
+      std::cout << "Failed to set up Subscription!" << std::endl;
+      return false;
+    }
+    sleep(1);
+  }
 
   // Waypoint Mission : Initialization
   WayPointInitSettings fdata;
   setWaypointInitDefaults(&fdata);
+
   fdata.indexNumber =
     numWaypoints + 1; // We add 1 to get the aircarft back to the start.
-  float64_t      increment = 0.000001;
-  float32_t      start_alt = 10;
-  ACK::ErrorCode initAck   = vehicle->missionManager->init(
+
+  float64_t increment = 0.000001;
+  float32_t start_alt = 10;
+
+  ACK::ErrorCode initAck = vehicle->missionManager->init(
     DJI_MISSION_TYPE::WAYPOINT, responseTimeout, &fdata);
   if (ACK::getError(initAck))
   {
     ACK::getErrorCodeMessage(initAck, __func__);
   }
+
   vehicle->missionManager->printInfo();
   std::cout << "Initializing Waypoint Mission..\n";
 
@@ -150,13 +186,12 @@ runWaypointMission(Vehicle* vehicle, uint8_t numWaypoints, int responseTimeout)
 
   // Cleanup before return. The mission isn't done yet, but it doesn't need any
   // more input from our side.
-  ACK::ErrorCode ack =
-    vehicle->subscribe->removePackage(pkgIndex, responseTimeout);
-  if (ACK::getError(ack))
+  if (vehicle->getFwVersion() != Version::M100_31)
   {
-    std::cout << "Error unsubscribing; please restart the drone/FC to get back "
-                 "to a clean state.\n";
+    return teardownSubscription(vehicle, DEFAULT_PACKAGE_INDEX,
+                                responseTimeout);
   }
+
   return true;
 }
 
@@ -198,17 +233,35 @@ std::vector<DJI::OSDK::WayPointSettings>
 createWaypoints(DJI::OSDK::Vehicle* vehicle, int numWaypoints,
                 float64_t distanceIncrement, float32_t start_alt)
 {
-  Telemetry::TypeMap<TOPIC_GPS_FUSED>::type gPosition =
-    vehicle->subscribe->getValue<TOPIC_GPS_FUSED>();
-
   // Create Start Waypoint
   WayPointSettings start_wp;
   setWaypointDefaults(&start_wp);
-  start_wp.latitude  = gPosition.latitude;
-  start_wp.longitude = gPosition.longitude;
-  start_wp.altitude  = start_alt;
-  printf("Waypoint created at (LLA): %f \t%f \t%f\n", gPosition.latitude,
-         gPosition.longitude, start_alt);
+
+  // Global position retrieved via subscription
+  Telemetry::TypeMap<TOPIC_GPS_FUSED>::type subscribeGPosition;
+  // Global position retrieved via broadcast
+  Telemetry::GlobalPosition broadcastGPosition;
+
+  if (vehicle->getFwVersion() != Version::M100_31)
+  {
+    subscribeGPosition = vehicle->subscribe->getValue<TOPIC_GPS_FUSED>();
+    start_wp.latitude  = subscribeGPosition.latitude;
+    start_wp.longitude = subscribeGPosition.longitude;
+    start_wp.altitude  = start_alt;
+    printf("Waypoint created at (LLA): %f \t%f \t%f\n",
+           subscribeGPosition.latitude, subscribeGPosition.longitude,
+           start_alt);
+  }
+  else
+  {
+    broadcastGPosition = vehicle->broadcast->getGlobalPosition();
+    start_wp.latitude  = broadcastGPosition.latitude;
+    start_wp.longitude = broadcastGPosition.longitude;
+    start_wp.altitude  = start_alt;
+    printf("Waypoint created at (LLA): %f \t%f \t%f\n",
+           broadcastGPosition.latitude, broadcastGPosition.longitude,
+           start_alt);
+  }
 
   std::vector<DJI::OSDK::WayPointSettings> wpVector =
     generateWaypointsPolygon(&start_wp, distanceIncrement, numWaypoints);
@@ -271,64 +324,48 @@ uploadWaypoints(Vehicle*                                  vehicle,
 bool
 runHotpointMission(Vehicle* vehicle, int initialRadius, int responseTimeout)
 {
-  // Telemetry: Verify the subscription
-  ACK::ErrorCode subscribeStatus;
-  subscribeStatus = vehicle->subscribe->verify(responseTimeout);
-  if (ACK::getError(subscribeStatus) != ACK::SUCCESS)
+  if (vehicle->getFwVersion() != Version::M100_31)
   {
-    ACK::getErrorCodeMessage(subscribeStatus, __func__);
-    return false;
-  }
-
-  // Telemetry: Subscribe to flight status and mode at freq 10 Hz
-  int       pkgIndex        = 0;
-  int       freq            = 10;
-  TopicName topicList10Hz[] = { TOPIC_GPS_FUSED };
-  int       numTopic        = sizeof(topicList10Hz) / sizeof(topicList10Hz[0]);
-  bool      enableTimestamp = false;
-
-  bool pkgStatus = vehicle->subscribe->initPackageFromTopicList(
-    pkgIndex, numTopic, topicList10Hz, enableTimestamp, freq);
-  if (!(pkgStatus))
-  {
-    return pkgStatus;
-  }
-  subscribeStatus = vehicle->subscribe->startPackage(pkgIndex, responseTimeout);
-  if (ACK::getError(subscribeStatus) != ACK::SUCCESS)
-  {
-    ACK::getErrorCodeMessage(subscribeStatus, __func__);
-    // Cleanup before return
-    ACK::ErrorCode ack =
-      vehicle->subscribe->removePackage(pkgIndex, responseTimeout);
-    if (ACK::getError(ack))
+    if (!setUpSubscription(vehicle, responseTimeout))
     {
-      std::cout << "Error unsubscribing; please restart the drone/FC to get "
-                   "back to a clean state.\n";
+      std::cout << "Failed to set up Subscription!" << std::endl;
+      return false;
     }
-    return false;
+    sleep(1);
   }
-  sleep(1);
+
+  // Global position retrieved via subscription
+  Telemetry::TypeMap<TOPIC_GPS_FUSED>::type subscribeGPosition;
+  // Global position retrieved via broadcast
+  Telemetry::GlobalPosition broadcastGPosition;
 
   // Hotpoint Mission Initialize
   vehicle->missionManager->init(DJI_MISSION_TYPE::HOTPOINT, responseTimeout,
                                 NULL);
   vehicle->missionManager->printInfo();
-  Telemetry::TypeMap<TOPIC_GPS_FUSED>::type gPosition =
-    vehicle->subscribe->getValue<TOPIC_GPS_FUSED>();
-  vehicle->missionManager->hpMission->setHotPoint(
-    gPosition.longitude, gPosition.latitude, initialRadius);
+
+  if (vehicle->getFwVersion() != Version::M100_31)
+  {
+    subscribeGPosition = vehicle->subscribe->getValue<TOPIC_GPS_FUSED>();
+    vehicle->missionManager->hpMission->setHotPoint(
+      subscribeGPosition.longitude, subscribeGPosition.latitude, initialRadius);
+  }
+  else
+  {
+    broadcastGPosition = vehicle->broadcast->getGlobalPosition();
+    vehicle->missionManager->hpMission->setHotPoint(
+      broadcastGPosition.longitude, broadcastGPosition.latitude, initialRadius);
+  }
 
   // Takeoff
   ACK::ErrorCode takeoffAck = vehicle->control->takeoff(responseTimeout);
   if (ACK::getError(takeoffAck))
   {
     ACK::getErrorCodeMessage(takeoffAck, __func__);
-    ACK::ErrorCode ack =
-      vehicle->subscribe->removePackage(pkgIndex, responseTimeout);
-    if (ACK::getError(ack))
+
+    if (vehicle->getFwVersion() != Version::M100_31)
     {
-      std::cout << "Error unsubscribing; please restart the drone/FC to get "
-                   "back to a clean state.\n";
+      teardownSubscription(vehicle, DEFAULT_PACKAGE_INDEX, responseTimeout);
     }
     return false;
   }
@@ -344,12 +381,9 @@ runHotpointMission(Vehicle* vehicle, int initialRadius, int responseTimeout)
   if (ACK::getError(startAck))
   {
     ACK::getErrorCodeMessage(startAck, __func__);
-    ACK::ErrorCode ack =
-      vehicle->subscribe->removePackage(pkgIndex, responseTimeout);
-    if (ACK::getError(ack))
+    if (vehicle->getFwVersion() != Version::M100_31)
     {
-      std::cout << "Error unsubscribing; please restart the drone/FC to get "
-                   "back to a clean state.\n";
+      teardownSubscription(vehicle, DEFAULT_PACKAGE_INDEX, responseTimeout);
     }
     return false;
   }
@@ -406,13 +440,12 @@ runHotpointMission(Vehicle* vehicle, int initialRadius, int responseTimeout)
     sleep(10);
   }
 
-  // Clean up before exit
-  ACK::ErrorCode ack =
-    vehicle->subscribe->removePackage(pkgIndex, responseTimeout);
-  if (ACK::getError(ack))
+  // Clean up
+  ACK::getErrorCodeMessage(startAck, __func__);
+  if (vehicle->getFwVersion() != Version::M100_31)
   {
-    std::cout << "Error unsubscribing; please restart the drone/FC to get back "
-                 "to a clean state.\n";
+    teardownSubscription(vehicle, DEFAULT_PACKAGE_INDEX, responseTimeout);
   }
+
   return true;
 }

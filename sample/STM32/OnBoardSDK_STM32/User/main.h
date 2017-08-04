@@ -11,19 +11,19 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#include "stm32f4xx_conf.h"
-#include "cppforstm32.h"
-#include "dji_vehicle.hpp"
-#include "timer.h"
 #include "Activate.h"
 #include "BspUsart.h"
 #include "CameraGimbalSample.h"
 #include "FlightControlSample.h"
 #include "MissionSample.h"
 #include "MobileSample.h"
-#include "TelemetrySample.h"
 #include "Receive.h"
+#include "TelemetrySample.h"
 #include "bsp.h"
+#include "cppforstm32.h"
+#include "dji_vehicle.hpp"
+#include "stm32f4xx_conf.h"
+#include "timer.h"
 extern uint32_t tick; // tick is the time stamp,which record how many ms since u
                       // initialize the system.
 // warnning: after 49 days of non-reset running, tick will RESET to ZERO.

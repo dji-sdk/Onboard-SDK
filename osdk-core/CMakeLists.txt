@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 project(djiosdk-core)
 
 if (NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Release CACHE STRING
+    set(CMAKE_BUILD_TYPE Debug CACHE STRING
             "Choose the type of build Debug/Release/Coverage:"
             FORCE)
 endif ()

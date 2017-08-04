@@ -32,14 +32,15 @@
 #include "dji_type.hpp"
 #include "dji_vehicle_callback.hpp"
 #include "dji_version.hpp"
+#include "dji_virtual_rc.hpp"
 
 /*! Platform includes:
  *  This set of macros figures out which files to include based on your
  * platform.
  */
 
-#ifdef qt
-#include <QThread.h>
+#ifdef QT
+#include <qt_thread.hpp>
 #elif STM32
 #include <STM32F4DataGuard.h>
 #elif defined(__linux__)
@@ -90,6 +91,8 @@ public:
   MobileCommunication* moc;
   MissionManager*      missionManager;
   HardwareSync*        hardSync;
+  // Supported only on Matrice 100
+  VirtualRC* virtualRC;
 
   ////// Control authorities //////
 
@@ -256,8 +259,14 @@ private:
   ACK::DroneVersion  droneVersionACK;
   ACK::HotPointStart hotpointStartACK;
   ACK::HotPointRead  hotpointReadACK;
+  /*!WayPoint download command
+   * @note Download mission setting*/
   ACK::WayPointInit  waypointInitACK;
-  ACK::WayPointIndex waypointDataACK;
+  /*!WayPoint index download command ACK
+   * @note Download index settings*/
+  ACK::WayPointIndex waypointIndexACK;
+  /*!WayPoint add point command ACK*/
+  ACK::WayPointAddPoint waypointAddPointACK;
   ACK::MFIOGet       mfioGetACK;
 
   //! This array will be populated by Non blocking calls depending on
@@ -265,7 +274,7 @@ private:
   //! Elements may be equal to NULL if Callback function execution has been
   //! completed and array element of
   //! callbackFunction is available to be populated.
-  RecvContainer nbCallbackRecvContainer[200]; //! @todo magic number
+  RecvContainer* nbCallbackRecvContainer;
 
   VehicleCallBackHandler nbVehicleCallBackHandler;
 
@@ -286,6 +295,7 @@ private:
 */
   void mandatorySetUp();
   bool initOpenProtocol();
+
   /*! @brief Initialize the right platform-specific implementations
    *  @details
    *  @return false if error, true if success
@@ -302,6 +312,7 @@ private:
   bool initMOC();
   bool initMissionManager();
   bool initHardSync();
+  bool initVirtualRC();
 
   //* Set of callback handler for various things
   VehicleCallBackHandler subscriberDecodeHandler;
@@ -353,6 +364,7 @@ public:
 
 private:
   const int            wait_timeout = 5;
+  const int 	       GIMBAL_MOUNTED = 1;
   CMD_SETSupportMatrix cmd_setSupportMatrix[9];
 };
 }

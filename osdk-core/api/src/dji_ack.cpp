@@ -185,6 +185,31 @@ ACK::createSetControlErrorCodeMap()
   return errorCodeMap;
 }
 
+/*
+ * SetArm supported only in Matrice 100
+ */
+const std::pair<const uint32_t, const char*> setArmData[] = {
+  std::make_pair(OpenProtocol::ErrorCode::ControlACK::SetArm::SUCCESS,
+                 (const char*)"SET_ARM_SUCCESS\n"),
+  std::make_pair(
+    OpenProtocol::ErrorCode::ControlACK::SetArm::AIRCRAFT_IN_AIR_ERROR,
+    (const char*)"SET_ARM_AIRCRAFT_IN_AIR_ERROR\n"),
+  std::make_pair(
+    OpenProtocol::ErrorCode::ControlACK::SetArm::ALREADY_ARMED_ERROR,
+    (const char*)"SET_ARM_ALREADY_ARMED_ERROR\n"),
+  std::make_pair(
+    OpenProtocol::ErrorCode::ControlACK::SetArm::OBTAIN_CONTROL_NEEDED_ERROR,
+    (const char*)"SET_ARM_OBTAIN_CONTROL_NEEDED_ERROR\n")
+};
+
+const std::map<const uint32_t, const char*>
+ACK::createSetArmErrorCodeMap()
+{
+  const std::map<const uint32_t, const char*> errorCodeMap(
+    setArmData, setArmData + sizeof setArmData / sizeof setArmData[0]);
+  return errorCodeMap;
+}
+
 const std::pair<const uint32_t, const char*> taskData[] = {
   std::make_pair(OpenProtocol::ErrorCode::ControlACK::Task::SUCCESS,
                  (const char*)"CONTROLLER_TASK_SUCCESS\n"),
@@ -228,6 +253,24 @@ ACK::createTaskErrorCodeMap()
 {
   const std::map<const uint32_t, const char*> errorCodeMap(
     taskData, taskData + sizeof taskData / sizeof taskData[0]);
+  return errorCodeMap;
+}
+
+/*
+ * Supported in Matrice 100
+ */
+const std::pair<const uint32_t, const char*> M100TaskData[] = {
+  std::make_pair(OpenProtocol::ErrorCode::ControlACK::M100Task::SUCCESS,
+                 (const char*)"CONTROLLER_SUCCESS\n"),
+  std::make_pair(OpenProtocol::ErrorCode::ControlACK::M100Task::FAIL,
+                 (const char*)"CONTROLLER_FAIL\n")
+};
+
+const std::map<const uint32_t, const char*>
+ACK::createM100TaskErrorCodeMap()
+{
+  const std::map<const uint32_t, const char*> errorCodeMap(
+    M100TaskData, M100TaskData + sizeof M100TaskData / sizeof M100TaskData[0]);
   return errorCodeMap;
 }
 
@@ -455,6 +498,15 @@ ACK::getError(ACK::ErrorCode ack)
                : ACK::FAIL;
     }
   }
+  else if (memcmp(cmd, OpenProtocol::CMDSet::Control::setArm, sizeof(cmd)) == 0)
+  {
+    /*
+     * SetArm command supported in Matrice 100
+     */
+    return (ack.data == OpenProtocol::ErrorCode::ControlACK::SetArm::SUCCESS)
+             ? ACK::SUCCESS
+             : ACK::FAIL;
+  }
   else if (memcmp(cmd, OpenProtocol::CMDSet::Control::control, sizeof(cmd)) ==
            0)
   {
@@ -462,9 +514,20 @@ ACK::getError(ACK::ErrorCode ack)
   }
   else if (memcmp(cmd, OpenProtocol::CMDSet::Control::task, sizeof(cmd)) == 0)
   {
-    return (ack.data == OpenProtocol::ErrorCode::ControlACK::Task::SUCCESS)
-             ? ACK::SUCCESS
-             : ACK::FAIL;
+    if (ack.info.version != Version::M100_31)
+    {
+      return (ack.data == OpenProtocol::ErrorCode::ControlACK::Task::SUCCESS)
+               ? ACK::SUCCESS
+               : ACK::FAIL;
+    }
+    else
+    {
+      //! ACKs supported in Matrice 100
+      return (ack.data ==
+              OpenProtocol::ErrorCode::ControlACK::M100Task::SUCCESS)
+               ? ACK::SUCCESS
+               : ACK::FAIL;
+    }
   }
   else if (ack.info.cmd_set == OpenProtocol::CMDSet::mission)
   {
@@ -635,6 +698,13 @@ ACK::getCMDSetControlMSG(ACK::ErrorCode ack)
      */
     getCMDIDTaskMSG(ack);
   }
+  else if (memcmp(cmd, OpenProtocol::CMDSet::Control::setArm, sizeof(cmd)) == 0)
+  {
+    /*
+     * SetArm command supported in Matrice 100
+     */
+    getCMDIDSetArmMSG(ack);
+  }
 }
 
 void
@@ -649,8 +719,7 @@ ACK::getCMDIDSetControlMSG(uint8_t ack, Version::FirmWare version)
     if (msg->first ==
         OpenProtocol::ErrorCode::ControlACK::SetControl::RC_MODE_ERROR)
     {
-      if (version != Version::M100_23 || version != Version::M100_31 ||
-          version != Version::A3_31)
+      if (version != Version::M100_31 || version != Version::A3_31)
       {
         DSTATUS("RC_NEED_MODE_P\n");
       }
@@ -675,11 +744,40 @@ ACK::getCMDIDControlMSG(ACK::ErrorCode ack)
 void
 ACK::getCMDIDTaskMSG(ACK::ErrorCode ack)
 {
-  const std::map<const uint32_t, const char*> taskErrorCodeMap =
-    ACK::createTaskErrorCodeMap();
+  std::map<const uint32_t, const char*> taskErrorCodeMap;
+
+  if (ack.info.version != Version::M100_31)
+  {
+    taskErrorCodeMap = ACK::createTaskErrorCodeMap();
+  }
+  else
+  {
+    taskErrorCodeMap = ACK::createM100TaskErrorCodeMap();
+  }
+
   auto msg = taskErrorCodeMap.find(ack.data);
 
   if (msg != taskErrorCodeMap.end())
+  {
+    DSTATUS(msg->second);
+  }
+  else
+  {
+    getCommonErrorCodeMessage(ack);
+  }
+}
+
+/*
+ * SetArm command supported on Matrice 100 only
+ */
+void
+ACK::getCMDIDSetArmMSG(ACK::ErrorCode ack)
+{
+  const std::map<const uint32_t, const char*> setArmErrorCodeMap =
+    ACK::createSetArmErrorCodeMap();
+  auto msg = setArmErrorCodeMap.find(ack.data);
+
+  if (msg != setArmErrorCodeMap.end())
   {
     DSTATUS(msg->second);
   }

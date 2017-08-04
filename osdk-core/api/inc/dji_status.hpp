@@ -24,8 +24,11 @@ namespace OSDK
 namespace VehicleStatus
 {
 /*!
- * @brief status of vehicle
+ * @brief "Mode" of the vehicle's state machine, as displayed on DJI Go
+ * @details Available through Telemetry::TOPIC_STATUS_DISPLAYMODE
  */
+namespace DisplayMode
+{
 enum
 {
   /*! This mode requires the user to manually
@@ -101,7 +104,17 @@ enum
   MODE_ENGINE_START = 41,
   MODE_RESERVED_42  = 42,
   MODE_RESERVED_43  = 42,
+};
+} // namespace DisplayMode
 
+/*!
+ * @brief Enums for various landing gear states.
+ * @details Available through broadcast (SDKInfo)/subscribe (Telemetry::TOPIC_STATUS_LANDINGGEAR)
+ */
+namespace LandingGearMode
+{
+enum
+{
   LANDING_GEAR_UNDEFINED             = 0,
   LANDING_GEAR_DOWN                  = 1,
   LANDING_GEAR_UP_TO_DOWN            = 2,
@@ -111,7 +124,17 @@ enum
   LANDING_GEAR_PACKED                = 6,
   LANDING_GEAR_PACKING_IN_PROGRESS   = 7,
   LANDING_GEAR_UNPACKING_IN_PROGRESS = 8,
+};
+} // namespace LandingGearMode
 
+/*!
+ * @brief Enums for describing the current control mode the aircraft is in.
+ * @details Available through broadcast (SDKInfo)/subscribe (Telemetry::TOPIC_CONTROL_DEVICE)
+ */
+namespace CtlrMode
+{
+enum
+{
   CTRL_MODE_ATTI_STOP                   = 0,
   CTRL_MODE_HORIZ_ANG_VERT_VEL_YAW_ANG  = 1,
   CTRL_MODE_HORIZ_ANG_VERT_VEL_YAW_RATE = 2,
@@ -140,6 +163,36 @@ enum
   CTRL_MODE_ATTI_CTRL_STOP              = 100,
   CTRL_MODE_MODE_NOT_SUPPORTED          = 0xFF //!< @note unused
 };
+} // namespace CtrlMode
+
+/*! @brief Flight Status enum
+ * @note this is a DataBroadcast/DataSubscription telemetry message.
+ *
+ */
+namespace FlightStatus
+{
+enum
+{
+  STOPED      = 0,
+  ON_GROUND   = 1,
+  IN_AIR      = 2
+};
+} // namespace FlightStatus
+
+/*
+ * Flight status supported by M100_31
+ */
+namespace M100FlightStatus
+{
+enum
+{
+  ON_GROUND_STANDBY  = 1,
+  TAKEOFF            = 2,
+  IN_AIR_STANDBY     = 3,
+  LANDING            = 4, 
+  FINISHING_LANDING  = 5
+};
+} // namespace M100FlightStatus
 
 } // namespace VehicleStatus
 } // namespace OSDK

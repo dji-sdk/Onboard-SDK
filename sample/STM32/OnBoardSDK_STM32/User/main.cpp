@@ -94,8 +94,10 @@ main()
       delay_nms(500);
 
       // Check if the firmware version is compatible with this OSDK version
-      if (v->getFwVersion() < mandatoryVersionBase)
+      if (v->getFwVersion() < extendedVersionBase &&
+	 v->getFwVersion() != Version::M100_31)
       {
+	printf("Upgrade firmware using Assistant software!\n");
         delete (v);
         return -1;
       }
@@ -109,8 +111,11 @@ main()
       }*/
 
       // Verify subscription
-      v->subscribe->verify();
-      delay_nms(500);
+      if (v->getFwVersion() != Version::M100_31)
+      {
+        v->subscribe->verify();
+        delay_nms(500);
+      }
 
       // Obtain Control Authority
       v->obtainCtrlAuthority();
@@ -124,7 +129,10 @@ main()
           // Run monitore takeoff
           monitoredTakeOff();
           // Run position control sample
-          moveByPositionOffset(0, 6, 0, 0);
+          
+				  // For M100 z is 1.2
+				
+				  moveByPositionOffset(0, 6, 0, 0);
           moveByPositionOffset(6, 0, 0, 0);
           moveByPositionOffset(-6, -6, 0, 0);
           // Run monitored landing sample
@@ -161,12 +169,20 @@ main()
             "\n\nMobile callback registered. Trigger command mobile App.\r\n");
           delay_nms(10000);
           break;
-				case 6:
+        case 6:
           printf("\n\nStarting executing telemetry sample:\r\n");
           delay_nms(1000);
 
           // Run Telemetry sample
-          subscribeToData();
+          if (v->getFwVersion() == Version::M100_31)
+          {
+            getBroadcastData();
+          }
+          else
+          {
+            subscribeToData();
+          }
+
           delay_nms(10000);
           break;
         default:

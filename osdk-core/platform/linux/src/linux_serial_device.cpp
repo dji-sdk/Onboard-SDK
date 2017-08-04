@@ -95,7 +95,7 @@ LinuxSerialDevice::setDevice(const char* device)
 int
 LinuxSerialDevice::setSerialPureTimedRead()
 {
- return _serialConfig(m_baudrate, 8, 'N', 1, true);
+  return _serialConfig(m_baudrate, 8, 'N', 1, true);
 }
 
 int

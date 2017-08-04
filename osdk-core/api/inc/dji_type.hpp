@@ -156,6 +156,42 @@ typedef struct DispatchInfo
   uint8_t callbackID;
 } DispatchInfo;
 
+/*!
+ * @brief Virtual RC Settings (supported only on Matrice 100)
+ */
+typedef struct VirtualRCSetting
+{
+  uint8_t enable : 1;
+  uint8_t cutoff : 1;
+  uint8_t reserved : 6;
+} VirtualRCSetting;
+
+/*!
+ * @brief Virtual RC data (supported only on Matrice 100)
+ */
+typedef struct VirtualRCData
+{
+  //! @note this is default mapping data structure for
+  //! virtual remote controller.
+  //! @todo channel mapping
+  uint32_t roll;
+  uint32_t pitch;
+  uint32_t throttle;
+  uint32_t yaw;
+  uint32_t gear;
+  uint32_t reserved;
+  uint32_t mode;
+  uint32_t Channel_07;
+  uint32_t Channel_08;
+  uint32_t Channel_09;
+  uint32_t Channel_10;
+  uint32_t Channel_11;
+  uint32_t Channel_12;
+  uint32_t Channel_13;
+  uint32_t Channel_14;
+  uint32_t Channel_15;
+} VirtualRCData;
+
 } // namespace OSDK
 } // namespace DJI
 

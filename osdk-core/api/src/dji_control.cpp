@@ -28,7 +28,67 @@ Control::~Control()
 void
 Control::action(const int cmd, VehicleCallBack callback, UserData userData)
 {
-  uint8_t data    = cmd;
+  int cbIndex = vehicle->callbackIdIndex();
+  if (callback)
+  {
+    vehicle->nbCallbackFunctions[cbIndex] = (void*)callback;
+    vehicle->nbUserData[cbIndex]          = userData;
+  }
+  else
+  {
+    // Support for default callbacks
+    vehicle->nbCallbackFunctions[cbIndex] = (void*)actionCallback;
+    vehicle->nbUserData[cbIndex]          = NULL;
+  }
+
+  if (vehicle->getFwVersion() != Version::M100_31)
+  {
+    uint8_t data = cmd;
+    vehicle->protocolLayer->send(2, DJI::OSDK::encrypt,
+                                 OpenProtocol::CMDSet::Control::task, &data,
+                                 sizeof(data), 500, 2, true, cbIndex);
+  }
+  else
+  {
+    m100CMDData.cmd = cmd;
+    m100CMDData.sequence++;
+    vehicle->protocolLayer->send(
+      2, DJI::OSDK::encrypt, OpenProtocol::CMDSet::Control::task,
+      (uint8_t*)&m100CMDData, sizeof(m100CMDData), 500, 2, true, cbIndex);
+  }
+}
+
+ACK::ErrorCode
+Control::action(const int cmd, int timeout)
+{
+  ACK::ErrorCode ack;
+
+  if (vehicle->getFwVersion() != Version::M100_31)
+  {
+    uint8_t data = cmd;
+    vehicle->protocolLayer->send(2, DJI::OSDK::encrypt,
+                                 OpenProtocol::CMDSet::Control::task, &data,
+                                 sizeof(data), 500, 2, false, 2);
+  }
+  else
+  {
+    m100CMDData.cmd = cmd;
+    m100CMDData.sequence++;
+    vehicle->protocolLayer->send(
+      2, DJI::OSDK::encrypt, OpenProtocol::CMDSet::Control::task,
+      (uint8_t*)&m100CMDData, sizeof(m100CMDData), 100, 3, false, 2);
+  }
+
+  ack = *((ACK::ErrorCode*)vehicle->waitForACK(
+    OpenProtocol::CMDSet::Control::task, timeout));
+
+  return ack;
+}
+
+void
+Control::setArm(bool armSetting, VehicleCallBack callback, UserData userData)
+{
+  uint8_t data    = armSetting ? 1 : 0;
   int     cbIndex = vehicle->callbackIdIndex();
   if (callback)
   {
@@ -41,23 +101,24 @@ Control::action(const int cmd, VehicleCallBack callback, UserData userData)
     vehicle->nbCallbackFunctions[cbIndex] = (void*)actionCallback;
     vehicle->nbUserData[cbIndex]          = NULL;
   }
+
   vehicle->protocolLayer->send(2, DJI::OSDK::encrypt,
-                               OpenProtocol::CMDSet::Control::task, &data,
-                               sizeof(data), 500, 2, true, cbIndex);
+                               OpenProtocol::CMDSet::Control::setArm, &data,
+                               sizeof(data), 10, 10, true, cbIndex);
 }
 
 ACK::ErrorCode
-Control::action(const int cmd, int timeout)
+Control::setArm(bool armSetting, int timeout)
 {
   ACK::ErrorCode ack;
-  uint8_t        data = cmd;
+  uint8_t        data = armSetting ? 1 : 0;
 
   vehicle->protocolLayer->send(2, DJI::OSDK::encrypt,
-                               OpenProtocol::CMDSet::Control::task, &data,
-                               sizeof(data), 500, 2, false, 2);
+                               OpenProtocol::CMDSet::Control::setArm, &data,
+                               sizeof(data), 10, 10, false, 2);
 
   ack = *((ACK::ErrorCode*)vehicle->waitForACK(
-    OpenProtocol::CMDSet::Control::task, timeout));
+    OpenProtocol::CMDSet::Control::setArm, timeout));
 
   return ack;
 }
@@ -65,61 +126,131 @@ Control::action(const int cmd, int timeout)
 ACK::ErrorCode
 Control::armMotors(int wait_timeout)
 {
-  return this->action(FlightCommand::startMotor, wait_timeout);
+  if (vehicle->getFwVersion() != Version::M100_31)
+  {
+    return this->action(FlightCommand::startMotor, wait_timeout);
+  }
+  else
+  {
+    return this->setArm(true, wait_timeout);
+  }
 }
 
 void
 Control::armMotors(VehicleCallBack callback, UserData userData)
 {
-  this->action(FlightCommand::startMotor, callback, userData);
+  if (vehicle->getFwVersion() != Version::M100_31)
+  {
+    this->action(FlightCommand::startMotor, callback, userData);
+  }
+  else
+  {
+    this->setArm(true, callback, userData);
+  }
 }
 
 ACK::ErrorCode
 Control::disArmMotors(int wait_timeout)
 {
-  return this->action(FlightCommand::stopMotor, wait_timeout);
+  if (vehicle->getFwVersion() != Version::M100_31)
+  {
+    return this->action(FlightCommand::stopMotor, wait_timeout);
+  }
+  else
+  {
+    return this->setArm(false, wait_timeout);
+  }
 }
 
 void
 Control::disArmMotors(VehicleCallBack callback, UserData userData)
 {
-  this->action(FlightCommand::stopMotor, callback, userData);
+  if (vehicle->getFwVersion() != Version::M100_31)
+  {
+    this->action(FlightCommand::stopMotor, callback, userData);
+  }
+  else
+  {
+    this->setArm(false, callback, userData);
+  }
 }
 
 ACK::ErrorCode
 Control::takeoff(int wait_timeout)
 {
-  return this->action(FlightCommand::takeOff, wait_timeout);
+  if (vehicle->getFwVersion() != Version::M100_31)
+  {
+    return this->action(FlightCommand::takeOff, wait_timeout);
+  }
+  else
+  {
+    return this->action(FlightCommand::M100CMD::takeOff, wait_timeout);
+  }
 }
 
 void
 Control::takeoff(VehicleCallBack callback, UserData userData)
 {
-  this->action(FlightCommand::takeOff, callback, userData);
+  if (vehicle->getFwVersion() != Version::M100_31)
+  {
+    this->action(FlightCommand::takeOff, callback, userData);
+  }
+  else
+  {
+    this->action(FlightCommand::M100CMD::takeOff, callback, userData);
+  }
 }
 
 ACK::ErrorCode
 Control::goHome(int wait_timeout)
 {
-  return this->action(FlightCommand::goHome, wait_timeout);
+  if (vehicle->getFwVersion() != Version::M100_31)
+  {
+    return this->action(FlightCommand::goHome, wait_timeout);
+  }
+  else
+  {
+    return this->action(FlightCommand::M100CMD::goHome, wait_timeout);
+  }
 }
 
 void
 Control::goHome(VehicleCallBack callback, UserData userData)
 {
-  this->action(FlightCommand::goHome, callback, userData);
+  if (vehicle->getFwVersion() != Version::M100_31)
+  {
+    this->action(FlightCommand::goHome, callback, userData);
+  }
+  else
+  {
+    this->action(FlightCommand::M100CMD::goHome, callback, userData);
+  }
 }
 
 ACK::ErrorCode
 Control::land(int wait_timeout)
 {
-  return this->action(FlightCommand::landing, wait_timeout);
+  if (vehicle->getFwVersion() != Version::M100_31)
+  {
+    return this->action(FlightCommand::landing, wait_timeout);
+  }
+  else
+  {
+    return this->action(FlightCommand::M100CMD::landing, wait_timeout);
+  }
 }
 
 void
 Control::land(VehicleCallBack callback, UserData userData)
 {
-  this->action(FlightCommand::landing, callback, userData);
+  if (vehicle->getFwVersion() != Version::M100_31)
+  {
+    this->action(FlightCommand::landing, callback, userData);
+  }
+  else
+  {
+    this->action(FlightCommand::M100CMD::landing, callback, userData);
+  }
 }
 
 void
@@ -133,9 +264,24 @@ Control::flightCtrl(CtrlData data)
 void
 Control::flightCtrl(AdvancedCtrlData data)
 {
-  vehicle->protocolLayer->send(
-    0, DJI::OSDK::encrypt, OpenProtocol::CMDSet::Control::control,
-    static_cast<void*>(&data), sizeof(AdvancedCtrlData), 500, 2, false, 1);
+  if (vehicle->getFwVersion() != Version::M100_31)
+  {
+    vehicle->protocolLayer->send(
+      0, DJI::OSDK::encrypt, OpenProtocol::CMDSet::Control::control,
+      static_cast<void*>(&data), sizeof(AdvancedCtrlData), 500, 2, false, 1);
+  }
+  else
+  {
+    if (vehicle->getHwVersion() == "M100")
+    {
+      DERROR("Advanced flight control not supported on Matrice 100!\n");
+    }
+    else
+    {
+      DERROR("Advanced flight control not supported. Upgrade firmware to 3.3 "
+             "or higher!\n");
+    }
+  }
 }
 
 void
@@ -178,21 +324,51 @@ void
 Control::angularRateAndVertPosCtrl(float32_t rollRate, float32_t pitchRate,
                                    float32_t yawRate, float32_t z)
 {
-  //! @note 218 is the flag value of this mode
-  uint8_t ctrl_flag =
-    (VERTICAL_POSITION | HORIZONTAL_ANGULAR_RATE | YAW_RATE | HORIZONTAL_BODY);
-  CtrlData data(ctrl_flag, rollRate, pitchRate, z, yawRate);
+  if (vehicle->getFwVersion() != Version::M100_31)
+  {
+    //! @note 218 is the flag value of this mode
+    uint8_t ctrl_flag = (VERTICAL_POSITION | HORIZONTAL_ANGULAR_RATE |
+                         YAW_RATE | HORIZONTAL_BODY);
+    CtrlData data(ctrl_flag, rollRate, pitchRate, z, yawRate);
 
-  return this->flightCtrl(data);
+    return this->flightCtrl(data);
+  }
+  else
+  {
+    if (vehicle->getHwVersion() == "M100")
+    {
+      DERROR("angularRateAndVertPosCtrl not supported on Matrice 100!\n");
+    }
+    else
+    {
+      DERROR("angularRateAndVertPosCtrl not supported. Upgrade firmware to 3.3 "
+             "or higher!\n");
+    }
+  }
 }
 
 void
 Control::emergencyBrake()
 {
-  //! @note 75 is the flag value of this mode
-  AdvancedCtrlData data(72, 0, 0, 0, 0, 0, 0);
+  if (vehicle->getFwVersion() != Version::M100_31)
+  {
+    //! @note 75 is the flag value of this mode
+    AdvancedCtrlData data(72, 0, 0, 0, 0, 0, 0);
 
-  return this->flightCtrl(data);
+    return this->flightCtrl(data);
+  }
+  else
+  {
+    if (vehicle->getHwVersion() == "M100")
+    {
+      DERROR("emergencyBrake not supported on Matrice 100!\n");
+    }
+    else
+    {
+      DERROR(
+        "emergencyBrake not supported. Upgrade firmware to 3.3 or higher!\n");
+    }
+  }
 }
 
 void
@@ -206,7 +382,7 @@ Control::actionCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
   {
 
     ack.info = recvFrame.recvInfo;
-    ack.data = recvFrame.recvData.ack;
+    ack.data = recvFrame.recvData.commandACK;
 
     if (ACK::getError(ack))
     {

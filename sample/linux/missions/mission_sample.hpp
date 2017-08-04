@@ -25,6 +25,11 @@
 // Helpers
 #include <dji_linux_helpers.hpp>
 
+// Subscription not supported in Matrice 100
+bool setUpSubscription(DJI::OSDK::Vehicle* vehicle, int responseTimeout);
+bool teardownSubscription(DJI::OSDK::Vehicle* vehicle, const int pkgIndex,
+                          int responseTimeout);
+
 bool runWaypointMission(DJI::OSDK::Vehicle* vehicle, uint8_t numWaypoints,
                         int responseTimeout);
 
@@ -45,5 +50,7 @@ void uploadWaypoints(DJI::OSDK::Vehicle*                       vehicle,
 
 bool runHotpointMission(DJI::OSDK::Vehicle* vehicle, int initialRadius,
                         int responseTimeout);
+
+const int DEFAULT_PACKAGE_INDEX = 0;
 
 #endif // DJIOSDK_MISSIONSAMPLE_HPP

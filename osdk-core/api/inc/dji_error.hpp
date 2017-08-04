@@ -264,18 +264,6 @@ public:
     const static uint8_t MOTOR_FAIL_CRAFT_FAIL_LATELY;
     /*! The code logic is illegal.*/
     const static uint8_t MOTOR_FAIL_MOTOR_CODE_ERROR;
-
-    /*! @brief Flight Status enum
-     * @note this is not just an acknowledgement,
-     * it is also a DataBroadcast/DataSubscription telemetry message.
-     *
-     */
-    typedef struct FlightStatus
-    {
-      const static uint8_t STOPED;
-      const static uint8_t ON_GROUND;
-      const static uint8_t IN_AIR;
-    } FlightStatus;
   };
 
   /*!
@@ -343,6 +331,27 @@ public:
       const static uint16_t NO_PACKED;
       const static uint16_t PACKED_MODE_NOT_SUPPORTED;
     } Task;
+
+    /*
+     * Task ACKs Supported in firmware version < 3.3
+     */
+    typedef struct M100Task
+    {
+      const static uint16_t SUCCESS;
+      const static uint16_t FAIL;
+    } M100Task;
+
+    /*!
+     * @brief CMDID: SetArm supported in products with
+     * firmware version < 3.3
+     */
+    typedef struct SetArm
+    {
+      const static uint16_t SUCCESS;
+      const static uint16_t OBTAIN_CONTROL_NEEDED_ERROR;
+      const static uint16_t ALREADY_ARMED_ERROR;
+      const static uint16_t AIRCRAFT_IN_AIR_ERROR;
+    } SetArm;
 
   }; // Control class
 

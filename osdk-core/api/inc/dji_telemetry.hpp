@@ -47,7 +47,7 @@ typedef enum
   TOPIC_ANGULAR_RATE_RAW,         /*!< raw attitude rate @400Hz */
   TOPIC_ALTITUDE_FUSIONED,        /*!< fused altitude @200Hz */
   TOPIC_ALTITUDE_BAROMETER,       /*!< barometer @200Hz */
-  TOPIC_HEIGHT_HOMEPOOINT,        /*!< home point height @1Hz */
+  TOPIC_HEIGHT_HOMEPOINT,         /*!< home point height @1Hz */
   TOPIC_HEIGHT_FUSION,            /*!< fused height @100Hz */
   TOPIC_GPS_FUSED,                /*!< fused position @50Hz */
   TOPIC_GPS_DATE,                 /*!< GPS date @50Hz */
@@ -92,7 +92,7 @@ typedef enum
   UID_ANGULAR_RATE_RAW         = 0x700389ee,
   UID_ALTITUDE_FUSIONED        = 0x11e9c81a,
   UID_ALTITUDE_BAROMETER       = 0x27396a39,
-  UID_HEIGHT_HOMEPOOINT        = 0x252c164b,
+  UID_HEIGHT_HOMEPOINT         = 0x252c164b,
   UID_HEIGHT_FUSION            = 0x87cf419d,
   UID_GPS_FUSED                = 0x4b19a8c7,
   UID_GPS_DATE                 = 0x598f79bc,
@@ -392,7 +392,7 @@ typedef struct RC
  */
 typedef struct GimbalStatus
 {
-  uint32_t mountStatus : 1;
+  uint32_t mountStatus : 1;            /*!< 1 - gimbal mounted, 0 - gimbal not mounted*/
   uint32_t isBusy : 1;
   uint32_t pitchLimited : 1;           /*!< 1 - axis reached limit, 0 - no */
   uint32_t rollLimited : 1;            /*!< 1 - axis reached limit, 0 - no */
@@ -497,6 +497,45 @@ typedef struct HardSyncData
   Vector3f      w;  /*!< gyro reading unit: rad/sec */
 } HardSyncData;     // pack(1)
 
+/*!
+ * @brief Matrice 100 Timestamp data, available in Broadcast telemetry (only for M100)
+ */
+typedef struct M100TimeStamp
+{
+  uint32_t time;
+  uint32_t nanoTime;
+  uint8_t  syncFlag;
+} M100TimeStamp; // pack(1)
+
+/*!
+ * @brief Matrice 100 Velocity struct, returned in Broadcast telemetry (only for M100)
+ * @note The velocity may be in body or ground frame
+ * based on settings in DJI Assistant 2's SDK page.
+ */
+typedef struct M100Velocity
+{
+  float32_t x;
+  float32_t y;
+  float32_t z;
+  /*! scale from 0 - 5 signifying gps signal strength <br>
+   *  greater than 3 for strong signal
+   */
+  uint8_t health : 1;
+  uint8_t sensorID : 4;
+  uint8_t reserve : 3;
+} M100Velocity; // pack(1)
+
+typedef uint16_t EnableFlag;  // pack(1)
+
+/*!
+ * @brief Return type for flight status data broadcast (only for M100). Returns VehicleStatus::M100FlightStatus.
+ */
+typedef uint8_t  M100Status;  // pack(1)
+/*!
+ * @brief Return type for battery data broadcast (only for M100). Returns percentage.
+ */
+typedef uint8_t  M100Battery; // pack(1)
+
 #pragma pack()
 
 extern TopicInfo TopicDataBase[];
@@ -521,7 +560,7 @@ template <> struct TypeMap<TOPIC_ANGULAR_RATE_FUSIONED    > { typedef Vector3f  
 template <> struct TypeMap<TOPIC_ANGULAR_RATE_RAW         > { typedef Vector3f        type;};
 template <> struct TypeMap<TOPIC_ALTITUDE_FUSIONED        > { typedef float32_t       type;};
 template <> struct TypeMap<TOPIC_ALTITUDE_BAROMETER       > { typedef float32_t       type;};
-template <> struct TypeMap<TOPIC_HEIGHT_HOMEPOOINT        > { typedef float32_t       type;};
+template <> struct TypeMap<TOPIC_HEIGHT_HOMEPOINT         > { typedef float32_t       type;};
 template <> struct TypeMap<TOPIC_HEIGHT_FUSION            > { typedef float32_t       type;};
 template <> struct TypeMap<TOPIC_GPS_FUSED                > { typedef GPSFused        type;};
 template <> struct TypeMap<TOPIC_GPS_DATE                 > { typedef uint32_t        type;};

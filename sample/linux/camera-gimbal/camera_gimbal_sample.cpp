@@ -61,48 +61,67 @@ gimbalCameraControl(Vehicle* vehicle)
   RotationAngle                initialAngle;
   RotationAngle                currentAngle;
   DJI::OSDK::Gimbal::SpeedData gimbalSpeed;
+  int                          pkgIndex;
 
-  // Subscribe to gimbal data
-  // Telemetry: Verify the subscription
-  ACK::ErrorCode subscribeStatus;
-  subscribeStatus = vehicle->subscribe->verify(responseTimeout);
-  if (ACK::getError(subscribeStatus) != ACK::SUCCESS)
+  /*
+   * Subscribe to gimbal data not supported in MAtrice 100
+   */
+
+  if (vehicle->getFwVersion() != Version::M100_31)
   {
-    ACK::getErrorCodeMessage(subscribeStatus, __func__);
-    return false;
+    // Telemetry: Verify the subscription
+    ACK::ErrorCode subscribeStatus;
+    subscribeStatus = vehicle->subscribe->verify(responseTimeout);
+    if (ACK::getError(subscribeStatus) != ACK::SUCCESS)
+    {
+      ACK::getErrorCodeMessage(subscribeStatus, __func__);
+      return false;
+    }
+
+    // Telemetry: Subscribe to gimbal status and gimbal angle at freq 10 Hz
+    pkgIndex                  = 0;
+    int       freq            = 10;
+    TopicName topicList10Hz[] = { TOPIC_GIMBAL_ANGLES, TOPIC_GIMBAL_STATUS };
+    int       numTopic = sizeof(topicList10Hz) / sizeof(topicList10Hz[0]);
+    bool      enableTimestamp = false;
+
+    bool pkgStatus = vehicle->subscribe->initPackageFromTopicList(
+      pkgIndex, numTopic, topicList10Hz, enableTimestamp, freq);
+    if (!(pkgStatus))
+    {
+      return pkgStatus;
+    }
+    subscribeStatus =
+      vehicle->subscribe->startPackage(pkgIndex, responseTimeout);
+    if (ACK::getError(subscribeStatus) != ACK::SUCCESS)
+    {
+      ACK::getErrorCodeMessage(subscribeStatus, __func__);
+      // Cleanup before return
+      vehicle->subscribe->removePackage(pkgIndex, responseTimeout);
+      return false;
+    }
   }
 
-  // Telemetry: Subscribe to gimbal status and gimbal angle at freq 10 Hz
-  int       pkgIndex        = 0;
-  int       freq            = 10;
-  TopicName topicList10Hz[] = { TOPIC_GIMBAL_ANGLES, TOPIC_GIMBAL_STATUS };
-  int       numTopic        = sizeof(topicList10Hz) / sizeof(topicList10Hz[0]);
-  bool      enableTimestamp = false;
-
-  bool pkgStatus = vehicle->subscribe->initPackageFromTopicList(
-    pkgIndex, numTopic, topicList10Hz, enableTimestamp, freq);
-  if (!(pkgStatus))
-  {
-    return pkgStatus;
-  }
-  subscribeStatus = vehicle->subscribe->startPackage(pkgIndex, responseTimeout);
-  if (ACK::getError(subscribeStatus) != ACK::SUCCESS)
-  {
-    ACK::getErrorCodeMessage(subscribeStatus, __func__);
-    // Cleanup before return
-    vehicle->subscribe->removePackage(pkgIndex, responseTimeout);
-    return false;
-  }
   sleep(1);
 
-  // Get Gimbal initial values
-  initialAngle.roll  = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().y;
-  initialAngle.pitch = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().x;
-  initialAngle.yaw   = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().z;
   std::cout
     << "Please note that the gimbal yaw angle you see in the telemetry is "
        "w.r.t absolute North"
        ", and the accuracy depends on your magnetometer calibration.\n\n";
+
+  // Get Gimbal initial values
+  if (vehicle->getFwVersion() != Version::M100_31)
+  {
+    initialAngle.roll  = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().y;
+    initialAngle.pitch = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().x;
+    initialAngle.yaw   = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().z;
+  }
+  else
+  {
+    initialAngle.roll  = vehicle->broadcast->getGimbal().roll;
+    initialAngle.pitch = vehicle->broadcast->getGimbal().pitch;
+    initialAngle.yaw   = vehicle->broadcast->getGimbal().yaw;
+  }
 
   std::cout << "Initial Gimbal rotation angle: [" << initialAngle.roll << ", "
             << initialAngle.pitch << ", " << initialAngle.yaw << "]\n\n";
@@ -113,17 +132,36 @@ gimbalCameraControl(Vehicle* vehicle)
 
   std::cout << "Setting new Gimbal rotation angle to [0,20,180] using "
                "incremental control:\n";
+
   // Get current gimbal data to calc precision error in post processing
-  currentAngle.roll  = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().y;
-  currentAngle.pitch = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().x;
-  currentAngle.yaw   = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().z;
+  if (vehicle->getFwVersion() != Version::M100_31)
+  {
+    currentAngle.roll  = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().y;
+    currentAngle.pitch = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().x;
+    currentAngle.yaw   = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().z;
+  }
+  else
+  {
+    currentAngle.roll  = vehicle->broadcast->getGimbal().roll;
+    currentAngle.pitch = vehicle->broadcast->getGimbal().pitch;
+    currentAngle.yaw   = vehicle->broadcast->getGimbal().yaw;
+  }
 
   gimbal = GimbalContainer(0, 200, 1800, 20, 0, initialAngle, currentAngle);
   doSetGimbalAngle(vehicle, &gimbal);
 
-  currentAngle.roll  = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().y;
-  currentAngle.pitch = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().x;
-  currentAngle.yaw   = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().z;
+  if (vehicle->getFwVersion() != Version::M100_31)
+  {
+    currentAngle.roll  = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().y;
+    currentAngle.pitch = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().x;
+    currentAngle.yaw   = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().z;
+  }
+  else
+  {
+    currentAngle.roll  = vehicle->broadcast->getGimbal().roll;
+    currentAngle.pitch = vehicle->broadcast->getGimbal().pitch;
+    currentAngle.yaw   = vehicle->broadcast->getGimbal().yaw;
+  }
 
   displayResult(&currentAngle);
 
@@ -138,9 +176,19 @@ gimbalCameraControl(Vehicle* vehicle)
   gimbal = GimbalContainer(0, -500, 0, 20, 1, initialAngle);
   doSetGimbalAngle(vehicle, &gimbal);
 
-  currentAngle.roll  = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().y;
-  currentAngle.pitch = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().x;
-  currentAngle.yaw   = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().z;
+  if (vehicle->getFwVersion() != Version::M100_31)
+  {
+    currentAngle.roll  = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().y;
+    currentAngle.pitch = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().x;
+    currentAngle.yaw   = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().z;
+  }
+  else
+  {
+    currentAngle.roll  = vehicle->broadcast->getGimbal().roll;
+    currentAngle.pitch = vehicle->broadcast->getGimbal().pitch;
+    currentAngle.yaw   = vehicle->broadcast->getGimbal().yaw;
+  }
+
   displayResult(&currentAngle);
 
   // Start video: We will keep the video doing for the duration of the speed
@@ -169,9 +217,19 @@ gimbalCameraControl(Vehicle* vehicle)
     usleep(incrementMs * 1000);
   }
 
-  currentAngle.roll  = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().y;
-  currentAngle.pitch = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().x;
-  currentAngle.yaw   = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().z;
+  if (vehicle->getFwVersion() != Version::M100_31)
+  {
+    currentAngle.roll  = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().y;
+    currentAngle.pitch = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().x;
+    currentAngle.yaw   = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().z;
+  }
+  else
+  {
+    currentAngle.roll  = vehicle->broadcast->getGimbal().roll;
+    currentAngle.pitch = vehicle->broadcast->getGimbal().pitch;
+    currentAngle.yaw   = vehicle->broadcast->getGimbal().yaw;
+  }
+
   displayResult(&currentAngle);
 
   // Reset the position
@@ -179,9 +237,19 @@ gimbalCameraControl(Vehicle* vehicle)
   gimbal = GimbalContainer(0, 0, 0, 20, 1, initialAngle);
   doSetGimbalAngle(vehicle, &gimbal);
 
-  currentAngle.roll  = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().y;
-  currentAngle.pitch = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().x;
-  currentAngle.yaw   = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().z;
+  if (vehicle->getFwVersion() != Version::M100_31)
+  {
+    currentAngle.roll  = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().y;
+    currentAngle.pitch = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().x;
+    currentAngle.yaw   = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().z;
+  }
+  else
+  {
+    currentAngle.roll  = vehicle->broadcast->getGimbal().roll;
+    currentAngle.pitch = vehicle->broadcast->getGimbal().pitch;
+    currentAngle.yaw   = vehicle->broadcast->getGimbal().yaw;
+  }
+
   displayResult(&currentAngle);
 
   // Stop the video
@@ -190,12 +258,16 @@ gimbalCameraControl(Vehicle* vehicle)
   std::cout << "Check DJI GO App or SD card for a new video.\n";
 
   // Cleanup and exit gimbal sample
-  ACK::ErrorCode ack =
-    vehicle->subscribe->removePackage(pkgIndex, responseTimeout);
-  if (ACK::getError(ack))
+  if (vehicle->getFwVersion() != Version::M100_31)
   {
-    std::cout << "Error unsubscribing; please restart the drone/FC to get back "
-                 "to a clean state.\n";
+    ACK::ErrorCode ack =
+      vehicle->subscribe->removePackage(pkgIndex, responseTimeout);
+    if (ACK::getError(ack))
+    {
+      std::cout
+        << "Error unsubscribing; please restart the drone/FC to get back "
+           "to a clean state.\n";
+    }
   }
 
   return true;

@@ -3,10 +3,10 @@
 
 #include "timer.h"
 #include <cstdint>
-#include <stdio.h>
-#include <dji_vehicle.hpp>
-#include <dji_gimbal.hpp>
 #include <dji_camera.hpp>
+#include <dji_gimbal.hpp>
+#include <dji_vehicle.hpp>
+#include <stdio.h>
 
 struct RotationAngle
 {

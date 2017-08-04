@@ -38,11 +38,14 @@ public:
   {
   public:
     /*
-     * @note Deprecated in OSDK release 3.3
+     * @note Matrice 100 flight commands
      */
-    const static int TASK_GOHOME  = 1;
-    const static int TASK_TAKEOFF = 4;
-    const static int TASK_LANDING = 6;
+    typedef struct M100CMD
+    {
+      const static int goHome  = 1;
+      const static int takeOff = 4;
+      const static int landing = 6;
+    } M100CMD;
 
     /*
      * @note OSDK release 3.3
@@ -234,6 +237,12 @@ public:
                      float32_t y_forw);
   } AdvancedCtrlData; // pack(1)
 
+  // CMD data supported in Matrice 100
+  typedef struct M100CMDData
+  {
+    uint8_t sequence;
+    uint8_t cmd;
+  } M100CMDData; // pack (1)
 #pragma pack()
 
   /*! @note
@@ -413,6 +422,24 @@ public:
    */
   static void actionCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
                              UserData userData);
+
+private:
+  /*! @brief Wrapper function for arming/disarming the motors
+   *  @note Supported in Matrice 100
+   *  @return ACK::ErrorCode struct with the acknowledgment from the FC
+   */
+  ACK::ErrorCode setArm(bool armSetting, int timeout);
+  /*! @brief Wrapper function for arming/disarming the motors
+   *  @note Supported on Matrice 100. If user does not provide his/her
+   *  own callback, default callback will be executed.
+   */
+  void setArm(bool armSetting, VehicleCallBack callback = 0,
+              UserData userData = 0);
+
+  /*
+   * Task CMD data to send to the flight controller (supported in Matrice 100)
+   */
+  M100CMDData m100CMDData;
 }; // class Control
 
 } // OSDK

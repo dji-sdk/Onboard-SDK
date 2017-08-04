@@ -35,7 +35,7 @@ setupOSDK(int argc, char** argv)
     // We were unable to read the config file. Exit.
     return NULL;
   }
-  LinuxSerialDevice* linuxSerialDevice = new LinuxSerialDevice(
+/*  LinuxSerialDevice* linuxSerialDevice = new LinuxSerialDevice(
     environment->getDevice().c_str(), environment->getBaudrate());
   linuxSerialDevice->init();
   bool setupStatus = validateSerialDevice(linuxSerialDevice);
@@ -50,7 +50,7 @@ setupOSDK(int argc, char** argv)
   {
     delete (linuxSerialDevice);
   }
-
+*/
   bool     threadSupport = true;
   Vehicle* vehicle       = new Vehicle(environment->getDevice().c_str(),
                                  environment->getBaudrate(), threadSupport);
@@ -65,10 +65,12 @@ setupOSDK(int argc, char** argv)
   }
 
   // Check if drone version is okay
-  if (vehicle->getFwVersion() < mandatoryVersionBase)
+  if (vehicle->getFwVersion() < extendedVersionBase &&
+    vehicle->getFwVersion() != Version::M100_31)
   {
     return NULL;
   }
+
   // Activate
   Vehicle::ActivateData activateData;
   activateData.ID = environment->getApp_id();

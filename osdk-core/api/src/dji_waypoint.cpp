@@ -231,11 +231,136 @@ WaypointMission::resume(int timeout)
   return ack;
 }
 
-WayPointInitSettings
+ACK::WayPointInit WaypointMission::getWaypointSettings(int timer)
+{
+  ACK::WayPointInit ack;
+  uint8_t arbNumber = 0;
+
+  vehicle->protocolLayer->send(2, encrypt, OpenProtocol::CMDSet::Mission::waypointDownload, &arbNumber, sizeof(arbNumber), 1000, 4, 0, 0);
+
+  ack = *((ACK::WayPointInit*)vehicle->waitForACK(
+      OpenProtocol::CMDSet::Mission::waypointDownload, timer));
+
+  return ack;
+}
+
+void WaypointMission::getWaypointSettings(VehicleCallBack callback, UserData userData)
+{
+  uint8_t arbNumber = 0;
+
+  int cbIndex = vehicle->callbackIdIndex();
+  if (callback)
+  {
+    vehicle->nbCallbackFunctions[cbIndex] = (void*)callback;
+    vehicle->nbUserData[cbIndex]          = userData;
+  }
+  else
+  {
+    vehicle->nbCallbackFunctions[cbIndex] =
+      (void*)getWaypointSettingsCallback;
+    vehicle->nbUserData[cbIndex] = NULL;
+  }
+
+  vehicle->protocolLayer->send(2, encrypt,
+    OpenProtocol::CMDSet::Mission::waypointDownload, &arbNumber, sizeof(arbNumber), 1000, 4,
+    true, cbIndex);
+}
+
+void
+WaypointMission::getWaypointSettingsCallback(Vehicle*      vehicle,
+					     RecvContainer recvFrame,
+					     UserData      userData)
+{
+  ACK::WayPointInit wpInitInfo;
+
+  if (recvFrame.recvInfo.len - Protocol::PackageMin <=
+      sizeof(ACK::WayPointInit))
+  {
+    wpInitInfo.data     = recvFrame.recvData.wpInitACK.data;
+    wpInitInfo.ack.data = recvFrame.recvData.wpInitACK.ack;
+    wpInitInfo.ack.info = recvFrame.recvInfo;
+  }
+  else
+  {
+    DERROR("ACK is exception, sequence %d\n", recvFrame.recvInfo.seqNumber);
+    return;
+  }
+
+  if (ACK::getError(wpInitInfo.ack))
+    ACK::getErrorCodeMessage(wpInitInfo.ack, __func__);
+
+  vehicle->missionManager->wpMission->info = wpInitInfo.data;
+
+  DSTATUS("Index number: %d\n",
+          vehicle->missionManager->wpMission->info.indexNumber);
+}
+
+ACK::WayPointIndex WaypointMission::getIndex(uint8_t index, int timer)
+{
+  ACK::WayPointIndex ack;
+
+  vehicle->protocolLayer->send(2, encrypt, OpenProtocol::CMDSet::Mission::waypointIndexDownload, &index, sizeof(index), 1000, 4, 0, 0);
+
+  ack = *((ACK::WayPointIndex*)vehicle->waitForACK(
+        OpenProtocol::CMDSet::Mission::waypointIndexDownload, timer));
+
+  return ack;
+}
+
+void WaypointMission::getIndex(uint8_t index, VehicleCallBack callback, UserData userData)
+{
+  int cbIndex = vehicle->callbackIdIndex();
+  if (callback)
+  {
+    vehicle->nbCallbackFunctions[cbIndex] = (void*)callback;
+    vehicle->nbUserData[cbIndex]          = userData;
+  }
+  else
+  {
+    vehicle->nbCallbackFunctions[cbIndex] =
+      (void*)getIndexCallback;
+    vehicle->nbUserData[cbIndex] = NULL;
+  }
+
+  vehicle->protocolLayer->send(2, encrypt,
+    OpenProtocol::CMDSet::Mission::waypointIndexDownload,
+    &index, sizeof(index), 1000, 4, true, cbIndex);
+}
+
+void
+WaypointMission::getIndexCallback(Vehicle*      vehicle,
+                                  RecvContainer recvFrame,
+                                  UserData      userData)
+{
+  ACK::WayPointIndex wpIndexInfo;
+
+  if (recvFrame.recvInfo.len - Protocol::PackageMin <=
+      sizeof(ACK::WayPointIndex))
+  {
+    wpIndexInfo.data     = recvFrame.recvData.wpIndexACK.data;
+    wpIndexInfo.ack.data = recvFrame.recvData.wpIndexACK.ack;
+    wpIndexInfo.ack.info = recvFrame.recvInfo;
+  }
+  else
+  {
+    DERROR("ACK is exception, sequence %d\n", recvFrame.recvInfo.seqNumber);
+    return;
+  }
+
+  if (ACK::getError(wpIndexInfo.ack))
+    ACK::getErrorCodeMessage(wpIndexInfo.ack, __func__);
+
+  vehicle->missionManager->wpMission->index = &(wpIndexInfo.data);
+
+  DSTATUS("Index number: %d\n",
+          vehicle->missionManager->wpMission->index->index);
+}
+
+/*WayPointInitSettings
 WaypointMission::getInfo() const
 {
   return info;
-}
+}*/
 
 void
 WaypointMission::setInfo(const WayPointInitSettings& value)
@@ -271,7 +396,7 @@ WaypointMission::setIndex(WayPointSettings* value, size_t pos)
     index[pos].reserved[i] = 0;
 }
 
-WayPointSettings*
+/*WayPointSettings*
 WaypointMission::getIndex() const
 {
   return index;
@@ -281,7 +406,7 @@ WayPointSettings*
 WaypointMission::getIndex(size_t pos) const
 {
   return &(index[pos]);
-}
+}*/
 
 bool
 WaypointMission::uploadIndexData(WayPointSettings* data,
@@ -453,12 +578,12 @@ WaypointMission::uploadIndexDataCallback(Vehicle*      vehicle,
                                          RecvContainer recvFrame,
                                          UserData      userData)
 {
-  ACK::WayPointDataInternal wpDataInfo;
+  ACK::WayPointAddPointInternal wpDataInfo;
 
   if (recvFrame.recvInfo.len - Protocol::PackageMin <=
-      sizeof(ACK::WayPointDataInternal))
+      sizeof(ACK::WayPointAddPointInternal))
   {
-    wpDataInfo = recvFrame.recvData.wpDataACK;
+    wpDataInfo = recvFrame.recvData.wpAddPointACK;
   }
   else
   {

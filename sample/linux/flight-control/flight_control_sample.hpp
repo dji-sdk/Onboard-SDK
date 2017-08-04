@@ -68,12 +68,10 @@ bool monitoredLanding(DJI::OSDK::Vehicle* vehiclePtr, int timeout = 1);
  *
  * Accurate when distances are small.
 !*/
-void localOffsetFromGpsOffset(DJI::OSDK::Telemetry::Vector3f& deltaNed,
-                              DJI::OSDK::Telemetry::GPSFused& target,
-                              DJI::OSDK::Telemetry::GPSFused& origin);
+void localOffsetFromGpsOffset(DJI::OSDK::Vehicle*             vehicle,
+                              DJI::OSDK::Telemetry::Vector3f& deltaNed,
+                              void* target, void* origin);
 
-DJI::OSDK::Telemetry::Vector3f toEulerAngle(
-  DJI::OSDK::Telemetry::TypeMap<DJI::OSDK::Telemetry::TOPIC_QUATERNION>::type&
-    quaternionData);
+DJI::OSDK::Telemetry::Vector3f toEulerAngle(void* quaternionData);
 
 #endif // DJIOSDK_FLIGHTCONTROL_HPP

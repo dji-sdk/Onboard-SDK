@@ -49,7 +49,11 @@ build/
 CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
+<<<<<<< HEAD
+Makefile
+=======
 Makefile
 
 osdk-core/test
 contrib
+>>>>>>> refs/heads/3.3

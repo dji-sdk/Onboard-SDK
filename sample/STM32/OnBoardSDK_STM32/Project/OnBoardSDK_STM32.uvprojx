@@ -763,6 +763,11 @@
               <FilePath>..\..\..\..\osdk-core\api\src\dji_gimbal.cpp</FilePath>
             </File>
             <File>
+              <FileName>dji_virtual_rc.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\osdk-core\api\src\dji_virtual_rc.cpp</FilePath>
+            </File>
+            <File>
               <FileName>dji_version.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\osdk-core\api\src\dji_version.cpp</FilePath>

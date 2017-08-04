@@ -23,8 +23,18 @@ Protocol::Protocol(const char* device, uint32_t baudrate)
 //! Step 1: Initialize Hardware Driver
 
 //! Step 1.1: Instantiate a hardware driver as per OS
-#ifdef qt
-  this->serialDevice = new QHardDriver(device, baudrate);
+#ifdef QT
+  QThread* serialEventThread = new QThread;
+  QHardDriver* driver = new QHardDriver(0, device, baudrate);
+  driver->moveToThread(serialEventThread);
+  QObject::connect(serialEventThread, SIGNAL(started()), driver, SLOT(init()));
+  QObject::connect(driver, SIGNAL (finished()), driver, SLOT (deleteLater()));
+
+  QObject::connect(serialEventThread, SIGNAL (finished()), serialEventThread, SLOT (deleteLater()));
+  serialEventThread->start();
+  QThread::msleep(100);
+  this->serialDevice = driver;
+  this->threadHandle = new QThreadManager();
 //! Add correct Qt serial device constructor here
 #elif STM32
   this->serialDevice = new STM32F4;
@@ -35,7 +45,9 @@ Protocol::Protocol(const char* device, uint32_t baudrate)
 #endif
 
   //! Step 1.2: Initialize the hardware driver
+#ifndef QT
   this->serialDevice->init();
+#endif
   this->threadHandle->init();
 
   //! Step 2: Initialize the ProtocolLayer
@@ -481,11 +493,11 @@ Protocol::receive()
   //! Create a local container that will be used for storing data lower down in
   //! the stack
   RecvContainer receiveFrame;
+  receiveFrame.recvInfo.cmd_id = 0xFF;
 
   //! Run the readPoll until you get a true
   // @todo might need to modify to include thread stopCond
-  while (!readPoll(&receiveFrame))
-    ;
+  while (!readPoll(&receiveFrame));
   //! When we receive a true, return a copy of container to the caller: this is
   //! the 'receive' interface
 
@@ -502,6 +514,7 @@ Protocol::readPoll(RecvContainer* allocatedFramePtr)
   //! Step 1: Check if the buffer has been consumed
   if (buf_read_pos >= read_len)
   {
+
     this->buf_read_pos = 0;
     this->read_len     = serialDevice->readall(this->buf, BUFFER_SIZE);
   }
@@ -885,8 +898,7 @@ Protocol::recvReqData(Header*        protocolHeader,
   allocatedRecvObject->recvInfo.len     = protocolHeader->length;
   //@todo: Please monitor to make sure the length is correct
   memcpy(allocatedRecvObject->recvData.raw_ack_array, payload,
-         (protocolHeader->length - (Protocol::PackageMin + 2)));
-
+         ((protocolHeader->length) - (Protocol::PackageMin + 2)));
   allocatedRecvObject->dispatchInfo.isCallback = false;
   allocatedRecvObject->dispatchInfo.callbackID = 0;
 
@@ -1172,6 +1184,18 @@ ThreadAbstract*
 Protocol::getThreadHandle() const
 {
   return this->threadHandle;
+}
+
+int
+Protocol::getBufReadPos()
+{
+  return buf_read_pos;
+}
+
+int
+Protocol::getReadLen()
+{
+  return read_len;
 }
 
 /**********************************Filter*******************************************/
