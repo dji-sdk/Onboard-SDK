@@ -22,7 +22,7 @@ HotpointPanel::hotpointReadCallback(Vehicle* vehicle, RecvContainer recvFrame,
                                     UserData userData)
 {
   HotpointPanel* sdk = (HotpointPanel*)userData;
-  HotpointMission::readCallback(recvFrame, vehicle->missionManager->hpMission);
+  HotpointMission::getHotpointSettingsCallback(vehicle, recvFrame, vehicle->missionManager->hpMission);
   DSTATUS("Refreshing hotpoint data");
   sdk->ui->le_hp_la->setText(
     QString::number(vehicle->missionManager->hpMission->getData().latitude));
@@ -82,7 +82,7 @@ HotpointPanel::on_btn_hotPoint_stop_clicked()
 void
 HotpointPanel::on_btn_hp_data_clicked()
 {
-  vehicle->missionManager->hpMission->readData(hotpointReadCallback, this);
+  vehicle->missionManager->hpMission->getHotpointSettings(hotpointReadCallback, this);
 }
 
 void
