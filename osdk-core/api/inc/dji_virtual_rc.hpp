@@ -61,12 +61,12 @@ public:
    *   switching your remote controller's mode. Actually, in this situation your
    * drone will
    *   be a full automatically controlled by it self. It will keep flying until
-   * its bettery
+   * its battery
    *   is empty or your code make it stop.
    * - @attention If you do not know what reset code you need to write, please
    * just output
    *   your datalog and keep it empty.
-   * - @attention It would be realy dangous if you keep calling sendData(); in a
+   * - @attention It would be realy dangerous if you keep calling sendData(); in a
    * loop with out
    *   control-losing protection. like :
    *
@@ -86,7 +86,7 @@ public:
    *    msleep(200);
    *   }
    *
-   *   When your drone lose signal, it will keep the recent command sent by your
+   *   When your drone loses signal, it will keep the recent command sent by your
    * API:
    *   myAPIToSetupDataFromGroundStation();
    *   This may result in a catastrophic crash.
