@@ -193,7 +193,7 @@ class Protocol
 {
 public:
   //! Constructor
-  Protocol(const char* device, uint32_t baudRate);
+  Protocol(const char* device, uint32_t baudRate, bool& referenceToVehicleStopCond = defaultStopCondition_);
 
   //! Destructor
   ~Protocol()
@@ -209,7 +209,7 @@ public:
   cmd_set,
             uint8_t cmd_id, void *pdata, int len, bool isCallback, int
   callbackID,
-      /** @note Compatible for DJI_APP_Pro_send
+         @note Compatible for DJI_APP_Pro_send
             int timeout = 0, int retry_time = 1);
   */
   void send(uint8_t session_mode, bool is_enc, const uint8_t cmd[], void* pdata,
@@ -316,6 +316,11 @@ private:
   ACK::TypeUnion allocateACK(Header* protocolHeader);
 
   void setACKFrameStatus(uint32_t usageFlag);
+  
+  static bool defaultStopCondition_;
+  bool ThreadShouldKeepRunning() const;
+  bool VehicleStopConditionIsFalse() const;
+  bool GetVehicleStopCondition() const;
 
   /****************************Session Management***************************/
 
@@ -370,7 +375,7 @@ private:
   uint8_t encodeACK[ACK_SIZE];
 
   //! Thread data
-  bool            stopCond;
+  bool&           referenceToVehicleStopCond_;
   ThreadAbstract* threadHandle;
 
   //! Frame-related.
