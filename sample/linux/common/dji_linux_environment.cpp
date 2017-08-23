@@ -83,7 +83,7 @@ DJI_Environment::parse(std::string config_file_path)
   char        devName[20];
   int         id;
 
-  bool setID, setKey, setBaud, setSerialDevice;
+  bool setID = false, setKey = false, setBaud = false, setSerialDevice = false;
   bool result = false;
 
   std::ifstream read(config_file_path);
