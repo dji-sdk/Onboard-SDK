@@ -10,6 +10,8 @@
  */
 #include "dji_open_protocol.hpp"
 
+#include <iostream>
+
 #ifdef STM32
 #include <stdio.h>
 #endif
@@ -17,8 +19,11 @@
 using namespace DJI;
 using namespace DJI::OSDK;
 
+bool Protocol::defaultStopCondition_ = false;
+
 //! Constructor
-Protocol::Protocol(const char* device, uint32_t baudrate)
+Protocol::Protocol(const char* device, uint32_t baudrate, bool& referenceToVehicleStopCond )
+    : referenceToVehicleStopCond_( referenceToVehicleStopCond )
 {
 //! Step 1: Initialize Hardware Driver
 
@@ -496,12 +501,61 @@ Protocol::receive()
   receiveFrame.recvInfo.cmd_id = 0xFF;
 
   //! Run the readPoll until you get a true
-  // @todo might need to modify to include thread stopCond
-  while (!readPoll(&receiveFrame));
+  while (!readPoll(&receiveFrame) && ThreadShouldKeepRunning() );
   //! When we receive a true, return a copy of container to the caller: this is
   //! the 'receive' interface
 
   return receiveFrame;
+}
+
+bool
+Protocol::ThreadShouldKeepRunning() const
+{
+    return VehicleStopConditionIsFalse();
+}
+
+bool
+Protocol::VehicleStopConditionIsFalse() const
+{
+    return false == GetVehicleStopCondition();
+}
+
+namespace
+{
+    class ScopedStopConditionMutexLock
+    {
+        DJI::OSDK::ThreadAbstract& threadHandle_;
+    public:
+        ScopedStopConditionMutexLock( DJI::OSDK::ThreadAbstract& threadHandle )
+            : threadHandle_( threadHandle )
+        {
+            threadHandle_.lockStopCond();
+        }
+
+        ~ScopedStopConditionMutexLock()
+        {
+            try
+            {
+                threadHandle_.freeStopCond();
+            }
+            catch ( ... )
+            {
+                //Destructors should not emit exceptions.
+                //Log the error in whatever manner is appropriate for your platform, for example:
+                std::clog << ": unknown error in ScopedStopConditionMutexLock() dtor\n";
+            }
+        }
+        
+        ScopedStopConditionMutexLock( const ScopedStopConditionMutexLock& ) = delete;
+        ScopedStopConditionMutexLock& operator = ( const ScopedStopConditionMutexLock& ) = delete;
+    };
+} //unnamed namespace
+
+bool
+Protocol::GetVehicleStopCondition() const
+{
+    ScopedStopConditionMutexLock scopedStopConditionMutexLock{ *getThreadHandle() };
+    return referenceToVehicleStopCond_;
 }
 
 //! Step 1

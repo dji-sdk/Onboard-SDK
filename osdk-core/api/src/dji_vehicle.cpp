@@ -270,7 +270,7 @@ bool
 Vehicle::initOpenProtocol()
 {
   this->protocolLayer =
-    new (std::nothrow) Protocol(this->device, this->baudRate);
+    new (std::nothrow) Protocol(this->device, this->baudRate, stopCond);
   if (this->protocolLayer == 0)
   {
     return false;
