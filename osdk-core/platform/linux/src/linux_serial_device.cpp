@@ -22,6 +22,7 @@ using namespace DJI::OSDK;
 
 LinuxSerialDevice::LinuxSerialDevice(const char* device, uint32_t baudrate)
 {
+  m_serial_fd = -1;
   m_device   = device;
   m_baudrate = baudrate;
 }
@@ -34,6 +35,10 @@ LinuxSerialDevice::~LinuxSerialDevice()
 void
 LinuxSerialDevice::init()
 {
+
+  if( m_serial_fd >= 0 )
+     _serialClose();
+
   DSTATUS("Attempting to open device %s with baudrate %u...\n", m_device,
           m_baudrate);
   if (_serialStart(m_device, m_baudrate) < 0)

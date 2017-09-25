@@ -81,6 +81,8 @@ public:
   Vehicle(bool threadSupport);
   ~Vehicle();
 
+  bool reOpenSerialPort();
+
   Protocol*            protocolLayer;
   DataSubscription*    subscribe;
   DataBroadcast*       broadcast;

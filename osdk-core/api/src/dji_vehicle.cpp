@@ -61,6 +61,17 @@ Vehicle::Vehicle(bool threadSupport)
   mandatorySetUp();
 }
 
+bool
+Vehicle::reOpenSerialPort()
+{
+  if( protocolLayer )
+  {
+    protocolLayer->getDriver()->init();
+    return protocolLayer->getDriver()->getDeviceStatus();
+  }
+  return false;
+}
+
 void
 Vehicle::mandatorySetUp()
 {
@@ -338,9 +349,15 @@ Vehicle::initPlatformSupport()
     }
   }
 #endif
-  bool readThreadStatus = readThread->createThread();
-  bool cbThreadStatus   = callbackThread->createThread();
-  return (readThreadStatus && cbThreadStatus);
+  if (threadSupported)
+  {
+    bool readThreadStatus = readThread->createThread();
+    bool cbThreadStatus   = callbackThread->createThread();
+    return (readThreadStatus && cbThreadStatus);
+  }
+
+
+  return true;
 }
 
 bool
