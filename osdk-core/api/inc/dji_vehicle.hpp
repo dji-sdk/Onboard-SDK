@@ -348,12 +348,6 @@ private:
   void ACKHandler(void* eventData);
   void PushDataHandler(void* eventData);
 
-  /*
-   * Used in PushData event handling
-   */
-  bool hotPointData;
-  bool wayPointData;
-
   VehicleCallBackHandler hotPointCallback;
   VehicleCallBackHandler wayPointCallback;
   VehicleCallBackHandler missionCallback;

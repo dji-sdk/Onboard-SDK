@@ -1362,29 +1362,23 @@ Vehicle::PushDataHandler(void* eventData)
           case MISSION_WAYPOINT:
             if (missionManager->wpMission)
             {
-              if (wayPointData)
-              {
-                if (missionManager->wpMission->wayPointCallback.callback)
-                  missionManager->wpMission->wayPointCallback.callback(
-                    this, *(pushDataEntry),
-                    missionManager->wpMission->wayPointCallback.userData);
-                else
-                  DDEBUG("Mode WayPoint\n");
-              }
+              if (missionManager->wpMission->wayPointCallback.callback)
+                missionManager->wpMission->wayPointCallback.callback(
+                  this, *(pushDataEntry),
+                  missionManager->wpMission->wayPointCallback.userData);
+              else
+                DDEBUG("Mode WayPoint\n");
             }
             break;
           case MISSION_HOTPOINT:
             if (missionManager->hpMission)
             {
-              if (hotPointData)
-              {
-                if (missionManager->hpMission->hotPointCallback.callback)
-                  missionManager->hpMission->hotPointCallback.callback(
-                    this, *(pushDataEntry),
-                    missionManager->hpMission->hotPointCallback.userData);
-                else
-                  DDEBUG("Mode HotPoint\n");
-              }
+              if (missionManager->hpMission->hotPointCallback.callback)
+                missionManager->hpMission->hotPointCallback.callback(
+                  this, *(pushDataEntry),
+                  missionManager->hpMission->hotPointCallback.userData);
+              else
+                DDEBUG("Mode HotPoint\n");
             }
             break;
           case MISSION_IOC:
