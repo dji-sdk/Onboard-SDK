@@ -71,7 +71,7 @@ Vehicle::mandatorySetUp()
   {
     // We only need a buffer of recvContainers if we are using threads
     this->nbCallbackRecvContainer = new RecvContainer[200];
-    this->circularBuffer = new CircularBuffer();
+    this->circularBuffer          = new CircularBuffer();
   }
 
   /*
@@ -102,7 +102,6 @@ Vehicle::mandatorySetUp()
   }
 }
 
-
 void
 Vehicle::functionalSetUp()
 {
@@ -111,8 +110,8 @@ Vehicle::functionalSetUp()
     DERROR("Failed to initialize Version! Please exit.\n");
     return;
   }
-  else if(this->getFwVersion() < extendedVersionBase &&
-      this->getFwVersion() != Version::M100_31)
+  else if (this->getFwVersion() < extendedVersionBase &&
+           this->getFwVersion() != Version::M100_31 && !(this->isLegacyM600()))
   {
     DERROR("Upgrade firmware using Assistant software!\n");
     return;
@@ -279,7 +278,6 @@ Vehicle::initOpenProtocol()
   return true;
 }
 
-
 bool
 Vehicle::initPlatformSupport()
 {
@@ -296,8 +294,10 @@ Vehicle::initPlatformSupport()
       QThread* qReadThread = new QThread;
       readThreadPtr->setQThreadPtr(qReadThread);
       readThreadPtr->moveToThread(qReadThread);
-      QObject::connect(qReadThread, SIGNAL(started()), readThreadPtr, SLOT(run()));
-      QObject::connect(qReadThread, SIGNAL(finished()), qReadThread, SLOT(deleteLater()));
+      QObject::connect(qReadThread, SIGNAL(started()), readThreadPtr,
+                       SLOT(run()));
+      QObject::connect(qReadThread, SIGNAL(finished()), qReadThread,
+                       SLOT(deleteLater()));
       qReadThread->start();
       this->readThread = readThreadPtr;
     }
@@ -313,7 +313,8 @@ Vehicle::initPlatformSupport()
       cbThreadPtr->setQThreadPtr(qCbThread);
       cbThreadPtr->moveToThread(qCbThread);
       QObject::connect(qCbThread, SIGNAL(started()), cbThreadPtr, SLOT(run()));
-      QObject::connect(qCbThread, SIGNAL(finished()), qCbThread, SLOT(deleteLater()));
+      QObject::connect(qCbThread, SIGNAL(finished()), qCbThread,
+                       SLOT(deleteLater()));
       qCbThread->start();
       this->callbackThread = cbThreadPtr;
     }
@@ -666,27 +667,36 @@ bool
 Vehicle::initGimbal()
 {
   // Gimbal information via subscription
-  Telemetry::TypeMap<Telemetry::TOPIC_GIMBAL_STATUS>::type
-      subscriptionGimbal;
+  Telemetry::TypeMap<Telemetry::TOPIC_GIMBAL_STATUS>::type subscriptionGimbal;
 
-  if(this->getFwVersion() != Version::M100_31)
+  if (isLegacyM600())
+  {
+    this->gimbal = new (std::nothrow) Gimbal(this);
+    if (this->gimbal == 0)
+    {
+      DERROR("Failed to allocate memory for Gimbal!\n");
+      return false;
+    }
+    return true;
+  }
+  else if (this->getFwVersion() != Version::M100_31)
   {
     ACK::ErrorCode ack = this->subscribe->verify(wait_timeout);
-    if(ACK::getError(ack))
+    if (ACK::getError(ack))
     {
       DERROR("Failed to verify subscription!\n");
       return false;
     }
 
     Telemetry::TopicName topicList0[] = { Telemetry::TOPIC_GIMBAL_STATUS };
-    int nTopic0 = sizeof(topicList0) / sizeof(topicList0[0]);
+    int                  nTopic0 = sizeof(topicList0) / sizeof(topicList0[0]);
 
     bool result =
       this->subscribe->initPackageFromTopicList(0, nTopic0, topicList0, 0, 50);
     if (result)
     {
       ack = this->subscribe->startPackage(0, wait_timeout);
-      if(ACK::getError(ack))
+      if (ACK::getError(ack))
       {
         DERROR("Failed to start subscription package!\n");
       }
@@ -697,7 +707,7 @@ Vehicle::initGimbal()
       return false;
     }
 
-    // Wait for telemetry data
+// Wait for telemetry data
 #ifdef QT
     QThread::msleep(200);
 #elif STM32
@@ -706,7 +716,7 @@ Vehicle::initGimbal()
     sleep(2);
 #endif
     subscriptionGimbal =
-	  this->subscribe->getValue<Telemetry::TOPIC_GIMBAL_STATUS>();
+      this->subscribe->getValue<Telemetry::TOPIC_GIMBAL_STATUS>();
 
     this->subscribe->removePackage(0, wait_timeout);
 #ifdef QT
@@ -718,8 +728,8 @@ Vehicle::initGimbal()
 #endif
   }
 
-  if((this->getFwVersion() != Version::M100_31 &&
-      subscriptionGimbal.mountStatus == GIMBAL_MOUNTED) ||
+  if ((this->getFwVersion() != Version::M100_31 &&
+       subscriptionGimbal.mountStatus == GIMBAL_MOUNTED) ||
       this->getFwVersion() == Version::M100_31)
   {
     this->gimbal = new (std::nothrow) Gimbal(this);
@@ -838,6 +848,16 @@ Vehicle::isCmdSetSupported(const uint8_t cmdSet)
           return false;
         }
       }
+      else if (isLegacyM600())
+      {
+        // CMDs not supported in Matrice 600 old firmware
+        if (cmdSet == OpenProtocol::CMDSet::hardwareSync ||
+            cmdSet == OpenProtocol::CMDSet::mfio ||
+            cmdSet == OpenProtocol::CMDSet::subscribe)
+        {
+          return false;
+        }
+      }
     }
   }
   return true;
@@ -861,7 +881,7 @@ Vehicle::processReceivedData(RecvContainer receivedFrame)
       if (threadSupported)
       {
         this->nbCallbackRecvContainer[receivedFrame.dispatchInfo.callbackID] =
-            receivedFrame;
+          receivedFrame;
         protocolLayer->getThreadHandle()->lockNonBlockCBAck();
         this->circularBuffer->cbPush(
           this->circularBuffer, this->nbVehicleCallBackHandler,
@@ -870,9 +890,7 @@ Vehicle::processReceivedData(RecvContainer receivedFrame)
       }
       else
         this->nbVehicleCallBackHandler.callback(
-          this,
-          receivedFrame,
-          this->nbVehicleCallBackHandler.userData);
+          this, receivedFrame, this->nbVehicleCallBackHandler.userData);
     }
 
     else
@@ -982,7 +1000,7 @@ Vehicle::getDroneVersion(VehicleCallBack callback, UserData userData)
     OpenProtocol::ErrorCode::CommonACK::NO_RESPONSE_ERROR;
   versionData.version_crc     = 0x0;
   versionData.version_name[0] = 0;
-  versionData.fwVersion = 0;
+  versionData.fwVersion       = 0;
 
   uint32_t cmd_timeout = 100; // unit is ms
   uint32_t retry_time  = 3;
@@ -1176,8 +1194,7 @@ Vehicle::controlAuthorityCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
   }
 }
 
-/*****************************Set State
- * Data**************************************/
+/*****************************Set State Data**************************************/
 
 void
 Vehicle::setVersion(const Version::FirmWare& value)
@@ -1246,11 +1263,11 @@ Vehicle::ACKHandler(void* eventData)
       hotpointStartACK.maxRadius = ackData->recvData.hpStartACK.maxRadius;
     }
     else if (memcmp(cmd, OpenProtocol::CMDSet::Mission::hotpointDownload,
-		    sizeof(cmd)) == 0)
+                    sizeof(cmd)) == 0)
     {
-      hotpointReadACK.ack.info  = ackData->recvInfo;
-      hotpointReadACK.ack.data  = ackData->recvData.hpReadACK.ack;
-      hotpointReadACK.data = ackData->recvData.hpReadACK.data;
+      hotpointReadACK.ack.info = ackData->recvInfo;
+      hotpointReadACK.ack.data = ackData->recvData.hpReadACK.ack;
+      hotpointReadACK.data     = ackData->recvData.hpReadACK.data;
     }
     else
     {
@@ -1452,7 +1469,7 @@ Vehicle::waitForACK(const uint8_t (&cmd)[OpenProtocol::MAX_CMD_ARRAY_SIZE],
     pACK = static_cast<void*>(&this->hotpointStartACK);
   }
   else if (memcmp(cmd, OpenProtocol::CMDSet::Mission::hotpointDownload,
-		  sizeof(cmd)) == 0)
+                  sizeof(cmd)) == 0)
   {
     pACK = static_cast<void*>(&this->hotpointReadACK);
   }
@@ -1499,17 +1516,17 @@ ACK::ErrorCode
 Vehicle::obtainCtrlAuthority(int timeout)
 {
   ACK::ErrorCode ack;
-  uint8_t         data = 1;
+  uint8_t        data = 1;
 
   protocolLayer->send(2, DJI::OSDK::encrypt,
                       OpenProtocol::CMDSet::Control::setControl, &data, 1, 500,
                       2, false, 0);
 
   ack = *(ACK::ErrorCode*)waitForACK(OpenProtocol::CMDSet::Control::setControl,
-                                    timeout);
+                                     timeout);
 
   if (ack.data == OpenProtocol::ErrorCode::ControlACK::SetControl::
-                     OBTAIN_CONTROL_IN_PROGRESS)
+                    OBTAIN_CONTROL_IN_PROGRESS)
   {
     ack = this->obtainCtrlAuthority(timeout);
   }
@@ -1541,17 +1558,17 @@ ACK::ErrorCode
 Vehicle::releaseCtrlAuthority(int timeout)
 {
   ACK::ErrorCode ack;
-  uint8_t         data = 0;
+  uint8_t        data = 0;
 
   protocolLayer->send(2, DJI::OSDK::encrypt,
                       OpenProtocol::CMDSet::Control::setControl, &data, 1, 500,
                       2, false, 1);
 
   ack = *(ACK::ErrorCode*)waitForACK(OpenProtocol::CMDSet::Control::setControl,
-                                    timeout);
+                                     timeout);
 
   if (ack.data == OpenProtocol::ErrorCode::ControlACK::SetControl::
-                     RELEASE_CONTROL_IN_PROGRESS)
+                    RELEASE_CONTROL_IN_PROGRESS)
   {
     ack = this->releaseCtrlAuthority(timeout);
   }
@@ -1591,4 +1608,38 @@ char*
 Vehicle::getHwSerialNum() const
 {
   return (char*)versionData.hw_serial_num;
+}
+
+bool
+Vehicle::isLegacyM600()
+{
+  //! Check for the special M600 backwards compatibility
+  if (versionData.fwVersion == Version::FW(3, 2, 15, 62))
+  {
+    if (strncmp(versionData.hwVersion, "PM820V3", 7) == 0)
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
+}
+
+bool
+Vehicle::isM100()
+{
+  //! Check for the special M600 backwards compatibility
+  if (versionData.fwVersion == Version::FW(3, 1, 10, 0))
+  {
+    if (strncmp(versionData.hwVersion, "M100", 4) == 0)
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
 }

@@ -40,7 +40,7 @@ main(int argc, char** argv)
   switch (inputChar)
   {
     case 'a':
-      if (vehicle->getFwVersion() == Version::M100_31)
+      if (vehicle->isM100() || vehicle->isLegacyM600())
       {
         getBroadcastData(vehicle);
       }

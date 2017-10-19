@@ -66,8 +66,9 @@ setupOSDK(int argc, char** argv)
 
   // Check if drone version is okay
   if (vehicle->getFwVersion() < extendedVersionBase &&
-    vehicle->getFwVersion() != Version::M100_31)
+      (!vehicle->isM100()) && !vehicle->isLegacyM600())
   {
+    delete(vehicle);
     return NULL;
   }
 

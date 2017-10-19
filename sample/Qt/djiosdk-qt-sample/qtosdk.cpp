@@ -47,6 +47,13 @@ qtOsdk::readAppIDKey()
 void
 qtOsdk::refreshPort()
 {
+  QString currentPort;
+
+  if (ui->portSelection->currentText() != "Connect Serial")
+  {
+    currentPort = ui->portSelection->currentText();
+  }
+
   ui->portSelection->clear();
   QList<QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
   QStringList            list;
@@ -55,9 +62,19 @@ qtOsdk::refreshPort()
     list.append(ports[i].portName());
   }
   if (ports.length()== 0)
-      list.append("Connect Serial");
+    list.append("Connect Serial");
 
   ui->portSelection->addItems(list);
+
+  if (ports.length() != 0)
+  {
+    ui->portSelection->setCurrentIndex(ui->portSelection->findText(currentPort));
+  }
+
+  if (currentPort.isEmpty())
+  {
+    ui->portSelection->setCurrentIndex(0);
+  }
 }
 
 void

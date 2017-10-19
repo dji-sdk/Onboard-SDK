@@ -51,26 +51,10 @@ parseFromMobileCallback(Vehicle* vehicle, RecvContainer recvFrame,
       vehicle->releaseCtrlAuthority(controlAuthorityMobileCallback);
       break;
     case 5:
-      if(vehicle->getFwVersion() != Version::M100_31)
-      {
-        vehicle->control->action(Control::FlightCommand::startMotor,
-                               actionMobileCallback);
-      }
-      else
-      {
-	vehicle->control->armMotors(actionMobileCallback);
-      }
+      vehicle->control->armMotors(actionMobileCallback);
       break;
     case 6:
-      if(vehicle->getFwVersion() != Version::M100_31)
-      {
-        vehicle->control->action(Control::FlightCommand::stopMotor,
-                               actionMobileCallback);
-      }
-      else
-      {
-	vehicle->control->disArmMotors(actionMobileCallback);
-      }
+      vehicle->control->disArmMotors(actionMobileCallback);
       break;
     default:
       break;
@@ -159,10 +143,13 @@ actionMobileCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
 
     ack.info = recvFrame.recvInfo;
 
-    if (vehiclePtr->getFwVersion() != Version::M100_31)
-      ack.data = recvFrame.recvData.commandACK;
-    else
+    if (vehiclePtr->isLegacyM600())
       ack.data = recvFrame.recvData.ack;
+    else if (vehiclePtr->isM100())
+      ack.data = recvFrame.recvData.ack;
+    else
+      ack.data = recvFrame.recvData.commandACK;
+
 
     // Display ACK message
     ACK::getErrorCodeMessage(ack, __func__);
@@ -172,7 +159,7 @@ actionMobileCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
                             recvFrame.recvInfo.cmd_id };
 
     // startMotor supported in FW version >= 3.3
-    // setArm supported only on Matrice 100
+    // setArm supported only on Matrice 100 && M600 old FW
     if (recvFrame.recvInfo.buf[2] == Control::FlightCommand::startMotor ||
         (memcmp(cmd, OpenProtocol::CMDSet::Control::setArm, sizeof(cmd)) &&
          recvFrame.recvInfo.buf[2] == true))

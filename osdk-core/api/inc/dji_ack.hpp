@@ -293,7 +293,7 @@ private:
   static const std::map<const uint32_t, const char*> createMFIOErrorCodeMap();
   static const std::map<const uint32_t, const char*> createSetArmErrorCodeMap();
   static const std::map<const uint32_t, const char*>
-  createM100TaskErrorCodeMap();
+  createLegacyTaskErrorCodeMap();
 }; // class ACK
 
 } // namespace OSDK

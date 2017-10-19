@@ -335,11 +335,11 @@ public:
     /*
      * Task ACKs Supported in firmware version < 3.3
      */
-    typedef struct M100Task
+    typedef struct LegacyTask
     {
       const static uint16_t SUCCESS;
       const static uint16_t FAIL;
-    } M100Task;
+    } LegacyTask;
 
     /*!
      * @brief CMDID: SetArm supported in products with

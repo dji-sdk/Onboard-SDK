@@ -317,16 +317,22 @@ private:
 
 private:
   /*!
-   * @brief Extract broadcast data for A3/N3
-   * @param recvFrame: the raw data payload
+   * @brief Extract broadcast data for A3/N3/M600
+   * @param recvFrame: pointer to the raw data payload
    */
   void unpackData(RecvContainer* recvFrame);
 
   /*!
    * @brief Extract broadcast data for M100
-   * @param recvFrame: the raw data payload
+   * @param recvFrame: pointer to the raw data payload
    */
   void unpackM100Data(RecvContainer* pRecvFrame);
+
+  /*!
+   * @brief Extract broadcast data for M600 FW 3.2.41.5
+   * @param recvFrame: pointer to the raw data payload
+   */
+  void unpackOldM600Data(RecvContainer* recvFrame);
 
   inline void unpackOne(FLAG flag, void* data, uint8_t*& buf, size_t size);
 
@@ -355,13 +361,14 @@ private:
   Telemetry::Battery             battery     ;
   Telemetry::SDKInfo             info        ;
   /*
-   * @note Broadcast data for Matrice 100 that is fundamentally
-   * different from the A3/N3
+   * @note Broadcast data for Matrice 100/600 older firmware that is fundamentally
+   * different from the A3/N3/M600 newer firmware
    */
-  Telemetry::M100TimeStamp	    m100TimeStamp;
-  Telemetry::M100Velocity       m100Velocity;
-  Telemetry::M100Status         m100FlightStatus;
-  Telemetry::M100Battery        m100Battery;
+  Telemetry::LegacyTimeStamp	    legacyTimeStamp;
+  Telemetry::LegacyVelocity       legacyVelocity;
+  Telemetry::LegacyStatus         legacyStatus;
+  Telemetry::LegacyBattery        legacyBattery;
+  Telemetry::LegacyGPSInfo        legacyGPSInfo;
   // clang-format on
 private:
   Vehicle* vehicle;

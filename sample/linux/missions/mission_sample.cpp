@@ -133,7 +133,7 @@ teardownSubscription(DJI::OSDK::Vehicle* vehicle, const int pkgIndex,
 bool
 runWaypointMission(Vehicle* vehicle, uint8_t numWaypoints, int responseTimeout)
 {
-  if (vehicle->getFwVersion() != Version::M100_31)
+  if (!vehicle->isM100() && !vehicle->isLegacyM600())
   {
     if (!setUpSubscription(vehicle, responseTimeout))
     {
@@ -186,7 +186,7 @@ runWaypointMission(Vehicle* vehicle, uint8_t numWaypoints, int responseTimeout)
 
   // Cleanup before return. The mission isn't done yet, but it doesn't need any
   // more input from our side.
-  if (vehicle->getFwVersion() != Version::M100_31)
+  if (!vehicle->isM100() && !vehicle->isLegacyM600())
   {
     return teardownSubscription(vehicle, DEFAULT_PACKAGE_INDEX,
                                 responseTimeout);
@@ -242,7 +242,7 @@ createWaypoints(DJI::OSDK::Vehicle* vehicle, int numWaypoints,
   // Global position retrieved via broadcast
   Telemetry::GlobalPosition broadcastGPosition;
 
-  if (vehicle->getFwVersion() != Version::M100_31)
+  if (!vehicle->isM100() && !vehicle->isLegacyM600())
   {
     subscribeGPosition = vehicle->subscribe->getValue<TOPIC_GPS_FUSED>();
     start_wp.latitude  = subscribeGPosition.latitude;
@@ -324,7 +324,7 @@ uploadWaypoints(Vehicle*                                  vehicle,
 bool
 runHotpointMission(Vehicle* vehicle, int initialRadius, int responseTimeout)
 {
-  if (vehicle->getFwVersion() != Version::M100_31)
+  if (!vehicle->isM100() && !vehicle->isLegacyM600())
   {
     if (!setUpSubscription(vehicle, responseTimeout))
     {
@@ -344,7 +344,7 @@ runHotpointMission(Vehicle* vehicle, int initialRadius, int responseTimeout)
                                 NULL);
   vehicle->missionManager->printInfo();
 
-  if (vehicle->getFwVersion() != Version::M100_31)
+  if (!vehicle->isM100() && !vehicle->isLegacyM600())
   {
     subscribeGPosition = vehicle->subscribe->getValue<TOPIC_GPS_FUSED>();
     vehicle->missionManager->hpMission->setHotPoint(
@@ -363,7 +363,7 @@ runHotpointMission(Vehicle* vehicle, int initialRadius, int responseTimeout)
   {
     ACK::getErrorCodeMessage(takeoffAck, __func__);
 
-    if (vehicle->getFwVersion() != Version::M100_31)
+    if (!vehicle->isM100() && !vehicle->isLegacyM600())
     {
       teardownSubscription(vehicle, DEFAULT_PACKAGE_INDEX, responseTimeout);
     }
@@ -381,7 +381,7 @@ runHotpointMission(Vehicle* vehicle, int initialRadius, int responseTimeout)
   if (ACK::getError(startAck))
   {
     ACK::getErrorCodeMessage(startAck, __func__);
-    if (vehicle->getFwVersion() != Version::M100_31)
+    if (!vehicle->isM100() && !vehicle->isLegacyM600())
     {
       teardownSubscription(vehicle, DEFAULT_PACKAGE_INDEX, responseTimeout);
     }
@@ -442,7 +442,7 @@ runHotpointMission(Vehicle* vehicle, int initialRadius, int responseTimeout)
 
   // Clean up
   ACK::getErrorCodeMessage(startAck, __func__);
-  if (vehicle->getFwVersion() != Version::M100_31)
+  if (!vehicle->isM100() && !vehicle->isLegacyM600())
   {
     teardownSubscription(vehicle, DEFAULT_PACKAGE_INDEX, responseTimeout);
   }

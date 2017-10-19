@@ -500,19 +500,19 @@ typedef struct HardSyncData
 /*!
  * @brief Matrice 100 Timestamp data, available in Broadcast telemetry (only for M100)
  */
-typedef struct M100TimeStamp
+typedef struct LegacyTimeStamp
 {
   uint32_t time;
   uint32_t nanoTime;
   uint8_t  syncFlag;
-} M100TimeStamp; // pack(1)
+} LegacyTimeStamp; // pack(1)
 
 /*!
  * @brief Matrice 100 Velocity struct, returned in Broadcast telemetry (only for M100)
  * @note The velocity may be in body or ground frame
  * based on settings in DJI Assistant 2's SDK page.
  */
-typedef struct M100Velocity
+typedef struct LegacyVelocity
 {
   float32_t x;
   float32_t y;
@@ -523,18 +523,32 @@ typedef struct M100Velocity
   uint8_t health : 1;
   uint8_t sensorID : 4;
   uint8_t reserve : 3;
-} M100Velocity; // pack(1)
+} LegacyVelocity; // pack(1)
 
 typedef uint16_t EnableFlag;  // pack(1)
 
 /*!
  * @brief Return type for flight status data broadcast (only for M100). Returns VehicleStatus::M100FlightStatus.
  */
-typedef uint8_t  M100Status;  // pack(1)
+typedef uint8_t  LegacyStatus;  // pack(1)
 /*!
  * @brief Return type for battery data broadcast (only for M100). Returns percentage.
  */
-typedef uint8_t  M100Battery; // pack(1)
+typedef uint8_t  LegacyBattery; // pack(1)
+
+/*!
+ * @brief struct for GPSInfo of data broadcast
+ *
+ * @note only work outside of simulation
+ */
+typedef struct LegacyGPSInfo
+{
+  PositionTimeStamp time;
+  int32_t           longitude;   /*!< 1/1.0e7deg */
+  int32_t           latitude;    /*!< 1/1.0e7deg */
+  int32_t           HFSL;        /*!< height above mean sea level (mm) */
+  Vector3f          velocityNED; /*!< cm/s */
+} LegacyGPSInfo; // pack(1)
 
 #pragma pack()
 

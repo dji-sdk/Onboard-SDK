@@ -67,7 +67,7 @@ gimbalCameraControl(Vehicle* vehicle)
    * Subscribe to gimbal data not supported in MAtrice 100
    */
 
-  if (vehicle->getFwVersion() != Version::M100_31)
+  if (!vehicle->isM100() && !vehicle->isLegacyM600())
   {
     // Telemetry: Verify the subscription
     ACK::ErrorCode subscribeStatus;
@@ -110,7 +110,7 @@ gimbalCameraControl(Vehicle* vehicle)
        ", and the accuracy depends on your magnetometer calibration.\n\n";
 
   // Get Gimbal initial values
-  if (vehicle->getFwVersion() != Version::M100_31)
+  if (!vehicle->isM100() && !vehicle->isLegacyM600())
   {
     initialAngle.roll  = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().y;
     initialAngle.pitch = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().x;
@@ -134,7 +134,7 @@ gimbalCameraControl(Vehicle* vehicle)
                "incremental control:\n";
 
   // Get current gimbal data to calc precision error in post processing
-  if (vehicle->getFwVersion() != Version::M100_31)
+  if (!vehicle->isM100() && !vehicle->isLegacyM600())
   {
     currentAngle.roll  = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().y;
     currentAngle.pitch = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().x;
@@ -150,7 +150,7 @@ gimbalCameraControl(Vehicle* vehicle)
   gimbal = GimbalContainer(0, 200, 1800, 20, 0, initialAngle, currentAngle);
   doSetGimbalAngle(vehicle, &gimbal);
 
-  if (vehicle->getFwVersion() != Version::M100_31)
+  if (!vehicle->isM100() && !vehicle->isLegacyM600())
   {
     currentAngle.roll  = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().y;
     currentAngle.pitch = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().x;
@@ -176,7 +176,7 @@ gimbalCameraControl(Vehicle* vehicle)
   gimbal = GimbalContainer(0, -500, 0, 20, 1, initialAngle);
   doSetGimbalAngle(vehicle, &gimbal);
 
-  if (vehicle->getFwVersion() != Version::M100_31)
+  if (!vehicle->isM100() && !vehicle->isLegacyM600())
   {
     currentAngle.roll  = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().y;
     currentAngle.pitch = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().x;
@@ -217,7 +217,7 @@ gimbalCameraControl(Vehicle* vehicle)
     usleep(incrementMs * 1000);
   }
 
-  if (vehicle->getFwVersion() != Version::M100_31)
+  if (!vehicle->isM100() && !vehicle->isLegacyM600())
   {
     currentAngle.roll  = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().y;
     currentAngle.pitch = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().x;
@@ -237,7 +237,7 @@ gimbalCameraControl(Vehicle* vehicle)
   gimbal = GimbalContainer(0, 0, 0, 20, 1, initialAngle);
   doSetGimbalAngle(vehicle, &gimbal);
 
-  if (vehicle->getFwVersion() != Version::M100_31)
+  if (!vehicle->isM100() && !vehicle->isLegacyM600())
   {
     currentAngle.roll  = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().y;
     currentAngle.pitch = vehicle->subscribe->getValue<TOPIC_GIMBAL_ANGLES>().x;
@@ -258,7 +258,7 @@ gimbalCameraControl(Vehicle* vehicle)
   std::cout << "Check DJI GO App or SD card for a new video.\n";
 
   // Cleanup and exit gimbal sample
-  if (vehicle->getFwVersion() != Version::M100_31)
+  if (!vehicle->isM100() && !vehicle->isLegacyM600())
   {
     ACK::ErrorCode ack =
       vehicle->subscribe->removePackage(pkgIndex, responseTimeout);

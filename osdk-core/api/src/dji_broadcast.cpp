@@ -21,7 +21,11 @@ DataBroadcast::unpackCallback(Vehicle* vehicle, RecvContainer recvFrame,
 {
   DataBroadcast* broadcastPtr = (DataBroadcast*)data;
 
-  if (broadcastPtr->getVehicle()->getFwVersion() != Version::M100_31)
+  if (broadcastPtr->getVehicle()->isLegacyM600())
+  {
+    broadcastPtr->unpackOldM600Data(&recvFrame);
+  }
+  else if (broadcastPtr->getVehicle()->getFwVersion() != Version::M100_31)
   {
     broadcastPtr->unpackData(&recvFrame);
   }
@@ -63,15 +67,21 @@ DataBroadcast::getTimeStamp()
 {
   Telemetry::TimeStamp  data;
   vehicle->protocolLayer->getThreadHandle()->lockMSG();
-  if(vehicle->getFwVersion() != Version::M100_31)
+  if (vehicle->isLegacyM600())
   {
-    data = timeStamp;
+    // Supported Broadcast data in Matrice 600 old firmware
+    data.time_ms = legacyTimeStamp.time;
+    data.time_ns = legacyTimeStamp.nanoTime;
+  }
+  else if(vehicle->isM100())
+  {
+    // Supported Broadcast data in Matrice 100
+    data.time_ms = legacyTimeStamp.time;
+    data.time_ns = legacyTimeStamp.nanoTime;
   }
   else
   {
-    // Supported Broadcast data in Matrice 100
-    data.time_ms = m100TimeStamp.time;
-    data.time_ns = m100TimeStamp.nanoTime;
+    data = timeStamp;
   }
   vehicle->protocolLayer->getThreadHandle()->freeMSG();
   return data;
@@ -82,14 +92,19 @@ DataBroadcast::getSyncStamp()
 {
   Telemetry::SyncStamp data;
   vehicle->protocolLayer->getThreadHandle()->lockMSG();
-  if(vehicle->getFwVersion() != Version::M100_31)
+  if (vehicle->isLegacyM600())
   {
-    data = syncStamp;
+    // Supported Broadcast data in Matrice 600 old firmware
+    data.flag = legacyTimeStamp.syncFlag;
+  }
+  else if(vehicle->isM100())
+  {
+    // Supported Broadcast data in Matrice 100
+    data.flag = legacyTimeStamp.syncFlag;
   }
   else
   {
-    // Supported Broadcast data in Matrice 100
-    data.flag = m100TimeStamp.syncFlag;
+    data = syncStamp;
   }
   vehicle->protocolLayer->getThreadHandle()->freeMSG();
   return data;
@@ -120,16 +135,23 @@ DataBroadcast::getVelocity()
 {
   Telemetry::Vector3f data;
   vehicle->protocolLayer->getThreadHandle()->lockMSG();
-  if(vehicle->getFwVersion() != Version::M100_31)
+  if (vehicle->isLegacyM600())
   {
-    data = v;
+    // Supported Broadcast data in Matrice 600 old firmware
+    data.x = legacyVelocity.x;
+    data.y = legacyVelocity.y;
+    data.z = legacyVelocity.z;
+  }
+  else if(vehicle->isM100())
+  {
+    // Supported Broadcast data in Matrice 100
+    data.x = legacyVelocity.x;
+    data.y = legacyVelocity.y;
+    data.z = legacyVelocity.z;
   }
   else
   {
-    // Supported Broadcast data in Matrice 100
-    data.x = m100Velocity.x;
-    data.y = m100Velocity.y;
-    data.z = m100Velocity.z;
+    data = v;
   }
   vehicle->protocolLayer->getThreadHandle()->freeMSG();
   return data;
@@ -140,16 +162,22 @@ DataBroadcast::getVelocityInfo()
 {
   Telemetry::VelocityInfo data;
   vehicle->protocolLayer->getThreadHandle()->lockMSG();
-  if(vehicle->getFwVersion() != Version::M100_31)
+  if (vehicle->isLegacyM600())
   {
-    data = vi;
+    // Supported Broadcast data in Matrice 600 old firmware
+    data.health = legacyVelocity.health;
+    data.reserve = legacyVelocity.reserve;
+  }
+  else if(vehicle->isM100())
+  {
+    // Supported Broadcast data in Matrice 100
+    data.health = legacyVelocity.health;
+    data.reserve = legacyVelocity.reserve;
+    // TODO add sensorID (only M100)
   }
   else
   {
-    // Supported Broadcast data in Matrice 100
-    data.health = m100Velocity.health;
-    data.reserve = m100Velocity.reserve;
-    // TODO add sensorID (only M100)
+    data = vi;
   }
   vehicle->protocolLayer->getThreadHandle()->freeMSG();
   return data;
@@ -192,7 +220,20 @@ DataBroadcast::getGPSInfo()
 {
   Telemetry::GPSInfo data;
   vehicle->protocolLayer->getThreadHandle()->lockMSG();
-  data = gps;
+  if (vehicle->isLegacyM600())
+  {
+    // Supported Broadcast data in Matrice 600 old firmware
+    data.latitude = legacyGPSInfo.latitude;
+    data.longitude = legacyGPSInfo.longitude;
+    data.HFSL = legacyGPSInfo.HFSL;
+    data.velocityNED = legacyGPSInfo.velocityNED;
+    data.time = legacyGPSInfo.time;
+    //GPS details not supported.
+  }
+  else
+  {
+    data = gps;
+  }
   vehicle->protocolLayer->getThreadHandle()->freeMSG();
   return data;
 }
@@ -243,14 +284,19 @@ DataBroadcast::getStatus()
 {
   Telemetry::Status data;
   vehicle->protocolLayer->getThreadHandle()->lockMSG();
-  if(vehicle->getFwVersion() != Version::M100_31)
+  if (vehicle->isLegacyM600())
   {
-    data = status;
+    // Broadcast data on M600 old firmware. Only flight status is available.
+    data.flight = legacyStatus;
+  }
+  else if(vehicle->isM100())
+  {
+    // Supported Broadcast data in Matrice 100
+    data.flight = legacyStatus;
   }
   else
   {
-    // Supported Broadcast data in Matrice 100
-    data.flight = m100FlightStatus;
+    data = status;
   }
   vehicle->protocolLayer->getThreadHandle()->freeMSG();
   return data;
@@ -261,14 +307,19 @@ DataBroadcast::getBatteryInfo()
 {
   Telemetry::Battery data;
   vehicle->protocolLayer->getThreadHandle()->lockMSG();
-  if(vehicle->getFwVersion() != Version::M100_31)
+  if (vehicle->isLegacyM600())
   {
-    data = battery;
+    // Only capacity is supported on old M600 FW
+    data.percentage = legacyBattery;
+  }
+  else if (vehicle->isM100())
+  {
+    // Supported Broadcast data in Matrice 100
+    data.percentage = legacyBattery;
   }
   else
   {
-    // Supported Broadcast data in Matrice 100
-    data.capacity = m100Battery;
+    data = battery;
   }
   vehicle->protocolLayer->getThreadHandle()->freeMSG();
   return data;
@@ -383,18 +434,44 @@ DataBroadcast::unpackM100Data(RecvContainer* pRecvFrame)
   passFlag = *(uint16_t*)pdata;
   pdata += sizeof(uint16_t);
   // clang-format off
-  unpackOne(FLAG_TIME        ,&m100TimeStamp   ,pdata,sizeof(m100TimeStamp   ));
-  unpackOne(FLAG_QUATERNION  ,&q               ,pdata,sizeof(q               ));
-  unpackOne(FLAG_ACCELERATION,&a               ,pdata,sizeof(a               ));
-  unpackOne(FLAG_VELOCITY    ,&m100Velocity    ,pdata,sizeof(m100Velocity    ));
-  unpackOne(FLAG_ANGULAR_RATE,&w               ,pdata,sizeof(w               ));
-  unpackOne(FLAG_POSITION    ,&gp              ,pdata,sizeof(gp              ));
-  unpackOne(FLAG_M100_MAG    ,&mag             ,pdata,sizeof(mag             ));
-  unpackOne(FLAG_M100_RC     ,&rc              ,pdata,sizeof(rc              ));
-  unpackOne(FLAG_M100_GIMBAL ,&gimbal          ,pdata,sizeof(gimbal          ));
-  unpackOne(FLAG_M100_STATUS ,&m100FlightStatus,pdata,sizeof(m100FlightStatus));
-  unpackOne(FLAG_M100_BATTERY,&m100Battery     ,pdata,sizeof(m100Battery     ));
-  unpackOne(FLAG_M100_DEVICE ,&info            ,pdata,sizeof(info            ));
+  unpackOne(FLAG_TIME        ,&legacyTimeStamp   ,pdata,sizeof(legacyTimeStamp ));
+  unpackOne(FLAG_QUATERNION  ,&q                 ,pdata,sizeof(q               ));
+  unpackOne(FLAG_ACCELERATION,&a                 ,pdata,sizeof(a               ));
+  unpackOne(FLAG_VELOCITY    ,&legacyVelocity    ,pdata,sizeof(legacyVelocity  ));
+  unpackOne(FLAG_ANGULAR_RATE,&w                 ,pdata,sizeof(w               ));
+  unpackOne(FLAG_POSITION    ,&gp                ,pdata,sizeof(gp              ));
+  unpackOne(FLAG_M100_MAG    ,&mag               ,pdata,sizeof(mag             ));
+  unpackOne(FLAG_M100_RC     ,&rc                ,pdata,sizeof(rc              ));
+  unpackOne(FLAG_M100_GIMBAL ,&gimbal            ,pdata,sizeof(gimbal          ));
+  unpackOne(FLAG_M100_STATUS ,&legacyStatus      ,pdata,sizeof(legacyStatus    ));
+  unpackOne(FLAG_M100_BATTERY,&legacyBattery     ,pdata,sizeof(legacyBattery   ));
+  unpackOne(FLAG_M100_DEVICE ,&info              ,pdata,sizeof(info            ));
+  // clang-format on
+  vehicle->protocolLayer->getThreadHandle()->freeMSG();
+}
+
+void
+DataBroadcast::unpackOldM600Data(RecvContainer* pRecvFrame)
+{
+  uint8_t* pdata = pRecvFrame->recvData.raw_ack_array;
+  vehicle->protocolLayer->getThreadHandle()->lockMSG();
+  passFlag = *(uint16_t*)pdata;
+  pdata += sizeof(uint16_t);
+  // clang-format off
+  unpackOne(FLAG_TIME        ,&legacyTimeStamp   ,pdata,sizeof(legacyTimeStamp ));
+  unpackOne(FLAG_QUATERNION  ,&q                 ,pdata,sizeof(q               ));
+  unpackOne(FLAG_ACCELERATION,&a                 ,pdata,sizeof(a               ));
+  unpackOne(FLAG_VELOCITY    ,&legacyVelocity    ,pdata,sizeof(legacyVelocity  ));
+  unpackOne(FLAG_ANGULAR_RATE,&w                 ,pdata,sizeof(w               ));
+  unpackOne(FLAG_POSITION    ,&gp                ,pdata,sizeof(gp              ));
+  unpackOne(FLAG_GPSINFO     ,&legacyGPSInfo     ,pdata,sizeof(legacyGPSInfo   ));
+  unpackOne(FLAG_RTKINFO     ,&rtk               ,pdata,sizeof(rtk             ));
+  unpackOne(FLAG_MAG         ,&mag               ,pdata,sizeof(mag             ));
+  unpackOne(FLAG_RC          ,&rc                ,pdata,sizeof(rc              ));
+  unpackOne(FLAG_GIMBAL      ,&gimbal            ,pdata,sizeof(gimbal          ));
+  unpackOne(FLAG_STATUS      ,&legacyStatus      ,pdata,sizeof(legacyStatus    ));
+  unpackOne(FLAG_BATTERY     ,&legacyBattery     ,pdata,sizeof(legacyBattery   ));
+  unpackOne(FLAG_DEVICE      ,&info              ,pdata,sizeof(info            ));
   // clang-format on
   vehicle->protocolLayer->getThreadHandle()->freeMSG();
 }
@@ -413,7 +490,7 @@ DataBroadcast::unpackOne(DataBroadcast::FLAG flag, void* data, uint8_t*& buf,
 void
 DataBroadcast::setVersionDefaults(uint8_t* frequencyBuffer)
 {
-  if (vehicle->getFwVersion() != Version::M100_31)
+  if (!vehicle->isM100())
   {
     setFreqDefaults(frequencyBuffer);
   }
@@ -473,7 +550,7 @@ DataBroadcast::setFreqDefaultsM100_31(uint8_t* freq)
 void
 DataBroadcast::setFreqDefaults(uint8_t* freq)
 {
-  /* Channels definition for A3/N3
+  /* Channels definition for A3/N3/M600
    * 0 - Timestamp
    * 1 - Attitude Quaterniouns
    * 2 - Acceleration

@@ -203,8 +203,12 @@ public:
   Version::FirmWare getFwVersion() const;
   char*             getHwVersion() const;
   char*             getHwSerialNum() const;
+  bool              isLegacyM600();
+  bool              isM100();
 
-  void setKey(const char* key);
+
+
+    void setKey(const char* key);
   void setStopCond(bool stopCond);
   bool            getStopCond();
   CircularBuffer* circularBuffer; //! @note not used yet

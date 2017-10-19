@@ -25,7 +25,7 @@ A new major version of DJI Onboard SDK (v3.3) was released on 15 Jun 2017. This 
 |                   | 1.7.0.0                  | 3.2.15.37                 | OSDK 3.2               |                                                                       |
 |                   |                          |                           |                        |                                                                       |
 | **M600/M600 Pro** | *1.0.1.60*               | *3.2.41.5*                | *OSDK 3.3 (Current)*   | Firmware being investigated for potential in-flight instability       |
-|                   | **1.0.1.20**             | **3.2.15.62**             | **OSDK 3.2**           | OSDK 3.3 support for this firmware coming soon                        |
+|                   | **1.0.1.20**             | **3.2.15.62**             | **OSDK 3.3 (Current)** |                                                                       |
 |                   | 1.0.0.80                 | 3.2.15.00                 | OSDK 3.2               |                                                                       |
 |                   |                          |                           |                        |                                                                       |
 | **M100**          | 1.3.1.0                  | 3.1.10.0                  | **OSDK 3.3 (Current)** |                                                                       |

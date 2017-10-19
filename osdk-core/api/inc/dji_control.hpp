@@ -40,12 +40,12 @@ public:
     /*
      * @note Matrice 100 flight commands
      */
-    typedef struct M100CMD
+    typedef struct LegacyCMD
     {
       const static int goHome  = 1;
       const static int takeOff = 4;
       const static int landing = 6;
-    } M100CMD;
+    } LegacyCMD;
 
     /*
      * @note OSDK release 3.3
@@ -238,11 +238,11 @@ public:
   } AdvancedCtrlData; // pack(1)
 
   // CMD data supported in Matrice 100
-  typedef struct M100CMDData
+  typedef struct LegacyCMDData
   {
     uint8_t sequence;
     uint8_t cmd;
-  } M100CMDData; // pack (1)
+  } LegacyCMDData; // pack (1)
 #pragma pack()
 
   /*! @note
@@ -439,7 +439,7 @@ private:
   /*
    * Task CMD data to send to the flight controller (supported in Matrice 100)
    */
-  M100CMDData m100CMDData;
+  LegacyCMDData legacyCMDData;
 }; // class Control
 
 } // OSDK

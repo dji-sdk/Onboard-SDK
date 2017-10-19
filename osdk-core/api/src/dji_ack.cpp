@@ -259,18 +259,18 @@ ACK::createTaskErrorCodeMap()
 /*
  * Supported in Matrice 100
  */
-const std::pair<const uint32_t, const char*> M100TaskData[] = {
-  std::make_pair(OpenProtocol::ErrorCode::ControlACK::M100Task::SUCCESS,
+const std::pair<const uint32_t, const char*> LegacyTaskData[] = {
+  std::make_pair(OpenProtocol::ErrorCode::ControlACK::LegacyTask::SUCCESS,
                  (const char*)"CONTROLLER_SUCCESS\n"),
-  std::make_pair(OpenProtocol::ErrorCode::ControlACK::M100Task::FAIL,
+  std::make_pair(OpenProtocol::ErrorCode::ControlACK::LegacyTask::FAIL,
                  (const char*)"CONTROLLER_FAIL\n")
 };
 
 const std::map<const uint32_t, const char*>
-ACK::createM100TaskErrorCodeMap()
+ACK::createLegacyTaskErrorCodeMap()
 {
   const std::map<const uint32_t, const char*> errorCodeMap(
-    M100TaskData, M100TaskData + sizeof M100TaskData / sizeof M100TaskData[0]);
+    LegacyTaskData, LegacyTaskData + sizeof LegacyTaskData / sizeof LegacyTaskData[0]);
   return errorCodeMap;
 }
 
@@ -501,7 +501,7 @@ ACK::getError(ACK::ErrorCode ack)
   else if (memcmp(cmd, OpenProtocol::CMDSet::Control::setArm, sizeof(cmd)) == 0)
   {
     /*
-     * SetArm command supported in Matrice 100
+     * SetArm command supported in Matrice 100/ M600 old firmware
      */
     return (ack.data == OpenProtocol::ErrorCode::ControlACK::SetArm::SUCCESS)
              ? ACK::SUCCESS
@@ -514,7 +514,15 @@ ACK::getError(ACK::ErrorCode ack)
   }
   else if (memcmp(cmd, OpenProtocol::CMDSet::Control::task, sizeof(cmd)) == 0)
   {
-    if (ack.info.version != Version::M100_31)
+    if (ack.info.version == Version::FW(3,2,15,62))
+    {
+      //! ACKs supported in Matrice 600 old firmware
+      return (ack.data ==
+          OpenProtocol::ErrorCode::ControlACK::LegacyTask::SUCCESS)
+             ? ACK::SUCCESS
+             : ACK::FAIL;
+    }
+    else if (ack.info.version != Version::M100_31)
     {
       return (ack.data == OpenProtocol::ErrorCode::ControlACK::Task::SUCCESS)
                ? ACK::SUCCESS
@@ -524,7 +532,7 @@ ACK::getError(ACK::ErrorCode ack)
     {
       //! ACKs supported in Matrice 100
       return (ack.data ==
-              OpenProtocol::ErrorCode::ControlACK::M100Task::SUCCESS)
+              OpenProtocol::ErrorCode::ControlACK::LegacyTask::SUCCESS)
                ? ACK::SUCCESS
                : ACK::FAIL;
     }
@@ -746,13 +754,17 @@ ACK::getCMDIDTaskMSG(ACK::ErrorCode ack)
 {
   std::map<const uint32_t, const char*> taskErrorCodeMap;
 
-  if (ack.info.version != Version::M100_31)
+  if (ack.info.version == Version::FW(3,2,15,62))
   {
-    taskErrorCodeMap = ACK::createTaskErrorCodeMap();
+    taskErrorCodeMap = static_cast<std::map<const uint32_t, const char*>>(ACK::createLegacyTaskErrorCodeMap());
+  }
+  else if (ack.info.version == Version::M100_31)
+  {
+    taskErrorCodeMap = static_cast<std::map<const uint32_t, const char*>>(ACK::createLegacyTaskErrorCodeMap());
   }
   else
   {
-    taskErrorCodeMap = ACK::createM100TaskErrorCodeMap();
+    taskErrorCodeMap = static_cast<std::map<const uint32_t, const char*>>(ACK::createTaskErrorCodeMap());
   }
 
   auto msg = taskErrorCodeMap.find(ack.data);
