@@ -39,7 +39,8 @@ Vehicle::Vehicle(const char* device, uint32_t baudRate, bool threadSupport)
   ackErrorCode.data     = OpenProtocol::ErrorCode::CommonACK::NO_RESPONSE_ERROR;
 
   mandatorySetUp();
-  functionalSetUp();
+  if (threadSupport)
+    functionalSetUp();
 }
 
 Vehicle::Vehicle(bool threadSupport)
@@ -281,62 +282,59 @@ Vehicle::initOpenProtocol()
 bool
 Vehicle::initPlatformSupport()
 {
-#ifdef QT
-  if (threadSupported)
+  if (!threadSupported)
   {
-    OSDKThread* readThreadPtr = new (std::nothrow) OSDKThread(this, 2);
-    if (readThreadPtr == 0)
-    {
-      DERROR("Failed to initialize read thread!\n");
-    }
-    else
-    {
-      QThread* qReadThread = new QThread;
-      readThreadPtr->setQThreadPtr(qReadThread);
-      readThreadPtr->moveToThread(qReadThread);
-      QObject::connect(qReadThread, SIGNAL(started()), readThreadPtr,
-                       SLOT(run()));
-      QObject::connect(qReadThread, SIGNAL(finished()), qReadThread,
-                       SLOT(deleteLater()));
-      qReadThread->start();
-      this->readThread = readThreadPtr;
-    }
-
-    OSDKThread* cbThreadPtr = new (std::nothrow) OSDKThread(this, 3);
-    if (cbThreadPtr == 0)
-    {
-      DERROR("Failed to initialize callback thread!\n");
-    }
-    else
-    {
-      QThread* qCbThread = new QThread;
-      cbThreadPtr->setQThreadPtr(qCbThread);
-      cbThreadPtr->moveToThread(qCbThread);
-      QObject::connect(qCbThread, SIGNAL(started()), cbThreadPtr, SLOT(run()));
-      QObject::connect(qCbThread, SIGNAL(finished()), qCbThread,
-                       SLOT(deleteLater()));
-      qCbThread->start();
-      this->callbackThread = cbThreadPtr;
-    }
+    this->readThread = NULL;
+    this->callbackThread = NULL;
+    return true;
   }
-#elif STM32
-  //! Threads not supported by default
-  this->readThread = NULL;
-  return true;
-#elif defined(__linux__)
-  if (threadSupported)
-  {
-    this->callbackThread = new (std::nothrow) PosixThread(this, 3);
-    if (this->callbackThread == 0)
-    {
-      DERROR("Failed to initialize read callback thread!\n");
-    }
 
-    this->readThread = new (std::nothrow) PosixThread(this, 2);
-    if (this->readThread == 0)
-    {
-      DERROR("Failed to initialize read thread!\n");
-    }
+#ifdef QT
+  OSDKThread* readThreadPtr = new (std::nothrow) OSDKThread(this, 2);
+  if (readThreadPtr == 0)
+  {
+    DERROR("Failed to initialize read thread!\n");
+  }
+  else
+  {
+    QThread* qReadThread = new QThread;
+    readThreadPtr->setQThreadPtr(qReadThread);
+    readThreadPtr->moveToThread(qReadThread);
+    QObject::connect(qReadThread, SIGNAL(started()), readThreadPtr,
+                     SLOT(run()));
+    QObject::connect(qReadThread, SIGNAL(finished()), qReadThread,
+                     SLOT(deleteLater()));
+    qReadThread->start();
+    this->readThread = readThreadPtr;
+  }
+
+  OSDKThread* cbThreadPtr = new (std::nothrow) OSDKThread(this, 3);
+  if (cbThreadPtr == 0)
+  {
+    DERROR("Failed to initialize callback thread!\n");
+  }
+  else
+  {
+    QThread* qCbThread = new QThread;
+    cbThreadPtr->setQThreadPtr(qCbThread);
+    cbThreadPtr->moveToThread(qCbThread);
+    QObject::connect(qCbThread, SIGNAL(started()), cbThreadPtr, SLOT(run()));
+    QObject::connect(qCbThread, SIGNAL(finished()), qCbThread,
+                     SLOT(deleteLater()));
+    qCbThread->start();
+    this->callbackThread = cbThreadPtr;
+  }
+#elif defined(__linux__)
+  this->callbackThread = new (std::nothrow) PosixThread(this, 3);
+  if (this->callbackThread == 0)
+  {
+    DERROR("Failed to initialize read callback thread!\n");
+  }
+
+  this->readThread = new (std::nothrow) PosixThread(this, 2);
+  if (this->readThread == 0)
+  {
+    DERROR("Failed to initialize read thread!\n");
   }
 #endif
   bool readThreadStatus = readThread->createThread();
