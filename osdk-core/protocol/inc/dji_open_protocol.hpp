@@ -270,12 +270,12 @@ private:
     uint8_t encode;
   } SDKFilter;
 
+public:
   //! Lowest-level function interfaces with SerialDevice
   bool readPoll(RecvContainer* allocatedRecvObject);
 
   //! Handle incoming data - byte level
   //! STM32 uses it directly
-public:
   bool byteHandler(const uint8_t in_data, RecvContainer* allocatedRecvObject);
   //! Get the bufReadPos variable that tracks how much of the current serial buffer we have consumed
   int getBufReadPos();
