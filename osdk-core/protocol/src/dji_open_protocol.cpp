@@ -488,7 +488,7 @@ Protocol::sendPoll()
 
 //! Step 0: Call this in a loop.
 RecvContainer
-Protocol::receive()
+Protocol::receive(std::function<bool()> stop)
 {
   //! Create a local container that will be used for storing data lower down in
   //! the stack
@@ -496,8 +496,11 @@ Protocol::receive()
   receiveFrame.recvInfo.cmd_id = 0xFF;
 
   //! Run the readPoll until you get a true
-  // @todo might need to modify to include thread stopCond
-  while (!readPoll(&receiveFrame));
+  while (!stop()) {
+    if (readPoll(&receiveFrame))
+      break;
+  }
+
   //! When we receive a true, return a copy of container to the caller: this is
   //! the 'receive' interface
 
