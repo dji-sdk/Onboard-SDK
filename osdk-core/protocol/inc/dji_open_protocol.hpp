@@ -38,6 +38,8 @@
 #include <string.h>
 #endif
 
+#include <functional>
+
 namespace DJI
 {
 namespace OSDK
@@ -225,7 +227,7 @@ public:
 
   /************************Receive Management********************************/
 
-  RecvContainer receive();
+  RecvContainer receive(std::function<bool()> stop);
   /************************Getters and setters*******************************/
 
   /**

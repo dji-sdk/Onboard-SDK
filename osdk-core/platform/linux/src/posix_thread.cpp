@@ -121,7 +121,8 @@ PosixThread::read_call(void* param)
   while (!(vehiclePtr->getStopCond()))
   {
     // receive() implemented on the OpenProtocol side
-    recvContainer = vehiclePtr->protocolLayer->receive();
+    auto stop = [vehiclePtr](){ return vehiclePtr->getStopCond(); };
+    recvContainer = vehiclePtr->protocolLayer->receive(stop);
     vehiclePtr->processReceivedData(recvContainer);
     usleep(10); //! @note CPU optimization, reduce the CPU usage a lot
   }
