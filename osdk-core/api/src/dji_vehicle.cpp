@@ -1625,12 +1625,13 @@ Vehicle::isLegacyM600()
       return false;
     }
   }
+  return false;
 }
 
 bool
 Vehicle::isM100()
 {
-  //! Check for the special M600 backwards compatibility
+  //! Check for the M100 backwards compatibility
   if (versionData.fwVersion == Version::FW(3, 1, 10, 0))
   {
     if (strncmp(versionData.hwVersion, "M100", 4) == 0)
@@ -1642,4 +1643,5 @@ Vehicle::isM100()
       return false;
     }
   }
+  return false;
 }
