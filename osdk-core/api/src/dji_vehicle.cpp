@@ -11,6 +11,8 @@
 
 #include "dji_vehicle.hpp"
 #include <new>
+#include <QTime>
+#include <QCoreApplication>
 
 using namespace DJI;
 using namespace DJI::OSDK;
@@ -354,7 +356,14 @@ Vehicle::initVersion()
 #elif defined(QT)
   //! Non-blocking call for QT sample, thread sync not supported yet
   getDroneVersion();
-  QThread::msleep(200);
+  QTime* t = new QTime();
+  t->start();
+  while (t->elapsed() < 250)
+  {
+	  QCoreApplication::processEvents();
+  }
+  delete t;
+  t = nullptr;
 
 #else
   ACK::DroneVersion ack = getDroneVersion(wait_timeout);
@@ -1035,7 +1044,7 @@ Vehicle::getDroneVersion(int timeout)
   uint32_t retry_time  = 3;
   uint8_t  cmd_data    = 0;
 
-  protocolLayer->send(2, 0, OpenProtocol::CMDSet::Activation::getVersion,
+  protocolLayer->send(1, 0, OpenProtocol::CMDSet::Activation::getVersion,
                       (uint8_t*)&cmd_data, 1, cmd_timeout, retry_time, false,
                       0);
 
