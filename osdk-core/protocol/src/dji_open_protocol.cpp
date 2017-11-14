@@ -9,7 +9,6 @@
  *
  */
 #include "dji_open_protocol.hpp"
-
 #ifdef STM32
 #include <stdio.h>
 #endif
@@ -24,17 +23,11 @@ Protocol::Protocol(const char* device, uint32_t baudrate)
 
 //! Step 1.1: Instantiate a hardware driver as per OS
 #ifdef QT
-  QThread* serialEventThread = new QThread;
   QHardDriver* driver = new QHardDriver(0, device, baudrate);
-  driver->moveToThread(serialEventThread);
-  QObject::connect(serialEventThread, SIGNAL(started()), driver, SLOT(init()));
-  QObject::connect(driver, SIGNAL (finished()), driver, SLOT (deleteLater()));
-
-  QObject::connect(serialEventThread, SIGNAL (finished()), serialEventThread, SLOT (deleteLater()));
-  serialEventThread->start();
-  QThread::msleep(100);
+  driver->init();
   this->serialDevice = driver;
   this->threadHandle = new QThreadManager();
+
 //! Add correct Qt serial device constructor here
 #elif STM32
   this->serialDevice = new STM32F4;
@@ -259,7 +252,6 @@ Protocol::send(uint8_t session_mode, bool is_enc, const uint8_t cmd[],
   //! Callback
   cmdContainer.isCallback = hasCallback;
   cmdContainer.callbackID = callbackID;
-
   sendInterface(&cmdContainer);
 }
 
@@ -425,7 +417,6 @@ Protocol::sendData(uint8_t* buf)
 #ifdef API_TRACE_DATA
   printFrame(serialDevice, pHeader, true);
 #endif
-
   //! Serial Device call: last link in the send pipeline
   ans = serialDevice->send(buf, pHeader->length);
   if (ans == 0)
