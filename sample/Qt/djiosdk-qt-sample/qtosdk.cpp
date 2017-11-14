@@ -4,6 +4,8 @@
 #include "ui_hotpoint_panel.h"
 #include "ui_qtosdk.h"
 #include "ui_qwaypoints.h"
+#include "iostream"
+#include "QMessageBox"
 
 using namespace DJI;
 using namespace DJI::OSDK;
@@ -29,7 +31,9 @@ qtOsdk::readAppIDKey()
 {
   QFile f(":/UserConfig.txt");
   if (!f.open(QIODevice::ReadOnly | QIODevice::Text))
+  {
     DSTATUS ("No UserConfig.txt file found");
+  }
   else
   {
     while (!f.atEnd())
@@ -80,11 +84,15 @@ qtOsdk::refreshPort()
 void
 qtOsdk::on_initVehicle_clicked()
 {
-  if (ui->portSelection->currentText() == "Connect Serial")
+    QString currentPortName = ui->portSelection->currentText();
+  if (currentPortName == "Connect Serial" || currentPortName == "")
+  {
+    QMessageBox::information(this, "Select Serial Port", "Please select a serial port to open");
     return;
+  }
 
+  // read id and key form UserConfig file
   readAppIDKey();
-
   vehicle = new Vehicle(ui->portSelection->currentText().toStdString().c_str(),
                         ui->baudRateInput->text().toInt(), true);
   if (vehicle)
