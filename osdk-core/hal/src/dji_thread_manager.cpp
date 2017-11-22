@@ -20,6 +20,18 @@ Thread::~Thread()
 {
 }
 
+bool
+Thread::getStopCondition()
+{
+  return this->stop_condition;
+}
+
+void
+Thread::setStopCondition(bool condition)
+{
+  this->stop_condition = condition;
+}
+
 ThreadAbstract::ThreadAbstract()
 {
 }

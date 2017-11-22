@@ -27,24 +27,24 @@ Camera::~Camera()
 void
 Camera::shootPhoto()
 {
-  action(OpenProtocol::CMDSet::Control::cameraShot);
+  action(OpenProtocolCMD::CMDSet::Control::cameraShot);
 }
 
 void
 Camera::videoStart()
 {
-  action(OpenProtocol::CMDSet::Control::cameraVideoStart);
+  action(OpenProtocolCMD::CMDSet::Control::cameraVideoStart);
 }
 
 void
 Camera::videoStop()
 {
-  action(OpenProtocol::CMDSet::Control::cameraVideoStop);
+  action(OpenProtocolCMD::CMDSet::Control::cameraVideoStop);
 }
 
 void
 Camera::action(const uint8_t cmd[])
 {
   uint8_t sendData = 0;
-  vehicle->protocolLayer->send(0, encrypt, cmd, &sendData, 1);
+  vehicle->protocolLayer->send(0, vehicle->getEncryption(), cmd, &sendData, 1);
 }

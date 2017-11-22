@@ -136,7 +136,8 @@ MissionManager::missionCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
   char           func[50];
   ACK::ErrorCode ack;
 
-  if (recvFrame.recvInfo.len - Protocol::PackageMin <= sizeof(ACK::ErrorCode))
+  if (recvFrame.recvInfo.len - OpenProtocol::PackageMin <=
+      sizeof(ACK::ErrorCode))
   {
     ack.info = recvFrame.recvInfo;
     ack.data = recvFrame.recvData.missionACK;

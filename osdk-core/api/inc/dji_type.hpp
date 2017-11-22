@@ -68,9 +68,6 @@ extern char buffer[];
 
 /******************Protocol Related Definitions***************************/
 
-//! @todo move to class Vehicle as a configuration
-const uint8_t encrypt = 0;
-
 const size_t SESSION_TABLE_NUM = 32;
 const size_t CALLBACK_LIST_NUM = 10;
 
@@ -80,8 +77,14 @@ const size_t CALLBACK_LIST_NUM = 10;
 const size_t MAX_INCOMING_DATA_SIZE = 300;
 const size_t MAX_ACK_SIZE           = 107;
 
+/**
+ * @note some constants for stereo camera
+ */
+static const uint8_t CAMERA_PAIR_NUM = 5;
+static const uint8_t IMAGE_TYPE_NUM  = 10;
+
 //! The Header struct is meant to handle the open protocol header.
-typedef struct Header
+typedef struct OpenHeader
 {
   uint32_t sof : 8;
   uint32_t length : 10;
@@ -94,7 +97,7 @@ typedef struct Header
   uint32_t reserved1 : 24;
   uint32_t sequenceNumber : 16;
   uint32_t crc : 16;
-} Header;
+} OpenHeader;
 
 typedef struct Command
 {
@@ -143,18 +146,6 @@ typedef struct ACKSession
   uint32_t res : 25;
   MMU_Tab* mmu;
 } ACKSession;
-
-/*! @brief Dispatch info
- *  @details This struct has booleans that get populated in the protocol layer
- *           and help the dispatcher in the Vehicle layer decide what to do
- *           with the received packet.
- */
-typedef struct DispatchInfo
-{
-  bool    isAck;
-  bool    isCallback;
-  uint8_t callbackID;
-} DispatchInfo;
 
 /*!
  * @brief Virtual RC Settings (supported only on Matrice 100)

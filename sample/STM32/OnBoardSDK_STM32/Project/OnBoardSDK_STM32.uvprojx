@@ -802,6 +802,16 @@
               <FileType>8</FileType>
               <FilePath>..\..\..\..\osdk-core\hal\src\dji_log.cpp</FilePath>
             </File>
+            <File>
+              <FileName>dji_protocol_base.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\osdk-core\protocol\src\dji_protocol_base.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>dji_platform_manager.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\osdk-core\hal\src\dji_platform_manager.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

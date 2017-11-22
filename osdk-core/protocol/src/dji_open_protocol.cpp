@@ -9,6 +9,7 @@
  *
  */
 #include "dji_open_protocol.hpp"
+#include <dji_vehicle.hpp>
 
 #ifdef STM32
 #include <stdio.h>
@@ -18,71 +19,53 @@ using namespace DJI;
 using namespace DJI::OSDK;
 
 //! Constructor
-Protocol::Protocol(const char* device, uint32_t baudrate)
+OpenProtocol::OpenProtocol(PlatformManager* platformManager_ptr,
+                           const char* device, uint32_t baudrate)
 {
-//! Step 1: Initialize Hardware Driver
-
-//! Step 1.1: Instantiate a hardware driver as per OS
-#ifdef QT
-  QThread* serialEventThread = new QThread;
-  QHardDriver* driver = new QHardDriver(0, device, baudrate);
-  driver->moveToThread(serialEventThread);
-  QObject::connect(serialEventThread, SIGNAL(started()), driver, SLOT(init()));
-  QObject::connect(driver, SIGNAL (finished()), driver, SLOT (deleteLater()));
-
-  QObject::connect(serialEventThread, SIGNAL (finished()), serialEventThread, SLOT (deleteLater()));
-  serialEventThread->start();
-  QThread::msleep(100);
-  this->serialDevice = driver;
-  this->threadHandle = new QThreadManager();
-//! Add correct Qt serial device constructor here
-#elif STM32
-  this->serialDevice = new STM32F4;
-  this->threadHandle = new STM32F4DataGuard;
-#elif defined(__linux__)
-  this->serialDevice = new LinuxSerialDevice(device, baudrate);
-  this->threadHandle = new PosixThreadManager();
-#endif
+  //! Step 1: Initialize Hardware Driver
+  this->deviceDriver = platformManager_ptr->addHardDriver(
+    PlatformManager::SERIAL_DEVICE, device, baudrate);
+  this->threadHandle = platformManager_ptr->addThreadHandle();
 
   //! Step 1.2: Initialize the hardware driver
-#ifndef QT
-  this->serialDevice->init();
-#endif
+  this->deviceDriver->init();
   this->threadHandle->init();
 
-  //! Step 2: Initialize the ProtocolLayer
-  init(this->serialDevice, this->serialDevice->getMmu());
+  this->setHeaderLength(sizeof(OpenHeader));
+
+  this->setMaxRecvLength(BUFFER_SIZE);
+
+  //! Step 2: Initialize the Protocol
+  init(this->deviceDriver, this->deviceDriver->getMmu());
 }
 
-/***************************Init*******************************************/
+OpenProtocol::~OpenProtocol()
+{
+  delete p_filter->recvBuf;
+}
+
+/******************* Init ******************************/
 void
-Protocol::init(HardDriver* sDevice, MMU* mmuPtr, bool userCallbackThread)
+OpenProtocol::init(HardDriver* sDevice, MMU* mmuPtr, bool userCallbackThread)
 {
 
-  serialDevice = sDevice;
+  deviceDriver = sDevice;
+
+  p_recvContainer = new RecvContainer();
 
   seq_num              = 0;
   ackFrameStatus       = 11;
   broadcastFrameStatus = false;
 
-  filter.recvIndex  = 0;
-  filter.reuseCount = 0;
-  filter.reuseIndex = 0;
-  filter.encode     = 0;
+  p_filter             = new SDKFilter();
+  p_filter->recvIndex  = 0;
+  p_filter->reuseCount = 0;
+  p_filter->reuseIndex = 0;
+  p_filter->encode     = 0;
+  p_filter->recvBuf    = new uint8_t[MAX_RECV_LEN];
 
-  /* Still up for discussion: Is this mechanism useful?
-  recvCallback.callback = userRecvCallback.callback;
-  recvCallback.userData = userRecvCallback.userData;
-  */
-
-  /* Callback thread: come back to this later. We probably need to move this to
-  a higher layer.
-
-  callbackThread = false;
-  callbackThread = userCallbackThread;  //! @todo implement
-
-  nonBlockingCBThreadEnable = false;
-  */
+  buf             = new uint8_t[BUFFER_SIZE];
+  encodeSendData  = new uint8_t[BUFFER_SIZE];
 
   mmu          = mmuPtr;
   buf_read_pos = 0;
@@ -91,18 +74,17 @@ Protocol::init(HardDriver* sDevice, MMU* mmuPtr, bool userCallbackThread)
   setup();
 }
 
-/*********************************Session &
- * memory******************************/
+/******************* Session memory **************************/
 
 void
-Protocol::setup()
+OpenProtocol::setup()
 {
   mmu->setupMMU();
   setupSession();
 }
 
 void
-Protocol::setupSession()
+OpenProtocol::setupSession()
 {
   uint32_t i;
   for (i = 0; i < SESSION_TABLE_NUM; i++)
@@ -121,7 +103,7 @@ Protocol::setupSession()
 }
 
 CMDSession*
-Protocol::allocSession(uint16_t session_id, uint16_t size)
+OpenProtocol::allocSession(uint16_t session_id, uint16_t size)
 {
   uint32_t i;
   DDEBUG("Allocation size %d", size);
@@ -160,7 +142,7 @@ Protocol::allocSession(uint16_t session_id, uint16_t size)
 }
 
 void
-Protocol::freeSession(CMDSession* session)
+OpenProtocol::freeSession(CMDSession* session)
 {
   if (session->usageFlag == 1)
   {
@@ -171,7 +153,7 @@ Protocol::freeSession(CMDSession* session)
 }
 
 ACKSession*
-Protocol::allocACK(uint16_t session_id, uint16_t size)
+OpenProtocol::allocACK(uint16_t session_id, uint16_t size)
 {
   MMU_Tab* memoryTab = NULL;
   if (session_id > 0 && session_id < 32)
@@ -195,49 +177,17 @@ Protocol::allocACK(uint16_t session_id, uint16_t size)
 }
 
 void
-Protocol::freeACK(ACKSession* session)
+OpenProtocol::freeACK(ACKSession* session)
 {
   mmu->freeMemory(session->mmu);
 }
 
-/*********************************Send
- * Pipeline**********************************/
+/******************** Send Pipeline **********************/
 
-//! v1: no handler? This definition seems weird.
-/*
-void Protocol::send(uint8_t session, uint8_t is_enc,
-DJI_CONTROLLER_CMD cmdSet,
-                         uint8_t cmdID, void *pdata, int len,
-                         bool isCallback, int callbackID, int timeout, int
-retry) {
-  Command cmdContainer;
-  uint8_t *ptemp = (uint8_t *)encodeSendData;
-  *ptemp++             = cmdSet;
-  *ptemp++             = cmdID;
-
-  memcpy(encodeSendData + SET_CMD_SIZE, pdata, len);
-
-  //@todo Replace with a bool
-  //cmdContainer.handler     = ackCallback;
-  cmdContainer.sessionMode = session;
-  cmdContainer.length      = len + SET_CMD_SIZE;
-  cmdContainer.buf         = encodeSendData;
-  cmdContainer.retry       = retry;
-
-  cmdContainer.timeout = timeout;
-  cmdContainer.encrypt = is_enc;
-
-  //@todo This will go away too.
-  cmdContainer.userData = 0;
-
-  sendInterface(&cmdContainer);
-}
-*/
-//! v2 : This is more complete
 void
-Protocol::send(uint8_t session_mode, bool is_enc, const uint8_t cmd[],
-               void* pdata, size_t len, int timeout, int retry_time,
-               bool hasCallback, int callbackID)
+OpenProtocol::send(uint8_t session_mode, bool is_enc, const uint8_t cmd[],
+                   void* pdata, size_t len, int timeout, int retry_time,
+                   bool hasCallback, int callbackID)
 {
   Command  cmdContainer;
   uint8_t* ptemp = (uint8_t*)encodeSendData;
@@ -260,21 +210,21 @@ Protocol::send(uint8_t session_mode, bool is_enc, const uint8_t cmd[],
   cmdContainer.isCallback = hasCallback;
   cmdContainer.callbackID = callbackID;
 
-  sendInterface(&cmdContainer);
+  sendInterface((void*)&cmdContainer);
 }
 
-//! v3: Minimal
 void
-Protocol::send(Command* cmdContainer)
+OpenProtocol::send(Command* cmdContainer)
 {
-  sendInterface(cmdContainer);
+  sendInterface((void*)cmdContainer);
 }
 
 int
-Protocol::sendInterface(Command* cmdContainer)
+OpenProtocol::sendInterface(void* cmd_container)
 {
-  uint16_t    ret        = 0;
-  CMDSession* cmdSession = (CMDSession*)NULL;
+  uint16_t    ret          = 0;
+  CMDSession* cmdSession   = (CMDSession*)NULL;
+  Command*    cmdContainer = (Command*)cmd_container;
   if (cmdContainer->length > PRO_PURE_DATA_MAX_SIZE)
   {
     DERROR("ERROR,length=%lu is over-sized\n", cmdContainer->length);
@@ -289,14 +239,14 @@ Protocol::sendInterface(Command* cmdContainer)
   {
     case 0:
       //! No ACK required and no retries
-      threadHandle->lockMemory();
+      threadHandle->lockRecvContainer();
       cmdSession =
         allocSession(CMD_SESSION_0, calculateLength(cmdContainer->length,
                                                     cmdContainer->encrypt));
 
       if (cmdSession == (CMDSession*)NULL)
       {
-        threadHandle->freeMemory();
+        threadHandle->freeRecvContainer();
         DERROR("ERROR,there is not enough memory\n");
         return -1;
       }
@@ -308,7 +258,7 @@ Protocol::sendInterface(Command* cmdContainer)
       {
         DERROR("encrypt ERROR\n");
         freeSession(cmdSession);
-        threadHandle->freeMemory();
+        threadHandle->freeRecvContainer();
         return -1;
       }
 
@@ -318,18 +268,18 @@ Protocol::sendInterface(Command* cmdContainer)
       sendData(cmdSession->mmu->pmem);
       seq_num++;
       freeSession(cmdSession);
-      threadHandle->freeMemory();
+      threadHandle->freeRecvContainer();
       break;
 
     case 1:
       //! ACK required; Session 1; will retry until failure
-      threadHandle->lockMemory();
+      threadHandle->lockRecvContainer();
       cmdSession =
         allocSession(CMD_SESSION_1, calculateLength(cmdContainer->length,
                                                     cmdContainer->encrypt));
       if (cmdSession == (CMDSession*)NULL)
       {
-        threadHandle->freeMemory();
+        threadHandle->freeRecvContainer();
         DERROR("ERROR,there is not enough memory\n");
         return -1;
       }
@@ -344,7 +294,7 @@ Protocol::sendInterface(Command* cmdContainer)
       {
         DERROR("encrypt ERROR\n");
         freeSession(cmdSession);
-        threadHandle->freeMemory();
+        threadHandle->freeRecvContainer();
         return -1;
       }
       cmdSession->preSeqNum = seq_num++;
@@ -354,23 +304,23 @@ Protocol::sendInterface(Command* cmdContainer)
       cmdSession->callbackID = cmdContainer->callbackID;
       cmdSession->timeout =
         (cmdContainer->timeout > POLL_TICK) ? cmdContainer->timeout : POLL_TICK;
-      cmdSession->preTimestamp = serialDevice->getTimeStamp();
+      cmdSession->preTimestamp = deviceDriver->getTimeStamp();
       cmdSession->sent         = 1;
       cmdSession->retry        = 1;
       DDEBUG("sending session %d\n", cmdSession->sessionID);
       sendData(cmdSession->mmu->pmem);
-      threadHandle->freeMemory();
+      threadHandle->freeRecvContainer();
       break;
 
     case 2:
       //! ACK required, Sessions 2 - END; no guarantees and no retries.
-      threadHandle->lockMemory();
+      threadHandle->lockRecvContainer();
       cmdSession =
         allocSession(CMD_SESSION_AUTO, calculateLength(cmdContainer->length,
                                                        cmdContainer->encrypt));
       if (cmdSession == (CMDSession*)NULL)
       {
-        threadHandle->freeMemory();
+        threadHandle->freeRecvContainer();
         DERROR("ERROR,there is not enough memory\n");
         return -1;
       }
@@ -386,7 +336,7 @@ Protocol::sendInterface(Command* cmdContainer)
       {
         DERROR("encrypt ERROR");
         freeSession(cmdSession);
-        threadHandle->freeMemory();
+        threadHandle->freeRecvContainer();
         return -1;
       }
 
@@ -402,12 +352,12 @@ Protocol::sendInterface(Command* cmdContainer)
       cmdSession->callbackID = cmdContainer->callbackID;
       cmdSession->timeout =
         (cmdContainer->timeout > POLL_TICK) ? cmdContainer->timeout : POLL_TICK;
-      cmdSession->preTimestamp = serialDevice->getTimeStamp();
+      cmdSession->preTimestamp = deviceDriver->getTimeStamp();
       cmdSession->sent         = 1;
       cmdSession->retry        = cmdContainer->retry;
       DDEBUG("Sending session %d\n", cmdSession->sessionID);
       sendData(cmdSession->mmu->pmem);
-      threadHandle->freeMemory();
+      threadHandle->freeRecvContainer();
       break;
     default:
       DERROR("Unknown mode:%d\n", cmdContainer->sessionMode);
@@ -416,28 +366,39 @@ Protocol::sendInterface(Command* cmdContainer)
   return 0;
 }
 
-void
-Protocol::sendData(uint8_t* buf)
+int
+OpenProtocol::sendData(uint8_t* buf)
 {
-  size_t  ans;
-  Header* pHeader = (Header*)buf;
+  size_t      ans;
+  OpenHeader* pHeader = (OpenHeader*)buf;
 
 #ifdef API_TRACE_DATA
   printFrame(serialDevice, pHeader, true);
 #endif
 
   //! Serial Device call: last link in the send pipeline
-  ans = serialDevice->send(buf, pHeader->length);
+  ans = deviceDriver->send(buf, pHeader->length);
   if (ans == 0)
     DSTATUS("Port did not send");
   if (ans == (size_t)-1)
     DERROR("Port closed");
+
+  if (ans != pHeader->length)
+  {
+    DERROR("Open Protocol cmd send failed, send_len: %d packet_len: %d\n", ans,
+           pHeader->length);
+  }
+  else
+  {
+    DDEBUG("Open Protocol cmd send success\n");
+  }
+
+  return (int)ans;
 }
 
 //! Session management for the send pipeline: Poll
-
 void
-Protocol::sendPoll()
+OpenProtocol::sendPoll()
 {
   uint8_t i;
   time_ms curTimestamp;
@@ -445,11 +406,11 @@ Protocol::sendPoll()
   {
     if (CMDSessionTab[i].usageFlag == 1)
     {
-      curTimestamp = serialDevice->getTimeStamp();
+      curTimestamp = deviceDriver->getTimeStamp();
       if ((curTimestamp - CMDSessionTab[i].preTimestamp) >
           CMDSessionTab[i].timeout)
       {
-        threadHandle->lockMemory();
+        threadHandle->lockRecvContainer();
         if (CMDSessionTab[i].retry > 0)
         {
           if (CMDSessionTab[i].sent >= CMDSessionTab[i].retry)
@@ -472,7 +433,7 @@ Protocol::sendPoll()
           sendData(CMDSessionTab[i].mmu->pmem);
           CMDSessionTab[i].preTimestamp = curTimestamp;
         }
-        threadHandle->freeMemory();
+        threadHandle->freeRecvContainer();
       }
       else
       {
@@ -483,293 +444,156 @@ Protocol::sendPoll()
   //! @note Add auto resendpoll
 }
 
-/*******************************Receive
- * Pipeline*************************************/
-
-//! Step 0: Call this in a loop.
-RecvContainer
-Protocol::receive()
-{
-  //! Create a local container that will be used for storing data lower down in
-  //! the stack
-  RecvContainer receiveFrame;
-  receiveFrame.recvInfo.cmd_id = 0xFF;
-
-  //! Run the readPoll until you get a true
-  // @todo might need to modify to include thread stopCond
-  while (!readPoll(&receiveFrame));
-  //! When we receive a true, return a copy of container to the caller: this is
-  //! the 'receive' interface
-
-  return receiveFrame;
-}
-
-//! Step 1
-bool
-Protocol::readPoll(RecvContainer* allocatedFramePtr)
-{
-  //! Bool to check if the protocol parser has finished a full frame
-  bool isFrame = false;
-
-  //! Step 1: Check if the buffer has been consumed
-  if (buf_read_pos >= read_len)
-  {
-
-    this->buf_read_pos = 0;
-    this->read_len     = serialDevice->readall(this->buf, BUFFER_SIZE);
-  }
-
-#ifdef API_BUFFER_DATA
-  onceRead = read_len;
-  totalRead += onceRead;
-#endif // API_BUFFER_DATA
-
-  //! Step 2: Go through the buffer and return when you see a full frame.
-  //! buf_read_pos will maintain state about how much buffer data we have
-  //! already read
-  for (this->buf_read_pos; this->buf_read_pos < this->read_len;
-       this->buf_read_pos++)
-  {
-    isFrame = byteHandler(buf[this->buf_read_pos], allocatedFramePtr);
-    if (isFrame)
-    {
-      return isFrame;
-    }
-  }
-
-  //! Step 3: If we don't find a full frame by this time, return false.
-  //! The receive function calls readPoll in a loop, so if it returns false
-  //! it'll just be called again
-  return isFrame;
-}
-
-//! Step 2
-bool
-Protocol::byteHandler(const uint8_t in_data, RecvContainer* allocatedFramePtr)
-{
-  filter.reuseCount = 0;
-  filter.reuseIndex = Protocol::maxRecv;
-
-  RecvContainer* recvDataPtr;
-  //! Bool to check if the protocol parser has finished a full frame
-  bool isFrame = streamHandler(&filter, in_data, allocatedFramePtr);
-
-  /*! @note Just think a command as below
-    *
-    * [123456HHD1234567===HHHH------------------] --- is buf un-used part
-    *
-    * if after recv full of above, but crc failed, we throw all data?
-    * NO!
-    * Just throw ONE BYTE, we move like below
-    *
-    * [123456HH------------------D1234567===HHHH]
-    *
-    * Use the buffer high part to re-loop, try to find a new command
-    *
-    * if new cmd also fail, and buf like below
-    *
-    * [56HHD1234567----------------------===HHHH]
-    *
-    * throw one byte, buf looks like
-    *
-    * [6HHD123-----------------------4567===HHHH]
-    *
-    * the command tail part move to buffer right
-    * */
-  if (filter.reuseCount != 0)
-  {
-    while (filter.reuseIndex < Protocol::maxRecv)
-    {
-      /*! @note because reuse_index maybe re-located, so reuse_index must
-       * be
-       *  always point to un-used index
-       *  re-loop the buffered data
-       *  */
-      isFrame = streamHandler(&filter, filter.recvBuf[filter.reuseIndex++],
-                              allocatedFramePtr);
-    }
-    filter.reuseCount = 0;
-  }
-  return isFrame;
-}
-
-//! Step 3
-bool
-Protocol::streamHandler(SDKFilter* p_filter, uint8_t in_data,
-                        RecvContainer* allocatedRecvObject)
-{
-  storeData(p_filter, in_data);
-  //! Bool to check if the protocol parser has finished a full frame
-  bool isFrame = checkStream(p_filter, allocatedRecvObject);
-  return isFrame;
-}
-
-//! Step 4
-//! @note push data to filter buffer.
-//! SDKFilter is just a buffer.
-void
-Protocol::storeData(SDKFilter* p_filter, uint8_t in_data)
-{
-  if (p_filter->recvIndex < Protocol::maxRecv)
-  {
-    p_filter->recvBuf[p_filter->recvIndex] = in_data;
-    p_filter->recvIndex++;
-  }
-  else
-  {
-    DERROR("buffer overflow");
-    memset(p_filter->recvBuf, 0, p_filter->recvIndex);
-    p_filter->recvIndex = 0;
-  }
-}
+/******************** Receive Pipeline **********************/
+//! step 0 - 4 are in base class
 
 //! Step 5
 bool
-Protocol::checkStream(SDKFilter* p_filter, RecvContainer* allocatedRecvObject)
+OpenProtocol::checkStream()
 {
-  Header* p_head = (Header*)(p_filter->recvBuf);
+  OpenHeader* p_head = (OpenHeader*)(p_filter->recvBuf);
   //! Bool to check if the protocol parser has finished a full frame
   bool isFrame = false;
-  if (p_filter->recvIndex < sizeof(Header))
+  if (p_filter->recvIndex < sizeof(OpenHeader))
   {
     // Continue receive data, nothing to do
     return false;
   }
-  else if (p_filter->recvIndex == sizeof(Header))
+  else if (p_filter->recvIndex == sizeof(OpenHeader))
   {
     // recv a full-head
-    isFrame = verifyHead(p_filter, allocatedRecvObject);
+    isFrame = verifyHead();
   }
   else if (p_filter->recvIndex == p_head->length)
   {
-    isFrame = verifyData(p_filter, allocatedRecvObject);
+    isFrame = verifyData();
   }
   return isFrame;
 }
 
 //! Step 6
 bool
-Protocol::verifyHead(SDKFilter* p_filter, RecvContainer* allocatedRecvObject)
+OpenProtocol::verifyHead()
 {
-  Header* p_head = (Header*)(p_filter->recvBuf);
+  OpenHeader* p_head = (OpenHeader*)(p_filter->recvBuf);
+
   //! Bool to check if the protocol parser has finished a full frame
   bool isFrame = false;
 
-  if ((p_head->sof == Protocol::SOF) && (p_head->version == 0) &&
-      (p_head->length < Protocol::maxRecv) && (p_head->reserved0 == 0) &&
-      (p_head->reserved1 == 0) &&
-      (_SDK_CALC_CRC_HEAD(p_head, sizeof(Header)) == 0))
+  if ((p_head->sof == OpenProtocol::SOF) && (p_head->version == 0) &&
+      (p_head->length < OpenProtocol::MAX_RECV_LEN) &&
+      (p_head->reserved0 == 0) && (p_head->reserved1 == 0) &&
+      (crcHeadCheck((uint8_t*)p_head, sizeof(OpenHeader)) == 0))
   {
     // check if this head is a ack or simple package
-    if (p_head->length == sizeof(Header))
+    if (p_head->length == sizeof(OpenHeader))
     {
-      isFrame = callApp(p_filter, allocatedRecvObject);
+      isFrame = callApp();
     }
   }
   else
   {
-    sdk_stream_shift_data_lambda(p_filter);
+    shiftDataStream();
   }
   return isFrame;
 }
 
 //! Step 7
 bool
-Protocol::verifyData(SDKFilter* p_filter, RecvContainer* allocatedRecvObject)
+OpenProtocol::verifyData()
 {
-  Header* p_head = (Header*)(p_filter->recvBuf);
+  OpenHeader* p_head = (OpenHeader*)(p_filter->recvBuf);
 
   //! Bool to check if the protocol parser has finished a full frame
   bool isFrame = false;
 
-  if (_SDK_CALC_CRC_TAIL(p_head, p_head->length) == 0)
+  if (crcTailCheck((uint8_t*)p_head, p_head->length) == 0)
   {
-    isFrame = callApp(p_filter, allocatedRecvObject);
+    isFrame = callApp();
   }
   else
   {
     //! @note data crc fail, re-use the data part
-    sdk_stream_update_reuse_part_lambda(p_filter);
+    reuseDataStream();
   }
   return isFrame;
 }
 
 //! Step 8
 bool
-Protocol::callApp(SDKFilter* p_filter, RecvContainer* allocatedRecvObject)
+OpenProtocol::callApp()
 {
   // pass current data to handler
-  Header* p_head = (Header*)p_filter->recvBuf;
+  OpenHeader* p_head = (OpenHeader*)p_filter->recvBuf;
 
-  encodeData(p_filter, p_head, aes256_decrypt_ecb);
-  bool isFrame = appHandler((Header*)p_filter->recvBuf, allocatedRecvObject);
-  sdk_stream_prepare_lambda(p_filter);
+  encodeData(p_head, aes256_decrypt_ecb);
+  bool isFrame = appHandler((OpenHeader*)p_filter->recvBuf);
+  prepareDataStream();
 
   return isFrame;
 }
 
 //! Step 9
 bool
-Protocol::appHandler(Header* protocolHeader, RecvContainer* allocatedRecvObject)
+OpenProtocol::appHandler(void* protocolHeader)
 {
 //! @todo Filter replacement
 #ifdef API_TRACE_DATA
-  printFrame(serialDevice, protocolHeader, false);
+  printFrame(serialDevice, openHeader, false);
 #endif
 
-  Header* p2protocolHeader;
+  OpenHeader* p2protocolHeader;
+  OpenHeader* openHeader = (OpenHeader*)protocolHeader;
   //! Bool to check if the protocol parser has finished a full frame
   bool isFrame = false;
 
-  if (protocolHeader->isAck == 1)
+  if (openHeader->isAck == 1)
   {
     //! Case 0: This is an ACK frame that came in.
-    if (protocolHeader->sessionID > 1 && protocolHeader->sessionID < 32)
+    if (openHeader->sessionID > 1 && openHeader->sessionID < 32)
     {
       //! Session is valid
-      if (CMDSessionTab[protocolHeader->sessionID].usageFlag == 1)
+      if (CMDSessionTab[openHeader->sessionID].usageFlag == 1)
       {
         //! Session in use
-        threadHandle->lockMemory();
+        threadHandle->lockRecvContainer();
         p2protocolHeader =
-          (Header*)CMDSessionTab[protocolHeader->sessionID].mmu->pmem;
-        if (p2protocolHeader->sessionID == protocolHeader->sessionID &&
-            p2protocolHeader->sequenceNumber == protocolHeader->sequenceNumber)
+          (OpenHeader*)CMDSessionTab[openHeader->sessionID].mmu->pmem;
+        if (p2protocolHeader->sessionID == openHeader->sessionID &&
+            p2protocolHeader->sequenceNumber == openHeader->sequenceNumber)
         {
           DDEBUG("Recv Session %d ACK\n", p2protocolHeader->sessionID);
 
           //! Create receive container for error code management
-          allocatedRecvObject->dispatchInfo.isAck = true;
-          allocatedRecvObject->recvInfo.cmd_set =
-            CMDSessionTab[protocolHeader->sessionID].cmd_set;
-          allocatedRecvObject->recvInfo.cmd_id =
-            CMDSessionTab[protocolHeader->sessionID].cmd_id;
-          allocatedRecvObject->recvData = allocateACK(protocolHeader);
-          allocatedRecvObject->dispatchInfo.isCallback =
-            CMDSessionTab[protocolHeader->sessionID].isCallback;
-          allocatedRecvObject->dispatchInfo.callbackID =
-            CMDSessionTab[protocolHeader->sessionID].callbackID;
-          allocatedRecvObject->recvInfo.buf =
-            CMDSessionTab[protocolHeader->sessionID].buf;
-          allocatedRecvObject->recvInfo.seqNumber =
-            protocolHeader->sequenceNumber;
-          allocatedRecvObject->recvInfo.len = protocolHeader->length;
+          p_recvContainer->dispatchInfo.isAck = true;
+          p_recvContainer->recvInfo.cmd_set =
+            CMDSessionTab[openHeader->sessionID].cmd_set;
+          p_recvContainer->recvInfo.cmd_id =
+            CMDSessionTab[openHeader->sessionID].cmd_id;
+          p_recvContainer->recvData = allocateACK(openHeader);
+          p_recvContainer->dispatchInfo.isCallback =
+            CMDSessionTab[openHeader->sessionID].isCallback;
+          p_recvContainer->dispatchInfo.callbackID =
+            CMDSessionTab[openHeader->sessionID].callbackID;
+          p_recvContainer->recvInfo.buf =
+            CMDSessionTab[openHeader->sessionID].buf;
+          p_recvContainer->recvInfo.seqNumber = openHeader->sequenceNumber;
+          p_recvContainer->recvInfo.len       = openHeader->length;
           //! Set bool
           isFrame = true;
 
           //! Finish the session
-          freeSession(&CMDSessionTab[protocolHeader->sessionID]);
-          threadHandle->freeMemory();
+          freeSession(&CMDSessionTab[openHeader->sessionID]);
+          threadHandle->freeRecvContainer();
           /**
            * Set end of ACK frame
            * @todo Implement proper notification mechanism
            */
-          setACKFrameStatus(
-            (&CMDSessionTab[protocolHeader->sessionID])->usageFlag);
+          setACKFrameStatus((&CMDSessionTab[openHeader->sessionID])->usageFlag);
         }
         else
         {
-          threadHandle->freeMemory();
+          threadHandle->freeRecvContainer();
         }
       }
     }
@@ -777,10 +601,10 @@ Protocol::appHandler(Header* protocolHeader, RecvContainer* allocatedRecvObject)
   else
   {
     //! Not an ACK frame
-    switch (protocolHeader->sessionID)
+    switch (openHeader->sessionID)
     {
       case 0:
-        isFrame = recvReqData(protocolHeader, allocatedRecvObject);
+        isFrame = recvReqData(openHeader);
         break;
       case 1:
       //! @todo unnecessary ack in case 1. Maybe add code later
@@ -788,48 +612,47 @@ Protocol::appHandler(Header* protocolHeader, RecvContainer* allocatedRecvObject)
       //! @attention here real have a bug about self-looping issue.
       //! @bug not affect OSDK currerently. 2017-1-18
       default: //! @note session id is 2
-        DSTATUS("ACK %d", protocolHeader->sessionID);
+        DSTATUS("ACK %d", openHeader->sessionID);
 
-        if (ACKSessionTab[protocolHeader->sessionID - 1].sessionStatus ==
+        if (ACKSessionTab[openHeader->sessionID - 1].sessionStatus ==
             ACK_SESSION_PROCESS)
         {
           DDEBUG("This session is waiting for App ACK:"
                  "session id=%d,seq_num=%d\n",
-                 protocolHeader->sessionID, protocolHeader->sequenceNumber);
+                 openHeader->sessionID, openHeader->sequenceNumber);
         }
-        else if (ACKSessionTab[protocolHeader->sessionID - 1].sessionStatus ==
+        else if (ACKSessionTab[openHeader->sessionID - 1].sessionStatus ==
                  ACK_SESSION_IDLE)
         {
-          if (protocolHeader->sessionID > 1)
-            ACKSessionTab[protocolHeader->sessionID - 1].sessionStatus =
+          if (openHeader->sessionID > 1)
+            ACKSessionTab[openHeader->sessionID - 1].sessionStatus =
               ACK_SESSION_PROCESS;
-          isFrame = recvReqData(protocolHeader, allocatedRecvObject);
+          isFrame = recvReqData(openHeader);
         }
-        else if (ACKSessionTab[protocolHeader->sessionID - 1].sessionStatus ==
+        else if (ACKSessionTab[openHeader->sessionID - 1].sessionStatus ==
                  ACK_SESSION_USING)
         {
-          threadHandle->lockMemory();
+          threadHandle->lockRecvContainer();
           p2protocolHeader =
-            (Header*)ACKSessionTab[protocolHeader->sessionID - 1].mmu->pmem;
-          if (p2protocolHeader->sequenceNumber ==
-              protocolHeader->sequenceNumber)
+            (OpenHeader*)ACKSessionTab[openHeader->sessionID - 1].mmu->pmem;
+          if (p2protocolHeader->sequenceNumber == openHeader->sequenceNumber)
           {
             DDEBUG("Repeat ACK to remote,session "
                    "id=%d,seq_num=%d\n",
-                   protocolHeader->sessionID, protocolHeader->sequenceNumber);
-            sendData(ACKSessionTab[protocolHeader->sessionID - 1].mmu->pmem);
-            threadHandle->freeMemory();
+                   openHeader->sessionID, openHeader->sequenceNumber);
+            sendData(ACKSessionTab[openHeader->sessionID - 1].mmu->pmem);
+            threadHandle->freeRecvContainer();
           }
           else
           {
             DDEBUG("Same session,but new seq_num pkg,session id=%d,"
                    "pre seq_num=%d,cur seq_num=%d\n",
-                   protocolHeader->sessionID, p2protocolHeader->sequenceNumber,
-                   protocolHeader->sequenceNumber);
-            ACKSessionTab[protocolHeader->sessionID - 1].sessionStatus =
+                   openHeader->sessionID, p2protocolHeader->sequenceNumber,
+                   openHeader->sequenceNumber);
+            ACKSessionTab[openHeader->sessionID - 1].sessionStatus =
               ACK_SESSION_PROCESS;
-            threadHandle->freeMemory();
-            isFrame = recvReqData(protocolHeader, allocatedRecvObject);
+            threadHandle->freeRecvContainer();
+            isFrame = recvReqData(openHeader);
           }
         }
         break;
@@ -839,15 +662,16 @@ Protocol::appHandler(Header* protocolHeader, RecvContainer* allocatedRecvObject)
 }
 
 ACK::TypeUnion
-Protocol::allocateACK(Header* protocolHeader)
+OpenProtocol::allocateACK(OpenHeader* protocolHeader)
 {
 
   ACK::TypeUnion recvData;
 
   if (protocolHeader->length <= MAX_ACK_SIZE)
   {
-    memcpy(recvData.raw_ack_array, ((uint8_t*)protocolHeader) + sizeof(Header),
-           (protocolHeader->length - Protocol::PackageMin));
+    memcpy(recvData.raw_ack_array,
+           ((uint8_t*)protocolHeader) + sizeof(OpenHeader),
+           (protocolHeader->length - OpenProtocol::PackageMin));
   }
   else
   {
@@ -859,68 +683,67 @@ Protocol::allocateACK(Header* protocolHeader)
 }
 
 void
-Protocol::setACKFrameStatus(uint32_t usageFlag)
+OpenProtocol::setACKFrameStatus(uint32_t usageFlag)
 {
   ackFrameStatus = usageFlag;
 }
 
-/********************************Receive CMD
- * Functions***********************************/
+/***************** Receive CMD functions *******************/
 
 uint8_t
-Protocol::getCmdSet(Header* protocolHeader)
+OpenProtocol::getCmdSet(OpenHeader* protocolHeader)
 {
-  uint8_t* ptemp = ((uint8_t*)protocolHeader) + sizeof(Header);
+  uint8_t* ptemp = ((uint8_t*)protocolHeader) + sizeof(OpenHeader);
   return *ptemp;
 }
 
 uint8_t
-Protocol::getCmdCode(Header* protocolHeader)
+OpenProtocol::getCmdCode(OpenHeader* protocolHeader)
 {
-  uint8_t* ptemp = ((uint8_t*)protocolHeader) + sizeof(Header);
+  uint8_t* ptemp = ((uint8_t*)protocolHeader) + sizeof(OpenHeader);
   ptemp++;
   return *ptemp;
 }
 
 //! Step 10: In case we received a CMD frame and not an ACK frame
 bool
-Protocol::recvReqData(Header*        protocolHeader,
-                      RecvContainer* allocatedRecvObject)
+OpenProtocol::recvReqData(OpenHeader* protocolHeader)
 {
   uint8_t buf[100] = { 0, 0 };
 
   //@todo: Please monitor lengths to see whether we need to change the max size
   // of RecvContainer.recvData
-  allocatedRecvObject->dispatchInfo.isAck = false;
-  uint8_t* payload = (uint8_t*)protocolHeader + sizeof(Header) + 2;
-  allocatedRecvObject->recvInfo.cmd_set = getCmdSet(protocolHeader);
-  allocatedRecvObject->recvInfo.cmd_id  = getCmdCode(protocolHeader);
-  allocatedRecvObject->recvInfo.len     = protocolHeader->length;
+  p_recvContainer->dispatchInfo.isAck = false;
+  uint8_t* payload = (uint8_t*)protocolHeader + sizeof(OpenHeader) + 2;
+  p_recvContainer->recvInfo.cmd_set = getCmdSet(protocolHeader);
+  p_recvContainer->recvInfo.cmd_id  = getCmdCode(protocolHeader);
+  p_recvContainer->recvInfo.len     = protocolHeader->length;
   //@todo: Please monitor to make sure the length is correct
-  memcpy(allocatedRecvObject->recvData.raw_ack_array, payload,
-         ((protocolHeader->length) - (Protocol::PackageMin + 2)));
-  allocatedRecvObject->dispatchInfo.isCallback = false;
-  allocatedRecvObject->dispatchInfo.callbackID = 0;
+  memcpy(p_recvContainer->recvData.raw_ack_array, payload,
+         (protocolHeader->length - (OpenProtocol::PackageMin + 2)));
+
+  p_recvContainer->dispatchInfo.isCallback = false;
+  p_recvContainer->dispatchInfo.callbackID = 0;
 
   //! isFrame = true
   return true;
 }
 
-/*******************************Utility
- * Functions************************************/
+/******************* Utility Functions *********************/
+
 uint16_t
-Protocol::calculateLength(uint16_t size, uint16_t encrypt_flag)
+OpenProtocol::calculateLength(uint16_t size, uint16_t encrypt_flag)
 {
   uint16_t len;
   if (encrypt_flag)
-    len = size + sizeof(Header) + 4 + (16 - size % 16);
+    len = size + sizeof(OpenHeader) + 4 + (16 - size % 16);
   else
-    len = size + sizeof(Header) + 4;
+    len = size + sizeof(OpenHeader) + 4;
   return len;
 }
 
 void
-Protocol::transformTwoByte(const char* pstr, uint8_t* pdata)
+OpenProtocol::transformTwoByte(const char* pstr, uint8_t* pdata)
 {
   int      i;
   char     temp_area[3];
@@ -937,37 +760,36 @@ Protocol::transformTwoByte(const char* pstr, uint8_t* pdata)
   }
 }
 
-/******************************CRC
- * Calculationns*************************************/
+/******************* CRC Calculationns *********************/
 
 void
-Protocol::calculateCRC(void* p_data)
+OpenProtocol::calculateCRC(void* p_data)
 {
-  Header*  p_head = (Header*)p_data;
-  uint8_t* p_byte = (uint8_t*)p_data;
-  uint32_t index_of_crc32;
+  OpenHeader* p_head = (OpenHeader*)p_data;
+  uint8_t*    p_byte = (uint8_t*)p_data;
+  uint32_t    index_of_crc32;
 
-  if (p_head->sof != Protocol::SOF)
+  if (p_head->sof != OpenProtocol::SOF)
     return;
   if (p_head->version != 0)
     return;
-  if (p_head->length > Protocol::maxRecv)
+  if (p_head->length > OpenProtocol::MAX_RECV_LEN)
     return;
-  if (p_head->length > sizeof(Header) && p_head->length < Protocol::PackageMin)
+  if (p_head->length > sizeof(OpenHeader) &&
+      p_head->length < OpenProtocol::PackageMin)
     return;
 
-  p_head->crc = sdk_stream_crc16_calc(p_byte, Protocol::CRCHeadLen);
+  p_head->crc = crc16Calc(p_byte, OpenProtocol::CRCHeadLen);
 
-  if (p_head->length >= Protocol::PackageMin)
+  if (p_head->length >= OpenProtocol::PackageMin)
   {
-    index_of_crc32 = p_head->length - Protocol::CRCData;
-    _SDK_U32_SET(p_byte + index_of_crc32,
-                 sdk_stream_crc32_calc(p_byte, index_of_crc32));
+    index_of_crc32 = p_head->length - OpenProtocol::CRCData;
+    _SDK_U32_SET(p_byte + index_of_crc32, crc32Calc(p_byte, index_of_crc32));
   }
 }
 
 uint16_t
-Protocol::crc16_update(uint16_t crc, uint8_t ch)
+OpenProtocol::crc16Update(uint16_t crc, uint8_t ch)
 {
   uint16_t tmp;
   uint16_t msg;
@@ -980,7 +802,7 @@ Protocol::crc16_update(uint16_t crc, uint8_t ch)
 }
 
 uint32_t
-Protocol::crc32_update(uint32_t crc, uint8_t ch)
+OpenProtocol::crc32Update(uint32_t crc, uint8_t ch)
 {
   uint32_t tmp;
   uint32_t msg;
@@ -992,104 +814,37 @@ Protocol::crc32_update(uint32_t crc, uint8_t ch)
 }
 
 uint16_t
-Protocol::sdk_stream_crc16_calc(const uint8_t* pMsg, size_t nLen)
+OpenProtocol::crc16Calc(const uint8_t* pMsg, size_t nLen)
 {
   size_t   i;
   uint16_t wCRC = CRC_INIT;
 
   for (i = 0; i < nLen; i++)
   {
-    wCRC = crc16_update(wCRC, pMsg[i]);
+    wCRC = crc16Update(wCRC, pMsg[i]);
   }
 
   return wCRC;
 }
 
 uint32_t
-Protocol::sdk_stream_crc32_calc(const uint8_t* pMsg, size_t nLen)
+OpenProtocol::crc32Calc(const uint8_t* pMsg, size_t nLen)
 {
   size_t   i;
   uint32_t wCRC = CRC_INIT;
 
   for (i = 0; i < nLen; i++)
   {
-    wCRC = crc32_update(wCRC, pMsg[i]);
+    wCRC = crc32Update(wCRC, pMsg[i]);
   }
 
   return wCRC;
 }
 
-void
-Protocol::sdk_stream_prepare_lambda(SDKFilter* p_filter)
-{
-  uint32_t bytes_to_move = sizeof(Header) - 1;
-  uint32_t index_of_move = p_filter->recvIndex - bytes_to_move;
-
-  memmove(p_filter->recvBuf, p_filter->recvBuf + index_of_move, bytes_to_move);
-  memset(p_filter->recvBuf + bytes_to_move, 0, index_of_move);
-  p_filter->recvIndex = bytes_to_move;
-}
+/******************* Encryption *********************/
 
 void
-Protocol::sdk_stream_shift_data_lambda(SDKFilter* p_filter)
-{
-  if (p_filter->recvIndex)
-  {
-    p_filter->recvIndex--;
-    if (p_filter->recvIndex)
-    {
-      memmove(p_filter->recvBuf, p_filter->recvBuf + 1, p_filter->recvIndex);
-    }
-  }
-}
-
-// this function will move the data part to buffer end,
-// head part will move left
-//
-//  1. there no re-use data
-//  |------------------------------------------| <= cache
-//                       ^
-//                       reuse_index
-//  [12345678][ data Part ]--------------------| 1. p_filter
-//  [12345678]---------------------[ data Part ] 2. move data to end
-//  [2345678]----------------------[ data Part ] 3. forward head
-//  [2345678]------------[ data need to re-use ] 4. final mem layout
-//
-//  2. already has re-use data
-//  |---------------------------------[rev data] <= cache
-//                  ^
-//                  reuse_index, the data already used
-//  [12345678][ data Part ]-----------[rev data] 1. p_filter
-//  [12345678]-----------[ data Part ][rev data] 2. move data to end
-//  [2345678]------------[ data Part ][rev data] 3. forward head
-//  [2345678]------------[ data need to re-use ] 4. final mem layout
-//
-// the re-use data will loop later
-
-void
-Protocol::sdk_stream_update_reuse_part_lambda(SDKFilter* p_filter)
-{
-  uint8_t* p_buf         = p_filter->recvBuf;
-  uint16_t bytes_to_move = p_filter->recvIndex - sizeof(Header);
-  uint8_t* p_src         = p_buf + sizeof(Header);
-
-  uint16_t n_dest_index = p_filter->reuseIndex - bytes_to_move;
-  uint8_t* p_dest       = p_buf + n_dest_index;
-
-  memmove(p_dest, p_src, bytes_to_move);
-
-  p_filter->recvIndex = sizeof(Header);
-  sdk_stream_shift_data_lambda(p_filter);
-
-  p_filter->reuseIndex = n_dest_index;
-  p_filter->reuseCount++;
-}
-
-/***********************************Encryption****************************************/
-
-void
-Protocol::encodeData(SDKFilter* p_filter, Header* p_head,
-                     ptr_aes256_codec codec_func)
+OpenProtocol::encodeData(OpenHeader* p_head, ptr_aes256_codec codec_func)
 {
   aes256_context ctx;
   uint32_t       buf_i;
@@ -1100,11 +855,12 @@ Protocol::encodeData(SDKFilter* p_filter, Header* p_head,
 
   if (p_head->enc == 0)
     return;
-  if (p_head->length <= Protocol::PackageMin)
+  if (p_head->length <= OpenProtocol::PackageMin)
     return;
 
-  data_ptr = (uint8_t*)p_head + sizeof(Header);
-  data_len = p_head->length - Protocol::PackageMin;
+  data_ptr = (uint8_t*)p_head + sizeof(OpenHeader);
+  data_len = p_head->length - OpenProtocol::PackageMin;
+
   loop_blk = data_len / 16;
   data_idx = 0;
 
@@ -1118,38 +874,43 @@ Protocol::encodeData(SDKFilter* p_filter, Header* p_head,
 
   if (codec_func == aes256_decrypt_ecb)
     p_head->length = p_head->length - p_head->padding; // minus padding length;
+
+  if(data_len == 32)
+  {
+    setRawFrame(data_ptr);
+  }
 }
 
 uint16_t
-Protocol::encrypt(uint8_t* pdest, const uint8_t* psrc, uint16_t w_len,
-                  uint8_t is_ack, uint8_t is_enc, uint8_t session_id,
-                  uint16_t seq_num)
+OpenProtocol::encrypt(uint8_t* pdest, const uint8_t* psrc, uint16_t w_len,
+                      uint8_t is_ack, uint8_t is_enc, uint8_t session_id,
+                      uint16_t seq_num)
 {
   uint16_t data_len;
 
-  Header* p_head = (Header*)pdest;
+  OpenHeader* p_head = (OpenHeader*)pdest;
 
   if (w_len > 1024)
     return 0;
 
-  if (filter.encode == 0 && is_enc)
+  if (p_filter->encode == 0 && is_enc)
   {
     DERROR("Can not send encode data, Please activate your device to get an "
            "available key.\n");
     return 0;
   }
   if (w_len == 0 || psrc == 0)
-    data_len = static_cast<uint16_t>(sizeof(Header));
+    data_len = static_cast<uint16_t>(sizeof(OpenHeader));
   else
     data_len =
-      static_cast<uint16_t>(sizeof(Header) + Protocol::CRCData + w_len);
+      static_cast<uint16_t>(sizeof(OpenHeader) + OpenProtocol::CRCData + w_len);
 
   if (is_enc)
     data_len = data_len + (16 - w_len % 16);
 
   DDEBUG("data len: %d\n", data_len);
 
-  p_head->sof       = Protocol::SOF;
+  p_head->sof       = OpenProtocol::SOF;
   p_head->length    = data_len;
   p_head->version   = 0;
   p_head->sessionID = session_id;
@@ -1164,44 +925,43 @@ Protocol::encrypt(uint8_t* pdest, const uint8_t* psrc, uint16_t w_len,
   p_head->crc            = 0;
 
   if (psrc && w_len)
-    memcpy(pdest + sizeof(Header), psrc, w_len);
-  encodeData(&filter, p_head, aes256_encrypt_ecb);
+    memcpy(pdest + sizeof(OpenHeader), psrc, w_len);
+  encodeData(p_head, aes256_encrypt_ecb);
 
   calculateCRC(pdest);
 
   return data_len;
 }
 
-/*********************************Getters/Setters***********************************/
+/******************* Filter *********************/
 
-HardDriver*
-Protocol::getDriver() const
-{
-  return this->serialDevice;
-}
-
-ThreadAbstract*
-Protocol::getThreadHandle() const
-{
-  return this->threadHandle;
-}
-
-int
-Protocol::getBufReadPos()
-{
-  return buf_read_pos;
-}
-
-int
-Protocol::getReadLen()
-{
-  return read_len;
-}
-
-/**********************************Filter*******************************************/
 void
-Protocol::setKey(const char* key)
+OpenProtocol::setKey(const char* key)
 {
-  transformTwoByte(key, filter.sdkKey);
-  filter.encode = 1;
+  transformTwoByte(key, p_filter->sdkKey);
+  p_filter->encode = 1;
+}
+
+int
+OpenProtocol::crcHeadCheck(uint8_t* pMsg, size_t nLen)
+{
+  return crc16Calc(pMsg, nLen);
+}
+
+int
+OpenProtocol::crcTailCheck(uint8_t* pMsg, size_t nLen)
+{
+  return crc32Calc(pMsg, nLen);
+}
+
+void
+OpenProtocol::setRawFrame(uint8_t* p_header)
+{
+  this->rawFrame = p_header;
+}
+
+uint8_t*
+OpenProtocol::getRawFrame()
+{
+  return this->rawFrame;
 }

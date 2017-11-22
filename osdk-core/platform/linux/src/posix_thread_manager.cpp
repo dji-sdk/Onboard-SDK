@@ -50,13 +50,13 @@ PosixThreadManager::init()
 }
 
 void
-PosixThreadManager::lockMemory()
+PosixThreadManager::lockRecvContainer()
 {
   pthread_mutex_lock(&m_memLock);
 }
 
 void
-PosixThreadManager::freeMemory()
+PosixThreadManager::freeRecvContainer()
 {
   pthread_mutex_unlock(&m_memLock);
 }

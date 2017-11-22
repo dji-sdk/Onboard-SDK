@@ -51,7 +51,7 @@ qtOsdk::refreshPort()
 
   if (ui->portSelection->currentText() != "Connect Serial")
   {
-    currentPort = ui->portSelection->currentText();
+   currentPort = ui->portSelection->currentText();
   }
 
   ui->portSelection->clear();
@@ -62,7 +62,7 @@ qtOsdk::refreshPort()
     list.append(ports[i].portName());
   }
   if (ports.length()== 0)
-    list.append("Connect Serial");
+      list.append("Connect Serial");
 
   ui->portSelection->addItems(list);
 
@@ -119,7 +119,7 @@ qtOsdk::activateCallback(Vehicle* vehicle, RecvContainer recvFrame,
 {
   qtOsdk*        sdk = (qtOsdk*)userData;
   ACK::ErrorCode ack_data;
-  if (recvFrame.recvInfo.len - Protocol::PackageMin <= 2)
+  if (recvFrame.recvInfo.len - OpenProtocol::PackageMin <= 2)
   {
     ack_data.data = recvFrame.recvData.ack;
     ack_data.info = recvFrame.recvInfo;
@@ -142,7 +142,7 @@ qtOsdk::activateCallback(Vehicle* vehicle, RecvContainer recvFrame,
 
   // Do the stuff the OSDK callback does, since it is private and we cannot call
   // it here
-  if (ack_data.data == OpenProtocol::ErrorCode::ActivationACK::SUCCESS &&
+  if (ack_data.data == OpenProtocolCMD::ErrorCode::ActivationACK::SUCCESS &&
       vehicle->getAccountData().encKey)
   {
     vehicle->protocolLayer->setKey(vehicle->getAccountData().encKey);
@@ -164,9 +164,9 @@ qtOsdk::setControlCallback(Vehicle* vehicle, RecvContainer recvFrame,
 {
   qtOsdk*        sdk = (qtOsdk*)userData;
   ACK::ErrorCode ack;
-  ack.data = OpenProtocol::ErrorCode::CommonACK::NO_RESPONSE_ERROR;
+  ack.data = OpenProtocolCMD::ErrorCode::CommonACK::NO_RESPONSE_ERROR;
 
-  if (recvFrame.recvInfo.len - Protocol::PackageMin <= sizeof(uint16_t))
+  if (recvFrame.recvInfo.len - OpenProtocol::PackageMin <= sizeof(uint16_t))
   {
     ack.data = recvFrame.recvData.ack;
     ack.info = recvFrame.recvInfo;
@@ -178,7 +178,7 @@ qtOsdk::setControlCallback(Vehicle* vehicle, RecvContainer recvFrame,
   }
 
   if (ack.data ==
-      OpenProtocol::ErrorCode::ControlACK::SetControl::RC_MODE_ERROR)
+      OpenProtocolCMD::ErrorCode::ControlACK::SetControl::RC_MODE_ERROR)
   {
     if (sdk)
     {
@@ -188,7 +188,7 @@ qtOsdk::setControlCallback(Vehicle* vehicle, RecvContainer recvFrame,
       DERROR("SDK not initialized.");
   }
   if (ack.data ==
-      OpenProtocol::ErrorCode::ControlACK::SetControl::OBTAIN_CONTROL_SUCCESS)
+      OpenProtocolCMD::ErrorCode::ControlACK::SetControl::OBTAIN_CONTROL_SUCCESS)
   {
     if (sdk)
     {
@@ -199,7 +199,7 @@ qtOsdk::setControlCallback(Vehicle* vehicle, RecvContainer recvFrame,
       DERROR("SDK not initialized.");
   }
   if (ack.data ==
-      OpenProtocol::ErrorCode::ControlACK::SetControl::RELEASE_CONTROL_SUCCESS)
+      OpenProtocolCMD::ErrorCode::ControlACK::SetControl::RELEASE_CONTROL_SUCCESS)
   {
     if (sdk)
     {
@@ -210,13 +210,13 @@ qtOsdk::setControlCallback(Vehicle* vehicle, RecvContainer recvFrame,
     else
       DERROR("SDK not initialized.");
   }
-  if (ack.data == OpenProtocol::ErrorCode::ControlACK::SetControl::
+  if (ack.data == OpenProtocolCMD::ErrorCode::ControlACK::SetControl::
                     OBTAIN_CONTROL_IN_PROGRESS)
   {
     vehicle->obtainCtrlAuthority(qtOsdk::setControlCallback, sdk);
     emit sdk->changeControlAuthorityStatus("Obtaining Control...");
   }
-  if (ack.data == OpenProtocol::ErrorCode::ControlACK::SetControl::
+  if (ack.data == OpenProtocolCMD::ErrorCode::ControlACK::SetControl::
                     RELEASE_CONTROL_IN_PROGRESS)
   {
     vehicle->releaseCtrlAuthority(qtOsdk::setControlCallback, sdk);

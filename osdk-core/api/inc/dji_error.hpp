@@ -53,8 +53,7 @@ public:
      * (8) The compass is not calibrated. */
     const static uint8_t MOTOR_FAIL_COMPASS_ABNORMAL;
     /*! The aircraft is connected to the software for debugging parameters via
-       the
-       USB cable. */
+       the USB cable. */
     const static uint8_t MOTOR_FAIL_ASSISTANT_PROTECTED;
     /*! The structure of the parameter list has changed after the FW upgrade.*/
     const static uint8_t MOTOR_FAIL_DEVICE_LOCKED;
@@ -79,14 +78,19 @@ public:
     /*! The SN status is wrong. */
     const static uint8_t MOTOR_FAIL_IMU_SN_ERROR;
     /*! The IMU being used is preheated and current temperature is not wihin the
-       calibration range. */
+     * calibration range. */
     const static uint8_t MOTOR_FAIL_IMU_PREHEATING;
+    /*! Compass is being calibrated. */
     const static uint8_t MOTOR_FAIL_COMPASS_CALIBRATING;
+    /*! The attitude data output by navigation system being used is zero.*/
     const static uint8_t MOTOR_FAIL_IMU_NO_ATTITUDE;
     /*! The aircraft is in Novice Mode without gps. */
     const static uint8_t MOTOR_FAIL_NO_GPS_IN_NOVICE_MODE;
+    /*! Error occured in the battery cell. */
     const static uint8_t MOTOR_FAIL_BATTERY_CELL_ERROR;
+    /*! Battery communication is abnormal. */
     const static uint8_t MOTOR_FAIL_BATTERY_COMMUNICATION_ERROR;
+    /*! Battery voltage is below the minimum allowable value. */
     const static uint8_t MOTOR_FAIL_BATTERY_VOLTAGE_TOO_LOW;
     /*! The volume (%) is below the second-level power set by user. */
     const static uint8_t MOTOR_FAIL_BATTERY_USER_LOW_LAND;
@@ -98,26 +102,36 @@ public:
     /*! This error occurs whin 7s after power up.
      * Also, it occurs if the battery certification hasn't passed yet.*/
     const static uint8_t MOTOR_FAIL_BATTERY_NOT_READY;
+    /*! The simulator is running. */
     const static uint8_t MOTOR_FAIL_RUNNING_SIMULATOR;
     /*! The aircraft (Inspire series) is setting itself to packing config.*/
     const static uint8_t MOTOR_FAIL_PACK_MODE;
+    /*! This error is caused by attitude limit of IMU if horizontal 
+     * attitude output by navigation system is over 55 degrees when the
+     * system powered up for the first time. */
     const static uint8_t MOTOR_FAIL_IMU_ATTI_LIMIT;
+    /*! The device is not activated. */
     const static uint8_t MOTOR_FAIL_NOT_ACTIVATED;
+    /*! The drone is in the restricted take-off area. */
     const static uint8_t MOTOR_FAIL_IN_FLYLIMIT_AREA;
     /*! The IMU is too biased if the gyro's bias is over 0.03rad/s
      * or the accelerometer's bias is over 50 mg when first started up.*/
     const static uint8_t MOTOR_FAIL_IMU_BIAS_LIMIT;
+    /*! The status output by any esc is unhealthy. */
     const static uint8_t MOTOR_FAIL_ESC_ERROR;
     /*! The IMU is initializing.The attitude data of the current
      * navigation system has not converged yet and the height
      * data of the current navigation system is not ready.*/
     const static uint8_t MOTOR_FAIL_IMU_INITING;
+    /*! The system is being upgraded. */
     const static uint8_t MOTOR_FAIL_UPGRADING;
     /*! The simulator has already been run.*/
     const static uint8_t MOTOR_FAIL_HAVE_RUN_SIM;
     /*! The IMU is in calibration or the aircraft should reset after IMU
        calibration.*/
     const static uint8_t MOTOR_FAIL_IMU_CALIBRATING;
+    /*! The aircraft's horizontal attitude angle exceeds the limit 
+     * angle when requesting automatic takeoff. */
     const static uint8_t MOTOR_FAIL_TAKEOFF_TILT_TOO_LARGE;
     const static uint8_t MOTOR_FAIL_RESERVED_31;
     const static uint8_t MOTOR_FAIL_RESERVED_32;
@@ -135,6 +149,7 @@ public:
     const static uint8_t MOTOR_FAIL_RESERVED_43;
     /*! accessing flash data, MCU is blocked */
     const static uint8_t MOTOR_FAIL_FLASH_OPERATING;
+    /* The GPS is disconnected. */
     const static uint8_t MOTOR_FAIL_GPS_DISCONNECT;
     const static uint8_t MOTOR_FAIL_INTERNAL_46;
     /*! SD card has an exception. Please repair SD card if repeats after
@@ -154,15 +169,23 @@ public:
     const static uint8_t MOTOR_FAIL_RESERVED_58;
     const static uint8_t MOTOR_FAIL_RESERVED_59;
     const static uint8_t MOTOR_FAIL_RESERVED_60;
+    /*! IMU is disconnected. Please ask technical assistance 
+     * for help if repeats after reset. */
     const static uint8_t MOTOR_FAIL_IMU_DISCONNECTED;
+    /*! RC is in calibration. Please finish rc calibration. */
     const static uint8_t MOTOR_FAIL_RC_CALIBRATING;
+    /*! RC calibration has an exception. Please calibrate the RC. */
     const static uint8_t MOTOR_FAIL_RC_CALI_DATA_OUT_RANGE;
+    /* RC calibration is unfinished. Please calibrate the RC. */
     const static uint8_t MOTOR_FAIL_RC_QUIT_CALI;
+    /* The center value of RC is out of range. */
     const static uint8_t MOTOR_FAIL_RC_CENTER_OUT_RANGE;
+    /* RC mapping has an exception. Please check RC channel mapping. */
     const static uint8_t MOTOR_FAIL_RC_MAP_ERROR;
     /*! The aircraft type in flash is unmatched with the type in firmware. <br>
      * Please check the aircraft type.*/
     const static uint8_t MOTOR_FAIL_WRONG_AIRCRAFT_TYPE;
+    /*! Some modules that must be configured  have not been configured yet. */
     const static uint8_t MOTOR_FAIL_SOME_MODULE_NOT_CONFIGURED;
     const static uint8_t MOTOR_FAIL_RESERVED_69;
     const static uint8_t MOTOR_FAIL_RESERVED_70;
@@ -175,23 +198,38 @@ public:
      * It won't take off if a class of device is missing. Please reset and check
      * the connection.*/
     const static uint8_t MOTOR_FAIL_TOPOLOGY_ABNORMAL;
+    /*! The RC needs calibration. Please calibrate the RC. */
     const static uint8_t MOTOR_FAIL_RC_NEED_CALI;
-    /*! invalid data, system will block motor spinning */
+    /*! The system detects illegal data. */
     const static uint8_t MOTOR_FAIL_INVALID_FLOAT;
+    /*! This error will happen only in M600 if the aircraft 
+     * detects the battery number is not engouh. <br>
+     * Please insert more battery. */
     const static uint8_t MOTOR_FAIL_M600_BAT_TOO_FEW;
+    /*! Battery certification failed. <br>
+     * Please ask technical assistance for help if repeats after reset. */
     const static uint8_t MOTOR_FAIL_M600_BAT_AUTH_ERR;
+    /*! Battery communication is abnormal. <br>
+     * Please check the battery connection. */
     const static uint8_t MOTOR_FAIL_M600_BAT_COMM_ERR;
     /*! Battery voltage difference is too large. Please check the battery
        status.*/
     const static uint8_t MOTOR_FAIL_M600_BAT_DIF_VOLT_LARGE_1;
     const static uint8_t MOTOR_FAIL_BATTERY_BOLTAHGE_DIFF_82;
+    /*! Version mismatch. Please check the firmware version. */
     const static uint8_t MOTOR_FAIL_INVALID_VERSION;
     /*! There is an gimbal attitude error which happens only in M600.*/
     const static uint8_t MOTOR_FAIL_GIMBAL_GYRO_ABNORMAL;
+    /*! There is an gimbal pitch motor error which happens only in M600. */
     const static uint8_t MOTOR_FAIL_GIMBAL_ESC_PITCH_NO_DATA;
+    /*! There is an gimbal roll motor error which happens only in M600. */
     const static uint8_t MOTOR_FAIL_GIMBAL_ESC_ROLL_NO_DATA;
+    /*! There is an gimbal yaw motor error which happens only in M600. */
     const static uint8_t MOTOR_FAIL_GIMBAL_ESC_YAW_NO_DATA;
+    /*! The gimbal is updating. Please wait for the upgrade. <br>
+     * This happens only in M600. */
     const static uint8_t MOTOR_FAIL_GIMBAL_FIRM_IS_UPDATING;
+    /* The gimbal is out of control. This happens only in M600. */
     const static uint8_t MOTOR_FAIL_GIMBAL_OUT_OF_CONTROL;
     /*! The gimbal has self-oscillation in the pitch direction. <br>
      * Please lock the camera or reduce the gimbal sensitivity.*/
@@ -204,6 +242,8 @@ public:
     const static uint8_t MOTOR_FAIL_GIMBAL_YAW_SHOCK;
     /*! IMU calibration finished. Please reset aircraft.*/
     const static uint8_t MOTOR_FAIL_IMU_CALI_SUCCESS;
+    /*! The aircraft has rollover when taking off. <br>
+     * Please check the status of the IMU and motors. */
     const static uint8_t MOTOR_FAIL_TAKEOFF_EXCEPTION;
     /*! The motor is locked. Please check the status of the motors and blades.*/
     const static uint8_t MOTOR_FAIL_ESC_STALL_NEAR_GOUND;
@@ -219,9 +259,15 @@ public:
      * For M600, the minimum starting speed is 700rpm. <br>
      * For other aircrafts, the minimum starting speed is 1100rpm.*/
     const static uint8_t MOTOR_FAIL_ENGINE_START_FAILED;
+    /*! During automatic take-off, the status of aircraft doesn't 
+     * change from "on the ground" to "in the air" in 5s.*/
     const static uint8_t MOTOR_FAIL_AUTO_TAKEOFF_LAUNCH_FAILED;
+    /*! The aircraft is on a rollover on the ground or 
+     * the attitude control fails near ground. */
     const static uint8_t MOTOR_FAIL_ROLL_OVER_ON_GRD;
+    /*! Battery version error. Please check the battery version. */
     const static uint8_t MOTOR_FAIL_BAT_VERSION_ERR;
+    /*! RTK initialization error. */
     const static uint8_t MOTOR_FAIL_RTK_INITING;
     /*! rtk yaw and magnetometer yaw misaligned */
     const static uint8_t MOTOR_FAIL_RTK_FAIL_TO_INIT;
@@ -234,8 +280,12 @@ public:
     /*! The motor status shows the motor has been started.*/
     const static uint8_t START_MOTOR_FAIL_MOTOR_STARTED;
     const static uint8_t MOTOR_FAIL_INTERNAL_111;
+    /*! The esc is in calibration. */
     const static uint8_t MOTOR_FAIL_ESC_CALIBRATING;
+    /* GPS signature is invalid because the GPS module 
+     * has not received valid signature information for 2s. */
     const static uint8_t MOTOR_FAIL_GPS_SIGNATURE_INVALID;
+    /* The gimbal is in calibration. */
     const static uint8_t MOTOR_FAIL_GIMBAL_CALIBRATING;
     /*! The aircraft is force locked by APP.*/
     const static uint8_t MOTOR_FAIL_FORCE_DISABLE;
@@ -243,15 +293,19 @@ public:
      * This error happens when the takeoff height relative to ground is up to
      * 100m.*/
     const static uint8_t TAKEOFF_HEIGHT_EXCEPTION;
+    /*! ESC needs upgrade. */
     const static uint8_t MOTOR_FAIL_ESC_NEED_UPGRADE;
     /*! IMU direction is misaligned.*/
     const static uint8_t MOTOR_FAIL_GYRO_DATA_NOT_MATCH;
     /*! APP stops the takeoff.*/
     const static uint8_t MOTOR_FAIL_APP_NOT_ALLOW;
+    /*! Compass direction is not the same with IMU. */
     const static uint8_t MOTOR_FAIL_COMPASS_IMU_MISALIGN;
+    /*! The flash is unlocked. */
     const static uint8_t MOTOR_FAIL_FLASH_UNLOCK;
     /*! The ESC is in the buzzing mode.*/
     const static uint8_t MOTOR_FAIL_ESC_SCREAMING;
+    /*! The temperature of ESC is too high. */
     const static uint8_t MOTOR_FAIL_ESC_TEMP_HIGH;
     /*! The battery is not in place. */
     const static uint8_t MOTOR_FAIL_BAT_ERR;
@@ -364,7 +418,7 @@ public:
   {
   public:
     const static uint8_t SUCCESS;
-    const static uint8_t ILLEGAL_INPUT;
+    const static uint8_t ILLEGAL_DATA_LENGTH;
     const static uint8_t VERSION_DOES_NOT_MATCH;
     const static uint8_t PACKAGE_OUT_OF_RANGE;
     const static uint8_t PACKAGE_ALREADY_EXISTS;
@@ -374,15 +428,15 @@ public:
     const static uint8_t PIPELINE_OVERFLOW;
     const static uint8_t INTERNAL_ERROR_0X09;
     const static uint8_t PACKAGE_EMPTY;
-    const static uint8_t INPUT_SEGMENTATION_FAULT;
+    const static uint8_t INCORRECT_NUM_OF_TOPICS;
     const static uint8_t ILLEGAL_UID;
     const static uint8_t PERMISSION_DENY;
     const static uint8_t MULTIPLE_SUBSCRIBE;
-    const static uint8_t SOUCE_DEVICE_OFFLINE;
+    const static uint8_t SOURCE_DEVICE_OFFLINE;
     const static uint8_t PAUSED;
     const static uint8_t RESUMED;
     const static uint8_t INTERNAL_ERROR_0X4A;
-    const static uint8_t INTERNAL_ERROR_0X50;
+    const static uint8_t FAILED_AUTHENTICATION;
     const static uint8_t VERSION_VERSION_TOO_FAR;
     const static uint8_t VERSION_UNKNOWN_ERROR;
     const static uint8_t INTERNAL_ERROR_0XFF;

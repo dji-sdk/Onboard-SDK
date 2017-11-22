@@ -27,8 +27,8 @@ VirtualRC::setControl(bool enable, VirtualRC::CutOff cutoffType)
   VirtualRCSetting setting;
   setting.cutoff = cutoffType;
   setting.enable = enable ? 1 : 0;
-  vehicle->protocolLayer->send(0, DJI::OSDK::encrypt,
-                               OpenProtocol::CMDSet::VirtualRC::settings,
+  vehicle->protocolLayer->send(0, vehicle->getEncryption(),
+                               OpenProtocolCMD::CMDSet::VirtualRC::settings,
                                &setting, sizeof(setting));
 }
 
@@ -36,9 +36,9 @@ void
 VirtualRC::sendData(VirtualRCData data)
 {
   vrcData = data;
-  vehicle->protocolLayer->send(0, DJI::OSDK::encrypt,
-                               OpenProtocol::CMDSet::VirtualRC::data, &vrcData,
-                               sizeof(vrcData));
+  vehicle->protocolLayer->send(0, vehicle->getEncryption(),
+                               OpenProtocolCMD::CMDSet::VirtualRC::data,
+                               &vrcData, sizeof(vrcData));
 }
 
 void
@@ -66,9 +66,9 @@ void
 VirtualRC::neutralVRCSticks()
 {
   resetVRCData();
-  vehicle->protocolLayer->send(0, DJI::OSDK::encrypt,
-                               OpenProtocol::CMDSet::VirtualRC::data, &vrcData,
-                               sizeof(vrcData));
+  vehicle->protocolLayer->send(0, vehicle->getEncryption(),
+                               OpenProtocolCMD::CMDSet::VirtualRC::data,
+                               &vrcData, sizeof(vrcData));
 }
 
 Telemetry::RC

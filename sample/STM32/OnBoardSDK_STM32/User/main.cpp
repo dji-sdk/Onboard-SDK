@@ -126,15 +126,20 @@ main()
         case 1:
           printf("\n\nStarting executing position control sample:\r\n");
           delay_nms(1000);
-          // Run monitore takeoff
+          // Run monitor takeoff
           monitoredTakeOff();
           // Run position control sample
           
-				  // For M100 z is 1.2
-				
-				  moveByPositionOffset(0, 6, 0, 0);
-          moveByPositionOffset(6, 0, 0, 0);
-          moveByPositionOffset(-6, -6, 0, 0);
+	  // For M100 zPosition is 1.2
+          float zPosition = 0;
+          if(v->getFwVersion() == Version::M100_31)
+	  {
+	    zPosition = 1.2;
+	  }
+
+	  moveByPositionOffset(0, 6, zPosition, 0);
+          moveByPositionOffset(6, 0, zPosition, 0);
+          moveByPositionOffset(-6, -6, zPosition, 0);
           // Run monitored landing sample
           monitoredLanding();
           break;

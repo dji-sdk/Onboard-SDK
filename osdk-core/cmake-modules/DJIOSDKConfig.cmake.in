@@ -11,5 +11,5 @@ set(DJIOSDK_INCLUDE_DIRS "@CONF_INCLUDE_DIRS@")
 include("${DJIOSDK_CMAKE_DIR}/djiosdkTargets.cmake")
 
 # These are IMPORTED targets created by djiosdkTargets.cmake
-set(DJIOSDK_LIBRARIES djiosdk-core)
-
+get_target_property(DJIOSDK_DEPENDENCIES djiosdk-core INTERFACE_LINK_LIBRARIES)
+set(DJIOSDK_LIBRARIES ${DJIOSDK_DEPENDENCIES} djiosdk-core)

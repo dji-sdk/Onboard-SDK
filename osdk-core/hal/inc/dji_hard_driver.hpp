@@ -74,8 +74,11 @@ public:
    *
    * */
 public:
-  virtual void    init()         = 0;
-  virtual time_ms getTimeStamp() = 0;
+  virtual void    init() = 0;
+  virtual time_ms getTimeStamp()
+  {
+    return (uint32_t)time(NULL);
+  }
   virtual size_t send(const uint8_t* buf, size_t len) = 0;
   virtual size_t readall(uint8_t* buf, size_t maxlen) = 0;
   virtual bool getDeviceStatus()
@@ -90,10 +93,14 @@ public:
 public:
   static const int bufsize = 1024;
 
+public:
+  MMU* getMmu()
+  {
+    return &mmu;
+  }
+
 private:
-  MMU* getMmu();
-  MMU  mmu;
-  friend class Protocol;
+  MMU mmu;
 };
 } // namespace OSDK
 } // namespace DJI

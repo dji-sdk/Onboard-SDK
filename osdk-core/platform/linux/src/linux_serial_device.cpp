@@ -136,7 +136,7 @@ int LinuxSerialDevice::_checkBaudRate(uint8_t (&buf)[BUFFER_SIZE])
   }
   if (curTime.tv_sec >= absTimeout.tv_sec)
     return -1;
-  if (std::end(buf) == std::find(std::begin(buf), std::end(buf), 0xAA))
+  if (buf + BUFFER_SIZE == std::find(buf, buf + BUFFER_SIZE, 0xAA))
     return -2;
 
   return 1;

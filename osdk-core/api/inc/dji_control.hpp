@@ -101,7 +101,7 @@ public:
    *  @note
    *        - Only when the GPS signal is good (health_flag >=3)，horizontal
    * position control (HORIZONTAL_POSITION) related control modes can be used.
-   *        - Only when GPS signal is good (health_flag >=3)，or when Guidance
+   *        - Only when GPS signal is good (health_flag >=3)，or when AdvancedSensing
    * system is working properly with Autopilot，
    *          horizontal velocity control（HORIZONTAL_VELOCITY）related control
    * modes can be used.

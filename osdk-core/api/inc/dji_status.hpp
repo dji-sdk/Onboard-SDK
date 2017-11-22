@@ -109,7 +109,7 @@ enum
 
 /*!
  * @brief Enums for various landing gear states.
- * @details Available through broadcast (SDKInfo)/subscribe (Telemetry::TOPIC_STATUS_LANDINGGEAR)
+ * @details Available through broadcast (getStatus)/subscribe (Telemetry::TOPIC_STATUS_LANDINGGEAR)
  */
 namespace LandingGearMode
 {

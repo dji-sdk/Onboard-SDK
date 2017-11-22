@@ -126,14 +126,27 @@ typedef struct WayPointSettings
 } WayPointSettings;              // pack(1)
 
 /**
- * @brief WayPoint Push Data Incident Type enumerator
+ * @brief WayPoint Reached Data Incident Type enumerator
  */
 //! @note can be separated by the first bytes of data
-typedef enum WayPointIncidentType {
+typedef enum WayPointIncidentType
+{
   NAVI_UPLOAD_FINISH,
   NAVI_MISSION_FINISH,
   NAVI_MISSION_WP_REACH_POINT
 } WayPointIncidentType;
+
+/**
+ * @brief WayPoint Push Data Incident Type enumerator
+ */
+typedef enum WayPointPushDataIncidentType
+{
+  NAVI_MODE_ATTI,
+  NAVI_MISSION_WAYPOINT,
+  NAVI_MISSION_HOTPOINT,
+  NAVI_MISSION_FOLLOWME,
+  NAVI_MISSION_IOC,
+} WayPointPushDataIncidentType;
 
 /**
  * @brief Waypoint Mission Finish Event Push Data

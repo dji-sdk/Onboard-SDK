@@ -78,7 +78,14 @@ public:
     int16_t roll; /*!< Roll in rate, unit 0.1 deg/s, input range[-1800,1800] */
     int16_t
             pitch; /*!< Pitch in rate, unit 0.1 deg/s, input range[-1800,1800] */
-    uint8_t reserved; /*!< @note always 0x80 */
+    uint8_t reserved0                 : 1;
+    uint8_t reserved1                 : 1;
+    uint8_t extend_control_range      : 1; /*!< 1 -> true, 0 -> false */
+    uint8_t disable_fov_zoom          : 1; /*!< 1 -> true, 0 -> false */
+    uint8_t ignore_aircraft_motion    : 1; /*!< 1 -> true, 0 -> false */
+    uint8_t yaw_return_neutral        : 1; /*!< 1 -> true, 0 -> false */
+    uint8_t ignore_user_stick         : 1; /*!< 1 -> true, 0 -> false */
+    uint8_t gimbal_control_authority  : 1; /*!< 1 -> obtain, 0 -> release */
   } SpeedData;        // pack(1)
 #pragma pack()
 public:

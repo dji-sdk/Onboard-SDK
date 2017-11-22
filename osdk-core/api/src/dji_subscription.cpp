@@ -105,7 +105,7 @@ DataSubscription::decodeCallback(Vehicle*      vehiclePtr,
 {
   DataSubscription* subscriptionHandle = (DataSubscription*)subPtr;
 
-  // uint8_t pkgID = *(((uint8_t *)header) + sizeof(Header) + 2);
+  // uint8_t pkgID = *(((uint8_t *)header) + sizeof(OpenHeader) + 2);
   uint8_t pkgID = rcvContainer.recvData.subscribeACK;
 
   if (pkgID >= MAX_NUMBER_OF_PACKAGE)
@@ -179,8 +179,8 @@ DataSubscription::verify()
   vehicle->nbCallbackFunctions[cbIndex] = (void*)verifyCallback;
   vehicle->nbUserData[cbIndex]          = NULL;
 
-  protocol->send(2, DJI::OSDK::encrypt,
-                 OpenProtocol::CMDSet::Subscribe::versionMatch, &data,
+  protocol->send(2, vehicle->getEncryption(),
+                 OpenProtocolCMD::CMDSet::Subscribe::versionMatch, &data,
                  sizeof(data), 500, 2, true, cbIndex);
 }
 
@@ -206,12 +206,12 @@ DataSubscription::verify(int timeout)
   ACK::ErrorCode ack;
   uint32_t       data = DBVersion;
 
-  protocol->send(2, DJI::OSDK::encrypt,
-                 OpenProtocol::CMDSet::Subscribe::versionMatch, &data,
+  protocol->send(2, vehicle->getEncryption(),
+                 OpenProtocolCMD::CMDSet::Subscribe::versionMatch, &data,
                  sizeof(data), 500, 2, NULL, 0);
 
   ack = *((ACK::ErrorCode*)getVehicle()->waitForACK(
-    OpenProtocol::CMDSet::Subscribe::versionMatch, timeout));
+    OpenProtocolCMD::CMDSet::Subscribe::versionMatch, timeout));
   return ack;
 }
 
@@ -242,8 +242,8 @@ DataSubscription::startPackage(int packageID)
     (void*)DataSubscription::addPackageCallback;
   vehicle->nbUserData[cbIndex] = &package[packageID];
 
-  protocol->send(2, DJI::OSDK::encrypt,
-                 OpenProtocol::CMDSet::Subscribe::addPackage, buffer,
+  protocol->send(2, vehicle->getEncryption(),
+                 OpenProtocolCMD::CMDSet::Subscribe::addPackage, buffer,
                  bufferLength, 500, 1, true, cbIndex);
 }
 
@@ -290,12 +290,12 @@ DataSubscription::startPackage(int packageID, int timeout)
            "removePackage first.",
            packageID);
 
-    ack.info.cmd_set = OpenProtocol::CMDSet::subscribe;
+    ack.info.cmd_set = OpenProtocolCMD::CMDSet::subscribe;
 
     // @TODO: the SUBSCRIBER_MULTIPLE_SUBSCRIBE is not returned from FC, we may
     // need to distinguish between "short circuit return" from "round trip
     // return"
-    ack.data = OpenProtocol::ErrorCode::SubscribeACK::MULTIPLE_SUBSCRIBE;
+    ack.data = OpenProtocolCMD::ErrorCode::SubscribeACK::MULTIPLE_SUBSCRIBE;
     return ack;
   }
 
@@ -304,12 +304,12 @@ DataSubscription::startPackage(int packageID, int timeout)
   int bufferLength = package[packageID].serializePackageInfo(buffer);
   package[packageID].allocateDataBuffer();
 
-  protocol->send(2, DJI::OSDK::encrypt,
-                 OpenProtocol::CMDSet::Subscribe::addPackage, buffer,
+  protocol->send(2, vehicle->getEncryption(),
+                 OpenProtocolCMD::CMDSet::Subscribe::addPackage, buffer,
                  bufferLength, 500, 1, NULL, 0);
 
   ack = *((ACK::ErrorCode*)getVehicle()->waitForACK(
-    OpenProtocol::CMDSet::Subscribe::addPackage, timeout));
+    OpenProtocolCMD::CMDSet::Subscribe::addPackage, timeout));
 
   DSTATUS("Start package %d result: %d.",
           package[packageID].getInfo().packageID, ack.data);
@@ -337,7 +337,7 @@ void
 DataSubscription::extractOnePackage(RecvContainer*       pRcvContainer,
                                     SubscriptionPackage* pkg)
 {
-  //  uint8_t *data = ((uint8_t *)header) + sizeof(Header) + 2;
+  //  uint8_t *data = ((uint8_t *)header) + sizeof(OpenHeader) + 2;
   //  DDEBUG(
   //          "%d unpacking %d %d 0x%x 0x%x.", pkg->getBufferSize(),
   //          header->length - CoreAPI::PackageMin - 3, *((uint8_t *)data + 1),
@@ -376,8 +376,8 @@ DataSubscription::removePackage(int packageID)
     (void*)DataSubscription::removePackageCallback;
   vehicle->nbUserData[cbIndex] = &package[packageID];
 
-  protocol->send(2, DJI::OSDK::encrypt,
-                 OpenProtocol::CMDSet::Subscribe::removePackage, &data,
+  protocol->send(2, vehicle->getEncryption(),
+                 OpenProtocolCMD::CMDSet::Subscribe::removePackage, &data,
                  sizeof(data), 500, 1, true, cbIndex);
 }
 
@@ -411,12 +411,12 @@ DataSubscription::removePackage(int packageID, int timeout)
   ACK::ErrorCode ack;
   uint8_t        data = packageID;
 
-  protocol->send(2, DJI::OSDK::encrypt,
-                 OpenProtocol::CMDSet::Subscribe::removePackage, &data,
+  protocol->send(2, vehicle->getEncryption(),
+                 OpenProtocolCMD::CMDSet::Subscribe::removePackage, &data,
                  sizeof(data), 500, 1, NULL, 0);
 
   ack = *((ACK::ErrorCode*)getVehicle()->waitForACK(
-    OpenProtocol::CMDSet::Subscribe::removePackage, timeout));
+    OpenProtocolCMD::CMDSet::Subscribe::removePackage, timeout));
 
   if (!ACK::getError(ack))
   {
@@ -656,3 +656,34 @@ SubscriptionPackage::packageRemoveSuccessHandler()
 
   setOccupied(false);
 }
+
+// Detailed doxygen comments begin below
+
+/*! @var DJI::OSDK::Telemetry::TopicName DJI::OSDK::Telemetry::TOPIC_QUATERNION
+ * | Angle        | Unit | Accuracy   | Notes                                           |
+   |--------------|------|------------|-------------------------------------------------|
+   | pitch, roll  | deg  | <1         | in non-ahrs mode                                |
+   | yaw          | deg  | <3         | in well-calibrated compass with fine aligned    |
+   | yaw with rtk | deg  | around 1.2 | in RTK heading fixed mode with 1 meter baseline |
+*/
+
+/*! @var DJI::OSDK::Telemetry::TOPIC_VELOCITY
+ * | Axis     | Unit | Accuracy                                                                                    |
+   |----------|------|---------------------------------------------------------------------------------------------|
+   | vgx, vgy | m/s  | Around 5cm/s for GNSS navigation. Around 3cm/s with VO at 1 meter height                    |
+   | vgz      | m/s  | 10cm/s only with barometer in steady air. 3cm/s with VO at 1 meter height with 8cm baseline |
+ */
+
+/*! @var DJI::OSDK::Telemetry::TOPIC_GPS_FUSED
+ *   | Axis | Unit | Position Sensor | Accuracy                                         |
+     |------|------|-----------------|--------------------------------------------------|
+     | x, y | m    | GPS             | <3m with open sky without multipath              |
+     | z    | m    | GPS             | <5m with open sky without multipath              |
+     | x, y | m    | RTK             | around 2cm with fine alignment and fix condition |
+     | z    | m    | RTK             | around 3cm with fine alignment and fix condition |
+ *
+ */
+
+/*! @var DJI::OSDK::Telemetry::TOPIC_GIMBAL_ANGLES
+ *  Data Accuracy: 0.1 deg in all axes
+ */

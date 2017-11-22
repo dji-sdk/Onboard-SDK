@@ -47,7 +47,8 @@ MobileCommunication::sendDataToMSDK(uint8_t* data, uint8_t len)
     DERROR("Too much data to send");
     return;
   }
-  vehicle->protocolLayer->send(0, 0, OpenProtocol::CMDSet::Activation::toMobile,
+  vehicle->protocolLayer->send(0, vehicle->getEncryption(),
+                               OpenProtocolCMD::CMDSet::Activation::toMobile,
                                data, len, 500, 1, NULL, 0);
 }
 
@@ -56,7 +57,7 @@ MobileCommunication::getDataFromMSDKCallback(Vehicle*      vehiclePtr,
                                              RecvContainer recvFrame,
                                              UserData      userData)
 {
-  if (recvFrame.recvInfo.len - Protocol::PackageMin <= 100)
+  if (recvFrame.recvInfo.len - OpenProtocol::PackageMin <= 100)
   {
     DSTATUS("Received mobile Data of len %d\n", recvFrame.recvInfo.len);
   }

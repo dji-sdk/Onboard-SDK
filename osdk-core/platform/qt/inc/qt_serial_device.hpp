@@ -38,6 +38,8 @@ public:
   DJI::OSDK::time_ms getTimeStamp();
   size_t send(const uint8_t* buf, size_t len);
   size_t readall(uint8_t* buf, size_t maxlen);
+  bool getDeviceStatus();
+  void setDeviceStatus(bool status);
 
   void setBaudrate(int value);
 
@@ -46,6 +48,7 @@ public:
 
   QSerialPort* port;
 
+
 private:
   QHardDriver();
 
@@ -53,9 +56,10 @@ public slots:
   void init();
 
 private:
+  bool          initStatus;
   int           baudrate;
-  QMutex        memory;
-  QMutex        msg;
+  QMutex        statusLock;
+  QMutex        initLock;
   QMutex        sendLock;
   QMutex        bufferLock;
   QTextBrowser* display;

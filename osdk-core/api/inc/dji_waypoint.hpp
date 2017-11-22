@@ -222,17 +222,19 @@ public:
    *  @param recvFrame the data comes with the callback function
    *  @param userData a void ptr that user can manipulate inside the callback
    */
-  static void getWaypointSettingsCallback(Vehicle* vehicle, RecvContainer recvFrame,
-                                   UserData userData);
+  static void getWaypointSettingsCallback(Vehicle*      vehicle,
+                                          RecvContainer recvFrame,
+                                          UserData      userData);
   /*! @brief
    *
-   *  A callback function for getting waypoint information for a specified index (non-blocking call)
+   *  A callback function for getting waypoint information for a specified index
+   * (non-blocking call)
    *
    *  @param recvFrame the data comes with the callback function
    *  @param userData a void ptr that user can manipulate inside the callback
    */
   static void getIndexCallback(Vehicle* vehicle, RecvContainer recvFrame,
-				   UserData userData);
+                               UserData userData);
   /*! @brief
    *
    *  A callback function for uploading waypt index non-blocking calls

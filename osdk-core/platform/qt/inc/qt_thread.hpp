@@ -7,6 +7,16 @@
 #include <QThread>
 #include <QWaitCondition>
 
+// Forward Declaration
+namespace DJI
+{
+namespace OSDK
+{
+  struct RecvContainer;
+}
+}
+
+
 // Let's not subclass OSDKThread from Qthread; this violates event loop
 // constructs of Qt. Instead, let's moveToThread(OSDKThread).
 class OSDKThread : public QObject, public DJI::OSDK::Thread
@@ -17,7 +27,7 @@ public:
   OSDKThread();
   OSDKThread(DJI::OSDK::Vehicle* vehicle, int Type, QObject* parent = 0);
 
-  void callReceivePipeline();
+  void callReceivePipeline(DJI::OSDK::RecvContainer* recvContainer_copy);
   bool createThread();
   int  stopThread();
 
@@ -35,6 +45,7 @@ private:
   QThread* qThreadPtr;
   int      numReceiveSignals;
   size_t   callTimes;
+  void setStopCondition(bool stopCond);
 };
 
 /*! @brief Qt-style Data Protection and Condition Variables for
@@ -54,8 +65,8 @@ public:
 
   //! Implementing virtual functions from ThreadManager
 public:
-  void lockMemory();
-  void freeMemory();
+  void lockRecvContainer();
+  void freeRecvContainer();
 
   void lockMSG();
   void freeMSG();

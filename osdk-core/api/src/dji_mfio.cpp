@@ -50,8 +50,8 @@ MFIO::config(MFIO::MODE mode, CHANNEL channel, uint32_t defaultValue,
       vehicle->nbUserData[cbIndex]          = NULL;
     }
 
-    vehicle->protocolLayer->send(2, 0, OpenProtocol::CMDSet::MFIO::init, &data,
-                                 sizeof(data), 500, 2, true, cbIndex);
+    vehicle->protocolLayer->send(2, 0, OpenProtocolCMD::CMDSet::MFIO::init,
+                                 &data, sizeof(data), 500, 2, true, cbIndex);
   }
   else
   {
@@ -74,18 +74,18 @@ MFIO::config(MFIO::MODE mode, CHANNEL channel, uint32_t defaultValue,
     data.value   = defaultValue;
     data.freq    = freq;
     DSTATUS("sent");
-    vehicle->protocolLayer->send(2, 0, OpenProtocol::CMDSet::MFIO::init, &data,
-                                 sizeof(data), 500, 2, false, 0);
+    vehicle->protocolLayer->send(2, 0, OpenProtocolCMD::CMDSet::MFIO::init,
+                                 &data, sizeof(data), 500, 2, false, 0);
 
     ack = *((ACK::ErrorCode*)vehicle->waitForACK(
-      OpenProtocol::CMDSet::MFIO::init, wait_timeout));
+      OpenProtocolCMD::CMDSet::MFIO::init, wait_timeout));
 
     return ack;
   }
   else
   {
     DERROR("Channel already used 0x%X,0x%X", channelUsage, 1 << channel);
-    ack.info.cmd_set = OpenProtocol::CMDSet::mfio;
+    ack.info.cmd_set = OpenProtocolCMD::CMDSet::mfio;
     ack.data         = 0xFF;
     return ack;
   }
@@ -99,7 +99,7 @@ MFIO::initCallback(RecvContainer recvFrame, UserData data)
    * DSTATUS( "MFIO initMFIOCallback");
    */
   uint16_t ack_length =
-    recvFrame.recvInfo.len - static_cast<uint16_t>(Protocol::PackageMin);
+    recvFrame.recvInfo.len - static_cast<uint16_t>(OpenProtocol::PackageMin);
   uint8_t* ackPtr = recvFrame.recvData.raw_ack_array;
 
   uint8_t errorFlag;
@@ -128,7 +128,7 @@ MFIO::setValue(MFIO::CHANNEL channel, uint32_t value, VehicleCallBack callback,
     vehicle->nbUserData[cbIndex]          = NULL;
   }
 
-  vehicle->protocolLayer->send(2, 0, OpenProtocol::CMDSet::MFIO::set, &data,
+  vehicle->protocolLayer->send(2, 0, OpenProtocolCMD::CMDSet::MFIO::set, &data,
                                sizeof(data), 500, 2, true, cbIndex);
 }
 
@@ -141,11 +141,11 @@ MFIO::setValue(CHANNEL channel, uint32_t value, int wait_timeout)
   data.channel = channel;
   data.value   = value;
 
-  vehicle->protocolLayer->send(2, 0, OpenProtocol::CMDSet::MFIO::set, &data,
+  vehicle->protocolLayer->send(2, 0, OpenProtocolCMD::CMDSet::MFIO::set, &data,
                                sizeof(data), 500, 2, false, 0);
 
-  ack = *((ACK::ErrorCode*)vehicle->waitForACK(OpenProtocol::CMDSet::MFIO::set,
-                                               wait_timeout));
+  ack = *((ACK::ErrorCode*)vehicle->waitForACK(
+    OpenProtocolCMD::CMDSet::MFIO::set, wait_timeout));
 
   return ack;
 }
@@ -155,7 +155,7 @@ MFIO::setValueCallback(RecvContainer recvFrame, UserData data)
 {
 
   uint16_t ack_length =
-    recvFrame.recvInfo.len - static_cast<uint16_t>(Protocol::PackageMin);
+    recvFrame.recvInfo.len - static_cast<uint16_t>(OpenProtocol::PackageMin);
   uint8_t* ackPtr = recvFrame.recvData.raw_ack_array;
 
   uint8_t errorFlag;
@@ -183,7 +183,7 @@ MFIO::getValue(MFIO::CHANNEL channel, VehicleCallBack callback,
     vehicle->nbUserData[cbIndex]          = NULL;
   }
 
-  vehicle->protocolLayer->send(2, 0, OpenProtocol::CMDSet::MFIO::get, &data,
+  vehicle->protocolLayer->send(2, 0, OpenProtocolCMD::CMDSet::MFIO::get, &data,
                                sizeof(data), 500, 3, true, cbIndex);
 }
 
@@ -195,10 +195,10 @@ MFIO::getValue(CHANNEL channel, int wait_timeout)
   GetData data;
   data = channel;
 
-  vehicle->protocolLayer->send(2, 0, OpenProtocol::CMDSet::MFIO::get, &data,
+  vehicle->protocolLayer->send(2, 0, OpenProtocolCMD::CMDSet::MFIO::get, &data,
                                sizeof(data), 500, 3, false, 0);
 
-  ack = *((ACK::MFIOGet*)vehicle->waitForACK(OpenProtocol::CMDSet::MFIO::get,
+  ack = *((ACK::MFIOGet*)vehicle->waitForACK(OpenProtocolCMD::CMDSet::MFIO::get,
                                              wait_timeout));
   return ack;
 }
@@ -207,7 +207,7 @@ void
 MFIO::getValueCallback(RecvContainer recvFrame, UserData data)
 {
   uint16_t ack_length =
-    recvFrame.recvInfo.len - static_cast<uint16_t>(Protocol::PackageMin);
+    recvFrame.recvInfo.len - static_cast<uint16_t>(OpenProtocol::PackageMin);
   uint8_t* ackPtr = recvFrame.recvData.raw_ack_array;
 
   uint8_t  result;

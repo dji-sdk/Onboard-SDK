@@ -16,41 +16,6 @@
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
 
-int
-main(int argc, char** argv)
-{
-
-  // Setup the OSDK: Read config file, create vehicle, activate.
-  Vehicle* vehicle = setupOSDK(argc, argv);
-  if (vehicle == NULL)
-  {
-    std::cout << "Vehicle not initialized, exiting.\n";
-    return -1;
-  }
-
-  // Display interactive prompt
-  std::cout
-    << "| Available commands:                                            |"
-    << std::endl;
-  std::cout
-    << "| [a] Exercise gimbal and camera control                         |"
-    << std::endl;
-  char inputChar;
-  std::cin >> inputChar;
-
-  switch (inputChar)
-  {
-    case 'a':
-      gimbalCameraControl(vehicle);
-      break;
-    default:
-      break;
-  }
-
-  delete (vehicle);
-  return 0;
-}
-
 bool
 gimbalCameraControl(Vehicle* vehicle)
 {
@@ -208,6 +173,14 @@ gimbalCameraControl(Vehicle* vehicle)
   gimbalSpeed.roll  = 100;
   gimbalSpeed.pitch = 50;
   gimbalSpeed.yaw   = -200;
+  gimbalSpeed.gimbal_control_authority = 1;
+  gimbalSpeed.disable_fov_zoom = 0;
+  gimbalSpeed.ignore_user_stick = 0;
+  gimbalSpeed.extend_control_range = 0;
+  gimbalSpeed.ignore_aircraft_motion = 0;
+  gimbalSpeed.yaw_return_neutral = 0;
+  gimbalSpeed.reserved0 = 0;
+  gimbalSpeed.reserved1 = 0;
 
   int speedControlDurationMs = 4000;
   int incrementMs            = 100;
