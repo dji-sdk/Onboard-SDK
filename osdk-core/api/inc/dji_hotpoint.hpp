@@ -228,8 +228,9 @@ public:
    *  @param recvFrame the data comes with the callback function
    *  @param userData a void ptr that user can manipulate inside the callback
    */
-  static void getHotpointSettingsCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
-		                          UserData userData);
+  static void getHotpointSettingsCallback(Vehicle*      vehiclePtr,
+                                          RecvContainer recvFrame,
+                                          UserData      userData);
   /*! @brief
    *
    *  Set hotpoint callback

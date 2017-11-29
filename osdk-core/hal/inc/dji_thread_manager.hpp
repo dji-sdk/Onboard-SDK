@@ -38,8 +38,8 @@ public:
 
   //! Mutex operations
 public:
-  virtual void lockMemory() = 0;
-  virtual void freeMemory() = 0;
+  virtual void lockRecvContainer() = 0;
+  virtual void freeRecvContainer() = 0;
 
   virtual void lockMSG() = 0;
   virtual void freeMSG() = 0;
@@ -80,9 +80,14 @@ public:
   virtual bool createThread() = 0;
   virtual int  stopThread()   = 0;
 
+  bool getStopCondition();
+
+  void setStopCondition(bool condition);
+
 protected:
   Vehicle* vehicle;
   int      type;
+  bool     stop_condition;
 };
 
 } // namespace DJI

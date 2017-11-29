@@ -23,7 +23,8 @@ namespace DJI
 namespace OSDK
 {
 
-/*! @brief VirtualRC class has all the methods to mimic the RC functionality via OSDK
+/*! @brief VirtualRC class has all the methods to mimic the RC functionality via
+ * OSDK
  *  @details Only supported on M100
  */
 class VirtualRC

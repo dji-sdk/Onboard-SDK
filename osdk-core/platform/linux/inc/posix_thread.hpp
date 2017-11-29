@@ -12,15 +12,18 @@
 #ifndef LINUXTHREAD_H
 #define LINUXTHREAD_H
 
+#include "dji_log.hpp"
 #include "dji_thread_manager.hpp"
-#include "dji_vehicle.hpp"
-
 #include <pthread.h>
+#include <string>
 
 namespace DJI
 {
 namespace OSDK
 {
+
+//! Forward declaration
+class Vehicle;
 
 /*! @brief POSIX-compatible threading implementation for *NIX systems
  *
@@ -45,8 +48,9 @@ private:
   pthread_attr_t attr;
 
   static void* send_call(void* param);
-  static void* read_call(void* param);
+  static void* uart_serial_read_call(void* param);
   static void* callback_call(void* param);
+  static void* USB_read_call(void* param);
 };
 
 } // namespace DJI

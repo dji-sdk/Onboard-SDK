@@ -113,7 +113,7 @@ MFIOPanel::getValueCallback(Vehicle* vehicle, RecvContainer recvFrame,
   MFIOPanel* mfioPanel = (MFIOPanel*)data;
 
   uint16_t ack_length =
-    recvFrame.recvInfo.len - static_cast<uint16_t>(Protocol::PackageMin);
+    recvFrame.recvInfo.len - static_cast<uint16_t>(OpenProtocol::PackageMin);
   uint8_t* ackPtr = recvFrame.recvData.raw_ack_array;
 
   uint8_t  result;

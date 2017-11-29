@@ -8,21 +8,22 @@ OSDKThread::OSDKThread(DJI::OSDK::Vehicle* vehicle, int Type, QObject* parent)
   this->vehicle = vehicle;
   type          = Type;
   callTimes     = 0;
-  this->vehicle->setStopCond(false);
+  this->setStopCondition(false);
   numReceiveSignals = 0;
 }
 
 void
 OSDKThread::run()
 {
-  while (!(vehicle->getStopCond()))
+  RecvContainer *recvContainer_copy = new RecvContainer();
+  while (!(this->getStopCondition()))
   {
     callTimes++;
     if (type == 1)
       vehicle->protocolLayer->sendPoll();
     else if (type == 2)
     {
-      callReceivePipeline();
+      callReceivePipeline(recvContainer_copy);
     }
     else if (type == 3)
     {
@@ -31,29 +32,29 @@ OSDKThread::run()
     }
     QThread::usleep(100);
   }
+  delete recvContainer_copy;
+
 }
 
 void
-OSDKThread::callReceivePipeline()
+OSDKThread::setStopCondition(bool stopCond)
 {
-  int numProcess = 0;
-  while (numProcess == 0 || numReceiveSignals == 0 ||
-         (vehicle->protocolLayer->getBufReadPos() <
-          vehicle->protocolLayer->getReadLen()))
-  {
-    numProcess++;
-    if (vehicle->getStopCond())
-      break;
-    RecvContainer recvFrame = vehicle->protocolLayer->receive();
-    if (recvFrame.recvInfo.cmd_id != 0xFF)
-    {
-      vehicle->processReceivedData(recvFrame);
-    }
-    if (numReceiveSignals == 0)
-      numReceiveSignals++;
-  }
-  numReceiveSignals++;
+  this->stop_condition = stopCond;
 }
+
+void
+OSDKThread::callReceivePipeline(RecvContainer* recvContainer_copy)
+{
+  if (this->getStopCondition())
+    return;
+  RecvContainer* recvFrame = vehicle->protocolLayer->receive();
+  if (recvFrame->recvInfo.cmd_id != 0xFF)
+  {
+    memcpy(recvContainer_copy, recvFrame, sizeof(RecvContainer));
+    vehicle->processReceivedData(recvContainer_copy);
+  }
+}
+
 bool
 OSDKThread::createThread()
 {
@@ -65,7 +66,7 @@ OSDKThread::createThread()
 int
 OSDKThread::stopThread()
 {
-  vehicle->setStopCond(true);
+  this->setStopCondition(true);
   qThreadPtr->quit();
   return 0;
 }
@@ -98,13 +99,13 @@ QThreadManager::init()
 }
 
 void
-QThreadManager::lockMemory()
+QThreadManager::lockRecvContainer()
 {
   m_memLock.lock();
 }
 
 void
-QThreadManager::freeMemory()
+QThreadManager::freeRecvContainer()
 {
   m_memLock.unlock();
 }

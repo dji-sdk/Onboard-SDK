@@ -15,85 +15,6 @@
 
 using namespace DJI::OSDK;
 
-int
-main(int argc, char** argv)
-{
-  // Initialize variables
-  int functionTimeout = 1;
-
-  // Setup OSDK.
-  Vehicle* vehicle = setupOSDK(argc, argv);
-  if (vehicle == NULL)
-  {
-    std::cout << "Vehicle not initialized, exiting.\n";
-    return -1;
-  }
-
-  std::cout
-    << "To run the MFIO sample, please first do the following steps:\n"
-       "1. Open DJI Assistant 2 and go to the Tools page.\n"
-       "2. Click on the Function Channels tab.\n"
-       "3. Select SDK1 for channel F3.\n"
-       "4. Connect a logic analyzer/oscilloscope to this channel.\n"
-       "   The pin diagram, from top to bottom, is Gnd, 5V, Signal.\n"
-       "   You will only need to connect to the Gnd and Signal pins.\n\n";
-  std::cout << "All loopback demos use F4 as output and F5 as input \n\n";
-
-  std::cout << "ADC demo uses F5 as input \n\n";
-
-  // Display interactive prompt
-  std::cout
-    << "| Available commands:                                            |"
-    << std::endl;
-  std::cout
-    << "| [a] Set PWM output (block api)                                 |"
-    << std::endl;
-  std::cout
-    << "| [b] Set PWM output (non-block api)                             |"
-    << std::endl;
-  std::cout
-    << "| [c] Set GPIO loopback (blocking)                               |"
-    << std::endl;
-  std::cout
-    << "| [d] Set GPIO loopback (non-blocking)                           |"
-    << std::endl;
-  std::cout
-    << "| [e] Set ADC (blocking)                                         |"
-    << std::endl;
-  std::cout
-    << "| [f] Set ADC (non-blocking)                                     |"
-    << std::endl;
-
-  char inputChar;
-  std::cin >> inputChar;
-
-  switch (inputChar)
-  {
-    case 'a':
-      pwmOutputBlockingApiDemo(vehicle);
-      break;
-    case 'b':
-      pwmOutputNonBlockingApiDemo(vehicle);
-      break;
-    case 'c':
-      gpioLoopbackBlockingApiDemo(vehicle);
-      break;
-    case 'd':
-      gpioLoopbackNonBlockingApiDemo(vehicle);
-      break;
-    case 'e':
-      adcBlockingApiDemo(vehicle);
-      break;
-    case 'f':
-      adcNonBlockingApiDemo(vehicle);
-      break;
-    default:
-      break;
-  }
-
-  delete (vehicle);
-}
-
 bool
 pwmOutputBlockingApiDemo(Vehicle* vehicle)
 {
@@ -106,11 +27,11 @@ pwmOutputBlockingApiDemo(Vehicle* vehicle)
   uint32_t initOnTimeUs = 10000; // us
   uint16_t pwmFreq      = 50;    // Hz
 
-  // Setup the channe4
+  // Setup the channel 4
   std::cout << "Configuring channel\n";
   vehicle->mfio->config(MFIO::MODE_PWM_OUT, MFIO::CHANNEL_3, initOnTimeUs,
                         pwmFreq, responseTimeout);
-  std::cout << "Channe4 configured to output 50Hz PWM with 50% duty cycle.\n";
+  std::cout << "Channel 4 configured to output 50Hz PWM with 50% duty cycle.\n";
   sleep(5);
 
   // AFter 5s, change the duty cycle from 30%, then 70%.
@@ -232,7 +153,7 @@ gpioLoopbackNonBlockingApiDemo(Vehicle* vehicle)
   vehicle->mfio->config(MFIO::MODE_GPIO_IN, MFIO::CHANNEL_4, digitalValue,
                         digitalFreq);
 
-  vehicle->mfio->getValue(MFIO::CHANNEL_4, getGpiCallBack, userData);
+  vehicle->mfio->getValue(MFIO::CHANNEL_4, getGpiCallBack);
   sleep(5);
 }
 
@@ -241,7 +162,7 @@ getGpiCallBack(DJI::OSDK::Vehicle* vehicle, DJI::OSDK::RecvContainer recvFrame,
                DJI::OSDK::UserData userData)
 {
   uint16_t ack_length =
-    recvFrame.recvInfo.len - static_cast<uint16_t>(Protocol::PackageMin);
+    recvFrame.recvInfo.len - static_cast<uint16_t>(OpenProtocol::PackageMin);
   uint8_t* ackPtr = recvFrame.recvData.raw_ack_array;
 
   uint8_t  result;
@@ -289,7 +210,7 @@ adcNonBlockingApiDemo(Vehicle* vehicle)
   vehicle->mfio->config(MFIO::MODE_ADC, MFIO::CHANNEL_4, initOnTimeUs, pwmFreq);
   std::cout << "Channel 5 configured to ADC input\n";
 
-  vehicle->mfio->getValue(MFIO::CHANNEL_4, getAdcCallBack, userData);
+  vehicle->mfio->getValue(MFIO::CHANNEL_4, getAdcCallBack);
 
   sleep(5);
 }
@@ -300,7 +221,7 @@ getAdcCallBack(DJI::OSDK::Vehicle* vehicle, DJI::OSDK::RecvContainer recvFrame,
 {
 
   uint16_t ack_length =
-    recvFrame.recvInfo.len - static_cast<uint16_t>(Protocol::PackageMin);
+    recvFrame.recvInfo.len - static_cast<uint16_t>(OpenProtocol::PackageMin);
   uint8_t* ackPtr = recvFrame.recvData.raw_ack_array;
 
   uint8_t  result;

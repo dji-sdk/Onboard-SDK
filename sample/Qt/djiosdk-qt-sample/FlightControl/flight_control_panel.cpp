@@ -337,7 +337,7 @@ FlightControlPanel::actionCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
   ACK::ErrorCode      ack;
   Control*            controlPtr = vehiclePtr->control;
 
-  if (recvFrame.recvInfo.len - Protocol::PackageMin <= sizeof(uint16_t))
+  if (recvFrame.recvInfo.len - OpenProtocol::PackageMin <= sizeof(uint16_t))
   {
 
     ack.info = recvFrame.recvInfo;

@@ -25,12 +25,6 @@ HardDriver::~HardDriver()
 {
 }
 
-/*bool
-HardDriver::getDeviceStatus()
-{
-  return true;
-}*/
-
 void
 HardDriver::displayLog(const char* buf)
 {
@@ -38,10 +32,4 @@ HardDriver::displayLog(const char* buf)
     DDEBUG("%s", buf);
   else
     DDEBUG("%s", DJI::OSDK::buffer);
-}
-
-MMU*
-HardDriver::getMmu()
-{
-  return &mmu;
 }

@@ -15,48 +15,6 @@
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
 
-int
-main(int argc, char** argv)
-{
-
-  // Setup OSDK.
-  Vehicle* vehicle = setupOSDK(argc, argv);
-  if (vehicle == NULL)
-  {
-    std::cout << "Vehicle not initialized, exiting.\n";
-    return -1;
-  }
-
-  // Display interactive prompt
-  std::cout
-    << "| Available commands:                                            |"
-    << std::endl;
-  std::cout
-    << "| [a] Get telemetry data and print                               |"
-    << std::endl;
-  char inputChar;
-  std::cin >> inputChar;
-
-  switch (inputChar)
-  {
-    case 'a':
-      if (vehicle->isM100() || vehicle->isLegacyM600())
-      {
-        getBroadcastData(vehicle);
-      }
-      else
-      {
-        subscribeToData(vehicle);
-      }
-      break;
-    default:
-      break;
-  }
-
-  delete (vehicle);
-  return 0;
-}
-
 bool
 getBroadcastData(DJI::OSDK::Vehicle* vehicle, int responseTimeout)
 {
@@ -122,7 +80,8 @@ getBroadcastData(DJI::OSDK::Vehicle* vehicle, int responseTimeout)
 bool
 subscribeToData(Vehicle* vehicle, int responseTimeout)
 {
-
+  // RTK can be detected as unavailable only for Flight controllers that don't support RTK
+  bool rtkAvailable = false;
   // Counters
   int elapsedTimeInMs = 0;
   int timeToPrintInMs = 2000;
@@ -173,7 +132,7 @@ subscribeToData(Vehicle* vehicle, int responseTimeout)
   // Package 1: Subscribe to Lat/Lon, and Alt at freq 10 Hz
   pkgIndex                  = 1;
   freq                      = 10;
-  TopicName topicList10Hz[] = { TOPIC_GPS_FUSED, TOPIC_ALTITUDE_FUSIONED };
+  TopicName topicList10Hz[] = { TOPIC_GPS_FUSED, TOPIC_ALTITUDE_FUSIONED};
   numTopic                  = sizeof(topicList10Hz) / sizeof(topicList10Hz[0]);
   enableTimestamp           = false;
 
@@ -236,6 +195,40 @@ subscribeToData(Vehicle* vehicle, int responseTimeout)
     return false;
   }
 
+  // Package 4: Subscribe to RTK at freq 5 Hz.
+  pkgIndex                   = 4;
+  freq                       = 5;
+  TopicName topicListRTK5Hz[] = {TOPIC_RTK_POSITION, TOPIC_RTK_YAW_INFO,
+                                  TOPIC_RTK_POSITION_INFO, TOPIC_RTK_VELOCITY,
+                                  TOPIC_RTK_YAW};
+  numTopic        = sizeof(topicListRTK5Hz) / sizeof(topicListRTK5Hz[0]);
+  enableTimestamp = false;
+
+  pkgStatus = vehicle->subscribe->initPackageFromTopicList(
+      pkgIndex, numTopic, topicListRTK5Hz, enableTimestamp, freq);
+  if (!(pkgStatus))
+  {
+    return pkgStatus;
+  }
+  else {
+    subscribeStatus = vehicle->subscribe->startPackage(pkgIndex, responseTimeout);
+    if(subscribeStatus.data == ErrorCode::SubscribeACK::SOURCE_DEVICE_OFFLINE)
+    {
+      std::cout << "RTK Not Available" << "\n";
+      rtkAvailable = false;
+    }
+    else
+    {
+      rtkAvailable = true;
+      if (ACK::getError(subscribeStatus) != ACK::SUCCESS) {
+        ACK::getErrorCodeMessage(subscribeStatus, __func__);
+        // Cleanup before return
+        vehicle->subscribe->removePackage(pkgIndex, responseTimeout);
+        return false;
+      }
+    }
+  }
+
   // Wait for the data to start coming in.
   sleep(1);
 
@@ -246,6 +239,12 @@ subscribeToData(Vehicle* vehicle, int responseTimeout)
   TypeMap<TOPIC_RC>::type                rc;
   TypeMap<TOPIC_VELOCITY>::type          velocity;
   TypeMap<TOPIC_QUATERNION>::type        quaternion;
+  TypeMap<TOPIC_RTK_POSITION>::type      rtk;
+  TypeMap<TOPIC_RTK_POSITION_INFO>::type rtk_pos_info;
+  TypeMap<TOPIC_RTK_VELOCITY>::type      rtk_velocity;
+  TypeMap<TOPIC_RTK_YAW>::type           rtk_yaw;
+  TypeMap<TOPIC_RTK_YAW_INFO>::type      rtk_yaw_info;
+
 
   // Print in a loop for 2 sec
   while (elapsedTimeInMs < timeToPrintInMs)
@@ -256,7 +255,13 @@ subscribeToData(Vehicle* vehicle, int responseTimeout)
     rc           = vehicle->subscribe->getValue<TOPIC_RC>();
     velocity     = vehicle->subscribe->getValue<TOPIC_VELOCITY>();
     quaternion   = vehicle->subscribe->getValue<TOPIC_QUATERNION>();
-
+    if(rtkAvailable) {
+      rtk = vehicle->subscribe->getValue<TOPIC_RTK_POSITION>();
+      rtk_pos_info = vehicle->subscribe->getValue<TOPIC_RTK_POSITION_INFO>();
+      rtk_velocity = vehicle->subscribe->getValue<TOPIC_RTK_VELOCITY>();
+      rtk_yaw = vehicle->subscribe->getValue<TOPIC_RTK_YAW>();
+      rtk_yaw_info = vehicle->subscribe->getValue<TOPIC_RTK_YAW_INFO>();
+    }
     std::cout << "Counter = " << elapsedTimeInMs << ":\n";
     std::cout << "-------\n";
     std::cout << "Flight Status                         = " << (int)flightStatus
@@ -270,8 +275,13 @@ subscribeToData(Vehicle* vehicle, int responseTimeout)
     std::cout << "Attitude Quaternion   (w,x,y,z)       = " << quaternion.q0
               << ", " << quaternion.q1 << ", " << quaternion.q2 << ", "
               << quaternion.q3 << "\n";
+    if(rtkAvailable) {
+      std::cout << "RTK if available   (lat/long/alt/velocity_x/velocity_y/velocity_z/yaw/yaw_info/pos_info) ="
+                << rtk.latitude << "," << rtk.longitude << "," << rtk.HFSL << "," << rtk_velocity.x << ","
+                << rtk_velocity.y
+                << "," << rtk_velocity.z << "," << rtk_yaw << "," << rtk_yaw_info << rtk_pos_info << "\n";
+    }
     std::cout << "-------\n\n";
-
     usleep(5000);
     elapsedTimeInMs += 5;
   }

@@ -34,6 +34,4 @@ static void getAdcCallBack(DJI::OSDK::Vehicle*      vehicle,
                            DJI::OSDK::RecvContainer recvFrame,
                            DJI::OSDK::UserData      userData);
 
-DJI::OSDK::UserData userData;
-
 #endif // DJIOSDK_MFIOSAMPLE_HPP

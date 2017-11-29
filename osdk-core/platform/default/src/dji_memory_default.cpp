@@ -79,6 +79,7 @@ MutexDefault::MutexDefault()
 
 MutexDefault::~MutexDefault()
 {
+  delete instance;
 }
 
 void

@@ -112,8 +112,13 @@ public:
 
   /*! Get quaternion data from local cache
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
-   *
    *  @return Telemetry::Quaternion data structure with the newest value.
+   *  @details Data accuracy:
+   *  | Angle        | Unit | Accuracy   | Notes                                           |
+   *  |--------------|------|------------|-------------------------------------------------|
+   *  | pitch, roll  | deg  | <1         | in non-ahrs mode                                |
+   *  | yaw          | deg  | <3         | for well-calibrated compass with fine alignment |
+   *  | yaw with rtk | deg  | around 1.2 | in RTK heading fixed mode with 1 meter baseline |
    */
   Telemetry::Quaternion    getQuaternion()         ;
 
@@ -127,7 +132,13 @@ public:
 
   /*! Get velocity from local cache
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
-   *  @details The velocity may be in body or ground frame
+   *  @details Data accuracy:
+   * | Axis     | Unit | Accuracy                                                                                    |
+   * |----------|------|---------------------------------------------------------------------------------------------|
+   * | vgx, vgy | m/s  | Around 5cm/s for GNSS navigation. Around 3cm/s with VO at 1 meter height                    |
+   * | vgz      | m/s  | 10cm/s only with barometer in steady air. 3cm/s with VO at 1 meter height with 8cm baseline |
+   *
+   *  The velocity may be in body or ground frame
    *           based on settings on DJI Assistant 2's SDK page.
    *  @return Telemetry::Vector3f data structure with the newest value.
    */
@@ -150,7 +161,15 @@ public:
 
   /*! Get Globalc Position (LLA and metadata) from local cache
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
-   *  @details The returned Lat/Lon values are in rad.
+   *  @details Data accuracy:
+   *  | Axis | Unit | Position Sensor | Accuracy                                         |
+   *  |------|------|-----------------|--------------------------------------------------|
+   *  | x, y | m    | GPS             | <3m with open sky without multipath              |
+   *  | z    | m    | GPS             | <5m with open sky without multipath              |
+   *  | x, y | m    | RTK             | around 2cm with fine alignment and fix condition |
+   *  | z    | m    | RTK             | around 3cm with fine alignment and fix condition |
+   *
+   *  The returned Lat/Lon values are in rad.
    *  @return Telemetry::GlobalPosition data structure with the newest value.
    */
   Telemetry::GlobalPosition    getGlobalPosition()     ;
@@ -194,6 +213,7 @@ public:
 
   /*! Get Gimbal data from local cache
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
+   *  @details Data Accuracy: 0.1 deg in all axes
    *
    *  @return Telemetry::Gimbal data structure with the newest value.
    */
@@ -337,7 +357,6 @@ private:
   inline void unpackOne(FLAG flag, void* data, uint8_t*& buf, size_t size);
 
 public:
-
   void setBroadcastLength(uint16_t length);
   uint16_t getBroadcastLength();
 

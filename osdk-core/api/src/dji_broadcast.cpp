@@ -373,7 +373,7 @@ DataBroadcast::setBroadcastFreq(uint8_t* dataLenIs16, VehicleCallBack callback,
   }
 
   vehicle->protocolLayer->send(
-    2, 0, OpenProtocol::CMDSet::Activation::frequency, dataLenIs16, 16,
+    2, vehicle->getEncryption(), OpenProtocolCMD::CMDSet::Activation::frequency, dataLenIs16, 16,
     cmd_timeout, retry_time, true, cbIndex);
 }
 
@@ -387,12 +387,12 @@ DataBroadcast::setBroadcastFreq(uint8_t* dataLenIs16, int timeout)
     dataLenIs16[i] = (dataLenIs16[i] > 7 ? 5 : dataLenIs16[i]);
   }
 
-  vehicle->protocolLayer->send(2, 0,
-                               OpenProtocol::CMDSet::Activation::frequency,
+  vehicle->protocolLayer->send(2, vehicle->getEncryption(),
+                               OpenProtocolCMD::CMDSet::Activation::frequency,
                                dataLenIs16, 16, 100, 1, 0, 0);
 
   ack = *((ACK::ErrorCode*)getVehicle()->waitForACK(
-    OpenProtocol::CMDSet::Activation::frequency, timeout));
+    OpenProtocolCMD::CMDSet::Activation::frequency, timeout));
 
   return ack;
 }
@@ -610,10 +610,10 @@ DataBroadcast::setFrequencyCallback(Vehicle* vehicle, RecvContainer recvFrame,
 {
 
   ACK::ErrorCode ackErrorCode;
-  ackErrorCode.data = OpenProtocol::ErrorCode::CommonACK::NO_RESPONSE_ERROR;
+  ackErrorCode.data = OpenProtocolCMD::ErrorCode::CommonACK::NO_RESPONSE_ERROR;
   ackErrorCode.info = recvFrame.recvInfo;
 
-  if (recvFrame.recvInfo.len - Protocol::PackageMin <= 2)
+  if (recvFrame.recvInfo.len - OpenProtocol::PackageMin <= 2)
   {
     // Two-byte ACK
     ackErrorCode.data = recvFrame.recvData.ack;

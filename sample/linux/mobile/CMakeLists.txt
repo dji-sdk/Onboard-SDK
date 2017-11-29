@@ -10,9 +10,16 @@ include_directories(${ONBOARDSDK_SOURCE}/protocol/inc)
 include_directories(${ONBOARDSDK_SOURCE}/platform/linux/inc)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../common)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../flight-control)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../camera-gimbal)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../missions)
+
 FILE(GLOB SOURCE_FILES *.hpp *.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_environment.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_helpers.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/../flight-control/flight_control_sample.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/../camera-gimbal/camera_gimbal_sample.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/../missions/mission_sample.cpp
         )
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})

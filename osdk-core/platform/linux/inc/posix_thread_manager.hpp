@@ -20,7 +20,7 @@ namespace DJI
 namespace OSDK
 {
 
-/*! @brief POSIX-COmpatible Data Protection and Condition Variables for *NIX
+/*! @brief POSIX-Compatible Data Protection and Condition Variables for *NIX
  * platforms
  *
  */
@@ -36,8 +36,8 @@ public:
 
   //! Implementing virtual functions from ThreadManager
 public:
-  void lockMemory();
-  void freeMemory();
+  void lockRecvContainer();
+  void freeRecvContainer();
 
   void lockMSG();
   void freeMSG();

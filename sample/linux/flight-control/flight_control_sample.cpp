@@ -17,60 +17,6 @@
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
 
-/*! main
- *
- */
-int
-main(int argc, char** argv)
-{
-  // Initialize variables
-  int functionTimeout = 1;
-
-  // Setup OSDK.
-  Vehicle* vehicle = setupOSDK(argc, argv);
-  if (vehicle == NULL)
-  {
-    std::cout << "Vehicle not initialized, exiting.\n";
-    return -1;
-  }
-
-  // Obtain Control Authority
-  vehicle->obtainCtrlAuthority(functionTimeout);
-
-  // Display interactive prompt
-  std::cout
-    << "| Available commands:                                            |"
-    << std::endl;
-  std::cout
-    << "| [a] Monitored Takeoff + Landing                                |"
-    << std::endl;
-  std::cout
-    << "| [b] Monitored Takeoff + Position Control + Landing             |"
-    << std::endl;
-  char inputChar;
-  std::cin >> inputChar;
-
-  switch (inputChar)
-  {
-    case 'a':
-      monitoredTakeoff(vehicle);
-      monitoredLanding(vehicle);
-      break;
-    case 'b':
-      monitoredTakeoff(vehicle);
-      moveByPositionOffset(vehicle, 0, 6, 6, 30);
-      moveByPositionOffset(vehicle, 6, 0, -3, -30);
-      moveByPositionOffset(vehicle, -6, -6, 0, 0);
-      monitoredLanding(vehicle);
-      break;
-    default:
-      break;
-  }
-
-  delete (vehicle);
-  return 0;
-}
-
 /*! Monitored Takeoff (Blocking API call). Return status as well as ack.
     This version of takeoff makes sure your aircraft actually took off
     and only returns when takeoff is complete.
@@ -326,8 +272,8 @@ monitoredTakeoff(Vehicle* vehicle, int timeout)
     setpoints and use attitude control or convert to velocity setpoints
     and use velocity control.
 !*/
-int
-moveByPositionOffset(Vehicle* vehicle, float xOffsetDesired,
+bool
+moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired,
                      float yOffsetDesired, float zOffsetDesired,
                      float yawDesired, float posThresholdInM,
                      float yawThresholdInDeg)
@@ -740,7 +686,7 @@ monitoredLanding(Vehicle* vehicle, int timeout)
   }
   else if (vehicle->isLegacyM600())
   {
-    while (vehicle->broadcast->getStatus().flight ==
+    while (vehicle->broadcast->getStatus().flight >
            DJI::OSDK::VehicleStatus::FlightStatus::STOPED)
     {
       sleep(1);

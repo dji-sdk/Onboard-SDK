@@ -47,7 +47,7 @@ Control::action(const int cmd, VehicleCallBack callback, UserData userData)
     legacyCMDData.cmd = cmd;
     legacyCMDData.sequence++;
     vehicle->protocolLayer->send(
-        2, DJI::OSDK::encrypt, OpenProtocol::CMDSet::Control::task,
+        2, vehicle->getEncryption(), OpenProtocolCMD::CMDSet::Control::task,
         (uint8_t*)&legacyCMDData, sizeof(legacyCMDData), 500, 2, true, cbIndex);
   }
   else if (vehicle->isM100())
@@ -55,14 +55,14 @@ Control::action(const int cmd, VehicleCallBack callback, UserData userData)
     legacyCMDData.cmd = cmd;
     legacyCMDData.sequence++;
     vehicle->protocolLayer->send(
-        2, DJI::OSDK::encrypt, OpenProtocol::CMDSet::Control::task,
+        2,vehicle->getEncryption(), OpenProtocolCMD::CMDSet::Control::task,
         (uint8_t*)&legacyCMDData, sizeof(legacyCMDData), 500, 2, true, cbIndex);
   }
   else
   {
     uint8_t data = cmd;
-    vehicle->protocolLayer->send(2, DJI::OSDK::encrypt,
-                                 OpenProtocol::CMDSet::Control::task, &data,
+    vehicle->protocolLayer->send(2, vehicle->getEncryption(),
+                                 OpenProtocolCMD::CMDSet::Control::task, &data,
                                  sizeof(data), 500, 2, true, cbIndex);
   }
 }
@@ -77,7 +77,7 @@ Control::action(const int cmd, int timeout)
     legacyCMDData.cmd = cmd;
     legacyCMDData.sequence++;
     vehicle->protocolLayer->send(
-        2, DJI::OSDK::encrypt, OpenProtocol::CMDSet::Control::task,
+        2,vehicle->getEncryption(), OpenProtocolCMD::CMDSet::Control::task,
         (uint8_t*)&legacyCMDData, sizeof(legacyCMDData), 500, 2, false, 2);
   }
   else if (vehicle->isM100())
@@ -85,19 +85,19 @@ Control::action(const int cmd, int timeout)
     legacyCMDData.cmd = cmd;
     legacyCMDData.sequence++;
     vehicle->protocolLayer->send(
-        2, DJI::OSDK::encrypt, OpenProtocol::CMDSet::Control::task,
+        2, vehicle->getEncryption(), OpenProtocolCMD::CMDSet::Control::task,
         (uint8_t*)&legacyCMDData, sizeof(legacyCMDData), 100, 3, false, 2);
   }
   else
   {
     uint8_t data = cmd;
-    vehicle->protocolLayer->send(2, DJI::OSDK::encrypt,
-                                 OpenProtocol::CMDSet::Control::task, &data,
+    vehicle->protocolLayer->send(2, vehicle->getEncryption(),
+                                 OpenProtocolCMD::CMDSet::Control::task, &data,
                                  sizeof(data), 500, 2, false, 2);
   }
 
   ack = *((ACK::ErrorCode*)vehicle->waitForACK(
-    OpenProtocol::CMDSet::Control::task, timeout));
+    OpenProtocolCMD::CMDSet::Control::task, timeout));
 
   return ack;
 }
@@ -119,8 +119,8 @@ Control::setArm(bool armSetting, VehicleCallBack callback, UserData userData)
     vehicle->nbUserData[cbIndex]          = NULL;
   }
 
-  vehicle->protocolLayer->send(2, DJI::OSDK::encrypt,
-                               OpenProtocol::CMDSet::Control::setArm, &data,
+  vehicle->protocolLayer->send(2, vehicle->getEncryption(),
+                               OpenProtocolCMD::CMDSet::Control::setArm, &data,
                                sizeof(data), 10, 10, true, cbIndex);
 }
 
@@ -130,12 +130,12 @@ Control::setArm(bool armSetting, int timeout)
   ACK::ErrorCode ack;
   uint8_t        data = armSetting ? 1 : 0;
 
-  vehicle->protocolLayer->send(2, DJI::OSDK::encrypt,
-                               OpenProtocol::CMDSet::Control::setArm, &data,
+  vehicle->protocolLayer->send(2, vehicle->getEncryption(),
+                               OpenProtocolCMD::CMDSet::Control::setArm, &data,
                                sizeof(data), 10, 10, false, 2);
 
   ack = *((ACK::ErrorCode*)vehicle->waitForACK(
-    OpenProtocol::CMDSet::Control::setArm, timeout));
+    OpenProtocolCMD::CMDSet::Control::setArm, timeout));
 
   return ack;
 }
@@ -314,7 +314,7 @@ void
 Control::flightCtrl(CtrlData data)
 {
   vehicle->protocolLayer->send(
-    0, DJI::OSDK::encrypt, OpenProtocol::CMDSet::Control::control,
+    0, vehicle->getEncryption(), OpenProtocolCMD::CMDSet::Control::control,
     static_cast<void*>(&data), sizeof(CtrlData), 500, 2, false, 1);
 }
 
@@ -324,7 +324,7 @@ Control::flightCtrl(AdvancedCtrlData data)
   if (vehicle->getFwVersion() > extendedVersionBase)
   {
     vehicle->protocolLayer->send(
-      0, DJI::OSDK::encrypt, OpenProtocol::CMDSet::Control::control,
+      0, vehicle->getEncryption(), OpenProtocolCMD::CMDSet::Control::control,
       static_cast<void*>(&data), sizeof(AdvancedCtrlData), 500, 2, false, 1);
   }
   else
@@ -433,7 +433,7 @@ Control::actionCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
   ACK::ErrorCode ack;
   Control*       controlPtr = vehiclePtr->control;
 
-  if (recvFrame.recvInfo.len - Protocol::PackageMin <= sizeof(uint16_t))
+  if (recvFrame.recvInfo.len - OpenProtocol::PackageMin <= sizeof(uint16_t))
   {
 
     ack.info = recvFrame.recvInfo;

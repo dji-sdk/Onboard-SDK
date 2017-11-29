@@ -27,10 +27,15 @@ Log::Log(Mutex* m)
   {
     mutex = new MutexDefault();
   }
+
+  this->enable_status = true;
+  this->enable_debug  = false;
+  this->enable_error = true;
 }
 
 Log::~Log()
 {
+  delete mutex;
 }
 
 Log&
@@ -88,7 +93,7 @@ Log::operator<<(bool val)
 Log&
 Log::operator<<(short val)
 {
-  //! @todo NUMBER_STYLE
+  // @todo NUMBER_STYLE
   print("%d", val);
   return *this;
 }
@@ -96,7 +101,7 @@ Log::operator<<(short val)
 Log&
 Log::operator<<(uint16_t val)
 {
-  //! @todo NUMBER_STYLE
+  // @todo NUMBER_STYLE
   print("%u", val);
   return *this;
 }
@@ -104,7 +109,7 @@ Log::operator<<(uint16_t val)
 Log&
 Log::operator<<(int val)
 {
-  //! @todo NUMBER_STYLE
+  // @todo NUMBER_STYLE
   print("%d", val);
   return *this;
 }
@@ -112,7 +117,7 @@ Log::operator<<(int val)
 Log&
 Log::operator<<(uint32_t val)
 {
-  //! @todo NUMBER_STYLE
+  // @todo NUMBER_STYLE
   print("%u", val);
   return *this;
 }
@@ -120,7 +125,7 @@ Log::operator<<(uint32_t val)
 Log&
 Log::operator<<(long val)
 {
-  //! @todo NUMBER_STYLE
+  // @todo NUMBER_STYLE
   print("%ld", val);
   return *this;
 }
@@ -128,7 +133,7 @@ Log::operator<<(long val)
 Log&
 Log::operator<<(unsigned long val)
 {
-  //! @todo NUMBER_STYLE
+  // @todo NUMBER_STYLE
   print("%lu", val);
   return *this;
 }
@@ -136,7 +141,7 @@ Log::operator<<(unsigned long val)
 Log&
 Log::operator<<(long long val)
 {
-  //! @todo NUMBER_STYLE
+  // @todo NUMBER_STYLE
   print("%lld", val);
   return *this;
 }
@@ -144,7 +149,7 @@ Log::operator<<(long long val)
 Log&
 Log::operator<<(unsigned long long val)
 {
-  //! @todo NUMBER_STYLE
+  // @todo NUMBER_STYLE
   print("%llu", val);
   return *this;
 }
@@ -152,7 +157,7 @@ Log::operator<<(unsigned long long val)
 Log&
 Log::operator<<(float val)
 {
-  //! @todo NUMBER_STYLE
+  // @todo NUMBER_STYLE
   print("%f", val);
   return *this;
 }
@@ -160,7 +165,7 @@ Log::operator<<(float val)
 Log&
 Log::operator<<(double val)
 {
-  //! @todo NUMBER_STYLE
+  // @todo NUMBER_STYLE
   print("%lf", val);
   return *this;
 }
@@ -168,7 +173,7 @@ Log::operator<<(double val)
 Log&
 Log::operator<<(long double val)
 {
-  //! @todo NUMBER_STYLE
+  // @todo NUMBER_STYLE
   print("%Lf", val);
   return *this;
 }
@@ -176,7 +181,7 @@ Log::operator<<(long double val)
 Log&
 Log::operator<<(void* val)
 {
-  //! @todo NUMBER_STYLE
+  // @todo NUMBER_STYLE
   print("ptr:0x%X", val);
   return *this;
 }
@@ -191,7 +196,7 @@ Log::operator<<(const char* str)
 Log&
 Log::operator<<(char c)
 {
-  //! @todo NUMBER_STYLE
+  // @todo NUMBER_STYLE
   print("%c", c);
   return *this;
 }
@@ -199,7 +204,7 @@ Log::operator<<(char c)
 Log&
 Log::operator<<(int8_t c)
 {
-  //! @todo NUMBER_STYLE
+  // @todo NUMBER_STYLE
   print("%c", c);
   return *this;
 }
@@ -207,7 +212,58 @@ Log::operator<<(int8_t c)
 Log&
 Log::operator<<(uint8_t c)
 {
-  //! @todo NUMBER_STYLE
+  // @todo NUMBER_STYLE
   print("0x%.2X", c);
   return *this;
+}
+
+// Various Toggles
+
+void
+Log::enableStatusLogging()
+{
+  this->enable_status = true;
+}
+void
+Log::disableStatusLogging()
+{
+  this->enable_status = false;
+}
+void
+Log::enableDebugLogging()
+{
+  this->enable_debug = true;
+}
+void
+Log::disableDebugLogging()
+{
+  this->enable_debug = false;
+}
+void
+Log::enableErrorLogging()
+{
+  this->enable_error = true;
+}
+void
+Log::disableErrorLogging()
+{
+  this->enable_error = false;
+}
+
+bool
+Log::getStatusLogState()
+{
+  return this->enable_status;
+}
+
+bool
+Log::getDebugLogState()
+{
+  return this->enable_debug;
+}
+
+bool
+Log::getErrorLogState()
+{
+  return this->enable_error;
 }

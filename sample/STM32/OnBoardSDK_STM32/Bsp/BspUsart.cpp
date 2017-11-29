@@ -226,11 +226,13 @@ USART3_IRQHandler(void)
   if (USART_GetFlagStatus(USART3, USART_FLAG_RXNE) == SET)
   {
     isACKProcessed = false;
-    isFrame = v->protocolLayer->byteHandler(USART_ReceiveData(USART3), rFrame);
+    isFrame = v->protocolLayer->byteHandler(USART_ReceiveData(USART3));
     if (isFrame == true)
     {
+			rFrame = v->protocolLayer->getReceivedFrame();
+			
       //! Trigger default or user defined callback
-      v->processReceivedData(*rFrame);
+      v->processReceivedData(rFrame);
 
       //! Reset
       isFrame        = false;

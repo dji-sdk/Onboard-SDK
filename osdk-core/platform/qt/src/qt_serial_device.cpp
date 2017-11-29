@@ -28,6 +28,7 @@ QHardDriver::QHardDriver(QObject* parent, const char* portName, int baudrate)
 {
   this->portName = QString(portName);
   this->baudrate = baudrate;
+  this->initStatus = false;
   display        = 0;
 }
 
@@ -35,12 +36,38 @@ QHardDriver::QHardDriver(QObject* parent, QSerialPort* extSerialPort)
 {
   this->port     = extSerialPort;
   this->baudrate = extSerialPort->baudRate();
+  this->initStatus = false;
   display        = 0;
 }
 
+bool
+QHardDriver::getDeviceStatus()
+{
+  bool curStatus = false;
+  statusLock.lock();
+  curStatus = this->initStatus;
+  statusLock.unlock();
+
+  return curStatus;
+}
+
+void
+QHardDriver::setDeviceStatus(bool status)
+{
+  statusLock.lock();
+  this->initStatus = status;
+  statusLock.unlock();
+}
 void
 QHardDriver::init()
 {
+  initLock.lock();
+  if (this->getDeviceStatus())
+  {
+    initLock.unlock();
+    return;
+  }
+
   port = new QSerialPort(QString(portName));
   if (port != 0)
   {
@@ -54,15 +81,17 @@ QHardDriver::init()
     if (port->open(QIODevice::ReadWrite))
     {
       DSTATUS("port %s open success", port->portName().toLocal8Bit().data());
-
+      setDeviceStatus(true);
       DSTATUS("Read buf size: %d", port->readBufferSize());
     }
     else
     {
       DERROR("fail to open port %s", port->portName().toLocal8Bit().data());
+      setDeviceStatus(false);
     }
     DSTATUS("BaudRate: %d", port->baudRate());
   }
+  initLock.unlock();
 }
 
 time_ms
@@ -106,7 +135,7 @@ QHardDriver::readall(uint8_t* buf, size_t maxlen)
     {
       if (port->bytesAvailable() > 0)
       {
-        QThread::usleep(10);
+        QThread::usleep(100);
         ans = port->read(reinterpret_cast<char*>(buf), maxlen);
         // bufferLock.unlock();
       }

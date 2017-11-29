@@ -156,7 +156,7 @@ public: // public methods
    * @param packageID: The ID of package it'll generate
    * @param numberOfTopics:
    * @param topicList: List of Topic Names to subscribe in the package
-   * @param sendTimeStamp
+   * @param sendTimeStamp: Note that timestamp is the time of package transmission, not data acquisition from sensor.
    * @param freq
    * @return
    */
@@ -265,7 +265,7 @@ public: // public variables
 
 private: // private variables
   Vehicle*            vehicle;
-  Protocol*           protocol;
+  OpenProtocol*       protocol;
   SubscriptionPackage package[MAX_NUMBER_OF_PACKAGE];
 
 private: // private methods

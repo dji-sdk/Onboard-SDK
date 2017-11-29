@@ -17,59 +17,6 @@
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
 
-int
-main(int argc, char** argv)
-{
-  // Initialize variables
-  int functionTimeout = 1;
-
-  // Setup OSDK.
-  Vehicle* vehicle = setupOSDK(argc, argv);
-  if (vehicle == NULL)
-  {
-    std::cout << "Vehicle not initialized, exiting.\n";
-    return -1;
-  }
-
-  // Obtain Control Authority
-  vehicle->obtainCtrlAuthority(functionTimeout);
-
-  // Setup variables for use
-  uint8_t wayptPolygonSides;
-  int     hotptInitRadius;
-  int     responseTimeout = 1;
-
-  // Display interactive prompt
-  std::cout
-    << "| Available commands:                                            |"
-    << std::endl;
-  std::cout
-    << "| [a] Waypoint Mission                                           |"
-    << std::endl;
-  std::cout
-    << "| [b] Hotpoint Mission                                           |"
-    << std::endl;
-  char inputChar;
-  std::cin >> inputChar;
-  switch (inputChar)
-  {
-    case 'a':
-      // Waypoint call
-      wayptPolygonSides = 6;
-      runWaypointMission(vehicle, wayptPolygonSides, responseTimeout);
-      break;
-    case 'b':
-      hotptInitRadius = 10;
-      runHotpointMission(vehicle, hotptInitRadius, responseTimeout);
-      break;
-    default:
-      break;
-  }
-
-  delete (vehicle);
-  return 0;
-}
-
 bool
 setUpSubscription(DJI::OSDK::Vehicle* vehicle, int responseTimeout)
 {

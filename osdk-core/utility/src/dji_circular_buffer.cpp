@@ -18,7 +18,15 @@ CircularBuffer::CircularBuffer()
 {
   buffer =
     (VehicleCallBackHandler*)malloc(5000 * sizeof(VehicleCallBackHandler));
+  if(buffer == NULL){
+    DERROR("buffer memory alloc failed\n");
+  }
+
   buffer2 = (RecvContainer*)malloc(5000 * sizeof(RecvContainer));
+  if(buffer2 == NULL){
+    DERROR("buffer2 memory alloc failed\n");
+  }
+
   head    = 0;
   tail    = 0;
 }

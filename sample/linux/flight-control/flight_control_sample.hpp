@@ -49,10 +49,10 @@ bool monitoredTakeoff(DJI::OSDK::Vehicle* vehiclePtr, int timeout = 1);
     setpoints and use attitude control or convert to velocity setpoints
     and use velocity control.
 !*/
-int moveByPositionOffset(DJI::OSDK::Vehicle* vehicle, float xOffsetDesired,
-                         float yOffsetDesired, float zOffsetDesired,
-                         float yawDesired, float posThresholdInM = 0.2,
-                         float yawThresholdInDeg = 1.0);
+bool moveByPositionOffset(DJI::OSDK::Vehicle *vehicle, float xOffsetDesired,
+                          float yOffsetDesired, float zOffsetDesired,
+                          float yawDesired, float posThresholdInM = 0.2,
+                          float yawThresholdInDeg = 1.0);
 
 /*! Monitored Landing (Blocking API call). Return status as well as ack.
     This version of takeoff makes sure your aircraft actually took off

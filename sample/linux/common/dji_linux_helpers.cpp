@@ -1,22 +1,70 @@
-//
-// Created by rohit on 5/12/17.
-//
+/*! @file dji_linux_helpers.cpp
+ *  @version 3.3
+ *  @date Sep 12 2017
+ *
+ *  @brief
+ *  Helper functions to handle serial port validation and vehicle initialization
+ *
+ *  @copyright
+ *  2017 DJI. All rights reserved.
+ * */
 
 #include <dji_linux_helpers.hpp>
 
 using namespace DJI::OSDK;
 
-Vehicle*
-setupOSDK(int argc, char** argv)
+LinuxSetup::LinuxSetup(int argc, char** argv, bool enableAdvancedSensing)
 {
+  this->functionTimeout     = 1; // second
+  this->vehicle             = nullptr;
+  this->environment         = nullptr;
+  this->testSerialDevice    = nullptr;
+  this->useAdvancedSensing  = enableAdvancedSensing;
 
-  int functionTimeout = 1;
+  setupEnvironment(argc, argv);
+  initVehicle();
+}
+
+LinuxSetup::~LinuxSetup()
+{
+  if (vehicle){
+    delete (vehicle);
+    vehicle = nullptr;
+  }
+  if (environment){
+    delete (environment);
+    environment = nullptr;
+  }
+  if (testSerialDevice){
+    delete (testSerialDevice);
+    testSerialDevice = nullptr;
+  }
+}
+
+void
+LinuxSetup::setupEnvironment(int argc, char** argv)
+{
 
   // Config file loading
   std::string config_file_path;
-  if (argc > 1)
+
+  // Find config file among given parameters
+  for(int i = 1; i < argc; i++)
+  {  
+    std::ifstream ifs( argv[i] ); 
+    if (ifs.is_open()) 
+    {                 
+      config_file_path = argv[i];
+      if(config_file_path.find(".txt") != std::string::npos)
+      {
+        // Found config file
+        break;
+      } 
+    }
+  }
+
+  if (!config_file_path.empty())
   {
-    config_file_path = argv[1];
     std::ifstream fStream(config_file_path.c_str());
     if (!fStream.good())
       throw std::runtime_error("User configuration file not found");
@@ -29,31 +77,40 @@ setupOSDK(int argc, char** argv)
       throw std::runtime_error("User configuration file not found");
   }
 
-  DJI_Environment* environment = new DJI_Environment(config_file_path);
+  this->environment = new DJI_Environment(config_file_path);
   if (!environment->getConfigResult())
   {
     // We were unable to read the config file. Exit.
-    return NULL;
+    throw std::runtime_error(
+      "User configuration file is not correctly formatted.");
   }
-/*  LinuxSerialDevice* linuxSerialDevice = new LinuxSerialDevice(
-    environment->getDevice().c_str(), environment->getBaudrate());
-  linuxSerialDevice->init();
-  bool setupStatus = validateSerialDevice(linuxSerialDevice);
 
-  if (!setupStatus)
-  {
-    delete (linuxSerialDevice);
-    delete (environment);
-    return NULL;
-  }
-  else
-  {
-    delete (linuxSerialDevice);
-  }
-*/
-  bool     threadSupport = true;
-  Vehicle* vehicle       = new Vehicle(environment->getDevice().c_str(),
-                                 environment->getBaudrate(), threadSupport);
+  /*  this->testSerialDevice = new LinuxSerialDevice(
+      environment->getDevice().c_str(), environment->getBaudrate());
+    testSerialDevice->init();
+    bool setupStatus = validateSerialPort();
+
+    if (!setupStatus)
+    {
+      delete (testSerialDevice);
+      delete (environment);
+      return NULL;
+    }
+    else
+    {
+      delete (testSerialDevice);
+    }
+  */
+}
+
+void
+LinuxSetup::initVehicle()
+{
+  bool threadSupport = true;
+  this->vehicle      = new Vehicle(environment->getDevice().c_str(),
+                                   environment->getBaudrate(),
+                                   threadSupport,
+                                   this->useAdvancedSensing);
 
   // Check if the communication is working fine
   if (!vehicle->protocolLayer->getDriver()->getDeviceStatus())
@@ -61,19 +118,18 @@ setupOSDK(int argc, char** argv)
     std::cout << "Comms appear to be incorrectly set up. Exiting.\n";
     delete (vehicle);
     delete (environment);
-    return NULL;
+    this->vehicle     = nullptr;
+    this->environment = nullptr;
   }
 
   // Check if drone version is okay
   if (vehicle->getFwVersion() < extendedVersionBase &&
       (!vehicle->isM100()) && !vehicle->isLegacyM600())
   {
-    delete(vehicle);
-    return NULL;
+    this->vehicle = nullptr;
   }
 
   // Activate
-  Vehicle::ActivateData activateData;
   activateData.ID = environment->getApp_id();
   char app_key[65];
   activateData.encKey = app_key;
@@ -86,41 +142,38 @@ setupOSDK(int argc, char** argv)
     ACK::getErrorCodeMessage(ack, __func__);
     delete (vehicle);
     delete (environment);
-    return NULL;
+    this->environment = nullptr;
+    this->vehicle     = nullptr;
   }
-
-  delete (environment); // We have no more use for environment
-  return vehicle;
 }
 
 bool
-validateSerialDevice(LinuxSerialDevice* serialDevice)
+LinuxSetup::validateSerialPort()
 {
   static const int BUFFER_SIZE = 2048;
 
   //! Check the serial channel for data
   uint8_t buf[BUFFER_SIZE];
-  if (!serialDevice->setSerialPureTimedRead())
+  if (!testSerialDevice->setSerialPureTimedRead())
   {
-    DERROR(
-      "Failed to set up port for timed read.\n");
+    DERROR("Failed to set up port for timed read.\n");
     return (false);
   };
   usleep(100000);
-  if (serialDevice->serialRead(buf, BUFFER_SIZE))
+  if (testSerialDevice->serialRead(buf, BUFFER_SIZE))
   {
     DERROR("Succeeded to read from serial device\n");
   }
   else
   {
     DERROR("\"Failed to read from serial device. The Onboard SDK is not "
-           "communicating with your drone. \n");
+             "communicating with your drone. \n");
     // serialDevice->unsetSerialPureTimedRead();
     return (false);
   }
 
   // If we reach here, _serialRead succeeded.
-  int baudCheckStatus = serialDevice->checkBaudRate(buf);
+  int baudCheckStatus = testSerialDevice->checkBaudRate(buf);
   if (baudCheckStatus == -1)
   {
     DERROR("No data on the line. Is your drone powered on?\n");
@@ -129,10 +182,10 @@ validateSerialDevice(LinuxSerialDevice* serialDevice)
   if (baudCheckStatus == -2)
   {
     DERROR("Baud rate mismatch found. Make sure DJI Assistant 2 has the same "
-           "baud setting as the one in User_Config.h\n");
+             "baud setting as the one in User_Config.h\n");
     return (false);
   }
   // All the tests passed and the serial device is properly set up
-  serialDevice->unsetSerialPureTimedRead();
+  testSerialDevice->unsetSerialPureTimedRead();
   return (true);
 }

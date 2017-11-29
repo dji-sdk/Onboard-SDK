@@ -19,7 +19,7 @@ namespace DJI
 namespace OSDK
 {
 
-class OpenProtocol : public ErrorCode
+class OpenProtocolCMD : public ErrorCode
 {
 public:
   const static int MAX_CMD_ARRAY_SIZE = 2;

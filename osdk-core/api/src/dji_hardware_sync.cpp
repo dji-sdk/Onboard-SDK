@@ -31,7 +31,7 @@ HardwareSync::setSyncFreq(uint32_t freqInHz, uint16_t tag)
 void
 HardwareSync::startSync(SyncSettings& data)
 {
-  vehicle->protocolLayer->send(0, encrypt,
-                               OpenProtocol::CMDSet::HardwareSync::broadcast,
+  vehicle->protocolLayer->send(0, vehicle->getEncryption(),
+                               OpenProtocolCMD::CMDSet::HardwareSync::broadcast,
                                &data, sizeof(data));
 }
