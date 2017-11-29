@@ -1160,11 +1160,11 @@ Vehicle::getDroneVersion(int timeout)
 
     strncpy(droneVersionACK.data.hwVersion, this->versionData.hwVersion,
             sizeof(this->versionData.hwVersion));
-    droneVersionACK.data.hwVersion[sizeof(this->versionData.hwVersion)] = '\0';
+    droneVersionACK.data.hwVersion[sizeof(this->versionData.hwVersion) - 1] = '\0';
 
     strncpy(droneVersionACK.data.hw_serial_num, this->versionData.hw_serial_num,
             sizeof(this->versionData.hw_serial_num));
-    droneVersionACK.data.hw_serial_num[sizeof(this->versionData.hwVersion)] =
+    droneVersionACK.data.hw_serial_num[sizeof(this->versionData.hw_serial_num) - 1] =
       '\0';
   }
   return droneVersionACK;
