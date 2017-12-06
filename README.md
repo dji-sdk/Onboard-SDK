@@ -7,11 +7,11 @@
 The DJI Onboard SDK allows you to connect your own Onboard Computer to a [supported](https://developer.dji.com/onboard-sdk/documentation/introduction/osdk-hardware-introduction.html#supported-products) DJI vehicle or flight controller using a serial port (TTL UART). For full documentation, please visit the [DJI Developer Site](https://developer.dji.com/onboard-sdk/documentation/). Documentation regarding the code can be found in the [OSDK API Reference](https://developer.dji.com/onboard-api-reference/index.html) section of the developer website.
 
 ## Latest Release
-OSDK 3.4 was released on 22 Nov 2017. This release introduces support for Matrice 210 and 210 RTK. Developers will now have access to previously unavailable data such as front-facing and downward-facing stereo camera feeds through USB. Please see the [release notes](https://developer.dji.com/onboard-sdk/documentation/appendix/releaseNotes.html) for more information.
+OSDK 3.4.1 was released on 06 Dec 2017. This is a bugfix release fixing build issues for STM32, Qt, and resolving issues #212 and #221. Additionally, MIT license verbiage has been added to the open source components of OSDK. Links to DJI EULA have been added for headers accompanying closed-source binaries.
 
 ## Last Major Release
 
-A new major version of DJI Onboard SDK (v3.3.1) was released on 3 Aug 2017. This release introduces backward compatibility for the DJI M100 and re-introduces the cross-platform Qt GUI sample, so be sure to read the [release notes](https://developer.dji.com/onboard-sdk/documentation/appendix/releaseNotes.html).
+OSDK 3.4 was released on 22 Nov 2017. This release introduces support for Matrice 210 and 210 RTK. Developers will now have access to previously unavailable data such as front-facing and downward-facing stereo camera feeds through USB. Please see the [release notes](https://developer.dji.com/onboard-sdk/documentation/appendix/releaseNotes.html) for more information.
 
 ## Firmware Compatibility
 
