@@ -414,11 +414,8 @@ Vehicle::initVersion()
   getDroneVersion();
 #else
   ACK::DroneVersion ack = getDroneVersion(wait_timeout);
-	if(ACK::getError(ack.ack))
-	{
-		ACK::getErrorCodeMessage(ack.ack, __func__);
-		return false;
-	}
+  // Don't call getError on this ACK, since we don't care about the
+  // activation state while getting version during initialization
 #endif
 
   this->platformManager->millisecSleep(2000);	

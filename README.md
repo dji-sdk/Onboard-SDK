@@ -7,7 +7,7 @@
 The DJI Onboard SDK allows you to connect your own Onboard Computer to a [supported](https://developer.dji.com/onboard-sdk/documentation/introduction/osdk-hardware-introduction.html#supported-products) DJI vehicle or flight controller using a serial port (TTL UART). For full documentation, please visit the [DJI Developer Site](https://developer.dji.com/onboard-sdk/documentation/). Documentation regarding the code can be found in the [OSDK API Reference](https://developer.dji.com/onboard-api-reference/index.html) section of the developer website.
 
 ## Latest Release
-OSDK 3.4.1 was released on 06 Dec 2017. This is a bugfix release fixing build issues for STM32, Qt, and resolving issues #212 and #221. Additionally, MIT license verbiage has been added to the open source components of OSDK. Links to DJI EULA have been added for headers accompanying closed-source binaries.
+OSDK 3.4.2 was released on 13 Dec 2017. Along with OSDK 3.4.1, this is a bugfix release fixing build issues for STM32, Qt, and resolving issues #212 and #221. Additionally, MIT license verbiage has been added to the open source components of OSDK. Links to DJI EULA have been added for headers accompanying closed-source binaries.
 
 ## Last Major Release
 
@@ -17,7 +17,7 @@ OSDK 3.4 was released on 22 Nov 2017. This release introduces support for Matric
 
 | Aircraft/FC       | Firmware Package Version | Flight Controller Version | OSDK Branch            | Notes                                                                 |
 |-------------------|--------------------------|---------------------------|------------------------|-----------------------------------------------------------------------|
-| **M210/M210 RTK** | **1.1.0410**             | **3.2.39.12**             | **OSDK 3.4 (Current)** | Requires DJI Assistant 2 version 1.1.8                                |
+| **M210/M210 RTK** | **1.1.0410+**            | **3.2.39.12+**            | **OSDK 3.4 (Current)** | Requires DJI Assistant 2 version 1.1.8                                |
 |                   |                          |                           |                        |                                                                       |
 | **M600/M600 Pro** | **1.0.1.65**             | **3.2.41.9**              | **OSDK 3.4 (Current)** |                                                                       |
 |                   | *1.0.1.65*               | *3.2.41.9*                | OSDK 3.3               | Firmware released 10/24/17                                            |
