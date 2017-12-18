@@ -73,6 +73,24 @@ Log::title(int level, const char* prefix, const char* func, int line)
   return *this;
 }
 
+
+Log&
+Log::title(int level, const char* prefix)
+{
+  if (level)
+  {
+    vaild = true;
+
+    const char str[] = "\n%s/%d ";
+    print(str, prefix, level);
+  }
+  else
+  {
+    vaild = false;
+  }
+  return *this;
+}
+
 Log&
 Log::print()
 {

@@ -39,10 +39,11 @@
 #include <iostream>
 
 // Helpers
-#include <dji_linux_helpers.hpp>
+#include "dji_linux_helpers.hpp"
 
 #ifdef OPEN_CV_INSTALLED
-  #include <opencv2/opencv.hpp>
+#include "opencv2/opencv.hpp"
+#include "opencv2/highgui/highgui.hpp"
 #endif
 
 static void stereoImg240pCallback(DJI::OSDK::Vehicle *vehiclePtr, DJI::OSDK::RecvContainer recvFrame, DJI::OSDK::UserData userData);

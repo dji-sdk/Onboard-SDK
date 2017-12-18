@@ -40,11 +40,12 @@
 #include <iostream>
 
 // Helpers
-#include <dji_linux_helpers.hpp>
+#include "dji_linux_helpers.hpp"
 
 // Third party library
 #ifdef OPEN_CV_INSTALLED
-  #include <opencv2/opencv.hpp>
+#include "opencv2/opencv.hpp"
+#include "opencv2/highgui/highgui.hpp"
 #endif
 
 // Utility

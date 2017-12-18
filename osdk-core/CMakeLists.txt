@@ -129,6 +129,15 @@ if(ADVANCED_SENSING)
     add_dependencies(${PROJECT_NAME} advanced-sensing)
   endif()
 
+  find_package(FFMPEG REQUIRED)
+
+  if(FFMPEG_FOUND)
+    message("Found FFMPEG FFMPEG_INCLUDE_DIR = ${FFMPEG_INCLUDE_DIR}")
+    message("Found FFMPEG FFMPEG_LIBRARIES   = ${FFMPEG_LIBRARIES}")
+  else()
+    message("Cannot Find FFMPEG")
+  endif(FFMPEG_FOUND)
+
   target_include_directories(${PROJECT_NAME} PUBLIC
                              $<BUILD_INTERFACE:${ADVANCED_SENSING_INCLUDE_DIRS}>)
   target_link_libraries(${PROJECT_NAME} PRIVATE ${ADVANCED_SENSING_LIBRARY})
@@ -137,7 +146,10 @@ if(ADVANCED_SENSING)
   target_include_directories(${PROJECT_NAME} PUBLIC ${LIBUSB_1_INCLUDE_DIRS})
   target_link_libraries(${PROJECT_NAME} PUBLIC ${LIBUSB_1_LIBRARIES})
 
-  set(OSDK_INTERFACE_LIBS ${OSDK_INTERFACE_LIBS} ${LIBUSB_1_LIBRARIES})
+  target_include_directories(${PROJECT_NAME} PUBLIC ${FFMPEG_INCLUDE_DIR})
+  target_link_libraries(${PROJECT_NAME} PUBLIC ${FFMPEG_LIBRARIES})
+
+  set(OSDK_INTERFACE_LIBS ${OSDK_INTERFACE_LIBS} ${LIBUSB_1_LIBRARIES} ${FFMPEG_LIBRARIES})
   set(MODULE_BUILD_INTERFACE ${MODULE_BUILD_INTERFACE} ${ADVANCED_SENSING_LIBRARY})
   set(MODULE_INSTALL_INTERFACE ${MODULE_INSTALL_INTERFACE} $<INSTALL_PREFIX>/lib/libadvanced-sensing.a)
 
@@ -222,6 +234,8 @@ if(ADVANCED_SENSING)
       ${ADVANCED_SENSING_INCLUDE_DIRS}/dji_advanced_sensing.hpp
       ${ADVANCED_SENSING_INCLUDE_DIRS}/dji_advanced_sensing_protocol.hpp
       ${ADVANCED_SENSING_INCLUDE_DIRS}/linux_usb_device.hpp
+      ${ADVANCED_SENSING_INCLUDE_DIRS}/dji_camera_image.hpp
+      ${ADVANCED_SENSING_INCLUDE_DIRS}/dji_camera_stream.hpp
       )
 endif()
 

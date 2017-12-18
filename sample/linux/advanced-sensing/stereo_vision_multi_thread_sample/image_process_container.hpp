@@ -36,7 +36,8 @@
 #include "dji_vehicle.hpp"
 
 #ifdef OPEN_CV_INSTALLED
-  #include <opencv2/opencv.hpp>
+#include "opencv2/opencv.hpp"
+#include "opencv2/highgui/highgui.hpp"
 #endif
 
 class UtilityThread;
