@@ -3,7 +3,7 @@ project(stereo-vision-multi-thread-sample)
 
 # Try to see if user has OpenCV installed
 # if yes, default callback will display the image
-find_package( OpenCV 2 QUIET )
+find_package( OpenCV QUIET )
 if (OpenCV_FOUND)
   message( "\n${PROJECT_NAME}...")
   message( STATUS "Found OpenCV installed in the system, will use it to display image in AdvancedSensing APIs")

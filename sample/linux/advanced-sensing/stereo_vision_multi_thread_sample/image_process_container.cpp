@@ -74,14 +74,14 @@ void
 ImageProcessContainer::copyVGAImg(const ACK::StereoVGAImgData *img)
 {
   memcpy(&stereoVGAImg, img, sizeof(ACK::StereoVGAImgData));
-  this->gotNew240pImg = true;
+  this->gotNewVGAImg = true;
 }
 
 void
 ImageProcessContainer::copy240pImg(const ACK::StereoImgData *img)
 {
   memcpy(&stereo240pImg, img, sizeof(ACK::StereoImgData));
-  this->gotNewVGAImg = true;
+  this->gotNew240pImg = true;
 }
 
 

@@ -50,5 +50,5 @@ CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
 Makefile
-osdk-core/advanced-sensing-1.0.0
+osdk-core/advanced-sensing-*
 osdk-core/v1-1.0.0
