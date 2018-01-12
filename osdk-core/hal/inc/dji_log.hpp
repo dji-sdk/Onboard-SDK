@@ -37,6 +37,7 @@
 #ifdef WIN32
 #define __func__ __FUNCTION__
 #endif // WIN32
+#ifdef LOGGING
 
 #define DLOG(_title_)                                                          \
   DJI::OSDK::Log::instance()                                                   \
@@ -50,7 +51,7 @@
 
 #define STATUS DJI::OSDK::Log::instance().getStatusLogState()
 #define ERRORLOG DJI::OSDK::Log::instance().getErrorLogState()
-#define DEBUG DJI::OSDK::Log::instance().getDebugLogState()
+#define DEBUGLOG DJI::OSDK::Log::instance().getDebugLogState()
 
 /*! @brief Global Logging macro for status messages
  *  @details Users can use methods in the DJI::OSDK::Log class to
@@ -70,9 +71,38 @@
  *  @details Users can use methods in the DJI::OSDK::Log class to
  *  enable/disable this logging channel
  */
-#define DDEBUG DLOG(DEBUG)
-#define DDEBUG_PRIVATE DLOG_PRIVATE(DEBUG)
+#define DDEBUG DLOG(DEBUGLOG)
+#define DDEBUG_PRIVATE DLOG_PRIVATE(DEBUGLOG)
+#else
+#define DLOG(_title_)
 
+#define DLOG_PRIVATE(_title_)
+
+#define STATUS
+#define ERRORLOG
+#define DEBUGLOG
+
+/*! @brief Global Logging macro for status messages
+ *  @details Users can use methods in the DJI::OSDK::Log class to
+ *  enable/disable this logging channel
+ */
+#define DSTATUS
+#define DSTATUS_PRIVATE
+
+/*! @brief Global Logging macro for error messages
+ *  @details Users can use methods in the DJI::OSDK::Log class to
+ *  enable/disable this logging channel
+ */
+#define DERROR
+#define DERROR_PRIVATE
+
+/*! @brief Global Logging macro for debug messages
+ *  @details Users can use methods in the DJI::OSDK::Log class to
+ *  enable/disable this logging channel
+ */
+#define DDEBUG
+#define DDEBUG_PRIVATE
+#endif
 namespace DJI
 {
 namespace OSDK
@@ -149,9 +179,7 @@ public:
   Log& operator<<(short val);
   Log& operator<<(uint16_t val);
   Log& operator<<(int val);
-  Log& operator<<(uint32_t val);
   Log& operator<<(long val);
-  Log& operator<<(unsigned long val);
   Log& operator<<(long long val);
   Log& operator<<(unsigned long long val);
   Log& operator<<(float val);

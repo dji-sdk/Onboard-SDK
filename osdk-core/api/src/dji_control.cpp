@@ -443,12 +443,13 @@ Control::emergencyBrake()
     }
   }
 }
-
 void
 Control::actionCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
                         UserData userData)
 {
   ACK::ErrorCode ack;
+#if DISABLED
+
   Control*       controlPtr = vehiclePtr->control;
 
   if (recvFrame.recvInfo.len - OpenProtocol::PackageMin <= sizeof(uint16_t))
@@ -466,6 +467,7 @@ Control::actionCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
   {
     DERROR("ACK is exception, sequence %d\n", recvFrame.recvInfo.seqNumber);
   }
+#endif
 }
 Control::CtrlData::CtrlData(uint8_t in_flag, float32_t in_x, float32_t in_y,
                             float32_t in_z, float32_t in_yaw)
