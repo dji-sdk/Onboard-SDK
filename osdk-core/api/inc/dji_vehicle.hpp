@@ -263,6 +263,8 @@ public:
    * @return NULL
    */
   void processAdvancedSensingImgs(RecvContainer* receivedFrame);
+
+  bool advSensingErrorPrintOnce;
 #endif
 
   //! User sets this to true in order to enable Callback thread with Non
@@ -339,7 +341,7 @@ public:
   /*! @brief Initialize all functional Vehicle components
 *  like, Subscription, Broadcast, Control, Gimbal, ect
 */
-  void functionalSetUp();
+  int functionalSetUp();
 
 private:
   /*! @brief Initialize minimal Vehicle components
@@ -350,7 +352,12 @@ private:
    *  @details
    *  @return false if error, true if success
    */
-  bool initPlatformSupport();
+  bool initFullPlatformSupport();
+  /*!
+   * @brief Initialize main read thread to support UART communication
+   * @return fasle if error, true if success
+   */
+  bool initMainReadThread();
   bool initOpenProtocol();
   void initCallbacks();
   void initCMD_SetSupportMatrix();

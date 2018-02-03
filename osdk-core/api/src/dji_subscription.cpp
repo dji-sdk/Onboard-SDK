@@ -95,12 +95,10 @@ DataSubscription::DataSubscription(Vehicle* vehiclePtr)
 
   subscriptionDataDecodeHandler.callback = decodeCallback;
   subscriptionDataDecodeHandler.userData = this;
-  // protocol->setSubscribeCallback(decodeCallback, this);
 }
 
 DataSubscription::~DataSubscription()
 {
-  // protocol->setSubscribeCallback(NULL, NULL);
   subscriptionDataDecodeHandler.callback = 0;
   subscriptionDataDecodeHandler.userData = 0;
 }
@@ -159,7 +157,7 @@ DataSubscription::initPackageFromTopicList(int packageID, int numberOfTopics,
 {
   if (package[packageID].isOccupied())
   {
-    DERROR("package [%d] is being occupied.", packageID);
+    DERROR("package [%d] is being occupied.\n", packageID);
     return false;
   }
 
@@ -176,17 +174,17 @@ DataSubscription::registerUserPackageUnpackCallback(
                                            userData);
 }
 
-bool
-DataSubscription::pausePackage(int packageID)
-{
-  return true;
-}
-
-bool
-DataSubscription::resumePackage(int packageID)
-{
-  return true;
-}
+//bool
+//DataSubscription::pausePackage(int packageID)
+//{
+//  return true;
+//}
+//
+//bool
+//DataSubscription::resumePackage(int packageID)
+//{
+//  return true;
+//}
 
 void
 DataSubscription::verify()
@@ -210,9 +208,12 @@ DataSubscription::verifyCallback(Vehicle*      vehiclePtr,
   ackErrorCode.info = rcvContainer.recvInfo;
   ackErrorCode.data = rcvContainer.recvData.subscribeACK;
 
-  DSTATUS("Verify result: %d.", ackErrorCode.data);
-
-  if (ACK::getError(ackErrorCode))
+  if (!ACK::getError(ackErrorCode))
+  {
+    DSTATUS("Verify subscription successful.");
+//    subscribPtr->verifySuccessful = true;
+  }
+  else
   {
     ACK::getErrorCodeMessage(ackErrorCode, __func__);
   }
@@ -230,6 +231,16 @@ DataSubscription::verify(int timeout)
 
   ack = *((ACK::ErrorCode*)getVehicle()->waitForACK(
     OpenProtocolCMD::CMDSet::Subscribe::versionMatch, timeout));
+
+  if (!ACK::getError(ack))
+  {
+    DSTATUS("Verify subscription successful.");
+//    verifySuccessful = true;
+  }
+  else
+  {
+    ACK::getErrorCodeMessage(ack, __func__);
+  }
   return ack;
 }
 
@@ -331,7 +342,7 @@ DataSubscription::startPackage(int packageID, int timeout)
 
   DSTATUS("Start package %d result: %d.",
           package[packageID].getInfo().packageID, ack.data);
-  DSTATUS("Package %d info: freq=%d, nTopics=%d.",
+  DSTATUS("Package %d info: freq=%d, nTopics=%d.\n",
           package[packageID].getInfo().packageID,
           package[packageID].getInfo().freq,
           package[packageID].getInfo().numberOfTopics);
@@ -344,7 +355,6 @@ DataSubscription::startPackage(int packageID, int timeout)
   {
     // TODO Remove. User should do it on the application side
     ACK::getErrorCodeMessage(ack, __func__);
-    // todo: More clean-up?
   }
 
   return ack;
@@ -379,7 +389,13 @@ DataSubscription::extractOnePackage(RecvContainer*       pRcvContainer,
   }
   else
   {
-    DERROR("Package does not have a valid DataBuffer");
+    // This happens when the FC is not power-cycled
+    if(!(pkg->hasLeftOverData()))
+    {
+      pkg->setLeftOverDataFlag(true);
+      DDEBUG("Detected telemetry data in package %d before subscribing to it.",pkg->getInfo().packageID);
+      DDEBUG("This was due to unclean quit of the program without restarting the drone.\n");
+    }
   }
   protocol->getThreadHandle()->freeMSG();
 }
@@ -416,6 +432,10 @@ DataSubscription::removePackageCallback(Vehicle*      vehiclePtr,
   {
     DSTATUS("Remove package %d successful.", packageID);
     packageHandle->packageRemoveSuccessHandler();
+    if(packageHandle->hasLeftOverData())
+    {
+      packageHandle->setLeftOverDataFlag(false);
+    }
   }
   else
   {
@@ -440,6 +460,104 @@ DataSubscription::removePackage(int packageID, int timeout)
   {
     DSTATUS("Remove package %d successful.", packageID);
     package[packageID].packageRemoveSuccessHandler();
+    if(package[packageID].hasLeftOverData())
+    {
+      package[packageID].setLeftOverDataFlag(false);
+    }
+  }
+  else
+  {
+    ACK::getErrorCodeMessage(ack, __func__);
+  }
+
+  return ack;
+}
+
+void DataSubscription::removeLeftOverPackages()
+{
+  ACK::ErrorCode ack;
+  for(int retry = 0; retry <=3; retry++)
+  {
+    for(int packageID = 0; packageID < MAX_NUMBER_OF_PACKAGE; packageID++)
+    {
+      if(package[packageID].hasLeftOverData())
+      {
+        if(retry == 3)
+        {
+          DERROR("Package %d was not properly removed due to unclean quit. Please power cycle the drone...", packageID);
+        }
+        ack = removePackage(packageID, 1);
+        if(!ACK::getError(ack))
+        {
+          DERROR("failed to remove package %d", packageID);
+        }
+      }
+    }
+  }
+}
+
+void DataSubscription::removeAllExistingPackages()
+{
+  ACK::ErrorCode ack;
+  for(int packageID=0; packageID<MAX_NUMBER_OF_PACKAGE; packageID++)
+  {
+    if(package[packageID].hasLeftOverData() || package[packageID].isOccupied())
+    {
+      ack = removePackage(packageID, 1);
+      if(!ACK::getError(ack))
+      {
+        DERROR("failed to remove package %d", packageID);
+      }
+    }
+  }
+}
+
+void DataSubscription::reset()
+{
+  uint8_t data = 0;
+  int cbIndex = vehicle->callbackIdIndex();
+  vehicle->nbCallbackFunctions[cbIndex] =
+          (void*)DataSubscription::resetCallback;
+  vehicle->nbUserData[cbIndex] = NULL;
+
+  protocol->send(2, vehicle->getEncryption(),
+                 OpenProtocolCMD::CMDSet::Subscribe::reset, &data,
+                 sizeof(data), 500, 1, true, cbIndex);
+}
+
+void
+DataSubscription::resetCallback(Vehicle*      vehiclePtr,
+                                RecvContainer rcvContainer,
+                                UserData      pkgHandle)
+{
+  ACK::ErrorCode ackErrorCode;
+  ackErrorCode.info = rcvContainer.recvInfo;
+  ackErrorCode.data = rcvContainer.recvData.subscribeACK;
+
+  if (!ACK::getError(ackErrorCode))
+  {
+    DSTATUS("Reset Subscription Successful.");
+  }
+  else
+  {
+    ACK::getErrorCodeMessage(ackErrorCode, __func__);
+  }
+}
+ACK::ErrorCode
+DataSubscription::reset(int timeout)
+{
+  uint8_t data = 0;
+  protocol->send(2, vehicle->getEncryption(),
+                 OpenProtocolCMD::CMDSet::Subscribe::reset, &data,
+                 sizeof(data), 500, 1, NULL, 0);
+  ACK::ErrorCode ack;
+
+  ack = *((ACK::ErrorCode*)getVehicle()->waitForACK(
+          OpenProtocolCMD::CMDSet::Subscribe::reset, timeout));
+
+  if (!ACK::getError(ack))
+  {
+    DSTATUS("Reset Subscription Successful.\n");
   }
   else
   {
@@ -452,6 +570,7 @@ DataSubscription::removePackage(int packageID, int timeout)
 //////////////////////
 SubscriptionPackage::SubscriptionPackage()
   : occupied(false)
+  , leftOverDataFlag(false)
   , incomingDataBuffer(NULL)
   , packageDataSize(0)
 {
@@ -486,6 +605,18 @@ void
 SubscriptionPackage::setOccupied(bool status)
 {
   occupied = status;
+}
+
+bool
+SubscriptionPackage::hasLeftOverData()
+{
+  return leftOverDataFlag;
+}
+
+void
+SubscriptionPackage::setLeftOverDataFlag(bool flag)
+{
+  leftOverDataFlag = flag;
 }
 
 /*
@@ -543,7 +674,7 @@ SubscriptionPackage::allocateDataBuffer()
 {
   if (incomingDataBuffer)
   {
-    delete incomingDataBuffer;
+    delete[] incomingDataBuffer;
     incomingDataBuffer = NULL;
   }
 
@@ -572,7 +703,7 @@ SubscriptionPackage::clearDataBuffer()
 {
   if (incomingDataBuffer)
   {
-    delete incomingDataBuffer;
+    delete[] incomingDataBuffer;
     incomingDataBuffer = NULL;
   }
 }

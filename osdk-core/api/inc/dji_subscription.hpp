@@ -93,8 +93,10 @@ public:
                              UserData        userData);
 
   bool isOccupied();
-
   void setOccupied(bool status);
+
+  bool hasLeftOverData();
+  void setLeftOverDataFlag(bool flag);
 
   // Accessors to private variables:
   PackageInfo            getInfo();
@@ -121,6 +123,7 @@ public:
 
 private: // Private variables
   bool        occupied;
+  bool        leftOverDataFlag;
   PackageInfo info;
 
   // We have only 30 topics and 5 packages.
@@ -208,8 +211,44 @@ public: // public methods
    */
   ACK::ErrorCode startPackage(int packageID, int timeout); // blocking call
 
+  /*!
+   * @brief Non-blocking call for start package
+   * @param packageID
+   * @return
+   */
   void removePackage(int packageID);
+
+  /*!
+   * @brief Non-blocking call for start package
+   * @param packageID
+   * @param timeout
+   * @return
+   */
   ACK::ErrorCode removePackage(int packageID, int timeout); // blocking call
+
+  /*!
+   * @brief Remove leftover incoming telemetry data due to unclean quit
+   * @return
+   */
+  void removeLeftOverPackages();
+
+  /*!
+   * @brief Remove all occupied packages
+   * @return
+   */
+  void removeAllExistingPackages();
+
+  /*!
+   * @brief Non-blocking call for resetting all packages.
+   * @return
+   */
+  void reset();
+
+  /*!
+   * @brief Blocking call for resetting all packages.
+   * @param timeout
+   */
+  ACK::ErrorCode reset(int timeout);
 
   /*!
    * @brief Register a callback function after package[packageID] is received
@@ -221,8 +260,8 @@ public: // public methods
     UserData userData = NULL);
 
   // Not implemented yet
-  bool pausePackage(int packageID);
-  bool resumePackage(int packageID);
+  // bool pausePackage(int packageID);
+  // bool resumePackage(int packageID);
   // bool changePackageFrequency(int packageID, uint16_t newFreq);
 
   /*!
@@ -242,6 +281,10 @@ public: // public methods
   static void removePackageCallback(Vehicle*      vehiclePtr,
                                     RecvContainer rcvContainer,
                                     UserData      pkgHandle);
+
+  static void resetCallback(Vehicle*      vehiclePtr,
+                            RecvContainer rcvContainer,
+                            UserData      pkgHandle);
 
   /*!
    * @brief This callback function is called by recvReqData, case

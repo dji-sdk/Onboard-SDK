@@ -367,7 +367,7 @@ Control::positionAndYawCtrl(float32_t x, float32_t y, float32_t z,
                        HORIZONTAL_GROUND | STABLE_ENABLE);
   CtrlData data(ctrl_flag, x, y, z, yaw);
 
-  return this->flightCtrl(data);
+  this->flightCtrl(data);
 }
 
 void
@@ -379,7 +379,7 @@ Control::velocityAndYawRateCtrl(float32_t Vx, float32_t Vy, float32_t Vz,
     (VERTICAL_VELOCITY | HORIZONTAL_VELOCITY | YAW_RATE | HORIZONTAL_GROUND);
   CtrlData data(ctrl_flag, Vx, Vy, Vz, yawRate);
 
-  return this->flightCtrl(data);
+  this->flightCtrl(data);
 }
 
 void
@@ -391,7 +391,7 @@ Control::attitudeAndVertPosCtrl(float32_t roll, float32_t pitch, float32_t yaw,
     (VERTICAL_POSITION | HORIZONTAL_ANGLE | YAW_ANGLE | HORIZONTAL_BODY);
   CtrlData data(ctrl_flag, roll, pitch, z, yaw);
 
-  return this->flightCtrl(data);
+  this->flightCtrl(data);
 }
 
 void
@@ -405,7 +405,7 @@ Control::angularRateAndVertPosCtrl(float32_t rollRate, float32_t pitchRate,
                          YAW_RATE | HORIZONTAL_BODY);
     CtrlData data(ctrl_flag, rollRate, pitchRate, z, yawRate);
 
-    return this->flightCtrl(data);
+    this->flightCtrl(data);
   }
   else
   {
@@ -428,7 +428,7 @@ Control::emergencyBrake()
     //! @note 75 is the flag value of this mode
     AdvancedCtrlData data(72, 0, 0, 0, 0, 0, 0);
 
-    return this->flightCtrl(data);
+    this->flightCtrl(data);
   }
   else
   {

@@ -51,5 +51,6 @@ int moveByPositionOffset(float xOffsetDesired, float yOffsetDesired,
 void localOffsetFromGpsOffset(Vehicle* vehicle, Telemetry::Vector3f& deltaNed,
                               void* target, void* origin);
 Telemetry::Vector3f toEulerAngle(void* quaternionData);
+void startGlobalPositionBroadcast(Vehicle* vehicle);
 
 #endif // FLIGHTCONTROLSAMPLE_H

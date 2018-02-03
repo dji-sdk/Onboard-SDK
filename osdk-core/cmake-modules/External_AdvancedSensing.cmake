@@ -1,7 +1,7 @@
 include(ExternalProject)
 message( STATUS "External library - DJI Advanced Sensing for stereo cameras" )
 
-set(VERSION "2.0.0")
+set(VERSION "2.0.1")
 set(LIB_NAME advanced-sensing)
 set(LIB_PATH ${CMAKE_CURRENT_SOURCE_DIR}/${LIB_NAME}-${VERSION})
 

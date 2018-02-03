@@ -53,7 +53,7 @@ const std::pair<const uint32_t, const char*> commonData[] = {
                  (const char*)"ACK_SUCCESS\n"),
   std::make_pair(
     OpenProtocolCMD::ErrorCode::CommonACK::START_MOTOR_FAIL_MOTOR_STARTED,
-    (const char*)"START_MOTOR_FAIL_MOTOR_STARTED\n"),
+    (const char*)"START_MOTOR_FAILED_MOTOR_ALREADY_STARTED\n"),
   std::make_pair(
     OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_COMPASS_ABNORMAL,
     (const char*)"COMPASS_CALIB_FAIL_DUE_TO_MOTOR_ON\n"),
@@ -651,6 +651,7 @@ ACK::getErrorCodeMessage(ACK::ErrorCode ack, const char* func)
     case OpenProtocolCMD::CMDSet::control:
       // Get message by CMD_ID
       getCMDSetControlMSG(ack);
+      break;
     case OpenProtocolCMD::CMDSet::broadcast:
       getSetBroadcastMSG(ack);
       break;
@@ -672,7 +673,7 @@ ACK::getErrorCodeMessage(ACK::ErrorCode ack, const char* func)
       getCMDSetSubscribeMSG(ack);
       break;
     default:
-      DSTATUS("UNKNOWN_ACK_ERROR_CODE\n");
+      getCommonErrorCodeMessage(ack);
       break;
   }
 }
@@ -776,7 +777,7 @@ ACK::getCMDIDSetControlMSG(uint8_t ack, Version::FirmWare version)
     if (msg->first ==
         OpenProtocolCMD::ErrorCode::ControlACK::SetControl::RC_MODE_ERROR)
     {
-      if (version != Version::M100_31 || version != Version::A3_31)
+      if (version != Version::M100_31 && version != Version::A3_31)
       {
         DSTATUS("RC_NEED_MODE_P\n");
       }

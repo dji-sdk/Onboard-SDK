@@ -13,8 +13,8 @@ else (ADVANCED_SENSING_LIBRARY AND ADVANCED_SENSING_INCLUDE_DIRS)
             NAMES
             dji_advanced_sensing_protocol.hpp
             PATHS
-            ${CMAKE_CURRENT_SOURCE_DIR}/advanced-sensing-2.0.0/inc
-            ${EXECUTABLE_OUTPUT_PATH}/advanced-sensing-2.0.0/inc
+            ${CMAKE_CURRENT_SOURCE_DIR}/advanced-sensing-2.0.1/inc
+            ${EXECUTABLE_OUTPUT_PATH}/advanced-sensing-2.0.1/inc
             PATH_SUFFIXES
             advanced-sensing
             )
@@ -23,8 +23,8 @@ else (ADVANCED_SENSING_LIBRARY AND ADVANCED_SENSING_INCLUDE_DIRS)
             NAMES
             advanced-sensing
             PATHS
-            ${CMAKE_CURRENT_SOURCE_DIR}/advanced-sensing-2.0.0/lib 
-            ${EXECUTABLE_OUTPUT_PATH}/advanced-sensing-2.0.0/lib
+            ${CMAKE_CURRENT_SOURCE_DIR}/advanced-sensing-2.0.1/lib 
+            ${EXECUTABLE_OUTPUT_PATH}/advanced-sensing-2.0.1/lib
             NO_DEFAULT_PATH
             )
 

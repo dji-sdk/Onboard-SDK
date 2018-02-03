@@ -55,7 +55,7 @@ public:
   } ImgCallBackHandler;
 
   ImageProcessContainer(DJI::OSDK::Vehicle *vehicle);
-  ~ImageProcessContainer();
+  virtual ~ImageProcessContainer();
 
   static const int IMG_PROCESS_THREAD = 1;
 
@@ -75,10 +75,10 @@ public:
 
   UtilityThread* getImgProcessThread();
 
-private:
+protected:
   bool initImgProcessThread();
 
-private:
+protected:
   DJI::OSDK::ACK::StereoVGAImgData stereoVGAImg;
   DJI::OSDK::ACK::StereoImgData    stereo240pImg;
 

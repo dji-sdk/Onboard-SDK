@@ -37,6 +37,11 @@ using namespace DJI::OSDK::Telemetry;
 bool
 gimbalCameraControl(Vehicle* vehicle)
 {
+  if(!vehicle->gimbal)
+  {
+    DERROR("Gimbal object does not exist.\n");
+    return false;
+  }
 
   int responseTimeout = 0;
 

@@ -70,7 +70,8 @@ MissionManager::init(DJI_MISSION_TYPE type, int timeout, UserData missionData)
     DERROR("Cannot recognize the mission type provided\n");
     // @todo return a false ack
     ACK::ErrorCode ack;
-    ack.data = false;
+    ack.info.cmd_set = OpenProtocolCMD::CMDSet::mission;
+    ack.data = ErrorCode::MissionACK::Common::INVALID_COMMAND;
     return ack;
   }
 }
@@ -135,7 +136,8 @@ MissionManager::initHotptMission(int timeout, UserData hotptData)
 
   // @todo this initData() does not return ack
   ACK::ErrorCode ack;
-  ack.data = ACK::SUCCESS;
+  ack.info.cmd_set = OpenProtocolCMD::CMDSet::mission;
+  ack.data = ErrorCode::MissionACK::Common::SUCCESS;
 
   return ack;
 }

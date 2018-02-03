@@ -328,6 +328,12 @@ runHotpointMission(Vehicle* vehicle, int initialRadius, int responseTimeout)
   {
     ACK::getErrorCodeMessage(takeoffAck, __func__);
 
+    if(takeoffAck.info.cmd_set == OpenProtocolCMD::CMDSet::control
+       && takeoffAck.data == ErrorCode::CommonACK::START_MOTOR_FAIL_MOTOR_STARTED)
+    {
+      DSTATUS("Take off command sent failed. Please Land the drone and disarm the motors first.\n");
+    }
+
     if (!vehicle->isM100() && !vehicle->isLegacyM600())
     {
       teardownSubscription(vehicle, DEFAULT_PACKAGE_INDEX, responseTimeout);

@@ -233,6 +233,9 @@ LinuxSerialDevice::_serialConfig(int baudrate, char data_bits, char parity_bits,
     case 8:
       newtio.c_cflag |= CS8;
       break;
+    default:
+      newtio.c_cflag |= CS8;
+      break; //8N1 default config
   }
   /* config the parity bit */
   switch (parity_bits)
@@ -254,6 +257,9 @@ LinuxSerialDevice::_serialConfig(int baudrate, char data_bits, char parity_bits,
     case 'n':
       newtio.c_cflag &= ~PARENB;
       break;
+    default:
+      newtio.c_cflag &= ~PARENB;
+      break; //8N1 default config
   }
   /* config baudrate */
   j = sizeof(std_rate) / 4;
@@ -272,6 +278,8 @@ LinuxSerialDevice::_serialConfig(int baudrate, char data_bits, char parity_bits,
     newtio.c_cflag &= ~CSTOPB;
   else if (stop_bits == 2)
     newtio.c_cflag |= CSTOPB;
+  else
+    newtio.c_cflag &= ~CSTOPB; //8N1 default config
 
 /* config waiting time & min number of char */
 //! If you just want to see if there is data on the line, put the serial config

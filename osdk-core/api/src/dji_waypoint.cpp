@@ -45,6 +45,10 @@ WaypointMission::WaypointMission(Vehicle* vehicle)
 
 WaypointMission::~WaypointMission()
 {
+  if (index)
+  {
+    delete[] (index);
+  }
 }
 
 void
@@ -461,6 +465,8 @@ WaypointMission::uploadIndexData(WayPointSettings* data,
   vehicle->protocolLayer->send(
     2, vehicle->getEncryption(), OpenProtocolCMD::CMDSet::Mission::waypointAddPoint, &send,
     sizeof(send), 1000, 4, true, cbIndex);
+
+  return true;
 }
 
 ACK::WayPointIndex
