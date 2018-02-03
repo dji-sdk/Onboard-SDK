@@ -117,16 +117,17 @@ void Vehicle::mandatorySetUp() {
 	}
 }
 
-void Vehicle::functionalSetUp() {
+bool Vehicle::functionalSetUp() {
 	if (!initVersion()) {
 		DERROR("Failed to initialize Version! Please exit.\n");
-		return;
+		return false;
+
 	}
 	else if (this->getFwVersion() < extendedVersionBase &&
 	this->getFwVersion() != Version::M100_31 && !(this->isLegacyM600()))
 	{
 		DERROR("Upgrade firmware using Assistant software!\n");
-		return;
+		return false;
 	}
 
 	/*
@@ -214,6 +215,7 @@ void Vehicle::functionalSetUp() {
 		}
 	}
 #endif
+	return true;
 }
 
 void Vehicle::initCMD_SetSupportMatrix() {
@@ -374,7 +376,7 @@ bool Vehicle::initPlatformSupport() {
 }
 
 bool Vehicle::initVersion() {
-#if STM32
+#ifdef STM32
 	//! Non blocking call for STM32 as it does not support multi-thread
 	getDroneVersion();
 #else

@@ -342,7 +342,7 @@ public:
 	/*! @brief Initialize all functional Vehicle components
 	 *  like, Subscription, Broadcast, Control, Gimbal, ect
 	 */
-	void functionalSetUp();
+	bool functionalSetUp();
 
 private:
 	/*! @brief Initialize minimal Vehicle components

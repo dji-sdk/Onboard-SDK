@@ -30,7 +30,7 @@
 #include "stm32f4xx.h"
 #include <STM32F4SerialDriver.h>
 #include <time.h>
-
+#include "cmsis_os.h"
 void STM32F4RAA::delay_nms(uint16_t time) {
 	HAL_Delay(time);
 }
