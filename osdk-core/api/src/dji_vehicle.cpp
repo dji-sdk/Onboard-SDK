@@ -158,7 +158,7 @@ Vehicle::functionalSetUp()
    */
   if (!initSubscriber())
   {
-    DERROR("Subscriber not supported!\n");
+    DERROR("Failed to initialize subscriber!\n");
     return 1;
    }
 
@@ -167,7 +167,7 @@ Vehicle::functionalSetUp()
    */
   if (!initBroadcast())
   {
-    DERROR("Broadcast not supported!\n");
+    DERROR("Failed to initialize Broadcast!\n");
     return 1;
   }
 
@@ -176,7 +176,7 @@ Vehicle::functionalSetUp()
    */
   if (!initControl())
   {
-    DERROR("Control not supported!\n");
+    DERROR("Failed to initialize Control!\n");
     return 1;
   }
 
@@ -196,7 +196,7 @@ Vehicle::functionalSetUp()
    */
   if (!initMFIO())
   {
-    DSTATUS("MFIO not supported!\n");
+    DERROR("Failed to initialize MFIO!\n");
     return 1;
   }
 
@@ -217,13 +217,14 @@ Vehicle::functionalSetUp()
 
   if (!initHardSync())
   {
-    DERROR("Hardware Sync not supported!\n");
+    DERROR("Failed to initialize HardSync!\n");
     return 1;
   }
 
   if (!initVirtualRC())
   {
-    DSTATUS("Virtual RC not supported!\n");
+    DERROR("Failed to initiaze VirtualRC!\n");
+    return 1;
   }
 
 #ifdef ADVANCED_SENSING
@@ -734,7 +735,7 @@ Vehicle::initSubscriber()
   }
   else
   {
-    return false;
+    DSTATUS("Telemetry subscription mechanism is not supported on this platform!\n");
   }
 
   return true;
@@ -760,7 +761,7 @@ Vehicle::initBroadcast()
   }
   else
   {
-    return false;
+    DSTATUS("Telemetry broadcast is not supported on this platform!\n");
   }
 
   return true;
@@ -786,7 +787,7 @@ Vehicle::initControl()
   }
   else
   {
-    return false;
+    DSTATUS("Control functionalities are not supported on this platform!\n");
   }
 
   return true;
@@ -893,7 +894,7 @@ Vehicle::initGimbal()
     DSTATUS("Gimbal not mounted!\n");
   }
 
-  return false;
+  return true;
 }
 
 #ifdef ADVANCED_SENSING
@@ -937,7 +938,7 @@ Vehicle::initMFIO()
   }
   else
   {
-    return false;
+    DSTATUS("MFIO is not supported on this platform!\n");
   }
 
   return true;
@@ -973,7 +974,9 @@ Vehicle::initMissionManager()
 
   this->missionManager = new (std::nothrow) MissionManager(this);
   if (this->missionManager == 0)
+  {
     return false;
+  }
 
   return true;
 }
@@ -994,11 +997,13 @@ Vehicle::initHardSync()
     {
       return false;
     }
-
-    return true;
+  }
+  else
+  {
+    DSTATUS("Hardware Sync is not supported on this platform!\n");
   }
 
-  return false;
+  return true;
 }
 
 bool
@@ -1018,11 +1023,13 @@ Vehicle::initVirtualRC()
       DERROR("Error creating Virtual RC!");
       return false;
     }
-
-    return true;
+  }
+  else
+  {
+    DERROR("Virtual RC is not supported on this platform!\n");
   }
 
-  return false;
+  return true;
 }
 
 bool

@@ -258,7 +258,7 @@ monitoredTakeoff(Vehicle* vehicle, int timeout)
 
     do
     {
-      sleep(3);
+      sleep(4);
       currentHeight = vehicle->broadcast->getGlobalPosition();
       delta         = fabs(currentHeight.altitude - deltaHeight.altitude);
       deltaHeight.altitude = currentHeight.altitude;
