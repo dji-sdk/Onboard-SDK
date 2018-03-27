@@ -258,7 +258,7 @@ monitoredTakeoff(Vehicle* vehicle, int timeout)
 
     do
     {
-      sleep(3);
+      sleep(4);
       currentHeight = vehicle->broadcast->getGlobalPosition();
       delta         = fabs(currentHeight.altitude - deltaHeight.altitude);
       deltaHeight.altitude = currentHeight.altitude;
@@ -344,6 +344,15 @@ moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired,
       vehicle->subscribe->removePackage(pkgIndex, responseTimeout);
       return false;
     }
+
+    // Also, since we don't have a source for relative height through subscription,
+    // start using broadcast height
+    if (!startGlobalPositionBroadcast(vehicle))
+    {
+      // Cleanup before return
+      vehicle->subscribe->removePackage(pkgIndex, responseTimeout);
+      return false;
+    }
   }
 
   // Wait for data to come in
@@ -368,6 +377,9 @@ moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired,
     localOffsetFromGpsOffset(vehicle, localOffset,
                              static_cast<void*>(&currentSubscriptionGPS),
                              static_cast<void*>(&originSubscriptionGPS));
+
+    // Get the broadcast GP since we need the height for zCmd
+    currentBroadcastGP = vehicle->broadcast->getGlobalPosition();
   }
   else
   {
@@ -445,17 +457,16 @@ moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired,
 
   if (!vehicle->isM100() && !vehicle->isLegacyM600())
   {
-    zCmd = currentSubscriptionGPS.altitude + zOffsetDesired;
+    zCmd = currentBroadcastGP.height + zOffsetDesired; //Since subscription cannot give us a relative height, use broadcast.
   }
   else
   {
-    zCmd = currentBroadcastGP.altitude + zOffsetDesired;
+    zCmd = currentBroadcastGP.height + zOffsetDesired;
   }
 
   //! Main closed-loop receding setpoint position control
   while (elapsedTimeInMs < timeoutInMilSec)
   {
-
     vehicle->control->positionAndYawCtrl(xCmd, yCmd, zCmd,
                                          yawDesiredRad / DEG2RAD);
 
@@ -471,6 +482,9 @@ moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired,
       localOffsetFromGpsOffset(vehicle, localOffset,
                                static_cast<void*>(&currentSubscriptionGPS),
                                static_cast<void*>(&originSubscriptionGPS));
+
+      // Get the broadcast GP since we need the height for zCmd
+      currentBroadcastGP = vehicle->broadcast->getGlobalPosition();
     }
     else
     {
@@ -489,9 +503,13 @@ moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired,
 
     //! See if we need to modify the setpoint
     if (std::abs(xOffsetRemaining) < speedFactor)
+    {
       xCmd = xOffsetRemaining;
+    }
     if (std::abs(yOffsetRemaining) < speedFactor)
+    {
       yCmd = yOffsetRemaining;
+    }
 
     if (vehicle->isM100() && std::abs(xOffsetRemaining) < posThresholdInM &&
         std::abs(yOffsetRemaining) < posThresholdInM &&
@@ -536,7 +554,7 @@ moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired,
     while (brakeCounter < withinControlBoundsTimeReqmt)
     {
       vehicle->control->emergencyBrake();
-      usleep(cycleTimeInMs);
+      usleep(cycleTimeInMs * 10);
       brakeCounter += cycleTimeInMs;
     }
   }
@@ -835,4 +853,51 @@ toEulerAngle(void* quaternionData)
   ans.z = atan2(t1, t0);
 
   return ans;
+}
+
+bool startGlobalPositionBroadcast(Vehicle* vehicle)
+{
+  uint8_t freq[16];
+
+  /* Channels definition for A3/N3/M600
+   * 0 - Timestamp
+   * 1 - Attitude Quaternions
+   * 2 - Acceleration
+   * 3 - Velocity (Ground Frame)
+   * 4 - Angular Velocity (Body Frame)
+   * 5 - Position
+   * 6 - GPS Detailed Information
+   * 7 - RTK Detailed Information
+   * 8 - Magnetometer
+   * 9 - RC Channels Data
+   * 10 - Gimbal Data
+   * 11 - Flight Status
+   * 12 - Battery Level
+   * 13 - Control Information
+   */
+  freq[0]  = DataBroadcast::FREQ_HOLD;
+  freq[1]  = DataBroadcast::FREQ_HOLD;
+  freq[2]  = DataBroadcast::FREQ_HOLD;
+  freq[3]  = DataBroadcast::FREQ_HOLD;
+  freq[4]  = DataBroadcast::FREQ_HOLD;
+  freq[5]  = DataBroadcast::FREQ_50HZ; // This is the only one we want to change
+  freq[6]  = DataBroadcast::FREQ_HOLD;
+  freq[7]  = DataBroadcast::FREQ_HOLD;
+  freq[8]  = DataBroadcast::FREQ_HOLD;
+  freq[9]  = DataBroadcast::FREQ_HOLD;
+  freq[10] = DataBroadcast::FREQ_HOLD;
+  freq[11] = DataBroadcast::FREQ_HOLD;
+  freq[12] = DataBroadcast::FREQ_HOLD;
+  freq[13] = DataBroadcast::FREQ_HOLD;
+
+  ACK::ErrorCode ack = vehicle->broadcast->setBroadcastFreq(freq, 1);
+  if (ACK::getError(ack))
+  {
+    ACK::getErrorCodeMessage(ack, __func__);
+    return false;
+  }
+  else
+  {
+    return true;
+  }
 }

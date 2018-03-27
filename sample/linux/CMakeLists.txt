@@ -38,6 +38,6 @@ add_subdirectory(logging)
 
 if(ADVANCED_SENSING)
     add_definitions(-DADVANCED_SENSING)
-    add_subdirectory(advanced-sensing)
     message(STATUS "AdvancedSensing sample is enabled")
+    add_subdirectory(advanced-sensing)
 endif()

@@ -49,6 +49,18 @@ CircularBuffer::CircularBuffer()
   tail    = 0;
 }
 
+CircularBuffer::~CircularBuffer()
+{
+  if (buffer)
+  {
+    free(buffer);
+  }
+  if (buffer2)
+  {
+    free(buffer2);
+  }
+}
+
 int
 CircularBuffer::cbPush(CircularBuffer*                   CBuffer,
                        DJI::OSDK::VehicleCallBackHandler cbData,

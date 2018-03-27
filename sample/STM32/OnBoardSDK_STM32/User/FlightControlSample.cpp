@@ -540,6 +540,8 @@ moveByPositionOffset(float xOffsetDesired, float yOffsetDesired,
             return false;
     }*/
 
+    startGlobalPositionBroadcast(v);
+
     // Wait for data to come in
     delay_nms(8000);
   }
@@ -556,7 +558,7 @@ moveByPositionOffset(float xOffsetDesired, float yOffsetDesired,
   // Convert position offset from first position to local coordinates
   Telemetry::Vector3f localOffset;
 
-  if (v->getFwVersion() != Version::M100_31)
+  if (v->getFwVersion() != Version::M100_31 && !v->isLegacyM600())
   {
     currentSubscriptionGPS =
       v->subscribe->getValue<Telemetry::TOPIC_GPS_FUSED>();
@@ -564,6 +566,9 @@ moveByPositionOffset(float xOffsetDesired, float yOffsetDesired,
     localOffsetFromGpsOffset(v, localOffset,
                              static_cast<void*>(&currentSubscriptionGPS),
                              static_cast<void*>(&originSubscriptionGPS));
+
+    // Get the broadcast GP since we need the height for zCmd
+    currentBroadcastGP = v->broadcast->getGlobalPosition();
   }
   else
   {
@@ -641,11 +646,11 @@ moveByPositionOffset(float xOffsetDesired, float yOffsetDesired,
 
   if (v->getFwVersion() != Version::M100_31)
   {
-    zCmd = currentSubscriptionGPS.altitude + zOffsetDesired;
+    zCmd = currentBroadcastGP.height + zOffsetDesired; //Since subscription cannot give us a relative height, use broadcast.
   }
   else
   {
-    zCmd = currentBroadcastGP.altitude + zOffsetDesired;
+    zCmd = currentBroadcastGP.height + zOffsetDesired;
   }
 
   //! Main closed-loop receding setpoint position control
@@ -657,7 +662,7 @@ moveByPositionOffset(float xOffsetDesired, float yOffsetDesired,
     elapsedTimeInMs += cycleTimeInMs;
 
     //! Get current position in required coordinates and units
-    if (v->getFwVersion() != Version::M100_31)
+    if (v->getFwVersion() != Version::M100_31 && !v->isLegacyM600())
     {
       subscriptionQ = v->subscribe->getValue<Telemetry::TOPIC_QUATERNION>();
       yawInRad      = toEulerAngle((static_cast<void*>(&subscriptionQ))).z;
@@ -666,6 +671,9 @@ moveByPositionOffset(float xOffsetDesired, float yOffsetDesired,
       localOffsetFromGpsOffset(v, localOffset,
                                static_cast<void*>(&currentSubscriptionGPS),
                                static_cast<void*>(&originSubscriptionGPS));
+
+      // Get the broadcast GP since we need the height for zCmd
+      currentBroadcastGP = v->broadcast->getGlobalPosition();
     }
     else
     {
@@ -820,4 +828,42 @@ toEulerAngle(void* quaternionData)
   ans.z = atan2(t1, t0);
 
   return ans;
+}
+
+void startGlobalPositionBroadcast(Vehicle* vehicle)
+{
+  uint8_t freq[16];
+
+  /* Channels definition for A3/N3/M600
+   * 0 - Timestamp
+   * 1 - Attitude Quaternions
+   * 2 - Acceleration
+   * 3 - Velocity (Ground Frame)
+   * 4 - Angular Velocity (Body Frame)
+   * 5 - Position
+   * 6 - GPS Detailed Information
+   * 7 - RTK Detailed Information
+   * 8 - Magnetometer
+   * 9 - RC Channels Data
+   * 10 - Gimbal Data
+   * 11 - Flight Status
+   * 12 - Battery Level
+   * 13 - Control Information
+   */
+  freq[0]  = DataBroadcast::FREQ_HOLD;
+  freq[1]  = DataBroadcast::FREQ_HOLD;
+  freq[2]  = DataBroadcast::FREQ_HOLD;
+  freq[3]  = DataBroadcast::FREQ_HOLD;
+  freq[4]  = DataBroadcast::FREQ_HOLD;
+  freq[5]  = DataBroadcast::FREQ_50HZ; // This is the only one we want to change
+  freq[6]  = DataBroadcast::FREQ_HOLD;
+  freq[7]  = DataBroadcast::FREQ_HOLD;
+  freq[8]  = DataBroadcast::FREQ_HOLD;
+  freq[9]  = DataBroadcast::FREQ_HOLD;
+  freq[10] = DataBroadcast::FREQ_HOLD;
+  freq[11] = DataBroadcast::FREQ_HOLD;
+  freq[12] = DataBroadcast::FREQ_HOLD;
+  freq[13] = DataBroadcast::FREQ_HOLD;
+
+  vehicle->broadcast->setBroadcastFreq(freq);
 }

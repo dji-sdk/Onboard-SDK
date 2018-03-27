@@ -1,0 +1,41 @@
+%YAML:1.0
+leftCameraIntrinsicMatrix: !!opencv-matrix
+   rows: 3
+   cols: 3
+   dt: d
+   data: [ 459.882338, 0.000000, 328.380255, 0.000000, 458.855806, 243.749739, 0.000000, 0.000000, 1.000000 ]
+rightCameraIntrinsicMatrix: !!opencv-matrix
+   rows: 3
+   cols: 3
+   dt: d
+   data: [ 455.744183, 0.000000, 317.783292, 0.000000, 454.333521, 226.203923, 0.000000, 0.000000, 1.000000 ]
+leftDistCoeffs: !!opencv-matrix
+   rows: 5
+   cols: 1
+   dt: d
+   data: [0.035379, 0.003641, -0.004073, -0.002172, 0.000000 ]
+rightDistCoeffs: !!opencv-matrix
+   rows: 5
+   cols: 1
+   dt: d
+   data: [0.030189, -0.033546, -0.000356, -0.000101, 0.000000 ]
+leftRectificationMatrix: !!opencv-matrix
+   rows: 3
+   cols: 3
+   dt: d
+   data: [0.999019, -0.023417, 0.037579, 0.023545, 0.999718, -0.002975, -0.037498, 0.003857, 0.999289 ]
+rightRectificationMatrix: !!opencv-matrix
+   rows: 3
+   cols: 3
+   dt: d
+   data: [ 0.999839, -0.003815, 0.017534, 0.003755, 0.999987, 0.003450, -0.017547, -0.003383, 0.999840 ]
+leftProjectionMatrix: !!opencv-matrix
+   rows: 3
+   cols: 4
+   dt: d
+   data: [430.807701, 0.000000, 303.590256, 0.000000, 0.000000, 430.807701, 233.501654, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000 ]
+rightProjectionMatrix: !!opencv-matrix
+   rows: 3
+   cols: 4
+   dt: d
+   data: [ 430.807701, 0.000000, 303.590256, -48.272953, 0.000000, 430.807701, 233.501654, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000 ]

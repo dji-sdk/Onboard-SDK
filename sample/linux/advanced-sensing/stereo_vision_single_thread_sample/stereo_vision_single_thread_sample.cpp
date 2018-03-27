@@ -29,7 +29,7 @@
  *
  */
 
-#include "advanced_sensing_sample.hpp"
+#include "stereo_vision_single_thread_sample.hpp"
 
 using namespace DJI::OSDK;
 

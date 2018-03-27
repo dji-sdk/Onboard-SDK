@@ -118,8 +118,7 @@ qtOsdk::on_initVehicle_clicked()
   {
     emit changeInitButton("Vehicle Initialized", true);
     QThread::msleep(100);
-    // Initialize all the other parts of the SDK
-    initComponents();
+
   }
   else
   {
@@ -160,6 +159,7 @@ qtOsdk::activateCallback(Vehicle* vehicle, RecvContainer recvFrame,
     else
     {
       emit sdk->changeActivateButton(QString("Activation Successful"), true);
+
     }
   }
   else
@@ -295,14 +295,7 @@ qtOsdk::initFinished(QString initStatus, bool initResult)
                                    "y1: 0, x2: 0, y2: 1, stop: 0 #44a8f2, "
                                    "stop: 1 #44a8f2); color:white");
     ui->initVehicle->setText(initStatus);
-    ui->hwVersionDisplay->setText(QString(vehicle->getHwVersion()));
-    Version::FirmWare fwVersion = vehicle->getFwVersion();
-    uint8_t           ver1      = (fwVersion >> 24) & 0x000000ff;
-    uint8_t           ver2      = (fwVersion >> 16) & 0x000000ff;
-    uint8_t           ver3      = (fwVersion >> 8) & 0x000000ff;
-    uint8_t           ver4      = fwVersion & 0x000000ff;
-    ui->fwVersionDisplay->setText(
-      QString("%1.%2.%3.%4").arg(ver1).arg(ver2).arg(ver3).arg(ver4));
+
   }
   else
   {
@@ -329,6 +322,16 @@ qtOsdk::activateFinished(QString activateStatus, bool activateResult)
     ui->activateButton->setStyleSheet("background-color:qlineargradient(x1: 0, "
                                       "y1: 0, x2: 0, y2: 1, stop: 0 #44a8f2, "
                                       "stop: 1 #44a8f2); color:white");
+    ui->hwVersionDisplay->setText(QString(vehicle->getHwVersion()));
+    Version::FirmWare fwVersion = vehicle->getFwVersion();
+    uint8_t           ver1      = (fwVersion >> 24) & 0x000000ff;
+    uint8_t           ver2      = (fwVersion >> 16) & 0x000000ff;
+    uint8_t           ver3      = (fwVersion >> 8) & 0x000000ff;
+    uint8_t           ver4      = fwVersion & 0x000000ff;
+    ui->fwVersionDisplay->setText(
+      QString("%1.%2.%3.%4").arg(ver1).arg(ver2).arg(ver3).arg(ver4));
+    // Initialize all the other parts of the SDK
+    initComponents();
   }
 }
 

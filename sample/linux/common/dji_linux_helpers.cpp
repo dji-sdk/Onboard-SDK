@@ -140,13 +140,6 @@ LinuxSetup::initVehicle()
     this->environment = nullptr;
   }
 
-  // Check if drone version is okay
-  if (vehicle->getFwVersion() < extendedVersionBase &&
-      (!vehicle->isM100()) && !vehicle->isLegacyM600())
-  {
-    this->vehicle = nullptr;
-  }
-
   // Activate
   activateData.ID = environment->getApp_id();
   char app_key[65];
@@ -163,6 +156,7 @@ LinuxSetup::initVehicle()
     this->environment = nullptr;
     this->vehicle     = nullptr;
   }
+
 }
 
 bool

@@ -60,7 +60,11 @@ OpenProtocol::OpenProtocol(PlatformManager* platformManager_ptr,
 
 OpenProtocol::~OpenProtocol()
 {
-  delete p_filter->recvBuf;
+  delete[] p_filter->recvBuf;
+  delete p_filter;
+  delete[](buf);
+  delete[](encodeSendData);
+  delete(p_recvContainer);
 }
 
 /******************* Init ******************************/
@@ -400,7 +404,7 @@ OpenProtocol::sendData(uint8_t* buf)
   if (ans == 0)
     DSTATUS("Port did not send");
   if (ans == (size_t)-1)
-    DERROR("Port closed");
+    DERROR("Port closed.");
 
   if (ans != pHeader->length)
   {

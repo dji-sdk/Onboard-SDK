@@ -260,12 +260,14 @@ public:
 	void processReceivedData(RecvContainer* receivedFrame);
 
 #ifdef ADVANCED_SENSING
-	/*! @brief This function takes a frame and calls the right handlers/functions
-	 *         based on the nature of the frame (ack, blocking, etc.)
-	 * @param receivedFrame: RecvContainer populated by the AdvancedSensing Protocol
-	 * @return NULL
-	 */
-	void processAdvancedSensingImgs(RecvContainer* receivedFrame);
+  /*! @brief This function takes a frame and calls the right handlers/functions
+   *         based on the nature of the frame (ack, blocking, etc.)
+   * @param receivedFrame: RecvContainer populated by the AdvancedSensing Protocol
+   * @return NULL
+   */
+  void processAdvancedSensingImgs(RecvContainer* receivedFrame);
+
+  bool advSensingErrorPrintOnce;
 #endif
 
 	//! User sets this to true in order to enable Callback thread with Non
@@ -339,34 +341,39 @@ private:
 	 * @brief Vehicle initialization components
 	 */
 public:
-	/*! @brief Initialize all functional Vehicle components
-	 *  like, Subscription, Broadcast, Control, Gimbal, ect
-	 */
-	bool functionalSetUp();
+  /*! @brief Initialize all functional Vehicle components
+*  like, Subscription, Broadcast, Control, Gimbal, ect
+*/
+  int functionalSetUp();
 
 private:
-	/*! @brief Initialize minimal Vehicle components
-	 */
-	void mandatorySetUp();
+  /*! @brief Initialize minimal Vehicle components
+*/
+  void mandatorySetUp();
 
-	/*! @brief Initialize the right platform-specific implementations
-	 *  @details
-	 *  @return false if error, true if success
-	 */
-	bool initPlatformSupport();
-	bool initOpenProtocol();
-	void initCallbacks();
-	void initCMD_SetSupportMatrix();
-	bool initSubscriber();
-	bool initBroadcast();
-	bool initControl();
-	bool initCamera();
-	bool initGimbal();
-	bool initMFIO();
-	bool initMOC();
-	bool initMissionManager();
-	bool initHardSync();
-	bool initVirtualRC();
+  /*! @brief Initialize the right platform-specific implementations
+   *  @details
+   *  @return false if error, true if success
+   */
+  bool initFullPlatformSupport();
+  /*!
+   * @brief Initialize main read thread to support UART communication
+   * @return fasle if error, true if success
+   */
+  bool initMainReadThread();
+  bool initOpenProtocol();
+  void initCallbacks();
+  void initCMD_SetSupportMatrix();
+  bool initSubscriber();
+  bool initBroadcast();
+  bool initControl();
+  bool initCamera();
+  bool initGimbal();
+  bool initMFIO();
+  bool initMOC();
+  bool initMissionManager();
+  bool initHardSync();
+  bool initVirtualRC();
 #ifdef ADVANCED_SENSING
 	bool initAdvancedSensing();
 #endif

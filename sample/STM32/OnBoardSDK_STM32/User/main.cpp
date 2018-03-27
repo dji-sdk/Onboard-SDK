@@ -114,10 +114,11 @@ main()
       delay_nms(500);
 
       // Check if the firmware version is compatible with this OSDK version
-      if (v->getFwVersion() < extendedVersionBase &&
-	 v->getFwVersion() != Version::M100_31)
+      if (v->getFwVersion() > 0 &&
+				v->getFwVersion() < extendedVersionBase &&
+	      v->getFwVersion() != Version::M100_31)
       {
-	printf("Upgrade firmware using Assistant software!\n");
+	      printf("Upgrade firmware using Assistant software!\n");
         delete (v);
         return -1;
       }
@@ -217,6 +218,7 @@ main()
           printf("WAYPOINT_MISSION_SAMPLE\r\n");
           printf("CAMERA_GIMBAL_SAMPLE\r\n");
           printf("MOBILE_SAMPLE\r\n");
+				  printf("TELEMETRY_SAMPLE\r\n");
           break;
       }
     }

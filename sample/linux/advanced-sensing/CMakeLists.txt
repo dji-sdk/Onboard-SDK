@@ -43,6 +43,7 @@ add_subdirectory(stereo_vision_single_thread_sample)
 add_subdirectory(stereo_vision_multi_thread_sample)
 add_subdirectory(camera_stream_poll_sample)
 add_subdirectory(camera_stream_callback_sample)
+add_subdirectory(stereo_vision_depth_perception_sample)
 
 if (TARGET_TRACKING_SAMPLE)
   add_subdirectory(camera_stream_target_tracking_sample)

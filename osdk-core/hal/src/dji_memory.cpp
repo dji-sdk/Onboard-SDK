@@ -65,9 +65,13 @@ void
 MMU::freeMemory(MMU_Tab* mmu_tab)
 {
   if (mmu_tab == (MMU_Tab*)0)
+  {
     return;
+  }
   if (mmu_tab->tabIndex == 0 || mmu_tab->tabIndex == (MMU_TABLE_NUM - 1))
+  {
     return;
+  }
   mmu_tab->usageFlag = 0;
 }
 
@@ -87,17 +91,23 @@ MMU::allocMemory(uint16_t size)
   uint8_t  magic_flag    = 0;
 
   if (size > PRO_PURE_DATA_MAX_SIZE || size > MEMORY_SIZE)
-    return (MMU_Tab*)0;
+  {
+    return (MMU_Tab *) 0;
+  }
 
   for (i = 0; i < MMU_TABLE_NUM; i++)
+  {
     if (memoryTable[i].usageFlag == 1)
     {
       mem_used += memoryTable[i].memSize;
       mmu_tab_used_index[mmu_tab_used_num++] = memoryTable[i].tabIndex;
     }
+  }
 
   if (MEMORY_SIZE < (mem_used + size))
-    return (MMU_Tab*)0;
+  {
+    return (MMU_Tab *) 0;
+  }
 
   if (mem_used == 0)
   {
@@ -108,7 +118,9 @@ MMU::allocMemory(uint16_t size)
   }
 
   for (i = 0; i < (mmu_tab_used_num - 1); i++)
+  {
     for (j = 0; j < (mmu_tab_used_num - i - 1); j++)
+    {
       if (memoryTable[mmu_tab_used_index[j]].pmem >
           memoryTable[mmu_tab_used_index[j + 1]].pmem)
       {
@@ -116,7 +128,8 @@ MMU::allocMemory(uint16_t size)
         mmu_tab_used_index[j] ^= mmu_tab_used_index[j + 1];
         mmu_tab_used_index[j + 1] ^= mmu_tab_used_index[j];
       }
-
+    }
+  }
   for (i = 0; i < (mmu_tab_used_num - 1); i++)
   {
     temp32 = static_cast<uint32_t>(memoryTable[mmu_tab_used_index[i + 1]].pmem -

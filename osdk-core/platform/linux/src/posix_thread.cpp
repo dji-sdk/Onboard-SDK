@@ -107,18 +107,18 @@ PosixThread::stopThread()
   /* Free attribute and wait for the other threads */
   if (int i = pthread_attr_destroy(&attr))
   {
-    DERROR("fail to destroy thread %d\n", i);
+    DERROR("Failed to destroy thread %d\n", i);
   }
   else
   {
-    DDEBUG("success to distory thread\n");
+    DDEBUG("Succeeded to destroy thread\n");
   }
+
   ret = pthread_join(threadID, &status);
 
-  DDEBUG("Main: completed join with thread code: %d\n", ret);
   if (ret)
   {
-    // Return error code
+    DDEBUG("Join thread error: %d\n", ret);
     return ret;
   }
 
