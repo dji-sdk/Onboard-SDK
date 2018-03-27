@@ -33,15 +33,13 @@
 using namespace DJI;
 using namespace DJI::OSDK;
 
-Vehicle::Vehicle(const char* device,
-		 uint32_t baudRate,
-		 bool threadSupport,
-                 bool enableAdvancedSensing)
-  : protocolLayer(NULL)
-  , subscribe(NULL)
-  , broadcast(NULL)
-  , control(NULL)
-  , camera(NULL)
+Vehicle::Vehicle(const char* device, uint32_t baudRate, bool threadSupport,
+		bool enableAdvancedSensing) :
+		protocolLayer(NULL), subscribe(NULL), broadcast(NULL)
+#if DISABLED
+, control(NULL)
+				, camera(NULL)
+#endif
 #ifdef ADVANCED_SENSING
   , advancedSensing(NULL)
   , advSensingErrorPrintOnce(false)
@@ -89,8 +87,9 @@ Vehicle::Vehicle(bool threadSupport)
   this->threadSupported = threadSupport;
   callbackId            = 0;
 
-  mandatorySetUp();
-}
+				, UARTSerialReadThread(NULL), callbackThread(NULL) {
+	this->threadSupported = threadSupport;
+	callbackId = 0;
 
 void
 Vehicle::mandatorySetUp()
@@ -227,6 +226,84 @@ Vehicle::functionalSetUp()
     return 1;
   }
 
+bool Vehicle::functionalSetUp() {
+	if (!initVersion()) {
+		DERROR("Failed to initialize Version! Please exit.\n");
+		return false;
+
+	}
+	else if (this->getFwVersion() < extendedVersionBase &&
+	this->getFwVersion() != Version::M100_31 && !(this->isLegacyM600()))
+	{
+		DERROR("Upgrade firmware using Assistant software!\n");
+		return false;
+	}
+
+	/*
+	 * Initialize subscriber if supported
+	 */
+	if (!initSubscriber())
+	{
+		DERROR("Subscriber not supported!\n");
+	}
+
+	/*
+	 * Initialize broadcast if supported
+	 */
+	if (!initBroadcast())
+	{
+		DERROR("Broadcast not supported!\n");
+	}
+	/*
+	 * @note Initialize Movement Control
+	 */
+	if (!initControl())
+	{
+		DERROR("Control not supported!\n");
+	}
+#if DISABLED
+
+	/*
+	 * @note Initialize external components
+	 * like Camera and MFIO
+	 */
+
+	if (!initCamera())
+	{
+		DERROR("Failed to initialize Camera!\n");
+	}
+
+	/*
+	 * Initialize MFIO if supported
+	 */
+	if (!initMFIO())
+	{
+		DSTATUS("MFIO not supported!\n");
+	}
+
+	/*
+	 * Initialize Mobile-Onboard Communication (MobileCommunication)
+	 */
+	if (!initMOC())
+	{
+		DERROR("Failed to initialize MobileCommunication!\n");
+	}
+
+	if (!initMissionManager())
+	{
+		DERROR("Failed to initialize Mission Manager!\n");
+	}
+#endif
+	if (!initHardSync())
+	{
+		DERROR("Hardware Sync not supported!\n");
+	}
+#if DISABLED
+	if (!initVirtualRC())
+	{
+		DERROR("Virtual RC not supported!\n");
+	}
+#endif
 #ifdef ADVANCED_SENSING
   if (advancedSensingEnabled)
   {
@@ -253,52 +330,45 @@ Vehicle::functionalSetUp()
   return 0;
 }
 
-void
-Vehicle::initCMD_SetSupportMatrix()
-{
-  cmd_setSupportMatrix[0].cmdSet    = OpenProtocolCMD::CMDSet::activation;
-  cmd_setSupportMatrix[0].fwVersion = mandatoryVersionBase;
+void Vehicle::initCMD_SetSupportMatrix() {
+	cmd_setSupportMatrix[0].cmdSet = OpenProtocolCMD::CMDSet::activation;
+	cmd_setSupportMatrix[0].fwVersion = mandatoryVersionBase;
 
-  cmd_setSupportMatrix[1].cmdSet    = OpenProtocolCMD::CMDSet::control;
-  cmd_setSupportMatrix[1].fwVersion = mandatoryVersionBase;
+	cmd_setSupportMatrix[1].cmdSet = OpenProtocolCMD::CMDSet::control;
+	cmd_setSupportMatrix[1].fwVersion = mandatoryVersionBase;
 
-  cmd_setSupportMatrix[2].cmdSet    = OpenProtocolCMD::CMDSet::broadcast;
-  cmd_setSupportMatrix[2].fwVersion = mandatoryVersionBase;
+	cmd_setSupportMatrix[2].cmdSet = OpenProtocolCMD::CMDSet::broadcast;
+	cmd_setSupportMatrix[2].fwVersion = mandatoryVersionBase;
 
-  cmd_setSupportMatrix[3].cmdSet    = OpenProtocolCMD::CMDSet::mission;
-  cmd_setSupportMatrix[3].fwVersion = mandatoryVersionBase;
+	cmd_setSupportMatrix[3].cmdSet = OpenProtocolCMD::CMDSet::mission;
+	cmd_setSupportMatrix[3].fwVersion = mandatoryVersionBase;
 
-  cmd_setSupportMatrix[4].cmdSet    = OpenProtocolCMD::CMDSet::hardwareSync;
-  cmd_setSupportMatrix[4].fwVersion = extendedVersionBase;
+	cmd_setSupportMatrix[4].cmdSet = OpenProtocolCMD::CMDSet::hardwareSync;
+	cmd_setSupportMatrix[4].fwVersion = extendedVersionBase;
 
-  // Not supported in extendedVersionBase
-  cmd_setSupportMatrix[5].cmdSet    = OpenProtocolCMD::CMDSet::virtualRC;
-  cmd_setSupportMatrix[5].fwVersion = mandatoryVersionBase;
+	// Not supported in extendedVersionBase
+	cmd_setSupportMatrix[5].cmdSet = OpenProtocolCMD::CMDSet::virtualRC;
+	cmd_setSupportMatrix[5].fwVersion = mandatoryVersionBase;
 
-  cmd_setSupportMatrix[7].cmdSet    = OpenProtocolCMD::CMDSet::mfio;
-  cmd_setSupportMatrix[7].fwVersion = extendedVersionBase;
+	cmd_setSupportMatrix[7].cmdSet = OpenProtocolCMD::CMDSet::mfio;
+	cmd_setSupportMatrix[7].fwVersion = extendedVersionBase;
 
-  cmd_setSupportMatrix[8].cmdSet    = OpenProtocolCMD::CMDSet::subscribe;
-  cmd_setSupportMatrix[8].fwVersion = extendedVersionBase;
+	cmd_setSupportMatrix[8].cmdSet = OpenProtocolCMD::CMDSet::subscribe;
+	cmd_setSupportMatrix[8].fwVersion = extendedVersionBase;
 }
 
-void
-Vehicle::callbackPoll()
-{
-  VehicleCallBackHandler cbVal;
-  RecvContainer          recvCont;
-  //! If Head = Tail, there is no data in the buffer, do not call cbPop.
-  protocolLayer->getThreadHandle()->lockNonBlockCBAck();
-  if (this->circularBuffer->head != this->circularBuffer->tail)
-  {
-    circularBuffer->cbPop(circularBuffer, &cbVal, &recvCont);
-    protocolLayer->getThreadHandle()->freeNonBlockCBAck();
-    cbVal.callback(this, recvCont, cbVal.userData);
-  }
-  else
-  {
-    protocolLayer->getThreadHandle()->freeNonBlockCBAck();
-  }
+void Vehicle::callbackPoll() {
+	VehicleCallBackHandler cbVal;
+	RecvContainer recvCont;
+	//! If Head = Tail, there is no data in the buffer, do not call cbPop.
+	protocolLayer->getThreadHandle()->lockNonBlockCBAck();
+	if (this->circularBuffer->head != this->circularBuffer->tail) {
+		circularBuffer->cbPop(circularBuffer, &cbVal, &recvCont);
+		protocolLayer->getThreadHandle()->freeNonBlockCBAck();
+		cbVal.callback(this, recvCont, cbVal.userData);
+	} else {
+		protocolLayer->getThreadHandle()->freeNonBlockCBAck();
+	}
 }
 
 Vehicle::~Vehicle()
@@ -365,8 +435,14 @@ Vehicle::~Vehicle()
     delete this->subscribe;
   }
 #ifdef ADVANCED_SENSING
-  if (this->advancedSensing)
-    delete this->advancedSensing;
+	if (this->advancedSensing)
+	delete this->advancedSensing;
+
+	if (this->hardSync)
+		delete this->hardSync;
+
+	if (this->missionManager)
+	delete this->missionManager;
 #endif
   if (this->hardSync)
   {
@@ -388,20 +464,17 @@ Vehicle::~Vehicle()
   this->USBThreadReady = false;
 }
 
-bool
-Vehicle::initOpenProtocol()
-{
-  //Initialize platform manager before passing pointer to OpenProtocol constructor
-  this->platformManager = new PlatformManager();
+bool Vehicle::initOpenProtocol() {
+	//Initialize platform manager before passing pointer to OpenProtocol constructor
+	this->platformManager = new PlatformManager();
 
-  this->protocolLayer = new (std::nothrow)
-    OpenProtocol(this->platformManager, this->device, this->baudRate);
-  if (this->protocolLayer == 0)
-  {
-    return false;
-  }
+	this->protocolLayer = new (std::nothrow) OpenProtocol(this->platformManager,
+			this->device, this->baudRate);
+	if (this->protocolLayer == 0) {
+		return false;
+	}
 
-  return true;
+	return true;
 }
 
 bool
@@ -450,16 +523,16 @@ Vehicle::initFullPlatformSupport()
       return false;
     }
 #ifdef ADVANCED_SENSING
-    if (this->advancedSensingEnabled)
-    {
-      this->USBReadThread =
-        platformManager->addThread(this, PlatformManager::USB_READ_THREAD);
-      if (this->USBReadThread == NULL)
-      {
-        DERROR("Failed to initialize USB read thread!\n");
-        return false;
-      }
-    }
+		if (this->advancedSensingEnabled)
+		{
+			this->USBReadThread =
+			platformManager->addThread(this, PlatformManager::USB_READ_THREAD);
+			if (this->USBReadThread == NULL)
+			{
+				DERROR("Failed to initialize USB read thread!\n");
+				return false;
+			}
+		}
 #endif
   }
   else
@@ -473,9 +546,9 @@ Vehicle::initFullPlatformSupport()
   bool USBReadThreadStatus;
 
 #ifdef ADVANCED_SENSING
-  if (this->advancedSensingEnabled)
-  {
-    USBReadThreadStatus = USBReadThread->createThread();
+	if (this->advancedSensingEnabled)
+	{
+		USBReadThreadStatus = USBReadThread->createThread();
 
     return (USBReadThreadStatus && cbThreadStatus);
   }
@@ -505,10 +578,12 @@ Vehicle::initVersion()
   return false;
 }
 
-bool
-Vehicle::parseDroneVersionInfo(Version::VersionData& versionData,
-                               uint8_t*              ackPtr)
-{
+	if (this->getFwVersion() == 0) {
+		return false;
+	} else {
+		return true;
+	}
+}
 
   Version::VersionData versionStruct;
 
@@ -697,15 +772,13 @@ Vehicle::parseDroneVersionInfo(Version::VersionData& versionData,
   return true;
 }
 
-void
-Vehicle::initCallbacks()
-{
-  hotPointCallback.callback = 0;
-  wayPointCallback.callback = 0;
-  hotPointCallback.userData = 0;
-  wayPointCallback.userData = 0;
-  missionCallback.callback  = 0;
-  missionCallback.userData  = 0;
+void Vehicle::initCallbacks() {
+	hotPointCallback.callback = 0;
+	wayPointCallback.callback = 0;
+	hotPointCallback.userData = 0;
+	wayPointCallback.userData = 0;
+	missionCallback.callback = 0;
+	missionCallback.userData = 0;
 }
 
 bool
@@ -1032,92 +1105,71 @@ Vehicle::initVirtualRC()
   return true;
 }
 
-bool
-Vehicle::isCmdSetSupported(const uint8_t cmdSet)
-{
-  for (int i = 0; i < NUM_CMD_SET; i++)
-  {
-    if (cmd_setSupportMatrix[i].cmdSet == cmdSet)
-    {
-      if (cmdSet == OpenProtocolCMD::CMDSet::virtualRC &&
-          versionData.fwVersion != Version::M100_31)
-      {
-        return false;
-      }
-      else if (versionData.fwVersion == Version::M100_31)
-      {
-        // CMDs not supported in Matrice 100
-        if (cmdSet == OpenProtocolCMD::CMDSet::hardwareSync ||
-            cmdSet == OpenProtocolCMD::CMDSet::mfio ||
-            cmdSet == OpenProtocolCMD::CMDSet::subscribe)
-        {
-          return false;
-        }
-      }
-      else if (isLegacyM600())
-      {
-        // CMDs not supported in Matrice 600 old firmware
-        if (cmdSet == OpenProtocolCMD::CMDSet::hardwareSync ||
-            cmdSet == OpenProtocolCMD::CMDSet::mfio ||
-            cmdSet == OpenProtocolCMD::CMDSet::subscribe)
-        {
-          return false;
-        }
-      }
-    }
-  }
-  return true;
+bool Vehicle::isCmdSetSupported(const uint8_t cmdSet) {
+	for (int i = 0; i < NUM_CMD_SET; i++) {
+		if (cmd_setSupportMatrix[i].cmdSet == cmdSet) {
+			if (cmdSet == OpenProtocolCMD::CMDSet::virtualRC
+					&& versionData.fwVersion != Version::M100_31) {
+				return false;
+			} else if (versionData.fwVersion == Version::M100_31) {
+				// CMDs not supported in Matrice 100
+				if (cmdSet == OpenProtocolCMD::CMDSet::hardwareSync
+						|| cmdSet == OpenProtocolCMD::CMDSet::mfio
+						|| cmdSet == OpenProtocolCMD::CMDSet::subscribe) {
+					return false;
+				}
+			} else if (isLegacyM600()) {
+				// CMDs not supported in Matrice 600 old firmware
+				if (cmdSet == OpenProtocolCMD::CMDSet::hardwareSync
+						|| cmdSet == OpenProtocolCMD::CMDSet::mfio
+						|| cmdSet == OpenProtocolCMD::CMDSet::subscribe) {
+					return false;
+				}
+			}
+		}
+	}
+	return true;
 }
 
-void
-Vehicle::processReceivedData(RecvContainer* receivedFrame)
-{
-  receivedFrame->recvInfo.version = this->getFwVersion();
-  if (receivedFrame->dispatchInfo.isAck)
-  {
-    // TODO Fill up ACKErrorCode Container
-    if (receivedFrame->dispatchInfo.isCallback)
-    {
-      this->nbVehicleCallBackHandler.callback =
-        (VehicleCallBack) this
-          ->nbCallbackFunctions[receivedFrame->dispatchInfo.callbackID];
-      this->nbVehicleCallBackHandler.userData =
-        this->nbUserData[receivedFrame->dispatchInfo.callbackID];
+void Vehicle::processReceivedData(RecvContainer* receivedFrame) {
+	receivedFrame->recvInfo.version = this->getFwVersion();
+	if (receivedFrame->dispatchInfo.isAck) {
+		// TODO Fill up ACKErrorCode Container
+		if (receivedFrame->dispatchInfo.isCallback) {
+			this->nbVehicleCallBackHandler.callback =
+					(VehicleCallBack) this->nbCallbackFunctions[receivedFrame->dispatchInfo.callbackID];
+			this->nbVehicleCallBackHandler.userData =
+					this->nbUserData[receivedFrame->dispatchInfo.callbackID];
 
-      if (nbVehicleCallBackHandler.callback)
-      {
-        if (threadSupported)
-        {
-          this->nbCallbackRecvContainer[receivedFrame->dispatchInfo.callbackID] =
-            *receivedFrame;
-          protocolLayer->getThreadHandle()->lockNonBlockCBAck();
-          this->circularBuffer->cbPush(
-            this->circularBuffer, this->nbVehicleCallBackHandler,
-            this->nbCallbackRecvContainer[receivedFrame->dispatchInfo.callbackID]);
-          protocolLayer->getThreadHandle()->freeNonBlockCBAck();
-        }
-        else
-        {
-          this->nbVehicleCallBackHandler.callback(
-            this, *receivedFrame, this->nbVehicleCallBackHandler.userData);
-        }
-      }
-    }
-    else
-    {
-      DDEBUG("Dispatcher identified as blocking call\n");
-      // TODO remove
-      this->lastReceivedFrame = *receivedFrame;
+			if (nbVehicleCallBackHandler.callback) {
+				if (threadSupported) {
+					this->nbCallbackRecvContainer[receivedFrame->dispatchInfo.callbackID] =
+							*receivedFrame;
+					protocolLayer->getThreadHandle()->lockNonBlockCBAck();
+					this->circularBuffer->cbPush(this->circularBuffer,
+							this->nbVehicleCallBackHandler,
+							this->nbCallbackRecvContainer[receivedFrame->dispatchInfo.callbackID]);
+					protocolLayer->getThreadHandle()->freeNonBlockCBAck();
+				} else {
+					this->nbVehicleCallBackHandler.callback(this,
+							*receivedFrame,
+							this->nbVehicleCallBackHandler.userData);
+				}
+			}
+		} else {
+			DDEBUG("Dispatcher identified as blocking call\n");
+			// TODO remove
+			this->lastReceivedFrame = *receivedFrame;
 
-      ACKHandler(static_cast<void*>(receivedFrame));
-      protocolLayer->getThreadHandle()->notify();
-    }
-  }
-  else
-  {
-    DDEBUG("Dispatcher identified as push data\n");
-    PushDataHandler(static_cast<void*>(receivedFrame));
-  }
+			ACKHandler(static_cast<void*>(receivedFrame));
+			protocolLayer->getThreadHandle()->notify();
+		}
+	}
+	else
+	{
+		DDEBUG("Dispatcher identified as push data\n");
+		PushDataHandler(static_cast<void*>(receivedFrame));
+	}
 }
 
 #ifdef ADVANCED_SENSING
@@ -1166,19 +1218,14 @@ Vehicle::processAdvancedSensingImgs(RecvContainer* receivedFrame)
 }
 #endif
 
-int
-Vehicle::callbackIdIndex()
-{
-  if (callbackId == 199)
-  {
-    callbackId = 0;
-    return 0;
-  }
-  else
-  {
-    callbackId++;
-    return callbackId;
-  }
+int Vehicle::callbackIdIndex() {
+	if (callbackId == 199) {
+		callbackId = 0;
+		return 0;
+	} else {
+		callbackId++;
+		return callbackId;
+	}
 }
 
 void
@@ -1283,34 +1330,28 @@ Vehicle::activate(ActivateData* data, int timeout)
   return ack;
 }
 
-void
-Vehicle::getDroneVersion(VehicleCallBack callback, UserData userData)
-{
-  versionData.version_ack =
-    OpenProtocolCMD::ErrorCode::CommonACK::NO_RESPONSE_ERROR;
-  versionData.version_crc     = 0x0;
-  versionData.version_name[0] = 0;
-  versionData.fwVersion       = 0;
+void Vehicle::getDroneVersion(VehicleCallBack callback, UserData userData) {
+	versionData.version_ack =
+			OpenProtocolCMD::ErrorCode::CommonACK::NO_RESPONSE_ERROR;
+	versionData.version_crc = 0x0;
+	versionData.version_name[0] = 0;
+	versionData.fwVersion = 0;
 
-  uint32_t cmd_timeout = 100; // unit is ms
-  uint32_t retry_time  = 3;
-  uint8_t  cmd_data    = 0;
-  int      cbIndex     = callbackIdIndex();
-  if (callback)
-  {
-    nbCallbackFunctions[cbIndex] = (void*)callback;
-    nbUserData[cbIndex]          = userData;
-  }
-  else
-  {
-    nbCallbackFunctions[cbIndex] = (void*)getDroneVersionCallback;
-    nbUserData[cbIndex]          = NULL;
-  }
+	uint32_t cmd_timeout = 100; // unit is ms
+	uint32_t retry_time = 3;
+	uint8_t cmd_data = 0;
+	int cbIndex = callbackIdIndex();
+	if (callback) {
+		nbCallbackFunctions[cbIndex] = (void*) callback;
+		nbUserData[cbIndex] = userData;
+	} else {
+		nbCallbackFunctions[cbIndex] = (void*) getDroneVersionCallback;
+		nbUserData[cbIndex] = NULL;
+	}
 
-  // When UserData is implemented, pass the Vehicle as userData.
-  protocolLayer->send(2, 0, OpenProtocolCMD::CMDSet::Activation::getVersion,
-                      (uint8_t*)&cmd_data, 1, cmd_timeout, retry_time, true,
-                      cbIndex);
+	// When UserData is implemented, pass the Vehicle as userData.
+	protocolLayer->send(2, 0, OpenProtocolCMD::CMDSet::Activation::getVersion,
+			(uint8_t*) &cmd_data, 1, cmd_timeout, retry_time, true, cbIndex);
 }
 
 ACK::DroneVersion
@@ -1383,52 +1424,41 @@ Vehicle::getDroneVersion(int timeout)
   return droneVersionACK;
 }
 
-Vehicle::ActivateData
-Vehicle::getAccountData() const
-{
-  return accountData;
+Vehicle::ActivateData Vehicle::getAccountData() const {
+	return accountData;
 }
 
-void
-Vehicle::setAccountData(const ActivateData& value)
-{
-  accountData = value;
+void Vehicle::setAccountData(const ActivateData& value) {
+	accountData = value;
 }
 
-void
-Vehicle::activateCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
-                          UserData userData)
-{
+void Vehicle::activateCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
+		UserData userData) {
 
-  uint16_t ack_data;
-  if (recvFrame.recvInfo.len - OpenProtocol::PackageMin <= 2)
-  {
-    ack_data = recvFrame.recvData.ack;
+	uint16_t ack_data;
+	if (recvFrame.recvInfo.len - OpenProtocol::PackageMin <= 2) {
+		ack_data = recvFrame.recvData.ack;
 
-    vehiclePtr->ackErrorCode.data = ack_data;
-    vehiclePtr->ackErrorCode.info = recvFrame.recvInfo;
+		vehiclePtr->ackErrorCode.data = ack_data;
+		vehiclePtr->ackErrorCode.info = recvFrame.recvInfo;
 
-    if (ACK::getError(vehiclePtr->ackErrorCode) &&
-        ack_data ==
-          OpenProtocolCMD::ErrorCode::ActivationACK::OSDK_VERSION_ERROR)
-    {
-      DERROR("SDK version did not match\n");
-      vehiclePtr->getDroneVersion();
-    }
+		if (ACK::getError(vehiclePtr->ackErrorCode)
+				&& ack_data
+						== OpenProtocolCMD::ErrorCode::ActivationACK::OSDK_VERSION_ERROR) {
+			DERROR("SDK version did not match\n");
+			vehiclePtr->getDroneVersion();
+		}
 
-    //! Let user know about other errors if any
-    ACK::getErrorCodeMessage(vehiclePtr->ackErrorCode, __func__);
-  }
-  else
-  {
-    DERROR("ACK is exception, sequence %d\n", recvFrame.recvInfo.seqNumber);
-  }
+		//! Let user know about other errors if any
+		ACK::getErrorCodeMessage(vehiclePtr->ackErrorCode, __func__);
+	} else {
+		DERROR("ACK is exception, sequence %d\n", recvFrame.recvInfo.seqNumber);
+	}
 
-  if (ack_data == OpenProtocolCMD::ErrorCode::ActivationACK::SUCCESS &&
-      vehiclePtr->accountData.encKey)
-  {
-    vehiclePtr->protocolLayer->setKey(vehiclePtr->accountData.encKey);
-  }
+	if (ack_data == OpenProtocolCMD::ErrorCode::ActivationACK::SUCCESS
+			&& vehiclePtr->accountData.encKey) {
+		vehiclePtr->protocolLayer->setKey(vehiclePtr->accountData.encKey);
+	}
 }
 
 void
@@ -1469,52 +1499,40 @@ Vehicle::getDroneVersionCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
   }
 }
 
-void
-Vehicle::controlAuthorityCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
-                                  UserData userData)
-{
-  ACK::ErrorCode ack;
-  ack.data = OpenProtocolCMD::ErrorCode::CommonACK::NO_RESPONSE_ERROR;
+void Vehicle::controlAuthorityCallback(Vehicle* vehiclePtr,
+		RecvContainer recvFrame, UserData userData) {
+	ACK::ErrorCode ack;
+	ack.data = OpenProtocolCMD::ErrorCode::CommonACK::NO_RESPONSE_ERROR;
 
-  uint8_t data    = 0x1;
-  int     cbIndex = vehiclePtr->callbackIdIndex();
+	uint8_t data = 0x1;
+	int cbIndex = vehiclePtr->callbackIdIndex();
 
-  if (recvFrame.recvInfo.len - OpenProtocol::PackageMin <= sizeof(uint16_t))
-  {
-    ack.data = recvFrame.recvData.ack;
-    ack.info = recvFrame.recvInfo;
-  }
-  else
-  {
-    DERROR("ACK is exception, sequence %d\n", recvFrame.recvInfo.seqNumber);
-    return;
-  }
+	if (recvFrame.recvInfo.len - OpenProtocol::PackageMin <= sizeof(uint16_t)) {
+		ack.data = recvFrame.recvData.ack;
+		ack.info = recvFrame.recvInfo;
+	} else {
+		DERROR("ACK is exception, sequence %d\n", recvFrame.recvInfo.seqNumber);
+		return;
+	}
 
-  if (ack.data == OpenProtocolCMD::ErrorCode::ControlACK::SetControl::
-                    OBTAIN_CONTROL_IN_PROGRESS)
-  {
-    ACK::getErrorCodeMessage(ack, __func__);
-    vehiclePtr->obtainCtrlAuthority(controlAuthorityCallback);
-  }
-  else if (ack.data == OpenProtocolCMD::ErrorCode::ControlACK::SetControl::
-                         RELEASE_CONTROL_IN_PROGRESS)
-  {
-    ACK::getErrorCodeMessage(ack, __func__);
-    vehiclePtr->releaseCtrlAuthority(controlAuthorityCallback);
-  }
-  else
-  {
-    ACK::getErrorCodeMessage(ack, __func__);
-  }
+	if (ack.data
+			== OpenProtocolCMD::ErrorCode::ControlACK::SetControl::OBTAIN_CONTROL_IN_PROGRESS) {
+		ACK::getErrorCodeMessage(ack, __func__);
+		vehiclePtr->obtainCtrlAuthority(controlAuthorityCallback);
+	} else if (ack.data
+			== OpenProtocolCMD::ErrorCode::ControlACK::SetControl::RELEASE_CONTROL_IN_PROGRESS) {
+		ACK::getErrorCodeMessage(ack, __func__);
+		vehiclePtr->releaseCtrlAuthority(controlAuthorityCallback);
+	} else {
+		ACK::getErrorCodeMessage(ack, __func__);
+	}
 }
 
 /*****************************Set State
  * Data**************************************/
 
-void
-Vehicle::setVersion(const Version::FirmWare& value)
-{
-  versionData.fwVersion = value;
+void Vehicle::setVersion(const Version::FirmWare& value) {
+	versionData.fwVersion = value;
 }
 
 void
@@ -1749,89 +1767,68 @@ Vehicle::PushDataHandler(void* eventData)
 
 void*
 Vehicle::waitForACK(const uint8_t (&cmd)[OpenProtocolCMD::MAX_CMD_ARRAY_SIZE],
-                    int timeout)
-{
-  void* pACK;
+		int timeout) {
+	void* pACK;
 
-  protocolLayer->getThreadHandle()->lockACK();
-  protocolLayer->getThreadHandle()->wait(timeout);
+	protocolLayer->getThreadHandle()->lockACK();
+	protocolLayer->getThreadHandle()->wait(timeout);
 
-  if (memcmp(cmd, OpenProtocolCMD::CMDSet::Mission::waypointAddPoint,
-             sizeof(cmd)) == 0)
-  {
-    pACK = static_cast<void*>(&this->waypointAddPointACK);
-  }
-  else if (memcmp(cmd, OpenProtocolCMD::CMDSet::Mission::waypointDownload,
-                  sizeof(cmd)) == 0)
-  {
-    pACK = static_cast<void*>(&this->waypointInitACK);
-  }
-  else if (memcmp(cmd, OpenProtocolCMD::CMDSet::Mission::waypointIndexDownload,
-                  sizeof(cmd)) == 0)
-  {
-    pACK = static_cast<void*>(&this->waypointIndexACK);
-  }
-  else if (memcmp(cmd, OpenProtocolCMD::CMDSet::Mission::hotpointStart,
-                  sizeof(cmd)) == 0)
-  {
-    pACK = static_cast<void*>(&this->hotpointStartACK);
-  }
-  else if (memcmp(cmd, OpenProtocolCMD::CMDSet::Mission::hotpointDownload,
-                  sizeof(cmd)) == 0)
-  {
-    pACK = static_cast<void*>(&this->hotpointReadACK);
-  }
-  else if (memcmp(cmd, OpenProtocolCMD::CMDSet::Activation::getVersion,
-                  sizeof(cmd)) == 0)
-  {
-    pACK = static_cast<void*>(&this->rawVersionACK);
-  }
-  else if (memcmp(cmd, OpenProtocolCMD::CMDSet::MFIO::get, sizeof(cmd)) == 0)
-  {
-    pACK = static_cast<void*>(&this->mfioGetACK);
-  }
-  else
-  {
-    pACK = static_cast<void*>(&this->ackErrorCode);
-  }
+	if (memcmp(cmd, OpenProtocolCMD::CMDSet::Mission::waypointAddPoint,
+			sizeof(cmd)) == 0) {
+		pACK = static_cast<void*>(&this->waypointAddPointACK);
+	} else if (memcmp(cmd, OpenProtocolCMD::CMDSet::Mission::waypointDownload,
+			sizeof(cmd)) == 0) {
+		pACK = static_cast<void*>(&this->waypointInitACK);
+	} else if (memcmp(cmd,
+			OpenProtocolCMD::CMDSet::Mission::waypointIndexDownload,
+			sizeof(cmd)) == 0) {
+		pACK = static_cast<void*>(&this->waypointIndexACK);
+	} else if (memcmp(cmd, OpenProtocolCMD::CMDSet::Mission::hotpointStart,
+			sizeof(cmd)) == 0) {
+		pACK = static_cast<void*>(&this->hotpointStartACK);
+	} else if (memcmp(cmd, OpenProtocolCMD::CMDSet::Mission::hotpointDownload,
+			sizeof(cmd)) == 0) {
+		pACK = static_cast<void*>(&this->hotpointReadACK);
+	} else if (memcmp(cmd, OpenProtocolCMD::CMDSet::Activation::getVersion,
+			sizeof(cmd)) == 0) {
+		pACK = static_cast<void*>(&this->rawVersionACK);
+	} else if (memcmp(cmd, OpenProtocolCMD::CMDSet::MFIO::get, sizeof(cmd))
+			== 0) {
+		pACK = static_cast<void*>(&this->mfioGetACK);
+	} else {
+		pACK = static_cast<void*>(&this->ackErrorCode);
+	}
 
-  protocolLayer->getThreadHandle()->freeACK();
+	protocolLayer->getThreadHandle()->freeACK();
 
-  return pACK;
+	return pACK;
 }
 
-void
-Vehicle::obtainCtrlAuthority(VehicleCallBack callback, UserData userData)
-{
-  uint8_t data    = 1;
-  int     cbIndex = callbackIdIndex();
-  if (callback)
-  {
-    nbCallbackFunctions[cbIndex] = (void*)callback;
-    nbUserData[cbIndex]          = userData;
-  }
-  else
-  {
-    nbCallbackFunctions[cbIndex] = (void*)controlAuthorityCallback;
-    nbUserData[cbIndex]          = NULL;
-  }
-  protocolLayer->send(2, this->encrypt,
-                      OpenProtocolCMD::CMDSet::Control::setControl, &data, 1,
-                      500, 2, true, cbIndex);
+void Vehicle::obtainCtrlAuthority(VehicleCallBack callback, UserData userData) {
+	uint8_t data = 1;
+	int cbIndex = callbackIdIndex();
+	if (callback) {
+		nbCallbackFunctions[cbIndex] = (void*) callback;
+		nbUserData[cbIndex] = userData;
+	} else {
+		nbCallbackFunctions[cbIndex] = (void*) controlAuthorityCallback;
+		nbUserData[cbIndex] = NULL;
+	}
+	protocolLayer->send(2, this->encrypt,
+			OpenProtocolCMD::CMDSet::Control::setControl, &data, 1, 500, 2,
+			true, cbIndex);
 }
 
-ACK::ErrorCode
-Vehicle::obtainCtrlAuthority(int timeout)
-{
-  ACK::ErrorCode ack;
-  uint8_t        data = 1;
+ACK::ErrorCode Vehicle::obtainCtrlAuthority(int timeout) {
+	ACK::ErrorCode ack;
+	uint8_t data = 1;
 
-  protocolLayer->send(2, this->encrypt,
-                      OpenProtocolCMD::CMDSet::Control::setControl, &data, 1,
-                      500, 2, false, 0);
+	protocolLayer->send(2, this->encrypt,
+			OpenProtocolCMD::CMDSet::Control::setControl, &data, 1, 500, 2,
+			false, 0);
 
-  ack = *(ACK::ErrorCode*)waitForACK(
-    OpenProtocolCMD::CMDSet::Control::setControl, timeout);
+	ack = *(ACK::ErrorCode*) waitForACK(
+			OpenProtocolCMD::CMDSet::Control::setControl, timeout);
 
   if (ack.data == OpenProtocolCMD::ErrorCode::ControlACK::SetControl::
   OBTAIN_CONTROL_IN_PROGRESS)
@@ -1839,165 +1836,127 @@ Vehicle::obtainCtrlAuthority(int timeout)
     ack = this->obtainCtrlAuthority(timeout);
   }
 
-  return ack;
+	return ack;
 }
 
-void
-Vehicle::releaseCtrlAuthority(VehicleCallBack callback, UserData userData)
-{
-  uint8_t data    = 0;
-  int     cbIndex = callbackIdIndex();
-  if (callback)
-  {
-    nbCallbackFunctions[cbIndex] = (void*)callback;
-    nbUserData[cbIndex]          = userData;
-  }
-  else
-  {
-    // nbCallbackFunctions[cbIndex] = (void*)ReleaseCtrlCallback;
-    nbUserData[cbIndex] = NULL;
-  }
-  protocolLayer->send(2, this->encrypt,
-                      OpenProtocolCMD::CMDSet::Control::setControl, &data, 1,
-                      500, 2, true, cbIndex);
+void Vehicle::releaseCtrlAuthority(VehicleCallBack callback,
+		UserData userData) {
+	uint8_t data = 0;
+	int cbIndex = callbackIdIndex();
+	if (callback) {
+		nbCallbackFunctions[cbIndex] = (void*) callback;
+		nbUserData[cbIndex] = userData;
+	} else {
+		// nbCallbackFunctions[cbIndex] = (void*)ReleaseCtrlCallback;
+		nbUserData[cbIndex] = NULL;
+	}
+	protocolLayer->send(2, this->encrypt,
+			OpenProtocolCMD::CMDSet::Control::setControl, &data, 1, 500, 2,
+			true, cbIndex);
 }
 
-ACK::ErrorCode
-Vehicle::releaseCtrlAuthority(int timeout)
-{
-  ACK::ErrorCode ack;
-  uint8_t        data = 0;
+ACK::ErrorCode Vehicle::releaseCtrlAuthority(int timeout) {
+	ACK::ErrorCode ack;
+	uint8_t data = 0;
 
-  protocolLayer->send(2, this->encrypt,
-                      OpenProtocolCMD::CMDSet::Control::setControl, &data, 1,
-                      500, 2, false, 1);
+	protocolLayer->send(2, this->encrypt,
+			OpenProtocolCMD::CMDSet::Control::setControl, &data, 1, 500, 2,
+			false, 1);
 
-  ack = *(ACK::ErrorCode*)waitForACK(
-    OpenProtocolCMD::CMDSet::Control::setControl, timeout);
+	ack = *(ACK::ErrorCode*) waitForACK(
+			OpenProtocolCMD::CMDSet::Control::setControl, timeout);
 
-  if (ack.data == OpenProtocolCMD::ErrorCode::ControlACK::SetControl::
-                    RELEASE_CONTROL_IN_PROGRESS)
-  {
-    ack = this->releaseCtrlAuthority(timeout);
-  }
+	if (ack.data
+			== OpenProtocolCMD::ErrorCode::ControlACK::SetControl::RELEASE_CONTROL_IN_PROGRESS) {
+		ack = this->releaseCtrlAuthority(timeout);
+	}
 
-  return ack;
+	return ack;
 }
 
-void
-Vehicle::setLastReceivedFrame(RecvContainer recvFrame)
-{
-  protocolLayer->getThreadHandle()->lockFrame();
-  this->lastReceivedFrame = recvFrame;
-  protocolLayer->getThreadHandle()->freeFrame();
+void Vehicle::setLastReceivedFrame(RecvContainer recvFrame) {
+	protocolLayer->getThreadHandle()->lockFrame();
+	this->lastReceivedFrame = recvFrame;
+	protocolLayer->getThreadHandle()->freeFrame();
 }
 
-RecvContainer
-Vehicle::getLastReceivedFrame()
-{
-  RecvContainer recvFrame;
-  protocolLayer->getThreadHandle()->lockFrame();
-  recvFrame = this->lastReceivedFrame;
-  protocolLayer->getThreadHandle()->freeFrame();
-  return recvFrame;
+RecvContainer Vehicle::getLastReceivedFrame() {
+	RecvContainer recvFrame;
+	protocolLayer->getThreadHandle()->lockFrame();
+	recvFrame = this->lastReceivedFrame;
+	protocolLayer->getThreadHandle()->freeFrame();
+	return recvFrame;
 }
 
-Version::FirmWare
-Vehicle::getFwVersion() const
-{
-  return versionData.fwVersion;
+Version::FirmWare Vehicle::getFwVersion() const {
+	return versionData.fwVersion;
 }
 char*
-Vehicle::getHwVersion() const
-{
-  return (char*)versionData.hwVersion;
+Vehicle::getHwVersion() const {
+	return (char*) versionData.hwVersion;
 }
 char*
-Vehicle::getHwSerialNum() const
-{
-  return (char*)versionData.hw_serial_num;
+Vehicle::getHwSerialNum() const {
+	return (char*) versionData.hw_serial_num;
 }
 
 PlatformManager*
-Vehicle::getPlatformManager() const
-{
-  return this->platformManager;
+Vehicle::getPlatformManager() const {
+	return this->platformManager;
 }
 
 Thread*
-Vehicle::getSerialReadThread() const
-{
-  return this->UARTSerialReadThread;
+Vehicle::getSerialReadThread() const {
+	return this->UARTSerialReadThread;
 }
 
 Thread*
-Vehicle::getCallbackThread() const
-{
-  return this->callbackThread;
+Vehicle::getCallbackThread() const {
+	return this->callbackThread;
 }
 
 Thread*
-Vehicle::getUSBReadThread() const
-{
-  return this->USBReadThread;
+Vehicle::getUSBReadThread() const {
+	return this->USBReadThread;
 }
 
-bool
-Vehicle::isUSBThreadReady()
-{
-  return this->USBThreadReady;
+bool Vehicle::isUSBThreadReady() {
+	return this->USBThreadReady;
 }
 
 uint8_t*
-Vehicle::getRawVersionAck()
-{
-  return this->rawVersionACK;
+Vehicle::getRawVersionAck() {
+	return this->rawVersionACK;
 }
 
-void
-Vehicle::setEncryption(bool encryptSetting)
-{
-  this->encrypt = encryptSetting;
+void Vehicle::setEncryption(bool encryptSetting) {
+	this->encrypt = encryptSetting;
 }
 
-bool
-Vehicle::getEncryption()
-{
-  return this->encrypt;
+bool Vehicle::getEncryption() {
+	return this->encrypt;
 }
 
-bool
-Vehicle::isLegacyM600()
-{
-  //! Check for the special M600 backwards compatibility
-  if (versionData.fwVersion == Version::FW(3, 2, 15, 62))
-  {
-    if (strncmp(versionData.hwVersion, "PM820V3", 7) == 0)
-    {
-      return true;
-    }
-    else
-    {
-      return false;
-    }
-  }
-  return false;
+bool Vehicle::isLegacyM600() {
+	//! Check for the special M600 backwards compatibility
+	if (versionData.fwVersion == Version::FW(3, 2, 15, 62)) {
+		if (strncmp(versionData.hwVersion, "PM820V3", 7) == 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	return false;
 }
 
-bool
-Vehicle::isM100()
-{
-  //! Check for the M100 backwards compatibility
-  if (versionData.fwVersion == Version::FW(3, 1, 10, 0))
-  {
-    if (strncmp(versionData.hwVersion, "M100", 4) == 0)
-    {
-      return true;
-    }
-    else
-    {
-      return false;
-    }
-  }
-  return false;
+bool Vehicle::isM100() {
+	//! Check for the M100 backwards compatibility
+	if (versionData.fwVersion == Version::FW(3, 1, 10, 0)) {
+		if (strncmp(versionData.hwVersion, "M100", 4) == 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	return false;
 }
