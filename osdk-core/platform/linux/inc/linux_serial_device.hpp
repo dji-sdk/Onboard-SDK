@@ -40,6 +40,7 @@
 #include <fcntl.h>
 #include <termios.h>
 #include <unistd.h>
+#include <sys/select.h>
 
 #include "dji_hard_driver.hpp"
 
@@ -71,7 +72,7 @@ public:
   //! your serial connection
   int checkBaudRate(uint8_t (&buf)[BUFFER_SIZE])
   {
-    _checkBaudRate(buf);
+    return _checkBaudRate(buf);
   }
   int setSerialPureTimedRead();
   int unsetSerialPureTimedRead();

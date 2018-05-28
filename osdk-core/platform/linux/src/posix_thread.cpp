@@ -134,6 +134,7 @@ PosixThread::send_call(void* param)
     vehiclePtr->protocolLayer->sendPoll();
     usleep(10); //! @note CPU optimization, reduce the CPU usage a lot
   }
+  return NULL;
 }
 
 void*
@@ -159,6 +160,7 @@ PosixThread::uart_serial_read_call(void* param)
 
   delete recvContainer_copy;
   DDEBUG("Quit read function\n");
+  return NULL;
 }
 
 void*
@@ -184,6 +186,7 @@ PosixThread::USB_read_call(void* param)
 
   delete recvContainer;
   DDEBUG("Quit USB read function\n");
+  return NULL;
 }
 
 void*
@@ -196,4 +199,5 @@ PosixThread::callback_call(void* param)
     usleep(10); //! @note CPU optimization, reduce the CPU usage a lot
   }
   DDEBUG("Quit callback function\n");
+  return NULL;
 }
