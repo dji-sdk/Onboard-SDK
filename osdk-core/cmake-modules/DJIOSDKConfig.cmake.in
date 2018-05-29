@@ -5,7 +5,7 @@
 
 # Compute paths
 get_filename_component(DJIOSDK_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
-set(DJIOSDK_INCLUDE_DIRS "@CONF_INCLUDE_DIRS@")
+set(DJIOSDK_INCLUDE_DIRS "@CONF_INCLUDE_DIRS@/..")
 
 # Our library dependencies (contains definitions for IMPORTED targets)
 include("${DJIOSDK_CMAKE_DIR}/djiosdkTargets.cmake")
