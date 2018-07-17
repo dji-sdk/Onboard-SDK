@@ -32,7 +32,7 @@
 
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
-const uint8_t  ADD_PACKAEG_DATA_LENGTH = 200;
+const uint8_t  ADD_PACKAGE_DATA_LENGTH = 200;
 const uint32_t DBVersion               = 0x00000100;
 //
 // @note: make sure the order of entry is the same as in the enum TopicName
@@ -155,9 +155,19 @@ DataSubscription::initPackageFromTopicList(int packageID, int numberOfTopics,
                                            TopicName* topicList,
                                            bool sendTimeStamp, uint16_t freq)
 {
+  ACK::ErrorCode ack;
+
+  if(packageID >= MAX_NUMBER_OF_PACKAGE)
+  {
+    DERROR("Cannot init package [%d]. "
+           "packageID must be me smaller than %d.",
+           packageID, MAX_NUMBER_OF_PACKAGE);
+    return false;
+  }
+
   if (package[packageID].isOccupied())
   {
-    DERROR("package [%d] is being occupied.\n", packageID);
+    DERROR("package [%d] is being occupied.", packageID);
     return false;
   }
 
@@ -247,6 +257,13 @@ DataSubscription::verify(int timeout)
 void
 DataSubscription::startPackage(int packageID)
 {
+  if(packageID >= MAX_NUMBER_OF_PACKAGE)
+  {
+    DERROR("Cannot start package [%d]. "
+		  "packageID must be smaller than %d.",
+		  packageID, MAX_NUMBER_OF_PACKAGE);
+	return;
+  }
   // We need to prevent running startPackage multiple times
   // The reason is that allocateDataBuffer will delete and reallocating the
   // memory
@@ -260,7 +277,7 @@ DataSubscription::startPackage(int packageID)
     return;
   }
 
-  uint8_t buffer[ADD_PACKAEG_DATA_LENGTH];
+  uint8_t buffer[ADD_PACKAGE_DATA_LENGTH];
 
   int bufferLength = package[packageID].serializePackageInfo(buffer);
   package[packageID].allocateDataBuffer();
@@ -308,6 +325,17 @@ DataSubscription::startPackage(int packageID, int timeout)
 {
   ACK::ErrorCode ack;
 
+  if(packageID >= MAX_NUMBER_OF_PACKAGE)
+  {
+    DERROR("Cannot start package [%d]. "
+		  "packageID must be me smaller than %d.",
+		  packageID, MAX_NUMBER_OF_PACKAGE);
+
+    ack.info.cmd_set = OpenProtocolCMD::CMDSet::subscribe;
+
+    ack.data = OpenProtocolCMD::ErrorCode::SubscribeACK::PACKAGE_OUT_OF_RANGE;
+    return ack;
+  }
   // We need to prevent running startPackage multiple times
   // The reason is that allocateDataBuffer will delete and reallocating the
   // memory
@@ -328,7 +356,7 @@ DataSubscription::startPackage(int packageID, int timeout)
     return ack;
   }
 
-  uint8_t buffer[ADD_PACKAEG_DATA_LENGTH];
+  uint8_t buffer[ADD_PACKAGE_DATA_LENGTH];
 
   int bufferLength = package[packageID].serializePackageInfo(buffer);
   package[packageID].allocateDataBuffer();
@@ -342,7 +370,7 @@ DataSubscription::startPackage(int packageID, int timeout)
 
   DSTATUS("Start package %d result: %d.",
           package[packageID].getInfo().packageID, ack.data);
-  DSTATUS("Package %d info: freq=%d, nTopics=%d.\n",
+  DSTATUS("Package %d info: freq=%d, nTopics=%d.",
           package[packageID].getInfo().packageID,
           package[packageID].getInfo().freq,
           package[packageID].getInfo().numberOfTopics);
@@ -403,6 +431,14 @@ DataSubscription::extractOnePackage(RecvContainer*       pRcvContainer,
 void
 DataSubscription::removePackage(int packageID)
 {
+  if(packageID >= MAX_NUMBER_OF_PACKAGE)
+  {
+	DERROR("Remove package %d fail. "
+			"packageID must be smaller than %d.",
+			packageID, MAX_NUMBER_OF_PACKAGE);
+    return;
+  }
+
   uint8_t data = packageID;
 
   int cbIndex = vehicle->callbackIdIndex();
@@ -447,6 +483,19 @@ ACK::ErrorCode
 DataSubscription::removePackage(int packageID, int timeout)
 {
   ACK::ErrorCode ack;
+
+  if(packageID >= MAX_NUMBER_OF_PACKAGE)
+  {
+    DERROR("Cannot remove package [%d]. "
+		  "packageID must be smaller than %d.",
+		  packageID, MAX_NUMBER_OF_PACKAGE);
+
+    ack.info.cmd_set = OpenProtocolCMD::CMDSet::subscribe;
+
+    ack.data = OpenProtocolCMD::ErrorCode::SubscribeACK::PACKAGE_OUT_OF_RANGE;
+    return ack;
+  }
+
   uint8_t        data = packageID;
 
   protocol->send(2, vehicle->getEncryption(),
@@ -645,7 +694,7 @@ SubscriptionPackage::setTopicList(TopicName* topics, int numberOfTopics,
       return false;
     }
     totalSize += TopicDataBase[topics[i]].size;
-    if (totalSize > ADD_PACKAEG_DATA_LENGTH)
+    if (totalSize > ADD_PACKAGE_DATA_LENGTH)
     {
       DDEBUG(
         "Too many topics, data payload of the first %d topic is already %d", i,
