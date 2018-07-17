@@ -35,6 +35,8 @@
 
 using namespace DJI::OSDK;
 
+Log Log::nonPrintableInstance = Log();
+
 Log::Log(Mutex* m)
 {
   if (m)
@@ -61,16 +63,16 @@ Log::title(int level, const char* prefix, const char* func, int line)
 {
   if (level)
   {
-    vaild = true;
-
     const char str[] = "\n%s/%d @ %s, L%d: ";
     print(str, prefix, level, func, line);
+    return *this;
   }
   else
   {
-    vaild = false;
+    // Return nonPrintableInstance to indicate to print() method
+    // that this log type is disable
+    return nonPrintableInstance;
   }
-  return *this;
 }
 
 
@@ -79,16 +81,16 @@ Log::title(int level, const char* prefix)
 {
   if (level)
   {
-    vaild = true;
-
     const char str[] = "\n%s/%d ";
     print(str, prefix, level);
+    return *this;
   }
   else
   {
-    vaild = false;
+    // Return nonPrintableInstance to indicate to print() method
+    // that this log type is disabled
+    return nonPrintableInstance;
   }
-  return *this;
 }
 
 Log&
@@ -100,15 +102,18 @@ Log::print()
 Log&
 Log::print(const char* fmt, ...)
 {
-  if ((!release) && vaild)
+  // If print() method was called from nonPrintableInstance
+  // it means that this log type is disabled
+  if (this != &nonPrintableInstance)
   {
     va_list args;
     va_start(args, fmt);
     mutex->lock();
     vprintf(fmt, args);
+    fflush(stdout);
     mutex->unlock();
     va_end(args);
-  }
+ }
   return *this;
 }
 
@@ -260,26 +265,31 @@ Log::enableStatusLogging()
 {
   this->enable_status = true;
 }
+
 void
 Log::disableStatusLogging()
 {
   this->enable_status = false;
 }
+
 void
 Log::enableDebugLogging()
 {
   this->enable_debug = true;
 }
+
 void
 Log::disableDebugLogging()
 {
   this->enable_debug = false;
 }
+
 void
 Log::enableErrorLogging()
 {
   this->enable_error = true;
 }
+
 void
 Log::disableErrorLogging()
 {

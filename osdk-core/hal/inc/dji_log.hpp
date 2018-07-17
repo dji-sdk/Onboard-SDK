@@ -45,7 +45,7 @@
 
 #define DLOG_PRIVATE(_title_)                                                  \
   DJI::OSDK::Log::instance()                                                   \
-    .title((_title_), #_title_)                            \
+    .title((_title_), #_title_)                                                \
     .print
 
 #define STATUS DJI::OSDK::Log::instance().getStatusLogState()
@@ -165,7 +165,7 @@ public:
 
 private:
   Mutex* mutex;
-  bool   vaild;
+  static Log nonPrintableInstance;
 
   // @todo implement
   typedef enum NUMBER_STYLE {
@@ -179,8 +179,6 @@ private:
   bool enable_status;
   bool enable_debug;
   bool enable_error;
-
-  static const bool release = false;
 };
 
 } // namespace OSDK
