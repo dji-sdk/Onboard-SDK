@@ -33,6 +33,7 @@
 #include "linux_serial_device.hpp"
 #include <algorithm>
 #include <iterator>
+#include <sys/ioctl.h>
 
 using namespace DJI::OSDK;
 
@@ -58,19 +59,18 @@ LinuxSerialDevice::init()
   {
     _serialClose();
     DERROR("...Failed to start serial\n");
-    deviceStatus = false;
   }
   else
   {
     DSTATUS("...Serial started successfully.\n");
-    deviceStatus = true;
   }
 }
 
 bool
 LinuxSerialDevice::getDeviceStatus()
 {
-  return deviceStatus;
+  int count = 0;
+  return ioctl(m_serial_fd, FIONREAD, &count) >= 0;
 }
 
 DJI::OSDK::time_ms

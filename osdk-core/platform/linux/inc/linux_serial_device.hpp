@@ -95,7 +95,6 @@ private:
 
   int    m_serial_fd;
   fd_set m_serial_fd_set;
-  bool   deviceStatus;
 
   bool _serialOpen(const char* dev);
   bool _serialClose();
