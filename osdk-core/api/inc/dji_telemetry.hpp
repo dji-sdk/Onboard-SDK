@@ -1,6 +1,6 @@
 /** @file dji_telemetry.hpp
- *  @version 3.3
- *  @date April 2017
+ *  @version 3.7
+ *  @date Jul 2018
  *
  *  @brief Enumeration of all telemetry data types, structures and maps.
  *
@@ -50,53 +50,62 @@ namespace Telemetry
 /*!
  * @brief enum TopicName is the interface for user to create packages and access
  * data
- * It is also used as index for TopicDataBase
+ * It is also used as index for TopicDataBase.
+ *
+ * @note Please see dji_telemetry_doc.hpp (Or the API reference on the developer website) for detailed documentation.
  *
  */
 // clang-format off
 typedef enum
 {
-  TOPIC_QUATERNION,               /*!< quaternion @200Hz*/
-  TOPIC_ACCELERATION_GROUND,      /*!< acceleration in ground frame @200Hz */
-  TOPIC_ACCELERATION_BODY,        /*!< acceleration in body frame @200Hz*/
-  TOPIC_ACCELERATION_RAW,         /*!< raw acceleration @400Hz */
-  TOPIC_VELOCITY,                 /*!< velocity @200Hz */
-  TOPIC_ANGULAR_RATE_FUSIONED,    /*!< attitude rate @200Hz */
-  TOPIC_ANGULAR_RATE_RAW,         /*!< raw attitude rate @400Hz */
-  TOPIC_ALTITUDE_FUSIONED,        /*!< fused altitude @200Hz */
-  TOPIC_ALTITUDE_BAROMETER,       /*!< barometer @200Hz */
-  TOPIC_HEIGHT_HOMEPOINT,         /*!< home point height @1Hz */
-  TOPIC_HEIGHT_FUSION,            /*!< fused height @100Hz */
-  TOPIC_GPS_FUSED,                /*!< fused position @50Hz */
-  TOPIC_GPS_DATE,                 /*!< GPS date @50Hz */
-  TOPIC_GPS_TIME,                 /*!< GPS time @50Hz */
-  TOPIC_GPS_POSITION,             /*!< GPS position data type: (uint32)deg*10^7 @50Hz */
-  TOPIC_GPS_VELOCITY,             /*!< GPS velocity @50Hz */
-  TOPIC_GPS_DETAILS,              /*!< GPS status @50Hz */
-  TOPIC_RTK_POSITION,             /*!< RTK position @50Hz */
-  TOPIC_RTK_VELOCITY,             /*!< RTK velocity @50Hz */
-  TOPIC_RTK_YAW,                  /*!< RTK yaw @50Hz */
-  TOPIC_RTK_POSITION_INFO,        /*!< RTK status @50Hz */
-  TOPIC_RTK_YAW_INFO,             /*!< RTK yaw status @50Hz */
-  TOPIC_COMPASS,                  /*!< magnetometer @100Hz */
-  TOPIC_RC,                       /*!< 6-channel RC @50Hz */
-  TOPIC_GIMBAL_ANGLES,            /*!< gimbal angle @50Hz */
-  TOPIC_GIMBAL_STATUS,            /*!< gimbal status @50Hz */
-  TOPIC_STATUS_FLIGHT,            /*!< flight status @50Hz */
-  TOPIC_STATUS_DISPLAYMODE,       /*!< display mode @50Hz */
-  TOPIC_STATUS_LANDINGGEAR,       /*!< landing gear status @50Hz */
-  TOPIC_STATUS_MOTOR_START_ERROR, /*!< motor start error @50Hz */
-  TOPIC_BATTERY_INFO,             /*!< battery info @50Hz */
-  TOPIC_CONTROL_DEVICE,           /*!< SDK control device info @50Hz */
-  TOPIC_HARD_SYNC,                /*!< hardware sync @400Hz */
-  TOPIC_GPS_SIGNAL_LEVEL,         /*!< GPS Signal Level @50Hz */
-  TOPIC_GPS_CONTROL_LEVEL,        /*!< GPS Control Level @50Hz */
+  TOPIC_QUATERNION,
+  TOPIC_ACCELERATION_GROUND,
+  TOPIC_ACCELERATION_BODY,
+  TOPIC_ACCELERATION_RAW,
+  TOPIC_VELOCITY,
+  TOPIC_ANGULAR_RATE_FUSIONED,
+  TOPIC_ANGULAR_RATE_RAW,
+  TOPIC_ALTITUDE_FUSIONED,
+  TOPIC_ALTITUDE_BAROMETER,
+  TOPIC_HEIGHT_HOMEPOINT,
+  TOPIC_HEIGHT_FUSION,
+  TOPIC_GPS_FUSED,
+  TOPIC_GPS_DATE,
+  TOPIC_GPS_TIME,
+  TOPIC_GPS_POSITION,
+  TOPIC_GPS_VELOCITY,
+  TOPIC_GPS_DETAILS,
+  TOPIC_RTK_POSITION,
+  TOPIC_RTK_VELOCITY,
+  TOPIC_RTK_YAW,
+  TOPIC_RTK_POSITION_INFO,
+  TOPIC_RTK_YAW_INFO,
+  TOPIC_COMPASS,
+  TOPIC_RC,
+  TOPIC_GIMBAL_ANGLES,
+  TOPIC_GIMBAL_STATUS,
+  TOPIC_STATUS_FLIGHT,
+  TOPIC_STATUS_DISPLAYMODE,
+  TOPIC_STATUS_LANDINGGEAR,
+  TOPIC_STATUS_MOTOR_START_ERROR,
+  TOPIC_BATTERY_INFO,
+  TOPIC_CONTROL_DEVICE,
+  TOPIC_HARD_SYNC,
+  TOPIC_GPS_SIGNAL_LEVEL,
+  TOPIC_GPS_CONTROL_LEVEL,
+  TOPIC_RC_FULL_RAW_DATA,
+  TOPIC_RC_WITH_FLAG_DATA,
+  TOPIC_ESC_DATA,
+  TOPIC_RTK_CONNECT_STATUS,
+  TOPIC_GIMBAL_CONTROL_MODE,
+  TOPIC_FLIGHT_ANOMALY,
+  TOPIC_POSITION_VO,
   TOTAL_TOPIC_NUMBER              // Always put this line in the end
 } TopicName;
 // clang-format on
 
 /*!
- * enum TOPIC_UID is the UID that is accepted by the FC
+ * @brief enum TOPIC_UID is the UID that is accepted by the FC
  */
 // clang-format off
 typedef enum
@@ -135,11 +144,22 @@ typedef enum
   UID_CONTROL_DEVICE           = 0x667ba86a,
   UID_HARD_SYNC                = 0xecbef06d,
   UID_GPS_SIGNAL_LEVEL         = 0xa6a0395f,
-  UID_GPS_CONTROL_LEVEL        = 0xe30b17b0
+  UID_GPS_CONTROL_LEVEL        = 0xe30b17b0,
+  UID_RC_FULL_RAW_DATA         = 0x16ec4d0e,
+  UID_RC_WITH_FLAG_DATA        = 0xfe04cfcd,
+  UID_ESC_DATA                 = 0xaaa0f589,
+  UID_RTK_CONNECT_STATUS       = 0x6f349326,
+  UID_GIMBAL_CONTROL_MODE      = 0x326a446d,
+  UID_FLIGHT_ANOMALY           = 0x0a624b4b,
+  UID_POSITION_VO              = 0xd3462697
 } TOPIC_UID;
-// clang-format on
 
+// clang-format on
 #pragma pack(1)
+
+/*!
+ * @brief struct for TopicInfo data used to subscribe packages from the FC
+ */
 typedef struct
 {
   const TopicName name;
@@ -152,8 +172,8 @@ typedef struct
   uint8_t* latest;
 } TopicInfo; // pack(1)
 
-/*! @brief struct for TOPIC_QUATERNION
- *
+/*!
+ * @brief struct for TOPIC_QUATERNION
  */
 typedef struct Quaternion
 {
@@ -442,13 +462,13 @@ typedef struct GimbalStatus
 typedef struct Gimbal
 {
 
-  float32_t roll;           /*!< degree */
-  float32_t pitch;          /*!< degree */
-  float32_t yaw;            /*!< degree */
-  uint8_t   pitchLimit : 1; /*!< 1 - axis reached limit, 0 - no */
-  uint8_t   rollLimit : 1;  /*!< 1 - axis reached limit, 0 - no */
-  uint8_t   yawLimit : 1;   /*!< 1 - axis reached limit, 0 - no */
-  uint8_t   reserved : 5;
+  float32_t roll;            /*!< degree */
+  float32_t pitch;           /*!< degree */
+  float32_t yaw;             /*!< degree */
+  uint8_t   pitchLimit : 1;  /*!< 1 - axis reached limit, 0 - no */
+  uint8_t   rollLimit  : 1;  /*!< 1 - axis reached limit, 0 - no */
+  uint8_t   yawLimit   : 1;  /*!< 1 - axis reached limit, 0 - no */
+  uint8_t   reserved   : 5;
 } Gimbal; // pack(1)
 
 /*!
@@ -494,9 +514,8 @@ typedef struct SyncTimestamp
   uint32_t time2p5ms; /*!< clock time in multiples of 2.5ms. Sync timer runs at
                          400Hz, this field increments in integer steps */
   uint32_t time1ns;   /*!< nanosecond time offset from the 2.5ms pulse */
-  uint32_t
-    resetTime2p5ms; /*!< clock time in multiple of 2.5ms elapsed since the
-                hardware sync started */
+  uint32_t resetTime2p5ms; /*!< clock time in multiple of 2.5ms elapsed since the
+                              hardware sync started */
   uint16_t index;   /*!< This is the tag field you filled out when using the
                        setSyncFreq API above; use it to identify the packets that
                        have sync data. This is useful when you call the
@@ -520,6 +539,147 @@ typedef struct HardSyncData
   Vector3f      a;  /*!< accelerometer reading unit: g */
   Vector3f      w;  /*!< gyro reading unit: rad/sec */
 } HardSyncData;     // pack(1)
+
+/*!
+ * @brief struct indicating RTK GPS Connection
+ */
+typedef struct RTKConnectStatus
+{
+  uint16_t rtkConnected : 1;
+  uint16_t reserve         : 15;
+} RTKConnectStatus;
+
+/*!
+ * @brief struct for TOPIC_RC_WITH_FLAG_DATA
+ */
+typedef struct RCWithFlagData
+{
+  float32_t pitch;       /*!< down = -0.999, middle = 0.000, up   =0.999 */
+  float32_t roll;        /*!< left = -0.999, middle = 0.000, right=0.999 */
+  float32_t yaw;         /*!< left = -0.999, middle = 0.000, right=0.999 */
+  float32_t throttle;    /*!< down = -0.999, middle = 0.000, up   =0.999 */
+  struct
+  {
+    uint8_t logicConnected  :1;  /*!< 0 if sky or ground side is disconnected for 3 seconds   */
+    uint8_t skyConnected    :1;  /*!< Sky side is connected, i.e., receiver is connected to FC */
+    uint8_t groundConnected :1;  /*!< Ground side is connected, i.e., RC is on and connected to FC */
+    uint8_t appConnected    :1;  /*!< Mobile App is connected to RC */
+    uint8_t reserved        :4;
+  } flag;
+} RCWithFlagData;
+
+/*!
+ * @brief struct for status of each individual esc
+ */
+typedef struct ESCStatusIndividual
+{
+  int16_t  current;              /*!< ESC current, unit: mA */
+  int16_t  speed;                /*!< ESC speed, unit: rpm */
+  uint16_t voltage;              /*!< Input power from battery to ESC, unit: mV */
+  int16_t  temperature;          /*!< ESC temperature, unit: degree C */
+  uint16_t stall            : 1; /*!< Motor is stall */
+  uint16_t empty            : 1; /*!< Motor has no load */
+  uint16_t unbalanced       : 1; /*!< Motor speed is unbalanced */
+  uint16_t escDisconnected  : 1; /*!< ESC is disconnected */
+  uint16_t temperatureHigh  : 1; /*!< Temperature is high */
+  uint16_t reserved         : 11;
+} ESCStatusIndividual;
+
+#define MAX_ESC_NUM 8
+/*!
+ * @brief struct for TOPIC_ESC_DATA
+ */
+typedef struct EscData
+{
+  ESCStatusIndividual esc[MAX_ESC_NUM];
+} EscData;
+
+/*!
+ * @brief struct for the light bridge 2 part of TOPIC_RC_FULL_RAW_DATA
+ */
+typedef struct LB2RcFullRawData
+{
+  int16_t roll;             /*!< left = 364, middle = 1024, right=1684 */
+  int16_t pitch;            /*!< down = 364, middle = 1024, up=1684 */
+  int16_t yaw;              /*!< left = 364, middle = 1024, right=1684 */
+  int16_t throttle;         /*!< down = 364, middle = 1024, up=1684 */
+  int16_t mode;             /*!< right(P) = 364, middle(A) = 1024, left(F)=1684 */
+  int16_t gear;             /*!< up = 1684,  down = 1354 */
+  int16_t camera;           /*!< press_down = 1684, release = 364 */
+  int16_t video;            /*!< press_down = 1684, release = 364 */
+  int16_t videoPause;       /*!< press_down = 1684, release = 364 */
+  int16_t goHome;           /*!< Always 364 */
+  int16_t leftWheel;        /*!< left = 364, middle = 1024, right=16844 */
+  int16_t rightWheelButton; /*!< press_down = 1684, release = 364 */
+  int16_t rcC1;             /*!< press_down = 1684, release = 364 */
+  int16_t rcC2;             /*!< press_down = 1684, release = 364 */
+  int16_t rcD1;             /*!< rcD1 - 8 is used by sbus */
+  int16_t rcD2;
+  int16_t rcD3;
+  int16_t rcD4;
+  int16_t rcD5;
+  int16_t rcD6;
+  int16_t rcD7;
+  int16_t rcD8;
+} LB2RcFullRawData;
+
+#define SDK_LB2_CHANNEL_NUM (sizeof(LB2RcFullRawData)/sizeof(int16_t))
+#define SDK_SBUS_CHANNEL_NUM (16)
+/*!
+ * @brief struct for the sbus part of TOPIC_RC_FULL_RAW_DATA
+ */
+typedef struct SBUSFullRawData
+{
+  int16_t data[SDK_SBUS_CHANNEL_NUM];
+  int16_t reserved[SDK_LB2_CHANNEL_NUM - SDK_SBUS_CHANNEL_NUM];
+} SBUSFullRawData;
+
+/*!
+ * @brief union for TOPIC_RC_FULL_RAW_DATA
+ */
+typedef union
+{
+  LB2RcFullRawData lb2;
+  SBUSFullRawData  sbus;
+} RCFullRawData;
+
+typedef uint8_t GimbalControlMode;
+
+/*!
+ * @brief struct for TOPIC_FLIGHT_ANOMALY
+ */
+typedef struct FlightAnomaly
+{
+  uint32_t impactInAir               : 1;  /*!< Impact happens in Air */
+  uint32_t randomFly                 : 1;  /*!< Randomly fly in GPS mode without stick input*/
+  uint32_t heightCtrlFail            : 1;  /*!< Height control failed */
+  uint32_t rollPitchCtrlFail         : 1;  /*!< Tilt control failed */
+  uint32_t yawCtrlFail               : 1;  /*!< Yaw control failed */
+  uint32_t aircraftIsFalling         : 1;  /*!< Aircraft is falling */
+  uint32_t strongWindLevel1          : 1;  /*!< There is wind that FC views as strong level 1*/
+  uint32_t strongWindLevel2          : 1;  /*!< There is wind that FC views as strong level 2*/
+  uint32_t compassInstallationError  : 1;  /*!< Compass installation error */
+  uint32_t imuInstallationError      : 1;  /*!< IMU installation error */
+  uint32_t escTemperatureHigh        : 1;  /*!< ESC temperature is high */
+  uint32_t atLeastOneEscDisconnected : 1;  /*!< At least one ESC is disconnected */
+  uint32_t gpsYawError               : 1;  /*!< GPS yaw error */
+  uint32_t reserved                  : 19;
+} FlightAnomaly;
+
+/*!
+ * @brief struct for TOPIC_POSITION_VO
+ */
+typedef struct LocalPositionVO
+{
+    float32_t x;              /*!< North (best effort), unit: m */
+    float32_t y;              /*!< East (best effort),  unit: m */
+    float32_t z;              /*!< Down,  unit: m */
+    uint8_t   xHealth   : 1;
+    uint8_t   yHealth   : 1;
+    uint8_t   zHealth   : 1;
+    uint8_t   reserved  : 5;
+} LocalPositionVO;
+//---------------------------------Legacy commands below-----------------------------------//
 
 /*!
  * @brief Matrice 100 Timestamp data, available in Broadcast telemetry (only for
@@ -546,9 +706,9 @@ typedef struct LegacyVelocity
   /*! scale from 0 - 5 signifying gps signal strength <br>
    *  greater than 3 for strong signal
    */
-  uint8_t health : 1;
+  uint8_t health   : 1;
   uint8_t sensorID : 4;
-  uint8_t reserve : 3;
+  uint8_t reserve  : 3;
 } LegacyVelocity; // pack(1)
 
 typedef uint16_t EnableFlag; // pack(1)
@@ -627,6 +787,14 @@ template <> struct TypeMap<TOPIC_CONTROL_DEVICE           > { typedef SDKInfo   
 template <> struct TypeMap<TOPIC_HARD_SYNC                > { typedef HardSyncData    type;};
 template <> struct TypeMap<TOPIC_GPS_SIGNAL_LEVEL         > { typedef uint8_t         type;};
 template <> struct TypeMap<TOPIC_GPS_CONTROL_LEVEL        > { typedef uint8_t         type;};
+template <> struct TypeMap<TOPIC_RC_FULL_RAW_DATA         > { typedef RCFullRawData   type;};
+template <> struct TypeMap<TOPIC_RC_WITH_FLAG_DATA        > { typedef RCWithFlagData  type;};
+template <> struct TypeMap<TOPIC_ESC_DATA                 > { typedef EscData         type;};
+template <> struct TypeMap<TOPIC_RTK_CONNECT_STATUS       > { typedef RTKConnectStatus type;};
+template <> struct TypeMap<TOPIC_GIMBAL_CONTROL_MODE      > { typedef GimbalControlMode type;};
+template <> struct TypeMap<TOPIC_FLIGHT_ANOMALY           > { typedef FlightAnomaly   type;};
+template <> struct TypeMap<TOPIC_POSITION_VO              > { typedef LocalPositionVO type;};
+
 // clang-format on
 }
 }

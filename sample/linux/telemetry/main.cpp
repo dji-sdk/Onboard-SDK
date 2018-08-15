@@ -51,7 +51,9 @@ main(int argc, char** argv)
     << "| Available commands:                                            |"
     << std::endl;
   std::cout
-    << "| [a] Get telemetry data and print                               |"
+    << "| [a] Get telemetry data and print                               |\n"
+    << "| [b] Select some subscription topics to print                   |\n"
+    << "| [c] Get telemetry data and save to file                        |"
     << std::endl;
   char inputChar;
   std::cin >> inputChar;
@@ -67,6 +69,12 @@ main(int argc, char** argv)
       {
         subscribeToData(vehicle);
       }
+      break;
+    case 'b':
+      subscribeToDataForInteractivePrint(vehicle);
+      break;
+    case 'c':
+      subscribeToDataAndSaveLogToFile(vehicle);
       break;
     default:
       break;

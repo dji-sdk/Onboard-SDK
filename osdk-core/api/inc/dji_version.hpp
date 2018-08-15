@@ -47,6 +47,12 @@ class Version
 public:
   typedef uint32_t FirmWare;
 
+  constexpr static const char* M100 = "M100";
+  constexpr static const char* N3   = "N3";
+  constexpr static const char* A3   = "A3";
+  constexpr static const char* M210 = "PM410";
+  constexpr static const char* M600 = "PM820";
+
   typedef struct VersionData
   {
     uint16_t version_ack;
@@ -91,6 +97,13 @@ const Version::FirmWare mandatoryVersionBase = (Version::FW(3, 1, 10, 0));
  * Supported products: M210, A3, N3
  */
 const Version::FirmWare extendedVersionBase = (Version::FW(3, 2, 36, 6));
+
+/*!
+ * @brief Define FW version constant for 3.3.x firmware branch
+ * @details Only the A3 and the N3 support the 3.3.x firmware branch.
+ * @note Not to be confused with the OSDK version 3.3.x; firmware versions follow a different numbering and cadence.
+ */
+const Version::FirmWare versionBase33 = (Version::FW(3,3,0,0));
 
 /*!
  * @brief Define CMD_SET support matrix

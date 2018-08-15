@@ -77,7 +77,7 @@ MobileCommunication::getDataFromMSDKCallback(Vehicle*      vehiclePtr,
 {
   if (recvFrame.recvInfo.len - OpenProtocol::PackageMin <= 100)
   {
-    DSTATUS("Received mobile Data of len %d\n", recvFrame.recvInfo.len);
+    DSTATUS("The len of received mobile communication data: %d\n", recvFrame.recvInfo.len);
   }
 }
 

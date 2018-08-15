@@ -49,6 +49,7 @@ Vehicle::Vehicle(const char* device,
   , gimbal(NULL)
   , mfio(NULL)
   , moc(NULL)
+  , mobileDevice(NULL)
   , missionManager(NULL)
   , hardSync(NULL)
   , virtualRC(NULL)
@@ -80,6 +81,7 @@ Vehicle::Vehicle(bool threadSupport)
   , camera(NULL)
   , mfio(NULL)
   , moc(NULL)
+  , mobileDevice(NULL)
   , missionManager(NULL)
   , hardSync(NULL)
   , virtualRC(NULL)
@@ -209,7 +211,16 @@ Vehicle::functionalSetUp()
     return 1;
   }
 
-  if (!initMissionManager())
+  /*
+   * Initialize Mobile Device Abstraction
+   */
+  if (!initMobileDevice())
+  {
+    DERROR("Failed to initialize Mobile Device!\n");
+  }
+
+
+    if (!initMissionManager())
   {
     DERROR("Failed to initialize Mission Manager!\n");
     return 1;
@@ -336,17 +347,17 @@ Vehicle::~Vehicle()
   {
     delete this->camera;
   }
-  
+
   if(this->gimbal)
   {
     delete this->gimbal;
   }
-  
+
   if(this->control)
   {
     delete this->control;
   }
-  
+
   if (this->mfio)
   {
     delete this->mfio;
@@ -356,6 +367,12 @@ Vehicle::~Vehicle()
   {
     delete this->moc;
   }
+
+  if (this->mobileDevice)
+  {
+    delete this->mobileDevice;
+  }
+
   if (this->broadcast)
   {
     delete this->broadcast;
@@ -424,9 +441,11 @@ Vehicle::initMainReadThread()
   }
 
 #if defined(STM32) || defined(__arm__) || defined(QT)
-#else
+#elif defined(linux)
   DDEBUG("Set serial driver to nonblocking mode");
-  dynamic_cast<DJI::OSDK::LinuxSerialDevice*>(this->protocolLayer->getDriver())->setSerialPureTimedRead();
+  dynamic_cast<DJI::OSDK::LinuxSerialDevice *>(this->protocolLayer->getDriver())->setSerialPureTimedRead();
+#else
+  DDEBUG("Serial driver is not supported in this platform yet!");
 #endif
   return UARTSerialReadThread->createThread();
 }
@@ -624,7 +643,7 @@ Vehicle::parseDroneVersionInfo(Version::VersionData& versionData,
 
   //! Special cases
   //! M100:
-  if (strcmp(versionStruct.hwVersion, "M100") == 0)
+  if (strcmp(versionStruct.hwVersion, Version::M100) == 0)
   {
     //! Bug in M100 does not report the right FW.
     ver3                    = 10 * ver3;
@@ -964,6 +983,25 @@ Vehicle::initMOC()
 }
 
 bool
+Vehicle::initMobileDevice()
+{
+    if(this->mobileDevice)
+     {
+        DDEBUG("Mobile Device already initalized!");
+        return true;
+     }
+    this->mobileDevice = new (std::nothrow) MobileDevice(this);
+    if (this->mobileDevice == 0)
+    {
+        DERROR("Failed to allocate memory for MobileDevice!\n");
+        return false;
+    }
+
+    return true;
+}
+
+
+bool
 Vehicle::initMissionManager()
 {
   if(this->missionManager)
@@ -1251,7 +1289,7 @@ Vehicle::activate(ActivateData* data, int timeout)
   {
     DSTATUS("Activation successful\n");
     protocolLayer->setKey(accountData.encKey);
-   
+
     if(!this->gimbal)
     {
       initGimbal();
@@ -1277,7 +1315,7 @@ Vehicle::activate(ActivateData* data, int timeout)
                "you will need to re-activate it again (with internet through DJI GO App).\n"
                "\t* A new device needs to be activated twice to fix the NEW_DEVICE_ERROR, "
                "so please try it twice.\n");
-    }    
+    }
   }
 
   return ack;
@@ -1667,6 +1705,21 @@ Vehicle::PushDataHandler(void* eventData)
         }
       }
     }
+
+    if (mobileDevice) {
+      if (mobileDevice->fromMSDKHandler.callback) {
+        if (threadSupported) {
+          DDEBUG("Received data from mobile\n");
+          protocolLayer->getThreadHandle()->lockNonBlockCBAck();
+          this->circularBuffer->cbPush(this->circularBuffer, mobileDevice->fromMSDKHandler,
+                                       *pushDataEntry);
+          protocolLayer->getThreadHandle()->freeNonBlockCBAck();
+        } else {
+          mobileDevice->fromMSDKHandler.callback(this, *(pushDataEntry), mobileDevice->fromMSDKHandler.userData);
+        }
+      }
+    }
+
   }
   else if (memcmp(cmd, OpenProtocolCMD::CMDSet::Broadcast::mission,
                   sizeof(cmd)) == 0)
@@ -1990,7 +2043,7 @@ Vehicle::isM100()
   //! Check for the M100 backwards compatibility
   if (versionData.fwVersion == Version::FW(3, 1, 10, 0))
   {
-    if (strncmp(versionData.hwVersion, "M100", 4) == 0)
+    if (strncmp(versionData.hwVersion, Version::M100, 4) == 0)
     {
       return true;
     }

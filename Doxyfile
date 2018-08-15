@@ -220,7 +220,13 @@ TAB_SIZE               = 2
 # "Side Effects:". You can put \n's in the value part of an alias to insert
 # newlines.
 
-ALIASES                =
+ALIASES                 += platforms="\par Supported Platforms :\n"
+ALIASES                 += units="\par Measurement Unit :\n"
+ALIASES                 += datastruct="\par Data Structure :\n"
+ALIASES                 += perf="\par Performance Benchmarking Data :\n"
+ALIASES                 += sensors="\par Sensing Sources :\n"
+ALIASES                 += also="\par \a See \a Also :\n"
+ALIASES                 += imageSize{2}="\htmlonly <style>div.image img[src=\"\1\"]{\2}</style>\endhtmlonly"
 
 # This tag can be used to specify a number of word-keyword mappings (TCL only).
 # A mapping has the form "name=value". For example adding "class=itcl::class"
@@ -743,7 +749,7 @@ WARN_LOGFILE           =
 # spaces.
 # Note: If this tag is empty the current directory is searched.
 
-INPUT                  = osdk-core/api/src osdk-core/api/inc osdk-core/platform/linux/inc osdk-core/platform/linux/src osdk-core/hal/inc/dji_log.hpp osdk-core/hal/src/dji_log.cpp doc/doxygen-resources/doxygen-mainpage.hpp
+INPUT                  = osdk-core/api/src osdk-core/api/inc osdk-core/platform/linux/inc osdk-core/platform/linux/src osdk-core/hal/inc/dji_log.hpp osdk-core/hal/src/dji_log.cpp doc/doxygen-resources/doxygen-mainpage.hpp osdk-core/advanced-sensing-2.0.0/inc
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses
@@ -1078,7 +1084,7 @@ HTML_EXTRA_STYLESHEET  = doc/doxygen-resources/doxygen-bootstrapped/customdoxyge
 # files will be copied as-is; there are no commands or markers available.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_EXTRA_FILES       = doc/doxygen-resources/doxygen-bootstrapped/doxy-boot.js doc/doxygen-resources/css/bootstrap.min.css doc/doxygen-resources/js/bootstrap.min.js doc/doxygen-resources/images/dji-logo-foot.png doc/doxygen-resources/images/favicon.png
+HTML_EXTRA_FILES       = doc/doxygen-resources/doxygen-bootstrapped/doxy-boot.js doc/doxygen-resources/css/bootstrap.min.css doc/doxygen-resources/js/bootstrap.min.js doc/doxygen-resources/images/dji-logo-foot.png doc/doxygen-resources/images/dji-logo@2x.png doc/doxygen-resources/images/favicon.png doc/doxygen-resources/images/state_machine.png
 
 # The HTML_COLORSTYLE_HUE tag controls the color of the HTML output. Doxygen
 # will adjust the colors in the stylesheet and background images according to

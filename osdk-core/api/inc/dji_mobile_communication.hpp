@@ -29,6 +29,7 @@
 #ifndef MOC_H
 #define MOC_H
 
+#include "dji_macros.hpp"
 #include "dji_vehicle_callback.hpp"
 
 namespace DJI
@@ -41,13 +42,15 @@ class Vehicle;
 
 /*! @brief APIs for Mobile-Onboard SDK Communication
  *
- * @details This class implements the Onboard SDK side of
- * Data Transparent Transmission functionality. You must implement APIs
- * available
- * in the Mobile SDK to have full functionality on both directions of the
+ * @details This class is deprecated, please use the new class \ref MobileDevice
+ * instead.
+ * This class implements the Onboard SDK side of Data Transparent Transmission
+ * functionality.
+ * You must implement APIs available in the Mobile SDK to have full
+ * functionality on both directions of the
  * pipeline.
  */
-class MobileCommunication
+class DJI_DEPRECATED MobileCommunication
 {
 public:
   MobileCommunication(Vehicle* vehicle = 0);

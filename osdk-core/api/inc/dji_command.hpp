@@ -74,6 +74,7 @@ public:
       // CMD_ID_SETARM Supported on Matrice 100, A3, N3
       // with firmware version < 3.3
       const static uint8_t setArm[MAX_CMD_ARRAY_SIZE];
+      const static uint8_t killSwitch[MAX_CMD_ARRAY_SIZE];
       const static uint8_t gimbalSpeed[MAX_CMD_ARRAY_SIZE];
       const static uint8_t gimbalAngle[MAX_CMD_ARRAY_SIZE];
       const static uint8_t cameraShot[MAX_CMD_ARRAY_SIZE];

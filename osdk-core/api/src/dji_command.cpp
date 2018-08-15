@@ -76,6 +76,9 @@ const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Control::control[] = {
 const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Control::setArm[] = {
   OpenProtocolCMD::CMDSet::control, 0x05
 };
+const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Control::killSwitch[] = {
+  OpenProtocolCMD::CMDSet::control, 0x06
+};
 const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Control::cameraShot[] = {
   OpenProtocolCMD::CMDSet::control, 0x20
 };

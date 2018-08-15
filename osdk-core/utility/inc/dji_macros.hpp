@@ -1,12 +1,10 @@
-/*! @file telemetry_sample.hpp
- *  @version 3.3
- *  @date Jun 05 2017
+/** @file dji_macros.hpp
+ *  @version 3.7
+ *  @date Jun 2018
  *
- *  @brief
- *  Telemetry API usage in a Linux environment.
- *  Shows example usage of the new data subscription API.
+ *  @brief Circular buffer class for the DJI OSDK
  *
- *  @Copyright (c) 2017 DJI
+ *  @Copyright (c) 2018 DJI
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,22 +26,19 @@
  *
  */
 
-#ifndef DJIOSDK_TELEMETRYSAMPLE_HPP
-#define DJIOSDK_TELEMETRYSAMPLE_HPP
+#ifndef ONBOARDSDK_DJI_MACROS_H
+#define ONBOARDSDK_DJI_MACROS_H
 
-// System Includes
-#include <iostream>
+#ifndef DJI_NO_DEPRECATED_WARNING
+#if (defined __GNUC__ || defined ARMCC)
+#define DJI_DEPRECATED __attribute__((deprecated))
+#elif (defined _MSC_VER)
+#define DJI_DEPRECATED __declspec(deprecated)
+#else
+#define DJI_DEPRECATED
+#endif
+#else
+#define DJI_DEPRECATED
+#endif
 
-// DJI OSDK includes
-#include <dji_vehicle.hpp>
-
-// Helpers
-#include <dji_linux_helpers.hpp>
-
-bool subscribeToData(DJI::OSDK::Vehicle* vehiclePtr, int responseTimeout = 1);
-bool subscribeToDataForInteractivePrint(DJI::OSDK::Vehicle* vehiclePtr, int responseTimeout = 1);
-bool subscribeToDataAndSaveLogToFile(DJI::OSDK::Vehicle* vehiclePtr, int responseTimeout = 1);
-
-// Broadcast data implementation for Matrice 100
-bool getBroadcastData(DJI::OSDK::Vehicle* vehicle, int responseTimeout = 1);
-#endif // DJIOSDK_TELEMETRYSAMPLE_HPP
+#endif // ONBOARDSDK_DJI_MACROS_H

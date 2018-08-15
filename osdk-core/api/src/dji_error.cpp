@@ -160,6 +160,7 @@ const uint8_t DJI::OSDK::ErrorCode::CommonACK::MOTOR_FAIL_BAT_ERR       = 124;
 const uint8_t DJI::OSDK::ErrorCode::CommonACK::IMPACT_IS_DETECTED       = 125;
 const uint8_t DJI::OSDK::ErrorCode::CommonACK::MOTOR_FAIL_MODE_FAILURE  = 126;
 const uint8_t DJI::OSDK::ErrorCode::CommonACK::MOTOR_FAIL_CRAFT_FAIL_LATELY = 127;
+const uint8_t DJI::OSDK::ErrorCode::CommonACK::KILL_SWITCH_ON           = 135;
 const uint8_t DJI::OSDK::ErrorCode::CommonACK::MOTOR_FAIL_MOTOR_CODE_ERROR = 255;
 const uint16_t DJI::OSDK::ErrorCode::ActivationACK::SUCCESS          = 0x0000;
 const uint16_t DJI::OSDK::ErrorCode::ActivationACK::PARAMETER_ERROR  = 0x0001;
@@ -201,6 +202,7 @@ const uint16_t DJI::OSDK::ErrorCode::ControlACK::SetArm::AIRCRAFT_IN_AIR_ERROR  
 const uint16_t DJI::OSDK::ErrorCode::ControlACK::SetArm::ALREADY_ARMED_ERROR 	     = 0x0002;
 const uint16_t DJI::OSDK::ErrorCode::ControlACK::SetArm::OBTAIN_CONTROL_NEEDED_ERROR = 0x0001;
 const uint16_t DJI::OSDK::ErrorCode::ControlACK::SetArm::SUCCESS 		     = 0x0000;
+const uint16_t DJI::OSDK::ErrorCode::ControlACK::KillSwitch::SUCCESS 		 = 0x00;
 const uint8_t DJI::OSDK::ErrorCode::SubscribeACK::SUCCESS                = 0x00;
 const uint8_t DJI::OSDK::ErrorCode::SubscribeACK::ILLEGAL_DATA_LENGTH    = 0x01;
 const uint8_t DJI::OSDK::ErrorCode::SubscribeACK::VERSION_DOES_NOT_MATCH = 0x02;
@@ -270,8 +272,8 @@ const uint8_t DJI::OSDK::ErrorCode::MissionACK::HotPoint::IN_PAUSED_MODE = 0xA9;
 const uint8_t DJI::OSDK::ErrorCode::MissionACK::HotPoint::FAILED_TO_PAUSE = 0xAA;
 const uint8_t DJI::OSDK::ErrorCode::MissionACK::WayPoint::INVALID_DATA = 0xE0;
 const uint8_t DJI::OSDK::ErrorCode::MissionACK::WayPoint::INVALID_POINT_DATA = 0xE1;
-const uint8_t DJI::OSDK::ErrorCode::MissionACK::WayPoint::DISTANCE_OVERFLOW = 0xE2;
-const uint8_t DJI::OSDK::ErrorCode::MissionACK::WayPoint::TIMEOUT        = 0xE3;
+const uint8_t DJI::OSDK::ErrorCode::MissionACK::WayPoint::TRACE_TOO_LONG = 0xE2; /*!< This is the distance from WP1 to WPn. Newer A3/N3 FW > 60km; all others > 30km >*/
+const uint8_t DJI::OSDK::ErrorCode::MissionACK::WayPoint::TOTAL_DISTANCE_TOO_LONG        = 0xE3; /*!< This is the distance from WP1 to WPn, plus distance from homepoint to WP1 and the distance from WPn back to the homepoint. Newer A3/N3 FW > 100km; all others > 60km >*/
 const uint8_t DJI::OSDK::ErrorCode::MissionACK::WayPoint::POINT_OVERFLOW = 0xE4;
 const uint8_t DJI::OSDK::ErrorCode::MissionACK::WayPoint::POINTS_TOO_CLOSE = 0xE5;
 const uint8_t DJI::OSDK::ErrorCode::MissionACK::WayPoint::POINTS_TOO_FAR = 0xE6;
@@ -295,3 +297,9 @@ const uint8_t DJI::OSDK::ErrorCode::MFIOACK::set::CHANNEL_ERROR         = 0x01;
 const uint8_t DJI::OSDK::ErrorCode::MFIOACK::set::PORT_NOT_MAPPED_ERROR = 0x02;
 const uint8_t DJI::OSDK::ErrorCode::MFIOACK::get::SUCCESS               = 0x00;
 // clang-format on
+
+
+// Backward compatibility
+
+const uint8_t& DJI::OSDK::ErrorCode::MissionACK::WayPoint::DISTANCE_OVERFLOW = DJI::OSDK::ErrorCode::MissionACK::WayPoint::TRACE_TOO_LONG;
+const uint8_t& DJI::OSDK::ErrorCode::MissionACK::WayPoint::TIMEOUT = DJI::OSDK::ErrorCode::MissionACK::WayPoint::TOTAL_DISTANCE_TOO_LONG;

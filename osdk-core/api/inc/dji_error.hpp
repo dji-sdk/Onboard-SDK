@@ -334,6 +334,8 @@ public:
     const static uint8_t MOTOR_FAIL_MODE_FAILURE;
     /*! The aircraft recently had an error of NO. 125.*/
     const static uint8_t MOTOR_FAIL_CRAFT_FAIL_LATELY;
+    /*! The aircraft kill switch is on, please disable it*/
+    const static uint8_t KILL_SWITCH_ON;
     /*! The code logic is illegal.*/
     const static uint8_t MOTOR_FAIL_MOTOR_CODE_ERROR;
   };
@@ -424,6 +426,11 @@ public:
       const static uint16_t ALREADY_ARMED_ERROR;
       const static uint16_t AIRCRAFT_IN_AIR_ERROR;
     } SetArm;
+
+    typedef struct KillSwitch
+    {
+      const static uint16_t SUCCESS;
+    } KillSwitch;
 
   }; // Control class
 
@@ -561,8 +568,8 @@ public:
     {
       const static uint8_t INVALID_DATA;
       const static uint8_t INVALID_POINT_DATA;
-      const static uint8_t DISTANCE_OVERFLOW;
-      const static uint8_t TIMEOUT;
+      const static uint8_t TRACE_TOO_LONG;
+      const static uint8_t TOTAL_DISTANCE_TOO_LONG;
       const static uint8_t POINT_OVERFLOW;
       const static uint8_t POINTS_TOO_CLOSE;
       const static uint8_t POINTS_TOO_FAR;
@@ -574,6 +581,9 @@ public:
       const static uint8_t IN_PROGRESS;
       const static uint8_t NOT_IN_PROGRESS;
       const static uint8_t INVALID_VELOCITY;
+      // Backward Compatibility
+      const static uint8_t& DISTANCE_OVERFLOW __attribute__((deprecated));
+      const static uint8_t& TIMEOUT __attribute__((deprecated));
     } WayPoint;
 
     //! @brief IOC ACK Mission Error Code

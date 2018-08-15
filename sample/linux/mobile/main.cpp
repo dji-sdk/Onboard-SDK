@@ -28,6 +28,7 @@
  *
  */
 
+#include <sstream>
 #include "mobile_sample.hpp"
 
 using namespace DJI;
@@ -46,6 +47,26 @@ main(int argc, char** argv)
     return -1;
   }
 
+  std::string input = "";
+
+  // How to get a string/sentence with spaces
+  std::cout << "Please choose the test :\n 1 means testing moc \n 2 means testing mobileDevice\n 3 means testing both of them\n"<< std::endl;
+
+  // How to get a number.
+  int myNumber = 0;
+
+  while (true) {
+    std::cout << "Please enter a valid number: ";
+    getline(std::cin, input);
+
+    // This code converts from string to number safely.
+    std::stringstream myStream(input);
+    if (myStream >> myNumber && myNumber >=1 && myNumber <=3)
+      break;
+    std::cout << "Invalid number, please try again" << std::endl;
+  }
+  std::cout << "You entered: " << myNumber << std::endl << std::endl;
+  setTestSuite(myNumber);
   setupMSDKParsing(vehicle, &linuxEnvironment);
 
   return 0;

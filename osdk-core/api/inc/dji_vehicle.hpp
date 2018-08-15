@@ -43,6 +43,7 @@
 #include "dji_mfio.hpp"
 #include "dji_mission_manager.hpp"
 #include "dji_mobile_communication.hpp"
+#include "dji_mobile_device.hpp"
 #include "dji_open_protocol.hpp"
 #include "dji_platform_manager.hpp"
 #include "dji_status.hpp"
@@ -113,7 +114,8 @@ public:
   Camera*              camera;
   Gimbal*              gimbal;
   MFIO*                mfio;
-  MobileCommunication* moc;
+  DJI_DEPRECATED MobileCommunication* moc;
+  MobileDevice*        mobileDevice;
   MissionManager*      missionManager;
   HardwareSync*        hardSync;
   // Supported only on Matrice 100
@@ -368,6 +370,7 @@ private:
   bool initGimbal();
   bool initMFIO();
   bool initMOC();
+  bool initMobileDevice();
   bool initMissionManager();
   bool initHardSync();
   bool initVirtualRC();
@@ -438,6 +441,7 @@ public:
   PlatformManager* getPlatformManager() const;
   void setEncryption(bool encryptSetting);
   bool getEncryption();
+  MobileDevice* getMobileDevice();
 
 private:
   PlatformManager* platformManager;

@@ -197,6 +197,15 @@ public:
     STABLE_DISABLE = 0x00, /*!< Disable the stable mode */
     STABLE_ENABLE  = 0x01  /*!< Enable the stable mode */
   };
+
+  /*!
+   * @brief turn on or off the motors for emergency reasons
+   */
+  enum KillSwitch
+  {
+    ENABLE  = 0x01, /*!< Enable the killswitch */
+    DISABLE = 0x02  /*!< Disable the killswitch */
+  };
 // clang-format on
 
 /*! The struct for CtrlData
@@ -261,6 +270,17 @@ public:
     uint8_t sequence;
     uint8_t cmd;
   } LegacyCMDData; // pack (1)
+
+  typedef struct KillSwitchData
+  {
+    uint8_t high_version;    /*!< version # for FW version match */
+    uint8_t low_version;     /*!< version # for protocol compatibility */
+    uint8_t debug_description[10]; /*!< insert reasons for emergency stop for debugging purpose */
+    uint8_t cmd : 2;  /*!< 0: no action, 1: motor stop with protection, 2: disarm protection */
+    uint8_t reserved : 6;
+  } KillSwitchData; // pack(1)
+
+
 #pragma pack()
 
   /*! @note
@@ -432,6 +452,7 @@ public:
    *
    */
   void emergencyBrake();
+
   /*! @brief A callback function for action non-blocking calls
    *
    *  @param recvFrame the data comes with the callback function
@@ -440,6 +461,27 @@ public:
    */
   static void actionCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
                              UserData userData);
+
+  /*! @brief Turn on or off the kill switch
+   *
+   *  @param cmd enable or disable the kill switch
+   *  @param wait_timeout timeout for blocking call
+   *  @param debugMsg inject debug message to flight control FW for logging, size limit: 10 bytes
+   *
+   *  @return ACK::ErrorCode struct with the acknowledgement from the FC
+   */
+  ACK::ErrorCode killSwitch(KillSwitch cmd, int wait_timeout = 10, char debugMsg[10] = (char *)"OSDK_API");
+  /*! @brief Turn on or off the kill switch
+   *
+   *  @param cmd enable or disable the kill switch
+   *  @param debugMsg inject debug message to flight control FW for logging, size limit: 10 bytes
+   *  @param callback callback function you want called upon ACK
+   *  @param userData additional data you want the callback function to have access to
+   *
+   *  @note If user does not provide his/her own callback, default callback
+   *  will be executed
+   */
+  void killSwitch(KillSwitch cmd, char debugMsg[10] = (char *)"OSDK_API", VehicleCallBack callback = 0, UserData userData = 0);
 
 private:
   /*! @brief Wrapper function for arming/disarming the motors

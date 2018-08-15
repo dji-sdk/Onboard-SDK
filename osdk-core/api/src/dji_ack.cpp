@@ -71,7 +71,10 @@ const std::pair<const uint32_t, const char*> commonData[] = {
     (const char*)"MISSING_BATTERIES\n"),
   std::make_pair(
     OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_NOT_ACTIVATED,
-    (const char*)"NOT_ACTIVATED_ERROR\n")
+    (const char*)"NOT_ACTIVATED_ERROR\n"),
+  std::make_pair(
+    OpenProtocolCMD::ErrorCode::CommonACK::KILL_SWITCH_ON,
+    (const char*)"KILL_SWITCH_ON\n")
 };
 
 const std::map<const uint32_t, const char*>
@@ -308,6 +311,8 @@ const std::pair<const uint32_t, const char*> missionData[] = {
                  (const char*)"MISSION_AT_NO_FLY_ZONE\n"),
   std::make_pair(OpenProtocolCMD::ErrorCode::MissionACK::Common::BAD_GPS,
                  (const char*)"MISSION_BAD_GPS\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::MissionACK::Common::RTK_NOT_READY,
+                 (const char*)"MISSION_RTK_NOT_READY\n"),
   std::make_pair(
     OpenProtocolCMD::ErrorCode::MissionACK::Common::BEGGINER_MODE_NOT_SUPPORTED,
     (const char*)"MISSION_BEGGINER_MODE_NOT_SUPPORTED\n"),
@@ -430,7 +435,7 @@ const std::pair<const uint32_t, const char*> missionData[] = {
     OpenProtocolCMD::ErrorCode::MissionACK::WayPoint::DATA_NOT_ENOUGH,
     (const char*)"WAYPOINT_MISSION_DATA_NOT_ENOUGH\n"),
   std::make_pair(
-    OpenProtocolCMD::ErrorCode::MissionACK::WayPoint::DISTANCE_OVERFLOW,
+    OpenProtocolCMD::ErrorCode::MissionACK::WayPoint::TRACE_TOO_LONG,
     (const char*)"WAYPOINT_MISSION_DISTANCE_OVERFLOW\n"),
   std::make_pair(
     OpenProtocolCMD::ErrorCode::MissionACK::WayPoint::INVALID_ACTION,
@@ -463,7 +468,7 @@ const std::pair<const uint32_t, const char*> missionData[] = {
   std::make_pair(
     OpenProtocolCMD::ErrorCode::MissionACK::WayPoint::POINT_OVERFLOW,
     (const char*)"WAYPOINT_MISSION_POINT_OVERFLOW\n"),
-  std::make_pair(OpenProtocolCMD::ErrorCode::MissionACK::WayPoint::TIMEOUT,
+  std::make_pair(OpenProtocolCMD::ErrorCode::MissionACK::WayPoint::TOTAL_DISTANCE_TOO_LONG,
                  (const char*)"WAYPOINT_MISSION_TIMEOUT\n"),
   std::make_pair(OpenProtocolCMD::ErrorCode::MissionACK::IOC::TOO_CLOSE_TO_HOME,
                  (const char*)"IOC_MISSION_TOO_CLOSE_TO_HOME\n"),
@@ -582,6 +587,13 @@ ACK::getError(ACK::ErrorCode ack)
                ? ACK::SUCCESS
                : ACK::FAIL;
     }
+  }
+  else if (memcmp(cmd, OpenProtocolCMD::CMDSet::Control::killSwitch, sizeof(cmd)) ==
+           0)
+  {
+    return (ack.data ==
+      OpenProtocolCMD::ErrorCode::ControlACK::KillSwitch::SUCCESS)
+           ? ACK::SUCCESS : ACK::FAIL;
   }
   else if (ack.info.cmd_set == OpenProtocolCMD::CMDSet::mission)
   {

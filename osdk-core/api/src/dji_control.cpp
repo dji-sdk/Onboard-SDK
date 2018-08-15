@@ -347,7 +347,7 @@ Control::flightCtrl(AdvancedCtrlData data)
   }
   else
   {
-    if (strcmp(vehicle->getHwVersion(), "M100") == 0)
+    if (strcmp(vehicle->getHwVersion(), Version::M100) == 0)
     {
       DERROR("Advanced flight control not supported on Matrice 100!\n");
     }
@@ -409,7 +409,7 @@ Control::angularRateAndVertPosCtrl(float32_t rollRate, float32_t pitchRate,
   }
   else
   {
-    if (strcmp(vehicle->getHwVersion(), "M100") == 0)
+    if (strcmp(vehicle->getHwVersion(), Version::M100) == 0)
     {
       DERROR("angularRateAndVertPosCtrl not supported on Matrice 100!\n");
     }
@@ -432,7 +432,7 @@ Control::emergencyBrake()
   }
   else
   {
-    if (strcmp(vehicle->getHwVersion(), "M100") == 0)
+    if (strcmp(vehicle->getHwVersion(), Version::M100) == 0)
     {
       DERROR("emergencyBrake not supported on Matrice 100!\n");
     }
@@ -441,6 +441,72 @@ Control::emergencyBrake()
       DERROR(
         "emergencyBrake is only supported on newer firmware for your product.\n");
     }
+  }
+}
+
+ACK::ErrorCode
+Control::killSwitch(KillSwitch cmd, int wait_timeout, char debugMsg[10])
+{
+  ACK::ErrorCode ack;
+
+  if(vehicle->getFwVersion() >= versionBase33)
+  {
+    KillSwitchData data;
+    data.high_version = 0x01;
+    data.low_version = 0x01;
+    memcpy(data.debug_description, debugMsg, 10);
+    data.cmd = cmd;
+    data.reserved = 0;
+
+    vehicle->protocolLayer->send(2, vehicle->getEncryption(),
+                                 OpenProtocolCMD::CMDSet::Control::killSwitch, &data,
+                                 sizeof(data), 500, 2, false, 2);
+  }
+  else
+  {
+    DERROR("killSwitch() is not supported for this version of FW.\n");
+    ack.info.cmd_set = OpenProtocolCMD::CMDSet::Control::killSwitch[0];
+    ack.info.cmd_id  = OpenProtocolCMD::CMDSet::Control::killSwitch[1];
+    ack.data = ACK::FAIL;
+    return ack;
+  }
+
+  ack = *((ACK::ErrorCode*)vehicle->waitForACK(
+    OpenProtocolCMD::CMDSet::Control::killSwitch, wait_timeout));
+
+  return ack;
+}
+
+void Control::killSwitch(KillSwitch cmd, char debugMsg[10], VehicleCallBack callback, UserData userData)
+{
+  if(vehicle->getFwVersion() >= versionBase33)
+  {
+    int cbIndex = vehicle->callbackIdIndex();
+    if (callback)
+    {
+      vehicle->nbCallbackFunctions[cbIndex] = (void*)callback;
+      vehicle->nbUserData[cbIndex]          = userData;
+    }
+    else
+    {
+      // Support for default callbacks
+      vehicle->nbCallbackFunctions[cbIndex] = (void*)actionCallback;
+      vehicle->nbUserData[cbIndex]          = NULL;
+    }
+
+    KillSwitchData data;
+    data.high_version = 0x01;
+    data.low_version = 0x01;
+    memcpy(data.debug_description, debugMsg, 10);
+    data.cmd = cmd;
+    data.reserved = 0;
+    vehicle->protocolLayer->send(2, vehicle->getEncryption(),
+                                 OpenProtocolCMD::CMDSet::Control::killSwitch, &data,
+                                 sizeof(data), 500, 2, true, cbIndex);
+  }
+  else
+  {
+    DERROR("killSwitch() is not supported for this version of FW.\n");
   }
 }
 

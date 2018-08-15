@@ -41,41 +41,48 @@ const uint32_t DBVersion               = 0x00000100;
 // clang-format off
 TopicInfo Telemetry::TopicDataBase[] =
 {  // Topic Name ,                     UID,
-  {TOPIC_QUATERNION                , UID_QUATERNION               , sizeof(TypeMap<TOPIC_QUATERNION              >::type), 200 ,   0,  255,  0},
-  {TOPIC_ACCELERATION_GROUND       , UID_ACCELERATION_GROUND      , sizeof(TypeMap<TOPIC_ACCELERATION_GROUND     >::type), 200 ,   0,  255,  0},
-  {TOPIC_ACCELERATION_BODY         , UID_ACCELERATION_BODY        , sizeof(TypeMap<TOPIC_ACCELERATION_BODY       >::type), 200 ,   0,  255,  0},
-  {TOPIC_ACCELERATION_RAW          , UID_ACCELERATION_RAW         , sizeof(TypeMap<TOPIC_ACCELERATION_RAW        >::type), 400 ,   0,  255,  0},
-  {TOPIC_VELOCITY                  , UID_VELOCITY                 , sizeof(TypeMap<TOPIC_VELOCITY                >::type), 200 ,   0,  255,  0},
-  {TOPIC_ANGULAR_RATE_FUSIONED     , UID_ANGULAR_RATE_FUSIONED    , sizeof(TypeMap<TOPIC_ANGULAR_RATE_FUSIONED   >::type), 200 ,   0,  255,  0},
-  {TOPIC_ANGULAR_RATE_RAW          , UID_ANGULAR_RATE_RAW         , sizeof(TypeMap<TOPIC_ANGULAR_RATE_RAW        >::type), 400 ,   0,  255,  0},
-  {TOPIC_ALTITUDE_FUSIONED         , UID_ALTITUDE_FUSIONED        , sizeof(TypeMap<TOPIC_ALTITUDE_FUSIONED       >::type), 200 ,   0,  255,  0},
-  {TOPIC_ALTITUDE_BAROMETER        , UID_ALTITUDE_BAROMETER       , sizeof(TypeMap<TOPIC_ALTITUDE_BAROMETER      >::type), 200 ,   0,  255,  0},
-  {TOPIC_HEIGHT_HOMEPOINT          , UID_HEIGHT_HOMEPOINT         , sizeof(TypeMap<TOPIC_HEIGHT_HOMEPOINT        >::type), 1   ,   0,  255,  0},
-  {TOPIC_HEIGHT_FUSION             , UID_HEIGHT_FUSION            , sizeof(TypeMap<TOPIC_HEIGHT_FUSION           >::type), 100 ,   0,  255,  0},
-  {TOPIC_GPS_FUSED                 , UID_GPS_FUSED                , sizeof(TypeMap<TOPIC_GPS_FUSED               >::type), 50  ,   0,  255,  0},
-  {TOPIC_GPS_DATE                  , UID_GPS_DATE                 , sizeof(TypeMap<TOPIC_GPS_DATE                >::type), 50  ,   0,  255,  0},
-  {TOPIC_GPS_TIME                  , UID_GPS_TIME                 , sizeof(TypeMap<TOPIC_GPS_TIME                >::type), 50  ,   0,  255,  0},
-  {TOPIC_GPS_POSITION              , UID_GPS_POSITION             , sizeof(TypeMap<TOPIC_GPS_POSITION            >::type), 50  ,   0,  255,  0},
-  {TOPIC_GPS_VELOCITY              , UID_GPS_VELOCITY             , sizeof(TypeMap<TOPIC_GPS_VELOCITY            >::type), 50  ,   0,  255,  0},
-  {TOPIC_GPS_DETAILS               , UID_GPS_DETAILS              , sizeof(TypeMap<TOPIC_GPS_DETAILS             >::type), 50  ,   0,  255,  0},
-  {TOPIC_RTK_POSITION              , UID_RTK_POSITION             , sizeof(TypeMap<TOPIC_RTK_POSITION            >::type), 50  ,   0,  255,  0},
-  {TOPIC_RTK_VELOCITY              , UID_RTK_VELOCITY             , sizeof(TypeMap<TOPIC_RTK_VELOCITY            >::type), 50  ,   0,  255,  0},
-  {TOPIC_RTK_YAW                   , UID_RTK_YAW                  , sizeof(TypeMap<TOPIC_RTK_YAW                 >::type), 50  ,   0,  255,  0},
-  {TOPIC_RTK_POSITION_INFO         , UID_RTK_POSITION_INFO        , sizeof(TypeMap<TOPIC_RTK_POSITION_INFO       >::type), 50  ,   0,  255,  0},
-  {TOPIC_RTK_YAW_INFO              , UID_RTK_YAW_INFO             , sizeof(TypeMap<TOPIC_RTK_YAW_INFO            >::type), 50  ,   0,  255,  0},
-  {TOPIC_COMPASS                   , UID_COMPASS                  , sizeof(TypeMap<TOPIC_COMPASS                 >::type), 100 ,   0,  255,  0},
-  {TOPIC_RC                        , UID_RC                       , sizeof(TypeMap<TOPIC_RC                      >::type), 50  ,   0,  255,  0},
-  {TOPIC_GIMBAL_ANGLES             , UID_GIMBAL_ANGLES            , sizeof(TypeMap<TOPIC_GIMBAL_ANGLES           >::type), 50  ,   0,  255,  0},
-  {TOPIC_GIMBAL_STATUS             , UID_GIMBAL_STATUS            , sizeof(TypeMap<TOPIC_GIMBAL_STATUS           >::type), 50  ,   0,  255,  0},
-  {TOPIC_STATUS_FLIGHT             , UID_STATUS_FLIGHT            , sizeof(TypeMap<TOPIC_STATUS_FLIGHT           >::type), 50  ,   0,  255,  0},
-  {TOPIC_STATUS_DISPLAYMODE        , UID_STATUS_DISPLAYMODE       , sizeof(TypeMap<TOPIC_STATUS_DISPLAYMODE      >::type), 50  ,   0,  255,  0},
-  {TOPIC_STATUS_LANDINGGEAR        , UID_STATUS_LANDINGGEAR       , sizeof(TypeMap<TOPIC_STATUS_LANDINGGEAR      >::type), 50  ,   0,  255,  0},
-  {TOPIC_STATUS_MOTOR_START_ERROR  , UID_STATUS_MOTOR_START_ERROR , sizeof(TypeMap<TOPIC_STATUS_MOTOR_START_ERROR>::type), 50  ,   0,  255,  0},
-  {TOPIC_BATTERY_INFO              , UID_BATTERY_INFO             , sizeof(TypeMap<TOPIC_BATTERY_INFO            >::type), 50  ,   0,  255,  0},
-  {TOPIC_CONTROL_DEVICE            , UID_CONTROL_DEVICE           , sizeof(TypeMap<TOPIC_CONTROL_DEVICE          >::type), 50  ,   0,  255,  0},
-  {TOPIC_HARD_SYNC                 , UID_HARD_SYNC                , sizeof(TypeMap<TOPIC_HARD_SYNC               >::type), 400 ,   0,  255,  0},
-  {TOPIC_GPS_SIGNAL_LEVEL          , UID_GPS_SIGNAL_LEVEL         , sizeof(TypeMap<TOPIC_GPS_SIGNAL_LEVEL        >::type), 50 ,    0,  255,  0},
-  {TOPIC_GPS_CONTROL_LEVEL         , UID_GPS_CONTROL_LEVEL        , sizeof(TypeMap<TOPIC_GPS_CONTROL_LEVEL       >::type), 50 ,    0,  255,  0}
+  {TOPIC_QUATERNION                , UID_QUATERNION               , sizeof(TypeMap<TOPIC_QUATERNION              >::type), 200,   0,  255,  0},
+  {TOPIC_ACCELERATION_GROUND       , UID_ACCELERATION_GROUND      , sizeof(TypeMap<TOPIC_ACCELERATION_GROUND     >::type), 200,   0,  255,  0},
+  {TOPIC_ACCELERATION_BODY         , UID_ACCELERATION_BODY        , sizeof(TypeMap<TOPIC_ACCELERATION_BODY       >::type), 200,   0,  255,  0},
+  {TOPIC_ACCELERATION_RAW          , UID_ACCELERATION_RAW         , sizeof(TypeMap<TOPIC_ACCELERATION_RAW        >::type), 400,   0,  255,  0},
+  {TOPIC_VELOCITY                  , UID_VELOCITY                 , sizeof(TypeMap<TOPIC_VELOCITY                >::type), 200,   0,  255,  0},
+  {TOPIC_ANGULAR_RATE_FUSIONED     , UID_ANGULAR_RATE_FUSIONED    , sizeof(TypeMap<TOPIC_ANGULAR_RATE_FUSIONED   >::type), 200,   0,  255,  0},
+  {TOPIC_ANGULAR_RATE_RAW          , UID_ANGULAR_RATE_RAW         , sizeof(TypeMap<TOPIC_ANGULAR_RATE_RAW        >::type), 400,   0,  255,  0},
+  {TOPIC_ALTITUDE_FUSIONED         , UID_ALTITUDE_FUSIONED        , sizeof(TypeMap<TOPIC_ALTITUDE_FUSIONED       >::type), 200,   0,  255,  0},
+  {TOPIC_ALTITUDE_BAROMETER        , UID_ALTITUDE_BAROMETER       , sizeof(TypeMap<TOPIC_ALTITUDE_BAROMETER      >::type), 200,   0,  255,  0},
+  {TOPIC_HEIGHT_HOMEPOINT          , UID_HEIGHT_HOMEPOINT         , sizeof(TypeMap<TOPIC_HEIGHT_HOMEPOINT        >::type), 1  ,   0,  255,  0},
+  {TOPIC_HEIGHT_FUSION             , UID_HEIGHT_FUSION            , sizeof(TypeMap<TOPIC_HEIGHT_FUSION           >::type), 100,   0,  255,  0},
+  {TOPIC_GPS_FUSED                 , UID_GPS_FUSED                , sizeof(TypeMap<TOPIC_GPS_FUSED               >::type), 50 ,   0,  255,  0}, //todo: check frequency
+  {TOPIC_GPS_DATE                  , UID_GPS_DATE                 , sizeof(TypeMap<TOPIC_GPS_DATE                >::type), 5  ,   0,  255,  0}, //todo: check frequency
+  {TOPIC_GPS_TIME                  , UID_GPS_TIME                 , sizeof(TypeMap<TOPIC_GPS_TIME                >::type), 5  ,   0,  255,  0}, //todo: check frequency
+  {TOPIC_GPS_POSITION              , UID_GPS_POSITION             , sizeof(TypeMap<TOPIC_GPS_POSITION            >::type), 5  ,   0,  255,  0}, //todo: check frequency
+  {TOPIC_GPS_VELOCITY              , UID_GPS_VELOCITY             , sizeof(TypeMap<TOPIC_GPS_VELOCITY            >::type), 5  ,   0,  255,  0}, //todo: check frequency
+  {TOPIC_GPS_DETAILS               , UID_GPS_DETAILS              , sizeof(TypeMap<TOPIC_GPS_DETAILS             >::type), 5  ,   0,  255,  0}, //todo: check frequency
+  {TOPIC_RTK_POSITION              , UID_RTK_POSITION             , sizeof(TypeMap<TOPIC_RTK_POSITION            >::type), 5  ,   0,  255,  0}, //todo: check frequency
+  {TOPIC_RTK_VELOCITY              , UID_RTK_VELOCITY             , sizeof(TypeMap<TOPIC_RTK_VELOCITY            >::type), 5  ,   0,  255,  0}, //todo: check frequency
+  {TOPIC_RTK_YAW                   , UID_RTK_YAW                  , sizeof(TypeMap<TOPIC_RTK_YAW                 >::type), 5  ,   0,  255,  0}, //todo: check frequency
+  {TOPIC_RTK_POSITION_INFO         , UID_RTK_POSITION_INFO        , sizeof(TypeMap<TOPIC_RTK_POSITION_INFO       >::type), 5  ,   0,  255,  0}, //todo: check frequency
+  {TOPIC_RTK_YAW_INFO              , UID_RTK_YAW_INFO             , sizeof(TypeMap<TOPIC_RTK_YAW_INFO            >::type), 5  ,   0,  255,  0}, //todo: check frequency
+  {TOPIC_COMPASS                   , UID_COMPASS                  , sizeof(TypeMap<TOPIC_COMPASS                 >::type), 100,   0,  255,  0},
+  {TOPIC_RC                        , UID_RC                       , sizeof(TypeMap<TOPIC_RC                      >::type), 50 ,   0,  255,  0},
+  {TOPIC_GIMBAL_ANGLES             , UID_GIMBAL_ANGLES            , sizeof(TypeMap<TOPIC_GIMBAL_ANGLES           >::type), 50 ,   0,  255,  0},
+  {TOPIC_GIMBAL_STATUS             , UID_GIMBAL_STATUS            , sizeof(TypeMap<TOPIC_GIMBAL_STATUS           >::type), 50 ,   0,  255,  0},
+  {TOPIC_STATUS_FLIGHT             , UID_STATUS_FLIGHT            , sizeof(TypeMap<TOPIC_STATUS_FLIGHT           >::type), 50 ,   0,  255,  0},
+  {TOPIC_STATUS_DISPLAYMODE        , UID_STATUS_DISPLAYMODE       , sizeof(TypeMap<TOPIC_STATUS_DISPLAYMODE      >::type), 50 ,   0,  255,  0},
+  {TOPIC_STATUS_LANDINGGEAR        , UID_STATUS_LANDINGGEAR       , sizeof(TypeMap<TOPIC_STATUS_LANDINGGEAR      >::type), 50 ,   0,  255,  0},
+  {TOPIC_STATUS_MOTOR_START_ERROR  , UID_STATUS_MOTOR_START_ERROR , sizeof(TypeMap<TOPIC_STATUS_MOTOR_START_ERROR>::type), 50 ,   0,  255,  0},
+  {TOPIC_BATTERY_INFO              , UID_BATTERY_INFO             , sizeof(TypeMap<TOPIC_BATTERY_INFO            >::type), 50 ,   0,  255,  0},
+  {TOPIC_CONTROL_DEVICE            , UID_CONTROL_DEVICE           , sizeof(TypeMap<TOPIC_CONTROL_DEVICE          >::type), 50 ,   0,  255,  0},
+  {TOPIC_HARD_SYNC                 , UID_HARD_SYNC                , sizeof(TypeMap<TOPIC_HARD_SYNC               >::type), 400,   0,  255,  0},
+  {TOPIC_GPS_SIGNAL_LEVEL          , UID_GPS_SIGNAL_LEVEL         , sizeof(TypeMap<TOPIC_GPS_SIGNAL_LEVEL        >::type), 50 ,   0,  255,  0},
+  {TOPIC_GPS_CONTROL_LEVEL         , UID_GPS_CONTROL_LEVEL        , sizeof(TypeMap<TOPIC_GPS_CONTROL_LEVEL       >::type), 50 ,   0,  255,  0},
+  {TOPIC_RC_FULL_RAW_DATA          , UID_RC_FULL_RAW_DATA         , sizeof(TypeMap<TOPIC_RC_FULL_RAW_DATA        >::type), 50 ,   0,  255,  0},
+  {TOPIC_RC_WITH_FLAG_DATA         , UID_RC_WITH_FLAG_DATA        , sizeof(TypeMap<TOPIC_RC_WITH_FLAG_DATA       >::type), 50 ,   0,  255,  0},
+  {TOPIC_ESC_DATA                  , UID_ESC_DATA                 , sizeof(TypeMap<TOPIC_ESC_DATA                >::type), 50 ,   0,  255,  0},
+  {TOPIC_RTK_CONNECT_STATUS        , UID_RTK_CONNECT_STATUS       , sizeof(TypeMap<TOPIC_RTK_CONNECT_STATUS      >::type), 50 ,   0,  255,  0},
+  {TOPIC_GIMBAL_CONTROL_MODE       , UID_GIMBAL_CONTROL_MODE      , sizeof(TypeMap<TOPIC_GIMBAL_CONTROL_MODE     >::type), 50 ,   0,  255,  0},
+  {TOPIC_FLIGHT_ANOMALY            , UID_FLIGHT_ANOMALY           , sizeof(TypeMap<TOPIC_FLIGHT_ANOMALY          >::type), 50 ,   0,  255,  0},
+  {TOPIC_POSITION_VO               , UID_POSITION_VO              , sizeof(TypeMap<TOPIC_POSITION_VO             >::type), 200,   0,  255,  0},
 };
 // clang-format on
 
@@ -806,33 +813,3 @@ SubscriptionPackage::packageRemoveSuccessHandler()
   setOccupied(false);
 }
 
-// Detailed doxygen comments begin below
-
-/*! @var DJI::OSDK::Telemetry::TopicName DJI::OSDK::Telemetry::TOPIC_QUATERNION
- * | Angle        | Unit | Accuracy   | Notes                                           |
-   |--------------|------|------------|-------------------------------------------------|
-   | pitch, roll  | deg  | <1         | in non-ahrs mode                                |
-   | yaw          | deg  | <3         | in well-calibrated compass with fine aligned    |
-   | yaw with rtk | deg  | around 1.2 | in RTK heading fixed mode with 1 meter baseline |
-*/
-
-/*! @var DJI::OSDK::Telemetry::TOPIC_VELOCITY
- * | Axis     | Unit | Accuracy                                                                                    |
-   |----------|------|---------------------------------------------------------------------------------------------|
-   | vgx, vgy | m/s  | Around 5cm/s for GNSS navigation. Around 3cm/s with VO at 1 meter height                    |
-   | vgz      | m/s  | 10cm/s only with barometer in steady air. 3cm/s with VO at 1 meter height with 8cm baseline |
- */
-
-/*! @var DJI::OSDK::Telemetry::TOPIC_GPS_FUSED
- *   | Axis | Unit | Position Sensor | Accuracy                                         |
-     |------|------|-----------------|--------------------------------------------------|
-     | x, y | m    | GPS             | <3m with open sky without multipath              |
-     | z    | m    | GPS             | <5m with open sky without multipath              |
-     | x, y | m    | RTK             | around 2cm with fine alignment and fix condition |
-     | z    | m    | RTK             | around 3cm with fine alignment and fix condition |
- *
- */
-
-/*! @var DJI::OSDK::Telemetry::TOPIC_GIMBAL_ANGLES
- *  Data Accuracy: 0.1 deg in all axes
- */

@@ -48,7 +48,7 @@
 #define sample_flag 1
 #elif HOTPOINT_MISSION_SAMPLE
 #define sample_flag 2
-#elif WAYPOINT_MISSIOM_SAMPLE
+#elif WAYPOINT_MISSION_SAMPLE
 #define sample_flag 3
 #elif CAMERA_GIMBAL_SAMPLE
 #define sample_flag 4

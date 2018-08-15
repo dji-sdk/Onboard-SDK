@@ -28,7 +28,10 @@
  *
  */
 
+#include <dji_telemetry.hpp>
 #include "telemetry_sample.hpp"
+#include  <signal.h>
+#include  <stdlib.h>
 
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
@@ -102,7 +105,7 @@ subscribeToData(Vehicle* vehicle, int responseTimeout)
   bool rtkAvailable = false;
   // Counters
   int elapsedTimeInMs = 0;
-  int timeToPrintInMs = 2000;
+  int timeToPrintInMs = 20000;
 
   // We will subscribe to six kinds of data:
   // 1. Flight Status at 1 Hz
@@ -199,18 +202,18 @@ subscribeToData(Vehicle* vehicle, int responseTimeout)
   enableTimestamp = false;
 
   pkgStatus = vehicle->subscribe->initPackageFromTopicList(
-    pkgIndex, numTopic, topicList200Hz, enableTimestamp, freq);
+          pkgIndex, numTopic, topicList200Hz, enableTimestamp, freq);
   if (!(pkgStatus))
   {
-    return pkgStatus;
+      return pkgStatus;
   }
   subscribeStatus = vehicle->subscribe->startPackage(pkgIndex, responseTimeout);
   if (ACK::getError(subscribeStatus) != ACK::SUCCESS)
   {
-    ACK::getErrorCodeMessage(subscribeStatus, __func__);
-    // Cleanup before return
-    vehicle->subscribe->removePackage(pkgIndex, responseTimeout);
-    return false;
+      ACK::getErrorCodeMessage(subscribeStatus, __func__);
+      // Cleanup before return
+      vehicle->subscribe->removePackage(pkgIndex, responseTimeout);
+      return false;
   }
 
   // Package 4: Subscribe to RTK at freq 5 Hz.
@@ -263,7 +266,6 @@ subscribeToData(Vehicle* vehicle, int responseTimeout)
   TypeMap<TOPIC_RTK_YAW>::type           rtk_yaw;
   TypeMap<TOPIC_RTK_YAW_INFO>::type      rtk_yaw_info;
 
-
   // Print in a loop for 2 sec
   while (elapsedTimeInMs < timeToPrintInMs)
   {
@@ -312,4 +314,397 @@ subscribeToData(Vehicle* vehicle, int responseTimeout)
   vehicle->subscribe->removePackage(4, responseTimeout);
 
   return true;
+}
+
+void     INThandler(int);
+static bool keepRunning = true;
+
+bool
+subscribeToDataForInteractivePrint(Vehicle* vehicle, int responseTimeout)
+{
+  // RTK can be detected as unavailable only for Flight controllers that don't support RTK
+
+
+  // Please make sure your drone is in simulation mode. You can fly the drone
+  // with your RC to
+  // get different values.
+
+  // Telemetry: Verify the subscription
+  ACK::ErrorCode subscribeStatus;
+  subscribeStatus = vehicle->subscribe->verify(responseTimeout);
+  if (ACK::getError(subscribeStatus) != ACK::SUCCESS)
+  {
+    ACK::getErrorCodeMessage(subscribeStatus, __func__);
+    return false;
+  }
+
+  // Package 0: Subscribe to flight status at freq 1 Hz
+  int       pkgIndex        = 0;
+  int       freq            = 50;
+  TopicName topicList50Hz[]  = {TOPIC_RC
+                                ,TOPIC_RC_FULL_RAW_DATA
+                                ,TOPIC_RC_WITH_FLAG_DATA
+                                ,TOPIC_ESC_DATA
+                                ,TOPIC_RTK_CONNECT_STATUS
+                                ,TOPIC_GIMBAL_CONTROL_MODE
+                                ,TOPIC_FLIGHT_ANOMALY
+                                ,TOPIC_POSITION_VO
+  };
+
+  int       numTopic        = sizeof(topicList50Hz) / sizeof(topicList50Hz[0]);
+  bool      enableTimestamp = false;
+
+  bool pkgStatus = vehicle->subscribe->initPackageFromTopicList(
+          pkgIndex, numTopic, topicList50Hz, enableTimestamp, freq);
+
+  if (!(pkgStatus))
+  {
+    return pkgStatus;
+  }
+  subscribeStatus = vehicle->subscribe->startPackage(pkgIndex, responseTimeout);
+  if (ACK::getError(subscribeStatus) != ACK::SUCCESS)
+  {
+    ACK::getErrorCodeMessage(subscribeStatus, __func__);
+    // Cleanup before return
+    vehicle->subscribe->removePackage(pkgIndex, responseTimeout);
+    return false;
+  }
+
+  // Wait for the data to start coming in.
+  sleep(1);
+
+  while(true)
+  {
+    int userInput;
+
+    std::cout << "Select variable you are interested in printing:\n"
+              << "1. rcFuncFull\n"
+              << "2. rcWithFlag\n"
+              << "3. escData\n"
+              << "4. rtkConnect\n"
+              << "5. gimbalCtrlMode\n"
+              << "6. flyAnomaly\n"
+              << "7. local position vo\n"
+              << "0. exit\n";
+
+
+    std::cin >> userInput;
+
+    if(userInput == 0)
+      break;
+
+    // Get all the data once before the loop to initialize vars
+    TypeMap<TOPIC_RC>::type rc;
+
+    TypeMap<TOPIC_RC_FULL_RAW_DATA>::type rcFuncFull;
+    TypeMap<TOPIC_RC_WITH_FLAG_DATA>::type rcWithFlag;
+    TypeMap<TOPIC_ESC_DATA>::type escData;
+    TypeMap<TOPIC_RTK_CONNECT_STATUS>::type rtkConnect;
+    TypeMap<TOPIC_GIMBAL_CONTROL_MODE>::type gimbalCtrlMode;
+    TypeMap<TOPIC_FLIGHT_ANOMALY>::type flyAnomaly;
+    TypeMap<TOPIC_POSITION_VO>::type    localPos;
+
+    // Counters
+    int printFrequency          = 50; //Hz
+    int printIntervalInMicroSec = 1e6/printFrequency;
+    int totalPrintTimeInSec     = 10;
+    int totalSample             = totalPrintTimeInSec * printFrequency;
+    // Print in a loop for 2 sec
+    while(totalSample--)
+    {
+      switch(userInput)
+      {
+        case 1: //rcFuncFull
+          rcFuncFull = vehicle->subscribe->getValue<TOPIC_RC_FULL_RAW_DATA>();
+          printf("%d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d\n",
+                 rcFuncFull.lb2.roll,
+                 rcFuncFull.lb2.pitch,
+                 rcFuncFull.lb2.yaw,
+                 rcFuncFull.lb2.throttle,
+                 rcFuncFull.lb2.mode,
+                 rcFuncFull.lb2.gear,
+                 rcFuncFull.lb2.camera,
+                 rcFuncFull.lb2.video,
+                 rcFuncFull.lb2.videoPause,
+                 rcFuncFull.lb2.goHome,
+                 rcFuncFull.lb2.leftWheel,
+                 rcFuncFull.lb2.rightWheelButton,
+                 rcFuncFull.lb2.rcC1,
+                 rcFuncFull.lb2.rcC2);
+          break;
+        case 2:
+          rcWithFlag = vehicle->subscribe->getValue<TOPIC_RC_WITH_FLAG_DATA>();
+          printf("%f, %f, %f, %f, %d, %d, %d, %d,\n",
+                 rcWithFlag.roll,
+                 rcWithFlag.pitch,
+                 rcWithFlag.yaw,
+                 rcWithFlag.throttle,
+                 rcWithFlag.flag.logicConnected,
+                 rcWithFlag.flag.groundConnected,
+                 rcWithFlag.flag.skyConnected,
+                 rcWithFlag.flag.appConnected
+          );
+          break;
+        case 3:
+          escData = vehicle->subscribe->getValue<TOPIC_ESC_DATA>();
+          printf("Speeds: %5d, %5d, %5d, %5d, %5d, %5d, %5d, %5d\n",
+                 escData.esc[0].speed,
+                 escData.esc[1].speed,
+                 escData.esc[2].speed,
+                 escData.esc[3].speed,
+                 escData.esc[4].speed,
+                 escData.esc[5].speed,
+                 escData.esc[6].speed,
+                 escData.esc[7].speed
+          );
+          break;
+        case 4:
+          rtkConnect = vehicle->subscribe->getValue<TOPIC_RTK_CONNECT_STATUS>();
+          printf("RTKConnected = %d\n", rtkConnect.rtkConnected);
+          break;
+        case 5:
+          gimbalCtrlMode = vehicle->subscribe->getValue<TOPIC_GIMBAL_CONTROL_MODE>();
+          printf("Gimbal Control Mode = %d\n", gimbalCtrlMode);
+          break;
+        case 6:
+          flyAnomaly = vehicle->subscribe->getValue<TOPIC_FLIGHT_ANOMALY>();
+          printf("FlyAnomaly: %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d\n",
+                 flyAnomaly.impactInAir,
+                 flyAnomaly.randomFly,
+                 flyAnomaly.heightCtrlFail,
+                 flyAnomaly.rollPitchCtrlFail,
+                 flyAnomaly.yawCtrlFail,
+                 flyAnomaly.aircraftIsFalling,
+                 flyAnomaly.strongWindLevel1,
+                 flyAnomaly.strongWindLevel2,
+                 flyAnomaly.compassInstallationError,
+                 flyAnomaly.imuInstallationError,
+                 flyAnomaly.escTemperatureHigh,
+                 flyAnomaly.atLeastOneEscDisconnected,
+                 flyAnomaly.gpsYawError);
+          break;
+        case 7:
+          localPos = vehicle->subscribe->getValue<TOPIC_POSITION_VO>();
+              printf("PX=%.2f, PY=%.2f, PZ=%.2f\n",
+                     localPos.x,
+                     localPos.y,
+                     localPos.z
+              );
+              break;
+        case 0:
+          break;
+        default:
+          break;
+
+      }
+
+      usleep(printIntervalInMicroSec);
+    }
+  }
+  std::cout << "Done printing!\n";
+  vehicle->subscribe->removeAllExistingPackages();
+  return true;
+}
+
+bool
+subscribeToDataAndSaveLogToFile(Vehicle* vehicle, int responseTimeout)
+{
+    signal(SIGINT, INThandler);
+    // Telemetry: Verify the subscription
+    ACK::ErrorCode subscribeStatus;
+    subscribeStatus = vehicle->subscribe->verify(responseTimeout);
+    if (ACK::getError(subscribeStatus) != ACK::SUCCESS)
+    {
+        ACK::getErrorCodeMessage(subscribeStatus, __func__);
+        return false;
+    }
+
+    int       pkgIndex        = 0;
+    int       freq            = 50;
+    TopicName topicList50Hz[]  = {
+             TOPIC_VELOCITY
+            ,TOPIC_RC_WITH_FLAG_DATA
+            ,TOPIC_RTK_CONNECT_STATUS
+            ,TOPIC_POSITION_VO
+            ,TOPIC_ALTITUDE_FUSIONED
+            ,TOPIC_ALTITUDE_BAROMETER
+            ,TOPIC_HEIGHT_FUSION
+            ,TOPIC_GPS_FUSED
+            ,TOPIC_STATUS_DISPLAYMODE
+    };
+
+    int       numTopic        = sizeof(topicList50Hz) / sizeof(topicList50Hz[0]);
+    bool      enableTimestamp = false;
+
+    bool pkgStatus = vehicle->subscribe->initPackageFromTopicList(
+            pkgIndex, numTopic, topicList50Hz, enableTimestamp, freq);
+    std::cout <<"\n1. InitPackageFromTopicList" <<std::endl;
+
+    if (!(pkgStatus))
+    {
+      std::cout <<"1. InitPackageFromTopicList failed" <<std::endl;
+      return pkgStatus;
+    }
+    std::cout <<"1. StartPackage" <<std::endl;
+
+    subscribeStatus = vehicle->subscribe->startPackage(pkgIndex, responseTimeout);
+    if (ACK::getError(subscribeStatus) != ACK::SUCCESS)
+    {
+        ACK::getErrorCodeMessage(subscribeStatus, __func__);
+        // Cleanup before return
+        vehicle->subscribe->removePackage(pkgIndex, responseTimeout);
+        return false;
+    }
+
+///////////////////////////////////////////
+    pkgIndex                   = 1;
+    freq                       = 1;
+    TopicName topicList1Hz[] = { TOPIC_HEIGHT_HOMEPOINT
+                                 ,TOPIC_GPS_POSITION
+                                 ,TOPIC_GPS_VELOCITY};
+    numTopic        = sizeof(topicList1Hz) / sizeof(topicList1Hz[0]);
+    enableTimestamp = false;
+
+    std::cout <<"2. initPackageFromTopicList" <<std::endl;
+
+    pkgStatus = vehicle->subscribe->initPackageFromTopicList(
+            pkgIndex, numTopic, topicList1Hz, enableTimestamp, freq);
+    if (!(pkgStatus))
+    {
+      std::cout <<"2.1 initPackageFromTopicList" <<std::endl;
+      return pkgStatus;
+    }
+    std::cout <<"2.startPackage" <<std::endl;
+    subscribeStatus = vehicle->subscribe->startPackage(pkgIndex, responseTimeout);
+    if (ACK::getError(subscribeStatus) != ACK::SUCCESS)
+    {
+        ACK::getErrorCodeMessage(subscribeStatus, __func__);
+        // Cleanup before return
+        vehicle->subscribe->removePackage(pkgIndex, responseTimeout);
+        return false;
+    }
+
+    // Wait for the data to start coming in.
+    sleep(1);
+
+    // Get all the data once before the loop to initialize vars
+    TypeMap<TOPIC_VELOCITY>::type           velocity;
+    TypeMap<TOPIC_RC_WITH_FLAG_DATA>::type  rc_with_flag_data;
+    TypeMap<TOPIC_RTK_CONNECT_STATUS>::type rtk_connect_status;
+    TypeMap<TOPIC_POSITION_VO>::type        position_vo;
+    TypeMap<TOPIC_ALTITUDE_FUSIONED>::type  altitude_fusioned;
+    TypeMap<TOPIC_ALTITUDE_BAROMETER>::type altitude_barometer;
+    TypeMap<TOPIC_HEIGHT_HOMEPOINT>::type   height_homepoint;
+    TypeMap<TOPIC_HEIGHT_FUSION>::type      height_fusion;
+    TypeMap<TOPIC_GPS_FUSED>::type          gps_fused;
+    TypeMap<TOPIC_STATUS_DISPLAYMODE>::type status_displaymode;
+    TypeMap<TOPIC_STATUS_FLIGHT>::type      status_flight;
+    TypeMap<TOPIC_GPS_POSITION>::type       gpsPostion;
+    TypeMap<TOPIC_GPS_VELOCITY>::type       gpsVelocity;
+
+  // Counters
+    int printFrequency          = 50; //Hz
+    int printIntervalInMicroSec = 1e6/printFrequency;
+    int totalPrintTimeInSec     = 1000;  // 1000 : 16min
+    int totalSample             = totalPrintTimeInSec * printFrequency;
+    int notifyInterval          = 50;
+    int notifyCount             = notifyInterval;
+    FILE * pFile;
+    pFile = fopen ("telemetryLogFile.txt","w");
+    fprintf ( pFile,
+            "velocity_data_x,"
+            "velocity_data_y,"
+            "velocity_data_z,"
+            "rc_with_flag_data_roll,"
+            "rc_with_flag_data_pitch,"
+            "rc_with_flag_data_yaw,"
+            "rc_with_flag_data_throttle,"
+            "position_vo_x,"
+            "position_vo_y,"
+            "position_vo_z,"
+            "altitude_fusioned,"
+            "altitude_barometer,"
+            "height_homepoint,"
+            "height_fusion,"
+            "gps_fused_latitude,"
+            "gps_fused_longitude,"
+            "gps_fused_altitude,"
+            "gps_longitude,"
+            "gps_latitude,"
+            "gps_altitude,"
+            "velocity_x,"
+            "velocity_y,"
+            "velocity_z,"
+            "status_displaymode,"
+            "status_flight,"
+            "rtk_connect_status_rtkConnected\n"
+    );
+    // Print in a loop for 2 sec
+    while(totalSample--)
+    {
+        velocity           = vehicle->subscribe->getValue<TOPIC_VELOCITY>();
+        rc_with_flag_data  = vehicle->subscribe->getValue<TOPIC_RC_WITH_FLAG_DATA>();
+        rtk_connect_status = vehicle->subscribe->getValue<TOPIC_RTK_CONNECT_STATUS>();
+        position_vo        = vehicle->subscribe->getValue<TOPIC_POSITION_VO>();
+        altitude_fusioned  = vehicle->subscribe->getValue<TOPIC_ALTITUDE_FUSIONED>();
+        altitude_barometer = vehicle->subscribe->getValue<TOPIC_ALTITUDE_BAROMETER>();
+        height_homepoint   = vehicle->subscribe->getValue<TOPIC_HEIGHT_HOMEPOINT>();
+        height_fusion      = vehicle->subscribe->getValue<TOPIC_HEIGHT_FUSION>();
+        gps_fused          = vehicle->subscribe->getValue<TOPIC_GPS_FUSED>();
+        gpsPostion         = vehicle->subscribe->getValue<TOPIC_GPS_POSITION>();
+        gpsVelocity        = vehicle->subscribe->getValue<TOPIC_GPS_VELOCITY>();
+        status_displaymode = vehicle->subscribe->getValue<TOPIC_STATUS_DISPLAYMODE>();
+
+        fprintf ( pFile, "%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%lf,%lf,%f,%d,%d,%d,%f,%f,%f,%d,%d,%d\n"
+                 ,velocity.data.x
+                 ,velocity.data.y
+                 ,velocity.data.z
+                 ,rc_with_flag_data.roll
+                 ,rc_with_flag_data.pitch
+                 ,rc_with_flag_data.yaw
+                 ,rc_with_flag_data.throttle
+                 ,position_vo.x
+                 ,position_vo.y
+                 ,position_vo.z
+                 ,altitude_fusioned
+                 ,altitude_barometer
+                 ,height_homepoint
+                 ,height_fusion
+                 ,gps_fused.latitude
+                 ,gps_fused.longitude
+                 ,gps_fused.altitude
+                 ,gpsPostion.x
+                 ,gpsPostion.y
+                 ,gpsPostion.z
+                 ,gpsVelocity.x
+                 ,gpsVelocity.y
+                 ,gpsVelocity.z
+                 ,status_displaymode
+                 ,status_flight
+                 ,rtk_connect_status.rtkConnected
+        );
+
+        if(!keepRunning)
+        {
+            std::cout << "Ctrl-C pressed, quit loop" << std::endl;
+            break;
+        }
+
+        if( (--notifyCount) == 0 )
+        {
+            std::cout << "Printing to file ...\n";
+            notifyCount = notifyInterval;
+        }
+        usleep(printIntervalInMicroSec);
+    }
+
+    std::cout << "Done printing!\n";
+    fclose (pFile);
+    return true;
+}
+
+
+void  INThandler(int sig)
+{
+    keepRunning = false;
 }

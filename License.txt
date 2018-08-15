@@ -21,9 +21,11 @@ Onboard-SDK
 │   │   │   ├── dji_mission_manager.hpp
 │   │   │   ├── dji_mission_type.hpp
 │   │   │   ├── dji_mobile_communication.hpp
+|   |   |   ├── dji_mobile_device.hpp
 │   │   │   ├── dji_status.hpp
 │   │   │   ├── dji_subscription.hpp
 │   │   │   ├── dji_telemetry.hpp
+│   │   │   ├── dji_telemetry_doc.hpp
 │   │   │   ├── dji_type.hpp
 │   │   │   ├── dji_vehicle_callback.hpp
 │   │   │   ├── dji_vehicle.hpp
@@ -43,6 +45,7 @@ Onboard-SDK
 │   │       ├── dji_mfio.cpp
 │   │       ├── dji_mission_manager.cpp
 │   │       ├── dji_mobile_communication.cpp
+│   │       ├── dji_mobile_device.cpp
 │   │       ├── dji_subscription.cpp
 │   │       ├── dji_vehicle.cpp
 │   │       ├── dji_version.cpp
