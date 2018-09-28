@@ -82,4 +82,3 @@ You can get support from DJI with the following methods:
 - Send email to dev@dji.com describing your problem and a clear description of your setup
 - Post questions in [**Stackoverflow**](http://stackoverflow.com) using [**dji-sdk**](http://stackoverflow.com/questions/tagged/dji-sdk) tag
 - Github Issues or [gitter.im](https://gitter.im/dji-sdk/Onboard-SDK)
-- [**DJI Forum**](http://forum.dev.dji.com/en)
