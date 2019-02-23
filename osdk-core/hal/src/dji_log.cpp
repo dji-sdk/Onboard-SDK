@@ -33,6 +33,12 @@
 #include <stdarg.h>
 #include <stdio.h>
 
+#include <iostream>
+#include <fstream>
+#include <ctime>
+#include <sstream>
+#include <string>
+
 using namespace DJI::OSDK;
 
 Log::Log(Mutex* m)
@@ -49,6 +55,9 @@ Log::Log(Mutex* m)
   this->enable_status = true;
   this->enable_debug  = false;
   this->enable_error = true;
+
+  //call this function by main work flows
+  //prepareLogFile(1);
 }
 
 Log::~Log()
@@ -63,8 +72,15 @@ Log::title(int level, const char* prefix, const char* func, int line)
   {
     vaild = true;
 
-    const char str[] = "\n%s/%d @ %s, L%d: ";
-    print(str, prefix, level, func, line);
+    time_t now = time(0);
+    tm *ltm = localtime(&now);
+    std::ostringstream sstr;
+    sstr << ltm->tm_hour << "_";
+    sstr << ltm->tm_min << "_";
+    sstr << ltm->tm_sec;
+
+    const char str[] = "\n%s : %s/%d @ %s, L%d: ";
+    print(str, sstr.str().c_str(), prefix, level, func, line);
   }
   else
   {
@@ -105,7 +121,26 @@ Log::print(const char* fmt, ...)
     va_list args;
     va_start(args, fmt);
     mutex->lock();
-    vprintf(fmt, args);
+
+    //Write log to file;
+    char buf[1024] = {0};
+    vsnprintf(buf, sizeof(buf), fmt, args);
+
+    std::cout << buf;
+
+    static unsigned log_cnt = 0;
+    if ( log_file.is_open() )
+    {
+      log_file << buf;
+      log_cnt ++;
+      if ( log_cnt >= log_flush_time )
+      {
+        log_file.flush();
+        log_cnt = 0;
+      }
+    }
+    //vprintf(fmt, args);
+
     mutex->unlock();
     va_end(args);
   }
@@ -284,6 +319,53 @@ void
 Log::disableErrorLogging()
 {
   this->enable_error = false;
+}
+
+void
+Log::prepareLogFile(unsigned int flush_time)
+{
+  //Create log file to save dji log msg
+  //1.Get current date and time
+
+  time_t now = time(0);
+  tm *ltm = localtime(&now);
+  std::ostringstream sstr;
+  sstr << "log/dji_log/";
+  sstr << 1900 + ltm->tm_year; sstr << "_";
+  sstr << 1 + ltm->tm_mon; sstr << "_";
+  sstr << ltm->tm_mday; sstr << "_";
+  sstr << ltm->tm_hour; sstr << "_";
+  sstr << ltm->tm_min; sstr << "_";
+  sstr << ltm->tm_sec;
+  sstr << ".log";
+
+  log_file.open(sstr.str().c_str(), std::ios::binary | std::ios::out);
+
+  /*
+  if ( log_file.is_open() )
+  {
+    std::cout << "log file create success" << std::endl;
+  }
+  else
+  {
+    std::cout << "log file " << sstr.str().c_str() << " create failed" << std::endl;
+  }
+  */
+  log_flush_time = flush_time;
+}
+
+void Log::setLogFlushTime(unsigned int flush_time)
+{
+  log_flush_time = flush_time;
+}
+
+void
+Log::closeLogFile()
+{
+  if ( log_file.is_open() )
+  {
+    log_file.close();
+  }
 }
 
 bool

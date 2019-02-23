@@ -31,7 +31,7 @@
 
 #ifndef DJI_NO_DEPRECATED_WARNING
 #if (defined __GNUC__ || defined ARMCC)
-#define DJI_DEPRECATED __attribute__((deprecated))
+#define DJI_DEPRECATED //__attribute__((deprecated))
 #elif (defined _MSC_VER)
 #define DJI_DEPRECATED __declspec(deprecated)
 #else

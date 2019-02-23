@@ -33,6 +33,7 @@
 #include "dji_memory.hpp"
 #include "dji_singleton.hpp"
 #include "dji_thread_manager.hpp"
+#include <fstream>
 
 #ifdef WIN32
 #define __func__ __FUNCTION__
@@ -138,6 +139,10 @@ public:
    */
   void disableErrorLogging();
 
+  void prepareLogFile(unsigned int flush_time = 5);
+  void closeLogFile();
+  void setLogFlushTime(unsigned int flush_time);
+
   // Retrieve logging switches - used for global macros
   bool getStatusLogState();
   bool getDebugLogState();
@@ -181,6 +186,10 @@ private:
   bool enable_error;
 
   static const bool release = false;
+
+  // Log file
+  std::ofstream log_file;
+  unsigned int  log_flush_time;
 };
 
 } // namespace OSDK
