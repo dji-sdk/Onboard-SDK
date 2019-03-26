@@ -23,6 +23,14 @@
 cmake_minimum_required(VERSION 2.8)
 project(onboardsdk)
 
+if( ${CMAKE_SYSTEM_PROCESSOR} STREQUAL "aarch64" )
+  set(OpenCV_DIR "~/work/soft/opencv-2.4.9/build")
+  message( STATUS " - System Processor : aarch64")
+elseif ( ${CMAKE_SYSTEM_PROCESSOR} STREQUAL "x64" )
+  #set(OpenCV_DIR "~/work/soft/opencv-2.4.9/build")
+  message( STATUS " - System Processor : x86_64")
+endif()
+
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 
 set(DJIOSDK 0)
