@@ -21,29 +21,28 @@
 # *
 
 cmake_minimum_required(VERSION 2.8)
-project(onboardsdk)
+project(time-sync-sample)
 
-set(CMAKE_VERBOSE_MAKEFILE OFF)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread -g -O0")
 
-set(DJIOSDK 0)
-set(DJIOSDK_MINOR_VERSION 1)
-set(DJIOSDK_PATCH_VERSION 0)
-set(DJIOSDK_VERSION
-  ${DJIOSDK_MAJOR_VERSION}.${DJIOSDK_MINOR_VERSION}.${DJIOSDK_PATCH_VERSION})
+include_directories(${ONBOARDSDK_SOURCE}/api/inc)
+include_directories(${ONBOARDSDK_SOURCE}/utility/inc)
+include_directories(${ONBOARDSDK_SOURCE}/hal/inc)
+include_directories(${ONBOARDSDK_SOURCE}/protocol/inc)
+include_directories(${ONBOARDSDK_SOURCE}/platform/linux/inc)
 
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/libs)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../common)
 
-if (ADVANCED_SENSING)
-  add_definitions(-DADVANCED_SENSING)
-endif()
+add_executable(time_sync_callback_sample
+    time_sync_callback_sample.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_environment.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_helpers.cpp
+    )
+target_link_libraries(time_sync_callback_sample djiosdk-core)
 
-if(WAYPT2_CORE)
-  add_definitions(-DWAYPT2_CORE)
-endif()
-
-add_subdirectory(osdk-core)
-
-if (${CMAKE_SYSTEM_NAME} MATCHES Linux)
-  add_subdirectory(sample/linux)
-endif()
+add_executable(time_sync_poll_sample
+    time_sync_poll_sample.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_environment.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_helpers.cpp
+    )
+target_link_libraries(time_sync_poll_sample djiosdk-core)

@@ -114,7 +114,7 @@ public:
   Camera*              camera;
   Gimbal*              gimbal;
   MFIO*                mfio;
-  DJI_DEPRECATED MobileCommunication* moc;
+  MobileCommunication* moc;
   MobileDevice*        mobileDevice;
   MissionManager*      missionManager;
   HardwareSync*        hardSync;
@@ -235,6 +235,7 @@ public:
   char*             getHwSerialNum() const;
   bool              isLegacyM600();
   bool              isM100();
+  bool              isM210V2();
 
   void setKey(const char* key);
   CircularBuffer* circularBuffer; //! @note not used yet
@@ -315,7 +316,8 @@ private:
   ACK::WayPointInit waypointInitACK;
   /*!WayPoint index download command ACK
    * @note Download index settings*/
-  ACK::WayPointIndex waypointIndexACK;
+  ACK::WayPointIndex      waypointIndexACK;
+  ACK::WayPoint2CommonRsp wayPoint2CommonRspACK;
   /*!WayPoint add point command ACK*/
   ACK::WayPointAddPoint waypointAddPointACK;
   ACK::MFIOGet          mfioGetACK;

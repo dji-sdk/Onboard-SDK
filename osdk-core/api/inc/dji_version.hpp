@@ -47,11 +47,12 @@ class Version
 public:
   typedef uint32_t FirmWare;
 
-  constexpr static const char* M100 = "M100";
-  constexpr static const char* N3   = "N3";
-  constexpr static const char* A3   = "A3";
-  constexpr static const char* M210 = "PM410";
-  constexpr static const char* M600 = "PM820";
+  constexpr static const char* M100   = "M100";
+  constexpr static const char* N3     = "N3";
+  constexpr static const char* A3     = "A3";
+  constexpr static const char* M210   = "PM410";
+  constexpr static const char* M210V2 = "PM420";
+  constexpr static const char* M600   = "PM820";
 
   typedef struct VersionData
   {

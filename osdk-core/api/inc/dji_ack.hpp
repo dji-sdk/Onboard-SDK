@@ -92,6 +92,12 @@ public:
     WayPointSettings data;
   } WayPointIndexInternal; // pack(1)
 
+  typedef struct WayPoint2CommonRsp
+  {
+    Entry   info;
+    bool    updated = false;
+  } WayPoint2CommonRsp;
+
   typedef struct WayPointVelocityInternal
   {
     uint8_t   ack;
@@ -279,6 +285,16 @@ public:
     VGAImage img_vec[2];
   } StereoVGAImgData; // pack(1)
 
+  /*!
+   * @brief This struct captures PushData when subscribe to UTC & FC time in hardware sync
+   */
+  typedef struct FCTimeInUTC
+  {
+    uint32_t fc_timestamp_us;
+    uint32_t utc_yymmdd;
+    uint32_t utc_hhmmss;
+  } FCTimeInUTC; // pack(1)
+
   typedef union TypeUnion {
     uint8_t  raw_ack_array[MAX_INCOMING_DATA_SIZE];
     uint8_t  versionACK[MAX_ACK_SIZE];
@@ -310,6 +326,11 @@ public:
      */
     StereoImgData           *stereoImgData;
     StereoVGAImgData        *stereoVGAImgData;
+    /*
+     * Push Data from GPS or RTK
+     */
+    FCTimeInUTC             fcTimeInUTC;
+    uint8_t                 ppsSourceType;
 
   } TypeUnion; // pack(1)
 

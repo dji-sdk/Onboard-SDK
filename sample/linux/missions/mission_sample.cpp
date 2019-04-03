@@ -73,7 +73,7 @@ setUpSubscription(DJI::OSDK::Vehicle* vehicle, int responseTimeout)
     if (ACK::getError(ack))
     {
       std::cout << "Error unsubscribing; please restart the drone/FC to get "
-                   "back to a clean state.\n";
+        "back to a clean state.\n";
     }
     return false;
   }
@@ -89,7 +89,7 @@ teardownSubscription(DJI::OSDK::Vehicle* vehicle, const int pkgIndex,
   if (ACK::getError(ack))
   {
     std::cout << "Error unsubscribing; please restart the drone/FC to get back "
-                 "to a clean state.\n";
+      "to a clean state.\n";
     return false;
   }
   return true;

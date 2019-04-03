@@ -1,14 +1,13 @@
-/*! @file mission_sample.hpp
- *  @version 3.3
- *  @date Jun 05 2017
+/*! @file waypoint_v2_sample.hpp
+ *  @version 3.8
+ *  @date Mar 07 2019
  *
  *  @brief
- *  GPS Missions API usage in a Linux environment.
- *  Shows example usage of the Waypoint Missions and Hotpoint Missions through
- * the
- *  Mission Manager API.
+ *  main for Waypoint Missions V2 API usage in a Linux environment.
+ *  Shows example usage of the Waypoint Missions through
+ *  the Mission Manager API.
  *
- *  @Copyright (c) 2017 DJI
+ *  @Copyright (c) 2019 DJI
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,12 +29,15 @@
  *
  */
 
-#ifndef DJIOSDK_MISSIONSAMPLE_HPP
-#define DJIOSDK_MISSIONSAMPLE_HPP
+#ifndef DJIOSDK_WAYPOINT_V2_SAMPLE_HPP
+#define DJIOSDK_WAYPOINT_V2_SAMPLE_HPP
 
 // System Includes
 #include <cmath>
 #include <vector>
+#include <mutex>
+#include <condition_variable>
+#include <chrono>
 
 // DJI OSDK includes
 #include <dji_vehicle.hpp>
@@ -44,31 +46,43 @@
 #include <dji_linux_helpers.hpp>
 
 // Subscription not supported in Matrice 100
-bool setUpSubscription(DJI::OSDK::Vehicle* vehicle, int responseTimeout);
-bool teardownSubscription(DJI::OSDK::Vehicle* vehicle, const int pkgIndex,
+bool setUpSubscription(DJI::OSDK::Vehicle* vehicle,
+                       int responseTimeout);
+
+bool teardownSubscription(DJI::OSDK::Vehicle* vehicle,
+                          const int pkgIndex,
                           int responseTimeout);
 
-bool runWaypointMission(DJI::OSDK::Vehicle* vehicle, uint8_t numWaypoints,
-                        int responseTimeout);
+bool createAndUploadWaypointMission(DJI::OSDK::Vehicle *vehicle, uint8_t numWaypoints,
+                                    int responseTimeout);
+
+bool createActions(DJI::OSDK::Vehicle *vehicle,
+                   dji::waypointv2::WaypointActionActuatorType actuatorType,
+                   dji::waypointv2::WaypointActionTriggerType triggerType,
+                   std::vector<dji::waypointv2::WaypointActionConfig> &actions);
+
+bool uploadActions(DJI::OSDK::Vehicle *vehicle,
+                   std::vector<dji::waypointv2::WaypointActionConfig> &actions);
+
+bool startWaypointMission(DJI::OSDK::Vehicle *vehicle);
 
 void setWaypointDefaults(DJI::OSDK::WayPointSettings* wp);
+
 void setWaypointInitDefaults(DJI::OSDK::WayPointInitSettings* fdata);
 
 std::vector<DJI::OSDK::WayPointSettings> createWaypoints(
-  DJI::OSDK::Vehicle* vehicle, int numWaypoints,
-  DJI::OSDK::float64_t distanceIncrement, DJI::OSDK::float32_t start_alt);
+  DJI::OSDK::Vehicle* vehicle,
+  int numWaypoints,
+  DJI::OSDK::float64_t distanceIncrement,
+  DJI::OSDK::float32_t start_alt);
 
 std::vector<DJI::OSDK::WayPointSettings> generateWaypointsPolygon(
-  DJI::OSDK::WayPointSettings* start_data, DJI::OSDK::float64_t increment,
+  DJI::OSDK::WayPointSettings* start_data,
+  DJI::OSDK::float64_t increment,
   int num_wp);
 
-void uploadWaypoints(DJI::OSDK::Vehicle*                       vehicle,
-                     std::vector<DJI::OSDK::WayPointSettings>& wp_list,
-                     int                                       responseTimeout);
 
-bool runHotpointMission(DJI::OSDK::Vehicle* vehicle, int initialRadius,
-                        int responseTimeout);
 
 const int DEFAULT_PACKAGE_INDEX = 0;
 
-#endif // DJIOSDK_MISSIONSAMPLE_HPP
+#endif // DJIOSDK_WAYPOINT_V2_SAMPLE_HPP

@@ -35,6 +35,7 @@ add_subdirectory(missions)
 add_subdirectory(mobile)
 add_subdirectory(telemetry)
 add_subdirectory(logging)
+add_subdirectory(time-sync)
 
 if(ADVANCED_SENSING)
     add_definitions(-DADVANCED_SENSING)

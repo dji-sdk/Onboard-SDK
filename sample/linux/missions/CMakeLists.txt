@@ -33,10 +33,22 @@ include_directories(${ONBOARDSDK_SOURCE}/platform/linux/inc)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../common)
 FILE(GLOB SOURCE_FILES *.hpp *.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_environment.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_helpers.cpp
-        )
+    ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_environment.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_helpers.cpp
+    )
 
-add_executable(${PROJECT_NAME} ${SOURCE_FILES})
+add_executable(${PROJECT_NAME}
+    ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_environment.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_helpers.cpp
+    main.cpp
+    mission_sample.cpp)
 target_link_libraries(${PROJECT_NAME} djiosdk-core)
 
+if(WAYPT2_CORE)
+  add_executable(djiosdk-waypoint-v2-sample
+      ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_environment.cpp
+      ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_helpers.cpp
+      waypoint_v2_main.cpp
+      waypoint_v2_sample.cpp)
+  target_link_libraries(djiosdk-waypoint-v2-sample djiosdk-core)
+endif()

@@ -44,7 +44,7 @@ if (MSVC)
 endif (MSVC)
 
 if (CMAKE_SYSTEM_NAME MATCHES Linux)
-  set(COMMON_CXX_FLAGS "-std=c++11 -pthread")
+  set(COMMON_CXX_FLAGS "-std=c++11 -pthread -fPIC")
 endif ()
 
 if (CMAKE_SYSTEM_NAME MATCHES Darwin)
@@ -158,6 +158,52 @@ if(ADVANCED_SENSING)
 
 endif()
 
+## Waypoint2 Core
+if(NOT WAYPT2_CORE)
+  message(STATUS "Compiling without WaypointV2 Core")
+else()
+  # Add a cmake file to find libusb
+  set(CMAKE_MODULE_PATH ${CURRENT_CMAKE_MODULE_PATH})
+
+  find_package(Waypt2Core QUIET)
+  if(NOT WAYPT2_CORE_FOUND)
+    include(${CURRENT_CMAKE_MODULE_PATH}/External_WaypointV2Core.cmake)
+    add_dependencies(${PROJECT_NAME} waypointv2-core)
+  endif()
+
+  target_include_directories(${PROJECT_NAME} PUBLIC
+      $<BUILD_INTERFACE:${WAYPT2_CORE_INCLUDE_DIRS}>)
+  target_link_libraries(${PROJECT_NAME} PUBLIC
+      ${WAYPT2_CORE_LIBRARY}
+      ${SDK_COMMON_LIBRARY}
+      ${DJI_PROTOBUF_LIBRARY}
+      ${WAYPT2_INTERFACE_LIBRARY}
+      )
+
+  set(MODULE_BUILD_INTERFACE ${MODULE_BUILD_INTERFACE}
+      ${WAYPT2_CORE_LIBRARY}
+      ${SDK_COMMON_LIBRARY}
+      ${DJI_PROTOBUF_LIBRARY}
+      ${WAYPT2_INTERFACE_LIBRARY}
+      )
+  set(MODULE_INSTALL_INTERFACE ${MODULE_INSTALL_INTERFACE}
+      $<INSTALL_PREFIX>/lib/libwaypointv2-interface.a
+      $<INSTALL_PREFIX>/lib/libwaypointv2-core.a
+      $<INSTALL_PREFIX>/lib/libdjisdk-common.a
+      $<INSTALL_PREFIX>/lib/libDJIProtobuf.a
+      )
+
+  set(OSDK_INTERFACE_LIBS ${OSDK_INTERFACE_LIBS}
+      ${WAYPT2_CORE_LIBRARY}
+      ${SDK_COMMON_LIBRARY}
+      ${DJI_PROTOBUF_LIBRARY}
+      ${WAYPT2_INTERFACE_LIBRARY}
+      )
+
+  target_compile_definitions(${PROJECT_NAME} PUBLIC -DWAYPT2_CORE)
+
+endif()
+
 # If there are more modules, add them here, BEFORE we set INTERFACE_LINK_LIBRARIES property.
 
 ## Once all the modules are done, set the interface_link_libraries property
@@ -238,6 +284,27 @@ if(ADVANCED_SENSING)
       ${ADVANCED_SENSING_INCLUDE_DIRS}/dji_camera_image.hpp
       ${ADVANCED_SENSING_INCLUDE_DIRS}/dji_camera_stream.hpp
       )
+endif()
+
+if(WAYPT2_CORE)
+  install(FILES ${WAYPT2_CORE_LIBRARY}
+        DESTINATION "${INSTALL_LIB_DIR}" COMPONENT shlib)
+
+  install(FILES ${SDK_COMMON_LIBRARY}
+      DESTINATION "${INSTALL_LIB_DIR}" COMPONENT shlib)
+
+  install(FILES ${DJI_PROTOBUF_LIBRARY}
+      DESTINATION "${INSTALL_LIB_DIR}" COMPONENT shlib)
+
+  install(FILES ${WAYPT2_INTERFACE_LIBRARY}
+      DESTINATION "${INSTALL_LIB_DIR}" COMPONENT shlib)
+
+  ## using set(OSDK_LIB_HEADERS) does not inherit the hierarchy
+  install(DIRECTORY "${WAYPT2_CORE_INCLUDE_DIRS}/" ## this "/" is important...
+      DESTINATION "${INSTALL_INCLUDE_DIR}"
+      FILES_MATCHING
+      PATTERN "*.h*")
+
 endif()
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

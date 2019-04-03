@@ -33,6 +33,7 @@
 
 #include "dji_hotpoint.hpp"
 #include "dji_waypoint.hpp"
+#include <vector>
 
 namespace DJI
 {
@@ -155,17 +156,8 @@ public:
   WaypointMission* wpMission;
   HotpointMission* hpMission;
 
-  //! counter to keep track of the amount of mission (protection mechanism in
-  //! get_Pt())
-  int wayptCounter;
-  int hotptCounter;
-
-private:
-  //! @note no dynamic container, so fix the size of the mission container
-  static const int MAX_MISSION_SIZE = 5;
-
-  WaypointMission* wpMissionArray[MAX_MISSION_SIZE];
-  HotpointMission* hpMissionArray[MAX_MISSION_SIZE];
+  std::vector<WaypointMission*> wpMissionVector;
+  std::vector<HotpointMission*> hpMissionVector;
 };
 
 } // OSDK
