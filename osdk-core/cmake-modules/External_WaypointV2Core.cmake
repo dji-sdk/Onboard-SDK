@@ -1,13 +1,16 @@
 include(ExternalProject)
-message( STATUS "External library - DJI Advanced Sensing for stereo cameras" )
+message( STATUS "External library - DJI WaypointV2 Core for M210 V2" )
 
-set(VERSION "2.0.2")
-set(LIB_NAME advanced-sensing)
+set(VERSION "1.0.0")
+set(LIB_NAME waypointv2-core)
 set(LIB_PATH ${CMAKE_CURRENT_SOURCE_DIR}/${LIB_NAME}-${VERSION})
 
 # Work-around to multi-library projects configuration vs. execution times restrictions
-set(ADVANCED_SENSING_INCLUDE_DIRS ${LIB_PATH}/inc)
-set(ADVANCED_SENSING_LIBRARY ${LIB_PATH}/lib/libadvanced-sensing.a)
+set(WAYPT2_CORE_INCLUDE_DIRS ${LIB_PATH}/inc)
+set(WAYPT2_CORE_LIBRARY ${LIB_PATH}/lib/libwaypointv2-core.a)
+set(SDK_COMMON_LIBRARY ${LIB_PATH}/lib/libdjisdk-common.a)
+set(DJI_PROTOBUF_LIBRARY ${LIB_PATH}/lib/libDJIProtobuf.a)
+set(WAYPT2_INTERFACE_LIBRARY ${LIB_PATH}/lib/libwaypointv2-interface.a)
 
 # Set appropriate branch name
 set(BRANCH_NAME "${LIB_NAME}-${VERSION}-${TARGET_ARCH}")

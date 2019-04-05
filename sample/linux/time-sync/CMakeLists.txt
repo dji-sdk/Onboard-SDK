@@ -21,7 +21,7 @@
 # *
 
 cmake_minimum_required(VERSION 2.8)
-project(djiosdk-mission-sample)
+project(time-sync-sample)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread -g -O0")
 
@@ -32,23 +32,17 @@ include_directories(${ONBOARDSDK_SOURCE}/protocol/inc)
 include_directories(${ONBOARDSDK_SOURCE}/platform/linux/inc)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../common)
-FILE(GLOB SOURCE_FILES *.hpp *.cpp
+
+add_executable(time_sync_callback_sample
+    time_sync_callback_sample.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_environment.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_helpers.cpp
     )
+target_link_libraries(time_sync_callback_sample djiosdk-core)
 
-add_executable(${PROJECT_NAME}
+add_executable(time_sync_poll_sample
+    time_sync_poll_sample.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_environment.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_helpers.cpp
-    main.cpp
-    mission_sample.cpp)
-target_link_libraries(${PROJECT_NAME} djiosdk-core)
-
-if(WAYPT2_CORE)
-  add_executable(djiosdk-waypoint-v2-sample
-      ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_environment.cpp
-      ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_helpers.cpp
-      waypoint_v2_main.cpp
-      waypoint_v2_sample.cpp)
-  target_link_libraries(djiosdk-waypoint-v2-sample djiosdk-core)
-endif()
+    )
+target_link_libraries(time_sync_poll_sample djiosdk-core)

@@ -50,7 +50,7 @@ class Vehicle;
  * functionality on both directions of the
  * pipeline.
  */
-class DJI_DEPRECATED MobileCommunication
+class MobileCommunication
 {
 public:
   MobileCommunication(Vehicle* vehicle = 0);

@@ -206,7 +206,7 @@ LinuxSerialDevice::_serialConfig(int baudrate, char data_bits, char parity_bits,
                                  char stop_bits, bool testForData)
 {
   int st_baud[] = { B4800,  B9600,   B19200,  B38400,
-                    B57600, B115200, B230400, B921600 };
+                    B57600, B115200, B230400, B921600, B1000000};
   int std_rate[] = { 4800,   9600,   19200,   38400,   57600,  115200,
                      230400, 921600, 1000000, 1152000, 3000000 };
 

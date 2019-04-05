@@ -1319,10 +1319,14 @@ Vehicle::activate(ActivateData* data, int timeout)
       DERROR("Solutions for NEW_DEVICE_ERROR:\n"
                "\t* Double-check your app_id and app_key in UserConfig.txt. "
                "Does it match with your DJI developer account?\n"
-               "\t* If this is a new device, please make sure your DJI Go App "
-               "is connected to internet to activate the new device for the first time.\n"
+               "\t* If this is a new device, you need to activate it through the App or DJI Assistant 2 with Internet\n"
+               "\tFor different aircraft, the App and the version of DJI Assistant 2 might be different\n"
+               "\tFor A3, N3, M600/Pro and M100, please use DJI GO App\n"
+               "\tFor M210 V1, please use DJI GO 4 App or DJI Pilot App\n"
+               "\tFor M210 V2, please use DJI Pilot App\n"
+               "\tFor DJI Assistant 2, it's available on the 'Download' tab of the product page\n"
                "\t* If this device is previously activated with another app_id and app_key, "
-               "you will need to re-activate it again (with internet through DJI GO App).\n"
+               "you will need to re-activate it again.\n"
                "\t* A new device needs to be activated twice to fix the NEW_DEVICE_ERROR, "
                "so please try it twice.\n");
     }
@@ -1614,6 +1618,14 @@ Vehicle::ACKHandler(void* eventData)
       hotpointReadACK.ack.data = ackData->recvData.hpReadACK.ack;
       hotpointReadACK.data     = ackData->recvData.hpReadACK.data;
     }
+    else if (cmd[0] == OpenProtocolCMD::CMDSet::mission
+             && OpenProtocolCMD::CMDSet::Mission::waypointInitV2[1] <= cmd[1]
+                &&  cmd[1] <= OpenProtocolCMD::CMDSet::Mission::waypointGetMinMaxActionIDV2[1])
+    {
+      wayPoint2CommonRspACK.info      = ackData->recvInfo;
+      wayPoint2CommonRspACK.info.buf  = ackData->recvData.raw_ack_array;
+      wayPoint2CommonRspACK.updated   = true;
+    }
     else
     {
       ackErrorCode.info = ackData->recvInfo;
@@ -1690,6 +1702,80 @@ Vehicle::PushDataHandler(void* eventData)
         subscribe->subscriptionDataDecodeHandler.callback(
           this, *(pushDataEntry),
           subscribe->subscriptionDataDecodeHandler.userData);
+      }
+    }
+  }
+  else if (memcmp(cmd, OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEAGPSGSA,
+                  sizeof(cmd)) == 0
+           || memcmp(cmd, OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEAGPSRMC,
+                     sizeof(cmd)) == 0
+           || memcmp(cmd, OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEARTKGSA,
+                     sizeof(cmd)) == 0
+           || memcmp(cmd, OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEARTKRMC,
+                     sizeof(cmd)) == 0)
+  {
+    if(hardSync)
+    {
+      if(hardSync->ppsNMEAHandler.callback)
+      {
+        hardSync->ppsNMEAHandler.callback(
+          this, *(pushDataEntry),
+          hardSync->ppsNMEAHandler.userData);
+      }
+      else  // If user listen to it already, we don't store them.
+      {
+        hardSync->writeData(cmd[1], pushDataEntry);
+      }
+    }
+  }
+  else if (memcmp(cmd, OpenProtocolCMD::CMDSet::HardwareSync::ppsUTCTime,
+                  sizeof(cmd)) == 0)
+  {
+    if(hardSync)
+    {
+      if(hardSync->ppsUTCTimeHandler.callback)
+      {
+        hardSync->ppsUTCTimeHandler.callback(
+          this, *(pushDataEntry),
+          hardSync->ppsUTCTimeHandler.userData);
+      }
+      else  // If user listen to it already, we don't store them.
+      {
+        hardSync->writeData(cmd[1], pushDataEntry);
+      }
+    }
+  }
+  else if (memcmp(cmd, OpenProtocolCMD::CMDSet::HardwareSync::ppsUTCFCTimeRef,
+                  sizeof(cmd)) == 0)
+  {
+    if(hardSync)
+    {
+      if(hardSync->ppsUTCFCTimeHandler.callback)
+      {
+        hardSync->ppsUTCFCTimeHandler.callback(
+          this, *(pushDataEntry),
+          hardSync->ppsUTCFCTimeHandler.userData);
+      }
+      else  // If user listen to it already, we don't store them.
+      {
+        hardSync->writeData(cmd[1], pushDataEntry);
+      }
+    }
+  }
+  else if (memcmp(cmd, OpenProtocolCMD::CMDSet::HardwareSync::ppsSource,
+                  sizeof(cmd)) == 0)
+  {
+    if(hardSync)
+    {
+      if(hardSync->ppsSourceHandler.callback)
+      {
+        hardSync->ppsSourceHandler.callback(
+          this, *(pushDataEntry),
+          hardSync->ppsSourceHandler.userData);
+      }
+      else  // If user listen to it already, we don't store them.
+      {
+        hardSync->writeData(cmd[1], pushDataEntry);
       }
     }
   }
@@ -1804,6 +1890,19 @@ Vehicle::PushDataHandler(void* eventData)
       }
     }
   }
+#ifdef WAYPT2_CORE
+  else if (memcmp(cmd, OpenProtocolCMD::CMDSet::Mission::waypointGetStatePushDataV2,
+                  sizeof(cmd)) == 0)
+  {
+    if (missionManager && missionManager->wpMission)
+    {
+      missionManager->wpMission->updateV2PushData(cmd[1],
+                                                  pushDataEntry->recvInfo.seqNumber,
+                                                  pushDataEntry->recvData.raw_ack_array,
+                                                  pushDataEntry->recvInfo.len-OpenProtocol::PackageMin);
+    }
+  }
+#endif
   else
   {
     DDEBUG("Received Unknown PushData\n");
@@ -1849,9 +1948,15 @@ Vehicle::waitForACK(const uint8_t (&cmd)[OpenProtocolCMD::MAX_CMD_ARRAY_SIZE],
   {
     pACK = static_cast<void*>(&this->rawVersionACK);
   }
-  else if (memcmp(cmd, OpenProtocolCMD::CMDSet::MFIO::get, sizeof(cmd)) == 0)
+  else if (memcmp(cmd, OpenProtocolCMD::CMDSet::MFIO::get,
+                  sizeof(cmd)) == 0)
   {
     pACK = static_cast<void*>(&this->mfioGetACK);
+  }
+  else if (cmd[0] == OpenProtocolCMD::CMDSet::mission
+           && 0x40 <= cmd[1] && cmd[1] <= 0x53)
+  {
+    pACK = static_cast<void*>(&this->wayPoint2CommonRspACK);
   }
   else
   {
@@ -2062,6 +2167,16 @@ Vehicle::isM100()
     {
       return false;
     }
+  }
+  return false;
+}
+
+bool
+Vehicle::isM210V2()
+{
+  if (strncmp(versionData.hwVersion, Version::M210V2, 5) == 0)
+  {
+    return true;
   }
   return false;
 }

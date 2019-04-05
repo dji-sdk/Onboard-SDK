@@ -86,13 +86,32 @@ public:
     {
       // Waypoint mission commands
       const static uint8_t waypointInit[MAX_CMD_ARRAY_SIZE];
+      const static uint8_t waypointInitV2[MAX_CMD_ARRAY_SIZE];
       const static uint8_t waypointAddPoint[MAX_CMD_ARRAY_SIZE];
+      const static uint8_t waypointUploadV2[MAX_CMD_ARRAY_SIZE];
+      const static uint8_t waypointUploadActionV2[MAX_CMD_ARRAY_SIZE];
       const static uint8_t waypointSetStart[MAX_CMD_ARRAY_SIZE];
+      const static uint8_t waypointStartStopV2[MAX_CMD_ARRAY_SIZE];
       const static uint8_t waypointSetPause[MAX_CMD_ARRAY_SIZE];
+      const static uint8_t waypointResumePauseV2[MAX_CMD_ARRAY_SIZE];
+      const static uint8_t waypointBreakRestoreV2[MAX_CMD_ARRAY_SIZE];
       const static uint8_t waypointDownload[MAX_CMD_ARRAY_SIZE];
+      const static uint8_t waypointDownloadInitV2[MAX_CMD_ARRAY_SIZE];
+      const static uint8_t waypointDownloadPtV2[MAX_CMD_ARRAY_SIZE];
+      const static uint8_t waypointDownloadActionV2[MAX_CMD_ARRAY_SIZE];
       const static uint8_t waypointIndexDownload[MAX_CMD_ARRAY_SIZE];
       const static uint8_t waypointSetVelocity[MAX_CMD_ARRAY_SIZE];
+      const static uint8_t waypointSetGlobVelocityV2[MAX_CMD_ARRAY_SIZE];
+      const static uint8_t waypointGetGlobVelocityV2[MAX_CMD_ARRAY_SIZE];
       const static uint8_t waypointGetVelocity[MAX_CMD_ARRAY_SIZE];
+      const static uint8_t waypointGetMaxPtNumV2[MAX_CMD_ARRAY_SIZE];
+      const static uint8_t waypointGetWayptIdxInListV2[MAX_CMD_ARRAY_SIZE];
+      const static uint8_t waypointGetRemainSpaceV2[MAX_CMD_ARRAY_SIZE];
+      const static uint8_t waypointGetBreakInfoV2[MAX_CMD_ARRAY_SIZE];
+      const static uint8_t waypointGetStatePushDataV2[MAX_CMD_ARRAY_SIZE];
+      const static uint8_t waypointGetEventPushDataV2[MAX_CMD_ARRAY_SIZE];
+      const static uint8_t waypointGetInfoV2[MAX_CMD_ARRAY_SIZE];
+      const static uint8_t waypointGetMinMaxActionIDV2[MAX_CMD_ARRAY_SIZE];
       // Hotpint mission commands
       const static uint8_t hotpointStart[MAX_CMD_ARRAY_SIZE];
       const static uint8_t hotpointStop[MAX_CMD_ARRAY_SIZE];
@@ -111,6 +130,13 @@ public:
     typedef struct HardwareSync
     {
       const static uint8_t broadcast[MAX_CMD_ARRAY_SIZE];
+      const static uint8_t ppsNMEAGPSGSA[MAX_CMD_ARRAY_SIZE];
+      const static uint8_t ppsNMEAGPSRMC[MAX_CMD_ARRAY_SIZE];
+      const static uint8_t ppsNMEARTKGSA[MAX_CMD_ARRAY_SIZE];
+      const static uint8_t ppsNMEARTKRMC[MAX_CMD_ARRAY_SIZE];
+      const static uint8_t ppsUTCTime[MAX_CMD_ARRAY_SIZE];
+      const static uint8_t ppsUTCFCTimeRef[MAX_CMD_ARRAY_SIZE];
+      const static uint8_t ppsSource[MAX_CMD_ARRAY_SIZE];
     } HardwareSync;
 
     typedef struct VirtualRC

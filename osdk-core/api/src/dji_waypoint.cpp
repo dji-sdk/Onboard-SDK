@@ -36,6 +36,9 @@ using namespace DJI::OSDK;
 WaypointMission::WaypointMission(Vehicle* vehicle)
   : MissionBase(vehicle)
   , index(NULL)
+#ifdef WAYPT2_CORE
+  , waypointV2Interface(vehicle)
+#endif
 {
   wayPointEventCallback.callback = 0;
   wayPointEventCallback.userData = 0;
@@ -79,7 +82,6 @@ WaypointMission::init(WayPointInitSettings* Info, VehicleCallBack callback,
 ACK::ErrorCode
 WaypointMission::init(WayPointInitSettings* Info, int timeout)
 {
-
   ACK::ErrorCode ack;
 
   if (Info)
@@ -90,7 +92,6 @@ WaypointMission::init(WayPointInitSettings* Info, int timeout)
   vehicle->protocolLayer->send(2, vehicle->getEncryption(),
                                OpenProtocolCMD::CMDSet::Mission::waypointInit,
                                &info, sizeof(info), 500, 2, false, 2);
-
   ack = *((ACK::ErrorCode*)vehicle->waitForACK(
     OpenProtocolCMD::CMDSet::Mission::waypointInit, timeout));
 
@@ -648,3 +649,80 @@ WaypointMission::setWaypointCallback(VehicleCallBack callback,
   wayPointCallback.callback = callback;
   wayPointCallback.userData = userData;
 }
+
+#ifdef WAYPT2_CORE
+void
+WaypointMission::updateV2PushData(uint8_t cmd_id,
+                                  uint16_t seq_num,
+                                  const void *data,
+                                  int data_length)
+{
+  waypointV2Interface.updatePushData(cmd_id, seq_num, data, data_length);
+}
+
+void
+WaypointMission::startV2(WaypointV2Interface::CommonErrorCallback errorCallback)
+{
+  waypointV2Interface.start(errorCallback);
+}
+
+void
+WaypointMission::stopV2(WaypointV2Interface::CommonErrorCallback errorCallback)
+{
+  waypointV2Interface.stop(errorCallback);
+}
+
+void
+WaypointMission::pauseV2(WaypointV2Interface::CommonErrorCallback errorCallback)
+{
+  waypointV2Interface.pause(errorCallback);
+}
+
+void
+WaypointMission::resumeV2(WaypointV2Interface::CommonErrorCallback errorCallback)
+{
+  waypointV2Interface.resume(errorCallback);
+}
+
+void
+WaypointMission::getCurrentSpeed(std::function<void(float cruise_speed,
+                                                    WaypointV2Interface::CommonErrorCode error_code)> callback)
+{
+  waypointV2Interface.getCurrentSpeed(callback);
+}
+
+void
+WaypointMission::setCurrentSpeed(float speed, WaypointV2Interface::CommonErrorCallback errorCallback)
+{
+  waypointV2Interface.setCurrentSpeed(speed, errorCallback);
+}
+
+void
+WaypointMission::uploadMissionV2(const dji::waypointv2::WaypointMission &waypointMission,
+                                 WaypointV2Interface::CommonErrorCallback errorCallback)
+{
+  waypointV2Interface.uploadMission(waypointMission, errorCallback);
+}
+
+void
+WaypointMission::uploadMissionV2(const WayPointInitSettings &initSettings,
+                                 const std::vector<WayPointSettings> &waypts,
+                                 WaypointV2Interface::CommonErrorCallback errorCallback)
+{
+  waypointV2Interface.uploadMission(initSettings, waypts, errorCallback);
+}
+
+bool
+WaypointMission::DownloadMissionV2(dji::waypointv2::WaypointMission &outMission,
+                                   WaypointV2Interface::CommonErrorCallback errorCallback)
+{
+  waypointV2Interface.DownloadMission(outMission, errorCallback);
+}
+
+void
+WaypointMission::uploadActionV2(const std::vector<dji::waypointv2::WaypointActionConfig> &actions,
+                                WaypointV2Interface::CommonErrorCallback errorCallback)
+{
+  waypointV2Interface.uploadAction(actions, errorCallback);
+}
+#endif
