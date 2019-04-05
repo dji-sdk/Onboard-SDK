@@ -32,9 +32,16 @@
 #include "telemetry_sample.hpp"
 #include  <signal.h>
 #include  <stdlib.h>
+#include <thread>
+#include <chrono>
+#include <cmath>
+#include <iomanip>
 
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
+
+#define C_EARTH (double)6378137.0
+#define DEG2RAD 0.01745329252
 
 bool
 getBroadcastData(DJI::OSDK::Vehicle* vehicle, int responseTimeout)
@@ -282,6 +289,8 @@ subscribeToData(Vehicle* vehicle, int responseTimeout)
       rtk_yaw = vehicle->subscribe->getValue<TOPIC_RTK_YAW>();
       rtk_yaw_info = vehicle->subscribe->getValue<TOPIC_RTK_YAW_INFO>();
     }
+    std::cout << std::setiosflags(std::ios::fixed);
+    std::cout << std::setprecision(9);
     std::cout << "Counter = " << elapsedTimeInMs << ":\n";
     std::cout << "-------\n";
     std::cout << "Flight Status                         = " << (int)flightStatus
@@ -703,8 +712,92 @@ subscribeToDataAndSaveLogToFile(Vehicle* vehicle, int responseTimeout)
     return true;
 }
 
+void subscribeQuaternionAndYaw(Vehicle* vehicle, int responseTimeout)
+{
+  ACK::ErrorCode subscribeStatus;
+  char func[50];
+  subscribeStatus = vehicle->subscribe->verify(responseTimeout);
+  if (ACK::getError(subscribeStatus) != ACK::SUCCESS)
+  {
+    ACK::getErrorCodeMessage(subscribeStatus, func);
+    return;
+  }
+
+  // Telemetry: Subscribe to quaternion, fused lat/lon and altitude at freq 50
+  // Hz
+  int pkgIndex        = 0;
+  int freq            = 50;
+  TopicName topicList50Hz[] = { TOPIC_QUATERNION, TOPIC_GPS_FUSED };
+  int       numTopic = sizeof(topicList50Hz) / sizeof(topicList50Hz[0]);
+  bool      enableTimestamp = false;
+
+  bool pkgStatus = vehicle->subscribe->initPackageFromTopicList(
+    pkgIndex, numTopic, topicList50Hz, enableTimestamp, freq);
+  if (!(pkgStatus))
+  {
+    return;
+  }
+  subscribeStatus =
+    vehicle->subscribe->startPackage(pkgIndex, responseTimeout);
+  if (ACK::getError(subscribeStatus) != ACK::SUCCESS)
+  {
+    ACK::getErrorCodeMessage(subscribeStatus, func);
+    // Cleanup before return
+    vehicle->subscribe->removePackage(pkgIndex, responseTimeout);
+    return;
+  }
+
+  Telemetry::TypeMap<TOPIC_QUATERNION>::type subscriptionQ;
+
+  unsigned int cnt = 0;
+  while(cnt < 1000)
+  {
+    subscriptionQ = vehicle->subscribe->getValue<TOPIC_QUATERNION>();
+    double rawQz = toEulerAngle((static_cast<void*>(&subscriptionQ))).z;
+    double yawInRad = rawQz / DEG2RAD;  //actually this is in degree!
+    std::cout << "yawInDeg" << yawInRad << std::endl;
+
+    cnt++;
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+  }
+
+  ACK::ErrorCode ack =
+    vehicle->subscribe->removePackage(pkgIndex, responseTimeout);
+  if (ACK::getError(ack))
+  {
+    std::cout
+      << "Error unsubscribing; please restart the drone/FC to get back "
+         "to a clean state.\n";
+  }
+}
 
 void  INThandler(int sig)
 {
     keepRunning = false;
+}
+
+Telemetry::Vector3f
+toEulerAngle(void* quaternionData)
+{
+  Telemetry::Vector3f    ans;
+  Telemetry::Quaternion* quaternion = (Telemetry::Quaternion*)quaternionData;
+
+  double q2sqr = quaternion->q2 * quaternion->q2;
+  double t0    = -2.0 * (q2sqr + quaternion->q3 * quaternion->q3) + 1.0;
+  double t1 =
+    +2.0 * (quaternion->q1 * quaternion->q2 + quaternion->q0 * quaternion->q3);
+  double t2 =
+    -2.0 * (quaternion->q1 * quaternion->q3 - quaternion->q0 * quaternion->q2);
+  double t3 =
+    +2.0 * (quaternion->q2 * quaternion->q3 + quaternion->q0 * quaternion->q1);
+  double t4 = -2.0 * (quaternion->q1 * quaternion->q1 + q2sqr) + 1.0;
+
+  t2 = (t2 > 1.0) ? 1.0 : t2;
+  t2 = (t2 < -1.0) ? -1.0 : t2;
+
+  ans.x = asin(t2);
+  ans.y = atan2(t3, t4);
+  ans.z = atan2(t1, t0);
+
+  return ans;
 }

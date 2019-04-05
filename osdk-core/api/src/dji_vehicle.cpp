@@ -834,6 +834,7 @@ Vehicle::initCamera()
 bool
 Vehicle::initGimbal()
 {
+  /*
   int pkgNumber = 0;
   ACK::ErrorCode ack;
 
@@ -911,6 +912,15 @@ Vehicle::initGimbal()
   else
   {
     DSTATUS("Gimbal not mounted!\n");
+  }
+  */
+
+  //skip gimbal check!
+  this->gimbal = new (std::nothrow) Gimbal(this);
+  if (this->gimbal == nullptr)
+  {
+    DERROR("Failed to allocate memory for Gimbal!\n");
+    return false;
   }
 
   return true;
@@ -1886,6 +1896,7 @@ Vehicle::obtainCtrlAuthority(int timeout)
   ack = *(ACK::ErrorCode*)waitForACK(
     OpenProtocolCMD::CMDSet::Control::setControl, timeout);
 
+  //ToDO: Here monitor the ack failed time, reboot Main process after several tries
   if (ack.data == OpenProtocolCMD::ErrorCode::ControlACK::SetControl::
   OBTAIN_CONTROL_IN_PROGRESS)
   {

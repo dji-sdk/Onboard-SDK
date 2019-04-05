@@ -58,27 +58,36 @@ main(int argc, char** argv)
   char inputChar;
   std::cin >> inputChar;
 
-  switch (inputChar)
+  while ( inputChar != 'e' )
   {
-    case 'a':
-      if (vehicle->getFwVersion() == Version::M100_31)
-      {
-        getBroadcastData(vehicle);
-      }
-      else
-      {
-        subscribeToData(vehicle);
-      }
-      break;
-    case 'b':
-      subscribeToDataForInteractivePrint(vehicle);
-      break;
-    case 'c':
-      subscribeToDataAndSaveLogToFile(vehicle);
-      break;
-    default:
-      break;
+    switch (inputChar)
+    {
+      case 'a':
+        if (vehicle->getFwVersion() == Version::M100_31)
+        {
+          getBroadcastData(vehicle);
+        }
+        else
+        {
+          subscribeToData(vehicle);
+        }
+        break;
+      case 'b':
+        subscribeToDataForInteractivePrint(vehicle);
+        break;
+      case 'c':
+        subscribeToDataAndSaveLogToFile(vehicle);
+        break;
+      case 'q':
+        subscribeQuaternionAndYaw(vehicle);
+        break;
+      default:
+        break;
+    }
+    std::cin >> inputChar;
   }
+
+
 
   return 0;
 }

@@ -57,15 +57,17 @@ gimbalCameraControl(Vehicle* vehicle)
 
   if (!vehicle->isM100() && !vehicle->isLegacyM600())
   {
+
     // Telemetry: Verify the subscription
     ACK::ErrorCode subscribeStatus;
+    /*
     subscribeStatus = vehicle->subscribe->verify(responseTimeout);
     if (ACK::getError(subscribeStatus) != ACK::SUCCESS)
     {
       ACK::getErrorCodeMessage(subscribeStatus, __func__);
       return false;
     }
-
+    */
     // Telemetry: Subscribe to gimbal status and gimbal angle at freq 10 Hz
     pkgIndex                  = 0;
     int       freq            = 10;

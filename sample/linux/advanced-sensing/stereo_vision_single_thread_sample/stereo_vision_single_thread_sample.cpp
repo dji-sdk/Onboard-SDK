@@ -70,39 +70,43 @@ main(int argc, char** argv)
   bool is240p = false, isVGA = false;
 
   AdvancedSensing::ImageSelection image_select;
-  switch (inputChar)
-  {
-    case 'a':
-    {
-      memset(&image_select, 0, sizeof(AdvancedSensing::ImageSelection));
-      image_select.front_left = 1;
-      image_select.front_right = 1;
-      image_select.down_front = 1;
-      image_select.down_back = 1;
-      vehicle->advancedSensing->subscribeStereoImages(&image_select, &stereoImg240pCallback, NULL);
-      is240p = true;
-    }
-      break;
-    case 'b':
-    {
-      vehicle->advancedSensing->subscribeFrontStereoVGA(AdvancedSensingProtocol::FREQ_20HZ, &stereoImgVGACallback, NULL);
-      isVGA = true;
-    }
-      break;
-    case 'c':
-    {
-      vehicle->advancedSensing->unsubscribeStereoImages();
-    }
-      break;
-    case 'd':
-    {
-      vehicle->advancedSensing->unsubscribeVGAImages();
-    }
-      break;
-    default:
-      break;
-  }
 
+  while ( inputChar != 'e' )
+  {
+    switch (inputChar)
+    {
+      case 'a':
+      {
+        memset(&image_select, 0, sizeof(AdvancedSensing::ImageSelection));
+        image_select.front_left = 1;
+        image_select.front_right = 1;
+        image_select.down_front = 1;
+        image_select.down_back = 1;
+        vehicle->advancedSensing->subscribeStereoImages(&image_select, &stereoImg240pCallback, NULL);
+        is240p = true;
+      }
+        break;
+      case 'b':
+      {
+        vehicle->advancedSensing->subscribeFrontStereoVGA(AdvancedSensingProtocol::FREQ_20HZ, &stereoImgVGACallback, NULL);
+        isVGA = true;
+      }
+        break;
+      case 'c':
+      {
+        vehicle->advancedSensing->unsubscribeStereoImages();
+      }
+        break;
+      case 'd':
+      {
+        vehicle->advancedSensing->unsubscribeVGAImages();
+      }
+        break;
+      default:
+        break;
+    }
+    inputChar = getchar();
+  }
   DSTATUS("AdvancedSensing sample sleeps 5 seconds here");
   sleep(5);
 

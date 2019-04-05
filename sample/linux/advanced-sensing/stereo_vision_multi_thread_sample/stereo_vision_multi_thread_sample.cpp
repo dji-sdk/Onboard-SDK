@@ -73,45 +73,46 @@ main(int argc, char** argv)
   image_process_container_ptr = new ImageProcessContainer(vehicle);
 
   AdvancedSensing::ImageSelection image_select;
-  switch (inputChar)
+
+  while ( inputChar != 'e' )
   {
-    case 'a':
-    {
-      memset(&image_select, 0, sizeof(AdvancedSensing::ImageSelection));
-      image_select.front_left = 1;
-      image_select.front_right = 1;
-      image_select.down_front = 1;
-      image_select.down_back = 1;
-      // register a callback for "image processing" thread
-      image_process_container_ptr->setCallbackHandler(&ImageProcessContainer::displayStereo240pCallback,
-                                                      image_process_container_ptr);
-      // register a callback for "image reading" thread
-      vehicle->advancedSensing->subscribeStereoImages(&image_select, &storeStereoImg240pCallback, NULL);
-      is240p = true;
+    switch (inputChar) {
+      case 'a': {
+        memset(&image_select, 0, sizeof(AdvancedSensing::ImageSelection));
+        image_select.front_left = 1;
+        image_select.front_right = 1;
+        image_select.down_front = 1;
+        image_select.down_back = 1;
+        // register a callback for "image processing" thread
+        image_process_container_ptr->setCallbackHandler(&ImageProcessContainer::displayStereo240pCallback,
+                                                        image_process_container_ptr);
+        // register a callback for "image reading" thread
+        vehicle->advancedSensing->subscribeStereoImages(&image_select, &storeStereoImg240pCallback, NULL);
+        is240p = true;
+      }
+        break;
+      case 'b': {
+        // register a callback for "image processing" thread
+        image_process_container_ptr->setCallbackHandler(&ImageProcessContainer::displayStereoVGACallback,
+                                                        image_process_container_ptr);
+        // register a callback for "image reading" thread
+        vehicle->advancedSensing->subscribeFrontStereoVGA(AdvancedSensingProtocol::FREQ_20HZ,
+                                                          &storeStereoImgVGACallback, NULL);
+        isVGA = true;
+      }
+        break;
+      case 'c': {
+        vehicle->advancedSensing->unsubscribeStereoImages();
+      }
+        break;
+      case 'd': {
+        vehicle->advancedSensing->unsubscribeVGAImages();
+      }
+        break;
+      default:
+        break;
     }
-      break;
-    case 'b':
-    {
-      // register a callback for "image processing" thread
-      image_process_container_ptr->setCallbackHandler(&ImageProcessContainer::displayStereoVGACallback,
-                                                      image_process_container_ptr);
-      // register a callback for "image reading" thread
-      vehicle->advancedSensing->subscribeFrontStereoVGA(AdvancedSensingProtocol::FREQ_20HZ, &storeStereoImgVGACallback, NULL);
-      isVGA = true;
-    }
-      break;
-    case 'c':
-    {
-      vehicle->advancedSensing->unsubscribeStereoImages();
-    }
-      break;
-    case 'd':
-    {
-      vehicle->advancedSensing->unsubscribeVGAImages();
-    }
-      break;
-    default:
-      break;
+    inputChar = getchar();
   }
 
   DSTATUS("AdvancedSensing sample sleeps 5 seconds here");

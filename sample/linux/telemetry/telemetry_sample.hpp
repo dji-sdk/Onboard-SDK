@@ -46,4 +46,9 @@ bool subscribeToDataAndSaveLogToFile(DJI::OSDK::Vehicle* vehiclePtr, int respons
 
 // Broadcast data implementation for Matrice 100
 bool getBroadcastData(DJI::OSDK::Vehicle* vehicle, int responseTimeout = 1);
+
+
+void subscribeQuaternionAndYaw(Vehicle* vehicle, int responseTimeout = 1);
+
+Telemetry::Vector3f toEulerAngle(void* quaternionData);
 #endif // DJIOSDK_TELEMETRYSAMPLE_HPP

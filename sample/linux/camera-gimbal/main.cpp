@@ -47,6 +47,9 @@ main(int argc, char** argv)
     return -1;
   }
 
+   // Obtain Control Authority
+  vehicle->obtainCtrlAuthority(1);
+
   // Display interactive prompt
   std::cout
     << "| Available commands:                                            |"
