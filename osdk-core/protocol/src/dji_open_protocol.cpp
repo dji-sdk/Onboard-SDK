@@ -179,7 +179,7 @@ ACKSession*
 OpenProtocol::allocACK(uint16_t session_id, uint16_t size)
 {
   MMU_Tab* memoryTab = NULL;
-  if (session_id > 0 && session_id < 32)
+  if (session_id > 0 && session_id < SESSION_TABLE_NUM)
   {
     if (ACKSessionTab[session_id - 1].mmu)
       freeACK(&ACKSessionTab[session_id - 1]);
