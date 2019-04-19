@@ -149,7 +149,7 @@ OpenProtocol::allocSession(uint16_t session_id, uint16_t size)
       if (CMDSessionTab[i].usageFlag == 0)
         break;
   }
-  if (i < 32 && CMDSessionTab[i].usageFlag == 0)
+  if (i < SESSION_TABLE_NUM && CMDSessionTab[i].usageFlag == 0)
   {
     CMDSessionTab[i].usageFlag = 1;
     memoryTab                  = mmu->allocMemory(size);
