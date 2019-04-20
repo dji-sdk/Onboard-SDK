@@ -55,7 +55,7 @@ public:
    *  @brief After calling this function, HardDriver should be able to
    *  read and send correctly, through a correct UART part.
          *
-         *  NOTE: STM32 does nnot implement support for this function.
+         *  NOTE: STM32 does not implement support for this function.
    *
    *  uint32_t getTimeStamp();
    *  @brief returns a TimeStamp data in unit msec.
@@ -75,7 +75,7 @@ public:
    *  @brief Micro "API_LOG" invoked this function, to pass datalog.
    *  In order to pass data through different stream or channel.
    *  We abstract this virtual function for user.
-   *  And different from others, this interface is not a pure virtual funcion.
+   *  And different from others, this interface is not a pure virtual function.
    *  The default data-passing channel is stdout (printf).
    *  See also "DJI_HardDriver.cpp".
    *
