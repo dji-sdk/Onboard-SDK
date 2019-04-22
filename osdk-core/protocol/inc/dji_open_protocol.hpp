@@ -226,7 +226,7 @@ private:
 
   void setACKFrameStatus(uint32_t usageFlag);
 
-  /**********************************Fitlered******************************/
+  /**********************************Filtered******************************/
 public:
   void setKey(const char* key);
 

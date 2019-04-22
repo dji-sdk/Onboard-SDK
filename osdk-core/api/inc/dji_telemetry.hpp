@@ -442,11 +442,11 @@ typedef struct GimbalStatus
   uint32_t rollLimited : 1;            /*!< 1 - axis reached limit, 0 - no */
   uint32_t yawLimited : 1;             /*!< 1 - axis reached limit, 0 - no */
   uint32_t calibrating : 1;            /*!< 1 - calibrating, 0 - no */
-  uint32_t prevCalibrationgResult : 1; /*!< 1 - success, 0 - fail */
+  uint32_t prevCalibrationResult : 1;  /*!< 1 - success, 0 - fail */
   uint32_t installedDirection : 1;     /*!< 1 - reversed for OSMO, 0 - normal */
   uint32_t disabled_mvo : 1;
   uint32_t gear_show_unable : 1;
-  uint32_t gyroFalut : 1;       /*!< 1 - fault, 0 - normal */
+  uint32_t gyroFault : 1;       /*!< 1 - fault, 0 - normal */
   uint32_t escPitchStatus : 1;  /*!< 1 - Pitch data is normal, 0 - fault */
   uint32_t escRollStatus : 1;   /*!< 1 - Roll data is normal, 0 - fault */
   uint32_t escYawStatus : 1;    /*!< 1 - Yaw data is normal , 0 - fault */
