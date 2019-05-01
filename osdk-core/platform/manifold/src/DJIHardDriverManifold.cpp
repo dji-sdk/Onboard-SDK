@@ -90,7 +90,7 @@ HardDriverManifold::setDevice(std::string device)
 DJI::OSDK::time_ms
 HardDriverManifold::getTimeStamp()
 {
-  return (uint32_t)time(NULL);
+  return (uint64_t)time(NULL);
 }
 
 size_t
