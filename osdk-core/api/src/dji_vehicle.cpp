@@ -114,7 +114,7 @@ Vehicle::mandatorySetUp()
 
   /*
    * @note Initialize CMD_SET support matrix to identify
-   * CMD_SET availability for paritcular FW version
+   * CMD_SET availability for particular FW version
    */
   initCMD_SetSupportMatrix();
 
@@ -234,7 +234,7 @@ Vehicle::functionalSetUp()
 
   if (!initVirtualRC())
   {
-    DERROR("Failed to initiaze VirtualRC!\n");
+    DERROR("Failed to initialize VirtualRC!\n");
     return 1;
   }
 
