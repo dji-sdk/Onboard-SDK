@@ -42,7 +42,7 @@ class Vehicle;
 
 /*! @brief Function prototype for all callback functions used in the OSDK
  *
- * @details If you want to register a function as a callback funtion, make sure
+ * @details If you want to register a function as a callback function, make sure
  * it matches this prototype.
  *
  */
