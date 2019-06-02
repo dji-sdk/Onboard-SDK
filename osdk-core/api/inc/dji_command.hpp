@@ -51,6 +51,7 @@ public:
       const static uint8_t activate[MAX_CMD_ARRAY_SIZE];
       const static uint8_t frequency[MAX_CMD_ARRAY_SIZE];
       const static uint8_t toMobile[MAX_CMD_ARRAY_SIZE];
+      const static uint8_t toPayload[MAX_CMD_ARRAY_SIZE];
     } Activation;
 
     typedef struct Broadcast
@@ -62,6 +63,7 @@ public:
       const static uint8_t subscribe[MAX_CMD_ARRAY_SIZE];
       const static uint8_t test[MAX_CMD_ARRAY_SIZE];
       const static uint8_t waypoint[MAX_CMD_ARRAY_SIZE];
+      const static uint8_t fromPayload[MAX_CMD_ARRAY_SIZE];
     } Broadcast;
 
     typedef struct Control
@@ -80,6 +82,7 @@ public:
       const static uint8_t cameraShot[MAX_CMD_ARRAY_SIZE];
       const static uint8_t cameraVideoStart[MAX_CMD_ARRAY_SIZE];
       const static uint8_t cameraVideoStop[MAX_CMD_ARRAY_SIZE];
+      const static uint8_t cameraZoom[MAX_CMD_ARRAY_SIZE];
     } Control;
 
     typedef struct Mission

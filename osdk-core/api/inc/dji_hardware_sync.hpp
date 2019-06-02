@@ -32,8 +32,11 @@
 
 #include "dji_type.hpp"
 #include "dji_vehicle_callback.hpp"
-#include <chrono>
+#include <string>
+
+#if defined(__linux__)
 #include <atomic>
+#endif
 
 namespace DJI
 {
@@ -82,11 +85,17 @@ public:
     RTK
   }PPSSource;
 
+#if STM32
+  typedef time_ms RecvTimeMsg;
+#elif defined(__linux__)
+  typedef timespec RecvTimeMsg;
+#endif
+
   typedef struct NMEAData
   {
     std::string sentence;
     uint32_t seq;
-    timespec timestamp; // this is OSDK recv time
+    RecvTimeMsg timestamp; // this is OSDK recv time
   }NMEAData;
 
 public:
@@ -184,8 +193,8 @@ private:
 
   Vehicle* vehicle;
 
-  pthread_mutex_t mutexHardSync;
-  pthread_cond_t  condVarHardSync;
+  //pthread_mutex_t mutexHardSync;
+  //pthread_cond_t  condVarHardSync;
 
   NMEAData GPGSAData;
   NMEAData GLGSAData;
@@ -195,24 +204,54 @@ private:
   NMEAData UTCData;
   ACK::FCTimeInUTC fcTimeInUTC;
   PPSSource  ppsSourceType;
-  std::atomic_bool GPGSAFlag;
-  std::atomic_bool GLGSAFlag;
-  std::atomic_bool GAGSAFlag;
-  std::atomic_bool BDGSAFlag;
-  std::atomic_bool GPRMCFlag;
-  std::atomic_bool UTCFlag;
-  std::atomic_bool fcTimeFlag;
-  std::atomic_bool ppsSourceFlag;
+
+#if STM32
+  typedef bool HWSyncDataFlag;
+#elif defined(__linux__)
+  typedef std::atomic_bool HWSyncDataFlag;
+#endif
+
+ /*! @brief Set the data update flag
+  *
+  *  @param point out the flag need to be changed
+  *  @param set the val for the flag
+  */
+  void setDataFlag(HWSyncDataFlag &flag, bool val);
+
+ /*! @brief Get the data update flag
+  *
+  *  @param point out the flag need to be read
+  */
+  bool getDataFlag(HWSyncDataFlag &flag);
+
+ /*! @brief Record the local timestamp when received the NMEA/UTC data from FC
+  *  @details Pay attention that the local timestamp of linux platform is to get
+  *  the local UTC time. As to STM32 platform, the local timestamp is to get the
+  *  millseconds since boot-up.
+  *
+  *  @param recvTime to record the data reaching time. It is different between
+  *  the linux and STM32 platform.
+  */
+  void recordRecvTimeMsg(RecvTimeMsg &recvTime);
+
+  HWSyncDataFlag GPGSAFlag;
+  HWSyncDataFlag GLGSAFlag;
+  HWSyncDataFlag GAGSAFlag;
+  HWSyncDataFlag BDGSAFlag;
+  HWSyncDataFlag GPRMCFlag;
+  HWSyncDataFlag UTCFlag;
+  HWSyncDataFlag fcTimeFlag;
+  HWSyncDataFlag ppsSourceFlag;
 
   template <class dataType>
-  bool writeDataHelper(std::atomic_bool &flag,
+  bool writeDataHelper(HWSyncDataFlag &flag,
                        const dataType &msg,
                        dataType &copyMsg)
   {
-    if(flag.load(std::memory_order_acquire) == true)
+    if(getDataFlag(flag) == true)
     {
       copyMsg = msg;
-      flag.store(false, std::memory_order_release);
+      setDataFlag(flag, false);
       return true;
     }
     return false;

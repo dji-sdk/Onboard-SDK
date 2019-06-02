@@ -1,11 +1,11 @@
-/*! @file Activate.cpp
- *  @version 3.1.8
- *  @date Aug 05 2016
+/*! @file PayloadSample.h
+ *  @version 3.8.1
+ *  @date May 2019
  *
  *  @brief
- *  Activation process for the STM32 example App.
+ *  PSDK Communication STM32 example.
  *
- *  @Copyright (c) 2016-2017 DJI
+ *  @Copyright (c) 2016-2019 DJI
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,22 +27,14 @@
  *
  */
 
-#include "Activate.h"
+#ifndef PAYLOADSAMPLE_H
+#define PAYLOADSAMPLE_H
 
-extern Vehicle  vehicle;
-extern Vehicle* v;
+#include <cstdint>
+#include <dji_vehicle.hpp>
+#include "timer.h"
 
-void
-userActivate()
-{
-  //! At your DJI developer account look for: app_key and app ID
+void parseFromPayloadCallback(Vehicle* vehicle, RecvContainer recvFrame, UserData userData);
+void PayloadSendingTest(uint8_t TestSecond);
 
-  static char key_buf[65] = "your app_key here";
-
-  DJI::OSDK::Vehicle::ActivateData user_act_data = {0};
-  user_act_data.ID = 0000; /*your app ID here*/
-
-  user_act_data.encKey = key_buf;
-
-  v->activate(&user_act_data);
-}
+#endif // PAYLOADSAMPLE_H

@@ -45,7 +45,11 @@ MobileDevice::sendDataToMSDK(uint8_t* data, uint8_t len)
     DERROR("Too much data to send");
     return;
   }
-
+  if (!vehicle->getActivationStatus())
+  {
+    DERROR("The drone has not been activated");
+    return;
+  }
   vehicle->protocolLayer->send(0, vehicle->getEncryption(),
                                OpenProtocolCMD::CMDSet::Activation::toMobile,
                                data, len, 500, 1, NULL, 0);

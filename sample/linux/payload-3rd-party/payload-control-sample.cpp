@@ -1,11 +1,12 @@
-/*! @file Activate.cpp
- *  @version 3.1.8
- *  @date Aug 05 2016
+/*! @file payload-control-sample.cpp
+ *  @version 3.8.1
+ *  @date May 05 2019
  *
  *  @brief
- *  Activation process for the STM32 example App.
+ *  Payload SDK Communication API usage in a Linux environment.
+ *  Shows example usage of the payload<-->onboard SDK communication API.
  *
- *  @Copyright (c) 2016-2017 DJI
+ *  @Copyright (c) 2017 DJI
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,23 +27,28 @@
  * SOFTWARE.
  *
  */
+#include "payload-control-sample.hpp"
 
-#include "Activate.h"
 
-extern Vehicle  vehicle;
-extern Vehicle* v;
 
-void
-userActivate()
+void sendDataToPSDK(Vehicle* vehicle, uint8_t* data, uint16_t len)
 {
-  //! At your DJI developer account look for: app_key and app ID
+  vehicle->payloadDevice->sendDataToPSDK(data, len);
+}
 
-  static char key_buf[65] = "your app_key here";
+void parseFromPayloadCallback(Vehicle* vehicle, RecvContainer recvFrame, UserData userData)
+{
+  uint8_t *   payload_data;
+  uint16_t    payload_data_len;
 
-  DJI::OSDK::Vehicle::ActivateData user_act_data = {0};
-  user_act_data.ID = 0000; /*your app ID here*/
+  payload_data_len = recvFrame.recvInfo.len;
+  payload_data  = recvFrame.recvData.raw_ack_array;
 
-  user_act_data.encKey = key_buf;
+  std::cout << "Received the payload data length is :"   << payload_data_len<< std::endl;
+  std::cout << "Received the payload data is :"   << payload_data << std::endl;
+}
 
-  v->activate(&user_act_data);
+void setFromPSDKCallback(Vehicle* vehicle, LinuxSetup* linuxEnvironment)
+{
+  vehicle->payloadDevice->setFromPSDKCallback(parseFromPayloadCallback, linuxEnvironment);
 }

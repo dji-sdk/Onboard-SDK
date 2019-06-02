@@ -300,7 +300,7 @@ moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired,
   // the
   // mission
   int responseTimeout              = 1;
-  int timeoutInMilSec              = 10000;
+  int timeoutInMilSec              = 20000;
   int controlFreqInHz              = 50; // Hz
   int cycleTimeInMs                = 1000 / controlFreqInHz;
   int outOfControlBoundsTimeLimit  = 10 * cycleTimeInMs; // 10 cycles
@@ -393,7 +393,7 @@ moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired,
   // Get initial offset. We will update this in a loop later.
   double xOffsetRemaining = xOffsetDesired - localOffset.x;
   double yOffsetRemaining = yOffsetDesired - localOffset.y;
-  double zOffsetRemaining = zOffsetDesired - (-localOffset.z);
+  double zOffsetRemaining = zOffsetDesired - localOffset.z;
 
   // Conversions
   double yawDesiredRad     = DEG2RAD * yawDesired;
@@ -499,7 +499,7 @@ moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired,
     //! See how much farther we have to go
     xOffsetRemaining = xOffsetDesired - localOffset.x;
     yOffsetRemaining = yOffsetDesired - localOffset.y;
-    zOffsetRemaining = zOffsetDesired - (-localOffset.z);
+    zOffsetRemaining = zOffsetDesired - localOffset.z;
 
     //! See if we need to modify the setpoint
     if (std::abs(xOffsetRemaining) < speedFactor)
@@ -674,12 +674,14 @@ monitoredLanding(Vehicle* vehicle, int timeout)
   if (landingNotStarted == timeoutCycles)
   {
     std::cout << "Landing failed. Aircraft is still in the air." << std::endl;
-    // Cleanup before return
-    ACK::ErrorCode ack = vehicle->subscribe->removePackage(pkgIndex, timeout);
-    if (ACK::getError(ack))
+    if (!vehicle->isM100() && !vehicle->isLegacyM600())
     {
-      std::cout << "Error unsubscribing; please restart the drone/FC to get "
-                   "back to a clean state.\n";
+      // Cleanup before return
+      ACK::ErrorCode ack = vehicle->subscribe->removePackage(pkgIndex, timeout);
+      if (ACK::getError(ack)) {
+        std::cout << "Error unsubscribing; please restart the drone/FC to get "
+                     "back to a clean state.\n";
+      }
     }
     return false;
   }

@@ -1,11 +1,11 @@
-/*! @file Activate.cpp
- *  @version 3.1.8
- *  @date Aug 05 2016
+/*! @file PayloadSample.cpp
+ *  @version 3.8.1
+ *  @date May 2019
  *
  *  @brief
- *  Activation process for the STM32 example App.
+ *  PSDK Communication STM32 example.
  *
- *  @Copyright (c) 2016-2017 DJI
+ *  @Copyright (c) 2016-2019 DJI
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,22 +27,37 @@
  *
  */
 
-#include "Activate.h"
+#include "PayloadSample.h"
+
+#define TEST_DATA_0 0x22
+#define TEST_DATA_1 0x33
+
+using namespace DJI;
+using namespace DJI::OSDK;
 
 extern Vehicle  vehicle;
 extern Vehicle* v;
 
-void
-userActivate()
+void parseFromPayloadCallback(Vehicle* vehicle, RecvContainer recvFrame, UserData userData)
 {
-  //! At your DJI developer account look for: app_key and app ID
+  uint8_t *   payload_data;
+  uint16_t    payload_data_len;
 
-  static char key_buf[65] = "your app_key here";
+  payload_data_len = recvFrame.recvInfo.len;
+  payload_data  = recvFrame.recvData.raw_ack_array;
 
-  DJI::OSDK::Vehicle::ActivateData user_act_data = {0};
-  user_act_data.ID = 0000; /*your app ID here*/
+  DSTATUS("Received the payload data length is : %d\r\n", payload_data_len);
+  DSTATUS("Received the payload data is :\n%s\r\n", payload_data);
+}
 
-  user_act_data.encKey = key_buf;
+void PayloadSendingTest(uint8_t TestSecond)
+{
+	uint8_t data[] = {TEST_DATA_0, TEST_DATA_1};
 
-  v->activate(&user_act_data);
+	DSTATUS("Test start, TestSecond:%ds\n", TestSecond);
+	while (TestSecond--)
+	{
+	  v->payloadDevice->sendDataToPSDK(data, sizeof(data));
+		delay_nms(1000);
+	}
 }

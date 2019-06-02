@@ -138,43 +138,43 @@ HardwareSync::writeNMEA(const std::string &nmea)
   {
     GPGSAData.sentence = nmea;
     ++GPGSAData.seq;
-    timespec_get(&GPGSAData.timestamp, TIME_UTC);
-    GPGSAFlag.store(true, std::memory_order_release);
+    recordRecvTimeMsg(GPGSAData.timestamp);
+    setDataFlag(GPGSAFlag, true);
   }
   else if(head == "$GLGSA")
   {
     GLGSAData.sentence = nmea;
     ++GLGSAData.seq;
-    timespec_get(&GLGSAData.timestamp, TIME_UTC);
-    GLGSAFlag.store(true, std::memory_order_release);
+    recordRecvTimeMsg(GLGSAData.timestamp);
+    setDataFlag(GLGSAFlag, true);
   }
   else if(head == "$GAGSA")
   {
     GAGSAData.sentence = nmea;
     ++GAGSAData.seq;
-    timespec_get(&GAGSAData.timestamp, TIME_UTC);
-    GAGSAFlag.store(true, std::memory_order_release);
+    recordRecvTimeMsg(GAGSAData.timestamp);
+    setDataFlag(GAGSAFlag, true);
   }
   else if(head == "$BDGSA")
   {
     BDGSAData.sentence = nmea;
     ++BDGSAData.seq;
-    timespec_get(&BDGSAData.timestamp, TIME_UTC);
-    BDGSAFlag.store(true, std::memory_order_release);
+    recordRecvTimeMsg(BDGSAData.timestamp);
+    setDataFlag(BDGSAFlag, true);
   }
   else if(head == "$GPRMC")
   {
     GPRMCData.sentence = nmea;
     ++GPRMCData.seq;
-    timespec_get(&GPRMCData.timestamp, TIME_UTC);
-    GPRMCFlag.store(true, std::memory_order_release);
+    recordRecvTimeMsg(GPRMCData.timestamp);
+    setDataFlag(GPRMCFlag, true);
   }
   else if(head.substr(0,3) == "UTC")
   {
     UTCData.sentence = nmea;
     ++UTCData.seq;
-    timespec_get(&UTCData.timestamp, TIME_UTC);
-    UTCFlag.store(true, std::memory_order_release);
+    recordRecvTimeMsg(UTCData.timestamp);
+    setDataFlag(UTCFlag, true);
   }
   else
   {
@@ -189,19 +189,20 @@ HardwareSync::writeData(const uint8_t cmdID, const RecvContainer *recvContainer)
     cmdID <= OpenProtocolCMD::CMDSet::HardwareSync::ppsUTCTime[1] )
   {
     int length = recvContainer->recvInfo.len-OpenProtocol::PackageMin-4;
-    uint8_t rawBuf[length];
+    char* rawBuf = (char*)malloc(length);
     memcpy(rawBuf, recvContainer->recvData.raw_ack_array, length);
     writeNMEA(std::string((char*)rawBuf, length));
+    free(rawBuf);
   }
   else if (cmdID == OpenProtocolCMD::CMDSet::HardwareSync::ppsUTCFCTimeRef[1])
   {
     fcTimeInUTC = recvContainer->recvData.fcTimeInUTC;
-    fcTimeFlag.store(true, std::memory_order_release);
+    setDataFlag(fcTimeFlag, true);
   }
   else if (cmdID == OpenProtocolCMD::CMDSet::HardwareSync::ppsSource[1])
   {
     ppsSourceType = (PPSSource)recvContainer->recvData.ppsSourceType;
-    ppsSourceFlag.store(true, std::memory_order_release);
+    setDataFlag(ppsSourceFlag, true);
   }
   else
   {
@@ -258,3 +259,41 @@ HardwareSync::getNMEAMsg(NMEAType type, NMEAData &nmea)
   }
   return result;
 }
+
+#if STM32
+void
+HardwareSync::setDataFlag(HWSyncDataFlag &flag, bool val)
+{
+   flag = val;
+}
+
+bool
+HardwareSync::getDataFlag(HWSyncDataFlag &flag)
+{
+  return flag;
+}
+
+void
+HardwareSync::recordRecvTimeMsg(RecvTimeMsg &recvTime)
+{
+  recvTime = vehicle->protocolLayer->getDriver()->getTimeStamp();
+}
+#elif defined(__linux__)
+void
+HardwareSync::setDataFlag(HWSyncDataFlag &flag, bool val)
+{
+  flag.store(val, std::memory_order_release);
+}
+
+bool
+HardwareSync::getDataFlag(HWSyncDataFlag &flag)
+{
+  return flag.load(std::memory_order_acquire);
+}
+
+void
+HardwareSync::recordRecvTimeMsg(RecvTimeMsg &recvTime)
+{
+  timespec_get(&recvTime, TIME_UTC);
+}
+#endif

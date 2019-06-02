@@ -36,6 +36,7 @@ using namespace DJI::OSDK;
 MissionManager::MissionManager(Vehicle* vehiclePtr)
   : vehicle(vehiclePtr)
   , wpMission(NULL)
+  , hpMission(NULL)
 {
 }
 

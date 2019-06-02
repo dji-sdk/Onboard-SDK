@@ -228,6 +228,7 @@ uploadWaypoints(std::vector<DJI::OSDK::WayPointSettings>& wp_list)
            wp->longitude, wp->altitude);
 
     v->missionManager->wpMission->uploadIndexData(&(*wp));
+    delay_nms(200);
   }
 }
 

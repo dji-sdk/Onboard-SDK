@@ -33,6 +33,7 @@
 
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
+using std::hex;
 
 bool
 gimbalCameraControl(Vehicle* vehicle)
@@ -296,4 +297,62 @@ displayResult(RotationAngle* currentAngle)
   std::cout << currentAngle->pitch << " ";
   std::cout << currentAngle->yaw;
   std::cout << "]\n\n";
+}
+
+
+void cameraZoomControl(Vehicle* vehicle)
+{
+  camera_zoom_data_type zoom_data = {0};
+
+  memset(&zoom_data, 0, sizeof(zoom_data));
+  zoom_data.func_index = 19;
+  zoom_data.cam_index = 1;
+  zoom_data.zoom_config.optical_zoom_mode = 0;
+  zoom_data.zoom_config.optical_zoom_enable = 1;
+  zoom_data.optical_zoom_param.step_param.zoom_step_level = 200;
+  zoom_data.optical_zoom_param.step_param.zoom_step_direction = 1;
+  z30_zoom_test(vehicle, &zoom_data);
+  sleep(3);
+
+  memset(&zoom_data, 0, sizeof(zoom_data));
+  zoom_data.func_index = 19;
+  zoom_data.cam_index = 1;
+  zoom_data.zoom_config.optical_zoom_mode = 1;
+  zoom_data.zoom_config.optical_zoom_enable = 1;
+  zoom_data.optical_zoom_param.pos_param.zoom_pos_level = 500;
+  z30_zoom_test(vehicle, &zoom_data);
+  sleep(3);
+
+  memset(&zoom_data, 0, sizeof(zoom_data));
+  zoom_data.func_index = 19;
+  zoom_data.cam_index = 1;
+  zoom_data.zoom_config.optical_zoom_mode = 2;
+  zoom_data.zoom_config.optical_zoom_enable = 1;
+  zoom_data.optical_zoom_param.cont_param.zoom_cont_speed = 50;
+  zoom_data.optical_zoom_param.cont_param.zoom_cont_direction = 0;
+  z30_zoom_test(vehicle, &zoom_data);
+  sleep(3);
+}
+
+void z30_zoom_cb(Vehicle* vehiclePtr, RecvContainer recvFrame,UserData userData)
+{
+  uint16_t ack_data_len = recvFrame.recvInfo.len - OpenProtocol::PackageMin;
+  std::cout << "ack data: " <<  __func__  << " ";
+  for (uint16_t i = 0; i < ack_data_len; i++)
+  {
+    std::cout << "0x" << hex << (unsigned int) recvFrame.recvData.raw_ack_array[i] << " ";
+  }
+  std::cout << std::endl;
+}
+
+void z30_zoom_test(Vehicle* vehicle, camera_zoom_data_type *zoom)
+{
+  const uint8_t z30_zoom_cmd[] = {0x01, 0x30};
+  int cbIndex = vehicle->callbackIdIndex();
+
+  vehicle->nbCallbackFunctions[cbIndex] = (void*)z30_zoom_cb;
+  vehicle->nbUserData[cbIndex] = NULL;
+
+  vehicle->protocolLayer->send(2, vehicle->getEncryption(),z30_zoom_cmd,(unsigned char*)zoom, sizeof(camera_zoom_data_type), 500, 2, true, cbIndex);
+  std::cout << "z30_zoom_test running" << std::endl;
 }

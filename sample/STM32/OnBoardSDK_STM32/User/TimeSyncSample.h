@@ -1,11 +1,11 @@
-/*! @file Activate.cpp
- *  @version 3.1.8
- *  @date Aug 05 2016
+/*! @file TimeSyncSample.h
+ *  @version 3.8.1
+ *  @date May 2019
  *
  *  @brief
- *  Activation process for the STM32 example App.
+ *  TimeSync STM32 example.
  *
- *  @Copyright (c) 2016-2017 DJI
+ *  @Copyright (c) 2019 DJI
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,23 +26,12 @@
  * SOFTWARE.
  *
  */
+#ifndef TIMESYNCSAMPLE_H
+#define TIMESYNCSAMPLE_H
 
-#include "Activate.h"
+#include "timer.h"
 
-extern Vehicle  vehicle;
-extern Vehicle* v;
+int time_sync_callback_test();
+int time_sync_poll_test();
 
-void
-userActivate()
-{
-  //! At your DJI developer account look for: app_key and app ID
-
-  static char key_buf[65] = "your app_key here";
-
-  DJI::OSDK::Vehicle::ActivateData user_act_data = {0};
-  user_act_data.ID = 0000; /*your app ID here*/
-
-  user_act_data.encKey = key_buf;
-
-  v->activate(&user_act_data);
-}
+#endif //TIMESYNCSAMPLE_H

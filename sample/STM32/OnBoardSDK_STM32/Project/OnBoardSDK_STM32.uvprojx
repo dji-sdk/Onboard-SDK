@@ -492,6 +492,16 @@
               <FileType>8</FileType>
               <FilePath>..\User\Receive.cpp</FilePath>
             </File>
+            <File>
+              <FileName>TimeSyncSample.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\User\TimeSyncSample.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>PayloadSample.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\User\PayloadSample.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -816,6 +826,11 @@
               <FileName>dji_platform_manager.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\osdk-core\hal\src\dji_platform_manager.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>dji_payload_device.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\osdk-core\api\src\dji_payload_device.cpp</FilePath>
             </File>
           </Files>
         </Group>

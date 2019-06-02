@@ -1,11 +1,10 @@
-/*! @file camera-gimbal/main.cpp
- *  @version 3.3
- *  @date Sep 12 2017
+/*! @file payload-3rd-party/main.cpp
+ *  @version 3.8.1
+ *  @date May 05 2019
  *
  *  @brief
- *  main for Camera and Gimbal Control API usage in a Linux environment.
- *  Shows example usage of camera commands and gimbal position/speed control
- *  APIs
+ *  Payload SDK Communication API usage in a Linux environment.
+ *  Shows example usage of the payload<-->onboard SDK communication API.
  *
  *  @Copyright (c) 2017 DJI
  *
@@ -26,49 +25,29 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
+#include "payload-control-sample.hpp"
 
-#include "camera_gimbal_sample.hpp"
+#define TEST_DATA_0 0x32
+#define TEST_DATA_1 0x33
 
-using namespace DJI::OSDK;
-using namespace DJI::OSDK::Telemetry;
-
-int
-main(int argc, char** argv)
+int main(int argc, char** argv)
 {
-
-  // Setup the OSDK: Read config file, create vehicle, activate.
-  LinuxSetup linuxEnvironment(argc, argv);
+  bool enableAdvancedSensing = true;
+  LinuxSetup linuxEnvironment(argc, argv, enableAdvancedSensing);
   Vehicle*   vehicle = linuxEnvironment.getVehicle();
   if (vehicle == NULL)
   {
     std::cout << "Vehicle not initialized, exiting.\n";
     return -1;
   }
-
-  // Display interactive prompt
-  std::cout
-    << "| Available commands:                                            |"
-    << std::endl;
-  std::cout
-    << "| [a] Exercise gimbal and camera control                         |\n"
-    << "| [b] Exercise camera zoom control                               |"
-    << std::endl;
-  char inputChar;
-  std::cin >> inputChar;
-
-  switch (inputChar)
+  setFromPSDKCallback(vehicle, &linuxEnvironment);
+  // user can define your own data
+  uint8_t data[] = {TEST_DATA_0, TEST_DATA_1};
+  while(1)
   {
-    case 'a':
-      gimbalCameraControl(vehicle);
-      break;
-    case 'b':
-      cameraZoomControl(vehicle);
-      break;
-    default:
-      break;
+    sendDataToPSDK(vehicle, data, sizeof(data));
+    sleep(1);
   }
-
   return 0;
 }

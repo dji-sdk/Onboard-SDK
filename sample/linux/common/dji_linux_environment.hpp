@@ -49,6 +49,8 @@ public:
   unsigned int       getBaudrate() const;
   bool               getConfigResult() const;
   bool parse(std::string config_file_path);
+  const std::string& getDeviceAcm() const;
+  void setDeviceAcm(std::string dev_path);
 
 private:
   std::string  config_file_path;
@@ -57,6 +59,7 @@ private:
   std::string  device;
   unsigned int baudrate;
   bool         config_read_result;
+  std::string  device_acm;
 };
 
 #endif // ONBOARDSDK_DJI_ENVIRONMENT_H

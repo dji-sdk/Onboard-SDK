@@ -32,12 +32,13 @@
 
 
 #include "dji_vehicle.hpp"
-#include <iostream>
 #include "dji_linux_helpers.hpp"
+#include <iostream>
+#include <pthread.h>
 
 #ifdef OPEN_CV_INSTALLED
-  #include "opencv2/opencv.hpp"
-  #include "opencv2/highgui/highgui.hpp"
+#include "opencv2/opencv.hpp"
+#include "opencv2/highgui/highgui.hpp"
 #endif
 
 using namespace DJI::OSDK;
@@ -63,24 +64,26 @@ int main(int argc, char** argv)
   char c = 0;
   cout << "Please enter the type of camera stream you want to view\n"
        << "m: Main Camera\n"
-       << "f: FPV  Camera" << endl; 
+       << "f: FPV  Camera" << endl;
   cin >> c;
 
   switch(c)
   {
-  case 'm':
-    m=true; break;
-  case 'f':
-    f=true; break;
-  default:
-    cout << "No camera selected";
-    return 1;
+    case 'm':
+      m=true; break;
+    case 'f':
+      f=true; break;
+    default:
+      cout << "No camera selected";
+      return 1;
   }
 
   // Setup OSDK.
   bool enableAdvancedSensing = true;
   LinuxSetup linuxEnvironment(argc, argv, enableAdvancedSensing);
   Vehicle*   vehicle = linuxEnvironment.getVehicle();
+  const char *acm_dev = linuxEnvironment.getEnvironment()->getDeviceAcm().c_str();
+  vehicle->advancedSensing->setAcmDevicePath(acm_dev);
   if (vehicle == NULL)
   {
     std::cout << "Vehicle not initialized, exiting.\n";
@@ -106,11 +109,12 @@ int main(int argc, char** argv)
     return 1;
   }
 
-  CameraRGBImage camImg;
+  //cameraZoomControl(vehicle);     //run camera zoom control test
+  CameraRGBImage camImg;            //get the camera's image
 
   // main thread just sleep
   // callback function will be called whenever a new image is ready
-  sleep(10);
+  sleep(3000);
 
   if(f)
   {
@@ -120,6 +124,5 @@ int main(int argc, char** argv)
   {
     vehicle->advancedSensing->stopMainCameraStream();
   }
-
   return 0;
 }

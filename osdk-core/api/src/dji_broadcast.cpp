@@ -108,7 +108,7 @@ DataBroadcast::getTimeStamp()
 Telemetry::SyncStamp
 DataBroadcast::getSyncStamp()
 {
-  Telemetry::SyncStamp data;
+  Telemetry::SyncStamp data = {0};
   vehicle->protocolLayer->getThreadHandle()->lockMSG();
   if (vehicle->isLegacyM600())
   {
@@ -300,7 +300,7 @@ DataBroadcast::getGimbal()
 Telemetry::Status
 DataBroadcast::getStatus()
 {
-  Telemetry::Status data;
+  Telemetry::Status data = {0};
   vehicle->protocolLayer->getThreadHandle()->lockMSG();
   if (vehicle->isLegacyM600())
   {
@@ -323,7 +323,7 @@ DataBroadcast::getStatus()
 Telemetry::Battery
 DataBroadcast::getBatteryInfo()
 {
-  Telemetry::Battery data;
+  Telemetry::Battery data = {0};
   vehicle->protocolLayer->getThreadHandle()->lockMSG();
   if (vehicle->isLegacyM600())
   {

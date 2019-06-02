@@ -69,6 +69,7 @@ pwmOutputBlockingApiDemo(Vehicle* vehicle)
   uint16_t digitalFreq  = 0;
   vehicle->mfio->config(MFIO::MODE_GPIO_OUT, MFIO::CHANNEL_3, digitalValue,
                         digitalFreq, responseTimeout);
+  return true;
 }
 
 bool
@@ -105,6 +106,7 @@ pwmOutputNonBlockingApiDemo(Vehicle* vehicle)
   uint16_t digitalFreq  = 0;
   vehicle->mfio->config(MFIO::MODE_GPIO_OUT, MFIO::CHANNEL_3, digitalValue,
                         digitalFreq);
+  return true;
 }
 
 bool
@@ -142,6 +144,7 @@ gpioLoopbackBlockingApiDemo(Vehicle* vehicle)
 
   std::cout << "\n GPI status:" << ack.ack.data << std::endl;
   std::cout << "\n GPI value:" << ack.value << std::endl;
+  return true;
 }
 
 bool
@@ -173,6 +176,7 @@ gpioLoopbackNonBlockingApiDemo(Vehicle* vehicle)
 
   vehicle->mfio->getValue(MFIO::CHANNEL_4, getGpiCallBack);
   sleep(5);
+  return true;
 }
 
 static void
@@ -213,6 +217,7 @@ adcBlockingApiDemo(Vehicle* vehicle)
 
   std::cout << "ADC status:" << ack.ack.data << std::endl;
   std::cout << "ADC value:" << ack.value << std::endl;
+  return true;
 }
 
 bool
@@ -231,6 +236,7 @@ adcNonBlockingApiDemo(Vehicle* vehicle)
   vehicle->mfio->getValue(MFIO::CHANNEL_4, getAdcCallBack);
 
   sleep(5);
+  return true;
 }
 
 static void

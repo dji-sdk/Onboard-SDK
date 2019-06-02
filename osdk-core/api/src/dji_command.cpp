@@ -37,6 +37,9 @@ const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Activation::activate[] = {
 const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Activation::frequency[] = {
   OpenProtocolCMD::CMDSet::activation, 0x10
 };
+const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Activation::toPayload[] = {
+  OpenProtocolCMD::CMDSet::activation, 0xFB
+};
 const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Activation::toMobile[] = {
   OpenProtocolCMD::CMDSet::activation, 0xFE
 };
@@ -57,6 +60,9 @@ const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Broadcast::waypoint[] = {
 };
 const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Broadcast::subscribe[] = {
   OpenProtocolCMD::CMDSet::broadcast, 0x05
+};
+const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Broadcast::fromPayload[] = {
+  OpenProtocolCMD::CMDSet::broadcast, 0x06
 };
 const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Broadcast::test[] = {
   OpenProtocolCMD::CMDSet::broadcast, 0xEF
@@ -92,6 +98,9 @@ const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Control::gimbalSpeed[] = {
 };
 const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Control::gimbalAngle[] = {
   OpenProtocolCMD::CMDSet::control, 0x1B
+};
+const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Control::cameraZoom[] = {
+  OpenProtocolCMD::CMDSet::control, 0x30
 };
 const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Mission::waypointInit[] = {
   OpenProtocolCMD::CMDSet::mission, 0x10 };

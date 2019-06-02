@@ -58,6 +58,7 @@ Vehicle::Vehicle(const char* device,
   , advancedSensingEnabled(enableAdvancedSensing)
   , USBReadThread(NULL)
   , USBThreadReady(false)
+  , payloadDevice(NULL)
 {
   if (!device)
   {
@@ -87,6 +88,7 @@ Vehicle::Vehicle(bool threadSupport)
   , virtualRC(NULL)
   , UARTSerialReadThread(NULL)
   , callbackThread(NULL)
+  , payloadDevice(NULL)
 {
   this->threadSupported = threadSupport;
   callbackId            = 0;
@@ -133,6 +135,16 @@ Vehicle::mandatorySetUp()
   {
     DERROR("Failed to initialize main read thread!\n");
   }
+}
+
+bool
+Vehicle::GimbalSetUp()
+{
+  if (this->gimbal == 0)
+  {
+    initGimbal();
+  }
+  return ((this->gimbal == 0) ? false : true);
 }
 
 int
@@ -217,6 +229,11 @@ Vehicle::functionalSetUp()
   if (!initMobileDevice())
   {
     DERROR("Failed to initialize Mobile Device!\n");
+  }
+
+  if (!initPayloadDevice())
+  {
+    DERROR("Failed to initialize Payload Device!\n");
   }
 
 
@@ -373,6 +390,10 @@ Vehicle::~Vehicle()
     delete this->mobileDevice;
   }
 
+  if (this->payloadDevice)
+  {
+    delete this->payloadDevice;
+  }
   if (this->broadcast)
   {
     delete this->broadcast;
@@ -999,7 +1020,22 @@ Vehicle::initMobileDevice()
 
     return true;
 }
+bool Vehicle::initPayloadDevice()
+{
+  if(this->payloadDevice)
+  {
+    DDEBUG("Payload Device already initalized!");
+    return true;
+  }
+  this->payloadDevice = new (std::nothrow) PayloadDevice(this);
+  if (this->payloadDevice == 0)
+  {
+    DERROR("Failed to allocate memory for payload Device!\n");
+    return false;
+  }
+  return true;
 
+}
 
 bool
 Vehicle::initMissionManager()
@@ -1289,6 +1325,7 @@ Vehicle::activate(ActivateData* data, int timeout)
   {
     DSTATUS("Activation successful\n");
     protocolLayer->setKey(accountData.encKey);
+    setActivationStatus(true);
 
     if(!this->gimbal)
     {
@@ -1410,7 +1447,7 @@ Vehicle::getDroneVersion(int timeout)
 
     strncpy(droneVersionACK.data.version_name, this->versionData.version_name,
             sizeof(this->versionData.version_name));
-    droneVersionACK.data.version_name[sizeof(this->versionData.version_name)] =
+    droneVersionACK.data.version_name[sizeof(this->versionData.version_name) - 1] =
       '\0';
 
     strncpy(droneVersionACK.data.hwVersion, this->versionData.hwVersion,
@@ -1464,12 +1501,14 @@ Vehicle::activateCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
   else
   {
     DERROR("ACK is exception, sequence %d\n", recvFrame.recvInfo.seqNumber);
+    return;
   }
 
   if (ack_data == OpenProtocolCMD::ErrorCode::ActivationACK::SUCCESS &&
       vehiclePtr->accountData.encKey)
   {
     vehiclePtr->protocolLayer->setKey(vehiclePtr->accountData.encKey);
+    vehiclePtr->setActivationStatus(true);
   }
 }
 
@@ -1807,6 +1846,25 @@ Vehicle::PushDataHandler(void* eventData)
     }
 
   }
+
+  else if (memcmp(cmd, OpenProtocolCMD::CMDSet::Broadcast::fromPayload,
+                  sizeof(cmd)) == 0)
+  {
+    if (payloadDevice) {
+      if (payloadDevice->fromPSDKHandler.callback) {
+        if (threadSupported) {
+          DDEBUG("Received data from payload\n");
+          protocolLayer->getThreadHandle()->lockNonBlockCBAck();
+          this->circularBuffer->cbPush(this->circularBuffer, payloadDevice->fromPSDKHandler,
+                                       *pushDataEntry);
+          protocolLayer->getThreadHandle()->freeNonBlockCBAck();
+        } else {
+          payloadDevice->fromPSDKHandler.callback(this, *(pushDataEntry), payloadDevice->fromPSDKHandler.userData);
+        }
+      }
+    }
+
+  }
   else if (memcmp(cmd, OpenProtocolCMD::CMDSet::Broadcast::mission,
                   sizeof(cmd)) == 0)
   {
@@ -2122,6 +2180,16 @@ bool
 Vehicle::getEncryption()
 {
   return this->encrypt;
+}
+
+void Vehicle::setActivationStatus(bool is_activated)
+{
+  this->is_activated = is_activated;
+}
+
+bool Vehicle::getActivationStatus()
+{
+  return this->is_activated;
 }
 
 bool

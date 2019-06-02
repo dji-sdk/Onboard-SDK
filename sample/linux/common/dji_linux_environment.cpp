@@ -81,6 +81,18 @@ DJI_Environment::getDevice() const
   return device;
 }
 
+const std::string&
+DJI_Environment::getDeviceAcm()  const
+{
+  return device_acm;
+}
+
+void
+DJI_Environment::setDeviceAcm(std::string dev_path)
+{
+  device_acm = dev_path;
+}
+
 unsigned int
 DJI_Environment::getBaudrate() const
 {

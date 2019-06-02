@@ -56,6 +56,12 @@
 #define sample_flag 5
 #elif TELEMETRY_SAMPLE
 #define sample_flag 6
+#elif TIME_SYNC_CALLBACK_SAMPLE
+#define sample_flag 7
+#elif TIME_SYNC_POLL_SAMPLE
+#define sample_flag 8
+#elif PAYLOAD_SAMPLE
+#define sample_flag 9
 #endif
 
 const int sampleToRun = sample_flag;
@@ -209,6 +215,30 @@ main()
             subscribeToData();
           }
 
+          delay_nms(10000);
+          break;
+        case 7:
+          printf("\n\nStarting executing time sync callback sample:\r\n");
+          delay_nms(1000);
+          time_sync_callback_test();
+          delay_nms(1000);
+          printf("\n\ntest end\r\n");
+          break;
+        case 8:
+          printf("\n\nStarting executing time sync poll sample:\r\n");
+          delay_nms(1000);
+          time_sync_poll_test();
+          delay_nms(1000);
+          printf("\n\ntest end\r\n");
+          break;
+        case 9:
+          printf("\n\nStarting executing payload communication sample:\r\n");
+          delay_nms(1000);
+
+          // Run Payload Communication sample
+          v->payloadDevice->setFromPSDKCallback(parseFromPayloadCallback);
+          printf("\n\nPayload callback registered.\r\n");
+          PayloadSendingTest(30);
           delay_nms(10000);
           break;
         default:

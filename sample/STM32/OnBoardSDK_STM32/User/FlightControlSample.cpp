@@ -582,7 +582,7 @@ moveByPositionOffset(float xOffsetDesired, float yOffsetDesired,
   // Get initial offset. We will update this in a loop later.
   double xOffsetRemaining = xOffsetDesired - localOffset.x;
   double yOffsetRemaining = yOffsetDesired - localOffset.y;
-  double zOffsetRemaining = zOffsetDesired - (-localOffset.z);
+  double zOffsetRemaining = zOffsetDesired - localOffset.z;
 
   // Conversions
   double yawDesiredRad     = DEG2RAD * yawDesired;
@@ -688,7 +688,7 @@ moveByPositionOffset(float xOffsetDesired, float yOffsetDesired,
     //! See how much farther we have to go
     xOffsetRemaining = xOffsetDesired - localOffset.x;
     yOffsetRemaining = yOffsetDesired - localOffset.y;
-    zOffsetRemaining = zOffsetDesired - (-localOffset.z);
+    zOffsetRemaining = zOffsetDesired - localOffset.z;
 
     //! See if we need to modify the setpoint
     if (std::abs(xOffsetRemaining) < speedFactor)

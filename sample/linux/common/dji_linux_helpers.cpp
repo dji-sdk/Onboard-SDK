@@ -64,7 +64,9 @@ LinuxSetup::setupEnvironment(int argc, char** argv)
 {
 
   // Config file loading
+  const char* acm_dev_prefix = "/dev/ttyACM";
   std::string config_file_path;
+  std::string acm_device_path = "";
 
   // Find config file among given parameters
   for(int i = 1; i < argc; i++)
@@ -77,9 +79,21 @@ LinuxSetup::setupEnvironment(int argc, char** argv)
       {
         // Found config file
         break;
-      } 
+      }
     }
   }
+
+  for(int i = 1; i < argc; i++)
+  {
+    if(strncmp(argv[i], acm_dev_prefix, strlen(acm_dev_prefix)) == 0)
+    {
+      std::cout << "Find the target ttyACM device , path:" <<  argv[i] << std::endl;
+      acm_device_path = argv[i];
+      break;
+    }
+  }
+
+
 
   if (!config_file_path.empty())
   {
@@ -103,6 +117,12 @@ LinuxSetup::setupEnvironment(int argc, char** argv)
       "User configuration file is not correctly formatted.");
   }
 
+  /* set ttyACM device */
+  if(acm_device_path != "")
+  {
+    std::cout << "Set ACM device:" << acm_device_path.c_str() << std::endl;
+    this->environment->setDeviceAcm(acm_device_path);
+  }
   /*  this->testSerialDevice = new LinuxSerialDevice(
       environment->getDevice().c_str(), environment->getBaudrate());
     testSerialDevice->init();
@@ -133,7 +153,7 @@ LinuxSetup::initVehicle()
   // Check if the communication is working fine
   if (!vehicle->protocolLayer->getDriver()->getDeviceStatus())
   {
-    std::cout << "Comms appear to be incorrectly set up. Exiting.\n";
+    std::cout << "Comms appear to be incorrectly set up. Exiting." << std::endl;
     delete (vehicle);
     delete (environment);
     this->vehicle     = nullptr;

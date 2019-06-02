@@ -21,7 +21,8 @@ Onboard-SDK
 │   │   │   ├── dji_mission_manager.hpp
 │   │   │   ├── dji_mission_type.hpp
 │   │   │   ├── dji_mobile_communication.hpp
-|   |   |   ├── dji_mobile_device.hpp
+│   │   │   ├── dji_mobile_device.hpp
+│   │   │   ├── dji_payload_device.hpp
 │   │   │   ├── dji_status.hpp
 │   │   │   ├── dji_subscription.hpp
 │   │   │   ├── dji_telemetry.hpp
@@ -46,6 +47,7 @@ Onboard-SDK
 │   │       ├── dji_mission_manager.cpp
 │   │       ├── dji_mobile_communication.cpp
 │   │       ├── dji_mobile_device.cpp
+│   │       ├── dji_payload_device.cpp
 │   │       ├── dji_subscription.cpp
 │   │       ├── dji_vehicle.cpp
 │   │       ├── dji_version.cpp
@@ -126,6 +128,7 @@ Onboard-SDK
 │   └── utility
 │       ├── inc
 │       │   ├── dji_circular_buffer.hpp
+│       │   ├── dji_macros.hpp
 │       │   └── dji_singleton.hpp
 │       └── src
 │           ├── dji_circular_buffer.cpp
@@ -210,11 +213,20 @@ Onboard-SDK
     │   │   ├── main.cpp
     │   │   ├── mobile_sample.cpp
     │   │   └── mobile_sample.hpp
-    │   └── telemetry
-    │       ├── CMakeLists.txt
-    │       ├── main.cpp
-    │       ├── telemetry_sample.cpp
-    │       └── telemetry_sample.hpp
+    │   ├── payload-3rd-party
+    │   │   ├── CMakeLists.txt
+    │   │   ├── main.cpp
+    │   │   ├── payload-control-sample.cpp
+    │   │   └── payload-control-sample.hpp
+    │   ├── telemetry
+    │   │   ├── CMakeLists.txt
+    │   │   ├── main.cpp
+    │   │   ├── telemetry_sample.cpp
+    │   │   ├── telemetry_sample.hpp
+    │   ├── time-sync
+    │   │   ├── CMakeLists.txt
+    │   │   ├── time_sync_callback_sample.cpp
+    │   │   └── time_sync_poll_sample.cpp
     ├── Qt
     │   ├── djiosdk-qt-sample
     │   │   ├── Broadcast
@@ -306,11 +318,15 @@ Onboard-SDK
         │       ├── MissionSample.h
         │       ├── MobileSample.cpp
         │       ├── MobileSample.h
+        │       ├── PayloadSample.cpp
+        │       ├── PayloadSample.h
         │       ├── Receive.cpp
         │       ├── Receive.h
         │       ├── stm32f4xx_conf.h
         │       ├── TelemetrySample.cpp
-        │       └── TelemetrySample.h
+        │       ├── TelemetrySample.h
+        │       ├── TimeSyncSample.cpp
+        │       └── TimeSyncSample.h
         └── README.md
 
 Unless otherwise agreed, all other portions of DJI’s Onboard SDK are and will be made available under the SDK End User License Agreement (EULA). A copy of the SDK EULA is distributed with this software and is available at https://developer.dji.com/policies/eula/.

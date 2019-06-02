@@ -1,11 +1,12 @@
-/*! @file Activate.cpp
- *  @version 3.1.8
- *  @date Aug 05 2016
+/*! @file payload-control-sample.hpp
+ *  @version 3.8.1
+ *  @date May 05 2019
  *
  *  @brief
- *  Activation process for the STM32 example App.
+ *  Payload SDK Communication API usage in a Linux environment.
+ *  Shows example usage of the payload<-->onboard SDK communication API.
  *
- *  @Copyright (c) 2016-2017 DJI
+ *  @Copyright (c) 2017 DJI
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,23 +27,13 @@
  * SOFTWARE.
  *
  */
+#ifndef DJIOSDK_PAYLOAD_CONTROL_SAMPLE_HPP
+#define DJIOSDK_PAYLOAD_CONTROL_SAMPLE_HPP
 
-#include "Activate.h"
+#include <dji_vehicle.hpp>
+#include "dji_linux_helpers.hpp"
 
-extern Vehicle  vehicle;
-extern Vehicle* v;
-
-void
-userActivate()
-{
-  //! At your DJI developer account look for: app_key and app ID
-
-  static char key_buf[65] = "your app_key here";
-
-  DJI::OSDK::Vehicle::ActivateData user_act_data = {0};
-  user_act_data.ID = 0000; /*your app ID here*/
-
-  user_act_data.encKey = key_buf;
-
-  v->activate(&user_act_data);
-}
+void sendDataToPSDK(Vehicle* vehicle, uint8_t* data, uint16_t len);
+void parseFromPayloadCallback(Vehicle* vehicle, RecvContainer recvFrame, UserData userData);
+void setFromPSDKCallback(Vehicle* vehicle, LinuxSetup* linuxEnvironment);
+#endif //DJIOSDK_PAYLOAD_CONTROL_SAMPLE_HPP

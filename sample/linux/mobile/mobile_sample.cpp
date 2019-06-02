@@ -456,6 +456,7 @@ activateMobileCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
   else
   {
     DERROR("ACK is exception, sequence %d\n", recvFrame.recvInfo.seqNumber);
+    return;
   }
 
   if (ack_data == OpenProtocolCMD::ErrorCode::ActivationACK::SUCCESS &&
