@@ -25,7 +25,7 @@ project(djiosdk-advanced-sensing-sample)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fPIC -pthread -g -O0")
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/osdk-core/cmake-modules/")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${ONBOARDSDK_SOURCE}/cmake-modules/")
 
 find_package(LibUSB REQUIRED)
 include_directories(${LIBUSB_1_INCLUDE_DIRS})
