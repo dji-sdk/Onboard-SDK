@@ -68,9 +68,8 @@ public:
     int16_t yaw;   /*!< Yaw angle, unit 0.1 degree , input range [-3200,3200] */
     int16_t roll;  /*!< Roll angle, unit 0.1 degree, input range [-350,350] */
     int16_t pitch; /*!< Pitch angle, unit 0.1 degree, input range [-900,300] */
-    uint8_t mode;
     // clang-format off
-    /*!< Mode is 1 byte size:
+    /*! Mode is 1 byte size:
         Bit #:        | Set to 0: | Set to 1:
         ------------- | ------------- | -------------
         bit 0         |  Incremental control, the angle reference is the current Gimbal location    |  Absolute control, the angle reference is related to configuration in DJI Go App
@@ -80,6 +79,7 @@ public:
         bit [4:7]     | bit [4:7]: reserved, set to be 0| |
     */
     // clang-format on
+    uint8_t mode;
     uint8_t duration; /*!<  Command completion time.
                             - Unit 0.1s, for example 20 means gimbal will reach
                          the commended postition in 2 seconds.
