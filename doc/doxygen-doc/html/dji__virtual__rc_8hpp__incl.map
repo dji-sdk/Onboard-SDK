@@ -1,0 +1,15 @@
+<map id="osdk&#45;core/api/inc/dji_virtual_rc.hpp" name="osdk&#45;core/api/inc/dji_virtual_rc.hpp">
+<area shape="rect" id="node1" title="Virtual Radio Control API for DJI onboardSDK library." alt="" coords="355,5,494,44"/>
+<area shape="rect" id="node2" href="$dji__ack_8hpp.html" title="All DJI OSDK ACK parsing." alt="" coords="171,92,260,117"/>
+<area shape="rect" id="node7" href="$dji__type_8hpp.html" title="Data type and Data Structure definitions for use throughout DJI OSDK." alt="" coords="341,239,434,264"/>
+<area shape="rect" id="node12" title=" " alt="" coords="430,92,582,117"/>
+<area shape="rect" id="node13" href="$dji__telemetry_8hpp.html" title="Enumeration of all telemetry data types, structures and maps." alt="" coords="284,92,406,117"/>
+<area shape="rect" id="node3" href="$dji__command_8hpp.html" title="All DJI OSDK OpenProtocol Command IDs." alt="" coords="91,239,217,264"/>
+<area shape="rect" id="node6" href="$dji__mission__type_8hpp.html" title="Mission related data struct for DJI OSDK library." alt="" coords="315,165,460,191"/>
+<area shape="rect" id="node9" href="$dji__version_8hpp.html" title="Drone/SDK Version definition for DJI onboardSDK library." alt="" coords="5,165,116,191"/>
+<area shape="rect" id="node11" title=" " alt="" coords="192,165,239,191"/>
+<area shape="rect" id="node4" href="$dji__error_8hpp.html" title="All DJI OSDK OpenProtocol ACK Error Codes." alt="" coords="190,312,286,337"/>
+<area shape="rect" id="node5" title=" " alt="" coords="206,385,270,411"/>
+<area shape="rect" id="node8" title=" " alt="" coords="361,312,417,337"/>
+<area shape="rect" id="node10" title=" " alt="" coords="7,239,67,264"/>
+</map>

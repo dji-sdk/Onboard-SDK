@@ -1,0 +1,12 @@
+<map id="osdk&#45;core/advanced&#45;sensing&#45;2.0.0/inc/dji_advanced_sensing.hpp" name="osdk&#45;core/advanced&#45;sensing&#45;2.0.0/inc/dji_advanced_sensing.hpp">
+<area shape="rect" id="node2" href="$dji__type_8hpp.html" title="Data type and Data Structure definitions for use throughout DJI OSDK. " alt="" coords="619,348,711,375"/>
+<area shape="rect" id="node6" href="$dji__advanced__sensing__protocol_8hpp.html" title="dji_advanced_sensing\l_protocol.hpp" alt="" coords="335,109,486,151"/>
+<area shape="rect" id="node19" href="$dji__version_8hpp.html" title="Drone/SDK Version definition for DJI onboardSDK library. " alt="" coords="989,273,1099,300"/>
+<area shape="rect" id="node22" href="$dji__camera__stream_8hpp.html" title="The high level APIs to interact with the camera. " alt="" coords="920,117,1077,143"/>
+<area shape="rect" id="node10" href="$linux__usb__device_8hpp.html" title="linux_usb_device.hpp" alt="" coords="509,199,656,225"/>
+<area shape="rect" id="node15" href="$dji__ack_8hpp.html" title="All DJI OSDK ACK parsing. " alt="" coords="732,199,820,225"/>
+<area shape="rect" id="node16" href="$dji__command_8hpp.html" title="All DJI OSDK OpenProtocol Command IDs. " alt="" coords="818,348,942,375"/>
+<area shape="rect" id="node18" href="$dji__mission__type_8hpp.html" title="Mission related data struct for DJI OSDK library. " alt="" coords="699,273,843,300"/>
+<area shape="rect" id="node17" href="$dji__error_8hpp.html" title="All DJI OSDK OpenProtocol ACK Error Codes. " alt="" coords="833,423,927,449"/>
+<area shape="rect" id="node24" href="$dji__camera__image_8hpp_source.html" title="dji_camera_image.hpp" alt="" coords="1060,199,1212,225"/>
+</map>

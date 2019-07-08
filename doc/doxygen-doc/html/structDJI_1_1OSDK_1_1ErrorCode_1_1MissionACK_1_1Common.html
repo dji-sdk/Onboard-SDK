@@ -1,0 +1,481 @@
+<!-- HTML header for doxygen 1.8.8-->
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- For Mobile Devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8" />
+    <meta name="generator" content="Doxygen 1.8.15" />
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <title>DJI Onboard SDK: DJI::OSDK::ErrorCode::MissionACK::Common Struct Reference</title>
+    <!-- <link href="tabs.css" rel="stylesheet" type="text/css"/> -->
+    <script type="text/javascript" src="dynsections.js"></script>
+    <link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+    <link href="doxygen.css" rel="stylesheet" type="text/css" />
+    <link href="customdoxygen.css" rel="stylesheet" type="text/css"/>
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Slab' rel='stylesheet' type='text/css'>
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link href="jquery.smartmenus.bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="bootstrap-theme.css">
+    <script src="bootstrap.min.js"></script>
+    <link href="jquery.smartmenus.bootstrap.css" rel="stylesheet">
+    <!-- SmartMenus jQuery plugin -->
+    <script type="text/javascript" src="jquery.smartmenus.min.js"></script>
+    <!-- SmartMenus jQuery Bootstrap Addon -->
+    <script type="text/javascript" src="jquery.smartmenus.bootstrap.min.js"></script>
+    <style>
+        .has-submenu {
+            position: relative;
+        }
+        #main-nav {
+            margin-top: 60px;
+        }
+    </style>
+</head>
+<body>
+    <nav id="site-header" class="site-header navbar">
+        <div class="container">
+            <div class="navbar-header"><a href="/" class="logo"><img src="dji-logo@2x.png">Developer</a></div>
+            <div id="header-navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="/mobile-sdk">Mobile SDK</a></li>
+                    <li><a href="/ux-sdk">UX SDK</a></li>
+                    <li><a href="/onboard-sdk">Onboard SDK</a></li>
+                    <li><a href="/payload-sdk">Payload SDK</a></li>
+                    <li><a href="/windows-sdk">Windows SDK</a></li>
+                </ul>
+                <ul v-cloak="" v-show="!loggedIn" class="nav navbar-nav navbar-right nav-user">
+                    <li><a
+                            href="https://account.dji.com/login?appId=dji_sdk&backUrl=https%3A%2F%2Fdeveloper.dji.com%2Fuser&locale=en_US">Login</a>
+                    </li>
+                    <li><a href="https://account.dji.com/register?appId=dji_sdk&backUrl=https%3A%2F%2Fdeveloper.dji.com%2Fuser&locale=en_US"
+                            class="head-cta">Register</a></li>
+                </ul>
+                <ul v-cloak="" v-show="loggedIn" class="nav navbar-nav navbar-right nav-user">
+                    <li class="hovedown"><a href="javascript:void(0);" class="hovedown-toggle"><i
+                                class="fa fa-user"></i></a>
+                        <ul class="hovedown-menu hovedown-menu-right">
+                            <li><a href="/user">User Center</a></li>
+                            <li><a href="javascript:void(0);" v-on="click: logout">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div data-offset-top="60" data-spy="affix" class="sub-nav">
+        <div class="container">
+            <h1 class="logo">Onboard SDK</h1>
+            <nav><a href="/onboard-sdk">Overview</a><a href="/onboard-sdk/documentation">Documentation</a><a
+                    href="/onboard-api-reference/index.html" class="active">API Reference</a><a
+                    href="/onboard-sdk/downloads">Downloads</a>
+            </nav>
+        </div>
+    </div>
+    <!--<nav class="navbar navbar-default" role="navigation">-->
+    <!--<div class="container">-->
+    <!--<div class="navbar-header">-->
+    <!--<a href="#" class="navbar-left"><img src="dji_logo_gray_small.png" alt="DJI OSDK API Documentation" width="32px"/></a>-->
+    <!--<a class="navbar-brand" href="index.html">ONBOARD SDK 3.3</a>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</nav>-->
+    <div id="top">
+        <!-- do not remove this div, it is closed by doxygen! -->
+        <div class="content" id="content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12 panel " style="padding-bottom: 15px;">
+                        <div style="margin-bottom: 15px;">
+                            <!-- end header part --><!-- Generated by Doxygen 1.8.15 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Search');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespaceDJI.html">DJI</a></li><li class="navelem"><a class="el" href="namespaceDJI_1_1OSDK.html">OSDK</a></li><li class="navelem"><a class="el" href="classDJI_1_1OSDK_1_1ErrorCode.html">ErrorCode</a></li><li class="navelem"><a class="el" href="classDJI_1_1OSDK_1_1ErrorCode_1_1MissionACK.html">MissionACK</a></li><li class="navelem"><a class="el" href="structDJI_1_1OSDK_1_1ErrorCode_1_1MissionACK_1_1Common.html">Common</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
+<a href="structDJI_1_1OSDK_1_1ErrorCode_1_1MissionACK_1_1Common-members.html">List of all members</a>  </div>
+  <div class="headertitle">
+<div class="title">DJI::OSDK::ErrorCode::MissionACK::Common Struct Reference</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p><a class="el" href="structDJI_1_1OSDK_1_1ErrorCode_1_1MissionACK_1_1Common.html" title="Common Mission ACK codes.">Common</a> Mission <a class="el" href="classDJI_1_1OSDK_1_1ACK.html" title="Class for handling acknowledgements from the aircraft.">ACK</a> codes.  
+ <a href="structDJI_1_1OSDK_1_1ErrorCode_1_1MissionACK_1_1Common.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="dji__error_8hpp_source.html">dji_error.hpp</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:aae5ed75f11e573ddfb60ce6663cad9c1"><td class="memItemLeft" align="right" valign="top"><a id="aae5ed75f11e573ddfb60ce6663cad9c1"></a>
+static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>SUCCESS</b> = 0x00</td></tr>
+<tr class="separator:aae5ed75f11e573ddfb60ce6663cad9c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9534509c5f91545857d26035ce35c15c"><td class="memItemLeft" align="right" valign="top"><a id="a9534509c5f91545857d26035ce35c15c"></a>
+static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>WRONG_WAYPOINT_INDEX</b> = 0x01</td></tr>
+<tr class="separator:a9534509c5f91545857d26035ce35c15c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a661eb265dfbdb5896c3f207d71f52e82"><td class="memItemLeft" align="right" valign="top"><a id="a661eb265dfbdb5896c3f207d71f52e82"></a>
+static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>RC_NOT_IN_MODE_F</b> = 0xD0</td></tr>
+<tr class="separator:a661eb265dfbdb5896c3f207d71f52e82"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae8a23d7525ef34f60c126b0f2cac1446"><td class="memItemLeft" align="right" valign="top"><a id="ae8a23d7525ef34f60c126b0f2cac1446"></a>
+static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>OBTAIN_CONTROL_REQUIRED</b> = 0xD1</td></tr>
+<tr class="separator:ae8a23d7525ef34f60c126b0f2cac1446"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af30c2cca9c05cd8a553f72787c36e3a3"><td class="memItemLeft" align="right" valign="top"><a id="af30c2cca9c05cd8a553f72787c36e3a3"></a>
+static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>CLOSE_IOC_REQUIRED</b> = 0xD2</td></tr>
+<tr class="separator:af30c2cca9c05cd8a553f72787c36e3a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add3d7da9c288748a15217afb8e43cae3"><td class="memItemLeft" align="right" valign="top"><a id="add3d7da9c288748a15217afb8e43cae3"></a>
+static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>NOT_INITIALIZED</b> = 0xD3</td></tr>
+<tr class="separator:add3d7da9c288748a15217afb8e43cae3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9119c55bc761272db685bae8593c503b"><td class="memItemLeft" align="right" valign="top"><a id="a9119c55bc761272db685bae8593c503b"></a>
+static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>NOT_RUNNING</b> = 0xD4</td></tr>
+<tr class="separator:a9119c55bc761272db685bae8593c503b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac78db2b002636726125989ebdcd887c5"><td class="memItemLeft" align="right" valign="top"><a id="ac78db2b002636726125989ebdcd887c5"></a>
+static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>IN_PROGRESS</b> = 0xD5</td></tr>
+<tr class="separator:ac78db2b002636726125989ebdcd887c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af7c29657aa54ddd58accf27233b262d0"><td class="memItemLeft" align="right" valign="top">static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDJI_1_1OSDK_1_1ErrorCode_1_1MissionACK_1_1Common.html#af7c29657aa54ddd58accf27233b262d0">TASK_TIMEOUT</a> = 0xD6</td></tr>
+<tr class="separator:af7c29657aa54ddd58accf27233b262d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d2b4c86bf557c772d28b967c3e7b739"><td class="memItemLeft" align="right" valign="top"><a id="a9d2b4c86bf557c772d28b967c3e7b739"></a>
+static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>OTHER_MISSION_RUNNING</b> = 0xD7</td></tr>
+<tr class="separator:a9d2b4c86bf557c772d28b967c3e7b739"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0c1598be1377d7a67c946fa82188928"><td class="memItemLeft" align="right" valign="top">static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDJI_1_1OSDK_1_1ErrorCode_1_1MissionACK_1_1Common.html#ab0c1598be1377d7a67c946fa82188928">BAD_GPS</a> = 0xD8</td></tr>
+<tr class="separator:ab0c1598be1377d7a67c946fa82188928"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa9cd8ed3e875a053fb048243d7674ded"><td class="memItemLeft" align="right" valign="top"><a id="aa9cd8ed3e875a053fb048243d7674ded"></a>
+static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>RTK_NOT_READY</b> = 0xCD</td></tr>
+<tr class="separator:aa9cd8ed3e875a053fb048243d7674ded"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f8c9d34cc188173287bb39fb7869f98"><td class="memItemLeft" align="right" valign="top">static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDJI_1_1OSDK_1_1ErrorCode_1_1MissionACK_1_1Common.html#a1f8c9d34cc188173287bb39fb7869f98">LOW_BATTERY</a> = 0xD9</td></tr>
+<tr class="separator:a1f8c9d34cc188173287bb39fb7869f98"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af51acee4c162278f735166a5d0d61608"><td class="memItemLeft" align="right" valign="top"><a id="af51acee4c162278f735166a5d0d61608"></a>
+static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>VEHICLE_DID_NOT_TAKE_OFF</b> = 0xDA</td></tr>
+<tr class="separator:af51acee4c162278f735166a5d0d61608"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2aea54c50b4873a5c6820f638ef48997"><td class="memItemLeft" align="right" valign="top"><a id="a2aea54c50b4873a5c6820f638ef48997"></a>
+static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>INVALID_PARAMETER</b> = 0xDB</td></tr>
+<tr class="separator:a2aea54c50b4873a5c6820f638ef48997"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a30ecbffd415c4f517d44b1b0dc77853f"><td class="memItemLeft" align="right" valign="top">static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDJI_1_1OSDK_1_1ErrorCode_1_1MissionACK_1_1Common.html#a30ecbffd415c4f517d44b1b0dc77853f">CONDITIONS_NOT_SATISFIED</a> = 0xDC</td></tr>
+<tr class="separator:a30ecbffd415c4f517d44b1b0dc77853f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a400e257f61e0a2ee5d798a4171244399"><td class="memItemLeft" align="right" valign="top"><a id="a400e257f61e0a2ee5d798a4171244399"></a>
+static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>CROSSING_NO_FLY_ZONE</b> = 0xDD</td></tr>
+<tr class="separator:a400e257f61e0a2ee5d798a4171244399"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99a154ed3a1956310727b1cdea613cac"><td class="memItemLeft" align="right" valign="top">static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDJI_1_1OSDK_1_1ErrorCode_1_1MissionACK_1_1Common.html#a99a154ed3a1956310727b1cdea613cac">UNRECORDED_HOME</a> = 0xDE</td></tr>
+<tr class="separator:a99a154ed3a1956310727b1cdea613cac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a90482da8fa31fb95e60c333fd405e42f"><td class="memItemLeft" align="right" valign="top"><a id="a90482da8fa31fb95e60c333fd405e42f"></a>
+static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>AT_NO_FLY_ZONE</b> = 0xDF</td></tr>
+<tr class="separator:a90482da8fa31fb95e60c333fd405e42f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0519571c9c2347b7a7192dad3545c02b"><td class="memItemLeft" align="right" valign="top">static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDJI_1_1OSDK_1_1ErrorCode_1_1MissionACK_1_1Common.html#a0519571c9c2347b7a7192dad3545c02b">TOO_HIGH</a> = 0xC0</td></tr>
+<tr class="separator:a0519571c9c2347b7a7192dad3545c02b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2d20032f013ef0e1b613c45a99a97210"><td class="memItemLeft" align="right" valign="top">static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDJI_1_1OSDK_1_1ErrorCode_1_1MissionACK_1_1Common.html#a2d20032f013ef0e1b613c45a99a97210">TOO_LOW</a> = 0xC1</td></tr>
+<tr class="separator:a2d20032f013ef0e1b613c45a99a97210"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abbf5778b26f765185cb5f1fcfdc67f88"><td class="memItemLeft" align="right" valign="top"><a id="abbf5778b26f765185cb5f1fcfdc67f88"></a>
+static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>TOO_FAR_FROM_HOME</b> = 0xC7</td></tr>
+<tr class="separator:abbf5778b26f765185cb5f1fcfdc67f88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a91ba7f71d14f79c7899ab02d0c59281f"><td class="memItemLeft" align="right" valign="top">static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDJI_1_1OSDK_1_1ErrorCode_1_1MissionACK_1_1Common.html#a91ba7f71d14f79c7899ab02d0c59281f">NOT_SUPPORTED</a> = 0xC8</td></tr>
+<tr class="separator:a91ba7f71d14f79c7899ab02d0c59281f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad067392db7a273c9e0046522bda0ff84"><td class="memItemLeft" align="right" valign="top">static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDJI_1_1OSDK_1_1ErrorCode_1_1MissionACK_1_1Common.html#ad067392db7a273c9e0046522bda0ff84">TOO_FAR_FROM_CURRENT_POSITION</a> = 0xC9</td></tr>
+<tr class="separator:ad067392db7a273c9e0046522bda0ff84"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a909d99b98d0c7aeb74351ec634408b"><td class="memItemLeft" align="right" valign="top"><a id="a2a909d99b98d0c7aeb74351ec634408b"></a>
+static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>BEGGINER_MODE_NOT_SUPPORTED</b> = 0xCA</td></tr>
+<tr class="separator:a2a909d99b98d0c7aeb74351ec634408b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:affc6622dd1c64029e6f2fefc800f8390"><td class="memItemLeft" align="right" valign="top"><a id="affc6622dd1c64029e6f2fefc800f8390"></a>
+static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>TAKE_OFF_IN_PROGRESS</b> = 0xF0</td></tr>
+<tr class="separator:affc6622dd1c64029e6f2fefc800f8390"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0652a29b9c2ed91305337175d1b0050"><td class="memItemLeft" align="right" valign="top"><a id="ae0652a29b9c2ed91305337175d1b0050"></a>
+static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>LANDING_IN_PROGRESS</b> = 0xF1</td></tr>
+<tr class="separator:ae0652a29b9c2ed91305337175d1b0050"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a08b0123242136d1e94c460f429bf9c57"><td class="memItemLeft" align="right" valign="top"><a id="a08b0123242136d1e94c460f429bf9c57"></a>
+static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>RRETURN_HOME_IN_PROGRESS</b> = 0xF2</td></tr>
+<tr class="separator:a08b0123242136d1e94c460f429bf9c57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a811d8aec97e2f3447d330de0ea1fa190"><td class="memItemLeft" align="right" valign="top"><a id="a811d8aec97e2f3447d330de0ea1fa190"></a>
+static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>START_MOTORS_IN_PROGRESS</b> = 0xF3</td></tr>
+<tr class="separator:a811d8aec97e2f3447d330de0ea1fa190"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a713beb7d955b5b681c971f6a18e87f8c"><td class="memItemLeft" align="right" valign="top"><a id="a713beb7d955b5b681c971f6a18e87f8c"></a>
+static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>INVALID_COMMAND</b> = 0xF4</td></tr>
+<tr class="separator:a713beb7d955b5b681c971f6a18e87f8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d7f9fa1accc6872abcf973fd9776671"><td class="memItemLeft" align="right" valign="top"><a id="a0d7f9fa1accc6872abcf973fd9776671"></a>
+static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>UNKNOWN_ERROR</b> = 0xFF</td></tr>
+<tr class="separator:a0d7f9fa1accc6872abcf973fd9776671"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p><a class="el" href="structDJI_1_1OSDK_1_1ErrorCode_1_1MissionACK_1_1Common.html" title="Common Mission ACK codes.">Common</a> Mission <a class="el" href="classDJI_1_1OSDK_1_1ACK.html" title="Class for handling acknowledgements from the aircraft.">ACK</a> codes. </p>
+</div><h2 class="groupheader">Member Data Documentation</h2>
+<a id="ab0c1598be1377d7a67c946fa82188928"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab0c1598be1377d7a67c946fa82188928">&#9670;&nbsp;</a></span>BAD_GPS</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const uint8_t DJI::OSDK::ErrorCode::MissionACK::Common::BAD_GPS = 0xD8</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>GPS signal GPS_LEVEL &lt; 3 </p>
+
+</div>
+</div>
+<a id="a30ecbffd415c4f517d44b1b0dc77853f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a30ecbffd415c4f517d44b1b0dc77853f">&#9670;&nbsp;</a></span>CONDITIONS_NOT_SATISFIED</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const uint8_t DJI::OSDK::ErrorCode::MissionACK::Common::CONDITIONS_NOT_SATISFIED = 0xDC</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Execution condition is not satisfied </p><dl class="section note"><dt>Note</dt><dd>Aircraft not in one of the following modes: Assist Takeoff Auto Takeoff Auto Landing Go Home </dd></dl>
+
+</div>
+</div>
+<a id="a1f8c9d34cc188173287bb39fb7869f98"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f8c9d34cc188173287bb39fb7869f98">&#9670;&nbsp;</a></span>LOW_BATTERY</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const uint8_t DJI::OSDK::ErrorCode::MissionACK::Common::LOW_BATTERY = 0xD9</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Battery beyond first-stage voltage for non-smart battery OR first-stage volume for smart battery </p>
+
+</div>
+</div>
+<a id="a91ba7f71d14f79c7899ab02d0c59281f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a91ba7f71d14f79c7899ab02d0c59281f">&#9670;&nbsp;</a></span>NOT_SUPPORTED</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const uint8_t DJI::OSDK::ErrorCode::MissionACK::Common::NOT_SUPPORTED = 0xC8</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Mission not supported </p>
+
+</div>
+</div>
+<a id="af7c29657aa54ddd58accf27233b262d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af7c29657aa54ddd58accf27233b262d0">&#9670;&nbsp;</a></span>TASK_TIMEOUT</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const uint8_t DJI::OSDK::ErrorCode::MissionACK::Common::TASK_TIMEOUT = 0xD6</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Estimated time needed to perform a task is greater than the flight time left </p>
+
+</div>
+</div>
+<a id="ad067392db7a273c9e0046522bda0ff84"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad067392db7a273c9e0046522bda0ff84">&#9670;&nbsp;</a></span>TOO_FAR_FROM_CURRENT_POSITION</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const uint8_t DJI::OSDK::ErrorCode::MissionACK::Common::TOO_FAR_FROM_CURRENT_POSITION = 0xC9</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Current position of aircraft is too far from the <a class="el" href="structDJI_1_1OSDK_1_1ErrorCode_1_1MissionACK_1_1HotPoint.html" title="HotPoint Mission ACK Error Code.">HotPoint</a> or first point </p>
+
+</div>
+</div>
+<a id="a0519571c9c2347b7a7192dad3545c02b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0519571c9c2347b7a7192dad3545c02b">&#9670;&nbsp;</a></span>TOO_HIGH</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const uint8_t DJI::OSDK::ErrorCode::MissionACK::Common::TOO_HIGH = 0xC0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Height is too high (higher than MAX flying height set by user (default: 120m)) </p>
+
+</div>
+</div>
+<a id="a2d20032f013ef0e1b613c45a99a97210"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2d20032f013ef0e1b613c45a99a97210">&#9670;&nbsp;</a></span>TOO_LOW</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const uint8_t DJI::OSDK::ErrorCode::MissionACK::Common::TOO_LOW = 0xC1</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Height is too low (lower than 5m) </p>
+
+</div>
+</div>
+<a id="a99a154ed3a1956310727b1cdea613cac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a99a154ed3a1956310727b1cdea613cac">&#9670;&nbsp;</a></span>UNRECORDED_HOME</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const uint8_t DJI::OSDK::ErrorCode::MissionACK::Common::UNRECORDED_HOME = 0xDE</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>HomePoint not recorded </p>
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following files:<ul>
+<li>osdk-core/api/inc/<a class="el" href="dji__error_8hpp_source.html">dji_error.hpp</a></li>
+<li>osdk-core/api/src/<a class="el" href="dji__error_8cpp.html">dji_error.cpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- HTML footer for doxygen 1.8.8-->
+<!-- start footer part -->
+</div>
+</div>
+</div>
+</div>
+</div>
+<hr class="footer"/><address class="footer"><small>
+  <footer id="site-footer" class="site-footer">
+    <div class="container">
+      <div class="foot-nav row">
+        <nav class="link-list col-xs-2"><span class="title">SDK</span><a href="/mobile-sdk">Mobile SDK</a><a href="/ux-sdk">UX SDK</a><a href="/onboard-sdk">Onboard SDK</a><a href="/payload-sdk">Payload SDK</a><a href="/windows-sdk">Windows SDK</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Info</span><a href="/products">Products</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Community</span><a href="http://stackoverflow.com/questions/tagged/dji-sdk" target="_blank">Stack Overflow</a><a href="https://www.youtube.com/channel/UCPQwN5xsob8zZGIcDhkYqUA" target="_blank">YouTube</a><a href="https://twitter.com/djidevelopers" target="_blank">Twitter</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Contact Us</span><a href="mailto:dev@dji.com"> dev@dji.com</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Business Cooperation</span><a href="mailto:dev@dji.com"> dev@dji.com</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">BILLING</span><a href="mailto:billing-dev@dji.com"> billing-dev@dji.com</a></nav>
+      </div>
+      <div class="foot-copyright row">
+        <div class="col-xs-3 foot-logo"><img src="dji-logo-foot.png"></div>
+        <div class="copyright col-xs-7"><span>Copyright © 2018 DJI All Rights Reserved</span><a href="/policies/privacy">Privacy Policy</a><a href="/policies/terms">Terms of Use</a></div>
+        <div class="col-xs-2">
+          <div class="lang-selector">
+            <select dir="rtl" v-model="lang">
+              <option value="en">English</option>
+              <option value="cn">中文</option>
+            </select><i class="fa fa-globe"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</small></address>
+</body>
+<script type="text/javascript" src="doxy-boot.js"></script>
+</html>

@@ -1,0 +1,444 @@
+<!-- HTML header for doxygen 1.8.8-->
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- For Mobile Devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8" />
+    <meta name="generator" content="Doxygen 1.8.15" />
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <title>DJI Onboard SDK: DJI::OSDK::MissionManager Class Reference</title>
+    <!-- <link href="tabs.css" rel="stylesheet" type="text/css"/> -->
+    <script type="text/javascript" src="dynsections.js"></script>
+    <link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+    <link href="doxygen.css" rel="stylesheet" type="text/css" />
+    <link href="customdoxygen.css" rel="stylesheet" type="text/css"/>
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Slab' rel='stylesheet' type='text/css'>
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link href="jquery.smartmenus.bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="bootstrap-theme.css">
+    <script src="bootstrap.min.js"></script>
+    <link href="jquery.smartmenus.bootstrap.css" rel="stylesheet">
+    <!-- SmartMenus jQuery plugin -->
+    <script type="text/javascript" src="jquery.smartmenus.min.js"></script>
+    <!-- SmartMenus jQuery Bootstrap Addon -->
+    <script type="text/javascript" src="jquery.smartmenus.bootstrap.min.js"></script>
+    <style>
+        .has-submenu {
+            position: relative;
+        }
+        #main-nav {
+            margin-top: 60px;
+        }
+    </style>
+</head>
+<body>
+    <nav id="site-header" class="site-header navbar">
+        <div class="container">
+            <div class="navbar-header"><a href="/" class="logo"><img src="dji-logo@2x.png">Developer</a></div>
+            <div id="header-navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="/mobile-sdk">Mobile SDK</a></li>
+                    <li><a href="/ux-sdk">UX SDK</a></li>
+                    <li><a href="/onboard-sdk">Onboard SDK</a></li>
+                    <li><a href="/payload-sdk">Payload SDK</a></li>
+                    <li><a href="/windows-sdk">Windows SDK</a></li>
+                </ul>
+                <ul v-cloak="" v-show="!loggedIn" class="nav navbar-nav navbar-right nav-user">
+                    <li><a
+                            href="https://account.dji.com/login?appId=dji_sdk&backUrl=https%3A%2F%2Fdeveloper.dji.com%2Fuser&locale=en_US">Login</a>
+                    </li>
+                    <li><a href="https://account.dji.com/register?appId=dji_sdk&backUrl=https%3A%2F%2Fdeveloper.dji.com%2Fuser&locale=en_US"
+                            class="head-cta">Register</a></li>
+                </ul>
+                <ul v-cloak="" v-show="loggedIn" class="nav navbar-nav navbar-right nav-user">
+                    <li class="hovedown"><a href="javascript:void(0);" class="hovedown-toggle"><i
+                                class="fa fa-user"></i></a>
+                        <ul class="hovedown-menu hovedown-menu-right">
+                            <li><a href="/user">User Center</a></li>
+                            <li><a href="javascript:void(0);" v-on="click: logout">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div data-offset-top="60" data-spy="affix" class="sub-nav">
+        <div class="container">
+            <h1 class="logo">Onboard SDK</h1>
+            <nav><a href="/onboard-sdk">Overview</a><a href="/onboard-sdk/documentation">Documentation</a><a
+                    href="/onboard-api-reference/index.html" class="active">API Reference</a><a
+                    href="/onboard-sdk/downloads">Downloads</a>
+            </nav>
+        </div>
+    </div>
+    <!--<nav class="navbar navbar-default" role="navigation">-->
+    <!--<div class="container">-->
+    <!--<div class="navbar-header">-->
+    <!--<a href="#" class="navbar-left"><img src="dji_logo_gray_small.png" alt="DJI OSDK API Documentation" width="32px"/></a>-->
+    <!--<a class="navbar-brand" href="index.html">ONBOARD SDK 3.3</a>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</nav>-->
+    <div id="top">
+        <!-- do not remove this div, it is closed by doxygen! -->
+        <div class="content" id="content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12 panel " style="padding-bottom: 15px;">
+                        <div style="margin-bottom: 15px;">
+                            <!-- end header part --><!-- Generated by Doxygen 1.8.15 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Search');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespaceDJI.html">DJI</a></li><li class="navelem"><a class="el" href="namespaceDJI_1_1OSDK.html">OSDK</a></li><li class="navelem"><a class="el" href="classDJI_1_1OSDK_1_1MissionManager.html">MissionManager</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="classDJI_1_1OSDK_1_1MissionManager-members.html">List of all members</a>  </div>
+  <div class="headertitle">
+<div class="title">DJI::OSDK::MissionManager Class Reference</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p><a class="el" href="classDJI_1_1OSDK_1_1MissionManager.html" title="MissionManager class for chaining/managing missions.">MissionManager</a> class for chaining/managing missions.  
+ <a href="classDJI_1_1OSDK_1_1MissionManager.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="dji__mission__manager_8hpp_source.html">dji_mission_manager.hpp</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:aed528d297f3f9bfb8aae66563e21c7fa"><td class="memItemLeft" align="right" valign="top"><a id="aed528d297f3f9bfb8aae66563e21c7fa"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>MissionManager</b> (<a class="el" href="classDJI_1_1OSDK_1_1Vehicle.html">Vehicle</a> *vehiclePtr=0)</td></tr>
+<tr class="separator:aed528d297f3f9bfb8aae66563e21c7fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a91d3ce7c6018fed8c609227c54b4e7cd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structDJI_1_1OSDK_1_1ACK_1_1ErrorCode.html">ACK::ErrorCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1MissionManager.html#a91d3ce7c6018fed8c609227c54b4e7cd">init</a> (DJI_MISSION_TYPE type, int timeout, <a class="el" href="namespaceDJI_1_1OSDK.html#aded24c93a2d064658a1f59cbf0e6eb9d">UserData</a> missionData=0)</td></tr>
+<tr class="memdesc:a91d3ce7c6018fed8c609227c54b4e7cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">init missions, could be hotpt or waypt, blocking calls  <a href="#a91d3ce7c6018fed8c609227c54b4e7cd">More...</a><br /></td></tr>
+<tr class="separator:a91d3ce7c6018fed8c609227c54b4e7cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16fe3e6cef64de0948438ca59c98496c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1MissionManager.html#a16fe3e6cef64de0948438ca59c98496c">init</a> (DJI_MISSION_TYPE type, <a class="el" href="namespaceDJI_1_1OSDK.html#a20a68c21abe449cf5f133f7d398055d3">VehicleCallBack</a> callback=0, <a class="el" href="namespaceDJI_1_1OSDK.html#aded24c93a2d064658a1f59cbf0e6eb9d">UserData</a> missionData=0)</td></tr>
+<tr class="memdesc:a16fe3e6cef64de0948438ca59c98496c"><td class="mdescLeft">&#160;</td><td class="mdescRight">init missions, could be hotpt or waypt, non-blocking calls  <a href="#a16fe3e6cef64de0948438ca59c98496c">More...</a><br /></td></tr>
+<tr class="separator:a16fe3e6cef64de0948438ca59c98496c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c910dc986310624ca97ff3dbb97f172"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classDJI_1_1OSDK_1_1WaypointMission.html">WaypointMission</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1MissionManager.html#a0c910dc986310624ca97ff3dbb97f172">getWaypt</a> (int index)</td></tr>
+<tr class="memdesc:a0c910dc986310624ca97ff3dbb97f172"><td class="mdescLeft">&#160;</td><td class="mdescRight">get waypt ptr from waypt container  <a href="#a0c910dc986310624ca97ff3dbb97f172">More...</a><br /></td></tr>
+<tr class="separator:a0c910dc986310624ca97ff3dbb97f172"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acdd37f52db4721152f871058d2424372"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classDJI_1_1OSDK_1_1HotpointMission.html">HotpointMission</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1MissionManager.html#acdd37f52db4721152f871058d2424372">getHotpt</a> (int index)</td></tr>
+<tr class="memdesc:acdd37f52db4721152f871058d2424372"><td class="mdescLeft">&#160;</td><td class="mdescRight">get hotpt ptr from hotpt container  <a href="#acdd37f52db4721152f871058d2424372">More...</a><br /></td></tr>
+<tr class="separator:acdd37f52db4721152f871058d2424372"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1fcbb1152e6569c4774113f10ed79ae"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1MissionManager.html#ad1fcbb1152e6569c4774113f10ed79ae">printInfo</a> ()</td></tr>
+<tr class="memdesc:ad1fcbb1152e6569c4774113f10ed79ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">print the status of the mission manager  <a href="#ad1fcbb1152e6569c4774113f10ed79ae">More...</a><br /></td></tr>
+<tr class="separator:ad1fcbb1152e6569c4774113f10ed79ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a431ef98a73939b779051359269683d6e"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1MissionManager.html#a431ef98a73939b779051359269683d6e">missionCallback</a> (<a class="el" href="classDJI_1_1OSDK_1_1Vehicle.html">Vehicle</a> *vehiclePtr, RecvContainer recvFrame, <a class="el" href="namespaceDJI_1_1OSDK.html#aded24c93a2d064658a1f59cbf0e6eb9d">UserData</a> userData)</td></tr>
+<tr class="memdesc:a431ef98a73939b779051359269683d6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">a callback function for waypoint non-blocking calls  <a href="#a431ef98a73939b779051359269683d6e">More...</a><br /></td></tr>
+<tr class="separator:a431ef98a73939b779051359269683d6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a2e5621da4ed86720fe9be0f0aa4f96f3"><td class="memItemLeft" align="right" valign="top"><a id="a2e5621da4ed86720fe9be0f0aa4f96f3"></a>
+<a class="el" href="classDJI_1_1OSDK_1_1Vehicle.html">Vehicle</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>vehicle</b></td></tr>
+<tr class="separator:a2e5621da4ed86720fe9be0f0aa4f96f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2346e7d860dcd757f5affd78312dd479"><td class="memItemLeft" align="right" valign="top"><a id="a2346e7d860dcd757f5affd78312dd479"></a>
+<a class="el" href="classDJI_1_1OSDK_1_1WaypointMission.html">WaypointMission</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>wpMission</b></td></tr>
+<tr class="separator:a2346e7d860dcd757f5affd78312dd479"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa9abaee461d0593b26977aacb15c8deb"><td class="memItemLeft" align="right" valign="top"><a id="aa9abaee461d0593b26977aacb15c8deb"></a>
+<a class="el" href="classDJI_1_1OSDK_1_1HotpointMission.html">HotpointMission</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>hpMission</b></td></tr>
+<tr class="separator:aa9abaee461d0593b26977aacb15c8deb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80170e263c83cee5f345d3f92e6a5654"><td class="memItemLeft" align="right" valign="top"><a id="a80170e263c83cee5f345d3f92e6a5654"></a>
+std::vector&lt; <a class="el" href="classDJI_1_1OSDK_1_1WaypointMission.html">WaypointMission</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>wpMissionVector</b></td></tr>
+<tr class="separator:a80170e263c83cee5f345d3f92e6a5654"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a163888e6b3b2722000e5929d51408e2a"><td class="memItemLeft" align="right" valign="top"><a id="a163888e6b3b2722000e5929d51408e2a"></a>
+std::vector&lt; <a class="el" href="classDJI_1_1OSDK_1_1HotpointMission.html">HotpointMission</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>hpMissionVector</b></td></tr>
+<tr class="separator:a163888e6b3b2722000e5929d51408e2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p><a class="el" href="classDJI_1_1OSDK_1_1MissionManager.html" title="MissionManager class for chaining/managing missions.">MissionManager</a> class for chaining/managing missions. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="acdd37f52db4721152f871058d2424372"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acdd37f52db4721152f871058d2424372">&#9670;&nbsp;</a></span>getHotpt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classDJI_1_1OSDK_1_1HotpointMission.html">HotpointMission</a> * MissionManager::getHotpt </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>get hotpt ptr from hotpt container </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">index</td><td>index of hotpt container </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a0c910dc986310624ca97ff3dbb97f172"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0c910dc986310624ca97ff3dbb97f172">&#9670;&nbsp;</a></span>getWaypt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classDJI_1_1OSDK_1_1WaypointMission.html">WaypointMission</a> * MissionManager::getWaypt </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>get waypt ptr from waypt container </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">index</td><td>index of waypt container </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a91d3ce7c6018fed8c609227c54b4e7cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a91d3ce7c6018fed8c609227c54b4e7cd">&#9670;&nbsp;</a></span>init() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structDJI_1_1OSDK_1_1ACK_1_1ErrorCode.html">ACK::ErrorCode</a> MissionManager::init </td>
+          <td>(</td>
+          <td class="paramtype">DJI_MISSION_TYPE&#160;</td>
+          <td class="paramname"><em>type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>timeout</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceDJI_1_1OSDK.html#aded24c93a2d064658a1f59cbf0e6eb9d">UserData</a>&#160;</td>
+          <td class="paramname"><em>missionData</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>init missions, could be hotpt or waypt, blocking calls </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">type</td><td>mission type enum </td></tr>
+    <tr><td class="paramname">timeout</td><td>timeout </td></tr>
+    <tr><td class="paramname">missionData</td><td>initData for the mission (void ptr) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a16fe3e6cef64de0948438ca59c98496c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a16fe3e6cef64de0948438ca59c98496c">&#9670;&nbsp;</a></span>init() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void MissionManager::init </td>
+          <td>(</td>
+          <td class="paramtype">DJI_MISSION_TYPE&#160;</td>
+          <td class="paramname"><em>type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceDJI_1_1OSDK.html#a20a68c21abe449cf5f133f7d398055d3">VehicleCallBack</a>&#160;</td>
+          <td class="paramname"><em>callback</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceDJI_1_1OSDK.html#aded24c93a2d064658a1f59cbf0e6eb9d">UserData</a>&#160;</td>
+          <td class="paramname"><em>missionData</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>init missions, could be hotpt or waypt, non-blocking calls </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">type</td><td>mission type enum </td></tr>
+    <tr><td class="paramname">callback</td><td>user specified callback </td></tr>
+    <tr><td class="paramname">missionData</td><td>initData for the mission (void ptr) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a431ef98a73939b779051359269683d6e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a431ef98a73939b779051359269683d6e">&#9670;&nbsp;</a></span>missionCallback()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void MissionManager::missionCallback </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classDJI_1_1OSDK_1_1Vehicle.html">Vehicle</a> *&#160;</td>
+          <td class="paramname"><em>vehiclePtr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">RecvContainer&#160;</td>
+          <td class="paramname"><em>recvFrame</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceDJI_1_1OSDK.html#aded24c93a2d064658a1f59cbf0e6eb9d">UserData</a>&#160;</td>
+          <td class="paramname"><em>userData</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>a callback function for waypoint non-blocking calls </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">recvFrame</td><td>RecvContainer populated by the protocolLayer </td></tr>
+    <tr><td class="paramname">userData</td><td>void ptr for user usage </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ad1fcbb1152e6569c4774113f10ed79ae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad1fcbb1152e6569c4774113f10ed79ae">&#9670;&nbsp;</a></span>printInfo()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void MissionManager::printInfo </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>print the status of the mission manager </p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following files:<ul>
+<li>osdk-core/api/inc/<a class="el" href="dji__mission__manager_8hpp_source.html">dji_mission_manager.hpp</a></li>
+<li>osdk-core/api/src/<a class="el" href="dji__mission__manager_8cpp.html">dji_mission_manager.cpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- HTML footer for doxygen 1.8.8-->
+<!-- start footer part -->
+</div>
+</div>
+</div>
+</div>
+</div>
+<hr class="footer"/><address class="footer"><small>
+  <footer id="site-footer" class="site-footer">
+    <div class="container">
+      <div class="foot-nav row">
+        <nav class="link-list col-xs-2"><span class="title">SDK</span><a href="/mobile-sdk">Mobile SDK</a><a href="/ux-sdk">UX SDK</a><a href="/onboard-sdk">Onboard SDK</a><a href="/payload-sdk">Payload SDK</a><a href="/windows-sdk">Windows SDK</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Info</span><a href="/products">Products</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Community</span><a href="http://stackoverflow.com/questions/tagged/dji-sdk" target="_blank">Stack Overflow</a><a href="https://www.youtube.com/channel/UCPQwN5xsob8zZGIcDhkYqUA" target="_blank">YouTube</a><a href="https://twitter.com/djidevelopers" target="_blank">Twitter</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Contact Us</span><a href="mailto:dev@dji.com"> dev@dji.com</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Business Cooperation</span><a href="mailto:dev@dji.com"> dev@dji.com</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">BILLING</span><a href="mailto:billing-dev@dji.com"> billing-dev@dji.com</a></nav>
+      </div>
+      <div class="foot-copyright row">
+        <div class="col-xs-3 foot-logo"><img src="dji-logo-foot.png"></div>
+        <div class="copyright col-xs-7"><span>Copyright © 2018 DJI All Rights Reserved</span><a href="/policies/privacy">Privacy Policy</a><a href="/policies/terms">Terms of Use</a></div>
+        <div class="col-xs-2">
+          <div class="lang-selector">
+            <select dir="rtl" v-model="lang">
+              <option value="en">English</option>
+              <option value="cn">中文</option>
+            </select><i class="fa fa-globe"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</small></address>
+</body>
+<script type="text/javascript" src="doxy-boot.js"></script>
+</html>

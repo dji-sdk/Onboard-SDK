@@ -1084,7 +1084,16 @@ HTML_EXTRA_STYLESHEET  = doc/doxygen-resources/doxygen-bootstrapped/customdoxyge
 # files will be copied as-is; there are no commands or markers available.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_EXTRA_FILES       = doc/doxygen-resources/doxygen-bootstrapped/doxy-boot.js doc/doxygen-resources/css/bootstrap.min.css doc/doxygen-resources/js/bootstrap.min.js doc/doxygen-resources/images/dji-logo-foot.png doc/doxygen-resources/images/dji-logo@2x.png doc/doxygen-resources/images/favicon.png doc/doxygen-resources/images/state_machine.png
+HTML_EXTRA_FILES       = doc/doxygen-resources/doxygen-bootstrapped/doxy-boot.js \
+                         doc/doxygen-resources/js/jquery.smartmenus.min.js \
+                         doc/doxygen-resources/js/jquery.smartmenus.bootstrap.min.js \
+                         doc/doxygen-resources/css/jquery.smartmenus.bootstrap.css \
+                         doc/doxygen-resources/css/bootstrap.min.css \
+                         doc/doxygen-resources/js/bootstrap.min.js \
+                         doc/doxygen-resources/images/dji-logo-foot.png \
+                         doc/doxygen-resources/images/dji-logo@2x.png \
+                         doc/doxygen-resources/images/favicon.png \
+                         doc/doxygen-resources/images/state_machine.png
 
 # The HTML_COLORSTYLE_HUE tag controls the color of the HTML output. Doxygen
 # will adjust the colors in the stylesheet and background images according to

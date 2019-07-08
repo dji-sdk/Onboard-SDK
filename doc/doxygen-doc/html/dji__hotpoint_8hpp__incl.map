@@ -1,0 +1,12 @@
+<map id="osdk&#45;core/api/inc/dji_hotpoint.hpp" name="osdk&#45;core/api/inc/dji_hotpoint.hpp">
+<area shape="rect" id="node1" title="Implementation of HotPoint (Point of Interest) Missions for DJI OSDK." alt="" coords="246,5,385,44"/>
+<area shape="rect" id="node2" href="$dji__mission__base_8hpp.html" title="Mission&#45;Base abstract class for DJI OSDK library." alt="" coords="161,92,310,117"/>
+<area shape="rect" id="node10" href="$dji__telemetry_8hpp.html" title="Enumeration of all telemetry data types, structures and maps." alt="" coords="334,92,456,117"/>
+<area shape="rect" id="node3" href="$dji__command_8hpp.html" title="All DJI OSDK OpenProtocol Command IDs." alt="" coords="5,165,132,191"/>
+<area shape="rect" id="node6" href="$dji__type_8hpp.html" title="Data type and Data Structure definitions for use throughout DJI OSDK." alt="" coords="347,165,441,191"/>
+<area shape="rect" id="node8" href="$dji__vehicle__callback_8hpp.html" title="Type definition for new Vehicle&#45;style callbacks." alt="" coords="155,165,321,191"/>
+<area shape="rect" id="node4" href="$dji__error_8hpp.html" title="All DJI OSDK OpenProtocol ACK Error Codes." alt="" coords="42,239,138,264"/>
+<area shape="rect" id="node5" title=" " alt="" coords="58,312,122,337"/>
+<area shape="rect" id="node7" title=" " alt="" coords="338,239,394,264"/>
+<area shape="rect" id="node9" title=" " alt="" coords="162,239,314,264"/>
+</map>

@@ -1,0 +1,194 @@
+<!-- HTML header for doxygen 1.8.8-->
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- For Mobile Devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8" />
+    <meta name="generator" content="Doxygen 1.8.15" />
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <title>DJI Onboard SDK: osdk-core/api/inc/dji_hardware_sync.hpp Source File</title>
+    <!-- <link href="tabs.css" rel="stylesheet" type="text/css"/> -->
+    <script type="text/javascript" src="dynsections.js"></script>
+    <link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+    <link href="doxygen.css" rel="stylesheet" type="text/css" />
+    <link href="customdoxygen.css" rel="stylesheet" type="text/css"/>
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Slab' rel='stylesheet' type='text/css'>
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link href="jquery.smartmenus.bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="bootstrap-theme.css">
+    <script src="bootstrap.min.js"></script>
+    <link href="jquery.smartmenus.bootstrap.css" rel="stylesheet">
+    <!-- SmartMenus jQuery plugin -->
+    <script type="text/javascript" src="jquery.smartmenus.min.js"></script>
+    <!-- SmartMenus jQuery Bootstrap Addon -->
+    <script type="text/javascript" src="jquery.smartmenus.bootstrap.min.js"></script>
+    <style>
+        .has-submenu {
+            position: relative;
+        }
+        #main-nav {
+            margin-top: 60px;
+        }
+    </style>
+</head>
+<body>
+    <nav id="site-header" class="site-header navbar">
+        <div class="container">
+            <div class="navbar-header"><a href="/" class="logo"><img src="dji-logo@2x.png">Developer</a></div>
+            <div id="header-navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="/mobile-sdk">Mobile SDK</a></li>
+                    <li><a href="/ux-sdk">UX SDK</a></li>
+                    <li><a href="/onboard-sdk">Onboard SDK</a></li>
+                    <li><a href="/payload-sdk">Payload SDK</a></li>
+                    <li><a href="/windows-sdk">Windows SDK</a></li>
+                </ul>
+                <ul v-cloak="" v-show="!loggedIn" class="nav navbar-nav navbar-right nav-user">
+                    <li><a
+                            href="https://account.dji.com/login?appId=dji_sdk&backUrl=https%3A%2F%2Fdeveloper.dji.com%2Fuser&locale=en_US">Login</a>
+                    </li>
+                    <li><a href="https://account.dji.com/register?appId=dji_sdk&backUrl=https%3A%2F%2Fdeveloper.dji.com%2Fuser&locale=en_US"
+                            class="head-cta">Register</a></li>
+                </ul>
+                <ul v-cloak="" v-show="loggedIn" class="nav navbar-nav navbar-right nav-user">
+                    <li class="hovedown"><a href="javascript:void(0);" class="hovedown-toggle"><i
+                                class="fa fa-user"></i></a>
+                        <ul class="hovedown-menu hovedown-menu-right">
+                            <li><a href="/user">User Center</a></li>
+                            <li><a href="javascript:void(0);" v-on="click: logout">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div data-offset-top="60" data-spy="affix" class="sub-nav">
+        <div class="container">
+            <h1 class="logo">Onboard SDK</h1>
+            <nav><a href="/onboard-sdk">Overview</a><a href="/onboard-sdk/documentation">Documentation</a><a
+                    href="/onboard-api-reference/index.html" class="active">API Reference</a><a
+                    href="/onboard-sdk/downloads">Downloads</a>
+            </nav>
+        </div>
+    </div>
+    <!--<nav class="navbar navbar-default" role="navigation">-->
+    <!--<div class="container">-->
+    <!--<div class="navbar-header">-->
+    <!--<a href="#" class="navbar-left"><img src="dji_logo_gray_small.png" alt="DJI OSDK API Documentation" width="32px"/></a>-->
+    <!--<a class="navbar-brand" href="index.html">ONBOARD SDK 3.3</a>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</nav>-->
+    <div id="top">
+        <!-- do not remove this div, it is closed by doxygen! -->
+        <div class="content" id="content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12 panel " style="padding-bottom: 15px;">
+                        <div style="margin-bottom: 15px;">
+                            <!-- end header part --><!-- Generated by Doxygen 1.8.15 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Search');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_95d02babf7f2c2cbb8138434e234b0a4.html">osdk-core</a></li><li class="navelem"><a class="el" href="dir_ef926edda2a887b065db034fc3005c14.html">api</a></li><li class="navelem"><a class="el" href="dir_0fb058e33548cd6e720172c5f012eda8.html">inc</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle">
+<div class="title">dji_hardware_sync.hpp</div>  </div>
+</div><!--header-->
+<div class="contents">
+<a href="dji__hardware__sync_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div><div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#ifndef HARDSYNC_H</span></div><div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#define HARDSYNC_H</span></div><div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div><div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="dji__type_8hpp.html">dji_type.hpp</a>&quot;</span></div><div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="dji__vehicle__callback_8hpp.html">dji_vehicle_callback.hpp</a>&quot;</span></div><div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div><div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div><div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#if defined(__linux__)</span></div><div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#include &lt;atomic&gt;</span></div><div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#endif</span></div><div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div><div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceDJI.html">DJI</a></div><div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;{</div><div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="keyword">namespace </span>OSDK</div><div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;{</div><div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div><div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">// Forward Declarations</span></div><div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keyword">class </span>Vehicle;</div><div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div><div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="classDJI_1_1OSDK_1_1HardwareSync.html">   57</a></span>&#160;<span class="keyword">class </span><a class="code" href="classDJI_1_1OSDK_1_1HardwareSync.html">HardwareSync</a></div><div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;{</div><div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div><div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keyword">public</span>:</div><div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor">#pragma pack(1)</span></div><div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div><div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;  <span class="keyword">typedef</span> <span class="keyword">struct </span>SyncSettings</div><div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  {</div><div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    uint32_t freq;</div><div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    uint16_t tag;</div><div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;  } SyncSettings;</div><div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div><div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="preprocessor">#pragma pack()</span></div><div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div><div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;  <span class="keyword">typedef</span> <span class="keyword">enum</span> NMEAType</div><div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;  {</div><div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    GPGSA,</div><div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    GLGSA,</div><div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    GAGSA,</div><div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    BDGSA,</div><div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    GPRMC,</div><div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    TYPENUM</div><div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;  }NMEAType;</div><div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div><div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;  <span class="keyword">typedef</span> <span class="keyword">enum</span> PPSSource</div><div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;  {</div><div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    INTERNAL_GPS,</div><div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    EXTERNAL_GPS,</div><div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    RTK</div><div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;  }PPSSource;</div><div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div><div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="preprocessor">#if STM32</span></div><div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;  <span class="keyword">typedef</span> time_ms RecvTimeMsg;</div><div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="preprocessor">#elif defined(__linux__)</span></div><div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;  <span class="keyword">typedef</span> timespec RecvTimeMsg;</div><div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="preprocessor">#endif</span></div><div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div><div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;  <span class="keyword">typedef</span> <span class="keyword">struct </span>NMEAData</div><div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;  {</div><div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    std::string sentence;</div><div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    uint32_t seq;</div><div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    RecvTimeMsg timestamp; <span class="comment">// this is OSDK recv time</span></div><div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;  }NMEAData;</div><div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div><div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="keyword">public</span>:</div><div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;  <a class="code" href="classDJI_1_1OSDK_1_1HardwareSync.html">HardwareSync</a>(<a class="code" href="classDJI_1_1OSDK_1_1Vehicle.html">Vehicle</a>* vehiclePtr = 0);</div><div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;</div><div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;  <a class="code" href="structDJI_1_1OSDK_1_1VehicleCallBackHandler.html">VehicleCallBackHandler</a> ppsNMEAHandler;</div><div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;  <a class="code" href="structDJI_1_1OSDK_1_1VehicleCallBackHandler.html">VehicleCallBackHandler</a> ppsUTCTimeHandler;</div><div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;  <a class="code" href="structDJI_1_1OSDK_1_1VehicleCallBackHandler.html">VehicleCallBackHandler</a> ppsUTCFCTimeHandler;</div><div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;  <a class="code" href="structDJI_1_1OSDK_1_1VehicleCallBackHandler.html">VehicleCallBackHandler</a> ppsSourceHandler;</div><div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div><div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classDJI_1_1OSDK_1_1HardwareSync.html#ab05f264d3e1266f91f9423d332decfed">setSyncFreq</a>(uint32_t freqInHz, uint16_t tag = 0);</div><div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classDJI_1_1OSDK_1_1HardwareSync.html#aeb35dae3161b67dfa7a0a1d2e4618453">startSync</a>(SyncSettings&amp; data);</div><div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classDJI_1_1OSDK_1_1HardwareSync.html#a80fb47b6315f474ca25d7dad6eb70f90">subscribeNMEAMsgs</a>(<a class="code" href="namespaceDJI_1_1OSDK.html#a20a68c21abe449cf5f133f7d398055d3">VehicleCallBack</a> cb, <span class="keywordtype">void</span> *userData);</div><div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classDJI_1_1OSDK_1_1HardwareSync.html#a335a945e5a0425d8afc3902749892428">unsubscribeNMEAMsgs</a>();</div><div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="classDJI_1_1OSDK_1_1HardwareSync.html#a12229ad8966eb98703e98bde424150f2">getNMEAMsg</a>(NMEAType type, NMEAData &amp;nmea);</div><div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classDJI_1_1OSDK_1_1HardwareSync.html#ae1f041a72d25b9acd49eea5d69584d49">subscribeUTCTime</a>(<a class="code" href="namespaceDJI_1_1OSDK.html#a20a68c21abe449cf5f133f7d398055d3">VehicleCallBack</a> cb, <span class="keywordtype">void</span> *userData);</div><div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classDJI_1_1OSDK_1_1HardwareSync.html#aec86984217521ea987df4b0a01adf02c">unsubscribeUTCTime</a>();</div><div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="classDJI_1_1OSDK_1_1HardwareSync.html#a0ed5e55db885b7394067097536fdca7e">getUTCTime</a>(NMEAData &amp;utc);</div><div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classDJI_1_1OSDK_1_1HardwareSync.html#a0a5033b8a07f0117cb6f3e0f1867fd81">subscribeFCTimeInUTCRef</a>(<a class="code" href="namespaceDJI_1_1OSDK.html#a20a68c21abe449cf5f133f7d398055d3">VehicleCallBack</a> cb, <span class="keywordtype">void</span> *userData);</div><div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classDJI_1_1OSDK_1_1HardwareSync.html#a61a4446558a06f726b8f2721e1baad5d">unsubscribeFCTimeInUTCRef</a>();</div><div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="classDJI_1_1OSDK_1_1HardwareSync.html#ad17cd403c695b368c46019de5ee523ae">getFCTimeInUTCRef</a>(<a class="code" href="structDJI_1_1OSDK_1_1ACK_1_1FCTimeInUTC.html">DJI::OSDK::ACK::FCTimeInUTC</a> &amp;fcTimeInUTC);</div><div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classDJI_1_1OSDK_1_1HardwareSync.html#aa03e25071136464de03e6d64c557f194">subscribePPSSource</a>(<a class="code" href="namespaceDJI_1_1OSDK.html#a20a68c21abe449cf5f133f7d398055d3">VehicleCallBack</a> cb, <span class="keywordtype">void</span> *userData);</div><div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classDJI_1_1OSDK_1_1HardwareSync.html#a37a321ce0be787c5fea542fa8cd87615">unsubscribePPSSource</a>();</div><div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="classDJI_1_1OSDK_1_1HardwareSync.html#ae50f41651aaf82753c8a2d410b2478ab">getPPSSource</a>(PPSSource &amp;source);</div><div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classDJI_1_1OSDK_1_1HardwareSync.html#afcf55570e29b261ab4ab6aa1364f161d">writeData</a>(<span class="keyword">const</span> uint8_t cmdID, <span class="keyword">const</span> RecvContainer *recvContainer);</div><div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;</div><div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;<span class="keyword">private</span>:</div><div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;  <span class="keywordtype">void</span> writeNMEA(<span class="keyword">const</span> std::string &amp;nmea);</div><div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;</div><div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;  <a class="code" href="classDJI_1_1OSDK_1_1Vehicle.html">Vehicle</a>* vehicle;</div><div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;</div><div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;  <span class="comment">//pthread_mutex_t mutexHardSync;</span></div><div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;  <span class="comment">//pthread_cond_t  condVarHardSync;</span></div><div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;</div><div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;  NMEAData GPGSAData;</div><div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;  NMEAData GLGSAData;</div><div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;  NMEAData GAGSAData;</div><div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;  NMEAData BDGSAData;</div><div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;  NMEAData GPRMCData;</div><div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;  NMEAData UTCData;</div><div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;  <a class="code" href="structDJI_1_1OSDK_1_1ACK_1_1FCTimeInUTC.html">ACK::FCTimeInUTC</a> fcTimeInUTC;</div><div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;  PPSSource  ppsSourceType;</div><div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;</div><div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;<span class="preprocessor">#if STM32</span></div><div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;  <span class="keyword">typedef</span> <span class="keywordtype">bool</span> HWSyncDataFlag;</div><div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;<span class="preprocessor">#elif defined(__linux__)</span></div><div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;  <span class="keyword">typedef</span> std::atomic_bool HWSyncDataFlag;</div><div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;<span class="preprocessor">#endif</span></div><div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;</div><div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;  <span class="keywordtype">void</span> setDataFlag(HWSyncDataFlag &amp;flag, <span class="keywordtype">bool</span> val);</div><div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;</div><div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;  <span class="keywordtype">bool</span> getDataFlag(HWSyncDataFlag &amp;flag);</div><div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;</div><div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;  <span class="keywordtype">void</span> recordRecvTimeMsg(RecvTimeMsg &amp;recvTime);</div><div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;</div><div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;  HWSyncDataFlag GPGSAFlag;</div><div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;  HWSyncDataFlag GLGSAFlag;</div><div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;  HWSyncDataFlag GAGSAFlag;</div><div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;  HWSyncDataFlag BDGSAFlag;</div><div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;  HWSyncDataFlag GPRMCFlag;</div><div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;  HWSyncDataFlag UTCFlag;</div><div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;  HWSyncDataFlag fcTimeFlag;</div><div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;  HWSyncDataFlag ppsSourceFlag;</div><div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;</div><div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">class</span> dataType&gt;</div><div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;  <span class="keywordtype">bool</span> writeDataHelper(HWSyncDataFlag &amp;flag,</div><div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;                       <span class="keyword">const</span> dataType &amp;msg,</div><div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;                       dataType &amp;copyMsg)</div><div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;  {</div><div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;    <span class="keywordflow">if</span>(getDataFlag(flag) == <span class="keyword">true</span>)</div><div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;    {</div><div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;      copyMsg = msg;</div><div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;      setDataFlag(flag, <span class="keyword">false</span>);</div><div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;      <span class="keywordflow">return</span> <span class="keyword">true</span>;</div><div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;    }</div><div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div><div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;  }</div><div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;};</div><div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;} <span class="comment">// OSDK</span></div><div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;} <span class="comment">// DJI</span></div><div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;</div><div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;<span class="preprocessor">#endif // HARDSYNC_H</span></div><div class="ttc" id="classDJI_1_1OSDK_1_1HardwareSync_html_a80fb47b6315f474ca25d7dad6eb70f90"><div class="ttname"><a href="classDJI_1_1OSDK_1_1HardwareSync.html#a80fb47b6315f474ca25d7dad6eb70f90">DJI::OSDK::HardwareSync::subscribeNMEAMsgs</a></div><div class="ttdeci">void subscribeNMEAMsgs(VehicleCallBack cb, void *userData)</div><div class="ttdoc">Subscribe to NMEA messages with a callback function.</div><div class="ttdef"><b>Definition:</b> dji_hardware_sync.cpp:66</div></div>
+<div class="ttc" id="classDJI_1_1OSDK_1_1HardwareSync_html"><div class="ttname"><a href="classDJI_1_1OSDK_1_1HardwareSync.html">DJI::OSDK::HardwareSync</a></div><div class="ttdoc">APIs for controlling Hardware Sync.</div><div class="ttdef"><b>Definition:</b> dji_hardware_sync.hpp:57</div></div>
+<div class="ttc" id="classDJI_1_1OSDK_1_1HardwareSync_html_a61a4446558a06f726b8f2721e1baad5d"><div class="ttname"><a href="classDJI_1_1OSDK_1_1HardwareSync.html#a61a4446558a06f726b8f2721e1baad5d">DJI::OSDK::HardwareSync::unsubscribeFCTimeInUTCRef</a></div><div class="ttdeci">void unsubscribeFCTimeInUTCRef()</div><div class="ttdoc">Unsubscribe to FC Time in UTC referece.</div><div class="ttdef"><b>Definition:</b> dji_hardware_sync.cpp:110</div></div>
+<div class="ttc" id="dji__vehicle__callback_8hpp_html"><div class="ttname"><a href="dji__vehicle__callback_8hpp.html">dji_vehicle_callback.hpp</a></div><div class="ttdoc">Type definition for new Vehicle-style callbacks.</div></div>
+<div class="ttc" id="classDJI_1_1OSDK_1_1Vehicle_html"><div class="ttname"><a href="classDJI_1_1OSDK_1_1Vehicle.html">DJI::OSDK::Vehicle</a></div><div class="ttdoc">A top-level encapsulation of a DJI drone/FC connected to your OES.</div><div class="ttdef"><b>Definition:</b> dji_vehicle.hpp:90</div></div>
+<div class="ttc" id="namespaceDJI_1_1OSDK_html_a20a68c21abe449cf5f133f7d398055d3"><div class="ttname"><a href="namespaceDJI_1_1OSDK.html#a20a68c21abe449cf5f133f7d398055d3">DJI::OSDK::VehicleCallBack</a></div><div class="ttdeci">void(* VehicleCallBack)(Vehicle *vehicle, RecvContainer recvFrame, UserData userData)</div><div class="ttdoc">Function prototype for all callback functions used in the OSDK.</div><div class="ttdef"><b>Definition:</b> dji_vehicle_callback.hpp:49</div></div>
+<div class="ttc" id="classDJI_1_1OSDK_1_1HardwareSync_html_aec86984217521ea987df4b0a01adf02c"><div class="ttname"><a href="classDJI_1_1OSDK_1_1HardwareSync.html#aec86984217521ea987df4b0a01adf02c">DJI::OSDK::HardwareSync::unsubscribeUTCTime</a></div><div class="ttdeci">void unsubscribeUTCTime()</div><div class="ttdoc">Unsubscribe to UTC time tag.</div><div class="ttdef"><b>Definition:</b> dji_hardware_sync.cpp:93</div></div>
+<div class="ttc" id="classDJI_1_1OSDK_1_1HardwareSync_html_ae50f41651aaf82753c8a2d410b2478ab"><div class="ttname"><a href="classDJI_1_1OSDK_1_1HardwareSync.html#ae50f41651aaf82753c8a2d410b2478ab">DJI::OSDK::HardwareSync::getPPSSource</a></div><div class="ttdeci">bool getPPSSource(PPSSource &amp;source)</div><div class="ttdoc">Poll PPS source info.</div><div class="ttdef"><b>Definition:</b> dji_hardware_sync.cpp:226</div></div>
+<div class="ttc" id="classDJI_1_1OSDK_1_1HardwareSync_html_ae1f041a72d25b9acd49eea5d69584d49"><div class="ttname"><a href="classDJI_1_1OSDK_1_1HardwareSync.html#ae1f041a72d25b9acd49eea5d69584d49">DJI::OSDK::HardwareSync::subscribeUTCTime</a></div><div class="ttdeci">void subscribeUTCTime(VehicleCallBack cb, void *userData)</div><div class="ttdoc">Subscribe to UTC Time tag with a callback function.</div><div class="ttdef"><b>Definition:</b> dji_hardware_sync.cpp:83</div></div>
+<div class="ttc" id="classDJI_1_1OSDK_1_1HardwareSync_html_a12229ad8966eb98703e98bde424150f2"><div class="ttname"><a href="classDJI_1_1OSDK_1_1HardwareSync.html#a12229ad8966eb98703e98bde424150f2">DJI::OSDK::HardwareSync::getNMEAMsg</a></div><div class="ttdeci">bool getNMEAMsg(NMEAType type, NMEAData &amp;nmea)</div><div class="ttdoc">Poll NMEA messages.</div><div class="ttdef"><b>Definition:</b> dji_hardware_sync.cpp:232</div></div>
+<div class="ttc" id="structDJI_1_1OSDK_1_1VehicleCallBackHandler_html"><div class="ttname"><a href="structDJI_1_1OSDK_1_1VehicleCallBackHandler.html">DJI::OSDK::VehicleCallBackHandler</a></div><div class="ttdoc">The CallBackHandler struct allows users to encapsulate callbacks and data in one struct.</div><div class="ttdef"><b>Definition:</b> dji_vehicle_callback.hpp:56</div></div>
+<div class="ttc" id="classDJI_1_1OSDK_1_1HardwareSync_html_ab05f264d3e1266f91f9423d332decfed"><div class="ttname"><a href="classDJI_1_1OSDK_1_1HardwareSync.html#ab05f264d3e1266f91f9423d332decfed">DJI::OSDK::HardwareSync::setSyncFreq</a></div><div class="ttdeci">void setSyncFreq(uint32_t freqInHz, uint16_t tag=0)</div><div class="ttdoc">Call this API to start sending a hardware pulse and set up a software packet to accompany it.</div><div class="ttdef"><b>Definition:</b> dji_hardware_sync.cpp:49</div></div>
+<div class="ttc" id="classDJI_1_1OSDK_1_1HardwareSync_html_ad17cd403c695b368c46019de5ee523ae"><div class="ttname"><a href="classDJI_1_1OSDK_1_1HardwareSync.html#ad17cd403c695b368c46019de5ee523ae">DJI::OSDK::HardwareSync::getFCTimeInUTCRef</a></div><div class="ttdeci">bool getFCTimeInUTCRef(DJI::OSDK::ACK::FCTimeInUTC &amp;fcTimeInUTC)</div><div class="ttdoc">Poll FC Time in UTC referece.</div><div class="ttdef"><b>Definition:</b> dji_hardware_sync.cpp:220</div></div>
+<div class="ttc" id="classDJI_1_1OSDK_1_1HardwareSync_html_afcf55570e29b261ab4ab6aa1364f161d"><div class="ttname"><a href="classDJI_1_1OSDK_1_1HardwareSync.html#afcf55570e29b261ab4ab6aa1364f161d">DJI::OSDK::HardwareSync::writeData</a></div><div class="ttdeci">void writeData(const uint8_t cmdID, const RecvContainer *recvContainer)</div><div class="ttdoc">Write data when received from UART.</div><div class="ttdef"><b>Definition:</b> dji_hardware_sync.cpp:186</div></div>
+<div class="ttc" id="dji__type_8hpp_html"><div class="ttname"><a href="dji__type_8hpp.html">dji_type.hpp</a></div><div class="ttdoc">Data type and Data Structure definitions for use throughout DJI OSDK.</div></div>
+<div class="ttc" id="classDJI_1_1OSDK_1_1HardwareSync_html_aa03e25071136464de03e6d64c557f194"><div class="ttname"><a href="classDJI_1_1OSDK_1_1HardwareSync.html#aa03e25071136464de03e6d64c557f194">DJI::OSDK::HardwareSync::subscribePPSSource</a></div><div class="ttdeci">void subscribePPSSource(VehicleCallBack cb, void *userData)</div><div class="ttdoc">Subscribe to PPS source info with a callback function.</div><div class="ttdef"><b>Definition:</b> dji_hardware_sync.cpp:117</div></div>
+<div class="ttc" id="classDJI_1_1OSDK_1_1HardwareSync_html_aeb35dae3161b67dfa7a0a1d2e4618453"><div class="ttname"><a href="classDJI_1_1OSDK_1_1HardwareSync.html#aeb35dae3161b67dfa7a0a1d2e4618453">DJI::OSDK::HardwareSync::startSync</a></div><div class="ttdeci">void startSync(SyncSettings &amp;data)</div><div class="ttdoc">Internal setter function that is called by setSyncFreq function.</div><div class="ttdef"><b>Definition:</b> dji_hardware_sync.cpp:58</div></div>
+<div class="ttc" id="classDJI_1_1OSDK_1_1HardwareSync_html_a37a321ce0be787c5fea542fa8cd87615"><div class="ttname"><a href="classDJI_1_1OSDK_1_1HardwareSync.html#a37a321ce0be787c5fea542fa8cd87615">DJI::OSDK::HardwareSync::unsubscribePPSSource</a></div><div class="ttdeci">void unsubscribePPSSource()</div><div class="ttdoc">Unsubscribe to PPS source info.</div><div class="ttdef"><b>Definition:</b> dji_hardware_sync.cpp:127</div></div>
+<div class="ttc" id="namespaceDJI_html"><div class="ttname"><a href="namespaceDJI.html">DJI</a></div><div class="ttdef"><b>Definition:</b> dji_ack.cpp:38</div></div>
+<div class="ttc" id="classDJI_1_1OSDK_1_1HardwareSync_html_a335a945e5a0425d8afc3902749892428"><div class="ttname"><a href="classDJI_1_1OSDK_1_1HardwareSync.html#a335a945e5a0425d8afc3902749892428">DJI::OSDK::HardwareSync::unsubscribeNMEAMsgs</a></div><div class="ttdeci">void unsubscribeNMEAMsgs()</div><div class="ttdoc">Unsubscribe to NMEA messages.</div><div class="ttdef"><b>Definition:</b> dji_hardware_sync.cpp:76</div></div>
+<div class="ttc" id="classDJI_1_1OSDK_1_1HardwareSync_html_a0a5033b8a07f0117cb6f3e0f1867fd81"><div class="ttname"><a href="classDJI_1_1OSDK_1_1HardwareSync.html#a0a5033b8a07f0117cb6f3e0f1867fd81">DJI::OSDK::HardwareSync::subscribeFCTimeInUTCRef</a></div><div class="ttdeci">void subscribeFCTimeInUTCRef(VehicleCallBack cb, void *userData)</div><div class="ttdoc">Subscribe to FC Time in UTC referece with a callback function.</div><div class="ttdef"><b>Definition:</b> dji_hardware_sync.cpp:100</div></div>
+<div class="ttc" id="structDJI_1_1OSDK_1_1ACK_1_1FCTimeInUTC_html"><div class="ttname"><a href="structDJI_1_1OSDK_1_1ACK_1_1FCTimeInUTC.html">DJI::OSDK::ACK::FCTimeInUTC</a></div><div class="ttdoc">This struct captures PushData when subscribe to UTC &amp; FC time in hardware sync.</div><div class="ttdef"><b>Definition:</b> dji_ack.hpp:291</div></div>
+<div class="ttc" id="classDJI_1_1OSDK_1_1HardwareSync_html_a0ed5e55db885b7394067097536fdca7e"><div class="ttname"><a href="classDJI_1_1OSDK_1_1HardwareSync.html#a0ed5e55db885b7394067097536fdca7e">DJI::OSDK::HardwareSync::getUTCTime</a></div><div class="ttdeci">bool getUTCTime(NMEAData &amp;utc)</div><div class="ttdoc">Poll UTC time tag.</div><div class="ttdef"><b>Definition:</b> dji_hardware_sync.cpp:214</div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- HTML footer for doxygen 1.8.8-->
+<!-- start footer part -->
+</div>
+</div>
+</div>
+</div>
+</div>
+<hr class="footer"/><address class="footer"><small>
+  <footer id="site-footer" class="site-footer">
+    <div class="container">
+      <div class="foot-nav row">
+        <nav class="link-list col-xs-2"><span class="title">SDK</span><a href="/mobile-sdk">Mobile SDK</a><a href="/ux-sdk">UX SDK</a><a href="/onboard-sdk">Onboard SDK</a><a href="/payload-sdk">Payload SDK</a><a href="/windows-sdk">Windows SDK</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Info</span><a href="/products">Products</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Community</span><a href="http://stackoverflow.com/questions/tagged/dji-sdk" target="_blank">Stack Overflow</a><a href="https://www.youtube.com/channel/UCPQwN5xsob8zZGIcDhkYqUA" target="_blank">YouTube</a><a href="https://twitter.com/djidevelopers" target="_blank">Twitter</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Contact Us</span><a href="mailto:dev@dji.com"> dev@dji.com</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Business Cooperation</span><a href="mailto:dev@dji.com"> dev@dji.com</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">BILLING</span><a href="mailto:billing-dev@dji.com"> billing-dev@dji.com</a></nav>
+      </div>
+      <div class="foot-copyright row">
+        <div class="col-xs-3 foot-logo"><img src="dji-logo-foot.png"></div>
+        <div class="copyright col-xs-7"><span>Copyright © 2018 DJI All Rights Reserved</span><a href="/policies/privacy">Privacy Policy</a><a href="/policies/terms">Terms of Use</a></div>
+        <div class="col-xs-2">
+          <div class="lang-selector">
+            <select dir="rtl" v-model="lang">
+              <option value="en">English</option>
+              <option value="cn">中文</option>
+            </select><i class="fa fa-globe"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</small></address>
+</body>
+<script type="text/javascript" src="doxy-boot.js"></script>
+</html>
