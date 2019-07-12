@@ -132,6 +132,10 @@ public:
     uint32_t data;
   } ErrorCode; // pack(1)
 
+  /*! @brief This struct is returned from the DJI::OSDK::MFIO::getValue
+   * blocking API
+   *
+   */
   typedef struct MFIOGet
   {
     ErrorCode ack;
@@ -148,7 +152,7 @@ public:
     float32_t maxRadius;
   } HotPointStart; // pack(1)
 
-  /*! @brief This struct is returned from the DJI::OSDK::HotpointMission::read
+  /*! @brief This struct is returned from the DJI::OSDK::HotpointMission::readData
    * blocking API
    *
    */

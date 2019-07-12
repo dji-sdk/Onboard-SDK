@@ -264,7 +264,6 @@ using namespace DJI::OSDK::Telemetry;
  * @details Format : yyyymmdd
  * @sensors GPS
  * @platforms A3,N3,M600,M210
- * @units -
  * @datastruct \ref uint32_t
  */
 
@@ -273,7 +272,6 @@ using namespace DJI::OSDK::Telemetry;
  * @details Format : hhmmss
  * @sensors GPS
  * @platforms A3,N3,M600,M210
- * @units -
  * @datastruct \ref uint32_t
  */
 
@@ -684,7 +682,7 @@ using namespace DJI::OSDK::Telemetry;
  * sources of data, the quality of this topic will reduce significantly. VO data quality will reduce if you are too high
  * above the ground. Make sure that the Vision Positioning System is enabled in DJI Go 4 before using this topic
  * (by default it is enabled).
- * @sensors IMU, VO, GPS(if available), compass
+ * @sensors IMU, VO, GPS(if available), RTK (if available), ultrasonic, magnetometer, barometer
  * @platforms A3,N3,M210
  * @units m
  * @datastruct \ref LocalPositionVO

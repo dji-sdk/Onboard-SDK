@@ -190,7 +190,12 @@ public:
   /*!
    * @brief bit 0 of the 8-bit (7:0) CtrlData.flag.
    *
-   * Drone will try to hold at current position if enable
+   * Only works in Horizontal velocity control mode
+   * In velocity stable mode, drone will brake and hover at one position once the input command is zero.
+   * Drone will try to stay in position once in hover state.
+   *
+   * In velocity non-stable mode, drone will follow the velocity command and doesn’t hover when the command is zero.
+   * That’s to say drone will drift with the wind.
    */
   enum StableMode
   {
@@ -383,6 +388,33 @@ public:
   /*! @brief Control the vehicle using user-specified mode
    *
    *  @param data control set-points and flags
+   *
+   * @details Control Mode Byte
+   *
+   *  bit 7:6                  | bit 5:4           | bit 3          | bit 2:1            | bit 0                |
+   *  ----------------         | ----------------- | -------------- | -----------------  | -----------------    |
+   *  0b00: HORI_ATTI_TILT_ANG | 0b00: VERT_VEL    | 0b00: YAW_ANG  | 0b00: ground frame | 0b0: non-stable mode |
+   *  0b01: HORI_VEL           | 0b01: VERT_POS    | 0b01: YAW_RATE | 0b01: body frame   | 0b1: stable mode     |
+   *  0b10: HORI_POS           | 0b10: VERT_THRUST |                | (horizontal frame) |                      |
+   *  0b11: HORI_ANG_VEL       |                   |                |                    |                      |
+   *
+   * @details Command Value
+   *
+   * ctrl_flag | ctrl_byte | roll_or_x | pitch_or_y | thr_z   | yaw     | feedforward_x | feedforward_y
+   * --------  | --------  | --------- | ---------- | ------- | ------- | -----------   | -------------
+   * uint8_t   | uint8_t   | float32   | float32    | float32 | float32 | float32       | float32
+   *
+   *
+   * | Mode        | Input Limit |
+   * |-------------|-------------|
+   * | vert_thrust | 0 to 100 %  |
+   * | vert_vel    | -5 to 5 m/s |
+   * | vert_pos    | 0 to 120m   |
+   * | hori_ang    | 35 degrees  |
+   * | hori_vel    | 30 m/s      |
+   * | hori_acc    | 7 m/s^2     |
+   * | yaw_rate    | 150 deg/s   |
+   *
    */
   void flightCtrl(CtrlData data);
 
@@ -392,6 +424,19 @@ public:
    *  feedforward term is m/s^2
    *
    *  @param data control set-points and flags
+   *
+   *
+   * @details Control Advanced Byte
+   *
+   * bit 7                 | bit 6                 | bit 5         | bit 4:3                 | bit 2:0     |
+   * -----------------     | -----------------     | ------------- | -----------------       | ----------- |
+   * adv flag              | brake_flag            | yaw_ctrl_flag | avoid_atti_limit_enable | reserved    |
+   * (1 for ON, 0 for OFF) | (1 for ON, 0 for OFF) |               | (1 for ON, 2 for OFF)   |             |
+   *
+   * @details If adv_flag is ON, feedforward of x axis and y axis will work in horiz_vel
+   * @details If brake_flag is ON, emergency brake will work when you use joystick.
+   * @details If avoid_atti_limit_enable is ON, copter's atti limit will use avoid_atti_limit, that means the camera could not see the propeller.
+   * @details If avoid_atti_limit_enable is OFF, copter's atti limit won't use avoid_atti_limit, that means the camera may see the propeller.
    */
   void flightCtrl(AdvancedCtrlData data);
 
@@ -403,6 +448,7 @@ public:
    *  @param z position set-point in z axis of ground frame (m), input limit see
    * DJI::OSDK::Control::VERTICAL_POSITION
    *  @param yaw yaw set-point (deg)
+   *
    */
   void positionAndYawCtrl(float32_t x, float32_t y, float32_t z, float32_t yaw);
 
