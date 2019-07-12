@@ -1,0 +1,559 @@
+<!-- HTML header for doxygen 1.8.8-->
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- For Mobile Devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8" />
+    <meta name="generator" content="Doxygen 1.8.15" />
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <title>DJI Onboard SDK: DJI::OSDK::MFIO Class Reference</title>
+    <!-- <link href="tabs.css" rel="stylesheet" type="text/css"/> -->
+    <script type="text/javascript" src="dynsections.js"></script>
+    <link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+    <link href="doxygen.css" rel="stylesheet" type="text/css" />
+    <link href="customdoxygen.css" rel="stylesheet" type="text/css"/>
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Slab' rel='stylesheet' type='text/css'>
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link href="jquery.smartmenus.bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="bootstrap-theme.css">
+    <script src="bootstrap.min.js"></script>
+    <link href="jquery.smartmenus.bootstrap.css" rel="stylesheet">
+    <!-- SmartMenus jQuery plugin -->
+    <script type="text/javascript" src="jquery.smartmenus.min.js"></script>
+    <!-- SmartMenus jQuery Bootstrap Addon -->
+    <script type="text/javascript" src="jquery.smartmenus.bootstrap.min.js"></script>
+    <style>
+        .has-submenu {
+            position: relative;
+        }
+        #main-nav {
+            margin-top: 60px;
+        }
+    </style>
+</head>
+<body>
+    <nav id="site-header" class="site-header navbar">
+        <div class="container">
+            <div class="navbar-header"><a href="/" class="logo"><img src="dji-logo@2x.png">Developer</a></div>
+            <div id="header-navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="/mobile-sdk">Mobile SDK</a></li>
+                    <li><a href="/ux-sdk">UX SDK</a></li>
+                    <li><a href="/onboard-sdk">Onboard SDK</a></li>
+                    <li><a href="/payload-sdk">Payload SDK</a></li>
+                    <li><a href="/windows-sdk">Windows SDK</a></li>
+                </ul>
+                <ul v-cloak="" v-show="!loggedIn" class="nav navbar-nav navbar-right nav-user">
+                    <li><a
+                            href="https://account.dji.com/login?appId=dji_sdk&backUrl=https%3A%2F%2Fdeveloper.dji.com%2Fuser&locale=en_US">Login</a>
+                    </li>
+                    <li><a href="https://account.dji.com/register?appId=dji_sdk&backUrl=https%3A%2F%2Fdeveloper.dji.com%2Fuser&locale=en_US"
+                            class="head-cta">Register</a></li>
+                </ul>
+                <ul v-cloak="" v-show="loggedIn" class="nav navbar-nav navbar-right nav-user">
+                    <li class="hovedown"><a href="javascript:void(0);" class="hovedown-toggle"><i
+                                class="fa fa-user"></i></a>
+                        <ul class="hovedown-menu hovedown-menu-right">
+                            <li><a href="/user">User Center</a></li>
+                            <li><a href="javascript:void(0);" v-on="click: logout">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div data-offset-top="60" data-spy="affix" class="sub-nav">
+        <div class="container">
+            <h1 class="logo">Onboard SDK</h1>
+            <nav><a href="/onboard-sdk">Overview</a><a href="/onboard-sdk/documentation">Documentation</a><a
+                    href="/onboard-api-reference/index.html" class="active">API Reference</a><a
+                    href="/onboard-sdk/downloads">Downloads</a>
+            </nav>
+        </div>
+    </div>
+    <!--<nav class="navbar navbar-default" role="navigation">-->
+    <!--<div class="container">-->
+    <!--<div class="navbar-header">-->
+    <!--<a href="#" class="navbar-left"><img src="dji_logo_gray_small.png" alt="DJI OSDK API Documentation" width="32px"/></a>-->
+    <!--<a class="navbar-brand" href="index.html">ONBOARD SDK 3.3</a>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</nav>-->
+    <div id="top">
+        <!-- do not remove this div, it is closed by doxygen! -->
+        <div class="content" id="content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12 panel " style="padding-bottom: 15px;">
+                        <div style="margin-bottom: 15px;">
+                            <!-- end header part --><!-- Generated by Doxygen 1.8.15 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Search');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespaceDJI.html">DJI</a></li><li class="navelem"><a class="el" href="namespaceDJI_1_1OSDK.html">OSDK</a></li><li class="navelem"><a class="el" href="classDJI_1_1OSDK_1_1MFIO.html">MFIO</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="classDJI_1_1OSDK_1_1MFIO-members.html">List of all members</a>  </div>
+  <div class="headertitle">
+<div class="title">DJI::OSDK::MFIO Class Reference</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>APIs for Multi-Function Input-Output functionality.  
+ <a href="classDJI_1_1OSDK_1_1MFIO.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="dji__mfio_8hpp_source.html">dji_mfio.hpp</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:ad1ca70fdbc74a1427414e6139a397742"><td class="memItemLeft" align="right" valign="top"><a id="ad1ca70fdbc74a1427414e6139a397742"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>MODE</b> { <br />
+&#160;&#160;<b>MODE_PWM_OUT</b> = 0, 
+<br />
+&#160;&#160;<b>MODE_PWM_IN</b> = 1, 
+<br />
+&#160;&#160;<b>MODE_GPIO_OUT</b> = 2, 
+<br />
+&#160;&#160;<b>MODE_GPIO_IN</b> = 3, 
+<br />
+&#160;&#160;<b>MODE_ADC</b> = 4
+<br />
+ }</td></tr>
+<tr class="separator:ad1ca70fdbc74a1427414e6139a397742"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a228cbc97918c6a95b34110b805902ab4"><td class="memItemLeft" align="right" valign="top"><a id="a228cbc97918c6a95b34110b805902ab4"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>CHANNEL</b> { <br />
+&#160;&#160;<b>CHANNEL_0</b> = 0, 
+<br />
+&#160;&#160;<b>CHANNEL_1</b> = 1, 
+<br />
+&#160;&#160;<b>CHANNEL_2</b> = 2, 
+<br />
+&#160;&#160;<b>CHANNEL_3</b> = 3, 
+<br />
+&#160;&#160;<b>CHANNEL_4</b> = 4, 
+<br />
+&#160;&#160;<b>CHANNEL_5</b> = 5, 
+<br />
+&#160;&#160;<b>CHANNEL_6</b> = 6, 
+<br />
+&#160;&#160;<b>CHANNEL_7</b> = 7
+<br />
+ }</td></tr>
+<tr class="separator:a228cbc97918c6a95b34110b805902ab4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75a00e6794b6cdfa0b262f4fdd333831"><td class="memItemLeft" align="right" valign="top"><a id="a75a00e6794b6cdfa0b262f4fdd333831"></a>
+typedef enum DJI::OSDK::MFIO::MODE&#160;</td><td class="memItemRight" valign="bottom"><b>MODE</b></td></tr>
+<tr class="separator:a75a00e6794b6cdfa0b262f4fdd333831"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a39b6b27c01cf6e947ab01dccdbc810b7"><td class="memItemLeft" align="right" valign="top"><a id="a39b6b27c01cf6e947ab01dccdbc810b7"></a>
+typedef enum DJI::OSDK::MFIO::CHANNEL&#160;</td><td class="memItemRight" valign="bottom"><b>CHANNEL</b></td></tr>
+<tr class="separator:a39b6b27c01cf6e947ab01dccdbc810b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a40331f930aa123bad112c5688f40693f"><td class="memItemLeft" align="right" valign="top"><a id="a40331f930aa123bad112c5688f40693f"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>MFIO</b> (<a class="el" href="classDJI_1_1OSDK_1_1Vehicle.html">Vehicle</a> *vehicle)</td></tr>
+<tr class="separator:a40331f930aa123bad112c5688f40693f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad835c6e3e14a720c66aab9855310e6a7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1MFIO.html#ad835c6e3e14a720c66aab9855310e6a7">config</a> (MODE mode, CHANNEL channel, uint32_t defaultValue, uint16_t freq, <a class="el" href="namespaceDJI_1_1OSDK.html#a20a68c21abe449cf5f133f7d398055d3">VehicleCallBack</a> fn=0, <a class="el" href="namespaceDJI_1_1OSDK.html#aded24c93a2d064658a1f59cbf0e6eb9d">UserData</a> userData=0)</td></tr>
+<tr class="memdesc:ad835c6e3e14a720c66aab9855310e6a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Non-blocking call for initializing an <a class="el" href="classDJI_1_1OSDK_1_1MFIO.html" title="APIs for Multi-Function Input-Output functionality.">MFIO</a> channel.  <a href="#ad835c6e3e14a720c66aab9855310e6a7">More...</a><br /></td></tr>
+<tr class="separator:ad835c6e3e14a720c66aab9855310e6a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a833730cd241dae33b28dd2624b3571fb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1MFIO.html#a833730cd241dae33b28dd2624b3571fb">setValue</a> (CHANNEL channel, uint32_t value, <a class="el" href="namespaceDJI_1_1OSDK.html#a20a68c21abe449cf5f133f7d398055d3">VehicleCallBack</a> fn=0, <a class="el" href="namespaceDJI_1_1OSDK.html#aded24c93a2d064658a1f59cbf0e6eb9d">UserData</a> data=0)</td></tr>
+<tr class="memdesc:a833730cd241dae33b28dd2624b3571fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Non-blocking call for setting an <a class="el" href="classDJI_1_1OSDK_1_1MFIO.html" title="APIs for Multi-Function Input-Output functionality.">MFIO</a> value to a channel.  <a href="#a833730cd241dae33b28dd2624b3571fb">More...</a><br /></td></tr>
+<tr class="separator:a833730cd241dae33b28dd2624b3571fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad64c03a68764d310202a15ed85454ab6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1MFIO.html#ad64c03a68764d310202a15ed85454ab6">getValue</a> (CHANNEL channel, <a class="el" href="namespaceDJI_1_1OSDK.html#a20a68c21abe449cf5f133f7d398055d3">VehicleCallBack</a> fn=0, <a class="el" href="namespaceDJI_1_1OSDK.html#aded24c93a2d064658a1f59cbf0e6eb9d">UserData</a> data=0)</td></tr>
+<tr class="memdesc:ad64c03a68764d310202a15ed85454ab6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Non-blocking call for getting data from an <a class="el" href="classDJI_1_1OSDK_1_1MFIO.html" title="APIs for Multi-Function Input-Output functionality.">MFIO</a> channel.  <a href="#ad64c03a68764d310202a15ed85454ab6">More...</a><br /></td></tr>
+<tr class="separator:ad64c03a68764d310202a15ed85454ab6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a404925d18f7d84187b0c692ce765e10a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structDJI_1_1OSDK_1_1ACK_1_1ErrorCode.html">ACK::ErrorCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1MFIO.html#a404925d18f7d84187b0c692ce765e10a">config</a> (MODE mode, CHANNEL channel, uint32_t defaultValue, uint16_t freq, int wait_timeout)</td></tr>
+<tr class="memdesc:a404925d18f7d84187b0c692ce765e10a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Blocking call for initializing an <a class="el" href="classDJI_1_1OSDK_1_1MFIO.html" title="APIs for Multi-Function Input-Output functionality.">MFIO</a> channel.  <a href="#a404925d18f7d84187b0c692ce765e10a">More...</a><br /></td></tr>
+<tr class="separator:a404925d18f7d84187b0c692ce765e10a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a74ea79ac2e8e55aaa5bb5447b3291af2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structDJI_1_1OSDK_1_1ACK_1_1ErrorCode.html">ACK::ErrorCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1MFIO.html#a74ea79ac2e8e55aaa5bb5447b3291af2">setValue</a> (CHANNEL channel, uint32_t value, int wait_timeout)</td></tr>
+<tr class="separator:a74ea79ac2e8e55aaa5bb5447b3291af2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab7249173876661392fff872e1d410cb2"><td class="memItemLeft" align="right" valign="top">ACK::MFIOGet&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1MFIO.html#ab7249173876661392fff872e1d410cb2">getValue</a> (CHANNEL channel, int wait_timeout)</td></tr>
+<tr class="separator:ab7249173876661392fff872e1d410cb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>APIs for Multi-Function Input-Output functionality. </p>
+<p>This class offers control over the F-channel pins on <a class="el" href="namespaceDJI.html">DJI</a> products. Five modes are available through the F-channels:</p><ol type="1">
+<li>PWM Input (not supported yet)</li>
+<li>PWM Output</li>
+<li>Digital Input (GPI)</li>
+<li>Digital Output (GPO)</li>
+<li>Analog-Digital Conversion (ADC) Input</li>
+</ol>
+<dl class="section note"><dt>Note</dt><dd>You must map F-channels to SDK channels through <a class="el" href="namespaceDJI.html">DJI</a> Assistant 2 to use <a class="el" href="classDJI_1_1OSDK_1_1MFIO.html" title="APIs for Multi-Function Input-Output functionality.">MFIO</a> functionality. </dd></dl>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="ad835c6e3e14a720c66aab9855310e6a7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad835c6e3e14a720c66aab9855310e6a7">&#9670;&nbsp;</a></span>config() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void MFIO::config </td>
+          <td>(</td>
+          <td class="paramtype">MFIO::MODE&#160;</td>
+          <td class="paramname"><em>mode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">CHANNEL&#160;</td>
+          <td class="paramname"><em>channel</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>defaultValue</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>freq</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceDJI_1_1OSDK.html#a20a68c21abe449cf5f133f7d398055d3">VehicleCallBack</a>&#160;</td>
+          <td class="paramname"><em>fn</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceDJI_1_1OSDK.html#aded24c93a2d064658a1f59cbf0e6eb9d">UserData</a>&#160;</td>
+          <td class="paramname"><em>userData</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Non-blocking call for initializing an <a class="el" href="classDJI_1_1OSDK_1_1MFIO.html" title="APIs for Multi-Function Input-Output functionality.">MFIO</a> channel. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">mode</td><td>The mode (PWM, GPIO, ADC) to initialize to </td></tr>
+    <tr><td class="paramname">channel</td><td>The channel (0-7) to initialize </td></tr>
+    <tr><td class="paramname">defaultValue</td><td>The starting value [for output] </td></tr>
+    <tr><td class="paramname">freq</td><td>The frequency </td></tr>
+    <tr><td class="paramname">fn</td><td>Callback function you want called upon <a class="el" href="classDJI_1_1OSDK_1_1ACK.html" title="Class for handling acknowledgements from the aircraft.">ACK</a> </td></tr>
+    <tr><td class="paramname">userData</td><td>Additional data you want the callback function to have access to </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a404925d18f7d84187b0c692ce765e10a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a404925d18f7d84187b0c692ce765e10a">&#9670;&nbsp;</a></span>config() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structDJI_1_1OSDK_1_1ACK_1_1ErrorCode.html">ACK::ErrorCode</a> MFIO::config </td>
+          <td>(</td>
+          <td class="paramtype">MFIO::MODE&#160;</td>
+          <td class="paramname"><em>mode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">CHANNEL&#160;</td>
+          <td class="paramname"><em>channel</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>defaultValue</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>freq</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>wait_timeout</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Blocking call for initializing an <a class="el" href="classDJI_1_1OSDK_1_1MFIO.html" title="APIs for Multi-Function Input-Output functionality.">MFIO</a> channel. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">mode</td><td>The mode (PWM, GPIO, ADC) to initialize to </td></tr>
+    <tr><td class="paramname">channel</td><td>The channel (0-7) to initialize </td></tr>
+    <tr><td class="paramname">defaultValue</td><td>The starting value [for output] </td></tr>
+    <tr><td class="paramname">freq</td><td>The frequency </td></tr>
+    <tr><td class="paramname">wait_timeout</td><td>Time(in s) you want the function to wait for an <a class="el" href="classDJI_1_1OSDK_1_1ACK.html" title="Class for handling acknowledgements from the aircraft.">ACK</a> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structDJI_1_1OSDK_1_1ACK_1_1ErrorCode.html" title="This struct is returned from all blocking calls, except certain mission calls that have explicit type...">ACK::ErrorCode</a> struct containing the <a class="el" href="classDJI_1_1OSDK_1_1ACK.html" title="Class for handling acknowledgements from the aircraft.">ACK</a> and metadata </dd></dl>
+
+</div>
+</div>
+<a id="ad64c03a68764d310202a15ed85454ab6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad64c03a68764d310202a15ed85454ab6">&#9670;&nbsp;</a></span>getValue() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void MFIO::getValue </td>
+          <td>(</td>
+          <td class="paramtype">MFIO::CHANNEL&#160;</td>
+          <td class="paramname"><em>channel</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceDJI_1_1OSDK.html#a20a68c21abe449cf5f133f7d398055d3">VehicleCallBack</a>&#160;</td>
+          <td class="paramname"><em>fn</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceDJI_1_1OSDK.html#aded24c93a2d064658a1f59cbf0e6eb9d">UserData</a>&#160;</td>
+          <td class="paramname"><em>data</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Non-blocking call for getting data from an <a class="el" href="classDJI_1_1OSDK_1_1MFIO.html" title="APIs for Multi-Function Input-Output functionality.">MFIO</a> channel. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">channel</td><td>The channel (0-7) to get the value from </td></tr>
+    <tr><td class="paramname">fn</td><td>Callback function you want called upon <a class="el" href="classDJI_1_1OSDK_1_1ACK.html" title="Class for handling acknowledgements from the aircraft.">ACK</a> </td></tr>
+    <tr><td class="paramname">data</td><td>Additional data you want the callback function to have access to </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ab7249173876661392fff872e1d410cb2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab7249173876661392fff872e1d410cb2">&#9670;&nbsp;</a></span>getValue() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ACK::MFIOGet MFIO::getValue </td>
+          <td>(</td>
+          <td class="paramtype">CHANNEL&#160;</td>
+          <td class="paramname"><em>channel</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>wait_timeout</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Blocking call for getting data from an <a class="el" href="classDJI_1_1OSDK_1_1MFIO.html" title="APIs for Multi-Function Input-Output functionality.">MFIO</a> channel</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">channel</td><td>The channel (0-7) to get the value from </td></tr>
+    <tr><td class="paramname">wait_timeout</td><td>Time(in s) you want the function to wait for an <a class="el" href="classDJI_1_1OSDK_1_1ACK.html" title="Class for handling acknowledgements from the aircraft.">ACK</a> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structDJI_1_1OSDK_1_1ACK_1_1ErrorCode.html" title="This struct is returned from all blocking calls, except certain mission calls that have explicit type...">ACK::ErrorCode</a> struct containing the <a class="el" href="classDJI_1_1OSDK_1_1ACK.html" title="Class for handling acknowledgements from the aircraft.">ACK</a> and metadata </dd></dl>
+
+</div>
+</div>
+<a id="a833730cd241dae33b28dd2624b3571fb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a833730cd241dae33b28dd2624b3571fb">&#9670;&nbsp;</a></span>setValue() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void MFIO::setValue </td>
+          <td>(</td>
+          <td class="paramtype">MFIO::CHANNEL&#160;</td>
+          <td class="paramname"><em>channel</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>value</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceDJI_1_1OSDK.html#a20a68c21abe449cf5f133f7d398055d3">VehicleCallBack</a>&#160;</td>
+          <td class="paramname"><em>fn</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceDJI_1_1OSDK.html#aded24c93a2d064658a1f59cbf0e6eb9d">UserData</a>&#160;</td>
+          <td class="paramname"><em>data</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Non-blocking call for setting an <a class="el" href="classDJI_1_1OSDK_1_1MFIO.html" title="APIs for Multi-Function Input-Output functionality.">MFIO</a> value to a channel. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">channel</td><td>The channel (0-7) to set the value to </td></tr>
+    <tr><td class="paramname">value</td><td>The value you want to set </td></tr>
+    <tr><td class="paramname">fn</td><td>Callback function you want called upon <a class="el" href="classDJI_1_1OSDK_1_1ACK.html" title="Class for handling acknowledgements from the aircraft.">ACK</a> </td></tr>
+    <tr><td class="paramname">data</td><td>Additional data you want the callback function to have access to </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a74ea79ac2e8e55aaa5bb5447b3291af2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a74ea79ac2e8e55aaa5bb5447b3291af2">&#9670;&nbsp;</a></span>setValue() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structDJI_1_1OSDK_1_1ACK_1_1ErrorCode.html">ACK::ErrorCode</a> MFIO::setValue </td>
+          <td>(</td>
+          <td class="paramtype">CHANNEL&#160;</td>
+          <td class="paramname"><em>channel</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>value</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>wait_timeout</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Blocking call for setting an <a class="el" href="classDJI_1_1OSDK_1_1MFIO.html" title="APIs for Multi-Function Input-Output functionality.">MFIO</a> value to a channel</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">channel</td><td>The channel (0-7) to set the value to </td></tr>
+    <tr><td class="paramname">value</td><td>The value you want to set </td></tr>
+    <tr><td class="paramname">wait_timeout</td><td>Time(in s) you want the function to wait for an <a class="el" href="classDJI_1_1OSDK_1_1ACK.html" title="Class for handling acknowledgements from the aircraft.">ACK</a> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structDJI_1_1OSDK_1_1ACK_1_1ErrorCode.html" title="This struct is returned from all blocking calls, except certain mission calls that have explicit type...">ACK::ErrorCode</a> struct containing the <a class="el" href="classDJI_1_1OSDK_1_1ACK.html" title="Class for handling acknowledgements from the aircraft.">ACK</a> and metadata </dd></dl>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following files:<ul>
+<li>osdk-core/api/inc/<a class="el" href="dji__mfio_8hpp_source.html">dji_mfio.hpp</a></li>
+<li>osdk-core/api/src/<a class="el" href="dji__mfio_8cpp.html">dji_mfio.cpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- HTML footer for doxygen 1.8.8-->
+<!-- start footer part -->
+</div>
+</div>
+</div>
+</div>
+</div>
+<hr class="footer"/><address class="footer"><small>
+  <footer id="site-footer" class="site-footer">
+    <div class="container">
+      <div class="foot-nav row">
+        <nav class="link-list col-xs-2"><span class="title">SDK</span><a href="/mobile-sdk">Mobile SDK</a><a href="/ux-sdk">UX SDK</a><a href="/onboard-sdk">Onboard SDK</a><a href="/payload-sdk">Payload SDK</a><a href="/windows-sdk">Windows SDK</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Info</span><a href="/products">Products</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Community</span><a href="http://stackoverflow.com/questions/tagged/dji-sdk" target="_blank">Stack Overflow</a><a href="https://www.youtube.com/channel/UCPQwN5xsob8zZGIcDhkYqUA" target="_blank">YouTube</a><a href="https://twitter.com/djidevelopers" target="_blank">Twitter</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Contact Us</span><a href="mailto:dev@dji.com"> dev@dji.com</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Business Cooperation</span><a href="mailto:dev@dji.com"> dev@dji.com</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">BILLING</span><a href="mailto:billing-dev@dji.com"> billing-dev@dji.com</a></nav>
+      </div>
+      <div class="foot-copyright row">
+        <div class="col-xs-3 foot-logo"><img src="dji-logo-foot.png"></div>
+        <div class="copyright col-xs-7"><span>Copyright © 2018 DJI All Rights Reserved</span><a href="/policies/privacy">Privacy Policy</a><a href="/policies/terms">Terms of Use</a></div>
+        <div class="col-xs-2">
+          <div class="lang-selector">
+            <select dir="rtl" v-model="lang">
+              <option value="en">English</option>
+              <option value="cn">中文</option>
+            </select><i class="fa fa-globe"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</small></address>
+</body>
+<script type="text/javascript" src="doxy-boot.js"></script>
+</html>

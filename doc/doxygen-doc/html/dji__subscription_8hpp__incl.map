@@ -1,0 +1,9 @@
+<map id="osdk&#45;core/api/inc/dji_subscription.hpp" name="osdk&#45;core/api/inc/dji_subscription.hpp">
+<area shape="rect" id="node1" title="Telemetry Subscription API for DJI OSDK library." alt="" coords="72,5,211,44"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,165,158,191"/>
+<area shape="rect" id="node3" href="$dji__telemetry_8hpp.html" title="Enumeration of all telemetry data types, structures and maps." alt="" coords="249,92,371,117"/>
+<area shape="rect" id="node7" href="$dji__vehicle__callback_8hpp.html" title="Type definition for new Vehicle&#45;style callbacks." alt="" coords="59,92,224,117"/>
+<area shape="rect" id="node4" href="$dji__type_8hpp.html" title="Data type and Data Structure definitions for use throughout DJI OSDK." alt="" coords="263,165,356,191"/>
+<area shape="rect" id="node5" title=" " alt="" coords="239,239,295,264"/>
+<area shape="rect" id="node6" title=" " alt="" coords="319,239,383,264"/>
+</map>

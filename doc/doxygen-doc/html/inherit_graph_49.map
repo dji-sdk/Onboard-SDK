@@ -1,0 +1,5 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$classDJI_1_1OSDK_1_1MissionBase.html" title="Mission Base class for commonality between SDK Missions." alt="" coords="5,31,175,56"/>
+<area shape="rect" id="node2" href="$classDJI_1_1OSDK_1_1HotpointMission.html" title="APIs for Hotpoint (Point of Interest) Missions." alt="" coords="226,5,414,31"/>
+<area shape="rect" id="node3" href="$classDJI_1_1OSDK_1_1WaypointMission.html" title="APIs for GPS Waypoint Missions." alt="" coords="223,55,417,80"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="osdk&#45;core/api/src/dji_version.cpp" name="osdk&#45;core/api/src/dji_version.cpp">
+<area shape="rect" id="node1" title="Drone/SDK Version definition for DJI onboardSDK library." alt="" coords="162,5,302,44"/>
+<area shape="rect" id="node2" href="$dji__version_8hpp.html" title="Drone/SDK Version definition for DJI onboardSDK library." alt="" coords="99,92,210,117"/>
+<area shape="rect" id="node7" title=" " alt="" coords="234,92,387,117"/>
+<area shape="rect" id="node3" href="$dji__command_8hpp.html" title="All DJI OSDK OpenProtocol Command IDs." alt="" coords="32,165,159,191"/>
+<area shape="rect" id="node6" title=" " alt="" coords="183,165,243,191"/>
+<area shape="rect" id="node4" href="$dji__error_8hpp.html" title="All DJI OSDK OpenProtocol ACK Error Codes." alt="" coords="5,239,101,264"/>
+<area shape="rect" id="node5" title=" " alt="" coords="64,312,128,337"/>
+</map>

@@ -1,0 +1,474 @@
+<!-- HTML header for doxygen 1.8.8-->
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- For Mobile Devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8" />
+    <meta name="generator" content="Doxygen 1.8.15" />
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <title>DJI Onboard SDK: DJI::OSDK::Log Class Reference</title>
+    <!-- <link href="tabs.css" rel="stylesheet" type="text/css"/> -->
+    <script type="text/javascript" src="dynsections.js"></script>
+    <link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+    <link href="doxygen.css" rel="stylesheet" type="text/css" />
+    <link href="customdoxygen.css" rel="stylesheet" type="text/css"/>
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Slab' rel='stylesheet' type='text/css'>
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link href="jquery.smartmenus.bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="bootstrap-theme.css">
+    <script src="bootstrap.min.js"></script>
+    <link href="jquery.smartmenus.bootstrap.css" rel="stylesheet">
+    <!-- SmartMenus jQuery plugin -->
+    <script type="text/javascript" src="jquery.smartmenus.min.js"></script>
+    <!-- SmartMenus jQuery Bootstrap Addon -->
+    <script type="text/javascript" src="jquery.smartmenus.bootstrap.min.js"></script>
+    <style>
+        .has-submenu {
+            position: relative;
+        }
+        #main-nav {
+            margin-top: 60px;
+        }
+    </style>
+</head>
+<body>
+    <nav id="site-header" class="site-header navbar">
+        <div class="container">
+            <div class="navbar-header"><a href="/" class="logo"><img src="dji-logo@2x.png">Developer</a></div>
+            <div id="header-navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="/mobile-sdk">Mobile SDK</a></li>
+                    <li><a href="/ux-sdk">UX SDK</a></li>
+                    <li><a href="/onboard-sdk">Onboard SDK</a></li>
+                    <li><a href="/payload-sdk">Payload SDK</a></li>
+                    <li><a href="/windows-sdk">Windows SDK</a></li>
+                </ul>
+                <ul v-cloak="" v-show="!loggedIn" class="nav navbar-nav navbar-right nav-user">
+                    <li><a
+                            href="https://account.dji.com/login?appId=dji_sdk&backUrl=https%3A%2F%2Fdeveloper.dji.com%2Fuser&locale=en_US">Login</a>
+                    </li>
+                    <li><a href="https://account.dji.com/register?appId=dji_sdk&backUrl=https%3A%2F%2Fdeveloper.dji.com%2Fuser&locale=en_US"
+                            class="head-cta">Register</a></li>
+                </ul>
+                <ul v-cloak="" v-show="loggedIn" class="nav navbar-nav navbar-right nav-user">
+                    <li class="hovedown"><a href="javascript:void(0);" class="hovedown-toggle"><i
+                                class="fa fa-user"></i></a>
+                        <ul class="hovedown-menu hovedown-menu-right">
+                            <li><a href="/user">User Center</a></li>
+                            <li><a href="javascript:void(0);" v-on="click: logout">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div data-offset-top="60" data-spy="affix" class="sub-nav">
+        <div class="container">
+            <h1 class="logo">Onboard SDK</h1>
+            <nav><a href="/onboard-sdk">Overview</a><a href="/onboard-sdk/documentation">Documentation</a><a
+                    href="/onboard-api-reference/index.html" class="active">API Reference</a><a
+                    href="/onboard-sdk/downloads">Downloads</a>
+            </nav>
+        </div>
+    </div>
+    <!--<nav class="navbar navbar-default" role="navigation">-->
+    <!--<div class="container">-->
+    <!--<div class="navbar-header">-->
+    <!--<a href="#" class="navbar-left"><img src="dji_logo_gray_small.png" alt="DJI OSDK API Documentation" width="32px"/></a>-->
+    <!--<a class="navbar-brand" href="index.html">ONBOARD SDK 3.3</a>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</nav>-->
+    <div id="top">
+        <!-- do not remove this div, it is closed by doxygen! -->
+        <div class="content" id="content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12 panel " style="padding-bottom: 15px;">
+                        <div style="margin-bottom: 15px;">
+                            <!-- end header part --><!-- Generated by Doxygen 1.8.15 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Search');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespaceDJI.html">DJI</a></li><li class="navelem"><a class="el" href="namespaceDJI_1_1OSDK.html">OSDK</a></li><li class="navelem"><a class="el" href="classDJI_1_1OSDK_1_1Log.html">Log</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="classDJI_1_1OSDK_1_1Log-members.html">List of all members</a>  </div>
+  <div class="headertitle">
+<div class="title">DJI::OSDK::Log Class Reference</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>Logger for <a class="el" href="namespaceDJI.html">DJI</a> <a class="el" href="namespaceDJI_1_1OSDK.html">OSDK</a> supporting different logging channels.  
+ <a href="classDJI_1_1OSDK_1_1Log.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="dji__log_8hpp_source.html">dji_log.hpp</a>&gt;</code></p>
+
+<p>Inherits Singleton&lt; Log &gt;.</p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:afebff031f21e4aa58cfdf4fd0787d57a"><td class="memItemLeft" align="right" valign="top"><a id="afebff031f21e4aa58cfdf4fd0787d57a"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Log</b> (Mutex *m=0)</td></tr>
+<tr class="separator:afebff031f21e4aa58cfdf4fd0787d57a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af9373914bf75d6b77c779098ea04f474"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classDJI_1_1OSDK_1_1Log.html">Log</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1Log.html#af9373914bf75d6b77c779098ea04f474">title</a> (int level, const char *prefix, const char *func, int line)</td></tr>
+<tr class="separator:af9373914bf75d6b77c779098ea04f474"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73d0b45d5dd739c74145c37b0db2718e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classDJI_1_1OSDK_1_1Log.html">Log</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1Log.html#a73d0b45d5dd739c74145c37b0db2718e">title</a> (int level, const char *prefix)</td></tr>
+<tr class="separator:a73d0b45d5dd739c74145c37b0db2718e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed779bf46433ee037dd703534d44e7b6"><td class="memItemLeft" align="right" valign="top"><a id="aed779bf46433ee037dd703534d44e7b6"></a>
+<a class="el" href="classDJI_1_1OSDK_1_1Log.html">Log</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>print</b> ()</td></tr>
+<tr class="separator:aed779bf46433ee037dd703534d44e7b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6cbaeb5adfb215dcade1d0bcd0b7b13e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1Log.html#a6cbaeb5adfb215dcade1d0bcd0b7b13e">enableStatusLogging</a> ()</td></tr>
+<tr class="memdesc:a6cbaeb5adfb215dcade1d0bcd0b7b13e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable logging of status messages called through DSTATUS macro.  <a href="#a6cbaeb5adfb215dcade1d0bcd0b7b13e">More...</a><br /></td></tr>
+<tr class="separator:a6cbaeb5adfb215dcade1d0bcd0b7b13e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6456121aa4ed771ee139910dc64c2176"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1Log.html#a6456121aa4ed771ee139910dc64c2176">disableStatusLogging</a> ()</td></tr>
+<tr class="memdesc:a6456121aa4ed771ee139910dc64c2176"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disable logging of status messages called through DSTATUS macro.  <a href="#a6456121aa4ed771ee139910dc64c2176">More...</a><br /></td></tr>
+<tr class="separator:a6456121aa4ed771ee139910dc64c2176"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa961f62ab0484946ea87187f4b35905d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1Log.html#aa961f62ab0484946ea87187f4b35905d">enableDebugLogging</a> ()</td></tr>
+<tr class="memdesc:aa961f62ab0484946ea87187f4b35905d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable logging of status messages called through DDEBUG macro.  <a href="#aa961f62ab0484946ea87187f4b35905d">More...</a><br /></td></tr>
+<tr class="separator:aa961f62ab0484946ea87187f4b35905d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a317c87aa6a7caf8c658329dbb01bb756"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1Log.html#a317c87aa6a7caf8c658329dbb01bb756">disableDebugLogging</a> ()</td></tr>
+<tr class="memdesc:a317c87aa6a7caf8c658329dbb01bb756"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disable logging of status messages called through DDEBUG macro.  <a href="#a317c87aa6a7caf8c658329dbb01bb756">More...</a><br /></td></tr>
+<tr class="separator:a317c87aa6a7caf8c658329dbb01bb756"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abdfa25ae5bf1b5f62e16c2de7109e4a2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1Log.html#abdfa25ae5bf1b5f62e16c2de7109e4a2">enableErrorLogging</a> ()</td></tr>
+<tr class="memdesc:abdfa25ae5bf1b5f62e16c2de7109e4a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable logging of status messages called through DERROR macro.  <a href="#abdfa25ae5bf1b5f62e16c2de7109e4a2">More...</a><br /></td></tr>
+<tr class="separator:abdfa25ae5bf1b5f62e16c2de7109e4a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaac4e6fa34d6f695371a0b325adfaf88"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1Log.html#aaac4e6fa34d6f695371a0b325adfaf88">disableErrorLogging</a> ()</td></tr>
+<tr class="memdesc:aaac4e6fa34d6f695371a0b325adfaf88"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disable logging of status messages called through DERROR macro.  <a href="#aaac4e6fa34d6f695371a0b325adfaf88">More...</a><br /></td></tr>
+<tr class="separator:aaac4e6fa34d6f695371a0b325adfaf88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a19bf7a40464d9617ae55192b0848fc77"><td class="memItemLeft" align="right" valign="top"><a id="a19bf7a40464d9617ae55192b0848fc77"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>getStatusLogState</b> ()</td></tr>
+<tr class="separator:a19bf7a40464d9617ae55192b0848fc77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0483bcafffba2accc352569dad5932b1"><td class="memItemLeft" align="right" valign="top"><a id="a0483bcafffba2accc352569dad5932b1"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>getDebugLogState</b> ()</td></tr>
+<tr class="separator:a0483bcafffba2accc352569dad5932b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f45d36ed88e8ba72f1b3ac08b1396a6"><td class="memItemLeft" align="right" valign="top"><a id="a5f45d36ed88e8ba72f1b3ac08b1396a6"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>getErrorLogState</b> ()</td></tr>
+<tr class="separator:a5f45d36ed88e8ba72f1b3ac08b1396a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0a55acab43d8612a61cbd12c266ae8a"><td class="memItemLeft" align="right" valign="top"><a id="ab0a55acab43d8612a61cbd12c266ae8a"></a>
+virtual <a class="el" href="classDJI_1_1OSDK_1_1Log.html">Log</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>print</b> (const char *fmt,...)</td></tr>
+<tr class="separator:ab0a55acab43d8612a61cbd12c266ae8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a09c76825ce8889e97259341c4297f163"><td class="memItemLeft" align="right" valign="top"><a id="a09c76825ce8889e97259341c4297f163"></a>
+<a class="el" href="classDJI_1_1OSDK_1_1Log.html">Log</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;&lt;</b> (bool val)</td></tr>
+<tr class="separator:a09c76825ce8889e97259341c4297f163"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe26822aade436ba9c4f93c14207f202"><td class="memItemLeft" align="right" valign="top"><a id="abe26822aade436ba9c4f93c14207f202"></a>
+<a class="el" href="classDJI_1_1OSDK_1_1Log.html">Log</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;&lt;</b> (short val)</td></tr>
+<tr class="separator:abe26822aade436ba9c4f93c14207f202"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e9b4e28ab68ae271d1b86942657c8c7"><td class="memItemLeft" align="right" valign="top"><a id="a4e9b4e28ab68ae271d1b86942657c8c7"></a>
+<a class="el" href="classDJI_1_1OSDK_1_1Log.html">Log</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;&lt;</b> (uint16_t val)</td></tr>
+<tr class="separator:a4e9b4e28ab68ae271d1b86942657c8c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab56d30be387bc68814ae1f129d40283f"><td class="memItemLeft" align="right" valign="top"><a id="ab56d30be387bc68814ae1f129d40283f"></a>
+<a class="el" href="classDJI_1_1OSDK_1_1Log.html">Log</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;&lt;</b> (int val)</td></tr>
+<tr class="separator:ab56d30be387bc68814ae1f129d40283f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a261b55df8549e43f55d60f2a4407d029"><td class="memItemLeft" align="right" valign="top"><a id="a261b55df8549e43f55d60f2a4407d029"></a>
+<a class="el" href="classDJI_1_1OSDK_1_1Log.html">Log</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;&lt;</b> (uint32_t val)</td></tr>
+<tr class="separator:a261b55df8549e43f55d60f2a4407d029"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aedffb63532b701f7ae635b1ef0fa0837"><td class="memItemLeft" align="right" valign="top"><a id="aedffb63532b701f7ae635b1ef0fa0837"></a>
+<a class="el" href="classDJI_1_1OSDK_1_1Log.html">Log</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;&lt;</b> (long val)</td></tr>
+<tr class="separator:aedffb63532b701f7ae635b1ef0fa0837"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac1d64cbd4de5a67e1b2ed9fe7abd000e"><td class="memItemLeft" align="right" valign="top"><a id="ac1d64cbd4de5a67e1b2ed9fe7abd000e"></a>
+<a class="el" href="classDJI_1_1OSDK_1_1Log.html">Log</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;&lt;</b> (unsigned long val)</td></tr>
+<tr class="separator:ac1d64cbd4de5a67e1b2ed9fe7abd000e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada475769083ebd797381110052b37357"><td class="memItemLeft" align="right" valign="top"><a id="ada475769083ebd797381110052b37357"></a>
+<a class="el" href="classDJI_1_1OSDK_1_1Log.html">Log</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;&lt;</b> (long long val)</td></tr>
+<tr class="separator:ada475769083ebd797381110052b37357"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae3e0f3282ada18780d47fb08b62e34b1"><td class="memItemLeft" align="right" valign="top"><a id="ae3e0f3282ada18780d47fb08b62e34b1"></a>
+<a class="el" href="classDJI_1_1OSDK_1_1Log.html">Log</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;&lt;</b> (unsigned long long val)</td></tr>
+<tr class="separator:ae3e0f3282ada18780d47fb08b62e34b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac77c115e1ffb7bf39c8e414f6556b4ad"><td class="memItemLeft" align="right" valign="top"><a id="ac77c115e1ffb7bf39c8e414f6556b4ad"></a>
+<a class="el" href="classDJI_1_1OSDK_1_1Log.html">Log</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;&lt;</b> (float val)</td></tr>
+<tr class="separator:ac77c115e1ffb7bf39c8e414f6556b4ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e1fb2320d21c6f8329dd2c319a2e790"><td class="memItemLeft" align="right" valign="top"><a id="a6e1fb2320d21c6f8329dd2c319a2e790"></a>
+<a class="el" href="classDJI_1_1OSDK_1_1Log.html">Log</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;&lt;</b> (double val)</td></tr>
+<tr class="separator:a6e1fb2320d21c6f8329dd2c319a2e790"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a527c026eb573c3e456795cdd9f6175f7"><td class="memItemLeft" align="right" valign="top"><a id="a527c026eb573c3e456795cdd9f6175f7"></a>
+<a class="el" href="classDJI_1_1OSDK_1_1Log.html">Log</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;&lt;</b> (long double val)</td></tr>
+<tr class="separator:a527c026eb573c3e456795cdd9f6175f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0794a92c52cbaeff7bc7698db2fe9541"><td class="memItemLeft" align="right" valign="top"><a id="a0794a92c52cbaeff7bc7698db2fe9541"></a>
+<a class="el" href="classDJI_1_1OSDK_1_1Log.html">Log</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;&lt;</b> (void *val)</td></tr>
+<tr class="separator:a0794a92c52cbaeff7bc7698db2fe9541"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9f8e06c880dc0c740e8da9fe6bf636c8"><td class="memItemLeft" align="right" valign="top"><a id="a9f8e06c880dc0c740e8da9fe6bf636c8"></a>
+<a class="el" href="classDJI_1_1OSDK_1_1Log.html">Log</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;&lt;</b> (char c)</td></tr>
+<tr class="separator:a9f8e06c880dc0c740e8da9fe6bf636c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa55581b7f17ce81cadef8ad33884752a"><td class="memItemLeft" align="right" valign="top"><a id="aa55581b7f17ce81cadef8ad33884752a"></a>
+<a class="el" href="classDJI_1_1OSDK_1_1Log.html">Log</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;&lt;</b> (uint8_t c)</td></tr>
+<tr class="separator:aa55581b7f17ce81cadef8ad33884752a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0239cb6f77ce8763bfd4b3d6b151ed2"><td class="memItemLeft" align="right" valign="top"><a id="ab0239cb6f77ce8763bfd4b3d6b151ed2"></a>
+<a class="el" href="classDJI_1_1OSDK_1_1Log.html">Log</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;&lt;</b> (int8_t c)</td></tr>
+<tr class="separator:ab0239cb6f77ce8763bfd4b3d6b151ed2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8704f4005cd30bd66bbb9c9dd9622a9e"><td class="memItemLeft" align="right" valign="top"><a id="a8704f4005cd30bd66bbb9c9dd9622a9e"></a>
+<a class="el" href="classDJI_1_1OSDK_1_1Log.html">Log</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;&lt;</b> (const char *str)</td></tr>
+<tr class="separator:a8704f4005cd30bd66bbb9c9dd9622a9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Logger for <a class="el" href="namespaceDJI.html">DJI</a> <a class="el" href="namespaceDJI_1_1OSDK.html">OSDK</a> supporting different logging channels. </p>
+<p>The <a class="el" href="classDJI_1_1OSDK_1_1Log.html" title="Logger for DJI OSDK supporting different logging channels.">Log</a> class is a singleton and contains some pre-defined logging levels. The class provides methods to turn on or off these predefined logging levels. Users can also create their own logging channels using the DLOG macro. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a317c87aa6a7caf8c658329dbb01bb756"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a317c87aa6a7caf8c658329dbb01bb756">&#9670;&nbsp;</a></span>disableDebugLogging()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Log::disableDebugLogging </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Disable logging of status messages called through DDEBUG macro. </p>
+<p>Call this method on the DJI::OSDK::Log.instance() in your program. </p>
+
+</div>
+</div>
+<a id="aaac4e6fa34d6f695371a0b325adfaf88"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaac4e6fa34d6f695371a0b325adfaf88">&#9670;&nbsp;</a></span>disableErrorLogging()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Log::disableErrorLogging </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Disable logging of status messages called through DERROR macro. </p>
+<p>Call this method on the DJI::OSDK::Log.instance() in your program. </p>
+
+</div>
+</div>
+<a id="a6456121aa4ed771ee139910dc64c2176"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6456121aa4ed771ee139910dc64c2176">&#9670;&nbsp;</a></span>disableStatusLogging()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Log::disableStatusLogging </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Disable logging of status messages called through DSTATUS macro. </p>
+<p>Call this method on the DJI::OSDK::Log.instance() in your program. </p>
+
+</div>
+</div>
+<a id="aa961f62ab0484946ea87187f4b35905d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa961f62ab0484946ea87187f4b35905d">&#9670;&nbsp;</a></span>enableDebugLogging()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Log::enableDebugLogging </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enable logging of status messages called through DDEBUG macro. </p>
+<p>Call this method on the DJI::OSDK::Log.instance() in your program. </p>
+
+</div>
+</div>
+<a id="abdfa25ae5bf1b5f62e16c2de7109e4a2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abdfa25ae5bf1b5f62e16c2de7109e4a2">&#9670;&nbsp;</a></span>enableErrorLogging()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Log::enableErrorLogging </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enable logging of status messages called through DERROR macro. </p>
+<p>Call this method on the DJI::OSDK::Log.instance() in your program. </p>
+
+</div>
+</div>
+<a id="a6cbaeb5adfb215dcade1d0bcd0b7b13e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6cbaeb5adfb215dcade1d0bcd0b7b13e">&#9670;&nbsp;</a></span>enableStatusLogging()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Log::enableStatusLogging </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enable logging of status messages called through DSTATUS macro. </p>
+<p>Call this method on the DJI::OSDK::Log.instance() in your program. </p>
+
+</div>
+</div>
+<a id="af9373914bf75d6b77c779098ea04f474"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af9373914bf75d6b77c779098ea04f474">&#9670;&nbsp;</a></span>title() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classDJI_1_1OSDK_1_1Log.html">Log</a> &amp; Log::title </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>level</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>prefix</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>func</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>line</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section note"><dt>Note</dt><dd>if title level is 0, this log would not be print at all this feature is used for dynamical/statical optional log output </dd></dl>
+
+</div>
+</div>
+<a id="a73d0b45d5dd739c74145c37b0db2718e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a73d0b45d5dd739c74145c37b0db2718e">&#9670;&nbsp;</a></span>title() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classDJI_1_1OSDK_1_1Log.html">Log</a> &amp; Log::title </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>level</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>prefix</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section note"><dt>Note</dt><dd>Used for closed source logging, where we don't want to print function name and line number </dd></dl>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following files:<ul>
+<li>osdk-core/hal/inc/<a class="el" href="dji__log_8hpp_source.html">dji_log.hpp</a></li>
+<li>osdk-core/hal/src/<a class="el" href="dji__log_8cpp.html">dji_log.cpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- HTML footer for doxygen 1.8.8-->
+<!-- start footer part -->
+</div>
+</div>
+</div>
+</div>
+</div>
+<hr class="footer"/><address class="footer"><small>
+  <footer id="site-footer" class="site-footer">
+    <div class="container">
+      <div class="foot-nav row">
+        <nav class="link-list col-xs-2"><span class="title">SDK</span><a href="/mobile-sdk">Mobile SDK</a><a href="/ux-sdk">UX SDK</a><a href="/onboard-sdk">Onboard SDK</a><a href="/payload-sdk">Payload SDK</a><a href="/windows-sdk">Windows SDK</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Info</span><a href="/products">Products</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Community</span><a href="http://stackoverflow.com/questions/tagged/dji-sdk" target="_blank">Stack Overflow</a><a href="https://www.youtube.com/channel/UCPQwN5xsob8zZGIcDhkYqUA" target="_blank">YouTube</a><a href="https://twitter.com/djidevelopers" target="_blank">Twitter</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Contact Us</span><a href="mailto:dev@dji.com"> dev@dji.com</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Business Cooperation</span><a href="mailto:dev@dji.com"> dev@dji.com</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">BILLING</span><a href="mailto:billing-dev@dji.com"> billing-dev@dji.com</a></nav>
+      </div>
+      <div class="foot-copyright row">
+        <div class="col-xs-3 foot-logo"><img src="dji-logo-foot.png"></div>
+        <div class="copyright col-xs-7"><span>Copyright © 2018 DJI All Rights Reserved</span><a href="/policies/privacy">Privacy Policy</a><a href="/policies/terms">Terms of Use</a></div>
+        <div class="col-xs-2">
+          <div class="lang-selector">
+            <select dir="rtl" v-model="lang">
+              <option value="en">English</option>
+              <option value="cn">中文</option>
+            </select><i class="fa fa-globe"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</small></address>
+</body>
+<script type="text/javascript" src="doxy-boot.js"></script>
+</html>

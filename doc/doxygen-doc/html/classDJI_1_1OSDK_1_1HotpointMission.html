@@ -1,0 +1,1432 @@
+<!-- HTML header for doxygen 1.8.8-->
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- For Mobile Devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8" />
+    <meta name="generator" content="Doxygen 1.8.15" />
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <title>DJI Onboard SDK: DJI::OSDK::HotpointMission Class Reference</title>
+    <!-- <link href="tabs.css" rel="stylesheet" type="text/css"/> -->
+    <script type="text/javascript" src="dynsections.js"></script>
+    <link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+    <link href="doxygen.css" rel="stylesheet" type="text/css" />
+    <link href="customdoxygen.css" rel="stylesheet" type="text/css"/>
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Slab' rel='stylesheet' type='text/css'>
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link href="jquery.smartmenus.bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="bootstrap-theme.css">
+    <script src="bootstrap.min.js"></script>
+    <link href="jquery.smartmenus.bootstrap.css" rel="stylesheet">
+    <!-- SmartMenus jQuery plugin -->
+    <script type="text/javascript" src="jquery.smartmenus.min.js"></script>
+    <!-- SmartMenus jQuery Bootstrap Addon -->
+    <script type="text/javascript" src="jquery.smartmenus.bootstrap.min.js"></script>
+    <style>
+        .has-submenu {
+            position: relative;
+        }
+        #main-nav {
+            margin-top: 60px;
+        }
+    </style>
+</head>
+<body>
+    <nav id="site-header" class="site-header navbar">
+        <div class="container">
+            <div class="navbar-header"><a href="/" class="logo"><img src="dji-logo@2x.png">Developer</a></div>
+            <div id="header-navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="/mobile-sdk">Mobile SDK</a></li>
+                    <li><a href="/ux-sdk">UX SDK</a></li>
+                    <li><a href="/onboard-sdk">Onboard SDK</a></li>
+                    <li><a href="/payload-sdk">Payload SDK</a></li>
+                    <li><a href="/windows-sdk">Windows SDK</a></li>
+                </ul>
+                <ul v-cloak="" v-show="!loggedIn" class="nav navbar-nav navbar-right nav-user">
+                    <li><a
+                            href="https://account.dji.com/login?appId=dji_sdk&backUrl=https%3A%2F%2Fdeveloper.dji.com%2Fuser&locale=en_US">Login</a>
+                    </li>
+                    <li><a href="https://account.dji.com/register?appId=dji_sdk&backUrl=https%3A%2F%2Fdeveloper.dji.com%2Fuser&locale=en_US"
+                            class="head-cta">Register</a></li>
+                </ul>
+                <ul v-cloak="" v-show="loggedIn" class="nav navbar-nav navbar-right nav-user">
+                    <li class="hovedown"><a href="javascript:void(0);" class="hovedown-toggle"><i
+                                class="fa fa-user"></i></a>
+                        <ul class="hovedown-menu hovedown-menu-right">
+                            <li><a href="/user">User Center</a></li>
+                            <li><a href="javascript:void(0);" v-on="click: logout">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div data-offset-top="60" data-spy="affix" class="sub-nav">
+        <div class="container">
+            <h1 class="logo">Onboard SDK</h1>
+            <nav><a href="/onboard-sdk">Overview</a><a href="/onboard-sdk/documentation">Documentation</a><a
+                    href="/onboard-api-reference/index.html" class="active">API Reference</a><a
+                    href="/onboard-sdk/downloads">Downloads</a>
+            </nav>
+        </div>
+    </div>
+    <!--<nav class="navbar navbar-default" role="navigation">-->
+    <!--<div class="container">-->
+    <!--<div class="navbar-header">-->
+    <!--<a href="#" class="navbar-left"><img src="dji_logo_gray_small.png" alt="DJI OSDK API Documentation" width="32px"/></a>-->
+    <!--<a class="navbar-brand" href="index.html">ONBOARD SDK 3.3</a>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</nav>-->
+    <div id="top">
+        <!-- do not remove this div, it is closed by doxygen! -->
+        <div class="content" id="content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12 panel " style="padding-bottom: 15px;">
+                        <div style="margin-bottom: 15px;">
+                            <!-- end header part --><!-- Generated by Doxygen 1.8.15 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Search');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespaceDJI.html">DJI</a></li><li class="navelem"><a class="el" href="namespaceDJI_1_1OSDK.html">OSDK</a></li><li class="navelem"><a class="el" href="classDJI_1_1OSDK_1_1HotpointMission.html">HotpointMission</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="classDJI_1_1OSDK_1_1HotpointMission-members.html">List of all members</a>  </div>
+  <div class="headertitle">
+<div class="title">DJI::OSDK::HotpointMission Class Reference</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>APIs for Hotpoint (Point of Interest) Missions.  
+ <a href="classDJI_1_1OSDK_1_1HotpointMission.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="dji__hotpoint_8hpp_source.html">dji_hotpoint.hpp</a>&gt;</code></p>
+<div class="dynheader">
+Inheritance diagram for DJI::OSDK::HotpointMission:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classDJI_1_1OSDK_1_1HotpointMission__inherit__graph.svg" width="220" height="486"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:af758f3e80f7558696d342e3be66b9132"><td class="memItemLeft" align="right" valign="top"><a id="af758f3e80f7558696d342e3be66b9132"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>View</b> { <br />
+&#160;&#160;<b>VIEW_NORTH</b> = 0, 
+<br />
+&#160;&#160;<b>VIEW_SOUTH</b> = 1, 
+<br />
+&#160;&#160;<b>VIEW_WEST</b> = 2, 
+<br />
+&#160;&#160;<b>VIEW_EAST</b> = 3, 
+<br />
+&#160;&#160;<b>VIEW_NEARBY</b> = 4
+<br />
+ }</td></tr>
+<tr class="separator:af758f3e80f7558696d342e3be66b9132"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ae0588ac6c5a525dc929fa498bf8bdd"><td class="memItemLeft" align="right" valign="top"><a id="a1ae0588ac6c5a525dc929fa498bf8bdd"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>YawMode</b> { <br />
+&#160;&#160;<b>YAW_AUTO</b> = 0, 
+<br />
+&#160;&#160;<b>YAW_INSIDE</b> = 1, 
+<br />
+&#160;&#160;<b>YAW_OUTSIDE</b> = 2, 
+<br />
+&#160;&#160;<b>YAW_CUSTOM</b> = 3, 
+<br />
+&#160;&#160;<b>YAW_STATIC</b> = 4
+<br />
+ }</td></tr>
+<tr class="separator:a1ae0588ac6c5a525dc929fa498bf8bdd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad595be8c74aecc478ac46c6c7aec12a0"><td class="memItemLeft" align="right" valign="top"><a id="ad595be8c74aecc478ac46c6c7aec12a0"></a>
+typedef struct DJI::OSDK::HotpointMission::YawRate&#160;</td><td class="memItemRight" valign="bottom"><b>YawRate</b></td></tr>
+<tr class="separator:ad595be8c74aecc478ac46c6c7aec12a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a2aa16e490d633facbbd5a14bc2e45e60"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1HotpointMission.html#a2aa16e490d633facbbd5a14bc2e45e60">HotpointMission</a> (<a class="el" href="classDJI_1_1OSDK_1_1Vehicle.html">Vehicle</a> *vehicle=0)</td></tr>
+<tr class="separator:a2aa16e490d633facbbd5a14bc2e45e60"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25a5f7ed542cbcc3344822f9a456c7fc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1HotpointMission.html#a25a5f7ed542cbcc3344822f9a456c7fc">initData</a> ()</td></tr>
+<tr class="memdesc:a25a5f7ed542cbcc3344822f9a456c7fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">init hotpoint default data  <a href="#a25a5f7ed542cbcc3344822f9a456c7fc">More...</a><br /></td></tr>
+<tr class="separator:a25a5f7ed542cbcc3344822f9a456c7fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a14972b9d8e86174a9f00fb327b824434"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structDJI_1_1OSDK_1_1HotPointSettings.html">HotPointSettings</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1HotpointMission.html#a14972b9d8e86174a9f00fb327b824434">getData</a> () const</td></tr>
+<tr class="memdesc:a14972b9d8e86174a9f00fb327b824434"><td class="mdescLeft">&#160;</td><td class="mdescRight">getting hotpoint data  <a href="#a14972b9d8e86174a9f00fb327b824434">More...</a><br /></td></tr>
+<tr class="separator:a14972b9d8e86174a9f00fb327b824434"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a0151215ad6204133361bd81e87f44c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1HotpointMission.html#a4a0151215ad6204133361bd81e87f44c">start</a> (<a class="el" href="namespaceDJI_1_1OSDK.html#a20a68c21abe449cf5f133f7d398055d3">VehicleCallBack</a> callback=0, <a class="el" href="namespaceDJI_1_1OSDK.html#aded24c93a2d064658a1f59cbf0e6eb9d">UserData</a> userData=0)</td></tr>
+<tr class="memdesc:a4a0151215ad6204133361bd81e87f44c"><td class="mdescLeft">&#160;</td><td class="mdescRight">start the hotpoint mission  <a href="#a4a0151215ad6204133361bd81e87f44c">More...</a><br /></td></tr>
+<tr class="separator:a4a0151215ad6204133361bd81e87f44c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03b7adf6cbac5a91101a578ee5ff8fd5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structDJI_1_1OSDK_1_1ACK_1_1ErrorCode.html">ACK::ErrorCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1HotpointMission.html#a03b7adf6cbac5a91101a578ee5ff8fd5">start</a> (int timer)</td></tr>
+<tr class="memdesc:a03b7adf6cbac5a91101a578ee5ff8fd5"><td class="mdescLeft">&#160;</td><td class="mdescRight">start the hotpoint mission  <a href="#a03b7adf6cbac5a91101a578ee5ff8fd5">More...</a><br /></td></tr>
+<tr class="separator:a03b7adf6cbac5a91101a578ee5ff8fd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac32563e7bc146fa96831237773280b36"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1HotpointMission.html#ac32563e7bc146fa96831237773280b36">stop</a> (<a class="el" href="namespaceDJI_1_1OSDK.html#a20a68c21abe449cf5f133f7d398055d3">VehicleCallBack</a> callback=0, <a class="el" href="namespaceDJI_1_1OSDK.html#aded24c93a2d064658a1f59cbf0e6eb9d">UserData</a> userData=0)</td></tr>
+<tr class="memdesc:ac32563e7bc146fa96831237773280b36"><td class="mdescLeft">&#160;</td><td class="mdescRight">stop the hotpoint mission  <a href="#ac32563e7bc146fa96831237773280b36">More...</a><br /></td></tr>
+<tr class="separator:ac32563e7bc146fa96831237773280b36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae91b0d3ca7da7ddb083cf1f678355ff8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structDJI_1_1OSDK_1_1ACK_1_1ErrorCode.html">ACK::ErrorCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1HotpointMission.html#ae91b0d3ca7da7ddb083cf1f678355ff8">stop</a> (int timer)</td></tr>
+<tr class="memdesc:ae91b0d3ca7da7ddb083cf1f678355ff8"><td class="mdescLeft">&#160;</td><td class="mdescRight">stop the hotpoint mission  <a href="#ae91b0d3ca7da7ddb083cf1f678355ff8">More...</a><br /></td></tr>
+<tr class="separator:ae91b0d3ca7da7ddb083cf1f678355ff8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae84f9c568ce391508eb125140e93345b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1HotpointMission.html#ae84f9c568ce391508eb125140e93345b">pause</a> (<a class="el" href="namespaceDJI_1_1OSDK.html#a20a68c21abe449cf5f133f7d398055d3">VehicleCallBack</a> callback=0, <a class="el" href="namespaceDJI_1_1OSDK.html#aded24c93a2d064658a1f59cbf0e6eb9d">UserData</a> userData=0)</td></tr>
+<tr class="memdesc:ae84f9c568ce391508eb125140e93345b"><td class="mdescLeft">&#160;</td><td class="mdescRight">pause the hotpoint mission  <a href="#ae84f9c568ce391508eb125140e93345b">More...</a><br /></td></tr>
+<tr class="separator:ae84f9c568ce391508eb125140e93345b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed544cba624572e7afb2fae017f908ad"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structDJI_1_1OSDK_1_1ACK_1_1ErrorCode.html">ACK::ErrorCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1HotpointMission.html#aed544cba624572e7afb2fae017f908ad">pause</a> (int timer)</td></tr>
+<tr class="memdesc:aed544cba624572e7afb2fae017f908ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">pause the hotpoint mission  <a href="#aed544cba624572e7afb2fae017f908ad">More...</a><br /></td></tr>
+<tr class="separator:aed544cba624572e7afb2fae017f908ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1fc73550ee5bcc36ca1b42550a5a693b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1HotpointMission.html#a1fc73550ee5bcc36ca1b42550a5a693b">resume</a> (<a class="el" href="namespaceDJI_1_1OSDK.html#a20a68c21abe449cf5f133f7d398055d3">VehicleCallBack</a> callback=0, <a class="el" href="namespaceDJI_1_1OSDK.html#aded24c93a2d064658a1f59cbf0e6eb9d">UserData</a> userData=0)</td></tr>
+<tr class="memdesc:a1fc73550ee5bcc36ca1b42550a5a693b"><td class="mdescLeft">&#160;</td><td class="mdescRight">resume the hotpoint mission  <a href="#a1fc73550ee5bcc36ca1b42550a5a693b">More...</a><br /></td></tr>
+<tr class="separator:a1fc73550ee5bcc36ca1b42550a5a693b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5b472af0da9c1370dae19d3e586ef00a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structDJI_1_1OSDK_1_1ACK_1_1ErrorCode.html">ACK::ErrorCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1HotpointMission.html#a5b472af0da9c1370dae19d3e586ef00a">resume</a> (int timer)</td></tr>
+<tr class="memdesc:a5b472af0da9c1370dae19d3e586ef00a"><td class="mdescLeft">&#160;</td><td class="mdescRight">resume the hotpoint mission  <a href="#a5b472af0da9c1370dae19d3e586ef00a">More...</a><br /></td></tr>
+<tr class="separator:a5b472af0da9c1370dae19d3e586ef00a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa73b985636b20e5449c2da4eaf98517c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1HotpointMission.html#aa73b985636b20e5449c2da4eaf98517c">updateYawRate</a> (YawRate &amp;Data, <a class="el" href="namespaceDJI_1_1OSDK.html#a20a68c21abe449cf5f133f7d398055d3">VehicleCallBack</a> callback=0, <a class="el" href="namespaceDJI_1_1OSDK.html#aded24c93a2d064658a1f59cbf0e6eb9d">UserData</a> userData=0)</td></tr>
+<tr class="memdesc:aa73b985636b20e5449c2da4eaf98517c"><td class="mdescLeft">&#160;</td><td class="mdescRight">update yaw rate and orientation of hotpoint mission  <a href="#aa73b985636b20e5449c2da4eaf98517c">More...</a><br /></td></tr>
+<tr class="separator:aa73b985636b20e5449c2da4eaf98517c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2649be5171a2e6f02ff96022423a7f32"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structDJI_1_1OSDK_1_1ACK_1_1ErrorCode.html">ACK::ErrorCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1HotpointMission.html#a2649be5171a2e6f02ff96022423a7f32">updateYawRate</a> (YawRate &amp;Data, int timer)</td></tr>
+<tr class="memdesc:a2649be5171a2e6f02ff96022423a7f32"><td class="mdescLeft">&#160;</td><td class="mdescRight">update yaw rate and orientation of hotpoint mission  <a href="#a2649be5171a2e6f02ff96022423a7f32">More...</a><br /></td></tr>
+<tr class="separator:a2649be5171a2e6f02ff96022423a7f32"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2999fe48791ddefe9c75a98ef7f58996"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1HotpointMission.html#a2999fe48791ddefe9c75a98ef7f58996">updateYawRate</a> (float32_t yawRate, bool isClockwise, <a class="el" href="namespaceDJI_1_1OSDK.html#a20a68c21abe449cf5f133f7d398055d3">VehicleCallBack</a> callback=0, <a class="el" href="namespaceDJI_1_1OSDK.html#aded24c93a2d064658a1f59cbf0e6eb9d">UserData</a> userData=0)</td></tr>
+<tr class="memdesc:a2999fe48791ddefe9c75a98ef7f58996"><td class="mdescLeft">&#160;</td><td class="mdescRight">update yaw rate and orientation of hotpoint mission  <a href="#a2999fe48791ddefe9c75a98ef7f58996">More...</a><br /></td></tr>
+<tr class="separator:a2999fe48791ddefe9c75a98ef7f58996"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a23db500bffe71b0dca90c70b10e751d4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1HotpointMission.html#a23db500bffe71b0dca90c70b10e751d4">updateRadius</a> (float32_t meter, <a class="el" href="namespaceDJI_1_1OSDK.html#a20a68c21abe449cf5f133f7d398055d3">VehicleCallBack</a> callback=0, <a class="el" href="namespaceDJI_1_1OSDK.html#aded24c93a2d064658a1f59cbf0e6eb9d">UserData</a> userData=0)</td></tr>
+<tr class="memdesc:a23db500bffe71b0dca90c70b10e751d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">update radius of hotpoint mission  <a href="#a23db500bffe71b0dca90c70b10e751d4">More...</a><br /></td></tr>
+<tr class="separator:a23db500bffe71b0dca90c70b10e751d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aafa97568c631a714657f6ec94694f792"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structDJI_1_1OSDK_1_1ACK_1_1ErrorCode.html">ACK::ErrorCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1HotpointMission.html#aafa97568c631a714657f6ec94694f792">updateRadius</a> (float32_t meter, int timer)</td></tr>
+<tr class="memdesc:aafa97568c631a714657f6ec94694f792"><td class="mdescLeft">&#160;</td><td class="mdescRight">update radius of hotpoint mission  <a href="#aafa97568c631a714657f6ec94694f792">More...</a><br /></td></tr>
+<tr class="separator:aafa97568c631a714657f6ec94694f792"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a610bf9468597c4e2da987b9419715f76"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1HotpointMission.html#a610bf9468597c4e2da987b9419715f76">resetYaw</a> (<a class="el" href="namespaceDJI_1_1OSDK.html#a20a68c21abe449cf5f133f7d398055d3">VehicleCallBack</a> callback=0, <a class="el" href="namespaceDJI_1_1OSDK.html#aded24c93a2d064658a1f59cbf0e6eb9d">UserData</a> userData=0)</td></tr>
+<tr class="memdesc:a610bf9468597c4e2da987b9419715f76"><td class="mdescLeft">&#160;</td><td class="mdescRight">reset yaw of hotpoint mission  <a href="#a610bf9468597c4e2da987b9419715f76">More...</a><br /></td></tr>
+<tr class="separator:a610bf9468597c4e2da987b9419715f76"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab04d05cdaea0ca14bf7ca6cfa14550da"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structDJI_1_1OSDK_1_1ACK_1_1ErrorCode.html">ACK::ErrorCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1HotpointMission.html#ab04d05cdaea0ca14bf7ca6cfa14550da">resetYaw</a> (int timer)</td></tr>
+<tr class="memdesc:ab04d05cdaea0ca14bf7ca6cfa14550da"><td class="mdescLeft">&#160;</td><td class="mdescRight">reset yaw of hotpoint mission  <a href="#ab04d05cdaea0ca14bf7ca6cfa14550da">More...</a><br /></td></tr>
+<tr class="separator:ab04d05cdaea0ca14bf7ca6cfa14550da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb0acb3f2efd5b93e19bf9703a5a7945"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1HotpointMission.html#abb0acb3f2efd5b93e19bf9703a5a7945">getHotpointSettings</a> (<a class="el" href="namespaceDJI_1_1OSDK.html#a20a68c21abe449cf5f133f7d398055d3">VehicleCallBack</a> callback=0, <a class="el" href="namespaceDJI_1_1OSDK.html#aded24c93a2d064658a1f59cbf0e6eb9d">UserData</a> userData=0)</td></tr>
+<tr class="memdesc:abb0acb3f2efd5b93e19bf9703a5a7945"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read hotpoint mission information from flight controller.  <a href="#abb0acb3f2efd5b93e19bf9703a5a7945">More...</a><br /></td></tr>
+<tr class="separator:abb0acb3f2efd5b93e19bf9703a5a7945"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac6ed7f19d00ccada93dfd0fda031286e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structDJI_1_1OSDK_1_1ACK_1_1HotPointRead.html">ACK::HotPointRead</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1HotpointMission.html#ac6ed7f19d00ccada93dfd0fda031286e">getHotpointSettings</a> (int timer)</td></tr>
+<tr class="memdesc:ac6ed7f19d00ccada93dfd0fda031286e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read hotpoint mission information from flight controller.  <a href="#ac6ed7f19d00ccada93dfd0fda031286e">More...</a><br /></td></tr>
+<tr class="separator:ac6ed7f19d00ccada93dfd0fda031286e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c292d437ea5af86b87f3e621935e56d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1HotpointMission.html#a4c292d437ea5af86b87f3e621935e56d">setHotpointCallback</a> (<a class="el" href="namespaceDJI_1_1OSDK.html#a20a68c21abe449cf5f133f7d398055d3">VehicleCallBack</a> callback, <a class="el" href="namespaceDJI_1_1OSDK.html#aded24c93a2d064658a1f59cbf0e6eb9d">UserData</a> userData)</td></tr>
+<tr class="memdesc:a4c292d437ea5af86b87f3e621935e56d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set hotpoint callback.  <a href="#a4c292d437ea5af86b87f3e621935e56d">More...</a><br /></td></tr>
+<tr class="separator:a4c292d437ea5af86b87f3e621935e56d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93684377dc3688fabbc41eb50956bbc6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1HotpointMission.html#a93684377dc3688fabbc41eb50956bbc6">setData</a> (<a class="el" href="structDJI_1_1OSDK_1_1HotPointSettings.html">HotPointSettings</a> *data)</td></tr>
+<tr class="memdesc:a93684377dc3688fabbc41eb50956bbc6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set hotpoint data for initialization purpose.  <a href="#a93684377dc3688fabbc41eb50956bbc6">More...</a><br /></td></tr>
+<tr class="separator:a93684377dc3688fabbc41eb50956bbc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa997b14e21eba4a8fc73a8b1a346d724"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1HotpointMission.html#aa997b14e21eba4a8fc73a8b1a346d724">setHotPoint</a> (float64_t longitude, float64_t latitude, float64_t altitude)</td></tr>
+<tr class="memdesc:aa997b14e21eba4a8fc73a8b1a346d724"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set hotpoint data for initialization purpose.  <a href="#aa997b14e21eba4a8fc73a8b1a346d724">More...</a><br /></td></tr>
+<tr class="separator:aa997b14e21eba4a8fc73a8b1a346d724"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2946e47508f5ec822f4795eb811afc12"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1HotpointMission.html#a2946e47508f5ec822f4795eb811afc12">setHotPoint</a> (<a class="el" href="structDJI_1_1OSDK_1_1Telemetry_1_1GlobalPosition.html">Telemetry::GlobalPosition</a> gps)</td></tr>
+<tr class="memdesc:a2946e47508f5ec822f4795eb811afc12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set hotpoint data for initialization purpose.  <a href="#a2946e47508f5ec822f4795eb811afc12">More...</a><br /></td></tr>
+<tr class="separator:a2946e47508f5ec822f4795eb811afc12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a277d36e0e8107e819360e9cf1049713e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1HotpointMission.html#a277d36e0e8107e819360e9cf1049713e">setRadius</a> (float64_t meter)</td></tr>
+<tr class="memdesc:a277d36e0e8107e819360e9cf1049713e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set hotpoint data for initialization purpose.  <a href="#a277d36e0e8107e819360e9cf1049713e">More...</a><br /></td></tr>
+<tr class="separator:a277d36e0e8107e819360e9cf1049713e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af8583e764f9097c6d67dd257d2263ae7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1HotpointMission.html#af8583e764f9097c6d67dd257d2263ae7">setYawRate</a> (float32_t degree)</td></tr>
+<tr class="memdesc:af8583e764f9097c6d67dd257d2263ae7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set hotpoint data for initialization purpose.  <a href="#af8583e764f9097c6d67dd257d2263ae7">More...</a><br /></td></tr>
+<tr class="separator:af8583e764f9097c6d67dd257d2263ae7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee686337934a2302ca8533df0cffe480"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1HotpointMission.html#aee686337934a2302ca8533df0cffe480">setClockwise</a> (bool isClockwise)</td></tr>
+<tr class="memdesc:aee686337934a2302ca8533df0cffe480"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set hotpoint data for initialization purpose.  <a href="#aee686337934a2302ca8533df0cffe480">More...</a><br /></td></tr>
+<tr class="separator:aee686337934a2302ca8533df0cffe480"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec0d5fa28da5381df51108211056b2a2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1HotpointMission.html#aec0d5fa28da5381df51108211056b2a2">setCameraView</a> (View view)</td></tr>
+<tr class="memdesc:aec0d5fa28da5381df51108211056b2a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set hotpoint data for initialization purpose.  <a href="#aec0d5fa28da5381df51108211056b2a2">More...</a><br /></td></tr>
+<tr class="separator:aec0d5fa28da5381df51108211056b2a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a105c0713ebe5d11e0242e00baf52639e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1HotpointMission.html#a105c0713ebe5d11e0242e00baf52639e">setYawMode</a> (YawMode mode)</td></tr>
+<tr class="memdesc:a105c0713ebe5d11e0242e00baf52639e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set hotpoint data for initialization purpose.  <a href="#a105c0713ebe5d11e0242e00baf52639e">More...</a><br /></td></tr>
+<tr class="separator:a105c0713ebe5d11e0242e00baf52639e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classDJI_1_1OSDK_1_1MissionBase"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classDJI_1_1OSDK_1_1MissionBase')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classDJI_1_1OSDK_1_1MissionBase.html">DJI::OSDK::MissionBase</a></td></tr>
+<tr class="memitem:aa2a6becb5c63af4389c01be8666f94a4 inherit pub_methods_classDJI_1_1OSDK_1_1MissionBase"><td class="memItemLeft" align="right" valign="top"><a id="aa2a6becb5c63af4389c01be8666f94a4"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>MissionBase</b> (<a class="el" href="classDJI_1_1OSDK_1_1Vehicle.html">Vehicle</a> *vehicle=0)</td></tr>
+<tr class="separator:aa2a6becb5c63af4389c01be8666f94a4 inherit pub_methods_classDJI_1_1OSDK_1_1MissionBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:afb0c8327e444a78a49c03b3bf0946730"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1HotpointMission.html#afb0c8327e444a78a49c03b3bf0946730">startCallback</a> (RecvContainer recvFrame, <a class="el" href="namespaceDJI_1_1OSDK.html#aded24c93a2d064658a1f59cbf0e6eb9d">UserData</a> userData)</td></tr>
+<tr class="memdesc:afb0c8327e444a78a49c03b3bf0946730"><td class="mdescLeft">&#160;</td><td class="mdescRight">A callback function for start non-blocking calls.  <a href="#afb0c8327e444a78a49c03b3bf0946730">More...</a><br /></td></tr>
+<tr class="separator:afb0c8327e444a78a49c03b3bf0946730"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae3e8c6c6d26a54cd28acb1a1efdaad1e"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1HotpointMission.html#ae3e8c6c6d26a54cd28acb1a1efdaad1e">getHotpointSettingsCallback</a> (<a class="el" href="classDJI_1_1OSDK_1_1Vehicle.html">Vehicle</a> *vehiclePtr, RecvContainer recvFrame, <a class="el" href="namespaceDJI_1_1OSDK.html#aded24c93a2d064658a1f59cbf0e6eb9d">UserData</a> userData)</td></tr>
+<tr class="memdesc:ae3e8c6c6d26a54cd28acb1a1efdaad1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">A callback function for read non-blocking calls.  <a href="#ae3e8c6c6d26a54cd28acb1a1efdaad1e">More...</a><br /></td></tr>
+<tr class="separator:ae3e8c6c6d26a54cd28acb1a1efdaad1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:aadfa36fbb7ea6eed16702fe7d0fc5cb7"><td class="memItemLeft" align="right" valign="top"><a id="aadfa36fbb7ea6eed16702fe7d0fc5cb7"></a>
+<a class="el" href="structDJI_1_1OSDK_1_1VehicleCallBackHandler.html">VehicleCallBackHandler</a>&#160;</td><td class="memItemRight" valign="bottom"><b>hotPointCallback</b></td></tr>
+<tr class="separator:aadfa36fbb7ea6eed16702fe7d0fc5cb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pro_attribs_classDJI_1_1OSDK_1_1MissionBase"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classDJI_1_1OSDK_1_1MissionBase')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classDJI_1_1OSDK_1_1MissionBase.html">DJI::OSDK::MissionBase</a></td></tr>
+<tr class="memitem:a609ce3f029a50b5ed4364df4c500253d inherit pro_attribs_classDJI_1_1OSDK_1_1MissionBase"><td class="memItemLeft" align="right" valign="top"><a id="a609ce3f029a50b5ed4364df4c500253d"></a>
+<a class="el" href="classDJI_1_1OSDK_1_1Vehicle.html">Vehicle</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>vehicle</b></td></tr>
+<tr class="separator:a609ce3f029a50b5ed4364df4c500253d inherit pro_attribs_classDJI_1_1OSDK_1_1MissionBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>APIs for Hotpoint (Point of Interest) Missions. </p>
+<p>This class inherits from <a class="el" href="classDJI_1_1OSDK_1_1MissionBase.html" title="Mission Base class for commonality between SDK Missions.">MissionBase</a> and can be used with <a class="el" href="classDJI_1_1OSDK_1_1MissionManager.html" title="MissionManager class for chaining/managing missions.">MissionManager</a>. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a2aa16e490d633facbbd5a14bc2e45e60"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2aa16e490d633facbbd5a14bc2e45e60">&#9670;&nbsp;</a></span>HotpointMission()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">HotpointMission::HotpointMission </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classDJI_1_1OSDK_1_1Vehicle.html">Vehicle</a> *&#160;</td>
+          <td class="paramname"><em>vehicle</em> = <code>0</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section note"><dt>Note</dt><dd>API functions </dd></dl>
+<dl class="section attention"><dt>Attention</dt><dd>difference between set and update <br />
+ Set functions only change the HotPoint data in this class, Update functions will change the Mission status. In other words: drone will response update functions immediately. </dd></dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a14972b9d8e86174a9f00fb327b824434"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a14972b9d8e86174a9f00fb327b824434">&#9670;&nbsp;</a></span>getData()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structDJI_1_1OSDK_1_1HotPointSettings.html">HotPointSettings</a> HotpointMission::getData </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>getting hotpoint data </p>
+
+</div>
+</div>
+<a id="abb0acb3f2efd5b93e19bf9703a5a7945"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb0acb3f2efd5b93e19bf9703a5a7945">&#9670;&nbsp;</a></span>getHotpointSettings() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void HotpointMission::getHotpointSettings </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceDJI_1_1OSDK.html#a20a68c21abe449cf5f133f7d398055d3">VehicleCallBack</a>&#160;</td>
+          <td class="paramname"><em>callback</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceDJI_1_1OSDK.html#aded24c93a2d064658a1f59cbf0e6eb9d">UserData</a>&#160;</td>
+          <td class="paramname"><em>userData</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Read hotpoint mission information from flight controller. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">callback</td><td>callback function </td></tr>
+    <tr><td class="paramname">userData</td><td>user data (void ptr) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ac6ed7f19d00ccada93dfd0fda031286e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac6ed7f19d00ccada93dfd0fda031286e">&#9670;&nbsp;</a></span>getHotpointSettings() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structDJI_1_1OSDK_1_1ACK_1_1HotPointRead.html">ACK::HotPointRead</a> HotpointMission::getHotpointSettings </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>timer</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Read hotpoint mission information from flight controller. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">timer</td><td>timeout to wait for <a class="el" href="classDJI_1_1OSDK_1_1ACK.html" title="Class for handling acknowledgements from the aircraft.">ACK</a> </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ae3e8c6c6d26a54cd28acb1a1efdaad1e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae3e8c6c6d26a54cd28acb1a1efdaad1e">&#9670;&nbsp;</a></span>getHotpointSettingsCallback()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void HotpointMission::getHotpointSettingsCallback </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classDJI_1_1OSDK_1_1Vehicle.html">Vehicle</a> *&#160;</td>
+          <td class="paramname"><em>vehiclePtr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">RecvContainer&#160;</td>
+          <td class="paramname"><em>recvFrame</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceDJI_1_1OSDK.html#aded24c93a2d064658a1f59cbf0e6eb9d">UserData</a>&#160;</td>
+          <td class="paramname"><em>userData</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>A callback function for read non-blocking calls. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">recvFrame</td><td>the data comes with the callback function </td></tr>
+    <tr><td class="paramname">userData</td><td>a void ptr that user can manipulate inside the callback </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a25a5f7ed542cbcc3344822f9a456c7fc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a25a5f7ed542cbcc3344822f9a456c7fc">&#9670;&nbsp;</a></span>initData()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void HotpointMission::initData </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>init hotpoint default data </p>
+
+</div>
+</div>
+<a id="ae84f9c568ce391508eb125140e93345b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae84f9c568ce391508eb125140e93345b">&#9670;&nbsp;</a></span>pause() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void HotpointMission::pause </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceDJI_1_1OSDK.html#a20a68c21abe449cf5f133f7d398055d3">VehicleCallBack</a>&#160;</td>
+          <td class="paramname"><em>callback</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceDJI_1_1OSDK.html#aded24c93a2d064658a1f59cbf0e6eb9d">UserData</a>&#160;</td>
+          <td class="paramname"><em>userData</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>pause the hotpoint mission </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">callback</td><td>callback function </td></tr>
+    <tr><td class="paramname">userData</td><td>user data (void ptr) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="classDJI_1_1OSDK_1_1MissionBase.html">DJI::OSDK::MissionBase</a>.</p>
+
+</div>
+</div>
+<a id="aed544cba624572e7afb2fae017f908ad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aed544cba624572e7afb2fae017f908ad">&#9670;&nbsp;</a></span>pause() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structDJI_1_1OSDK_1_1ACK_1_1ErrorCode.html">ACK::ErrorCode</a> HotpointMission::pause </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>timer</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>pause the hotpoint mission </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">timer</td><td>timeout to wait for <a class="el" href="classDJI_1_1OSDK_1_1ACK.html" title="Class for handling acknowledgements from the aircraft.">ACK</a> </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="classDJI_1_1OSDK_1_1MissionBase.html">DJI::OSDK::MissionBase</a>.</p>
+
+</div>
+</div>
+<a id="a610bf9468597c4e2da987b9419715f76"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a610bf9468597c4e2da987b9419715f76">&#9670;&nbsp;</a></span>resetYaw() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void HotpointMission::resetYaw </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceDJI_1_1OSDK.html#a20a68c21abe449cf5f133f7d398055d3">VehicleCallBack</a>&#160;</td>
+          <td class="paramname"><em>callback</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceDJI_1_1OSDK.html#aded24c93a2d064658a1f59cbf0e6eb9d">UserData</a>&#160;</td>
+          <td class="paramname"><em>userData</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>reset yaw of hotpoint mission </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">callback</td><td>callback function </td></tr>
+    <tr><td class="paramname">userData</td><td>user data (void ptr) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ab04d05cdaea0ca14bf7ca6cfa14550da"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab04d05cdaea0ca14bf7ca6cfa14550da">&#9670;&nbsp;</a></span>resetYaw() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structDJI_1_1OSDK_1_1ACK_1_1ErrorCode.html">ACK::ErrorCode</a> HotpointMission::resetYaw </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>timer</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>reset yaw of hotpoint mission </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">timer</td><td>timeout to wait for <a class="el" href="classDJI_1_1OSDK_1_1ACK.html" title="Class for handling acknowledgements from the aircraft.">ACK</a> </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a1fc73550ee5bcc36ca1b42550a5a693b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1fc73550ee5bcc36ca1b42550a5a693b">&#9670;&nbsp;</a></span>resume() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void HotpointMission::resume </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceDJI_1_1OSDK.html#a20a68c21abe449cf5f133f7d398055d3">VehicleCallBack</a>&#160;</td>
+          <td class="paramname"><em>callback</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceDJI_1_1OSDK.html#aded24c93a2d064658a1f59cbf0e6eb9d">UserData</a>&#160;</td>
+          <td class="paramname"><em>userData</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>resume the hotpoint mission </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">callback</td><td>callback function </td></tr>
+    <tr><td class="paramname">userData</td><td>user data (void ptr) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="classDJI_1_1OSDK_1_1MissionBase.html">DJI::OSDK::MissionBase</a>.</p>
+
+</div>
+</div>
+<a id="a5b472af0da9c1370dae19d3e586ef00a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5b472af0da9c1370dae19d3e586ef00a">&#9670;&nbsp;</a></span>resume() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structDJI_1_1OSDK_1_1ACK_1_1ErrorCode.html">ACK::ErrorCode</a> HotpointMission::resume </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>timer</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>resume the hotpoint mission </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">timer</td><td>timeout to wait for <a class="el" href="classDJI_1_1OSDK_1_1ACK.html" title="Class for handling acknowledgements from the aircraft.">ACK</a> </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="classDJI_1_1OSDK_1_1MissionBase.html">DJI::OSDK::MissionBase</a>.</p>
+
+</div>
+</div>
+<a id="aec0d5fa28da5381df51108211056b2a2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aec0d5fa28da5381df51108211056b2a2">&#9670;&nbsp;</a></span>setCameraView()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void HotpointMission::setCameraView </td>
+          <td>(</td>
+          <td class="paramtype">HotpointMission::View&#160;</td>
+          <td class="paramname"><em>view</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set hotpoint data for initialization purpose. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">view</td><td>check View struct </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aee686337934a2302ca8533df0cffe480"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aee686337934a2302ca8533df0cffe480">&#9670;&nbsp;</a></span>setClockwise()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void HotpointMission::setClockwise </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isClockwise</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set hotpoint data for initialization purpose. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">isClockwise</td><td>isClockwise </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a93684377dc3688fabbc41eb50956bbc6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a93684377dc3688fabbc41eb50956bbc6">&#9670;&nbsp;</a></span>setData()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void HotpointMission::setData </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structDJI_1_1OSDK_1_1HotPointSettings.html">HotPointSettings</a> *&#160;</td>
+          <td class="paramname"><em>data</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set hotpoint data for initialization purpose. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">data</td><td><a class="el" href="structDJI_1_1OSDK_1_1HotPointSettings.html" title="HotPoint Mission Initialization settings.">HotPointSettings</a> </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aa997b14e21eba4a8fc73a8b1a346d724"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa997b14e21eba4a8fc73a8b1a346d724">&#9670;&nbsp;</a></span>setHotPoint() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void HotpointMission::setHotPoint </td>
+          <td>(</td>
+          <td class="paramtype">float64_t&#160;</td>
+          <td class="paramname"><em>longitude</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float64_t&#160;</td>
+          <td class="paramname"><em>latitude</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float64_t&#160;</td>
+          <td class="paramname"><em>altitude</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set hotpoint data for initialization purpose. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">longitude</td><td>longitude </td></tr>
+    <tr><td class="paramname">latitude</td><td>latitude </td></tr>
+    <tr><td class="paramname">altitude</td><td>altitude </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a2946e47508f5ec822f4795eb811afc12"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2946e47508f5ec822f4795eb811afc12">&#9670;&nbsp;</a></span>setHotPoint() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void HotpointMission::setHotPoint </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structDJI_1_1OSDK_1_1Telemetry_1_1GlobalPosition.html">Telemetry::GlobalPosition</a>&#160;</td>
+          <td class="paramname"><em>gps</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set hotpoint data for initialization purpose. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">gps</td><td>gps </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a4c292d437ea5af86b87f3e621935e56d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4c292d437ea5af86b87f3e621935e56d">&#9670;&nbsp;</a></span>setHotpointCallback()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void HotpointMission::setHotpointCallback </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceDJI_1_1OSDK.html#a20a68c21abe449cf5f133f7d398055d3">VehicleCallBack</a>&#160;</td>
+          <td class="paramname"><em>callback</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceDJI_1_1OSDK.html#aded24c93a2d064658a1f59cbf0e6eb9d">UserData</a>&#160;</td>
+          <td class="paramname"><em>userData</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set hotpoint callback. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">callback</td><td>callback function </td></tr>
+    <tr><td class="paramname">userData</td><td>a void ptr that user can manipulate inside the callback </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a277d36e0e8107e819360e9cf1049713e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a277d36e0e8107e819360e9cf1049713e">&#9670;&nbsp;</a></span>setRadius()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void HotpointMission::setRadius </td>
+          <td>(</td>
+          <td class="paramtype">float64_t&#160;</td>
+          <td class="paramname"><em>meter</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set hotpoint data for initialization purpose. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">meter</td><td>radius in meter </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a105c0713ebe5d11e0242e00baf52639e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a105c0713ebe5d11e0242e00baf52639e">&#9670;&nbsp;</a></span>setYawMode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void HotpointMission::setYawMode </td>
+          <td>(</td>
+          <td class="paramtype">HotpointMission::YawMode&#160;</td>
+          <td class="paramname"><em>mode</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set hotpoint data for initialization purpose. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">mode</td><td>check YawMode struct </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="af8583e764f9097c6d67dd257d2263ae7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af8583e764f9097c6d67dd257d2263ae7">&#9670;&nbsp;</a></span>setYawRate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void HotpointMission::setYawRate </td>
+          <td>(</td>
+          <td class="paramtype">float32_t&#160;</td>
+          <td class="paramname"><em>degree</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set hotpoint data for initialization purpose. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">degree</td><td>yawrate in degree/sec </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a4a0151215ad6204133361bd81e87f44c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4a0151215ad6204133361bd81e87f44c">&#9670;&nbsp;</a></span>start() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void HotpointMission::start </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceDJI_1_1OSDK.html#a20a68c21abe449cf5f133f7d398055d3">VehicleCallBack</a>&#160;</td>
+          <td class="paramname"><em>callback</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceDJI_1_1OSDK.html#aded24c93a2d064658a1f59cbf0e6eb9d">UserData</a>&#160;</td>
+          <td class="paramname"><em>userData</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>start the hotpoint mission </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">callback</td><td>callback function </td></tr>
+    <tr><td class="paramname">userData</td><td>user data (void ptr) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="classDJI_1_1OSDK_1_1MissionBase.html">DJI::OSDK::MissionBase</a>.</p>
+
+</div>
+</div>
+<a id="a03b7adf6cbac5a91101a578ee5ff8fd5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a03b7adf6cbac5a91101a578ee5ff8fd5">&#9670;&nbsp;</a></span>start() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structDJI_1_1OSDK_1_1ACK_1_1ErrorCode.html">ACK::ErrorCode</a> HotpointMission::start </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>timer</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>start the hotpoint mission </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">timer</td><td>timeout to wait for <a class="el" href="classDJI_1_1OSDK_1_1ACK.html" title="Class for handling acknowledgements from the aircraft.">ACK</a> </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="classDJI_1_1OSDK_1_1MissionBase.html">DJI::OSDK::MissionBase</a>.</p>
+
+</div>
+</div>
+<a id="afb0c8327e444a78a49c03b3bf0946730"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afb0c8327e444a78a49c03b3bf0946730">&#9670;&nbsp;</a></span>startCallback()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void HotpointMission::startCallback </td>
+          <td>(</td>
+          <td class="paramtype">RecvContainer&#160;</td>
+          <td class="paramname"><em>recvFrame</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceDJI_1_1OSDK.html#aded24c93a2d064658a1f59cbf0e6eb9d">UserData</a>&#160;</td>
+          <td class="paramname"><em>userData</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>A callback function for start non-blocking calls. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">recvFrame</td><td>the data comes with the callback function </td></tr>
+    <tr><td class="paramname">userData</td><td>a void ptr that user can manipulate inside the callback </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ac32563e7bc146fa96831237773280b36"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac32563e7bc146fa96831237773280b36">&#9670;&nbsp;</a></span>stop() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void HotpointMission::stop </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceDJI_1_1OSDK.html#a20a68c21abe449cf5f133f7d398055d3">VehicleCallBack</a>&#160;</td>
+          <td class="paramname"><em>callback</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceDJI_1_1OSDK.html#aded24c93a2d064658a1f59cbf0e6eb9d">UserData</a>&#160;</td>
+          <td class="paramname"><em>userData</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>stop the hotpoint mission </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">callback</td><td>callback function </td></tr>
+    <tr><td class="paramname">userData</td><td>user data (void ptr) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="classDJI_1_1OSDK_1_1MissionBase.html">DJI::OSDK::MissionBase</a>.</p>
+
+</div>
+</div>
+<a id="ae91b0d3ca7da7ddb083cf1f678355ff8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae91b0d3ca7da7ddb083cf1f678355ff8">&#9670;&nbsp;</a></span>stop() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structDJI_1_1OSDK_1_1ACK_1_1ErrorCode.html">ACK::ErrorCode</a> HotpointMission::stop </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>timer</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>stop the hotpoint mission </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">timer</td><td>timeout to wait for <a class="el" href="classDJI_1_1OSDK_1_1ACK.html" title="Class for handling acknowledgements from the aircraft.">ACK</a> </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="classDJI_1_1OSDK_1_1MissionBase.html">DJI::OSDK::MissionBase</a>.</p>
+
+</div>
+</div>
+<a id="a23db500bffe71b0dca90c70b10e751d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a23db500bffe71b0dca90c70b10e751d4">&#9670;&nbsp;</a></span>updateRadius() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void HotpointMission::updateRadius </td>
+          <td>(</td>
+          <td class="paramtype">float32_t&#160;</td>
+          <td class="paramname"><em>meter</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceDJI_1_1OSDK.html#a20a68c21abe449cf5f133f7d398055d3">VehicleCallBack</a>&#160;</td>
+          <td class="paramname"><em>callback</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceDJI_1_1OSDK.html#aded24c93a2d064658a1f59cbf0e6eb9d">UserData</a>&#160;</td>
+          <td class="paramname"><em>userData</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>update radius of hotpoint mission </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">meter</td><td>radius </td></tr>
+    <tr><td class="paramname">callback</td><td>callback function </td></tr>
+    <tr><td class="paramname">userData</td><td>user data (void ptr) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aafa97568c631a714657f6ec94694f792"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aafa97568c631a714657f6ec94694f792">&#9670;&nbsp;</a></span>updateRadius() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structDJI_1_1OSDK_1_1ACK_1_1ErrorCode.html">ACK::ErrorCode</a> HotpointMission::updateRadius </td>
+          <td>(</td>
+          <td class="paramtype">float32_t&#160;</td>
+          <td class="paramname"><em>meter</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>timer</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>update radius of hotpoint mission </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">meter</td><td>radius </td></tr>
+    <tr><td class="paramname">timer</td><td>timeout to wait for <a class="el" href="classDJI_1_1OSDK_1_1ACK.html" title="Class for handling acknowledgements from the aircraft.">ACK</a> </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aa73b985636b20e5449c2da4eaf98517c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa73b985636b20e5449c2da4eaf98517c">&#9670;&nbsp;</a></span>updateYawRate() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void HotpointMission::updateYawRate </td>
+          <td>(</td>
+          <td class="paramtype">HotpointMission::YawRate &amp;&#160;</td>
+          <td class="paramname"><em>Data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceDJI_1_1OSDK.html#a20a68c21abe449cf5f133f7d398055d3">VehicleCallBack</a>&#160;</td>
+          <td class="paramname"><em>callback</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceDJI_1_1OSDK.html#aded24c93a2d064658a1f59cbf0e6eb9d">UserData</a>&#160;</td>
+          <td class="paramname"><em>userData</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>update yaw rate and orientation of hotpoint mission </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Data</td><td>specified yaw rate and orientation </td></tr>
+    <tr><td class="paramname">callback</td><td>callback function </td></tr>
+    <tr><td class="paramname">userData</td><td>user data (void ptr) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a2649be5171a2e6f02ff96022423a7f32"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2649be5171a2e6f02ff96022423a7f32">&#9670;&nbsp;</a></span>updateYawRate() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structDJI_1_1OSDK_1_1ACK_1_1ErrorCode.html">ACK::ErrorCode</a> HotpointMission::updateYawRate </td>
+          <td>(</td>
+          <td class="paramtype">HotpointMission::YawRate &amp;&#160;</td>
+          <td class="paramname"><em>Data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>timer</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>update yaw rate and orientation of hotpoint mission </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Data</td><td>specified yaw rate and orientation </td></tr>
+    <tr><td class="paramname">timer</td><td>timeout to wait for <a class="el" href="classDJI_1_1OSDK_1_1ACK.html" title="Class for handling acknowledgements from the aircraft.">ACK</a> </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a2999fe48791ddefe9c75a98ef7f58996"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2999fe48791ddefe9c75a98ef7f58996">&#9670;&nbsp;</a></span>updateYawRate() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void HotpointMission::updateYawRate </td>
+          <td>(</td>
+          <td class="paramtype">float32_t&#160;</td>
+          <td class="paramname"><em>yawRate</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isClockwise</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceDJI_1_1OSDK.html#a20a68c21abe449cf5f133f7d398055d3">VehicleCallBack</a>&#160;</td>
+          <td class="paramname"><em>callback</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceDJI_1_1OSDK.html#aded24c93a2d064658a1f59cbf0e6eb9d">UserData</a>&#160;</td>
+          <td class="paramname"><em>userData</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>update yaw rate and orientation of hotpoint mission </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">yawRate</td><td>specified yaw rate </td></tr>
+    <tr><td class="paramname">isClockwise</td><td>specified orientation </td></tr>
+    <tr><td class="paramname">timer</td><td>timeout to wait for <a class="el" href="classDJI_1_1OSDK_1_1ACK.html" title="Class for handling acknowledgements from the aircraft.">ACK</a> </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following files:<ul>
+<li>osdk-core/api/inc/<a class="el" href="dji__hotpoint_8hpp_source.html">dji_hotpoint.hpp</a></li>
+<li>osdk-core/api/src/<a class="el" href="dji__hotpoint_8cpp.html">dji_hotpoint.cpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- HTML footer for doxygen 1.8.8-->
+<!-- start footer part -->
+</div>
+</div>
+</div>
+</div>
+</div>
+<hr class="footer"/><address class="footer"><small>
+  <footer id="site-footer" class="site-footer">
+    <div class="container">
+      <div class="foot-nav row">
+        <nav class="link-list col-xs-2"><span class="title">SDK</span><a href="/mobile-sdk">Mobile SDK</a><a href="/ux-sdk">UX SDK</a><a href="/onboard-sdk">Onboard SDK</a><a href="/payload-sdk">Payload SDK</a><a href="/windows-sdk">Windows SDK</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Info</span><a href="/products">Products</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Community</span><a href="http://stackoverflow.com/questions/tagged/dji-sdk" target="_blank">Stack Overflow</a><a href="https://www.youtube.com/channel/UCPQwN5xsob8zZGIcDhkYqUA" target="_blank">YouTube</a><a href="https://twitter.com/djidevelopers" target="_blank">Twitter</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Contact Us</span><a href="mailto:dev@dji.com"> dev@dji.com</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Business Cooperation</span><a href="mailto:dev@dji.com"> dev@dji.com</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">BILLING</span><a href="mailto:billing-dev@dji.com"> billing-dev@dji.com</a></nav>
+      </div>
+      <div class="foot-copyright row">
+        <div class="col-xs-3 foot-logo"><img src="dji-logo-foot.png"></div>
+        <div class="copyright col-xs-7"><span>Copyright © 2018 DJI All Rights Reserved</span><a href="/policies/privacy">Privacy Policy</a><a href="/policies/terms">Terms of Use</a></div>
+        <div class="col-xs-2">
+          <div class="lang-selector">
+            <select dir="rtl" v-model="lang">
+              <option value="en">English</option>
+              <option value="cn">中文</option>
+            </select><i class="fa fa-globe"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</small></address>
+</body>
+<script type="text/javascript" src="doxy-boot.js"></script>
+</html>

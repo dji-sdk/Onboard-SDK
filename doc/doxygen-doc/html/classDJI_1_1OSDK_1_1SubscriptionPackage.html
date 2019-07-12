@@ -1,0 +1,371 @@
+<!-- HTML header for doxygen 1.8.8-->
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- For Mobile Devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8" />
+    <meta name="generator" content="Doxygen 1.8.15" />
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <title>DJI Onboard SDK: DJI::OSDK::SubscriptionPackage Class Reference</title>
+    <!-- <link href="tabs.css" rel="stylesheet" type="text/css"/> -->
+    <script type="text/javascript" src="dynsections.js"></script>
+    <link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+    <link href="doxygen.css" rel="stylesheet" type="text/css" />
+    <link href="customdoxygen.css" rel="stylesheet" type="text/css"/>
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Slab' rel='stylesheet' type='text/css'>
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link href="jquery.smartmenus.bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="bootstrap-theme.css">
+    <script src="bootstrap.min.js"></script>
+    <link href="jquery.smartmenus.bootstrap.css" rel="stylesheet">
+    <!-- SmartMenus jQuery plugin -->
+    <script type="text/javascript" src="jquery.smartmenus.min.js"></script>
+    <!-- SmartMenus jQuery Bootstrap Addon -->
+    <script type="text/javascript" src="jquery.smartmenus.bootstrap.min.js"></script>
+    <style>
+        .has-submenu {
+            position: relative;
+        }
+        #main-nav {
+            margin-top: 60px;
+        }
+    </style>
+</head>
+<body>
+    <nav id="site-header" class="site-header navbar">
+        <div class="container">
+            <div class="navbar-header"><a href="/" class="logo"><img src="dji-logo@2x.png">Developer</a></div>
+            <div id="header-navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="/mobile-sdk">Mobile SDK</a></li>
+                    <li><a href="/ux-sdk">UX SDK</a></li>
+                    <li><a href="/onboard-sdk">Onboard SDK</a></li>
+                    <li><a href="/payload-sdk">Payload SDK</a></li>
+                    <li><a href="/windows-sdk">Windows SDK</a></li>
+                </ul>
+                <ul v-cloak="" v-show="!loggedIn" class="nav navbar-nav navbar-right nav-user">
+                    <li><a
+                            href="https://account.dji.com/login?appId=dji_sdk&backUrl=https%3A%2F%2Fdeveloper.dji.com%2Fuser&locale=en_US">Login</a>
+                    </li>
+                    <li><a href="https://account.dji.com/register?appId=dji_sdk&backUrl=https%3A%2F%2Fdeveloper.dji.com%2Fuser&locale=en_US"
+                            class="head-cta">Register</a></li>
+                </ul>
+                <ul v-cloak="" v-show="loggedIn" class="nav navbar-nav navbar-right nav-user">
+                    <li class="hovedown"><a href="javascript:void(0);" class="hovedown-toggle"><i
+                                class="fa fa-user"></i></a>
+                        <ul class="hovedown-menu hovedown-menu-right">
+                            <li><a href="/user">User Center</a></li>
+                            <li><a href="javascript:void(0);" v-on="click: logout">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div data-offset-top="60" data-spy="affix" class="sub-nav">
+        <div class="container">
+            <h1 class="logo">Onboard SDK</h1>
+            <nav><a href="/onboard-sdk">Overview</a><a href="/onboard-sdk/documentation">Documentation</a><a
+                    href="/onboard-api-reference/index.html" class="active">API Reference</a><a
+                    href="/onboard-sdk/downloads">Downloads</a>
+            </nav>
+        </div>
+    </div>
+    <!--<nav class="navbar navbar-default" role="navigation">-->
+    <!--<div class="container">-->
+    <!--<div class="navbar-header">-->
+    <!--<a href="#" class="navbar-left"><img src="dji_logo_gray_small.png" alt="DJI OSDK API Documentation" width="32px"/></a>-->
+    <!--<a class="navbar-brand" href="index.html">ONBOARD SDK 3.3</a>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</nav>-->
+    <div id="top">
+        <!-- do not remove this div, it is closed by doxygen! -->
+        <div class="content" id="content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12 panel " style="padding-bottom: 15px;">
+                        <div style="margin-bottom: 15px;">
+                            <!-- end header part --><!-- Generated by Doxygen 1.8.15 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Search');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespaceDJI.html">DJI</a></li><li class="navelem"><a class="el" href="namespaceDJI_1_1OSDK.html">OSDK</a></li><li class="navelem"><a class="el" href="classDJI_1_1OSDK_1_1SubscriptionPackage.html">SubscriptionPackage</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="classDJI_1_1OSDK_1_1SubscriptionPackage-members.html">List of all members</a>  </div>
+  <div class="headertitle">
+<div class="title">DJI::OSDK::SubscriptionPackage Class Reference</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>Package class to support Subscribe-style telemetry.  
+ <a href="classDJI_1_1OSDK_1_1SubscriptionPackage.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="dji__subscription_8hpp_source.html">dji_subscription.hpp</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:ae9add5a23caba3aeae701684a3aa5b62"><td class="memItemLeft" align="right" valign="top"><a id="ae9add5a23caba3aeae701684a3aa5b62"></a>
+typedef struct DJI::OSDK::SubscriptionPackage::PackageInfo&#160;</td><td class="memItemRight" valign="bottom"><b>PackageInfo</b></td></tr>
+<tr class="separator:ae9add5a23caba3aeae701684a3aa5b62"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a1ad13452b0c43c8fa4f47df8d5a2b8a0"><td class="memItemLeft" align="right" valign="top"><a id="a1ad13452b0c43c8fa4f47df8d5a2b8a0"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setPackageID</b> (uint8_t id)</td></tr>
+<tr class="separator:a1ad13452b0c43c8fa4f47df8d5a2b8a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad94c018e58aedfd9e379b70feaa334fc"><td class="memItemLeft" align="right" valign="top"><a id="ad94c018e58aedfd9e379b70feaa334fc"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setConfig</b> (uint8_t config)</td></tr>
+<tr class="separator:ad94c018e58aedfd9e379b70feaa334fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6eaeebd4f63340da619088abafdabf26"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1SubscriptionPackage.html#a6eaeebd4f63340da619088abafdabf26">setTopicList</a> (<a class="el" href="group__telem.html#ga563d2333dc43253129a3915970f99cfa">Telemetry::TopicName</a> *topics, int numberOfTopics, uint16_t freq)</td></tr>
+<tr class="memdesc:a6eaeebd4f63340da619088abafdabf26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fill in necessary information for ADD_PACKAGE call.  <a href="#a6eaeebd4f63340da619088abafdabf26">More...</a><br /></td></tr>
+<tr class="separator:a6eaeebd4f63340da619088abafdabf26"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e4a1238d6afda5a38355a94272f8598"><td class="memItemLeft" align="right" valign="top"><a id="a7e4a1238d6afda5a38355a94272f8598"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>allocateDataBuffer</b> ()</td></tr>
+<tr class="separator:a7e4a1238d6afda5a38355a94272f8598"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a834e617347bdb5858fdf96d2d7e95260"><td class="memItemLeft" align="right" valign="top"><a id="a834e617347bdb5858fdf96d2d7e95260"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>clearDataBuffer</b> ()</td></tr>
+<tr class="separator:a834e617347bdb5858fdf96d2d7e95260"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adda50d577dfdb357eb600502b0d655cc"><td class="memItemLeft" align="right" valign="top"><a id="adda50d577dfdb357eb600502b0d655cc"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>cleanUpPackage</b> ()</td></tr>
+<tr class="separator:adda50d577dfdb357eb600502b0d655cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a58f4f8d179a961af12d421c6ffcd6aed"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1SubscriptionPackage.html#a58f4f8d179a961af12d421c6ffcd6aed">serializePackageInfo</a> (uint8_t *buffer)</td></tr>
+<tr class="memdesc:a58f4f8d179a961af12d421c6ffcd6aed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serialize the info and uidList to a buffer to send to FC.  <a href="#a58f4f8d179a961af12d421c6ffcd6aed">More...</a><br /></td></tr>
+<tr class="separator:a58f4f8d179a961af12d421c6ffcd6aed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72d4a6741efd26605ea7d56f92cb80f1"><td class="memItemLeft" align="right" valign="top"><a id="a72d4a6741efd26605ea7d56f92cb80f1"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setUserUnpackCallback</b> (<a class="el" href="namespaceDJI_1_1OSDK.html#a20a68c21abe449cf5f133f7d398055d3">VehicleCallBack</a> userFunctionAfterPackageExtraction, <a class="el" href="namespaceDJI_1_1OSDK.html#aded24c93a2d064658a1f59cbf0e6eb9d">UserData</a> userData)</td></tr>
+<tr class="separator:a72d4a6741efd26605ea7d56f92cb80f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae3c359095dd41ea783a7839b1c9fd47"><td class="memItemLeft" align="right" valign="top"><a id="aae3c359095dd41ea783a7839b1c9fd47"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isOccupied</b> ()</td></tr>
+<tr class="separator:aae3c359095dd41ea783a7839b1c9fd47"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af232817bed118affdcb38f457fb9b5c6"><td class="memItemLeft" align="right" valign="top"><a id="af232817bed118affdcb38f457fb9b5c6"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setOccupied</b> (bool status)</td></tr>
+<tr class="separator:af232817bed118affdcb38f457fb9b5c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a21000abde84d0d0c4213f1b1716e0fb8"><td class="memItemLeft" align="right" valign="top"><a id="a21000abde84d0d0c4213f1b1716e0fb8"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasLeftOverData</b> ()</td></tr>
+<tr class="separator:a21000abde84d0d0c4213f1b1716e0fb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a60d611997f5f3f95ac8c3f2f45d1ca3f"><td class="memItemLeft" align="right" valign="top"><a id="a60d611997f5f3f95ac8c3f2f45d1ca3f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setLeftOverDataFlag</b> (bool flag)</td></tr>
+<tr class="separator:a60d611997f5f3f95ac8c3f2f45d1ca3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a825f9cd30539ec5019f4ed7403d46fe8"><td class="memItemLeft" align="right" valign="top"><a id="a825f9cd30539ec5019f4ed7403d46fe8"></a>
+PackageInfo&#160;</td><td class="memItemRight" valign="bottom"><b>getInfo</b> ()</td></tr>
+<tr class="separator:a825f9cd30539ec5019f4ed7403d46fe8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf2014fd286eda4447780cc25ad6cada"><td class="memItemLeft" align="right" valign="top"><a id="aaf2014fd286eda4447780cc25ad6cada"></a>
+uint32_t *&#160;</td><td class="memItemRight" valign="bottom"><b>getUidList</b> ()</td></tr>
+<tr class="separator:aaf2014fd286eda4447780cc25ad6cada"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afcf311cf426d48f397b1022d9efcd5c4"><td class="memItemLeft" align="right" valign="top"><a id="afcf311cf426d48f397b1022d9efcd5c4"></a>
+<a class="el" href="group__telem.html#ga563d2333dc43253129a3915970f99cfa">Telemetry::TopicName</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getTopicList</b> ()</td></tr>
+<tr class="separator:afcf311cf426d48f397b1022d9efcd5c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0019b6e68c1d16c5d214ba3daf933522"><td class="memItemLeft" align="right" valign="top"><a id="a0019b6e68c1d16c5d214ba3daf933522"></a>
+uint32_t *&#160;</td><td class="memItemRight" valign="bottom"><b>getOffsetList</b> ()</td></tr>
+<tr class="separator:a0019b6e68c1d16c5d214ba3daf933522"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a935180c1767f45711b4b2ab8e55247f6"><td class="memItemLeft" align="right" valign="top"><a id="a935180c1767f45711b4b2ab8e55247f6"></a>
+uint8_t *&#160;</td><td class="memItemRight" valign="bottom"><b>getDataBuffer</b> ()</td></tr>
+<tr class="separator:a935180c1767f45711b4b2ab8e55247f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a064aa10b5062326e215f7d44394ccd01"><td class="memItemLeft" align="right" valign="top"><a id="a064aa10b5062326e215f7d44394ccd01"></a>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>getBufferSize</b> ()</td></tr>
+<tr class="separator:a064aa10b5062326e215f7d44394ccd01"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa0b3f3e20c9b6cfaeb9abc8e776cd1a0"><td class="memItemLeft" align="right" valign="top"><a id="aa0b3f3e20c9b6cfaeb9abc8e776cd1a0"></a>
+<a class="el" href="structDJI_1_1OSDK_1_1VehicleCallBackHandler.html">VehicleCallBackHandler</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getUnpackHandler</b> ()</td></tr>
+<tr class="separator:aa0b3f3e20c9b6cfaeb9abc8e776cd1a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ba8730ebee7c0d05b654d79ded399b2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1SubscriptionPackage.html#a0ba8730ebee7c0d05b654d79ded399b2">packageAddSuccessHandler</a> ()</td></tr>
+<tr class="memdesc:a0ba8730ebee7c0d05b654d79ded399b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper function to do post processing when adding package is successful.  <a href="#a0ba8730ebee7c0d05b654d79ded399b2">More...</a><br /></td></tr>
+<tr class="separator:a0ba8730ebee7c0d05b654d79ded399b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a858dfe31ddba393923d11c8055ca7a2d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1SubscriptionPackage.html#a858dfe31ddba393923d11c8055ca7a2d">packageRemoveSuccessHandler</a> ()</td></tr>
+<tr class="memdesc:a858dfe31ddba393923d11c8055ca7a2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper function to do post processing when removing package is successful.  <a href="#a858dfe31ddba393923d11c8055ca7a2d">More...</a><br /></td></tr>
+<tr class="separator:a858dfe31ddba393923d11c8055ca7a2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Package class to support Subscribe-style telemetry. </p>
+<p>Use the DJI_DataSubscription class to access telemetry.</p>
+<dl class="section note"><dt>Note</dt><dd>This class is internal and does not need to be used by applications directly. </dd></dl>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a0ba8730ebee7c0d05b654d79ded399b2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ba8730ebee7c0d05b654d79ded399b2">&#9670;&nbsp;</a></span>packageAddSuccessHandler()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SubscriptionPackage::packageAddSuccessHandler </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Helper function to do post processing when adding package is successful. </p>
+
+</div>
+</div>
+<a id="a858dfe31ddba393923d11c8055ca7a2d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a858dfe31ddba393923d11c8055ca7a2d">&#9670;&nbsp;</a></span>packageRemoveSuccessHandler()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SubscriptionPackage::packageRemoveSuccessHandler </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Helper function to do post processing when removing package is successful. </p>
+
+</div>
+</div>
+<a id="a58f4f8d179a961af12d421c6ffcd6aed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a58f4f8d179a961af12d421c6ffcd6aed">&#9670;&nbsp;</a></span>serializePackageInfo()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int SubscriptionPackage::serializePackageInfo </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramname"><em>buffer</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Serialize the info and uidList to a buffer to send to FC. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buffer</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a6eaeebd4f63340da619088abafdabf26"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6eaeebd4f63340da619088abafdabf26">&#9670;&nbsp;</a></span>setTopicList()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SubscriptionPackage::setTopicList </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__telem.html#ga563d2333dc43253129a3915970f99cfa">Telemetry::TopicName</a> *&#160;</td>
+          <td class="paramname"><em>topics</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>numberOfTopics</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>freq</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Fill in necessary information for ADD_PACKAGE call. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">topics</td><td>List of TopicName </td></tr>
+    <tr><td class="paramname">numberOfTopics</td><td>Number of topics to subscribe for this package </td></tr>
+    <tr><td class="paramname">freq</td><td>Frequency of this package </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following files:<ul>
+<li>osdk-core/api/inc/<a class="el" href="dji__subscription_8hpp_source.html">dji_subscription.hpp</a></li>
+<li>osdk-core/api/src/<a class="el" href="dji__subscription_8cpp.html">dji_subscription.cpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- HTML footer for doxygen 1.8.8-->
+<!-- start footer part -->
+</div>
+</div>
+</div>
+</div>
+</div>
+<hr class="footer"/><address class="footer"><small>
+  <footer id="site-footer" class="site-footer">
+    <div class="container">
+      <div class="foot-nav row">
+        <nav class="link-list col-xs-2"><span class="title">SDK</span><a href="/mobile-sdk">Mobile SDK</a><a href="/ux-sdk">UX SDK</a><a href="/onboard-sdk">Onboard SDK</a><a href="/payload-sdk">Payload SDK</a><a href="/windows-sdk">Windows SDK</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Info</span><a href="/products">Products</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Community</span><a href="http://stackoverflow.com/questions/tagged/dji-sdk" target="_blank">Stack Overflow</a><a href="https://www.youtube.com/channel/UCPQwN5xsob8zZGIcDhkYqUA" target="_blank">YouTube</a><a href="https://twitter.com/djidevelopers" target="_blank">Twitter</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Contact Us</span><a href="mailto:dev@dji.com"> dev@dji.com</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Business Cooperation</span><a href="mailto:dev@dji.com"> dev@dji.com</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">BILLING</span><a href="mailto:billing-dev@dji.com"> billing-dev@dji.com</a></nav>
+      </div>
+      <div class="foot-copyright row">
+        <div class="col-xs-3 foot-logo"><img src="dji-logo-foot.png"></div>
+        <div class="copyright col-xs-7"><span>Copyright © 2018 DJI All Rights Reserved</span><a href="/policies/privacy">Privacy Policy</a><a href="/policies/terms">Terms of Use</a></div>
+        <div class="col-xs-2">
+          <div class="lang-selector">
+            <select dir="rtl" v-model="lang">
+              <option value="en">English</option>
+              <option value="cn">中文</option>
+            </select><i class="fa fa-globe"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</small></address>
+</body>
+<script type="text/javascript" src="doxy-boot.js"></script>
+</html>

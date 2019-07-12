@@ -1,0 +1,293 @@
+<!-- HTML header for doxygen 1.8.8-->
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- For Mobile Devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8" />
+    <meta name="generator" content="Doxygen 1.8.15" />
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <title>DJI Onboard SDK: osdk-core/api/inc/dji_type.hpp File Reference</title>
+    <!-- <link href="tabs.css" rel="stylesheet" type="text/css"/> -->
+    <script type="text/javascript" src="dynsections.js"></script>
+    <link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+    <link href="doxygen.css" rel="stylesheet" type="text/css" />
+    <link href="customdoxygen.css" rel="stylesheet" type="text/css"/>
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Slab' rel='stylesheet' type='text/css'>
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link href="jquery.smartmenus.bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="bootstrap-theme.css">
+    <script src="bootstrap.min.js"></script>
+    <link href="jquery.smartmenus.bootstrap.css" rel="stylesheet">
+    <!-- SmartMenus jQuery plugin -->
+    <script type="text/javascript" src="jquery.smartmenus.min.js"></script>
+    <!-- SmartMenus jQuery Bootstrap Addon -->
+    <script type="text/javascript" src="jquery.smartmenus.bootstrap.min.js"></script>
+    <style>
+        .has-submenu {
+            position: relative;
+        }
+        #main-nav {
+            margin-top: 60px;
+        }
+    </style>
+</head>
+<body>
+    <nav id="site-header" class="site-header navbar">
+        <div class="container">
+            <div class="navbar-header"><a href="/" class="logo"><img src="dji-logo@2x.png">Developer</a></div>
+            <div id="header-navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="/mobile-sdk">Mobile SDK</a></li>
+                    <li><a href="/ux-sdk">UX SDK</a></li>
+                    <li><a href="/onboard-sdk">Onboard SDK</a></li>
+                    <li><a href="/payload-sdk">Payload SDK</a></li>
+                    <li><a href="/windows-sdk">Windows SDK</a></li>
+                </ul>
+                <ul v-cloak="" v-show="!loggedIn" class="nav navbar-nav navbar-right nav-user">
+                    <li><a
+                            href="https://account.dji.com/login?appId=dji_sdk&backUrl=https%3A%2F%2Fdeveloper.dji.com%2Fuser&locale=en_US">Login</a>
+                    </li>
+                    <li><a href="https://account.dji.com/register?appId=dji_sdk&backUrl=https%3A%2F%2Fdeveloper.dji.com%2Fuser&locale=en_US"
+                            class="head-cta">Register</a></li>
+                </ul>
+                <ul v-cloak="" v-show="loggedIn" class="nav navbar-nav navbar-right nav-user">
+                    <li class="hovedown"><a href="javascript:void(0);" class="hovedown-toggle"><i
+                                class="fa fa-user"></i></a>
+                        <ul class="hovedown-menu hovedown-menu-right">
+                            <li><a href="/user">User Center</a></li>
+                            <li><a href="javascript:void(0);" v-on="click: logout">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div data-offset-top="60" data-spy="affix" class="sub-nav">
+        <div class="container">
+            <h1 class="logo">Onboard SDK</h1>
+            <nav><a href="/onboard-sdk">Overview</a><a href="/onboard-sdk/documentation">Documentation</a><a
+                    href="/onboard-api-reference/index.html" class="active">API Reference</a><a
+                    href="/onboard-sdk/downloads">Downloads</a>
+            </nav>
+        </div>
+    </div>
+    <!--<nav class="navbar navbar-default" role="navigation">-->
+    <!--<div class="container">-->
+    <!--<div class="navbar-header">-->
+    <!--<a href="#" class="navbar-left"><img src="dji_logo_gray_small.png" alt="DJI OSDK API Documentation" width="32px"/></a>-->
+    <!--<a class="navbar-brand" href="index.html">ONBOARD SDK 3.3</a>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</nav>-->
+    <div id="top">
+        <!-- do not remove this div, it is closed by doxygen! -->
+        <div class="content" id="content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12 panel " style="padding-bottom: 15px;">
+                        <div style="margin-bottom: 15px;">
+                            <!-- end header part --><!-- Generated by Doxygen 1.8.15 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Search');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_95d02babf7f2c2cbb8138434e234b0a4.html">osdk-core</a></li><li class="navelem"><a class="el" href="dir_ef926edda2a887b065db034fc3005c14.html">api</a></li><li class="navelem"><a class="el" href="dir_0fb058e33548cd6e720172c5f012eda8.html">inc</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#define-members">Macros</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#var-members">Variables</a>  </div>
+  <div class="headertitle">
+<div class="title">dji_type.hpp File Reference</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>Data type and Data Structure definitions for use throughout <a class="el" href="namespaceDJI.html">DJI</a> OSDK.  
+<a href="#details">More...</a></p>
+<div class="textblock"><code>#include &lt;cstdio&gt;</code><br />
+<code>#include &lt;stdint.h&gt;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for dji_type.hpp:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="dji__type_8hpp__incl.svg" width="155" height="123"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+</div>
+<p><a href="dji__type_8hpp_source.html">Go to the source code of this file.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDJI_1_1OSDK_1_1OpenHeader.html">DJI::OSDK::OpenHeader</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Header struct is meant to handle the open protocol header.  <a href="structDJI_1_1OSDK_1_1OpenHeader.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDJI_1_1OSDK_1_1VirtualRCSetting.html">DJI::OSDK::VirtualRCSetting</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual RC Settings (supported only on Matrice 100)  <a href="structDJI_1_1OSDK_1_1VirtualRCSetting.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDJI_1_1OSDK_1_1VirtualRCData.html">DJI::OSDK::VirtualRCData</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual RC data (supported only on Matrice 100)  <a href="structDJI_1_1OSDK_1_1VirtualRCData.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:namespaceDJI"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceDJI.html">DJI</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespaceDJI_1_1OSDK"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceDJI_1_1OSDK.html">DJI::OSDK</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a6c30d490cd2302ff05d355f3ec844c1f"><td class="memItemLeft" align="right" valign="top"><a id="a6c30d490cd2302ff05d355f3ec844c1f"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="dji__type_8hpp.html#a6c30d490cd2302ff05d355f3ec844c1f">__UNUSED</a></td></tr>
+<tr class="memdesc:a6c30d490cd2302ff05d355f3ec844c1f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define the UNUSED macro to suppress compiler warnings about unused arguments. <br /></td></tr>
+<tr class="separator:a6c30d490cd2302ff05d355f3ec844c1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca504dc52c76c2095b0df3f451ef9bbd"><td class="memItemLeft" align="right" valign="top"><a id="aca504dc52c76c2095b0df3f451ef9bbd"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>__DELETE</b>(x)&#160;&#160;&#160;delete x</td></tr>
+<tr class="separator:aca504dc52c76c2095b0df3f451ef9bbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:aded24c93a2d064658a1f59cbf0e6eb9d"><td class="memItemLeft" align="right" valign="top"><a id="aded24c93a2d064658a1f59cbf0e6eb9d"></a>
+typedef void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceDJI_1_1OSDK.html#aded24c93a2d064658a1f59cbf0e6eb9d">DJI::OSDK::UserData</a></td></tr>
+<tr class="memdesc:aded24c93a2d064658a1f59cbf0e6eb9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is used as the datatype for all data arguments in callbacks. <br /></td></tr>
+<tr class="separator:aded24c93a2d064658a1f59cbf0e6eb9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afcce1d49760c36783fdbf49f6a7787b9"><td class="memItemLeft" align="right" valign="top"><a id="afcce1d49760c36783fdbf49f6a7787b9"></a>
+typedef uint64_t&#160;</td><td class="memItemRight" valign="bottom"><b>DJI::OSDK::time_ms</b></td></tr>
+<tr class="separator:afcce1d49760c36783fdbf49f6a7787b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa1ceeab06276c604c52fe918836c97fe"><td class="memItemLeft" align="right" valign="top"><a id="aa1ceeab06276c604c52fe918836c97fe"></a>
+typedef uint64_t&#160;</td><td class="memItemRight" valign="bottom"><b>DJI::OSDK::time_us</b></td></tr>
+<tr class="separator:aa1ceeab06276c604c52fe918836c97fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6bbfaa9311bebd6d8d63aa12f5c51f48"><td class="memItemLeft" align="right" valign="top"><a id="a6bbfaa9311bebd6d8d63aa12f5c51f48"></a>
+typedef float&#160;</td><td class="memItemRight" valign="bottom"><b>DJI::OSDK::float32_t</b></td></tr>
+<tr class="separator:a6bbfaa9311bebd6d8d63aa12f5c51f48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a19cb6f93aa0f81f3ebb3e72243f5c139"><td class="memItemLeft" align="right" valign="top"><a id="a19cb6f93aa0f81f3ebb3e72243f5c139"></a>
+typedef double&#160;</td><td class="memItemRight" valign="bottom"><b>DJI::OSDK::float64_t</b></td></tr>
+<tr class="separator:a19cb6f93aa0f81f3ebb3e72243f5c139"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a516293d5bd31dcc42f62375ca91b3971"><td class="memItemLeft" align="right" valign="top"><a id="a516293d5bd31dcc42f62375ca91b3971"></a>
+typedef struct <a class="el" href="structDJI_1_1OSDK_1_1OpenHeader.html">DJI::OSDK::OpenHeader</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceDJI_1_1OSDK.html#a516293d5bd31dcc42f62375ca91b3971">DJI::OSDK::OpenHeader</a></td></tr>
+<tr class="memdesc:a516293d5bd31dcc42f62375ca91b3971"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Header struct is meant to handle the open protocol header. <br /></td></tr>
+<tr class="separator:a516293d5bd31dcc42f62375ca91b3971"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3bbdc2a08404fc5fda00017949d94f71"><td class="memItemLeft" align="right" valign="top"><a id="a3bbdc2a08404fc5fda00017949d94f71"></a>
+typedef struct DJI::OSDK::Command&#160;</td><td class="memItemRight" valign="bottom"><b>DJI::OSDK::Command</b></td></tr>
+<tr class="separator:a3bbdc2a08404fc5fda00017949d94f71"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a58bf19e4e43372f087a4398dc3bd340b"><td class="memItemLeft" align="right" valign="top"><a id="a58bf19e4e43372f087a4398dc3bd340b"></a>
+typedef struct DJI::OSDK::MMU_Tab&#160;</td><td class="memItemRight" valign="bottom"><b>DJI::OSDK::MMU_Tab</b></td></tr>
+<tr class="separator:a58bf19e4e43372f087a4398dc3bd340b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a092eda541db42c08aaba6322b7413b4c"><td class="memItemLeft" align="right" valign="top"><a id="a092eda541db42c08aaba6322b7413b4c"></a>
+typedef struct DJI::OSDK::CMDSession&#160;</td><td class="memItemRight" valign="bottom"><b>DJI::OSDK::CMDSession</b></td></tr>
+<tr class="separator:a092eda541db42c08aaba6322b7413b4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a7fd598ffb8d527da0a9a7c116565ae"><td class="memItemLeft" align="right" valign="top"><a id="a8a7fd598ffb8d527da0a9a7c116565ae"></a>
+typedef struct DJI::OSDK::ACKSession&#160;</td><td class="memItemRight" valign="bottom"><b>DJI::OSDK::ACKSession</b></td></tr>
+<tr class="separator:a8a7fd598ffb8d527da0a9a7c116565ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32db9f4fdc20c6ec6f8dc56e389b98af"><td class="memItemLeft" align="right" valign="top"><a id="a32db9f4fdc20c6ec6f8dc56e389b98af"></a>
+typedef struct <a class="el" href="structDJI_1_1OSDK_1_1VirtualRCSetting.html">DJI::OSDK::VirtualRCSetting</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceDJI_1_1OSDK.html#a32db9f4fdc20c6ec6f8dc56e389b98af">DJI::OSDK::VirtualRCSetting</a></td></tr>
+<tr class="memdesc:a32db9f4fdc20c6ec6f8dc56e389b98af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual RC Settings (supported only on Matrice 100) <br /></td></tr>
+<tr class="separator:a32db9f4fdc20c6ec6f8dc56e389b98af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a703ddafe81ca04967f298082a4d59946"><td class="memItemLeft" align="right" valign="top"><a id="a703ddafe81ca04967f298082a4d59946"></a>
+typedef struct <a class="el" href="structDJI_1_1OSDK_1_1VirtualRCData.html">DJI::OSDK::VirtualRCData</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceDJI_1_1OSDK.html#a703ddafe81ca04967f298082a4d59946">DJI::OSDK::VirtualRCData</a></td></tr>
+<tr class="memdesc:a703ddafe81ca04967f298082a4d59946"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual RC data (supported only on Matrice 100) <br /></td></tr>
+<tr class="separator:a703ddafe81ca04967f298082a4d59946"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a843f3b491beabf6d0b91166edaad110a"><td class="memItemLeft" align="right" valign="top"><a id="a843f3b491beabf6d0b91166edaad110a"></a>
+char&#160;</td><td class="memItemRight" valign="bottom"><b>DJI::OSDK::buffer</b> []</td></tr>
+<tr class="separator:a843f3b491beabf6d0b91166edaad110a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6dbf38a7e407b98ac5ac6ca2793bce8a"><td class="memItemLeft" align="right" valign="top"><a id="a6dbf38a7e407b98ac5ac6ca2793bce8a"></a>
+const size_t&#160;</td><td class="memItemRight" valign="bottom"><b>DJI::OSDK::SESSION_TABLE_NUM</b> = 32</td></tr>
+<tr class="separator:a6dbf38a7e407b98ac5ac6ca2793bce8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0726d0926ec4a6b6332e5975fb614bd4"><td class="memItemLeft" align="right" valign="top"><a id="a0726d0926ec4a6b6332e5975fb614bd4"></a>
+const size_t&#160;</td><td class="memItemRight" valign="bottom"><b>DJI::OSDK::CALLBACK_LIST_NUM</b> = 10</td></tr>
+<tr class="separator:a0726d0926ec4a6b6332e5975fb614bd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0278bdc24560401128675003f8cb2ae3"><td class="memItemLeft" align="right" valign="top">const size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceDJI_1_1OSDK.html#a0278bdc24560401128675003f8cb2ae3">DJI::OSDK::MAX_INCOMING_DATA_SIZE</a> = 300</td></tr>
+<tr class="separator:a0278bdc24560401128675003f8cb2ae3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7974c455370b043e1021f0e29a06752f"><td class="memItemLeft" align="right" valign="top"><a id="a7974c455370b043e1021f0e29a06752f"></a>
+const size_t&#160;</td><td class="memItemRight" valign="bottom"><b>DJI::OSDK::MAX_ACK_SIZE</b> = 107</td></tr>
+<tr class="separator:a7974c455370b043e1021f0e29a06752f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a488c95017187e5a76f8cf0fc53e1fc54"><td class="memItemLeft" align="right" valign="top">static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceDJI_1_1OSDK.html#a488c95017187e5a76f8cf0fc53e1fc54">DJI::OSDK::CAMERA_PAIR_NUM</a> = 5</td></tr>
+<tr class="separator:a488c95017187e5a76f8cf0fc53e1fc54"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adcf14f167b72ae447ce1f0a52f70f11a"><td class="memItemLeft" align="right" valign="top"><a id="adcf14f167b72ae447ce1f0a52f70f11a"></a>
+static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>DJI::OSDK::IMAGE_TYPE_NUM</b> = 10</td></tr>
+<tr class="separator:adcf14f167b72ae447ce1f0a52f70f11a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Data type and Data Structure definitions for use throughout <a class="el" href="namespaceDJI.html">DJI</a> OSDK. </p>
+<dl class="section version"><dt>Version</dt><dd>3.3 </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>April 2017</dd></dl>
+<dl class="section attention"><dt>Attention</dt><dd>Most broadcast data definitions in this file have been deprecated. See dji_topics.hpp for updated definitions.</dd></dl>
+<p>@Copyright (c) 2016-2017 <a class="el" href="namespaceDJI.html">DJI</a></p>
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
+<p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. </p>
+</div></div><!-- contents -->
+<!-- HTML footer for doxygen 1.8.8-->
+<!-- start footer part -->
+</div>
+</div>
+</div>
+</div>
+</div>
+<hr class="footer"/><address class="footer"><small>
+  <footer id="site-footer" class="site-footer">
+    <div class="container">
+      <div class="foot-nav row">
+        <nav class="link-list col-xs-2"><span class="title">SDK</span><a href="/mobile-sdk">Mobile SDK</a><a href="/ux-sdk">UX SDK</a><a href="/onboard-sdk">Onboard SDK</a><a href="/payload-sdk">Payload SDK</a><a href="/windows-sdk">Windows SDK</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Info</span><a href="/products">Products</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Community</span><a href="http://stackoverflow.com/questions/tagged/dji-sdk" target="_blank">Stack Overflow</a><a href="https://www.youtube.com/channel/UCPQwN5xsob8zZGIcDhkYqUA" target="_blank">YouTube</a><a href="https://twitter.com/djidevelopers" target="_blank">Twitter</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Contact Us</span><a href="mailto:dev@dji.com"> dev@dji.com</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Business Cooperation</span><a href="mailto:dev@dji.com"> dev@dji.com</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">BILLING</span><a href="mailto:billing-dev@dji.com"> billing-dev@dji.com</a></nav>
+      </div>
+      <div class="foot-copyright row">
+        <div class="col-xs-3 foot-logo"><img src="dji-logo-foot.png"></div>
+        <div class="copyright col-xs-7"><span>Copyright © 2018 DJI All Rights Reserved</span><a href="/policies/privacy">Privacy Policy</a><a href="/policies/terms">Terms of Use</a></div>
+        <div class="col-xs-2">
+          <div class="lang-selector">
+            <select dir="rtl" v-model="lang">
+              <option value="en">English</option>
+              <option value="cn">中文</option>
+            </select><i class="fa fa-globe"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</small></address>
+</body>
+<script type="text/javascript" src="doxy-boot.js"></script>
+</html>

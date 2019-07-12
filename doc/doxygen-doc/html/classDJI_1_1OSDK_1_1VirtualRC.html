@@ -1,0 +1,305 @@
+<!-- HTML header for doxygen 1.8.8-->
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- For Mobile Devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8" />
+    <meta name="generator" content="Doxygen 1.8.15" />
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <title>DJI Onboard SDK: DJI::OSDK::VirtualRC Class Reference</title>
+    <!-- <link href="tabs.css" rel="stylesheet" type="text/css"/> -->
+    <script type="text/javascript" src="dynsections.js"></script>
+    <link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+    <link href="doxygen.css" rel="stylesheet" type="text/css" />
+    <link href="customdoxygen.css" rel="stylesheet" type="text/css"/>
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Slab' rel='stylesheet' type='text/css'>
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link href="jquery.smartmenus.bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="bootstrap-theme.css">
+    <script src="bootstrap.min.js"></script>
+    <link href="jquery.smartmenus.bootstrap.css" rel="stylesheet">
+    <!-- SmartMenus jQuery plugin -->
+    <script type="text/javascript" src="jquery.smartmenus.min.js"></script>
+    <!-- SmartMenus jQuery Bootstrap Addon -->
+    <script type="text/javascript" src="jquery.smartmenus.bootstrap.min.js"></script>
+    <style>
+        .has-submenu {
+            position: relative;
+        }
+        #main-nav {
+            margin-top: 60px;
+        }
+    </style>
+</head>
+<body>
+    <nav id="site-header" class="site-header navbar">
+        <div class="container">
+            <div class="navbar-header"><a href="/" class="logo"><img src="dji-logo@2x.png">Developer</a></div>
+            <div id="header-navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="/mobile-sdk">Mobile SDK</a></li>
+                    <li><a href="/ux-sdk">UX SDK</a></li>
+                    <li><a href="/onboard-sdk">Onboard SDK</a></li>
+                    <li><a href="/payload-sdk">Payload SDK</a></li>
+                    <li><a href="/windows-sdk">Windows SDK</a></li>
+                </ul>
+                <ul v-cloak="" v-show="!loggedIn" class="nav navbar-nav navbar-right nav-user">
+                    <li><a
+                            href="https://account.dji.com/login?appId=dji_sdk&backUrl=https%3A%2F%2Fdeveloper.dji.com%2Fuser&locale=en_US">Login</a>
+                    </li>
+                    <li><a href="https://account.dji.com/register?appId=dji_sdk&backUrl=https%3A%2F%2Fdeveloper.dji.com%2Fuser&locale=en_US"
+                            class="head-cta">Register</a></li>
+                </ul>
+                <ul v-cloak="" v-show="loggedIn" class="nav navbar-nav navbar-right nav-user">
+                    <li class="hovedown"><a href="javascript:void(0);" class="hovedown-toggle"><i
+                                class="fa fa-user"></i></a>
+                        <ul class="hovedown-menu hovedown-menu-right">
+                            <li><a href="/user">User Center</a></li>
+                            <li><a href="javascript:void(0);" v-on="click: logout">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div data-offset-top="60" data-spy="affix" class="sub-nav">
+        <div class="container">
+            <h1 class="logo">Onboard SDK</h1>
+            <nav><a href="/onboard-sdk">Overview</a><a href="/onboard-sdk/documentation">Documentation</a><a
+                    href="/onboard-api-reference/index.html" class="active">API Reference</a><a
+                    href="/onboard-sdk/downloads">Downloads</a>
+            </nav>
+        </div>
+    </div>
+    <!--<nav class="navbar navbar-default" role="navigation">-->
+    <!--<div class="container">-->
+    <!--<div class="navbar-header">-->
+    <!--<a href="#" class="navbar-left"><img src="dji_logo_gray_small.png" alt="DJI OSDK API Documentation" width="32px"/></a>-->
+    <!--<a class="navbar-brand" href="index.html">ONBOARD SDK 3.3</a>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</nav>-->
+    <div id="top">
+        <!-- do not remove this div, it is closed by doxygen! -->
+        <div class="content" id="content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12 panel " style="padding-bottom: 15px;">
+                        <div style="margin-bottom: 15px;">
+                            <!-- end header part --><!-- Generated by Doxygen 1.8.15 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Search');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespaceDJI.html">DJI</a></li><li class="navelem"><a class="el" href="namespaceDJI_1_1OSDK.html">OSDK</a></li><li class="navelem"><a class="el" href="classDJI_1_1OSDK_1_1VirtualRC.html">VirtualRC</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="classDJI_1_1OSDK_1_1VirtualRC-members.html">List of all members</a>  </div>
+  <div class="headertitle">
+<div class="title">DJI::OSDK::VirtualRC Class Reference</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p><a class="el" href="classDJI_1_1OSDK_1_1VirtualRC.html" title="VirtualRC class has all the methods to mimic the RC functionality via OSDK.">VirtualRC</a> class has all the methods to mimic the RC functionality via <a class="el" href="namespaceDJI_1_1OSDK.html">OSDK</a>.  
+ <a href="classDJI_1_1OSDK_1_1VirtualRC.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="dji__virtual__rc_8hpp_source.html">dji_virtual_rc.hpp</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:af29a15ca1a70038cfc60d0ca3719526b"><td class="memItemLeft" align="right" valign="top"><a id="af29a15ca1a70038cfc60d0ca3719526b"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>CutOff</b> { <br />
+&#160;&#160;<b>CutOff_ToLogic</b> = 0, 
+<br />
+&#160;&#160;<b>CutOff_ToRealRC</b> = 1
+<br />
+ }</td></tr>
+<tr class="separator:af29a15ca1a70038cfc60d0ca3719526b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:ae27ec433d272375efbf2e30cbd429eff"><td class="memItemLeft" align="right" valign="top"><a id="ae27ec433d272375efbf2e30cbd429eff"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>VirtualRC</b> (<a class="el" href="classDJI_1_1OSDK_1_1Vehicle.html">Vehicle</a> *vehicle=0)</td></tr>
+<tr class="separator:ae27ec433d272375efbf2e30cbd429eff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a561e25be8d98214360affe7907b52f63"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1VirtualRC.html#a561e25be8d98214360affe7907b52f63">setControl</a> (bool enable, CutOff cutoffType)</td></tr>
+<tr class="separator:a561e25be8d98214360affe7907b52f63"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72a474c78f12b733244eec8a68d73f5b"><td class="memItemLeft" align="right" valign="top"><a id="a72a474c78f12b733244eec8a68d73f5b"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>sendData</b> (<a class="el" href="structDJI_1_1OSDK_1_1VirtualRCData.html">VirtualRCData</a> Data)</td></tr>
+<tr class="separator:a72a474c78f12b733244eec8a68d73f5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7573ee80c64104db940bfa1fc7ad11ef"><td class="memItemLeft" align="right" valign="top"><a id="a7573ee80c64104db940bfa1fc7ad11ef"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>resetVRCData</b> ()</td></tr>
+<tr class="separator:a7573ee80c64104db940bfa1fc7ad11ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5a7974a1d812e1ed38b8bb9a092bebfc"><td class="memItemLeft" align="right" valign="top"><a id="a5a7974a1d812e1ed38b8bb9a092bebfc"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>neutralVRCSticks</b> ()</td></tr>
+<tr class="separator:a5a7974a1d812e1ed38b8bb9a092bebfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a467ee39842e1787c24e595fe24453a4e"><td class="memItemLeft" align="right" valign="top"><a id="a467ee39842e1787c24e595fe24453a4e"></a>
+<a class="el" href="structDJI_1_1OSDK_1_1Telemetry_1_1RC.html">Telemetry::RC</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getRCData</b> () const</td></tr>
+<tr class="separator:a467ee39842e1787c24e595fe24453a4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae41a6f2e303015d1e323558a5b4b1650"><td class="memItemLeft" align="right" valign="top"><a id="ae41a6f2e303015d1e323558a5b4b1650"></a>
+<a class="el" href="structDJI_1_1OSDK_1_1VirtualRCData.html">VirtualRCData</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getVRCData</b> () const</td></tr>
+<tr class="separator:ae41a6f2e303015d1e323558a5b4b1650"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adec1b129a3e091c56f3e9b6a04dc2253"><td class="memItemLeft" align="right" valign="top"><a id="adec1b129a3e091c56f3e9b6a04dc2253"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setVRCData</b> (const <a class="el" href="structDJI_1_1OSDK_1_1VirtualRCData.html">VirtualRCData</a> &amp;value)</td></tr>
+<tr class="separator:adec1b129a3e091c56f3e9b6a04dc2253"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a238df2e04dade7545b1baf39d7b6220b"><td class="memItemLeft" align="right" valign="top"><a id="a238df2e04dade7545b1baf39d7b6220b"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isVirtualRC</b> () const</td></tr>
+<tr class="separator:a238df2e04dade7545b1baf39d7b6220b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6fb0e07f168277b06e5ab3c63ac1c7f8"><td class="memItemLeft" align="right" valign="top"><a id="a6fb0e07f168277b06e5ab3c63ac1c7f8"></a>
+<a class="el" href="classDJI_1_1OSDK_1_1Vehicle.html">Vehicle</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getVehicle</b> () const</td></tr>
+<tr class="separator:a6fb0e07f168277b06e5ab3c63ac1c7f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2551fad02a897200c076db8cd7fac6b"><td class="memItemLeft" align="right" valign="top"><a id="af2551fad02a897200c076db8cd7fac6b"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setVehicle</b> (<a class="el" href="classDJI_1_1OSDK_1_1Vehicle.html">Vehicle</a> *v)</td></tr>
+<tr class="separator:af2551fad02a897200c076db8cd7fac6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:adc5fc327e759c33a81378efb415540df"><td class="memItemLeft" align="right" valign="top"><a id="adc5fc327e759c33a81378efb415540df"></a>
+static <a class="el" href="structDJI_1_1OSDK_1_1Telemetry_1_1RC.html">Telemetry::RC</a>&#160;</td><td class="memItemRight" valign="bottom"><b>toRCData</b> (<a class="el" href="structDJI_1_1OSDK_1_1VirtualRCData.html">VirtualRCData</a> &amp;vData)</td></tr>
+<tr class="separator:adc5fc327e759c33a81378efb415540df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab871b99eedb250200db4981433c8af5e"><td class="memItemLeft" align="right" valign="top"><a id="ab871b99eedb250200db4981433c8af5e"></a>
+static <a class="el" href="structDJI_1_1OSDK_1_1VirtualRCData.html">VirtualRCData</a>&#160;</td><td class="memItemRight" valign="bottom"><b>toVirtualRCData</b> (<a class="el" href="structDJI_1_1OSDK_1_1Telemetry_1_1RC.html">Telemetry::RC</a> &amp;rcData)</td></tr>
+<tr class="separator:ab871b99eedb250200db4981433c8af5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p><a class="el" href="classDJI_1_1OSDK_1_1VirtualRC.html" title="VirtualRC class has all the methods to mimic the RC functionality via OSDK.">VirtualRC</a> class has all the methods to mimic the RC functionality via <a class="el" href="namespaceDJI_1_1OSDK.html">OSDK</a>. </p>
+<p>Only supported on M100 </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a561e25be8d98214360affe7907b52f63"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a561e25be8d98214360affe7907b52f63">&#9670;&nbsp;</a></span>setControl()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void VirtualRC::setControl </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>enable</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">VirtualRC::CutOff&#160;</td>
+          <td class="paramname"><em>cutoffType</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section attention"><dt>Attention</dt><dd>Safety notes You must use these methods below really carefully with following rules:<ul>
+<li>Use API <a class="el" href="classDJI_1_1OSDK_1_1VirtualRC.html#a561e25be8d98214360affe7907b52f63">setControl(bool enable, CutOff cutoffType)</a>; only once in your main loop;</li>
+<li>Check your control device status by useing the following method: if(getControlDevice() != CONTROL_BY_VIRTUALRC) { reset code; }</li>
+<li></li>
+</ul>
+</dd>
+<dd>
+Your reset code must not be "setControl(true);" without any status check It may cause your drone became a nut drone.<ul>
+<li></li>
+</ul>
+</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>You could quit your VRC(Virtual Remot Control) by switching your remote controller out of modeF<ul>
+<li></li>
+</ul>
+</dd></dl>
+<dl class="section attention"><dt>Attention</dt><dd>Most dangerous, setControl(true); must not be called over 0.5Hz or your drone will be locked in a logic-checking loop. And you cannot exit <a class="el" href="classDJI_1_1OSDK_1_1VirtualRC.html" title="VirtualRC class has all the methods to mimic the RC functionality via OSDK.">VirtualRC</a> mode by switching your remote controller's mode. Actually, in this situation your drone will be a full automatically controlled by it self. It will keep flying until its bettery is empty or your code make it stop.<ul>
+<li></li>
+</ul>
+</dd>
+<dd>
+If you do not know what reset code you need to write, please just output your datalog and keep it empty.<ul>
+<li></li>
+</ul>
+</dd>
+<dd>
+It would be realy dangous if you keep calling sendData(); in a loop with out control-losing protection. like :</dd></dl>
+<p>Global: <a class="el" href="structDJI_1_1OSDK_1_1VirtualRCData.html" title="Virtual RC data (supported only on Matrice 100)">VirtualRCData</a> myData;</p>
+<p>Thread 1: while(1) { myData = myAPIToSetupDataFromGroundStation(); }</p>
+<p>Thread 2: while(1) { sendData(myData); msleep(200); }</p>
+<p>When your drone lose signal, it will keep the recent command sent by your API: myAPIToSetupDataFromGroundStation(); This may result in a catastrophic crash.</p>
+<dl class="section note"><dt>Note</dt><dd>API "sendData();" need to be called above 2Hz, and not greater than 25hz. </dd>
+<dd>
+API "sendSafeModeData();" will lead your drone hover; </dd></dl>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following files:<ul>
+<li>osdk-core/api/inc/<a class="el" href="dji__virtual__rc_8hpp_source.html">dji_virtual_rc.hpp</a></li>
+<li>osdk-core/api/src/<a class="el" href="dji__virtual__rc_8cpp.html">dji_virtual_rc.cpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- HTML footer for doxygen 1.8.8-->
+<!-- start footer part -->
+</div>
+</div>
+</div>
+</div>
+</div>
+<hr class="footer"/><address class="footer"><small>
+  <footer id="site-footer" class="site-footer">
+    <div class="container">
+      <div class="foot-nav row">
+        <nav class="link-list col-xs-2"><span class="title">SDK</span><a href="/mobile-sdk">Mobile SDK</a><a href="/ux-sdk">UX SDK</a><a href="/onboard-sdk">Onboard SDK</a><a href="/payload-sdk">Payload SDK</a><a href="/windows-sdk">Windows SDK</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Info</span><a href="/products">Products</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Community</span><a href="http://stackoverflow.com/questions/tagged/dji-sdk" target="_blank">Stack Overflow</a><a href="https://www.youtube.com/channel/UCPQwN5xsob8zZGIcDhkYqUA" target="_blank">YouTube</a><a href="https://twitter.com/djidevelopers" target="_blank">Twitter</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Contact Us</span><a href="mailto:dev@dji.com"> dev@dji.com</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Business Cooperation</span><a href="mailto:dev@dji.com"> dev@dji.com</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">BILLING</span><a href="mailto:billing-dev@dji.com"> billing-dev@dji.com</a></nav>
+      </div>
+      <div class="foot-copyright row">
+        <div class="col-xs-3 foot-logo"><img src="dji-logo-foot.png"></div>
+        <div class="copyright col-xs-7"><span>Copyright © 2018 DJI All Rights Reserved</span><a href="/policies/privacy">Privacy Policy</a><a href="/policies/terms">Terms of Use</a></div>
+        <div class="col-xs-2">
+          <div class="lang-selector">
+            <select dir="rtl" v-model="lang">
+              <option value="en">English</option>
+              <option value="cn">中文</option>
+            </select><i class="fa fa-globe"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</small></address>
+</body>
+<script type="text/javascript" src="doxy-boot.js"></script>
+</html>

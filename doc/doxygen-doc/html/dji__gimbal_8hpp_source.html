@@ -1,0 +1,195 @@
+<!-- HTML header for doxygen 1.8.8-->
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- For Mobile Devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8" />
+    <meta name="generator" content="Doxygen 1.8.15" />
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <title>DJI Onboard SDK: osdk-core/api/inc/dji_gimbal.hpp Source File</title>
+    <!-- <link href="tabs.css" rel="stylesheet" type="text/css"/> -->
+    <script type="text/javascript" src="dynsections.js"></script>
+    <link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+    <link href="doxygen.css" rel="stylesheet" type="text/css" />
+    <link href="customdoxygen.css" rel="stylesheet" type="text/css"/>
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Slab' rel='stylesheet' type='text/css'>
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link href="jquery.smartmenus.bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="bootstrap-theme.css">
+    <script src="bootstrap.min.js"></script>
+    <link href="jquery.smartmenus.bootstrap.css" rel="stylesheet">
+    <!-- SmartMenus jQuery plugin -->
+    <script type="text/javascript" src="jquery.smartmenus.min.js"></script>
+    <!-- SmartMenus jQuery Bootstrap Addon -->
+    <script type="text/javascript" src="jquery.smartmenus.bootstrap.min.js"></script>
+    <style>
+        .has-submenu {
+            position: relative;
+        }
+        #main-nav {
+            margin-top: 60px;
+        }
+    </style>
+</head>
+<body>
+    <nav id="site-header" class="site-header navbar">
+        <div class="container">
+            <div class="navbar-header"><a href="/" class="logo"><img src="dji-logo@2x.png">Developer</a></div>
+            <div id="header-navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="/mobile-sdk">Mobile SDK</a></li>
+                    <li><a href="/ux-sdk">UX SDK</a></li>
+                    <li><a href="/onboard-sdk">Onboard SDK</a></li>
+                    <li><a href="/payload-sdk">Payload SDK</a></li>
+                    <li><a href="/windows-sdk">Windows SDK</a></li>
+                </ul>
+                <ul v-cloak="" v-show="!loggedIn" class="nav navbar-nav navbar-right nav-user">
+                    <li><a
+                            href="https://account.dji.com/login?appId=dji_sdk&backUrl=https%3A%2F%2Fdeveloper.dji.com%2Fuser&locale=en_US">Login</a>
+                    </li>
+                    <li><a href="https://account.dji.com/register?appId=dji_sdk&backUrl=https%3A%2F%2Fdeveloper.dji.com%2Fuser&locale=en_US"
+                            class="head-cta">Register</a></li>
+                </ul>
+                <ul v-cloak="" v-show="loggedIn" class="nav navbar-nav navbar-right nav-user">
+                    <li class="hovedown"><a href="javascript:void(0);" class="hovedown-toggle"><i
+                                class="fa fa-user"></i></a>
+                        <ul class="hovedown-menu hovedown-menu-right">
+                            <li><a href="/user">User Center</a></li>
+                            <li><a href="javascript:void(0);" v-on="click: logout">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div data-offset-top="60" data-spy="affix" class="sub-nav">
+        <div class="container">
+            <h1 class="logo">Onboard SDK</h1>
+            <nav><a href="/onboard-sdk">Overview</a><a href="/onboard-sdk/documentation">Documentation</a><a
+                    href="/onboard-api-reference/index.html" class="active">API Reference</a><a
+                    href="/onboard-sdk/downloads">Downloads</a>
+            </nav>
+        </div>
+    </div>
+    <!--<nav class="navbar navbar-default" role="navigation">-->
+    <!--<div class="container">-->
+    <!--<div class="navbar-header">-->
+    <!--<a href="#" class="navbar-left"><img src="dji_logo_gray_small.png" alt="DJI OSDK API Documentation" width="32px"/></a>-->
+    <!--<a class="navbar-brand" href="index.html">ONBOARD SDK 3.3</a>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</nav>-->
+    <div id="top">
+        <!-- do not remove this div, it is closed by doxygen! -->
+        <div class="content" id="content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12 panel " style="padding-bottom: 15px;">
+                        <div style="margin-bottom: 15px;">
+                            <!-- end header part --><!-- Generated by Doxygen 1.8.15 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Search');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_95d02babf7f2c2cbb8138434e234b0a4.html">osdk-core</a></li><li class="navelem"><a class="el" href="dir_ef926edda2a887b065db034fc3005c14.html">api</a></li><li class="navelem"><a class="el" href="dir_0fb058e33548cd6e720172c5f012eda8.html">inc</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle">
+<div class="title">dji_gimbal.hpp</div>  </div>
+</div><!--header-->
+<div class="contents">
+<a href="dji__gimbal_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div><div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#ifndef GIMBAL_H</span></div><div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#define GIMBAL_H</span></div><div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div><div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="dji__command_8hpp.html">dji_command.hpp</a>&quot;</span></div><div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="dji__type_8hpp.html">dji_type.hpp</a>&quot;</span></div><div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div><div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceDJI.html">DJI</a></div><div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;{</div><div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">namespace </span>OSDK</div><div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;{</div><div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div><div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">// Forward Declaration</span></div><div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keyword">class </span>Vehicle;</div><div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div><div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="classDJI_1_1OSDK_1_1Gimbal.html">   46</a></span>&#160;<span class="keyword">class </span><a class="code" href="classDJI_1_1OSDK_1_1Gimbal.html">Gimbal</a></div><div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;{</div><div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="keyword">public</span>:</div><div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">#pragma pack(1)</span></div><div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div><div class="line"><a name="l00066"></a><span class="lineno"><a class="line" href="structDJI_1_1OSDK_1_1Gimbal_1_1AngleData.html">   66</a></span>&#160;  <span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structDJI_1_1OSDK_1_1Gimbal_1_1AngleData.html">AngleData</a></div><div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;  {</div><div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="structDJI_1_1OSDK_1_1Gimbal_1_1AngleData.html#aaa419405bc9ccac79a18f7b2552d1a22">   68</a></span>&#160;    int16_t <a class="code" href="structDJI_1_1OSDK_1_1Gimbal_1_1AngleData.html#aaa419405bc9ccac79a18f7b2552d1a22">yaw</a>;   </div><div class="line"><a name="l00069"></a><span class="lineno"><a class="line" href="structDJI_1_1OSDK_1_1Gimbal_1_1AngleData.html#ad81592fd267d625603b6c1b55b0b2047">   69</a></span>&#160;    int16_t <a class="code" href="structDJI_1_1OSDK_1_1Gimbal_1_1AngleData.html#ad81592fd267d625603b6c1b55b0b2047">roll</a>;  </div><div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="structDJI_1_1OSDK_1_1Gimbal_1_1AngleData.html#aac99d0744ad17e2147fcd342fce73fd8">   70</a></span>&#160;    int16_t <a class="code" href="structDJI_1_1OSDK_1_1Gimbal_1_1AngleData.html#aac99d0744ad17e2147fcd342fce73fd8">pitch</a>; </div><div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    uint8_t mode;</div><div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="comment">// clang-format off</span></div><div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="comment"></span>    <span class="comment">// clang-format on</span></div><div class="line"><a name="l00083"></a><span class="lineno"><a class="line" href="structDJI_1_1OSDK_1_1Gimbal_1_1AngleData.html#ab8cf75831267af18858ae325553316eb">   83</a></span>&#160;    uint8_t <a class="code" href="structDJI_1_1OSDK_1_1Gimbal_1_1AngleData.html#ab8cf75831267af18858ae325553316eb">duration</a>; </div><div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;  } <a class="code" href="classDJI_1_1OSDK_1_1Gimbal.html#a9cd1690d79f6e16d1ddd37f18cf4c69b">AngleData</a>;        <span class="comment">// pack(1)</span></div><div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div><div class="line"><a name="l00093"></a><span class="lineno"><a class="line" href="structDJI_1_1OSDK_1_1Gimbal_1_1SpeedData.html">   93</a></span>&#160;  <span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structDJI_1_1OSDK_1_1Gimbal_1_1SpeedData.html">SpeedData</a></div><div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;  {</div><div class="line"><a name="l00095"></a><span class="lineno"><a class="line" href="structDJI_1_1OSDK_1_1Gimbal_1_1SpeedData.html#a6fc474b62fa9051be50fa797f67f7264">   95</a></span>&#160;    int16_t <a class="code" href="structDJI_1_1OSDK_1_1Gimbal_1_1SpeedData.html#a6fc474b62fa9051be50fa797f67f7264">yaw</a>;  </div><div class="line"><a name="l00096"></a><span class="lineno"><a class="line" href="structDJI_1_1OSDK_1_1Gimbal_1_1SpeedData.html#a23171de47e00974fee8d0ef3b5234865">   96</a></span>&#160;    int16_t <a class="code" href="structDJI_1_1OSDK_1_1Gimbal_1_1SpeedData.html#a23171de47e00974fee8d0ef3b5234865">roll</a>; </div><div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    int16_t</div><div class="line"><a name="l00098"></a><span class="lineno"><a class="line" href="structDJI_1_1OSDK_1_1Gimbal_1_1SpeedData.html#a7fc886f4ca86714fa4ee5580c296eddd">   98</a></span>&#160;            <a class="code" href="structDJI_1_1OSDK_1_1Gimbal_1_1SpeedData.html#a7fc886f4ca86714fa4ee5580c296eddd">pitch</a>; </div><div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    uint8_t reserved0                 : 1;</div><div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    uint8_t reserved1                 : 1;</div><div class="line"><a name="l00101"></a><span class="lineno"><a class="line" href="structDJI_1_1OSDK_1_1Gimbal_1_1SpeedData.html#af6c9d02c018418d08a94864af60c9ec9">  101</a></span>&#160;    uint8_t <a class="code" href="structDJI_1_1OSDK_1_1Gimbal_1_1SpeedData.html#af6c9d02c018418d08a94864af60c9ec9">extend_control_range</a>      : 1; </div><div class="line"><a name="l00102"></a><span class="lineno"><a class="line" href="structDJI_1_1OSDK_1_1Gimbal_1_1SpeedData.html#a1607459e6a0238ef391e4de8e1c2dde4">  102</a></span>&#160;    uint8_t <a class="code" href="structDJI_1_1OSDK_1_1Gimbal_1_1SpeedData.html#a1607459e6a0238ef391e4de8e1c2dde4">disable_fov_zoom</a>          : 1; </div><div class="line"><a name="l00103"></a><span class="lineno"><a class="line" href="structDJI_1_1OSDK_1_1Gimbal_1_1SpeedData.html#a397f12869c8d9ed52c205f290e6345b6">  103</a></span>&#160;    uint8_t <a class="code" href="structDJI_1_1OSDK_1_1Gimbal_1_1SpeedData.html#a397f12869c8d9ed52c205f290e6345b6">ignore_aircraft_motion</a>    : 1; </div><div class="line"><a name="l00104"></a><span class="lineno"><a class="line" href="structDJI_1_1OSDK_1_1Gimbal_1_1SpeedData.html#a45a8957747d10d4860fd66f0ecc0d3cb">  104</a></span>&#160;    uint8_t <a class="code" href="structDJI_1_1OSDK_1_1Gimbal_1_1SpeedData.html#a45a8957747d10d4860fd66f0ecc0d3cb">yaw_return_neutral</a>        : 1; </div><div class="line"><a name="l00105"></a><span class="lineno"><a class="line" href="structDJI_1_1OSDK_1_1Gimbal_1_1SpeedData.html#aab8dbdd355c8cf0917600ff48ba461ae">  105</a></span>&#160;    uint8_t <a class="code" href="structDJI_1_1OSDK_1_1Gimbal_1_1SpeedData.html#aab8dbdd355c8cf0917600ff48ba461ae">ignore_user_stick</a>         : 1; </div><div class="line"><a name="l00106"></a><span class="lineno"><a class="line" href="structDJI_1_1OSDK_1_1Gimbal_1_1SpeedData.html#ab860b143c5a15ab613dc76d82f70a338">  106</a></span>&#160;    uint8_t <a class="code" href="structDJI_1_1OSDK_1_1Gimbal_1_1SpeedData.html#ab860b143c5a15ab613dc76d82f70a338">gimbal_control_authority</a>  : 1; </div><div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;  } <a class="code" href="classDJI_1_1OSDK_1_1Gimbal.html#a672445095bb4a9b2b6add4c69d385157">SpeedData</a>;        <span class="comment">// pack(1)</span></div><div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="preprocessor">#pragma pack()</span></div><div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="keyword">public</span>:</div><div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;  <a class="code" href="classDJI_1_1OSDK_1_1Gimbal.html">Gimbal</a>(<a class="code" href="classDJI_1_1OSDK_1_1Vehicle.html">Vehicle</a>* vehicle);</div><div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;  ~<a class="code" href="classDJI_1_1OSDK_1_1Gimbal.html">Gimbal</a>();</div><div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;</div><div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="keyword">public</span>:</div><div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classDJI_1_1OSDK_1_1Gimbal.html#a6ce7def5eb61934e2e13184b8467c7ed">setAngle</a>(<a class="code" href="structDJI_1_1OSDK_1_1Gimbal_1_1AngleData.html">Gimbal::AngleData</a>* data);</div><div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;</div><div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classDJI_1_1OSDK_1_1Gimbal.html#a2c496e88796c5e174223035f9570aa85">setSpeed</a>(<a class="code" href="structDJI_1_1OSDK_1_1Gimbal_1_1SpeedData.html">Gimbal::SpeedData</a>* data);</div><div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;</div><div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;<span class="keyword">private</span>:</div><div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;  <a class="code" href="classDJI_1_1OSDK_1_1Vehicle.html">Vehicle</a>* vehicle;</div><div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;};</div><div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;</div><div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;} <span class="comment">// OSDK</span></div><div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;} <span class="comment">// DJI</span></div><div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;</div><div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;<span class="preprocessor">#endif // GIMBAL_H</span></div><div class="ttc" id="structDJI_1_1OSDK_1_1Gimbal_1_1SpeedData_html_a1607459e6a0238ef391e4de8e1c2dde4"><div class="ttname"><a href="structDJI_1_1OSDK_1_1Gimbal_1_1SpeedData.html#a1607459e6a0238ef391e4de8e1c2dde4">DJI::OSDK::Gimbal::SpeedData::disable_fov_zoom</a></div><div class="ttdeci">uint8_t disable_fov_zoom</div><div class="ttdef"><b>Definition:</b> dji_gimbal.hpp:102</div></div>
+<div class="ttc" id="structDJI_1_1OSDK_1_1Gimbal_1_1SpeedData_html_a23171de47e00974fee8d0ef3b5234865"><div class="ttname"><a href="structDJI_1_1OSDK_1_1Gimbal_1_1SpeedData.html#a23171de47e00974fee8d0ef3b5234865">DJI::OSDK::Gimbal::SpeedData::roll</a></div><div class="ttdeci">int16_t roll</div><div class="ttdef"><b>Definition:</b> dji_gimbal.hpp:96</div></div>
+<div class="ttc" id="structDJI_1_1OSDK_1_1Gimbal_1_1SpeedData_html_aab8dbdd355c8cf0917600ff48ba461ae"><div class="ttname"><a href="structDJI_1_1OSDK_1_1Gimbal_1_1SpeedData.html#aab8dbdd355c8cf0917600ff48ba461ae">DJI::OSDK::Gimbal::SpeedData::ignore_user_stick</a></div><div class="ttdeci">uint8_t ignore_user_stick</div><div class="ttdef"><b>Definition:</b> dji_gimbal.hpp:105</div></div>
+<div class="ttc" id="structDJI_1_1OSDK_1_1Gimbal_1_1SpeedData_html_af6c9d02c018418d08a94864af60c9ec9"><div class="ttname"><a href="structDJI_1_1OSDK_1_1Gimbal_1_1SpeedData.html#af6c9d02c018418d08a94864af60c9ec9">DJI::OSDK::Gimbal::SpeedData::extend_control_range</a></div><div class="ttdeci">uint8_t extend_control_range</div><div class="ttdef"><b>Definition:</b> dji_gimbal.hpp:101</div></div>
+<div class="ttc" id="classDJI_1_1OSDK_1_1Vehicle_html"><div class="ttname"><a href="classDJI_1_1OSDK_1_1Vehicle.html">DJI::OSDK::Vehicle</a></div><div class="ttdoc">A top-level encapsulation of a DJI drone/FC connected to your OES.</div><div class="ttdef"><b>Definition:</b> dji_vehicle.hpp:90</div></div>
+<div class="ttc" id="structDJI_1_1OSDK_1_1Gimbal_1_1SpeedData_html_a7fc886f4ca86714fa4ee5580c296eddd"><div class="ttname"><a href="structDJI_1_1OSDK_1_1Gimbal_1_1SpeedData.html#a7fc886f4ca86714fa4ee5580c296eddd">DJI::OSDK::Gimbal::SpeedData::pitch</a></div><div class="ttdeci">int16_t pitch</div><div class="ttdef"><b>Definition:</b> dji_gimbal.hpp:98</div></div>
+<div class="ttc" id="structDJI_1_1OSDK_1_1Gimbal_1_1SpeedData_html_a6fc474b62fa9051be50fa797f67f7264"><div class="ttname"><a href="structDJI_1_1OSDK_1_1Gimbal_1_1SpeedData.html#a6fc474b62fa9051be50fa797f67f7264">DJI::OSDK::Gimbal::SpeedData::yaw</a></div><div class="ttdeci">int16_t yaw</div><div class="ttdef"><b>Definition:</b> dji_gimbal.hpp:95</div></div>
+<div class="ttc" id="classDJI_1_1OSDK_1_1Gimbal_html_a6ce7def5eb61934e2e13184b8467c7ed"><div class="ttname"><a href="classDJI_1_1OSDK_1_1Gimbal.html#a6ce7def5eb61934e2e13184b8467c7ed">DJI::OSDK::Gimbal::setAngle</a></div><div class="ttdeci">void setAngle(Gimbal::AngleData *data)</div><div class="ttdoc">Function for setting Gimbal Angle.</div><div class="ttdef"><b>Definition:</b> dji_gimbal.cpp:45</div></div>
+<div class="ttc" id="classDJI_1_1OSDK_1_1Gimbal_html_a9cd1690d79f6e16d1ddd37f18cf4c69b"><div class="ttname"><a href="classDJI_1_1OSDK_1_1Gimbal.html#a9cd1690d79f6e16d1ddd37f18cf4c69b">DJI::OSDK::Gimbal::AngleData</a></div><div class="ttdeci">struct DJI::OSDK::Gimbal::AngleData AngleData</div><div class="ttdoc">The Angle Data struct for gimbal control.</div></div>
+<div class="ttc" id="structDJI_1_1OSDK_1_1Gimbal_1_1AngleData_html_aac99d0744ad17e2147fcd342fce73fd8"><div class="ttname"><a href="structDJI_1_1OSDK_1_1Gimbal_1_1AngleData.html#aac99d0744ad17e2147fcd342fce73fd8">DJI::OSDK::Gimbal::AngleData::pitch</a></div><div class="ttdeci">int16_t pitch</div><div class="ttdef"><b>Definition:</b> dji_gimbal.hpp:70</div></div>
+<div class="ttc" id="dji__command_8hpp_html"><div class="ttname"><a href="dji__command_8hpp.html">dji_command.hpp</a></div><div class="ttdoc">All DJI OSDK OpenProtocol Command IDs.</div></div>
+<div class="ttc" id="structDJI_1_1OSDK_1_1Gimbal_1_1SpeedData_html"><div class="ttname"><a href="structDJI_1_1OSDK_1_1Gimbal_1_1SpeedData.html">DJI::OSDK::Gimbal::SpeedData</a></div><div class="ttdoc">The Speed Data struct for gimbal control.</div><div class="ttdef"><b>Definition:</b> dji_gimbal.hpp:93</div></div>
+<div class="ttc" id="structDJI_1_1OSDK_1_1Gimbal_1_1AngleData_html_ad81592fd267d625603b6c1b55b0b2047"><div class="ttname"><a href="structDJI_1_1OSDK_1_1Gimbal_1_1AngleData.html#ad81592fd267d625603b6c1b55b0b2047">DJI::OSDK::Gimbal::AngleData::roll</a></div><div class="ttdeci">int16_t roll</div><div class="ttdef"><b>Definition:</b> dji_gimbal.hpp:69</div></div>
+<div class="ttc" id="structDJI_1_1OSDK_1_1Gimbal_1_1AngleData_html_ab8cf75831267af18858ae325553316eb"><div class="ttname"><a href="structDJI_1_1OSDK_1_1Gimbal_1_1AngleData.html#ab8cf75831267af18858ae325553316eb">DJI::OSDK::Gimbal::AngleData::duration</a></div><div class="ttdeci">uint8_t duration</div><div class="ttdef"><b>Definition:</b> dji_gimbal.hpp:83</div></div>
+<div class="ttc" id="dji__type_8hpp_html"><div class="ttname"><a href="dji__type_8hpp.html">dji_type.hpp</a></div><div class="ttdoc">Data type and Data Structure definitions for use throughout DJI OSDK.</div></div>
+<div class="ttc" id="classDJI_1_1OSDK_1_1Gimbal_html_a2c496e88796c5e174223035f9570aa85"><div class="ttname"><a href="classDJI_1_1OSDK_1_1Gimbal.html#a2c496e88796c5e174223035f9570aa85">DJI::OSDK::Gimbal::setSpeed</a></div><div class="ttdeci">void setSpeed(Gimbal::SpeedData *data)</div><div class="ttdoc">Function for setting Gimbal Speed.</div><div class="ttdef"><b>Definition:</b> dji_gimbal.cpp:53</div></div>
+<div class="ttc" id="structDJI_1_1OSDK_1_1Gimbal_1_1SpeedData_html_a45a8957747d10d4860fd66f0ecc0d3cb"><div class="ttname"><a href="structDJI_1_1OSDK_1_1Gimbal_1_1SpeedData.html#a45a8957747d10d4860fd66f0ecc0d3cb">DJI::OSDK::Gimbal::SpeedData::yaw_return_neutral</a></div><div class="ttdeci">uint8_t yaw_return_neutral</div><div class="ttdef"><b>Definition:</b> dji_gimbal.hpp:104</div></div>
+<div class="ttc" id="structDJI_1_1OSDK_1_1Gimbal_1_1SpeedData_html_ab860b143c5a15ab613dc76d82f70a338"><div class="ttname"><a href="structDJI_1_1OSDK_1_1Gimbal_1_1SpeedData.html#ab860b143c5a15ab613dc76d82f70a338">DJI::OSDK::Gimbal::SpeedData::gimbal_control_authority</a></div><div class="ttdeci">uint8_t gimbal_control_authority</div><div class="ttdef"><b>Definition:</b> dji_gimbal.hpp:106</div></div>
+<div class="ttc" id="classDJI_1_1OSDK_1_1Gimbal_html"><div class="ttname"><a href="classDJI_1_1OSDK_1_1Gimbal.html">DJI::OSDK::Gimbal</a></div><div class="ttdoc">The Gimbal class for controlling gimbal-related functions.</div><div class="ttdef"><b>Definition:</b> dji_gimbal.hpp:46</div></div>
+<div class="ttc" id="namespaceDJI_html"><div class="ttname"><a href="namespaceDJI.html">DJI</a></div><div class="ttdef"><b>Definition:</b> dji_ack.cpp:38</div></div>
+<div class="ttc" id="structDJI_1_1OSDK_1_1Gimbal_1_1AngleData_html_aaa419405bc9ccac79a18f7b2552d1a22"><div class="ttname"><a href="structDJI_1_1OSDK_1_1Gimbal_1_1AngleData.html#aaa419405bc9ccac79a18f7b2552d1a22">DJI::OSDK::Gimbal::AngleData::yaw</a></div><div class="ttdeci">int16_t yaw</div><div class="ttdef"><b>Definition:</b> dji_gimbal.hpp:68</div></div>
+<div class="ttc" id="structDJI_1_1OSDK_1_1Gimbal_1_1AngleData_html"><div class="ttname"><a href="structDJI_1_1OSDK_1_1Gimbal_1_1AngleData.html">DJI::OSDK::Gimbal::AngleData</a></div><div class="ttdoc">The Angle Data struct for gimbal control.</div><div class="ttdef"><b>Definition:</b> dji_gimbal.hpp:66</div></div>
+<div class="ttc" id="structDJI_1_1OSDK_1_1Gimbal_1_1SpeedData_html_a397f12869c8d9ed52c205f290e6345b6"><div class="ttname"><a href="structDJI_1_1OSDK_1_1Gimbal_1_1SpeedData.html#a397f12869c8d9ed52c205f290e6345b6">DJI::OSDK::Gimbal::SpeedData::ignore_aircraft_motion</a></div><div class="ttdeci">uint8_t ignore_aircraft_motion</div><div class="ttdef"><b>Definition:</b> dji_gimbal.hpp:103</div></div>
+<div class="ttc" id="classDJI_1_1OSDK_1_1Gimbal_html_a672445095bb4a9b2b6add4c69d385157"><div class="ttname"><a href="classDJI_1_1OSDK_1_1Gimbal.html#a672445095bb4a9b2b6add4c69d385157">DJI::OSDK::Gimbal::SpeedData</a></div><div class="ttdeci">struct DJI::OSDK::Gimbal::SpeedData SpeedData</div><div class="ttdoc">The Speed Data struct for gimbal control.</div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- HTML footer for doxygen 1.8.8-->
+<!-- start footer part -->
+</div>
+</div>
+</div>
+</div>
+</div>
+<hr class="footer"/><address class="footer"><small>
+  <footer id="site-footer" class="site-footer">
+    <div class="container">
+      <div class="foot-nav row">
+        <nav class="link-list col-xs-2"><span class="title">SDK</span><a href="/mobile-sdk">Mobile SDK</a><a href="/ux-sdk">UX SDK</a><a href="/onboard-sdk">Onboard SDK</a><a href="/payload-sdk">Payload SDK</a><a href="/windows-sdk">Windows SDK</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Info</span><a href="/products">Products</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Community</span><a href="http://stackoverflow.com/questions/tagged/dji-sdk" target="_blank">Stack Overflow</a><a href="https://www.youtube.com/channel/UCPQwN5xsob8zZGIcDhkYqUA" target="_blank">YouTube</a><a href="https://twitter.com/djidevelopers" target="_blank">Twitter</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Contact Us</span><a href="mailto:dev@dji.com"> dev@dji.com</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Business Cooperation</span><a href="mailto:dev@dji.com"> dev@dji.com</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">BILLING</span><a href="mailto:billing-dev@dji.com"> billing-dev@dji.com</a></nav>
+      </div>
+      <div class="foot-copyright row">
+        <div class="col-xs-3 foot-logo"><img src="dji-logo-foot.png"></div>
+        <div class="copyright col-xs-7"><span>Copyright © 2018 DJI All Rights Reserved</span><a href="/policies/privacy">Privacy Policy</a><a href="/policies/terms">Terms of Use</a></div>
+        <div class="col-xs-2">
+          <div class="lang-selector">
+            <select dir="rtl" v-model="lang">
+              <option value="en">English</option>
+              <option value="cn">中文</option>
+            </select><i class="fa fa-globe"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</small></address>
+</body>
+<script type="text/javascript" src="doxy-boot.js"></script>
+</html>

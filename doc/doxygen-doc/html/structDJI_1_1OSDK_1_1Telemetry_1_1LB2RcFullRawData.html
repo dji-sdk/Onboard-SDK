@@ -1,0 +1,465 @@
+<!-- HTML header for doxygen 1.8.8-->
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- For Mobile Devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8" />
+    <meta name="generator" content="Doxygen 1.8.15" />
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <title>DJI Onboard SDK: DJI::OSDK::Telemetry::LB2RcFullRawData Struct Reference</title>
+    <!-- <link href="tabs.css" rel="stylesheet" type="text/css"/> -->
+    <script type="text/javascript" src="dynsections.js"></script>
+    <link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+    <link href="doxygen.css" rel="stylesheet" type="text/css" />
+    <link href="customdoxygen.css" rel="stylesheet" type="text/css"/>
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Slab' rel='stylesheet' type='text/css'>
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link href="jquery.smartmenus.bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="bootstrap-theme.css">
+    <script src="bootstrap.min.js"></script>
+    <link href="jquery.smartmenus.bootstrap.css" rel="stylesheet">
+    <!-- SmartMenus jQuery plugin -->
+    <script type="text/javascript" src="jquery.smartmenus.min.js"></script>
+    <!-- SmartMenus jQuery Bootstrap Addon -->
+    <script type="text/javascript" src="jquery.smartmenus.bootstrap.min.js"></script>
+    <style>
+        .has-submenu {
+            position: relative;
+        }
+        #main-nav {
+            margin-top: 60px;
+        }
+    </style>
+</head>
+<body>
+    <nav id="site-header" class="site-header navbar">
+        <div class="container">
+            <div class="navbar-header"><a href="/" class="logo"><img src="dji-logo@2x.png">Developer</a></div>
+            <div id="header-navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="/mobile-sdk">Mobile SDK</a></li>
+                    <li><a href="/ux-sdk">UX SDK</a></li>
+                    <li><a href="/onboard-sdk">Onboard SDK</a></li>
+                    <li><a href="/payload-sdk">Payload SDK</a></li>
+                    <li><a href="/windows-sdk">Windows SDK</a></li>
+                </ul>
+                <ul v-cloak="" v-show="!loggedIn" class="nav navbar-nav navbar-right nav-user">
+                    <li><a
+                            href="https://account.dji.com/login?appId=dji_sdk&backUrl=https%3A%2F%2Fdeveloper.dji.com%2Fuser&locale=en_US">Login</a>
+                    </li>
+                    <li><a href="https://account.dji.com/register?appId=dji_sdk&backUrl=https%3A%2F%2Fdeveloper.dji.com%2Fuser&locale=en_US"
+                            class="head-cta">Register</a></li>
+                </ul>
+                <ul v-cloak="" v-show="loggedIn" class="nav navbar-nav navbar-right nav-user">
+                    <li class="hovedown"><a href="javascript:void(0);" class="hovedown-toggle"><i
+                                class="fa fa-user"></i></a>
+                        <ul class="hovedown-menu hovedown-menu-right">
+                            <li><a href="/user">User Center</a></li>
+                            <li><a href="javascript:void(0);" v-on="click: logout">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div data-offset-top="60" data-spy="affix" class="sub-nav">
+        <div class="container">
+            <h1 class="logo">Onboard SDK</h1>
+            <nav><a href="/onboard-sdk">Overview</a><a href="/onboard-sdk/documentation">Documentation</a><a
+                    href="/onboard-api-reference/index.html" class="active">API Reference</a><a
+                    href="/onboard-sdk/downloads">Downloads</a>
+            </nav>
+        </div>
+    </div>
+    <!--<nav class="navbar navbar-default" role="navigation">-->
+    <!--<div class="container">-->
+    <!--<div class="navbar-header">-->
+    <!--<a href="#" class="navbar-left"><img src="dji_logo_gray_small.png" alt="DJI OSDK API Documentation" width="32px"/></a>-->
+    <!--<a class="navbar-brand" href="index.html">ONBOARD SDK 3.3</a>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</nav>-->
+    <div id="top">
+        <!-- do not remove this div, it is closed by doxygen! -->
+        <div class="content" id="content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12 panel " style="padding-bottom: 15px;">
+                        <div style="margin-bottom: 15px;">
+                            <!-- end header part --><!-- Generated by Doxygen 1.8.15 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Search');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespaceDJI.html">DJI</a></li><li class="navelem"><a class="el" href="namespaceDJI_1_1OSDK.html">OSDK</a></li><li class="navelem"><a class="el" href="namespaceDJI_1_1OSDK_1_1Telemetry.html">Telemetry</a></li><li class="navelem"><a class="el" href="structDJI_1_1OSDK_1_1Telemetry_1_1LB2RcFullRawData.html">LB2RcFullRawData</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="structDJI_1_1OSDK_1_1Telemetry_1_1LB2RcFullRawData-members.html">List of all members</a>  </div>
+  <div class="headertitle">
+<div class="title">DJI::OSDK::Telemetry::LB2RcFullRawData Struct Reference</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>struct for the light bridge 2 part of TOPIC_RC_FULL_RAW_DATA  
+ <a href="structDJI_1_1OSDK_1_1Telemetry_1_1LB2RcFullRawData.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="dji__telemetry_8hpp_source.html">dji_telemetry.hpp</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a5be0dd2ad6da9713c9b784e7b070f94c"><td class="memItemLeft" align="right" valign="top">int16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDJI_1_1OSDK_1_1Telemetry_1_1LB2RcFullRawData.html#a5be0dd2ad6da9713c9b784e7b070f94c">roll</a></td></tr>
+<tr class="separator:a5be0dd2ad6da9713c9b784e7b070f94c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7de2e270a7568b4731c9a7a314f8ef5e"><td class="memItemLeft" align="right" valign="top">int16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDJI_1_1OSDK_1_1Telemetry_1_1LB2RcFullRawData.html#a7de2e270a7568b4731c9a7a314f8ef5e">pitch</a></td></tr>
+<tr class="separator:a7de2e270a7568b4731c9a7a314f8ef5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adef148e77ae960dab6836fac3f92882e"><td class="memItemLeft" align="right" valign="top">int16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDJI_1_1OSDK_1_1Telemetry_1_1LB2RcFullRawData.html#adef148e77ae960dab6836fac3f92882e">yaw</a></td></tr>
+<tr class="separator:adef148e77ae960dab6836fac3f92882e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e2be3d40bdc4a776c797744c2cab06f"><td class="memItemLeft" align="right" valign="top">int16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDJI_1_1OSDK_1_1Telemetry_1_1LB2RcFullRawData.html#a2e2be3d40bdc4a776c797744c2cab06f">throttle</a></td></tr>
+<tr class="separator:a2e2be3d40bdc4a776c797744c2cab06f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a460f0063ce23e3d6471e2cdea744573a"><td class="memItemLeft" align="right" valign="top">int16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDJI_1_1OSDK_1_1Telemetry_1_1LB2RcFullRawData.html#a460f0063ce23e3d6471e2cdea744573a">mode</a></td></tr>
+<tr class="separator:a460f0063ce23e3d6471e2cdea744573a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f3ec4d13f59747f0c55fde41bdeb177"><td class="memItemLeft" align="right" valign="top">int16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDJI_1_1OSDK_1_1Telemetry_1_1LB2RcFullRawData.html#a1f3ec4d13f59747f0c55fde41bdeb177">gear</a></td></tr>
+<tr class="separator:a1f3ec4d13f59747f0c55fde41bdeb177"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a70cee8c47b9027811d34ec7ae4647a"><td class="memItemLeft" align="right" valign="top">int16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDJI_1_1OSDK_1_1Telemetry_1_1LB2RcFullRawData.html#a6a70cee8c47b9027811d34ec7ae4647a">camera</a></td></tr>
+<tr class="separator:a6a70cee8c47b9027811d34ec7ae4647a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a630fadcd8b72b92933c6b69b97f5c2fc"><td class="memItemLeft" align="right" valign="top">int16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDJI_1_1OSDK_1_1Telemetry_1_1LB2RcFullRawData.html#a630fadcd8b72b92933c6b69b97f5c2fc">video</a></td></tr>
+<tr class="separator:a630fadcd8b72b92933c6b69b97f5c2fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a27852fb3e1dfdff30e9e9038440311d7"><td class="memItemLeft" align="right" valign="top">int16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDJI_1_1OSDK_1_1Telemetry_1_1LB2RcFullRawData.html#a27852fb3e1dfdff30e9e9038440311d7">videoPause</a></td></tr>
+<tr class="separator:a27852fb3e1dfdff30e9e9038440311d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac40f511d5d8dd3afc1d448b62356a1fe"><td class="memItemLeft" align="right" valign="top">int16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDJI_1_1OSDK_1_1Telemetry_1_1LB2RcFullRawData.html#ac40f511d5d8dd3afc1d448b62356a1fe">goHome</a></td></tr>
+<tr class="separator:ac40f511d5d8dd3afc1d448b62356a1fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5b213a9bf0b8801c13ded593ac756410"><td class="memItemLeft" align="right" valign="top">int16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDJI_1_1OSDK_1_1Telemetry_1_1LB2RcFullRawData.html#a5b213a9bf0b8801c13ded593ac756410">leftWheel</a></td></tr>
+<tr class="separator:a5b213a9bf0b8801c13ded593ac756410"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb0bdd5b9df06a9442e53c551f54f618"><td class="memItemLeft" align="right" valign="top">int16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDJI_1_1OSDK_1_1Telemetry_1_1LB2RcFullRawData.html#acb0bdd5b9df06a9442e53c551f54f618">rightWheelButton</a></td></tr>
+<tr class="separator:acb0bdd5b9df06a9442e53c551f54f618"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5deea2551100af3f79fe2115d02060aa"><td class="memItemLeft" align="right" valign="top">int16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDJI_1_1OSDK_1_1Telemetry_1_1LB2RcFullRawData.html#a5deea2551100af3f79fe2115d02060aa">rcC1</a></td></tr>
+<tr class="separator:a5deea2551100af3f79fe2115d02060aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc0dd0d06ef112658e77972369c8f9bb"><td class="memItemLeft" align="right" valign="top">int16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDJI_1_1OSDK_1_1Telemetry_1_1LB2RcFullRawData.html#acc0dd0d06ef112658e77972369c8f9bb">rcC2</a></td></tr>
+<tr class="separator:acc0dd0d06ef112658e77972369c8f9bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d26679036d6209c923d332a7e9bb347"><td class="memItemLeft" align="right" valign="top">int16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDJI_1_1OSDK_1_1Telemetry_1_1LB2RcFullRawData.html#a6d26679036d6209c923d332a7e9bb347">rcD1</a></td></tr>
+<tr class="separator:a6d26679036d6209c923d332a7e9bb347"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a63a774676110d08cdafcfde11aab9450"><td class="memItemLeft" align="right" valign="top"><a id="a63a774676110d08cdafcfde11aab9450"></a>
+int16_t&#160;</td><td class="memItemRight" valign="bottom"><b>rcD2</b></td></tr>
+<tr class="separator:a63a774676110d08cdafcfde11aab9450"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7abb697aca585c66b11f63e925672199"><td class="memItemLeft" align="right" valign="top"><a id="a7abb697aca585c66b11f63e925672199"></a>
+int16_t&#160;</td><td class="memItemRight" valign="bottom"><b>rcD3</b></td></tr>
+<tr class="separator:a7abb697aca585c66b11f63e925672199"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac97f34fadc749a42ca860187f7e69fe6"><td class="memItemLeft" align="right" valign="top"><a id="ac97f34fadc749a42ca860187f7e69fe6"></a>
+int16_t&#160;</td><td class="memItemRight" valign="bottom"><b>rcD4</b></td></tr>
+<tr class="separator:ac97f34fadc749a42ca860187f7e69fe6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a585978f225e3b5557f0fe44e926ed5d9"><td class="memItemLeft" align="right" valign="top"><a id="a585978f225e3b5557f0fe44e926ed5d9"></a>
+int16_t&#160;</td><td class="memItemRight" valign="bottom"><b>rcD5</b></td></tr>
+<tr class="separator:a585978f225e3b5557f0fe44e926ed5d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ab319130eca8bbd689e0994887e1059"><td class="memItemLeft" align="right" valign="top"><a id="a4ab319130eca8bbd689e0994887e1059"></a>
+int16_t&#160;</td><td class="memItemRight" valign="bottom"><b>rcD6</b></td></tr>
+<tr class="separator:a4ab319130eca8bbd689e0994887e1059"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab614262f867f63cf14b22cdc719fbd77"><td class="memItemLeft" align="right" valign="top"><a id="ab614262f867f63cf14b22cdc719fbd77"></a>
+int16_t&#160;</td><td class="memItemRight" valign="bottom"><b>rcD7</b></td></tr>
+<tr class="separator:ab614262f867f63cf14b22cdc719fbd77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af29c8105357e2e96064ded9959d2827f"><td class="memItemLeft" align="right" valign="top"><a id="af29c8105357e2e96064ded9959d2827f"></a>
+int16_t&#160;</td><td class="memItemRight" valign="bottom"><b>rcD8</b></td></tr>
+<tr class="separator:af29c8105357e2e96064ded9959d2827f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>struct for the light bridge 2 part of TOPIC_RC_FULL_RAW_DATA </p>
+</div><h2 class="groupheader">Member Data Documentation</h2>
+<a id="a6a70cee8c47b9027811d34ec7ae4647a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6a70cee8c47b9027811d34ec7ae4647a">&#9670;&nbsp;</a></span>camera</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int16_t DJI::OSDK::Telemetry::LB2RcFullRawData::camera</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>press_down = 1684, release = 364 </p>
+
+</div>
+</div>
+<a id="a1f3ec4d13f59747f0c55fde41bdeb177"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f3ec4d13f59747f0c55fde41bdeb177">&#9670;&nbsp;</a></span>gear</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int16_t DJI::OSDK::Telemetry::LB2RcFullRawData::gear</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>up = 1684, down = 1354 </p>
+
+</div>
+</div>
+<a id="ac40f511d5d8dd3afc1d448b62356a1fe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac40f511d5d8dd3afc1d448b62356a1fe">&#9670;&nbsp;</a></span>goHome</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int16_t DJI::OSDK::Telemetry::LB2RcFullRawData::goHome</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Always 364 </p>
+
+</div>
+</div>
+<a id="a5b213a9bf0b8801c13ded593ac756410"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5b213a9bf0b8801c13ded593ac756410">&#9670;&nbsp;</a></span>leftWheel</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int16_t DJI::OSDK::Telemetry::LB2RcFullRawData::leftWheel</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>left = 364, middle = 1024, right=16844 </p>
+
+</div>
+</div>
+<a id="a460f0063ce23e3d6471e2cdea744573a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a460f0063ce23e3d6471e2cdea744573a">&#9670;&nbsp;</a></span>mode</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int16_t DJI::OSDK::Telemetry::LB2RcFullRawData::mode</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>right(P) = 364, middle(A) = 1024, left(F)=1684 </p>
+
+</div>
+</div>
+<a id="a7de2e270a7568b4731c9a7a314f8ef5e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7de2e270a7568b4731c9a7a314f8ef5e">&#9670;&nbsp;</a></span>pitch</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int16_t DJI::OSDK::Telemetry::LB2RcFullRawData::pitch</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>down = 364, middle = 1024, up=1684 </p>
+
+</div>
+</div>
+<a id="a5deea2551100af3f79fe2115d02060aa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5deea2551100af3f79fe2115d02060aa">&#9670;&nbsp;</a></span>rcC1</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int16_t DJI::OSDK::Telemetry::LB2RcFullRawData::rcC1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>press_down = 1684, release = 364 </p>
+
+</div>
+</div>
+<a id="acc0dd0d06ef112658e77972369c8f9bb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acc0dd0d06ef112658e77972369c8f9bb">&#9670;&nbsp;</a></span>rcC2</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int16_t DJI::OSDK::Telemetry::LB2RcFullRawData::rcC2</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>press_down = 1684, release = 364 </p>
+
+</div>
+</div>
+<a id="a6d26679036d6209c923d332a7e9bb347"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6d26679036d6209c923d332a7e9bb347">&#9670;&nbsp;</a></span>rcD1</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int16_t DJI::OSDK::Telemetry::LB2RcFullRawData::rcD1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>rcD1 - 8 is used by sbus </p>
+
+</div>
+</div>
+<a id="acb0bdd5b9df06a9442e53c551f54f618"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acb0bdd5b9df06a9442e53c551f54f618">&#9670;&nbsp;</a></span>rightWheelButton</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int16_t DJI::OSDK::Telemetry::LB2RcFullRawData::rightWheelButton</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>press_down = 1684, release = 364 </p>
+
+</div>
+</div>
+<a id="a5be0dd2ad6da9713c9b784e7b070f94c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5be0dd2ad6da9713c9b784e7b070f94c">&#9670;&nbsp;</a></span>roll</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int16_t DJI::OSDK::Telemetry::LB2RcFullRawData::roll</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>left = 364, middle = 1024, right=1684 </p>
+
+</div>
+</div>
+<a id="a2e2be3d40bdc4a776c797744c2cab06f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2e2be3d40bdc4a776c797744c2cab06f">&#9670;&nbsp;</a></span>throttle</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int16_t DJI::OSDK::Telemetry::LB2RcFullRawData::throttle</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>down = 364, middle = 1024, up=1684 </p>
+
+</div>
+</div>
+<a id="a630fadcd8b72b92933c6b69b97f5c2fc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a630fadcd8b72b92933c6b69b97f5c2fc">&#9670;&nbsp;</a></span>video</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int16_t DJI::OSDK::Telemetry::LB2RcFullRawData::video</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>press_down = 1684, release = 364 </p>
+
+</div>
+</div>
+<a id="a27852fb3e1dfdff30e9e9038440311d7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a27852fb3e1dfdff30e9e9038440311d7">&#9670;&nbsp;</a></span>videoPause</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int16_t DJI::OSDK::Telemetry::LB2RcFullRawData::videoPause</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>press_down = 1684, release = 364 </p>
+
+</div>
+</div>
+<a id="adef148e77ae960dab6836fac3f92882e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adef148e77ae960dab6836fac3f92882e">&#9670;&nbsp;</a></span>yaw</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int16_t DJI::OSDK::Telemetry::LB2RcFullRawData::yaw</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>left = 364, middle = 1024, right=1684 </p>
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>osdk-core/api/inc/<a class="el" href="dji__telemetry_8hpp_source.html">dji_telemetry.hpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- HTML footer for doxygen 1.8.8-->
+<!-- start footer part -->
+</div>
+</div>
+</div>
+</div>
+</div>
+<hr class="footer"/><address class="footer"><small>
+  <footer id="site-footer" class="site-footer">
+    <div class="container">
+      <div class="foot-nav row">
+        <nav class="link-list col-xs-2"><span class="title">SDK</span><a href="/mobile-sdk">Mobile SDK</a><a href="/ux-sdk">UX SDK</a><a href="/onboard-sdk">Onboard SDK</a><a href="/payload-sdk">Payload SDK</a><a href="/windows-sdk">Windows SDK</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Info</span><a href="/products">Products</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Community</span><a href="http://stackoverflow.com/questions/tagged/dji-sdk" target="_blank">Stack Overflow</a><a href="https://www.youtube.com/channel/UCPQwN5xsob8zZGIcDhkYqUA" target="_blank">YouTube</a><a href="https://twitter.com/djidevelopers" target="_blank">Twitter</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Contact Us</span><a href="mailto:dev@dji.com"> dev@dji.com</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Business Cooperation</span><a href="mailto:dev@dji.com"> dev@dji.com</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">BILLING</span><a href="mailto:billing-dev@dji.com"> billing-dev@dji.com</a></nav>
+      </div>
+      <div class="foot-copyright row">
+        <div class="col-xs-3 foot-logo"><img src="dji-logo-foot.png"></div>
+        <div class="copyright col-xs-7"><span>Copyright © 2018 DJI All Rights Reserved</span><a href="/policies/privacy">Privacy Policy</a><a href="/policies/terms">Terms of Use</a></div>
+        <div class="col-xs-2">
+          <div class="lang-selector">
+            <select dir="rtl" v-model="lang">
+              <option value="en">English</option>
+              <option value="cn">中文</option>
+            </select><i class="fa fa-globe"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</small></address>
+</body>
+<script type="text/javascript" src="doxy-boot.js"></script>
+</html>

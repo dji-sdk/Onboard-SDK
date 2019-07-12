@@ -1,0 +1,4 @@
+<map id="DJI::OSDK::WaypointMission" name="DJI::OSDK::WaypointMission">
+<area shape="rect" id="node1" title="APIs for GPS Waypoint Missions." alt="" coords="5,247,220,520"/>
+<area shape="rect" id="node2" href="$classDJI_1_1OSDK_1_1MissionBase.html" title="Mission Base class for commonality between SDK Missions." alt="" coords="28,5,197,199"/>
+</map>

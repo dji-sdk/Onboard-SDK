@@ -1,0 +1,404 @@
+<!-- HTML header for doxygen 1.8.8-->
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- For Mobile Devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8" />
+    <meta name="generator" content="Doxygen 1.8.15" />
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <title>DJI Onboard SDK: osdk-core/api/inc/dji_status.hpp File Reference</title>
+    <!-- <link href="tabs.css" rel="stylesheet" type="text/css"/> -->
+    <script type="text/javascript" src="dynsections.js"></script>
+    <link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+    <link href="doxygen.css" rel="stylesheet" type="text/css" />
+    <link href="customdoxygen.css" rel="stylesheet" type="text/css"/>
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Slab' rel='stylesheet' type='text/css'>
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link href="jquery.smartmenus.bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="bootstrap-theme.css">
+    <script src="bootstrap.min.js"></script>
+    <link href="jquery.smartmenus.bootstrap.css" rel="stylesheet">
+    <!-- SmartMenus jQuery plugin -->
+    <script type="text/javascript" src="jquery.smartmenus.min.js"></script>
+    <!-- SmartMenus jQuery Bootstrap Addon -->
+    <script type="text/javascript" src="jquery.smartmenus.bootstrap.min.js"></script>
+    <style>
+        .has-submenu {
+            position: relative;
+        }
+        #main-nav {
+            margin-top: 60px;
+        }
+    </style>
+</head>
+<body>
+    <nav id="site-header" class="site-header navbar">
+        <div class="container">
+            <div class="navbar-header"><a href="/" class="logo"><img src="dji-logo@2x.png">Developer</a></div>
+            <div id="header-navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="/mobile-sdk">Mobile SDK</a></li>
+                    <li><a href="/ux-sdk">UX SDK</a></li>
+                    <li><a href="/onboard-sdk">Onboard SDK</a></li>
+                    <li><a href="/payload-sdk">Payload SDK</a></li>
+                    <li><a href="/windows-sdk">Windows SDK</a></li>
+                </ul>
+                <ul v-cloak="" v-show="!loggedIn" class="nav navbar-nav navbar-right nav-user">
+                    <li><a
+                            href="https://account.dji.com/login?appId=dji_sdk&backUrl=https%3A%2F%2Fdeveloper.dji.com%2Fuser&locale=en_US">Login</a>
+                    </li>
+                    <li><a href="https://account.dji.com/register?appId=dji_sdk&backUrl=https%3A%2F%2Fdeveloper.dji.com%2Fuser&locale=en_US"
+                            class="head-cta">Register</a></li>
+                </ul>
+                <ul v-cloak="" v-show="loggedIn" class="nav navbar-nav navbar-right nav-user">
+                    <li class="hovedown"><a href="javascript:void(0);" class="hovedown-toggle"><i
+                                class="fa fa-user"></i></a>
+                        <ul class="hovedown-menu hovedown-menu-right">
+                            <li><a href="/user">User Center</a></li>
+                            <li><a href="javascript:void(0);" v-on="click: logout">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div data-offset-top="60" data-spy="affix" class="sub-nav">
+        <div class="container">
+            <h1 class="logo">Onboard SDK</h1>
+            <nav><a href="/onboard-sdk">Overview</a><a href="/onboard-sdk/documentation">Documentation</a><a
+                    href="/onboard-api-reference/index.html" class="active">API Reference</a><a
+                    href="/onboard-sdk/downloads">Downloads</a>
+            </nav>
+        </div>
+    </div>
+    <!--<nav class="navbar navbar-default" role="navigation">-->
+    <!--<div class="container">-->
+    <!--<div class="navbar-header">-->
+    <!--<a href="#" class="navbar-left"><img src="dji_logo_gray_small.png" alt="DJI OSDK API Documentation" width="32px"/></a>-->
+    <!--<a class="navbar-brand" href="index.html">ONBOARD SDK 3.3</a>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</nav>-->
+    <div id="top">
+        <!-- do not remove this div, it is closed by doxygen! -->
+        <div class="content" id="content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12 panel " style="padding-bottom: 15px;">
+                        <div style="margin-bottom: 15px;">
+                            <!-- end header part --><!-- Generated by Doxygen 1.8.15 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Search');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_95d02babf7f2c2cbb8138434e234b0a4.html">osdk-core</a></li><li class="navelem"><a class="el" href="dir_ef926edda2a887b065db034fc3005c14.html">api</a></li><li class="navelem"><a class="el" href="dir_0fb058e33548cd6e720172c5f012eda8.html">inc</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#enum-members">Enumerations</a>  </div>
+  <div class="headertitle">
+<div class="title">dji_status.hpp File Reference</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>Status information for <a class="el" href="namespaceDJI.html">DJI</a> Vehicle.  
+<a href="#details">More...</a></p>
+
+<p><a href="dji__status_8hpp_source.html">Go to the source code of this file.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:namespaceDJI"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceDJI.html">DJI</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespaceDJI_1_1OSDK"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceDJI_1_1OSDK.html">DJI::OSDK</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespaceDJI_1_1OSDK_1_1VehicleStatus"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceDJI_1_1OSDK_1_1VehicleStatus.html">DJI::OSDK::VehicleStatus</a></td></tr>
+<tr class="memdesc:namespaceDJI_1_1OSDK_1_1VehicleStatus"><td class="mdescLeft">&#160;</td><td class="mdescRight">info about vehicle <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespaceDJI_1_1OSDK_1_1VehicleStatus_1_1DisplayMode"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceDJI_1_1OSDK_1_1VehicleStatus_1_1DisplayMode.html">DJI::OSDK::VehicleStatus::DisplayMode</a></td></tr>
+<tr class="memdesc:namespaceDJI_1_1OSDK_1_1VehicleStatus_1_1DisplayMode"><td class="mdescLeft">&#160;</td><td class="mdescRight">"Mode" of the vehicle's state machine, as displayed on <a class="el" href="namespaceDJI.html">DJI</a> Go <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespaceDJI_1_1OSDK_1_1VehicleStatus_1_1LandingGearMode"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceDJI_1_1OSDK_1_1VehicleStatus_1_1LandingGearMode.html">DJI::OSDK::VehicleStatus::LandingGearMode</a></td></tr>
+<tr class="memdesc:namespaceDJI_1_1OSDK_1_1VehicleStatus_1_1LandingGearMode"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enums for various landing gear states. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespaceDJI_1_1OSDK_1_1VehicleStatus_1_1CtlrMode"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceDJI_1_1OSDK_1_1VehicleStatus_1_1CtlrMode.html">DJI::OSDK::VehicleStatus::CtlrMode</a></td></tr>
+<tr class="memdesc:namespaceDJI_1_1OSDK_1_1VehicleStatus_1_1CtlrMode"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enums for describing the current control mode the aircraft is in. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespaceDJI_1_1OSDK_1_1VehicleStatus_1_1FlightStatus"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceDJI_1_1OSDK_1_1VehicleStatus_1_1FlightStatus.html">DJI::OSDK::VehicleStatus::FlightStatus</a></td></tr>
+<tr class="memdesc:namespaceDJI_1_1OSDK_1_1VehicleStatus_1_1FlightStatus"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flight Status enum. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:a56c83bf02178d81e17502ddde4eb17da"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom">{ <br />
+&#160;&#160;<a class="el" href="namespaceDJI_1_1OSDK_1_1VehicleStatus_1_1DisplayMode.html#a56c83bf02178d81e17502ddde4eb17daab17c67328d4f8bbc769c2215a9818b58">DJI::OSDK::VehicleStatus::DisplayMode::MODE_MANUAL_CTRL</a> = 0, 
+<br />
+&#160;&#160;<a class="el" href="namespaceDJI_1_1OSDK_1_1VehicleStatus_1_1DisplayMode.html#a56c83bf02178d81e17502ddde4eb17daa633c98f8f7b8043c4664a92cf76f3394">DJI::OSDK::VehicleStatus::DisplayMode::MODE_ATTITUDE</a> = 1, 
+<br />
+&#160;&#160;<b>MODE_RESERVED_2</b> = 2, 
+<br />
+&#160;&#160;<b>MODE_RESERVED_3</b> = 3, 
+<br />
+&#160;&#160;<b>MODE_RESERVED_4</b> = 4, 
+<br />
+&#160;&#160;<b>MODE_RESERVED_5</b> = 5, 
+<br />
+&#160;&#160;<a class="el" href="namespaceDJI_1_1OSDK_1_1VehicleStatus_1_1DisplayMode.html#a56c83bf02178d81e17502ddde4eb17daa885610290f55be49f6d71ace51d0f82a">DJI::OSDK::VehicleStatus::DisplayMode::MODE_P_GPS</a> = 6, 
+<br />
+&#160;&#160;<b>MODE_RESERVED_7</b> = 7, 
+<br />
+&#160;&#160;<b>MODE_RESERVED_8</b> = 8, 
+<br />
+&#160;&#160;<a class="el" href="namespaceDJI_1_1OSDK_1_1VehicleStatus_1_1DisplayMode.html#a56c83bf02178d81e17502ddde4eb17daa5a40c4292e6066abd25ab6fe3a6fb9ba">DJI::OSDK::VehicleStatus::DisplayMode::MODE_HOTPOINT_MODE</a> = 9, 
+<br />
+&#160;&#160;<a class="el" href="namespaceDJI_1_1OSDK_1_1VehicleStatus_1_1DisplayMode.html#a56c83bf02178d81e17502ddde4eb17daa151cbf5386f673c9789c878d134d2360">DJI::OSDK::VehicleStatus::DisplayMode::MODE_ASSISTED_TAKEOFF</a> = 10, 
+<br />
+&#160;&#160;<a class="el" href="namespaceDJI_1_1OSDK_1_1VehicleStatus_1_1DisplayMode.html#a56c83bf02178d81e17502ddde4eb17daae9318cdc3cd15d48991882a262e40517">DJI::OSDK::VehicleStatus::DisplayMode::MODE_AUTO_TAKEOFF</a> = 11, 
+<br />
+&#160;&#160;<a class="el" href="namespaceDJI_1_1OSDK_1_1VehicleStatus_1_1DisplayMode.html#a56c83bf02178d81e17502ddde4eb17daa7ca0d924db0572d84e569a7de99e3ab0">DJI::OSDK::VehicleStatus::DisplayMode::MODE_AUTO_LANDING</a> = 12, 
+<br />
+&#160;&#160;<b>MODE_RESERVED_13</b> = 13, 
+<br />
+&#160;&#160;<b>MODE_RESERVED_14</b> = 14, 
+<br />
+&#160;&#160;<a class="el" href="namespaceDJI_1_1OSDK_1_1VehicleStatus_1_1DisplayMode.html#a56c83bf02178d81e17502ddde4eb17daa58189dd75592d1430d6b60a8ce9624a6">DJI::OSDK::VehicleStatus::DisplayMode::MODE_NAVI_GO_HOME</a> = 15, 
+<br />
+&#160;&#160;<b>MODE_RESERVED_16</b> = 16, 
+<br />
+&#160;&#160;<a class="el" href="namespaceDJI_1_1OSDK_1_1VehicleStatus_1_1DisplayMode.html#a56c83bf02178d81e17502ddde4eb17daa310b15ade5132e1d88d11dcd27dfa303">DJI::OSDK::VehicleStatus::DisplayMode::MODE_NAVI_SDK_CTRL</a> = 17, 
+<br />
+&#160;&#160;<b>MODE_RESERVED_18</b> = 18, 
+<br />
+&#160;&#160;<b>MODE_RESERVED_19</b> = 19, 
+<br />
+&#160;&#160;<b>MODE_RESERVED_20</b> = 20, 
+<br />
+&#160;&#160;<b>MODE_RESERVED_21</b> = 21, 
+<br />
+&#160;&#160;<b>MODE_RESERVED_22</b> = 22, 
+<br />
+&#160;&#160;<b>MODE_RESERVED_23</b> = 23, 
+<br />
+&#160;&#160;<b>MODE_RESERVED_24</b> = 24, 
+<br />
+&#160;&#160;<b>MODE_RESERVED_25</b> = 25, 
+<br />
+&#160;&#160;<b>MODE_RESERVED_26</b> = 26, 
+<br />
+&#160;&#160;<b>MODE_RESERVED_27</b> = 27, 
+<br />
+&#160;&#160;<b>MODE_RESERVED_28</b> = 28, 
+<br />
+&#160;&#160;<b>MODE_RESERVED_29</b> = 29, 
+<br />
+&#160;&#160;<b>MODE_RESERVED_30</b> = 30, 
+<br />
+&#160;&#160;<b>MODE_RESERVED_31</b> = 31, 
+<br />
+&#160;&#160;<b>MODE_RESERVED_32</b> = 32, 
+<br />
+&#160;&#160;<a class="el" href="namespaceDJI_1_1OSDK_1_1VehicleStatus_1_1DisplayMode.html#a56c83bf02178d81e17502ddde4eb17daa1480db58a9794e4c4b7594a610cf5c40">DJI::OSDK::VehicleStatus::DisplayMode::MODE_FORCE_AUTO_LANDING</a> = 33, 
+<br />
+&#160;&#160;<b>MODE_RESERVED_34</b> = 34, 
+<br />
+&#160;&#160;<b>MODE_RESERVED_35</b> = 35, 
+<br />
+&#160;&#160;<b>MODE_RESERVED_36</b> = 36, 
+<br />
+&#160;&#160;<b>MODE_RESERVED_37</b> = 37, 
+<br />
+&#160;&#160;<b>MODE_RESERVED_38</b> = 38, 
+<br />
+&#160;&#160;<b>MODE_RESERVED_39</b> = 39, 
+<br />
+&#160;&#160;<a class="el" href="namespaceDJI_1_1OSDK_1_1VehicleStatus_1_1DisplayMode.html#a56c83bf02178d81e17502ddde4eb17daa993627d730bc8555ade2010a55e013f9">DJI::OSDK::VehicleStatus::DisplayMode::MODE_SEARCH_MODE</a> = 40, 
+<br />
+&#160;&#160;<a class="el" href="namespaceDJI_1_1OSDK_1_1VehicleStatus_1_1DisplayMode.html#a56c83bf02178d81e17502ddde4eb17daadfa8e5d30acb8f316facb8a329bc0f60">DJI::OSDK::VehicleStatus::DisplayMode::MODE_ENGINE_START</a> = 41, 
+<br />
+&#160;&#160;<b>MODE_RESERVED_42</b> = 42, 
+<br />
+&#160;&#160;<b>MODE_RESERVED_43</b> = 42
+<br />
+ }</td></tr>
+<tr class="separator:a56c83bf02178d81e17502ddde4eb17da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed3d1be7d6434422532b1d24acd307b7"><td class="memItemLeft" align="right" valign="top"><a id="aed3d1be7d6434422532b1d24acd307b7"></a>enum &#160;</td><td class="memItemRight" valign="bottom">{ <br />
+&#160;&#160;<b>LANDING_GEAR_UNDEFINED</b> = 0, 
+<br />
+&#160;&#160;<b>LANDING_GEAR_DOWN</b> = 1, 
+<br />
+&#160;&#160;<b>LANDING_GEAR_UP_TO_DOWN</b> = 2, 
+<br />
+&#160;&#160;<b>LANDING_GEAR_UP</b> = 3, 
+<br />
+&#160;&#160;<b>LANDING_GEAR_DOWN_TO_UP</b> = 4, 
+<br />
+&#160;&#160;<b>LANDING_GEAR_HOLD</b> = 5, 
+<br />
+&#160;&#160;<b>LANDING_GEAR_PACKED</b> = 6, 
+<br />
+&#160;&#160;<b>LANDING_GEAR_PACKING_IN_PROGRESS</b> = 7, 
+<br />
+&#160;&#160;<b>LANDING_GEAR_UNPACKING_IN_PROGRESS</b> = 8
+<br />
+ }</td></tr>
+<tr class="separator:aed3d1be7d6434422532b1d24acd307b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6681a2e13cdc55848b9ceebdb3174287"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom">{ <br />
+&#160;&#160;<b>CTRL_MODE_ATTI_STOP</b> = 0, 
+<br />
+&#160;&#160;<b>CTRL_MODE_HORIZ_ANG_VERT_VEL_YAW_ANG</b> = 1, 
+<br />
+&#160;&#160;<b>CTRL_MODE_HORIZ_ANG_VERT_VEL_YAW_RATE</b> = 2, 
+<br />
+&#160;&#160;<b>CTRL_MODE_HORIZ_VEL_VERT_VEL_YAW_ANG</b> = 3, 
+<br />
+&#160;&#160;<b>CTRL_MODE_HORIZ_VEL_VERT_VEL_YAW_RATE</b> = 4, 
+<br />
+&#160;&#160;<b>CTRL_MODE_HORIZ_POS_VERT_VEL_YAW_ANG</b> = 5, 
+<br />
+&#160;&#160;<b>CTRL_MODE_HORIZ_POS_VERT_VEL_YAW_RATE</b> = 6, 
+<br />
+&#160;&#160;<b>CTRL_MODE_HORIZ_ANG_VERT_POS_YAW_ANG</b> = 7, 
+<br />
+&#160;&#160;<b>CTRL_MODE_HORIZ_ANG_VERT_POS_YAW_RATE</b> = 8, 
+<br />
+&#160;&#160;<b>CTRL_MODE_HORIZ_VEL_VERT_POS_YAW_ANG</b> = 9, 
+<br />
+&#160;&#160;<b>CTRL_MODE_HORIZ_VEL_VERT_POS_YAW_RATE</b> = 10, 
+<br />
+&#160;&#160;<b>CTRL_MODE_HORIZ_POS_VERT_POS_YAW_ANG</b> = 11, 
+<br />
+&#160;&#160;<b>CTRL_MODE_HORIZ_POS_VERT_POS_YAW_RATE</b> = 12, 
+<br />
+&#160;&#160;<b>CTRL_MODE_HORIZ_ANG_VERT_THR_YAW_ANG</b> = 13, 
+<br />
+&#160;&#160;<b>CTRL_MODE_HORIZ_ANG_VERT_THR_YAW_RATE</b> = 14, 
+<br />
+&#160;&#160;<b>CTRL_MODE_HORIZ_VEL_VERT_THR_YAW_ANG</b> = 15, 
+<br />
+&#160;&#160;<b>CTRL_MODE_HORIZ_VEL_VERT_THR_YAW_RATE</b> = 16, 
+<br />
+&#160;&#160;<b>CTRL_MODE_HORIZ_POS_VERT_THR_YAW_ANG</b> = 17, 
+<br />
+&#160;&#160;<b>CTRL_MODE_HORIZ_POS_VERT_THR_YAW_RATE</b> = 18, 
+<br />
+&#160;&#160;<b>CTRL_MODE_HORIZ_PAL_VERT_VEL_YAW_RATE</b> = 19, 
+<br />
+&#160;&#160;<b>CTRL_MODE_HORIZ_PAL_VERT_POS_YAW_RAT</b> = 20, 
+<br />
+&#160;&#160;<b>CTRL_MODE_HORIZ_PAL_VERT_THR_YAW_RATE</b> = 21, 
+<br />
+&#160;&#160;<a class="el" href="namespaceDJI_1_1OSDK_1_1VehicleStatus_1_1CtlrMode.html#a6681a2e13cdc55848b9ceebdb3174287a173e2b6c7dc359263300dc5a85d1b17c">DJI::OSDK::VehicleStatus::CtlrMode::CTRL_MODE_GPS_ATII_CTRL_CL_YAW_RATE</a> = 97, 
+<br />
+&#160;&#160;<a class="el" href="namespaceDJI_1_1OSDK_1_1VehicleStatus_1_1CtlrMode.html#a6681a2e13cdc55848b9ceebdb3174287aabf3a03dd93ef9f6ebe88d0ddc8f0f97">DJI::OSDK::VehicleStatus::CtlrMode::CTRL_MODE_GPS_ATTI_CTRL_YAW_RATE</a> = 98, 
+<br />
+&#160;&#160;<a class="el" href="namespaceDJI_1_1OSDK_1_1VehicleStatus_1_1CtlrMode.html#a6681a2e13cdc55848b9ceebdb3174287a8f2439166dd3829df5272c06e869f067">DJI::OSDK::VehicleStatus::CtlrMode::CTRL_MODE_ATTI_CTRL_YAW_RATE</a> = 99, 
+<br />
+&#160;&#160;<b>CTRL_MODE_ATTI_CTRL_STOP</b> = 100, 
+<br />
+&#160;&#160;<a class="el" href="namespaceDJI_1_1OSDK_1_1VehicleStatus_1_1CtlrMode.html#a6681a2e13cdc55848b9ceebdb3174287ae8abd8ea48c003cbb50a6434f3cc6984">DJI::OSDK::VehicleStatus::CtlrMode::CTRL_MODE_MODE_NOT_SUPPORTED</a> = 0xFF
+<br />
+ }</td></tr>
+<tr class="separator:a6681a2e13cdc55848b9ceebdb3174287"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6128cc028c309ef0228234cb0e3ebac3"><td class="memItemLeft" align="right" valign="top"><a id="a6128cc028c309ef0228234cb0e3ebac3"></a>enum &#160;</td><td class="memItemRight" valign="bottom">{ <br />
+&#160;&#160;<b>STOPED</b> = 0, 
+<br />
+&#160;&#160;<b>ON_GROUND</b> = 1, 
+<br />
+&#160;&#160;<b>IN_AIR</b> = 2
+<br />
+ }</td></tr>
+<tr class="separator:a6128cc028c309ef0228234cb0e3ebac3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3e4d7b36c9d242bb06952e9d4dbef9f"><td class="memItemLeft" align="right" valign="top"><a id="ac3e4d7b36c9d242bb06952e9d4dbef9f"></a>enum &#160;</td><td class="memItemRight" valign="bottom">{ <br />
+&#160;&#160;<b>ON_GROUND_STANDBY</b> = 1, 
+<br />
+&#160;&#160;<b>TAKEOFF</b> = 2, 
+<br />
+&#160;&#160;<b>IN_AIR_STANDBY</b> = 3, 
+<br />
+&#160;&#160;<b>LANDING</b> = 4, 
+<br />
+&#160;&#160;<b>FINISHING_LANDING</b> = 5
+<br />
+ }</td></tr>
+<tr class="separator:ac3e4d7b36c9d242bb06952e9d4dbef9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Status information for <a class="el" href="namespaceDJI.html">DJI</a> Vehicle. </p>
+<dl class="section version"><dt>Version</dt><dd>3.3 </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>June 2017</dd></dl>
+<p>@Copyright (c) 2017 <a class="el" href="namespaceDJI.html">DJI</a></p>
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
+<p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. </p>
+</div></div><!-- contents -->
+<!-- HTML footer for doxygen 1.8.8-->
+<!-- start footer part -->
+</div>
+</div>
+</div>
+</div>
+</div>
+<hr class="footer"/><address class="footer"><small>
+  <footer id="site-footer" class="site-footer">
+    <div class="container">
+      <div class="foot-nav row">
+        <nav class="link-list col-xs-2"><span class="title">SDK</span><a href="/mobile-sdk">Mobile SDK</a><a href="/ux-sdk">UX SDK</a><a href="/onboard-sdk">Onboard SDK</a><a href="/payload-sdk">Payload SDK</a><a href="/windows-sdk">Windows SDK</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Info</span><a href="/products">Products</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Community</span><a href="http://stackoverflow.com/questions/tagged/dji-sdk" target="_blank">Stack Overflow</a><a href="https://www.youtube.com/channel/UCPQwN5xsob8zZGIcDhkYqUA" target="_blank">YouTube</a><a href="https://twitter.com/djidevelopers" target="_blank">Twitter</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Contact Us</span><a href="mailto:dev@dji.com"> dev@dji.com</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Business Cooperation</span><a href="mailto:dev@dji.com"> dev@dji.com</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">BILLING</span><a href="mailto:billing-dev@dji.com"> billing-dev@dji.com</a></nav>
+      </div>
+      <div class="foot-copyright row">
+        <div class="col-xs-3 foot-logo"><img src="dji-logo-foot.png"></div>
+        <div class="copyright col-xs-7"><span>Copyright © 2018 DJI All Rights Reserved</span><a href="/policies/privacy">Privacy Policy</a><a href="/policies/terms">Terms of Use</a></div>
+        <div class="col-xs-2">
+          <div class="lang-selector">
+            <select dir="rtl" v-model="lang">
+              <option value="en">English</option>
+              <option value="cn">中文</option>
+            </select><i class="fa fa-globe"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</small></address>
+</body>
+<script type="text/javascript" src="doxy-boot.js"></script>
+</html>

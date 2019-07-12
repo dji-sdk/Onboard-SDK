@@ -1,0 +1,313 @@
+<!-- HTML header for doxygen 1.8.8-->
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- For Mobile Devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8" />
+    <meta name="generator" content="Doxygen 1.8.15" />
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <title>DJI Onboard SDK: DJI::OSDK::LinuxSerialDevice Class Reference</title>
+    <!-- <link href="tabs.css" rel="stylesheet" type="text/css"/> -->
+    <script type="text/javascript" src="dynsections.js"></script>
+    <link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+    <link href="doxygen.css" rel="stylesheet" type="text/css" />
+    <link href="customdoxygen.css" rel="stylesheet" type="text/css"/>
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Slab' rel='stylesheet' type='text/css'>
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link href="jquery.smartmenus.bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="bootstrap-theme.css">
+    <script src="bootstrap.min.js"></script>
+    <link href="jquery.smartmenus.bootstrap.css" rel="stylesheet">
+    <!-- SmartMenus jQuery plugin -->
+    <script type="text/javascript" src="jquery.smartmenus.min.js"></script>
+    <!-- SmartMenus jQuery Bootstrap Addon -->
+    <script type="text/javascript" src="jquery.smartmenus.bootstrap.min.js"></script>
+    <style>
+        .has-submenu {
+            position: relative;
+        }
+        #main-nav {
+            margin-top: 60px;
+        }
+    </style>
+</head>
+<body>
+    <nav id="site-header" class="site-header navbar">
+        <div class="container">
+            <div class="navbar-header"><a href="/" class="logo"><img src="dji-logo@2x.png">Developer</a></div>
+            <div id="header-navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="/mobile-sdk">Mobile SDK</a></li>
+                    <li><a href="/ux-sdk">UX SDK</a></li>
+                    <li><a href="/onboard-sdk">Onboard SDK</a></li>
+                    <li><a href="/payload-sdk">Payload SDK</a></li>
+                    <li><a href="/windows-sdk">Windows SDK</a></li>
+                </ul>
+                <ul v-cloak="" v-show="!loggedIn" class="nav navbar-nav navbar-right nav-user">
+                    <li><a
+                            href="https://account.dji.com/login?appId=dji_sdk&backUrl=https%3A%2F%2Fdeveloper.dji.com%2Fuser&locale=en_US">Login</a>
+                    </li>
+                    <li><a href="https://account.dji.com/register?appId=dji_sdk&backUrl=https%3A%2F%2Fdeveloper.dji.com%2Fuser&locale=en_US"
+                            class="head-cta">Register</a></li>
+                </ul>
+                <ul v-cloak="" v-show="loggedIn" class="nav navbar-nav navbar-right nav-user">
+                    <li class="hovedown"><a href="javascript:void(0);" class="hovedown-toggle"><i
+                                class="fa fa-user"></i></a>
+                        <ul class="hovedown-menu hovedown-menu-right">
+                            <li><a href="/user">User Center</a></li>
+                            <li><a href="javascript:void(0);" v-on="click: logout">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div data-offset-top="60" data-spy="affix" class="sub-nav">
+        <div class="container">
+            <h1 class="logo">Onboard SDK</h1>
+            <nav><a href="/onboard-sdk">Overview</a><a href="/onboard-sdk/documentation">Documentation</a><a
+                    href="/onboard-api-reference/index.html" class="active">API Reference</a><a
+                    href="/onboard-sdk/downloads">Downloads</a>
+            </nav>
+        </div>
+    </div>
+    <!--<nav class="navbar navbar-default" role="navigation">-->
+    <!--<div class="container">-->
+    <!--<div class="navbar-header">-->
+    <!--<a href="#" class="navbar-left"><img src="dji_logo_gray_small.png" alt="DJI OSDK API Documentation" width="32px"/></a>-->
+    <!--<a class="navbar-brand" href="index.html">ONBOARD SDK 3.3</a>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</nav>-->
+    <div id="top">
+        <!-- do not remove this div, it is closed by doxygen! -->
+        <div class="content" id="content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12 panel " style="padding-bottom: 15px;">
+                        <div style="margin-bottom: 15px;">
+                            <!-- end header part --><!-- Generated by Doxygen 1.8.15 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Search');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespaceDJI.html">DJI</a></li><li class="navelem"><a class="el" href="namespaceDJI_1_1OSDK.html">OSDK</a></li><li class="navelem"><a class="el" href="classDJI_1_1OSDK_1_1LinuxSerialDevice.html">LinuxSerialDevice</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
+<a href="classDJI_1_1OSDK_1_1LinuxSerialDevice-members.html">List of all members</a>  </div>
+  <div class="headertitle">
+<div class="title">DJI::OSDK::LinuxSerialDevice Class Reference</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>POSIX-Compatible Serial Driver for *NIX platforms.  
+ <a href="classDJI_1_1OSDK_1_1LinuxSerialDevice.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="linux__serial__device_8hpp_source.html">linux_serial_device.hpp</a>&gt;</code></p>
+
+<p>Inherits HardDriver.</p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a8bdb4069f8658bc6bf4c9e1c22aa9c63"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1LinuxSerialDevice.html#a8bdb4069f8658bc6bf4c9e1c22aa9c63">LinuxSerialDevice</a> (const char *device, uint32_t baudrate)</td></tr>
+<tr class="separator:a8bdb4069f8658bc6bf4c9e1c22aa9c63"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8bcc7237c4d949c73498868b9e9c3c19"><td class="memItemLeft" align="right" valign="top"><a id="a8bcc7237c4d949c73498868b9e9c3c19"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> ()</td></tr>
+<tr class="separator:a8bcc7237c4d949c73498868b9e9c3c19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa9b9018b8a325c40c3a129c0bd5225d"><td class="memItemLeft" align="right" valign="top"><a id="afa9b9018b8a325c40c3a129c0bd5225d"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>getDeviceStatus</b> ()</td></tr>
+<tr class="separator:afa9b9018b8a325c40c3a129c0bd5225d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73ec219df14ded200d5a89b1c0ecca19"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1LinuxSerialDevice.html#a73ec219df14ded200d5a89b1c0ecca19">setBaudrate</a> (uint32_t baudrate)</td></tr>
+<tr class="separator:a73ec219df14ded200d5a89b1c0ecca19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afbacb141f36c0d29263a9905e43d01aa"><td class="memItemLeft" align="right" valign="top"><a id="afbacb141f36c0d29263a9905e43d01aa"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setDevice</b> (const char *device)</td></tr>
+<tr class="separator:afbacb141f36c0d29263a9905e43d01aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae8024ecb6b46e647446cdb68de98bc29"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1LinuxSerialDevice.html#ae8024ecb6b46e647446cdb68de98bc29">checkBaudRate</a> (uint8_t(&amp;buf)[BUFFER_SIZE])</td></tr>
+<tr class="separator:ae8024ecb6b46e647446cdb68de98bc29"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1362cb4ec1f49061a483aaefb28b63b8"><td class="memItemLeft" align="right" valign="top"><a id="a1362cb4ec1f49061a483aaefb28b63b8"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>setSerialPureTimedRead</b> ()</td></tr>
+<tr class="separator:a1362cb4ec1f49061a483aaefb28b63b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a67179250e1b9eb5882b7cf5fc199f384"><td class="memItemLeft" align="right" valign="top"><a id="a67179250e1b9eb5882b7cf5fc199f384"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>unsetSerialPureTimedRead</b> ()</td></tr>
+<tr class="separator:a67179250e1b9eb5882b7cf5fc199f384"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a985f1476ca42dd7d0fd7c2db5d8f627f"><td class="memItemLeft" align="right" valign="top"><a id="a985f1476ca42dd7d0fd7c2db5d8f627f"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>serialRead</b> (uint8_t *buf, int len)</td></tr>
+<tr class="separator:a985f1476ca42dd7d0fd7c2db5d8f627f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d049404301807f9b270b85dad740d5a"><td class="memItemLeft" align="right" valign="top"><a id="a8d049404301807f9b270b85dad740d5a"></a>
+size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1LinuxSerialDevice.html#a8d049404301807f9b270b85dad740d5a">send</a> (const uint8_t *buf, size_t len)</td></tr>
+<tr class="memdesc:a8d049404301807f9b270b85dad740d5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start of DJI_HardDriver virtual function implementations. <br /></td></tr>
+<tr class="separator:a8d049404301807f9b270b85dad740d5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab51242b87d739f60eaf3b8da2ce8238b"><td class="memItemLeft" align="right" valign="top"><a id="ab51242b87d739f60eaf3b8da2ce8238b"></a>
+size_t&#160;</td><td class="memItemRight" valign="bottom"><b>readall</b> (uint8_t *buf, size_t maxlen)</td></tr>
+<tr class="separator:ab51242b87d739f60eaf3b8da2ce8238b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0acb5e77c1f9dd0ab64dab66c4b1e43f"><td class="memItemLeft" align="right" valign="top"><a id="a0acb5e77c1f9dd0ab64dab66c4b1e43f"></a>
+DJI::OSDK::time_ms&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDJI_1_1OSDK_1_1LinuxSerialDevice.html#a0acb5e77c1f9dd0ab64dab66c4b1e43f">getTimeStamp</a> ()</td></tr>
+<tr class="memdesc:a0acb5e77c1f9dd0ab64dab66c4b1e43f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implemented here because .. <br /></td></tr>
+<tr class="separator:a0acb5e77c1f9dd0ab64dab66c4b1e43f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aefe70cd960ee278ee11335411ac01acf"><td class="memItemLeft" align="right" valign="top"><a id="aefe70cd960ee278ee11335411ac01acf"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>delay_nms</b> (uint16_t time)</td></tr>
+<tr class="separator:aefe70cd960ee278ee11335411ac01acf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:a873a690ef3fbcb69f3210cdaa56c361c"><td class="memItemLeft" align="right" valign="top"><a id="a873a690ef3fbcb69f3210cdaa56c361c"></a>
+static const int&#160;</td><td class="memItemRight" valign="bottom"><b>BUFFER_SIZE</b> = 2048</td></tr>
+<tr class="separator:a873a690ef3fbcb69f3210cdaa56c361c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>POSIX-Compatible Serial Driver for *NIX platforms. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a8bdb4069f8658bc6bf4c9e1c22aa9c63"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8bdb4069f8658bc6bf4c9e1c22aa9c63">&#9670;&nbsp;</a></span>LinuxSerialDevice()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">LinuxSerialDevice::LinuxSerialDevice </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>device</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>baudrate</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Implementing inherited functions from abstract class DJI_HardDriver </p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="ae8024ecb6b46e647446cdb68de98bc29"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae8024ecb6b46e647446cdb68de98bc29">&#9670;&nbsp;</a></span>checkBaudRate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int DJI::OSDK::LinuxSerialDevice::checkBaudRate </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t(&amp;)&#160;</td>
+          <td class="paramname"><em>buf</em>[BUFFER_SIZE]</td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Public interfaces to private functions. Use these functions to validate your serial connection </p>
+
+</div>
+</div>
+<a id="a73ec219df14ded200d5a89b1c0ecca19"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a73ec219df14ded200d5a89b1c0ecca19">&#9670;&nbsp;</a></span>setBaudrate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void LinuxSerialDevice::setBaudrate </td>
+          <td>(</td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>baudrate</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Implement functions specific to this hardware driver </p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following files:<ul>
+<li>osdk-core/platform/linux/inc/<a class="el" href="linux__serial__device_8hpp_source.html">linux_serial_device.hpp</a></li>
+<li>osdk-core/platform/linux/src/<a class="el" href="linux__serial__device_8cpp.html">linux_serial_device.cpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- HTML footer for doxygen 1.8.8-->
+<!-- start footer part -->
+</div>
+</div>
+</div>
+</div>
+</div>
+<hr class="footer"/><address class="footer"><small>
+  <footer id="site-footer" class="site-footer">
+    <div class="container">
+      <div class="foot-nav row">
+        <nav class="link-list col-xs-2"><span class="title">SDK</span><a href="/mobile-sdk">Mobile SDK</a><a href="/ux-sdk">UX SDK</a><a href="/onboard-sdk">Onboard SDK</a><a href="/payload-sdk">Payload SDK</a><a href="/windows-sdk">Windows SDK</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Info</span><a href="/products">Products</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Community</span><a href="http://stackoverflow.com/questions/tagged/dji-sdk" target="_blank">Stack Overflow</a><a href="https://www.youtube.com/channel/UCPQwN5xsob8zZGIcDhkYqUA" target="_blank">YouTube</a><a href="https://twitter.com/djidevelopers" target="_blank">Twitter</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Contact Us</span><a href="mailto:dev@dji.com"> dev@dji.com</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">Business Cooperation</span><a href="mailto:dev@dji.com"> dev@dji.com</a></nav>
+        <nav class="link-list col-xs-2"><span class="title">BILLING</span><a href="mailto:billing-dev@dji.com"> billing-dev@dji.com</a></nav>
+      </div>
+      <div class="foot-copyright row">
+        <div class="col-xs-3 foot-logo"><img src="dji-logo-foot.png"></div>
+        <div class="copyright col-xs-7"><span>Copyright © 2018 DJI All Rights Reserved</span><a href="/policies/privacy">Privacy Policy</a><a href="/policies/terms">Terms of Use</a></div>
+        <div class="col-xs-2">
+          <div class="lang-selector">
+            <select dir="rtl" v-model="lang">
+              <option value="en">English</option>
+              <option value="cn">中文</option>
+            </select><i class="fa fa-globe"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</small></address>
+</body>
+<script type="text/javascript" src="doxy-boot.js"></script>
+</html>
