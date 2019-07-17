@@ -49,6 +49,7 @@ getBroadcastData(DJI::OSDK::Vehicle* vehicle, int responseTimeout)
   // 3. RC Channels
   // 4. Velocity
   // 5. Quaternion
+  // 6. Avoid obstacle data
 
   // Please make sure your drone is in simulation mode. You can
   // fly the drone with your RC to get different values.
@@ -58,6 +59,7 @@ getBroadcastData(DJI::OSDK::Vehicle* vehicle, int responseTimeout)
   Telemetry::RC             rc;
   Telemetry::Vector3f       velocity;
   Telemetry::Quaternion     quaternion;
+  Telemetry::RelativePosition avoidData;
 
   const int TIMEOUT = 20;
 
@@ -73,6 +75,7 @@ getBroadcastData(DJI::OSDK::Vehicle* vehicle, int responseTimeout)
     rc             = vehicle->broadcast->getRC();
     velocity       = vehicle->broadcast->getVelocity();
     quaternion     = vehicle->broadcast->getQuaternion();
+    avoidData      = vehicle->broadcast->getRelativePosition();
 
     std::cout << "Counter = " << elapsedTimeInMs << ":\n";
     std::cout << "-------\n";
@@ -88,6 +91,10 @@ getBroadcastData(DJI::OSDK::Vehicle* vehicle, int responseTimeout)
     std::cout << "Attitude Quaternion   (w,x,y,z)       = " << quaternion.q0
               << ", " << quaternion.q1 << ", " << quaternion.q2 << ", "
               << quaternion.q3 << "\n";
+    std::cout << "Avoid obstacle data  (down,front,right,back,left,up) ="
+              << avoidData.down  << ", "<< avoidData.front << ", "
+              << avoidData.right << ", "<< avoidData.back  << ", "
+              << avoidData.left  << ", "<< avoidData.up    << "\n";
     std::cout << "-------\n\n";
 
     usleep(5000);
@@ -349,6 +356,7 @@ subscribeToDataForInteractivePrint(Vehicle* vehicle, int responseTimeout)
                                 ,TOPIC_GIMBAL_CONTROL_MODE
                                 ,TOPIC_FLIGHT_ANOMALY
                                 ,TOPIC_POSITION_VO
+                                ,TOPIC_AVOID_DATA
   };
 
   int       numTopic        = sizeof(topicList50Hz) / sizeof(topicList50Hz[0]);
@@ -385,6 +393,7 @@ subscribeToDataForInteractivePrint(Vehicle* vehicle, int responseTimeout)
               << "5. gimbalCtrlMode\n"
               << "6. flyAnomaly\n"
               << "7. local position vo\n"
+              << "8. avoid obstacle data\n"
               << "0. exit\n";
 
 
@@ -403,6 +412,7 @@ subscribeToDataForInteractivePrint(Vehicle* vehicle, int responseTimeout)
     TypeMap<TOPIC_GIMBAL_CONTROL_MODE>::type gimbalCtrlMode;
     TypeMap<TOPIC_FLIGHT_ANOMALY>::type flyAnomaly;
     TypeMap<TOPIC_POSITION_VO>::type    localPos;
+    TypeMap<TOPIC_AVOID_DATA>::type     avoidData;
 
     // Counters
     int printFrequency          = 50; //Hz
@@ -491,6 +501,17 @@ subscribeToDataForInteractivePrint(Vehicle* vehicle, int responseTimeout)
                      localPos.z
               );
               break;
+        case 8:
+          avoidData =  vehicle->subscribe->getValue<TOPIC_AVOID_DATA>();
+          printf("down = %.2f, down health = %d, front = %.2f,  front health = %d, right = %.2f, right health = %d,"
+                 " back = %.2f, back health = %d, left = %.2f, left health = %d, up = %.2f, up health = %d\n",
+                 avoidData.down , avoidData.downHealth ,
+                 avoidData.front, avoidData.frontHealth,
+                 avoidData.right, avoidData.rightHealth,
+                 avoidData.back , avoidData.backHealth ,
+                 avoidData.left , avoidData.leftHealth ,
+                 avoidData.up   , avoidData.upHealth);
+          break;
         case 0:
           break;
         default:

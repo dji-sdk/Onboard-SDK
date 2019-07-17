@@ -83,6 +83,7 @@ TopicInfo Telemetry::TopicDataBase[] =
   {TOPIC_GIMBAL_CONTROL_MODE       , UID_GIMBAL_CONTROL_MODE      , sizeof(TypeMap<TOPIC_GIMBAL_CONTROL_MODE     >::type), 50 ,   0,  255,  0},
   {TOPIC_FLIGHT_ANOMALY            , UID_FLIGHT_ANOMALY           , sizeof(TypeMap<TOPIC_FLIGHT_ANOMALY          >::type), 50 ,   0,  255,  0},
   {TOPIC_POSITION_VO               , UID_POSITION_VO              , sizeof(TypeMap<TOPIC_POSITION_VO             >::type), 200,   0,  255,  0},
+  {TOPIC_AVOID_DATA                , UID_AVOID_DATA               , sizeof(TypeMap<TOPIC_AVOID_DATA              >::type), 100,   0,  255,  0},
 };
 // clang-format on
 

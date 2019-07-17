@@ -100,6 +100,7 @@ typedef enum
   TOPIC_GIMBAL_CONTROL_MODE,
   TOPIC_FLIGHT_ANOMALY,
   TOPIC_POSITION_VO,
+  TOPIC_AVOID_DATA,
   TOTAL_TOPIC_NUMBER              // Always put this line in the end
 } TopicName;
 // clang-format on
@@ -151,7 +152,8 @@ typedef enum
   UID_RTK_CONNECT_STATUS       = 0x6f349326,
   UID_GIMBAL_CONTROL_MODE      = 0x326a446d,
   UID_FLIGHT_ANOMALY           = 0x0a624b4b,
-  UID_POSITION_VO              = 0xd3462697
+  UID_POSITION_VO              = 0xd3462697,
+  UID_AVOID_DATA               = 0xf6405daa
 } TOPIC_UID;
 
 // clang-format on
@@ -289,12 +291,12 @@ typedef struct GPSFused
  */
 typedef struct RelativePosition
 {
-  float32_t down;            /*!< distance from obstacle (cm) */
-  float32_t front;           /*!< distance from obstacle (cm) */
-  float32_t right;           /*!< distance from obstacle (cm) */
-  float32_t back;            /*!< distance from obstacle (cm) */
-  float32_t left;            /*!< distance from obstacle (cm) */
-  float32_t up;              /*!< distance from obstacle (cm) */
+  float32_t down;            /*!< distance from obstacle (m) */
+  float32_t front;           /*!< distance from obstacle (m) */
+  float32_t right;           /*!< distance from obstacle (m) */
+  float32_t back;            /*!< distance from obstacle (m) */
+  float32_t left;            /*!< distance from obstacle (m) */
+  float32_t up;              /*!< distance from obstacle (m) */
   uint8_t   downHealth : 1;  /*!< Down sensor flag: 0 - not working, 1 - working */
   uint8_t   frontHealth : 1; /*!< Front sensor flag: 0 - not working, 1 - working */
   uint8_t   rightHealth : 1; /*!< Right sensor flag: 0 - not working, 1 - working */
@@ -794,7 +796,7 @@ template <> struct TypeMap<TOPIC_RTK_CONNECT_STATUS       > { typedef RTKConnect
 template <> struct TypeMap<TOPIC_GIMBAL_CONTROL_MODE      > { typedef GimbalControlMode type;};
 template <> struct TypeMap<TOPIC_FLIGHT_ANOMALY           > { typedef FlightAnomaly   type;};
 template <> struct TypeMap<TOPIC_POSITION_VO              > { typedef LocalPositionVO type;};
-
+template <> struct TypeMap<TOPIC_AVOID_DATA               > { typedef RelativePosition type;};
 // clang-format on
 }
 }

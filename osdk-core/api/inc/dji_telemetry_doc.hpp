@@ -687,5 +687,4 @@ using namespace DJI::OSDK::Telemetry;
  * @units m
  * @datastruct \ref LocalPositionVO
  */
-
 #endif //ONBOARDSDK_DJI_TELEMETRY_DOC_HPP
