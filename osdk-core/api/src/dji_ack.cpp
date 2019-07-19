@@ -30,6 +30,7 @@
 
 #include "dji_ack.hpp"
 #include "dji_log.hpp"
+#include "dji_control.hpp"
 #include <string.h>
 
 const bool DJI::OSDK::ACK::SUCCESS = 0;
@@ -41,40 +42,135 @@ namespace OSDK
 {
 
 const std::pair<const uint32_t, const char*> commonData[] = {
-  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::NO_RESPONSE_ERROR,
-                 (const char*)"ACK_NO_RESPONSE_ERROR\n"),
-  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::KEY_ERROR,
-                 (const char*)"ACK_KEY_ERROR\n"),
-  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::NO_AUTHORIZATION_ERROR,
-                 (const char*)"ACK_NO_AUTHORIZATION_ERROR\n"),
-  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::NO_RIGHTS_ERROR,
-                 (const char*)"ACK_NO_RIGHTS_ERROR\n"),
-  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::SUCCESS,
-                 (const char*)"ACK_SUCCESS\n"),
-  std::make_pair(
-    OpenProtocolCMD::ErrorCode::CommonACK::START_MOTOR_FAIL_MOTOR_STARTED,
-    (const char*)"START_MOTOR_FAILED_MOTOR_ALREADY_STARTED\n"),
-  std::make_pair(
-    OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_COMPASS_ABNORMAL,
-    (const char*)"COMPASS_CALIB_FAIL_DUE_TO_MOTOR_ON\n"),
-  std::make_pair(
-    OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_ASSISTANT_PROTECTED,
-    (const char*)"USB_CABLE_CONNECTED_ERROR\n"),
-  std::make_pair(
-    OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_DEVICE_LOCKED,
-    (const char*)"MOTOR_FAIL_DEVICE_LOCKED\n"),
-  std::make_pair(
-    OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_IMU_CALIBRATING,
-    (const char*)"MOTOR_FAIL_IMU_CALIBRATING\n"),
-  std::make_pair(
-    OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_M600_BAT_TOO_FEW,
-    (const char*)"MISSING_BATTERIES\n"),
-  std::make_pair(
-    OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_NOT_ACTIVATED,
-    (const char*)"NOT_ACTIVATED_ERROR\n"),
-  std::make_pair(
-    OpenProtocolCMD::ErrorCode::CommonACK::KILL_SWITCH_ON,
-    (const char*)"KILL_SWITCH_ON\n")
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_NONE, (const char*)"MOTOR_FAIL_NONE\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_COMPASS_ABNORMAL, (const char*)"MOTOR_FAIL_COMPASS_ABNORMAL\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_ASSISTANT_PROTECTED, (const char*)"MOTOR_FAIL_ASSISTANT_PROTECTED\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_DEVICE_LOCKED, (const char*)"MOTOR_FAIL_DEVICE_LOCKED\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_IMU_NEED_ADV_CALIBRATION, (const char*)"MOTOR_FAIL_IMU_NEED_ADV_CALIBRATION\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_IMU_SN_ERROR, (const char*)"MOTOR_FAIL_IMU_SN_ERROR\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_IMU_PREHEATING, (const char*)"MOTOR_FAIL_IMU_PREHEATING\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_COMPASS_CALIBRATING, (const char*)"MOTOR_FAIL_COMPASS_CALIBRATING\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_IMU_NO_ATTITUDE, (const char*)"MOTOR_FAIL_IMU_NO_ATTITUDE\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_NO_GPS_IN_NOVICE_MODE, (const char*)"MOTOR_FAIL_NO_GPS_IN_NOVICE_MODE\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_BATTERY_CELL_ERROR, (const char*)"MOTOR_FAIL_BATTERY_CELL_ERROR\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_BATTERY_COMMUNICATION_ERROR, (const char*)"MOTOR_FAIL_BATTERY_COMMUNICATION_ERROR\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_BATTERY_VOLTAGE_TOO_LOW, (const char*)"MOTOR_FAIL_BATTERY_VOLTAGE_TOO_LOW\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_BATTERY_USER_LOW_LAND, (const char*)"MOTOR_FAIL_BATTERY_USER_LOW_LAND\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_BATTERY_MAIN_VOL_LOW, (const char*)"MOTOR_FAIL_BATTERY_MAIN_VOL_LOW\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_BATTERY_TEMP_VOL_LOW, (const char*)"MOTOR_FAIL_BATTERY_TEMP_VOL_LOW\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_BATTERY_SMART_LOW_LAND, (const char*)"MOTOR_FAIL_BATTERY_SMART_LOW_LAND\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_BATTERY_NOT_READY, (const char*)"MOTOR_FAIL_BATTERY_NOT_READY\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RUNNING_SIMULATOR, (const char*)"MOTOR_FAIL_RUNNING_SIMULATOR\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_PACK_MODE, (const char*)"MOTOR_FAIL_PACK_MODE\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_IMU_ATTI_LIMIT, (const char*)"MOTOR_FAIL_IMU_ATTI_LIMIT\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_NOT_ACTIVATED, (const char*)"MOTOR_FAIL_NOT_ACTIVATED\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_IN_FLYLIMIT_AREA, (const char*)"MOTOR_FAIL_IN_FLYLIMIT_AREA\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_IMU_BIAS_LIMIT, (const char*)"MOTOR_FAIL_IMU_BIAS_LIMIT\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_ESC_ERROR, (const char*)"MOTOR_FAIL_ESC_ERROR\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_IMU_INITING, (const char*)"MOTOR_FAIL_IMU_INITING\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_UPGRADING, (const char*)"MOTOR_FAIL_UPGRADING\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_HAVE_RUN_SIM, (const char*)"MOTOR_FAIL_HAVE_RUN_SIM\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_IMU_CALIBRATING, (const char*)"MOTOR_FAIL_IMU_CALIBRATING\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_TAKEOFF_TILT_TOO_LARGE, (const char*)"MOTOR_FAIL_TAKEOFF_TILT_TOO_LARGE\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RESERVED_31, (const char*)"MOTOR_FAIL_RESERVED_31\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RESERVED_32, (const char*)"MOTOR_FAIL_RESERVED_32\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RESERVED_33, (const char*)"MOTOR_FAIL_RESERVED_33\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RESERVED_34, (const char*)"MOTOR_FAIL_RESERVED_34\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RESERVED_35, (const char*)"MOTOR_FAIL_RESERVED_35\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RESERVED_36, (const char*)"MOTOR_FAIL_RESERVED_36\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RESERVED_37, (const char*)"MOTOR_FAIL_RESERVED_37\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RESERVED_38, (const char*)"MOTOR_FAIL_RESERVED_38\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RESERVED_39, (const char*)"MOTOR_FAIL_RESERVED_39\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RESERVED_40, (const char*)"MOTOR_FAIL_RESERVED_40\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_INVALID_SN, (const char*)"MOTOR_FAIL_INVALID_SN\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RESERVED_42, (const char*)"MOTOR_FAIL_RESERVED_42\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RESERVED_43, (const char*)"MOTOR_FAIL_RESERVED_43\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_FLASH_OPERATING, (const char*)"MOTOR_FAIL_FLASH_OPERATING\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_GPS_DISCONNECT, (const char*)"MOTOR_FAIL_GPS_DISCONNECT\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_INTERNAL_46, (const char*)"MOTOR_FAIL_INTERNAL_46\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RECORDER_ERROR, (const char*)"MOTOR_FAIL_RECORDER_ERROR\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_INVALID_PRODUCT, (const char*)"MOTOR_FAIL_INVALID_PRODUCT\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RESERVED_49, (const char*)"MOTOR_FAIL_RESERVED_49\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RESERVED_50, (const char*)"MOTOR_FAIL_RESERVED_50\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RESERVED_51, (const char*)"MOTOR_FAIL_RESERVED_51\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RESERVED_52, (const char*)"MOTOR_FAIL_RESERVED_52\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RESERVED_53, (const char*)"MOTOR_FAIL_RESERVED_53\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RESERVED_54, (const char*)"MOTOR_FAIL_RESERVED_54\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RESERVED_55, (const char*)"MOTOR_FAIL_RESERVED_55\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RESERVED_56, (const char*)"MOTOR_FAIL_RESERVED_56\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RESERVED_57, (const char*)"MOTOR_FAIL_RESERVED_57\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RESERVED_58, (const char*)"MOTOR_FAIL_RESERVED_58\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RESERVED_59, (const char*)"MOTOR_FAIL_RESERVED_59\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RESERVED_60, (const char*)"MOTOR_FAIL_RESERVED_60\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_IMU_DISCONNECTED, (const char*)"MOTOR_FAIL_IMU_DISCONNECTED\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RC_CALIBRATING, (const char*)"MOTOR_FAIL_RC_CALIBRATING\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RC_CALI_DATA_OUT_RANGE, (const char*)"MOTOR_FAIL_RC_CALI_DATA_OUT_RANGE\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RC_QUIT_CALI, (const char*)"MOTOR_FAIL_RC_QUIT_CALI\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RC_CENTER_OUT_RANGE, (const char*)"MOTOR_FAIL_RC_CENTER_OUT_RANGE\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RC_MAP_ERROR, (const char*)"MOTOR_FAIL_RC_MAP_ERROR\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_WRONG_AIRCRAFT_TYPE, (const char*)"MOTOR_FAIL_WRONG_AIRCRAFT_TYPE\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_SOME_MODULE_NOT_CONFIGURED, (const char*)"MOTOR_FAIL_SOME_MODULE_NOT_CONFIGURED\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RESERVED_69, (const char*)"MOTOR_FAIL_RESERVED_69\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RESERVED_70, (const char*)"MOTOR_FAIL_RESERVED_70\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RESERVED_71, (const char*)"MOTOR_FAIL_RESERVED_71\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RESERVED_72, (const char*)"MOTOR_FAIL_RESERVED_72\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RESERVED_73, (const char*)"MOTOR_FAIL_RESERVED_73\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_NS_ABNORMAL, (const char*)"MOTOR_FAIL_NS_ABNORMAL\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_TOPOLOGY_ABNORMAL, (const char*)"MOTOR_FAIL_TOPOLOGY_ABNORMAL\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RC_NEED_CALI, (const char*)"MOTOR_FAIL_RC_NEED_CALI\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_INVALID_FLOAT, (const char*)"MOTOR_FAIL_INVALID_FLOAT\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_M600_BAT_TOO_FEW, (const char*)"MOTOR_FAIL_M600_BAT_TOO_FEW\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_M600_BAT_AUTH_ERR, (const char*)"MOTOR_FAIL_M600_BAT_AUTH_ERR\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_M600_BAT_COMM_ERR, (const char*)"MOTOR_FAIL_M600_BAT_COMM_ERR\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_M600_BAT_DIF_VOLT_LARGE_1, (const char*)"MOTOR_FAIL_M600_BAT_DIF_VOLT_LARGE_1\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_BATTERY_BOLTAHGE_DIFF_82, (const char*)"MOTOR_FAIL_BATTERY_BOLTAHGE_DIFF_82\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_INVALID_VERSION, (const char*)"MOTOR_FAIL_INVALID_VERSION\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_GIMBAL_GYRO_ABNORMAL, (const char*)"MOTOR_FAIL_GIMBAL_GYRO_ABNORMAL\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_GIMBAL_ESC_PITCH_NO_DATA, (const char*)"MOTOR_FAIL_GIMBAL_ESC_PITCH_NO_DATA\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_GIMBAL_ESC_ROLL_NO_DATA, (const char*)"MOTOR_FAIL_GIMBAL_ESC_ROLL_NO_DATA\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_GIMBAL_ESC_YAW_NO_DATA, (const char*)"MOTOR_FAIL_GIMBAL_ESC_YAW_NO_DATA\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_GIMBAL_FIRM_IS_UPDATING, (const char*)"MOTOR_FAIL_GIMBAL_FIRM_IS_UPDATING\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_GIMBAL_OUT_OF_CONTROL, (const char*)"MOTOR_FAIL_GIMBAL_OUT_OF_CONTROL\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_GIMBAL_PITCH_SHOCK, (const char*)"MOTOR_FAIL_GIMBAL_PITCH_SHOCK\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_GIMBAL_ROLL_SHOCK, (const char*)"MOTOR_FAIL_GIMBAL_ROLL_SHOCK\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_GIMBAL_YAW_SHOCK, (const char*)"MOTOR_FAIL_GIMBAL_YAW_SHOCK\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_IMU_CALI_SUCCESS, (const char*)"MOTOR_FAIL_IMU_CALI_SUCCESS\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_TAKEOFF_EXCEPTION, (const char*)"MOTOR_FAIL_TAKEOFF_EXCEPTION\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_ESC_STALL_NEAR_GOUND, (const char*)"MOTOR_FAIL_ESC_STALL_NEAR_GOUND\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_ESC_UNBALANCE_ON_GRD, (const char*)"MOTOR_FAIL_ESC_UNBALANCE_ON_GRD\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_ESC_PART_EMPTY_ON_GRD, (const char*)"MOTOR_FAIL_ESC_PART_EMPTY_ON_GRD\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_ENGINE_START_FAILED, (const char*)"MOTOR_FAIL_ENGINE_START_FAILED\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_AUTO_TAKEOFF_LAUNCH_FAILED, (const char*)"MOTOR_FAIL_AUTO_TAKEOFF_LAUNCH_FAILED\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_ROLL_OVER_ON_GRD, (const char*)"MOTOR_FAIL_ROLL_OVER_ON_GRD\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_BAT_VERSION_ERR, (const char*)"MOTOR_FAIL_BAT_VERSION_ERR\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RTK_INITING, (const char*)"MOTOR_FAIL_RTK_INITING\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RTK_FAIL_TO_INIT, (const char*)"MOTOR_FAIL_RTK_FAIL_TO_INIT\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RESERVED_104, (const char*)"MOTOR_FAIL_RESERVED_104\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RESERVED_105, (const char*)"MOTOR_FAIL_RESERVED_105\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RESERVED_106, (const char*)"MOTOR_FAIL_RESERVED_106\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RESERVED_107, (const char*)"MOTOR_FAIL_RESERVED_107\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RESERVED_108, (const char*)"MOTOR_FAIL_RESERVED_108\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_RESERVED_109, (const char*)"MOTOR_FAIL_RESERVED_109\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::START_MOTOR_FAIL_MOTOR_STARTED, (const char*)"START_MOTOR_FAIL_MOTOR_STARTED\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_INTERNAL_111, (const char*)"MOTOR_FAIL_INTERNAL_111\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_ESC_CALIBRATING, (const char*)"MOTOR_FAIL_ESC_CALIBRATING\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_GPS_SIGNATURE_INVALID, (const char*)"MOTOR_FAIL_GPS_SIGNATURE_INVALID\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_GIMBAL_CALIBRATING, (const char*)"MOTOR_FAIL_GIMBAL_CALIBRATING\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_FORCE_DISABLE, (const char*)"MOTOR_FAIL_FORCE_DISABLE\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::TAKEOFF_HEIGHT_EXCEPTION, (const char*)"TAKEOFF_HEIGHT_EXCEPTION\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_ESC_NEED_UPGRADE, (const char*)"MOTOR_FAIL_ESC_NEED_UPGRADE\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_GYRO_DATA_NOT_MATCH, (const char*)"MOTOR_FAIL_GYRO_DATA_NOT_MATCH\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_APP_NOT_ALLOW, (const char*)"MOTOR_FAIL_APP_NOT_ALLOW\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_COMPASS_IMU_MISALIGN, (const char*)"MOTOR_FAIL_COMPASS_IMU_MISALIGN\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_FLASH_UNLOCK, (const char*)"MOTOR_FAIL_FLASH_UNLOCK\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_ESC_SCREAMING, (const char*)"MOTOR_FAIL_ESC_SCREAMING\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_ESC_TEMP_HIGH, (const char*)"MOTOR_FAIL_ESC_TEMP_HIGH\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_BAT_ERR, (const char*)"MOTOR_FAIL_BAT_ERR\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::IMPACT_IS_DETECTED, (const char*)"IMPACT_IS_DETECTED\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_MODE_FAILURE, (const char*)"MOTOR_FAIL_MODE_FAILURE\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_CRAFT_FAIL_LATELY, (const char*)"MOTOR_FAIL_CRAFT_FAIL_LATELY\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::KILL_SWITCH_ON, (const char*)"KILL_SWITCH_ON\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_MOTOR_CODE_ERROR, (const char*)"MOTOR_FAIL_MOTOR_CODE_ERROR\n")
 };
 
 const std::map<const uint32_t, const char*>
@@ -719,11 +815,11 @@ ACK::getCommonErrorCodeMessage(ACK::ErrorCode ack)
 
   if (msg != commonErrorCodeMap.end())
   {
-    DSTATUS(msg->second);
+    DERROR(msg->second);
   }
   else
   {
-    DSTATUS("UNKNOWN_ACK_ERROR_CODE\n");
+    DERROR("UNKNOWN_ACK_ERROR_CODE\n");
   }
 }
 
@@ -831,13 +927,21 @@ ACK::getCMDIDTaskMSG(ACK::ErrorCode ack)
 
   auto msg = taskErrorCodeMap.find(ack.data);
 
-  if (msg != taskErrorCodeMap.end())
+  if (ack.info.buf != nullptr)
   {
-    DSTATUS(msg->second);
+    uint8_t taskCmd = *ack.info.buf;
+    if ((taskCmd != (uint8_t)Control::FlightCommand::takeOff) && msg != taskErrorCodeMap.end())
+    {
+      DSTATUS(msg->second);
+    }
+    else
+    {
+      getCommonErrorCodeMessage(ack);
+    }
   }
   else
   {
-    getCommonErrorCodeMessage(ack);
+    DERROR("ACK INFO BUF IS NULL\n");
   }
 }
 
