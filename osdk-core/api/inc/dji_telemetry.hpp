@@ -285,7 +285,7 @@ typedef struct GPSFused
 } GPSFused;                         // pack(1)
 
 /*!
- * @brief struct for data broadcast, return obstacle info around the vehicle
+ * @brief struct for data broadcast and subscription, return obstacle info around the vehicle
  *
  * @note available in M210 (front, up, down)
  */
