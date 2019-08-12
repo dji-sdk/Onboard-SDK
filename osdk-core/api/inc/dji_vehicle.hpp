@@ -55,6 +55,8 @@
 #include "dji_virtual_rc.hpp"
 #include "dji_payload_device.hpp"
 #include "dji_camera_manager.hpp"
+#include "dji_flight_controller/dji_flight_controller.hpp"
+
 #ifdef ADVANCED_SENSING
 #include "dji_advanced_sensing.hpp"
 #endif
@@ -125,6 +127,7 @@ public:
   VirtualRC* virtualRC;
   PayloadDevice*       payloadDevice;
   CameraManager*      cameraManager;
+  FlightController*    flightController;
 #ifdef ADVANCED_SENSING
   AdvancedSensing* advancedSensing;
 #endif
@@ -329,6 +332,7 @@ private:
   ACK::WayPointAddPoint waypointAddPointACK;
   ACK::MFIOGet          mfioGetACK;
   ACK::ExtendedFunctionRsp extendedFunctionRspAck;
+  ACK::ParamAck         paramAck;
 
 public:
   uint8_t* getRawVersionAck();
@@ -389,6 +393,7 @@ private:
   bool initVirtualRC();
   bool initPayloadDevice();
   bool initCameraManager();
+  bool initFlightController();
 #ifdef ADVANCED_SENSING
   bool initAdvancedSensing();
 #endif

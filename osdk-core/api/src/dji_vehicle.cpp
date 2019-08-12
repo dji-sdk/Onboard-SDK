@@ -60,6 +60,7 @@ Vehicle::Vehicle(const char* device,
   , USBThreadReady(false)
   , payloadDevice(NULL)
   , cameraManager(NULL)
+  , flightController(NULL)
 {
   if (!device)
   {
@@ -91,6 +92,7 @@ Vehicle::Vehicle(bool threadSupport)
   , callbackThread(NULL)
   , payloadDevice(NULL)
   , cameraManager(NULL)
+  , flightController(NULL)
 {
   this->threadSupported = threadSupport;
   callbackId            = 0;
@@ -260,6 +262,11 @@ Vehicle::functionalSetUp()
     return 1;
   }
 
+  if(!initFlightController())
+  {
+    DERROR("Failed to initialize FlightController!\n");
+    return 1;
+  }
 #ifdef ADVANCED_SENSING
   if (advancedSensingEnabled)
   {
@@ -946,6 +953,22 @@ Vehicle::initGimbal()
   return true;
 }
 
+bool
+Vehicle::initFlightController()
+{
+  if(this->flightController)
+  {
+    DDEBUG("flightController already initalized!");
+    return true;
+  }
+  this->flightController = new (std::nothrow) FlightController(this);
+  if (this->flightController == 0)
+  {
+    DERROR("Failed to allocate memory for flightController!\n");
+    return false;
+  }
+  return true;
+}
 #ifdef ADVANCED_SENSING
 bool
 Vehicle::initAdvancedSensing()
@@ -1631,10 +1654,8 @@ Vehicle::ACKHandler(void* eventData)
     DERROR("Invalid ACK event data received!\n");
     return;
   }
-
   RecvContainer* ackData = (RecvContainer*)eventData;
   const uint8_t cmd[] = { ackData->recvInfo.cmd_set, ackData->recvInfo.cmd_id };
-
   if (ackData->recvInfo.cmd_set == OpenProtocolCMD::CMDSet::mission)
   {
     if (memcmp(cmd, OpenProtocolCMD::CMDSet::Mission::waypointAddPoint,
@@ -1705,11 +1726,19 @@ Vehicle::ACKHandler(void* eventData)
   else if (ackData->recvInfo.cmd_set == OpenProtocolCMD::CMDSet::control)
   {
     if (memcmp(cmd, OpenProtocolCMD::CMDSet::Control::extendedFunction,
-                    sizeof(cmd)) == 0)
+                    sizeof(cmd)) == 0) {
+      extendedFunctionRspAck.info = ackData->recvInfo;
+      extendedFunctionRspAck.info.buf = ackData->recvData.raw_ack_array;
+      extendedFunctionRspAck.updated = true;
+    }
+    else if(memcmp(cmd, OpenProtocolCMD::CMDSet::Control::parameterRead, sizeof(cmd))==0 ||
+       memcmp(cmd, OpenProtocolCMD::CMDSet::Control::parameterWrite, sizeof(cmd))==0)
     {
-      extendedFunctionRspAck.info      = ackData->recvInfo;
-      extendedFunctionRspAck.info.buf  = ackData->recvData.raw_ack_array;
-      extendedFunctionRspAck.updated   = true;
+      paramAck.ack.info        = ackData->recvInfo;
+      paramAck.data.retCode    = ackData->recvData.paramAckData.retCode;
+      paramAck.data.hashValue  = ackData->recvData.paramAckData.hashValue;
+      memcpy(paramAck.data.paramValue, ackData->recvData.paramAckData.paramValue, 8);
+      paramAck.updated         = true;
     }
     else
     {
@@ -2050,6 +2079,11 @@ Vehicle::waitForACK(const uint8_t (&cmd)[OpenProtocolCMD::MAX_CMD_ARRAY_SIZE],
            && 0x40 <= cmd[1] && cmd[1] <= 0x53)
   {
     pACK = static_cast<void*>(&this->wayPoint2CommonRspACK);
+  }
+  else if (memcmp(cmd, OpenProtocolCMD::CMDSet::Control::parameterRead, sizeof(cmd)) == 0
+           || memcmp(cmd, OpenProtocolCMD::CMDSet::Control::parameterWrite, sizeof(cmd)) == 0)
+  {
+    pACK = static_cast<void*>(&this->paramAck);
   }
   else
   {

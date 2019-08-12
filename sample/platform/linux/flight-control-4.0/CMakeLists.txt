@@ -20,33 +20,28 @@
 # *
 # *
 
-
 cmake_minimum_required(VERSION 2.8)
-project(onboardsdk-linux-samples)
+project(djiosdk-flightcontrol-sample-4.0)
 
-if(NOT ONBOARDSDK_SOURCE)
-    set(ONBOARDSDK_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/../../../osdk-core")
-endif()
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread -g -O0")
 
-if(NOT MODULES_HEADER_DIR)
-    set(MODULES_HEADER_DIR "${ONBOARDSDK_SOURCE}/modules/inc/payload")
-endif()
+include_directories(${ONBOARDSDK_SOURCE}/api/inc)
+include_directories(${ONBOARDSDK_SOURCE}/api/inc/flight_controller)
+include_directories(${ONBOARDSDK_SOURCE}/utility/inc)
+include_directories(${ONBOARDSDK_SOURCE}/hal/inc)
+include_directories(${MODULES_HEADER_DIR})
+include_directories(${ONBOARDSDK_SOURCE}/protocol/inc)
+include_directories(${ONBOARDSDK_SOURCE}/platform/linux/inc)
 
-add_subdirectory(camera-gimbal)
-add_subdirectory(flight-control)
-add_subdirectory(mfio)
-add_subdirectory(missions)
-add_subdirectory(mobile)
-add_subdirectory(telemetry)
-add_subdirectory(logging)
-add_subdirectory(time-sync)
-add_subdirectory(payload-3rd-party)
-add_subdirectory(payloads)
-add_subdirectory(flight-control-4.0)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../common)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../common/inc)
+FILE(GLOB SOURCE_FILES *.hpp *.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/../../common/src/*.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_environment.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_helpers.cpp
+        )
+
+add_executable(${PROJECT_NAME} ${SOURCE_FILES})
+target_link_libraries(${PROJECT_NAME} djiosdk-core)
 
 
-if(ADVANCED_SENSING)
-    add_definitions(-DADVANCED_SENSING)
-    message(STATUS "AdvancedSensing sample is enabled")
-    add_subdirectory(advanced-sensing)
-endif()

@@ -48,7 +48,8 @@ namespace OSDK {
 class ErrorCode {
  public:
   /*! @brief Module ID type used in OnboardSDK Unified error
-   */
+  */
+
   typedef uint8_t ModuleIDType;
 
   /*! @brief Function ID type used in OnboardSDK Unified error

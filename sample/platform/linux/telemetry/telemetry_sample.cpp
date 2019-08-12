@@ -356,7 +356,9 @@ subscribeToDataForInteractivePrint(Vehicle* vehicle, int responseTimeout)
                                 ,TOPIC_GIMBAL_CONTROL_MODE
                                 ,TOPIC_FLIGHT_ANOMALY
                                 ,TOPIC_POSITION_VO
-                                ,TOPIC_AVOID_DATA
+                                 //,TOPIC_AVOID_DATA
+                                ,TOPIC_HOME_POINT_SET_STATUS
+                                ,TOPIC_HOME_POINT_INFO
   };
 
   int       numTopic        = sizeof(topicList50Hz) / sizeof(topicList50Hz[0]);
@@ -394,6 +396,8 @@ subscribeToDataForInteractivePrint(Vehicle* vehicle, int responseTimeout)
               << "6. flyAnomaly\n"
               << "7. local position vo\n"
               << "8. avoid obstacle data\n"
+              << "9. home point set status\n"
+              << "10. home point information\n"
               << "0. exit\n";
 
 
@@ -413,6 +417,8 @@ subscribeToDataForInteractivePrint(Vehicle* vehicle, int responseTimeout)
     TypeMap<TOPIC_FLIGHT_ANOMALY>::type flyAnomaly;
     TypeMap<TOPIC_POSITION_VO>::type    localPos;
     TypeMap<TOPIC_AVOID_DATA>::type     avoidData;
+    TypeMap<TOPIC_HOME_POINT_SET_STATUS>::type homePointSetStatus;
+    TypeMap<TOPIC_HOME_POINT_INFO>::type  homePointInfo;
 
     // Counters
     int printFrequency          = 50; //Hz
@@ -511,6 +517,14 @@ subscribeToDataForInteractivePrint(Vehicle* vehicle, int responseTimeout)
                  avoidData.back , avoidData.backHealth ,
                  avoidData.left , avoidData.leftHealth ,
                  avoidData.up   , avoidData.upHealth);
+          break;
+        case 9:
+          homePointSetStatus =  vehicle->subscribe->getValue<TOPIC_HOME_POINT_SET_STATUS>();
+          printf("home point statas is %d\n", homePointSetStatus.status);
+          break;
+        case 10:
+          homePointInfo = vehicle->subscribe->getValue<TOPIC_HOME_POINT_INFO>();
+          printf("home point latitude is :%.15f, home point longitude is %.15f\n",homePointInfo.latitude, homePointInfo.longitude);
           break;
         case 0:
           break;
