@@ -80,6 +80,7 @@ include (${CMAKE_CURRENT_SOURCE_DIR}/../contrib/DJIConfig.cmake)
 ## Your package locations should be listed before other locations
 include_directories(
         api/inc
+        modules/inc/payload
         protocol/inc
         hal/inc
         utility/inc
@@ -94,6 +95,7 @@ endif()
 ## Source code for OSDK CORE
 FILE(GLOB OSDK_LIB_SRCS
         api/src/*.cpp
+        modules/src/payload/*.cpp
         protocol/src/*.cpp
         hal/src/*.cpp
         utility/src/*.cpp
@@ -264,6 +266,7 @@ install(FILES
 
 FILE(GLOB OSDK_LIB_HEADERS
         api/inc/*.h*
+        modules/inc/*.h*
         protocol/inc/*.h*
         hal/inc/*.h*
         utility/inc/*.h*

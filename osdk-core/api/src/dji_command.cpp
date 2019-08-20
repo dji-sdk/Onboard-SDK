@@ -99,7 +99,7 @@ const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Control::gimbalSpeed[] = {
 const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Control::gimbalAngle[] = {
   OpenProtocolCMD::CMDSet::control, 0x1B
 };
-const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Control::cameraZoom[] = {
+const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Control::extendedFunction[] = {
   OpenProtocolCMD::CMDSet::control, 0x30
 };
 const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Mission::waypointInit[] = {

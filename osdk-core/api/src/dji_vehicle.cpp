@@ -59,6 +59,7 @@ Vehicle::Vehicle(const char* device,
   , USBReadThread(NULL)
   , USBThreadReady(false)
   , payloadDevice(NULL)
+  , cameraManager(NULL)
 {
   if (!device)
   {
@@ -89,6 +90,7 @@ Vehicle::Vehicle(bool threadSupport)
   , UARTSerialReadThread(NULL)
   , callbackThread(NULL)
   , payloadDevice(NULL)
+  , cameraManager(NULL)
 {
   this->threadSupported = threadSupport;
   callbackId            = 0;
@@ -236,7 +238,10 @@ Vehicle::functionalSetUp()
     DERROR("Failed to initialize Payload Device!\n");
   }
 
-
+  if (!initCameraManager())
+  {
+    DERROR("Failed to initialize PayloadManger!\n");
+  }
     if (!initMissionManager())
   {
     DERROR("Failed to initialize Mission Manager!\n");
@@ -393,6 +398,10 @@ Vehicle::~Vehicle()
   if (this->payloadDevice)
   {
     delete this->payloadDevice;
+  }
+  if (this->cameraManager)
+  {
+    delete this->cameraManager;
   }
   if (this->broadcast)
   {
@@ -1037,6 +1046,22 @@ bool Vehicle::initPayloadDevice()
 
 }
 
+bool Vehicle::initCameraManager()
+{
+  if(this->cameraManager)
+  {
+    DDEBUG("cameraManager already initalized!");
+    return true;
+  }
+  this->cameraManager = new (std::nothrow) CameraManager(this);
+  if (this->cameraManager == 0)
+  {
+    DERROR("Failed to allocate memory for pm!\n");
+    return false;
+  }
+  return true;
+}
+
 bool
 Vehicle::initMissionManager()
 {
@@ -1189,7 +1214,7 @@ Vehicle::processReceivedData(RecvContainer* receivedFrame)
   }
   else
   {
-    DDEBUG("Dispatcher identified as push data\n");
+    //DDEBUG("Dispatcher identified as push data\n");
     PushDataHandler(static_cast<void*>(receivedFrame));
   }
 }
@@ -1679,8 +1704,18 @@ Vehicle::ACKHandler(void* eventData)
   }
   else if (ackData->recvInfo.cmd_set == OpenProtocolCMD::CMDSet::control)
   {
-    ackErrorCode.info = ackData->recvInfo;
-    ackErrorCode.data = ackData->recvData.commandACK;
+    if (memcmp(cmd, OpenProtocolCMD::CMDSet::Control::extendedFunction,
+                    sizeof(cmd)) == 0)
+    {
+      extendedFunctionRspAck.info      = ackData->recvInfo;
+      extendedFunctionRspAck.info.buf  = ackData->recvData.raw_ack_array;
+      extendedFunctionRspAck.updated   = true;
+    }
+    else
+    {
+      ackErrorCode.info = ackData->recvInfo;
+      ackErrorCode.data = ackData->recvData.commandACK;
+    }
   }
   else if (memcmp(cmd, OpenProtocolCMD::CMDSet::MFIO::init, sizeof(cmd)) == 0)
   {
@@ -1964,9 +1999,19 @@ Vehicle::waitForACK(const uint8_t (&cmd)[OpenProtocolCMD::MAX_CMD_ARRAY_SIZE],
   void* pACK;
 
   protocolLayer->getThreadHandle()->lockACK();
+  if (memcmp(cmd, OpenProtocolCMD::CMDSet::Control::extendedFunction,
+             sizeof(cmd)) == 0)
+  {
+    extendedFunctionRspAck.updated = false;
+  }
   protocolLayer->getThreadHandle()->wait(timeout);
 
-  if (memcmp(cmd, OpenProtocolCMD::CMDSet::Mission::waypointAddPoint,
+  if (memcmp(cmd, OpenProtocolCMD::CMDSet::Control::extendedFunction,
+      sizeof(cmd)) == 0)
+  {
+    pACK = static_cast<void*>(&this->extendedFunctionRspAck);
+  }
+  else if (memcmp(cmd, OpenProtocolCMD::CMDSet::Mission::waypointAddPoint,
              sizeof(cmd)) == 0)
   {
     pACK = static_cast<void*>(&this->waypointAddPointACK);

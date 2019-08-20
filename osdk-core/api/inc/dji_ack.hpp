@@ -98,6 +98,11 @@ public:
     bool    updated = false;
   } WayPoint2CommonRsp;
 
+  typedef struct ExtendedFunctionRsp{
+    Entry   info;
+    bool    updated = false;
+  } ExtendedFunctionRsp;
+
   typedef struct WayPointVelocityInternal
   {
     uint8_t   ack;

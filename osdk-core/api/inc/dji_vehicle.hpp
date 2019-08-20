@@ -54,6 +54,7 @@
 #include "dji_version.hpp"
 #include "dji_virtual_rc.hpp"
 #include "dji_payload_device.hpp"
+#include "dji_camera_manager.hpp"
 #ifdef ADVANCED_SENSING
 #include "dji_advanced_sensing.hpp"
 #endif
@@ -123,6 +124,7 @@ public:
   // Supported only on Matrice 100
   VirtualRC* virtualRC;
   PayloadDevice*       payloadDevice;
+  CameraManager*      cameraManager;
 #ifdef ADVANCED_SENSING
   AdvancedSensing* advancedSensing;
 #endif
@@ -325,6 +327,7 @@ private:
   /*!WayPoint add point command ACK*/
   ACK::WayPointAddPoint waypointAddPointACK;
   ACK::MFIOGet          mfioGetACK;
+  ACK::ExtendedFunctionRsp extendedFunctionRspAck;
 
 public:
   uint8_t* getRawVersionAck();
@@ -384,6 +387,7 @@ private:
   bool initHardSync();
   bool initVirtualRC();
   bool initPayloadDevice();
+  bool initCameraManager();
 #ifdef ADVANCED_SENSING
   bool initAdvancedSensing();
 #endif

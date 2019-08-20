@@ -30,6 +30,7 @@
 #ifndef DJI_CAMERA_H
 #define DJI_CAMERA_H
 
+#include <dji_macros.hpp>
 #include "dji_command.hpp"
 #include "dji_type.hpp"
 
@@ -45,7 +46,7 @@ class Vehicle;
  * available through open protocol
  *
  */
-class Camera
+DJI_DEPRECATED class Camera
 {
 public:
   Camera(Vehicle* vehicle);

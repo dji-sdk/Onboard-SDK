@@ -20,30 +20,31 @@
 # *
 # *
 
+
 cmake_minimum_required(VERSION 2.8)
-project(onboardsdk)
+project(onboardsdk-linux-samples)
 
-set(CMAKE_VERBOSE_MAKEFILE OFF)
-
-set(DJIOSDK 0)
-set(DJIOSDK_MINOR_VERSION 1)
-set(DJIOSDK_PATCH_VERSION 0)
-set(DJIOSDK_VERSION
-  ${DJIOSDK_MAJOR_VERSION}.${DJIOSDK_MINOR_VERSION}.${DJIOSDK_PATCH_VERSION})
-
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/libs)
-
-if (ADVANCED_SENSING)
-  add_definitions(-DADVANCED_SENSING)
+if(NOT ONBOARDSDK_SOURCE)
+    set(ONBOARDSDK_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/../../../osdk-core")
 endif()
 
-if(WAYPT2_CORE)
-  add_definitions(-DWAYPT2_CORE)
+if(NOT MODULES_HEADER_DIR)
+    set(MODULES_HEADER_DIR "${ONBOARDSDK_SOURCE}/modules/inc/payload")
 endif()
 
-add_subdirectory(osdk-core)
+add_subdirectory(camera-gimbal)
+add_subdirectory(flight-control)
+add_subdirectory(mfio)
+add_subdirectory(missions)
+add_subdirectory(mobile)
+add_subdirectory(telemetry)
+add_subdirectory(logging)
+add_subdirectory(time-sync)
+add_subdirectory(payload-3rd-party)
+add_subdirectory(payloads)
 
-if (${CMAKE_SYSTEM_NAME} MATCHES Linux)
-  add_subdirectory(sample/platform/linux)
+if(ADVANCED_SENSING)
+    add_definitions(-DADVANCED_SENSING)
+    message(STATUS "AdvancedSensing sample is enabled")
+    add_subdirectory(advanced-sensing)
 endif()

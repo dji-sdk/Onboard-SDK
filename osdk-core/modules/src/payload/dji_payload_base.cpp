@@ -1,11 +1,10 @@
-/*! @file STM32F4SerialDriver.h
- *  @version 3.3
- *  @date Jun 2017
+/** @file dji_payload_base.cpp
+ *  @version 3.9
+ *  @date July 2019
  *
- *  @brief
- *  Implementation of HardDriver for the STM32F4Discovery board.
+ *  @brief Abstract protocol implementation for payload module
  *
- *  @Copyright (c) 2016-2017 DJI
+ *  @Copyright (c) 2019 DJI
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,23 +26,22 @@
  *
  */
 
-#include "dji_hard_driver.hpp"
+#include "dji_payload_base.hpp"
 
-class STM32F4 : public DJI::OSDK::HardDriver
-{
-public:
-  virtual void init()
-  {
-  }
-  virtual size_t send(const uint8_t* buf, size_t len);
-  virtual DJI::OSDK::time_ms getTimeStamp();
-  virtual bool         getDeviceStatus()
-  {
-    return true;
-  }
-  virtual size_t readall(uint8_t* buf, size_t maxlen)
-  {
-    return 8;
-  }
-  static void sleep_nms(uint16_t time);
-};
+using namespace DJI;
+using namespace DJI::OSDK;
+
+PayloadBase::PayloadBase(PayloadIndexType index, std::string name, bool enable)
+    : index(index), name(name), enable(enable) {}
+
+PayloadBase::~PayloadBase() {}
+
+PayloadIndexType PayloadBase::getIndex() { return this->index; }
+
+std::string PayloadBase::getName() { return this->name; }
+
+void PayloadBase::setName(std::string name) { this->name = name; }
+
+void PayloadBase::setEnable(bool en) { this->enable = en; }
+
+bool PayloadBase::getEnable() { return this->enable; }

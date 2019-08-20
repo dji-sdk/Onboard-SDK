@@ -32,17 +32,11 @@
 #include <time.h>
 
 extern uint32_t tick;
-
+extern void delay_nms(uint16_t time);
 void
-STM32F4::delay_nms(uint16_t time)
+STM32F4::sleep_nms(uint16_t time)
 {
-  u32 i = 0;
-  while (time--)
-  {
-    i = 30000;
-    while (i--)
-      ;
-  }
+  delay_nms(time);
 }
 
 size_t

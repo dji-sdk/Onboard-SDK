@@ -1,11 +1,10 @@
-/*! @file STM32F4SerialDriver.h
- *  @version 3.3
- *  @date Jun 2017
+/** @file dji_psdk_module.hpp
+ *  @version 3.9
+ *  @date July 2019
  *
- *  @brief
- *  Implementation of HardDriver for the STM32F4Discovery board.
+ *  @brief Implementation of psdk module for payload node
  *
- *  @Copyright (c) 2016-2017 DJI
+ *  @Copyright (c) 2019 DJI
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,23 +26,29 @@
  *
  */
 
-#include "dji_hard_driver.hpp"
+#ifndef ONBOARDSDK_DJI_PSDK_MODULE_HPP
+#define ONBOARDSDK_DJI_PSDK_MODULE_HPP
 
-class STM32F4 : public DJI::OSDK::HardDriver
-{
-public:
-  virtual void init()
-  {
-  }
-  virtual size_t send(const uint8_t* buf, size_t len);
-  virtual DJI::OSDK::time_ms getTimeStamp();
-  virtual bool         getDeviceStatus()
-  {
-    return true;
-  }
-  virtual size_t readall(uint8_t* buf, size_t maxlen)
-  {
-    return 8;
-  }
-  static void sleep_nms(uint16_t time);
-};
+#include "dji_payload_base.hpp"
+#include "dji_payload_link.hpp"
+
+namespace DJI {
+namespace OSDK {
+class PSDKModule : public PayloadBase {
+ public:
+  PSDKModule(PayloadLink *payloadLink, PayloadIndexType payloadIndex,
+             std::string name, bool enable);
+
+  ~PSDKModule();
+
+ public:
+  const static uint16_t MAX_SIZE_OF_PACKAGE = 255;
+
+ private:
+  PayloadLink *payloadLink;
+
+}; /* PSDKModule camera */
+}  // namespace OSDK
+}  // namespace DJI
+
+#endif  // ONBOARDSDK_DJI_PSDK_MODULE_HPP

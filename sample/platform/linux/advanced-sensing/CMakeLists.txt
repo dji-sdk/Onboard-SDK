@@ -21,29 +21,30 @@
 # *
 
 cmake_minimum_required(VERSION 2.8)
-project(onboardsdk)
+project(djiosdk-advanced-sensing-sample)
 
-set(CMAKE_VERBOSE_MAKEFILE OFF)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fPIC -pthread -g -O0")
 
-set(DJIOSDK 0)
-set(DJIOSDK_MINOR_VERSION 1)
-set(DJIOSDK_PATCH_VERSION 0)
-set(DJIOSDK_VERSION
-  ${DJIOSDK_MAJOR_VERSION}.${DJIOSDK_MINOR_VERSION}.${DJIOSDK_PATCH_VERSION})
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${ONBOARDSDK_SOURCE}/cmake-modules/")
 
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/libs)
+find_package(LibUSB REQUIRED)
+include_directories(${LIBUSB_1_INCLUDE_DIRS})
 
-if (ADVANCED_SENSING)
-  add_definitions(-DADVANCED_SENSING)
-endif()
+set(HELPER_FUNCTIONS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../common)
 
-if(WAYPT2_CORE)
-  add_definitions(-DWAYPT2_CORE)
-endif()
+include_directories(${ONBOARDSDK_SOURCE}/api/inc)
+include_directories(${ONBOARDSDK_SOURCE}/utility/inc)
+include_directories(${ONBOARDSDK_SOURCE}/hal/inc)
+include_directories(${ONBOARDSDK_SOURCE}/protocol/inc)
+include_directories(${ONBOARDSDK_SOURCE}/platform/linux/inc)
+include_directories(${HELPER_FUNCTIONS_DIR})
+include_directories(${MODULES_HEADER_DIR})
+add_subdirectory(stereo_vision_single_thread_sample)
+add_subdirectory(stereo_vision_multi_thread_sample)
+add_subdirectory(camera_stream_poll_sample)
+add_subdirectory(camera_stream_callback_sample)
+add_subdirectory(stereo_vision_depth_perception_sample)
 
-add_subdirectory(osdk-core)
-
-if (${CMAKE_SYSTEM_NAME} MATCHES Linux)
-  add_subdirectory(sample/platform/linux)
+if (TARGET_TRACKING_SAMPLE)
+  add_subdirectory(camera_stream_target_tracking_sample)
 endif()

@@ -108,6 +108,9 @@ Log::print(const char* fmt, ...)
     vprintf(fmt, args);
     mutex->unlock();
     va_end(args);
+#if defined(__linux__)
+    fflush(stdout);
+#endif
   }
   return *this;
 }

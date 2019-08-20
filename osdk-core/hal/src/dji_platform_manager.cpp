@@ -204,7 +204,7 @@ void
 PlatformManager::millisecSleep(int milliseconds)
 {
 #if STM32
-  STM32F4::delay_nms(milliseconds);
+  STM32F4::sleep_nms(milliseconds);
 #elif defined(QT)
   QThread::msleep(milliseconds);
 #elif defined(__linux__)

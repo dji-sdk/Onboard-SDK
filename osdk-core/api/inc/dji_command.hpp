@@ -82,7 +82,7 @@ public:
       const static uint8_t cameraShot[MAX_CMD_ARRAY_SIZE];
       const static uint8_t cameraVideoStart[MAX_CMD_ARRAY_SIZE];
       const static uint8_t cameraVideoStop[MAX_CMD_ARRAY_SIZE];
-      const static uint8_t cameraZoom[MAX_CMD_ARRAY_SIZE];
+      const static uint8_t extendedFunction[MAX_CMD_ARRAY_SIZE];
     } Control;
 
     typedef struct Mission

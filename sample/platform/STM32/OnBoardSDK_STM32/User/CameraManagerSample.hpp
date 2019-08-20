@@ -1,11 +1,10 @@
-/*! @file STM32F4SerialDriver.h
- *  @version 3.3
- *  @date Jun 2017
+/*! @file CameraManagerSample.hpp
+ *  @version 3.9
+ *  @date July 29 2019
  *
- *  @brief
- *  Implementation of HardDriver for the STM32F4Discovery board.
+ *  @brief Tesf for the CameraManager. All tests are basic on callback method.
  *
- *  @Copyright (c) 2016-2017 DJI
+ *  @Copyright (c) 2019 DJI
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,23 +26,18 @@
  *
  */
 
-#include "dji_hard_driver.hpp"
+#ifndef ONBOARDSDK_NEWCAMERASAMPLE_HPP
+#define ONBOARDSDK_NEWCAMERASAMPLE_HPP
 
-class STM32F4 : public DJI::OSDK::HardDriver
-{
-public:
-  virtual void init()
-  {
-  }
-  virtual size_t send(const uint8_t* buf, size_t len);
-  virtual DJI::OSDK::time_ms getTimeStamp();
-  virtual bool         getDeviceStatus()
-  {
-    return true;
-  }
-  virtual size_t readall(uint8_t* buf, size_t maxlen)
-  {
-    return 8;
-  }
-  static void sleep_nms(uint16_t time);
+#include <dji_vehicle.hpp>
+#include "dji_camera_manager.hpp"
+
+enum CameraManagerTestCase {
+  X5S_AT_PAYLOAD_0 = 0,
+  Z30_AT_PAYLOAD_0 = 1,
+  UNKNOWN_TEST_CASE,
 };
+
+int cameraManagerTest(Vehicle* vehicle, CameraManagerTestCase testCase);
+
+#endif  // ONBOARDSDK_NEWCAMERASAMPLE_HPP

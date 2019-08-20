@@ -21,29 +21,22 @@
 # *
 
 cmake_minimum_required(VERSION 2.8)
-project(onboardsdk)
+project(djiosdk-mfio-sample)
 
-set(CMAKE_VERBOSE_MAKEFILE OFF)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread -g -O0")
 
-set(DJIOSDK 0)
-set(DJIOSDK_MINOR_VERSION 1)
-set(DJIOSDK_PATCH_VERSION 0)
-set(DJIOSDK_VERSION
-  ${DJIOSDK_MAJOR_VERSION}.${DJIOSDK_MINOR_VERSION}.${DJIOSDK_PATCH_VERSION})
+include_directories(${ONBOARDSDK_SOURCE}/api/inc)
+include_directories(${ONBOARDSDK_SOURCE}/utility/inc)
+include_directories(${ONBOARDSDK_SOURCE}/hal/inc)
+include_directories(${ONBOARDSDK_SOURCE}/protocol/inc)
+include_directories(${ONBOARDSDK_SOURCE}/platform/linux/inc)
+include_directories(${MODULES_HEADER_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../common)
+FILE(GLOB SOURCE_FILES *.hpp *.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_environment.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_helpers.cpp
+        )
 
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/libs)
+add_executable(${PROJECT_NAME} ${SOURCE_FILES})
+target_link_libraries(${PROJECT_NAME} djiosdk-core)
 
-if (ADVANCED_SENSING)
-  add_definitions(-DADVANCED_SENSING)
-endif()
-
-if(WAYPT2_CORE)
-  add_definitions(-DWAYPT2_CORE)
-endif()
-
-add_subdirectory(osdk-core)
-
-if (${CMAKE_SYSTEM_NAME} MATCHES Linux)
-  add_subdirectory(sample/platform/linux)
-endif()

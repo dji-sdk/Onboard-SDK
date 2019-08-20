@@ -1,9 +1,9 @@
-/*! @file STM32F4SerialDriver.h
- *  @version 3.3
- *  @date Jun 2017
+/*! @file main.cpp
+*  @version 3.1.8
+ *  @date Aug 05 2016
  *
  *  @brief
- *  Implementation of HardDriver for the STM32F4Discovery board.
+ *  An exmaple program of DJI-onboard-SDK portable for stm32
  *
  *  @Copyright (c) 2016-2017 DJI
  *
@@ -27,23 +27,27 @@
  *
  */
 
-#include "dji_hard_driver.hpp"
+#ifndef MAIN_H
+#define MAIN_H
 
-class STM32F4 : public DJI::OSDK::HardDriver
-{
-public:
-  virtual void init()
-  {
-  }
-  virtual size_t send(const uint8_t* buf, size_t len);
-  virtual DJI::OSDK::time_ms getTimeStamp();
-  virtual bool         getDeviceStatus()
-  {
-    return true;
-  }
-  virtual size_t readall(uint8_t* buf, size_t maxlen)
-  {
-    return 8;
-  }
-  static void sleep_nms(uint16_t time);
-};
+#include "Activate.h"
+#include "BspUsart.h"
+#include "CameraGimbalSample.h"
+#include "FlightControlSample.h"
+#include "MissionSample.h"
+#include "MobileSample.h"
+#include "PayloadSample.h"
+#include "Receive.h"
+#include "TelemetrySample.h"
+#include "TimeSyncSample.h"
+#include "CameraManagerSample.hpp"
+#include "bsp.h"
+#include "cppforstm32.h"
+#include "dji_vehicle.hpp"
+#include "stm32f4xx_conf.h"
+#include "timer.h"
+extern uint32_t tick; // tick is the time stamp,which record how many ms since u
+                      // initialize the system.
+// warnning: after 49 days of non-reset running, tick will RESET to ZERO.
+
+#endif // MAIN_H
