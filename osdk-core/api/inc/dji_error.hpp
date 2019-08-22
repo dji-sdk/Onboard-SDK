@@ -30,6 +30,7 @@
 #define DJI_ERROR_H
 
 #include <stdint.h>
+#include "dji_unified_error_code.hpp"
 
 namespace DJI
 {
