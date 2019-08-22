@@ -44,37 +44,6 @@ namespace OSDK
 class ErrorCode
 {
 public:
-
-  /*
-   * @TODO To build a set of osdk standrad errcode, temperarily use DJI::OSDK::ErrorCode::UnifiedErrCode
-   */
-  typedef int32_t ErrCodeType;
-
-  /*!
-   * @brief CMDSet: Unified Error Codes
-   */
-  class UnifiedErrCode
-  {
-  public:
-   const static int32_t kNoError;
-   const static int32_t kErrorRequestHandlerNotFound;
-   const static int32_t kErrorRequestNotSupportedByHandler;
-   const static int32_t kErrorRequestTimeout;
-   const static int32_t kErrorSendPackFailure;
-   const static int32_t kErrorDisconnected;
-   const static int32_t kErrorInvalidParam;
-   const static int32_t kErrorSystemError;
-   const static int32_t kErrorCommandInterrupted;
-   const static int32_t kErrorParametersGetError;
-   const static int32_t kErrorParametersSetError;
-   const static int32_t kErrorInvalidRespond;
-   const static int32_t kErrorParamOutOfRange;
-   const static int32_t kErrorInvalidRequestInCurrentState;
-   const static int32_t kErrorExecutionFailed;
-   const static int32_t kErrorDownloadAbortByFirmware;
-   const static int32_t kErrorDownloadDataParsingFailure;
-  };
-
   /*!
    * @brief Common ACK Error Codes
    */

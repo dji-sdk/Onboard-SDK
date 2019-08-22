@@ -28,23 +28,6 @@
 
 #include "dji_error.hpp"
 // clang-format off
-const int32_t DJI::OSDK::ErrorCode::UnifiedErrCode::kNoError = 0x00000;
-const int32_t DJI::OSDK::ErrorCode::UnifiedErrCode::kErrorRequestHandlerNotFound = -0x00001;
-const int32_t DJI::OSDK::ErrorCode::UnifiedErrCode::kErrorRequestNotSupportedByHandler = -0x00002;
-const int32_t DJI::OSDK::ErrorCode::UnifiedErrCode::kErrorRequestTimeout = -0x00003;
-const int32_t DJI::OSDK::ErrorCode::UnifiedErrCode::kErrorSendPackFailure = -0x00004;
-const int32_t DJI::OSDK::ErrorCode::UnifiedErrCode::kErrorDisconnected = -0x00005;
-const int32_t DJI::OSDK::ErrorCode::UnifiedErrCode::kErrorInvalidParam = -0x00006;
-const int32_t DJI::OSDK::ErrorCode::UnifiedErrCode::kErrorSystemError = -0x00007;
-const int32_t DJI::OSDK::ErrorCode::UnifiedErrCode::kErrorCommandInterrupted = -0x00008;
-const int32_t DJI::OSDK::ErrorCode::UnifiedErrCode::kErrorParametersGetError = -0x00009;
-const int32_t DJI::OSDK::ErrorCode::UnifiedErrCode::kErrorParametersSetError = -0x0000A;
-const int32_t DJI::OSDK::ErrorCode::UnifiedErrCode::kErrorInvalidRespond = -0x0000B;
-const int32_t DJI::OSDK::ErrorCode::UnifiedErrCode::kErrorParamOutOfRange = -0x0000C;
-const int32_t DJI::OSDK::ErrorCode::UnifiedErrCode::kErrorInvalidRequestInCurrentState = -0x0000D;
-const int32_t DJI::OSDK::ErrorCode::UnifiedErrCode::kErrorExecutionFailed = -0x0000E;
-const int32_t DJI::OSDK::ErrorCode::UnifiedErrCode::kErrorDownloadAbortByFirmware = -0x01001;
-const int32_t DJI::OSDK::ErrorCode::UnifiedErrCode::kErrorDownloadDataParsingFailure = -0x01002;
 const uint16_t DJI::OSDK::ErrorCode::CommonACK::SUCCESS                = 0x0000;
 const uint16_t DJI::OSDK::ErrorCode::CommonACK::KEY_ERROR              = 0xFF00;
 const uint16_t DJI::OSDK::ErrorCode::CommonACK::NO_AUTHORIZATION_ERROR = 0xFF01;

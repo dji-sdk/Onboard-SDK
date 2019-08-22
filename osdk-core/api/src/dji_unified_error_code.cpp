@@ -165,8 +165,8 @@ const std::map<const ErrCode::ErrCodeType, ErrCode::ErrCodeMsg> ErrCode::SystemC
 // clang-format on
 
 ErrCode::ErrCodeMsg ErrCode::getErrCodeMsg(ErrCode::ErrCodeType errCode) {
-  uint8_t ModuleID = getModuleID(errCode);
-  uint8_t FunctionID = getFunctionID(errCode);
+  ModuleIDType ModuleID = getModuleID(errCode);
+  FunctionIDType FunctionID = getFunctionID(errCode);
   char defaultResolutionMsg[100] = {0};
   snprintf(defaultResolutionMsg, sizeof(defaultResolutionMsg),
            "Unknown error code : 0X%lX, please contact <dev@dji.com> for help.",
@@ -205,12 +205,12 @@ ErrCode::ErrCodeMsg ErrCode::getErrCodeMsg(ErrCode::ErrCodeType errCode) {
   return retMsg;
 }
 
-uint8_t ErrCode::getModuleID(ErrCodeType errCode) {
-  return (uint8_t)((errCode >> moduleIDLeftMove) & 0xFF);
+ErrCode::ModuleIDType ErrCode::getModuleID(ErrCodeType errCode) {
+  return (ModuleIDType)((errCode >> moduleIDLeftMove) & 0xFF);
 }
 
 std::string ErrCode::getModuleName(ErrCodeType errCode) {
-  uint8_t moduleID = getModuleID(errCode);
+  ModuleIDType moduleID = getModuleID(errCode);
   switch (moduleID) {
     case ModuleID::SysModule:
       return "System";
@@ -231,6 +231,6 @@ std::string ErrCode::getModuleName(ErrCodeType errCode) {
   }
 }
 
-uint8_t ErrCode::getFunctionID(ErrCodeType errCode) {
-  return (uint8_t)((errCode >> functionIDLeftMove) & 0xFF);
+ErrCode::FunctionIDType ErrCode::getFunctionID(ErrCodeType errCode) {
+  return (FunctionIDType)((errCode >> functionIDLeftMove) & 0xFF);
 }

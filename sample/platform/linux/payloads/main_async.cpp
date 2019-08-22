@@ -34,19 +34,19 @@
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
 
-void asyncSampleCallBack(ErrorCode::ErrCodeType retCode, UserData SampleLog) {
+void asyncSampleCallBack(ErrCode::ErrCodeType retCode, UserData SampleLog) {
   DSTATUS("retCode : %d", retCode);
-  if (retCode == ErrorCode::UnifiedErrCode::kNoError) {
+  if (retCode == ErrCode::SysCommonErr::Success) {
     DSTATUS("Pass : %s.", SampleLog);
   } else {
     DERROR("Error : %s. Error code : %d", SampleLog, retCode);
   }
 }
 
-void callbackToSetShutterSpeed(ErrorCode::ErrCodeType retCode,
+void callbackToSetShutterSpeed(ErrCode::ErrCodeType retCode,
                                UserData userData) {
   DSTATUS("retCode : %d", retCode);
-  if (retCode == ErrorCode::UnifiedErrCode::kNoError) {
+  if (retCode == ErrCode::SysCommonErr::Success) {
     CameraManagerAsyncSample *p = (CameraManagerAsyncSample *)userData;
     if (p)
       p->setShutterSpeedAsyncSample(
@@ -57,9 +57,9 @@ void callbackToSetShutterSpeed(ErrorCode::ErrCodeType retCode,
   }
 }
 
-void callbackToSetAperture(ErrorCode::ErrCodeType retCode, UserData userData) {
+void callbackToSetAperture(ErrCode::ErrCodeType retCode, UserData userData) {
   DSTATUS("retCode : %d", retCode);
-  if (retCode == ErrorCode::UnifiedErrCode::kNoError) {
+  if (retCode == ErrCode::SysCommonErr::Success) {
     CameraManagerAsyncSample *p = (CameraManagerAsyncSample *)userData;
     if (p)
       p->setApertureAsyncSample(
@@ -70,9 +70,9 @@ void callbackToSetAperture(ErrorCode::ErrCodeType retCode, UserData userData) {
   }
 }
 
-void callbackToSetISO(ErrorCode::ErrCodeType retCode, UserData userData) {
+void callbackToSetISO(ErrCode::ErrCodeType retCode, UserData userData) {
   DSTATUS("retCode : %d", retCode);
-  if (retCode == ErrorCode::UnifiedErrCode::kNoError) {
+  if (retCode == ErrCode::SysCommonErr::Success) {
     CameraManagerAsyncSample *p = (CameraManagerAsyncSample *)userData;
     if (p)
       p->setISOAsyncSample(PAYLOAD_INDEX_0, CameraModule::ISO::ISO_200,
@@ -82,10 +82,10 @@ void callbackToSetISO(ErrorCode::ErrCodeType retCode, UserData userData) {
   }
 }
 
-void callbackToSetExposureCompensation(ErrorCode::ErrCodeType retCode,
+void callbackToSetExposureCompensation(ErrCode::ErrCodeType retCode,
                                        UserData userData) {
   DSTATUS("retCode : %d", retCode);
-  if (retCode == ErrorCode::UnifiedErrCode::kNoError) {
+  if (retCode == ErrCode::SysCommonErr::Success) {
     CameraManagerAsyncSample *p = (CameraManagerAsyncSample *)userData;
     if (p)
       p->setEVAsyncSample(PAYLOAD_INDEX_0,
@@ -107,7 +107,7 @@ int main(int argc, char **argv) {
   std::string sampleCase = linuxEnvironment.getEnvironment()->getSampleCase();
 
   /*! init camera modules for cameraManager */
-  ErrorCode::ErrCodeType ret = vehicle->cameraManager->initCameraModule(
+  ErrCode::ErrCodeType ret = vehicle->cameraManager->initCameraModule(
       PAYLOAD_INDEX_0, "Sample_camera_1");
   ret |= vehicle->cameraManager->initCameraModule(
       PAYLOAD_INDEX_1, "Sample_camera_2");

@@ -45,7 +45,7 @@ int main(int argc, char **argv) {
   std::string sampleCase = linuxEnvironment.getEnvironment()->getSampleCase();
 
   /*! init camera modules for cameraManager */
-  ErrorCode::ErrCodeType ret = vehicle->cameraManager->initCameraModule(
+  ErrCode::ErrCodeType ret = vehicle->cameraManager->initCameraModule(
       PAYLOAD_INDEX_0, "Sample_camera_1");
   ret |= vehicle->cameraManager->initCameraModule(
       PAYLOAD_INDEX_1, "Sample_camera_2");

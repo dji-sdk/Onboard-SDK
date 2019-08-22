@@ -52,7 +52,7 @@ class CameraManagerSyncSample {
    *  @param dataTarget the target exposure compensation value
    *  @return OSDK unitified error code
    */
-  ErrorCode::ErrCodeType setEVSyncSample(
+  ErrCode::ErrCodeType setEVSyncSample(
       PayloadIndexType index, CameraModule::ExposureCompensation dataTarget);
 
   /*! @brief Sample to set exposure mode for camera, using async api
@@ -63,7 +63,7 @@ class CameraManagerSyncSample {
    *  @param dataTarget the target exposure mode
    *  @return OSDK unitified error code
    */
-  ErrorCode::ErrCodeType setExposureModeSyncSample(
+  ErrCode::ErrCodeType setExposureModeSyncSample(
       PayloadIndexType index, CameraModule::ExposureMode dataTarget);
 
   /*! @brief Sample to set ISO value for camera, using async api
@@ -74,7 +74,7 @@ class CameraManagerSyncSample {
    *  @param dataTarget the target ISO value
    *  @return OSDK unitified error code
    */
-  ErrorCode::ErrCodeType setISOSyncSample(PayloadIndexType index,
+  ErrCode::ErrCodeType setISOSyncSample(PayloadIndexType index,
                                           CameraModule::ISO dataTarget);
 
   /*! @brief Sample to set shutter speed for camera, using async api
@@ -85,7 +85,7 @@ class CameraManagerSyncSample {
    *  @param dataTarget the target shutter speed
    *  @return OSDK unitified error code
    */
-  ErrorCode::ErrCodeType setShutterSpeedSyncSample(
+  ErrCode::ErrCodeType setShutterSpeedSyncSample(
       PayloadIndexType index, CameraModule::ShutterSpeed dataTarget);
 
   /*! @brief Sample to set shutter aperture value for camera, using async api
@@ -96,7 +96,7 @@ class CameraManagerSyncSample {
    *  @param dataTarget the target aperture value
    *  @return OSDK unitified error code
    */
-  ErrorCode::ErrCodeType setApertureSyncSample(
+  ErrCode::ErrCodeType setApertureSyncSample(
       PayloadIndexType index, CameraModule::Aperture dataTarget);
 
   /*! @brief Sample to set focus point for camera, using async api
@@ -109,7 +109,7 @@ class CameraManagerSyncSample {
    *  @param y the y value of target focus point, 0~1
    *  @return OSDK unitified error code
    */
-  ErrorCode::ErrCodeType setFocusPointSyncSample(PayloadIndexType index,
+  ErrCode::ErrCodeType setFocusPointSyncSample(PayloadIndexType index,
                                                  float x, float y);
 
   /*! @brief Sample to set tap-zoom point for camera, using async api
@@ -124,7 +124,7 @@ class CameraManagerSyncSample {
    *  @param y the y value of target tap-zoom point, 0~1
    *  @return OSDK unitified error code
    */
-  ErrorCode::ErrCodeType setTapZoomPointSyncSample(PayloadIndexType index,
+  ErrCode::ErrCodeType setTapZoomPointSyncSample(PayloadIndexType index,
                                                    uint8_t multiplier, float x,
                                                    float y);
 
@@ -140,7 +140,7 @@ class CameraManagerSyncSample {
    *  @param speed zooming speed
    *  @return OSDK unitified error code
    */
-  ErrorCode::ErrCodeType startZoomSyncSample(
+  ErrCode::ErrCodeType startZoomSyncSample(
       PayloadIndexType index, CameraModule::zoomDirectionData direction,
       CameraModule::zoomSpeedData speed);
 
@@ -152,7 +152,7 @@ class CameraManagerSyncSample {
    * DJI::OSDK::PayloadIndexType
    *  @return OSDK unitified error code
    */
-  ErrorCode::ErrCodeType stopZoomSyncSample(PayloadIndexType index);
+  ErrCode::ErrCodeType stopZoomSyncSample(PayloadIndexType index);
 
   /*! @brief Sample to shoot single photo, using async api
    *
@@ -162,7 +162,7 @@ class CameraManagerSyncSample {
    * DJI::OSDK::PayloadIndexType
    *  @return OSDK unitified error code
    */
-  ErrorCode::ErrCodeType startShootSinglePhotoSyncSample(
+  ErrCode::ErrCodeType startShootSinglePhotoSyncSample(
       PayloadIndexType index);
 
   /*! @brief Sample to shoot burst photo, using async api
@@ -174,7 +174,7 @@ class CameraManagerSyncSample {
    *  @param count The number of pictures in each burst shooting
    *  @return OSDK unitified error code
    */
-  ErrorCode::ErrCodeType startShootBurstPhotoSyncSample(
+  ErrCode::ErrCodeType startShootBurstPhotoSyncSample(
       PayloadIndexType index, CameraModule::PhotoBurstCount count);
 
   /*! @brief Sample to shoot AEB photo, using async api
@@ -186,7 +186,7 @@ class CameraManagerSyncSample {
    *  @param photoNum The number of pictures in each AEB shooting
    *  @return OSDK unitified error code
    */
-  ErrorCode::ErrCodeType startShootAEBPhotoSyncSample(
+  ErrCode::ErrCodeType startShootAEBPhotoSyncSample(
       PayloadIndexType index, CameraModule::PhotoAEBCount photoNum);
 
   /*! @brief Sample to start shooting interval photo, using async api
@@ -198,7 +198,7 @@ class CameraManagerSyncSample {
    *  @param intervalData the parameter of interval shooting
    *  @return OSDK unitified error code
    */
-  ErrorCode::ErrCodeType startShootIntervalPhotoSyncSample(
+  ErrCode::ErrCodeType startShootIntervalPhotoSyncSample(
       PayloadIndexType index, CameraModule::PhotoIntervalData intervalData);
 
   /*! @brief Sample to stop shooting, using async api
@@ -208,7 +208,7 @@ class CameraManagerSyncSample {
    * DJI::OSDK::PayloadIndexType
    *  @return OSDK unitified error code
    */
-  ErrorCode::ErrCodeType shootPhotoStopSyncSample(PayloadIndexType index);
+  ErrCode::ErrCodeType shootPhotoStopSyncSample(PayloadIndexType index);
 
   /*! @brief Sample to start record video, using async api
    *
@@ -218,7 +218,7 @@ class CameraManagerSyncSample {
    * DJI::OSDK::PayloadIndexType
    *  @return OSDK unitified error code
    */
-  ErrorCode::ErrCodeType startRecordVideoSyncSample(PayloadIndexType index);
+  ErrCode::ErrCodeType startRecordVideoSyncSample(PayloadIndexType index);
 
   /*! @brief Sample to stop record video, using async api
    *
@@ -228,7 +228,7 @@ class CameraManagerSyncSample {
    * DJI::OSDK::PayloadIndexType
    *  @return OSDK unitified error code
    */
-  ErrorCode::ErrCodeType stopRecordVideoSyncSample(PayloadIndexType index);
+  ErrCode::ErrCodeType stopRecordVideoSyncSample(PayloadIndexType index);
 
  private:
   Vehicle* vehicle;

@@ -37,23 +37,23 @@ CameraManagerSyncSample::CameraManagerSyncSample(Vehicle *vehiclePtr)
 
 CameraManagerSyncSample::~CameraManagerSyncSample() {}
 
-ErrorCode::ErrCodeType CameraManagerSyncSample::setEVSyncSample(
+ErrCode::ErrCodeType CameraManagerSyncSample::setEVSyncSample(
     PayloadIndexType index, CameraModule::ExposureCompensation dataTarget) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
-    return ErrorCode::UnifiedErrCode::kErrorSystemError;
+    return ErrCode::SysCommonErr::ReqHandlerNotFound;
   }
-  ErrorCode::ErrCodeType retCode;
+  ErrCode::ErrCodeType retCode;
   CameraManager *pm = vehicle->cameraManager;
   CameraModule::ExposureCompensation evGet;
 
   retCode = pm->getExposureCompensationSync(index, evGet, 1);
-  if (retCode == ErrorCode::UnifiedErrCode::kNoError) {
+  if (retCode == ErrCode::SysCommonErr::Success) {
     DSTATUS("Get ev = %d", evGet);
     if (dataTarget != evGet) {
       DSTATUS("Set evTarget = %d", dataTarget);
       retCode = pm->setExposureCompensationSync(index, dataTarget, 1);
-      if (retCode == ErrorCode::UnifiedErrCode::kNoError) {
+      if (retCode == ErrCode::SysCommonErr::Success) {
         DSTATUS("Set ev value successfully.");
       } else {
         DERROR("Set ev parameter error. Error code : %d", retCode);
@@ -72,23 +72,23 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::setEVSyncSample(
   return retCode;
 }
 
-ErrorCode::ErrCodeType CameraManagerSyncSample::setExposureModeSyncSample(
+ErrCode::ErrCodeType CameraManagerSyncSample::setExposureModeSyncSample(
     PayloadIndexType index, CameraModule::ExposureMode dataTarget) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
-    return ErrorCode::UnifiedErrCode::kErrorSystemError;
+    return ErrCode::SysCommonErr::ReqHandlerNotFound;
   }
-  ErrorCode::ErrCodeType retCode;
+  ErrCode::ErrCodeType retCode;
   CameraManager *pm = vehicle->cameraManager;
   CameraModule::ExposureMode exposureModeGet;
 
   retCode = pm->getExposureModeSync(index, exposureModeGet, 1);
-  if (retCode == ErrorCode::UnifiedErrCode::kNoError) {
+  if (retCode == ErrCode::SysCommonErr::Success) {
     DSTATUS("Get exposure mode = %d", exposureModeGet);
     if (dataTarget != exposureModeGet) {
       DSTATUS("Set exposure mode = %d", dataTarget);
       retCode = pm->setExposureModeSync(index, dataTarget, 1);
-      if (retCode == ErrorCode::UnifiedErrCode::kNoError) {
+      if (retCode == ErrCode::SysCommonErr::Success) {
         DSTATUS("Set exposure mode successfully.");
       } else {
         DERROR("Set exposure mode error. Error code : %d", retCode);
@@ -103,23 +103,23 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::setExposureModeSyncSample(
   return retCode;
 }
 
-ErrorCode::ErrCodeType CameraManagerSyncSample::setISOSyncSample(
+ErrCode::ErrCodeType CameraManagerSyncSample::setISOSyncSample(
     PayloadIndexType index, CameraModule::ISO dataTarget) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
-    return ErrorCode::UnifiedErrCode::kErrorSystemError;
+    return ErrCode::SysCommonErr::ReqHandlerNotFound;
   }
-  ErrorCode::ErrCodeType retCode;
+  ErrCode::ErrCodeType retCode;
   CameraManager *pm = vehicle->cameraManager;
   CameraModule::ISO isoGet;
 
   retCode = pm->getISOSync(index, isoGet, 1);
-  if (retCode == ErrorCode::UnifiedErrCode::kNoError) {
+  if (retCode == ErrCode::SysCommonErr::Success) {
     DSTATUS("Get iso = %d", isoGet);
     if (dataTarget != isoGet) {
       DSTATUS("Set iso = %d", dataTarget);
       retCode = pm->setISOSync(index, dataTarget, 1);
-      if (retCode == ErrorCode::UnifiedErrCode::kNoError) {
+      if (retCode == ErrCode::SysCommonErr::Success) {
         DSTATUS("Set iso successfully");
       } else {
         DERROR("Set ISO parameter error. Error code : %d", retCode);
@@ -138,23 +138,23 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::setISOSyncSample(
   return retCode;
 }
 
-ErrorCode::ErrCodeType CameraManagerSyncSample::setShutterSpeedSyncSample(
+ErrCode::ErrCodeType CameraManagerSyncSample::setShutterSpeedSyncSample(
     PayloadIndexType index, CameraModule::ShutterSpeed dataTarget) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
-    return ErrorCode::UnifiedErrCode::kErrorSystemError;
+    return ErrCode::SysCommonErr::ReqHandlerNotFound;
   }
-  ErrorCode::ErrCodeType retCode;
+  ErrCode::ErrCodeType retCode;
   CameraManager *pm = vehicle->cameraManager;
   CameraModule::ShutterSpeed shutterSpeedGet;
 
   retCode = pm->getShutterSpeedSync(index, shutterSpeedGet, 1);
-  if (retCode == ErrorCode::UnifiedErrCode::kNoError) {
+  if (retCode == ErrCode::SysCommonErr::Success) {
     DSTATUS("Get shutterSpeed = %d", shutterSpeedGet);
     if (dataTarget != shutterSpeedGet) {
       DSTATUS("Set shutterSpeed = %d", dataTarget);
       retCode = pm->setShutterSpeedSync(index, dataTarget, 1);
-      if (retCode == ErrorCode::UnifiedErrCode::kNoError) {
+      if (retCode == ErrCode::SysCommonErr::Success) {
         DSTATUS("Set iso successfully");
       } else {
         DERROR("Set shutterSpeed parameter error. Error code : %d", retCode);
@@ -174,23 +174,23 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::setShutterSpeedSyncSample(
   return retCode;
 }
 
-ErrorCode::ErrCodeType CameraManagerSyncSample::setApertureSyncSample(
+ErrCode::ErrCodeType CameraManagerSyncSample::setApertureSyncSample(
     PayloadIndexType index, CameraModule::Aperture dataTarget) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
-    return ErrorCode::UnifiedErrCode::kErrorSystemError;
+    return ErrCode::SysCommonErr::ReqHandlerNotFound;
   }
-  ErrorCode::ErrCodeType retCode;
+  ErrCode::ErrCodeType retCode;
   CameraManager *pm = vehicle->cameraManager;
   CameraModule::Aperture apertureGet;
 
   retCode = pm->getApertureSync(index, apertureGet, 1);
-  if (retCode == ErrorCode::UnifiedErrCode::kNoError) {
+  if (retCode == ErrCode::SysCommonErr::Success) {
     DSTATUS("Get aperture = %d", apertureGet);
     if (dataTarget != apertureGet) {
       DSTATUS("Set aperture = %d", dataTarget);
       retCode = pm->setApertureSync(index, dataTarget, 1);
-      if (retCode == ErrorCode::UnifiedErrCode::kNoError) {
+      if (retCode == ErrCode::SysCommonErr::Success) {
         DSTATUS("Set aperture successfully");
       } else {
         DERROR("Set aperture parameter error. Error code : %d", retCode);
@@ -209,23 +209,23 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::setApertureSyncSample(
   return retCode;
 }
 
-ErrorCode::ErrCodeType CameraManagerSyncSample::setFocusPointSyncSample(
+ErrCode::ErrCodeType CameraManagerSyncSample::setFocusPointSyncSample(
     PayloadIndexType index, float x, float y) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
-    return ErrorCode::UnifiedErrCode::kErrorSystemError;
+    return ErrCode::SysCommonErr::ReqHandlerNotFound;
   }
-  ErrorCode::ErrCodeType retCode;
+  ErrCode::ErrCodeType retCode;
   CameraManager *pm = vehicle->cameraManager;
 
   /*!< set camera focus mode to be CameraModule::FocusMode::AUTO */
   DSTATUS("Set focus mode = %d", CameraModule::FocusMode::AUTO);
   retCode = pm->setFocusModeSync(index, CameraModule::FocusMode::AUTO, 1);
-  if (retCode == ErrorCode::UnifiedErrCode::kNoError) {
+  if (retCode == ErrCode::SysCommonErr::Success) {
     /*!< set camera focus point */
     DSTATUS("Set focus point = (%f,%f)", x, y);
     retCode = pm->setFocusTargetSync(index, {x, y}, 1);
-    if (retCode == ErrorCode::UnifiedErrCode::kNoError) {
+    if (retCode == ErrCode::SysCommonErr::Success) {
       DSTATUS("Set focus point successfully");
     } else {
       DERROR("Set focus point error. Error code : %d", retCode);
@@ -242,19 +242,19 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::setFocusPointSyncSample(
   return retCode;
 }
 
-ErrorCode::ErrCodeType CameraManagerSyncSample::setTapZoomPointSyncSample(
+ErrCode::ErrCodeType CameraManagerSyncSample::setTapZoomPointSyncSample(
     PayloadIndexType index, uint8_t multiplier, float x, float y) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
-    return ErrorCode::UnifiedErrCode::kErrorSystemError;
+    return ErrCode::SysCommonErr::ReqHandlerNotFound;
   }
-  ErrorCode::ErrCodeType retCode;
+  ErrCode::ErrCodeType retCode;
   CameraManager *pm = vehicle->cameraManager;
 
   /*!< set camera tap zoom enable parameter to be enable */
   DSTATUS("Set tap zoom enable  = %d", true);
   retCode = pm->setTapZoomEnabledSync(index, true, 1);
-  if (retCode != ErrorCode::UnifiedErrCode::kNoError) {
+  if (retCode != ErrCode::SysCommonErr::Success) {
     DERROR("Set tap zoom enable fail. Error code : %d", retCode);
     DERROR("It is only supported Z30 camera.");
     return retCode;
@@ -263,7 +263,7 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::setTapZoomPointSyncSample(
   /*!< set camera tap zoom multiplier parameter */
   DSTATUS("Set tap zoom multiplier = %d", multiplier);
   retCode = pm->setTapZoomMultiplierSync(index, multiplier, 1);
-  if (retCode != ErrorCode::UnifiedErrCode::kNoError) {
+  if (retCode != ErrCode::SysCommonErr::Success) {
     DERROR("Set tap zoom multiplier fail. Error code : %d", retCode);
     DERROR("It is only supported Z30 camera.");
     return retCode;
@@ -272,7 +272,7 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::setTapZoomPointSyncSample(
   /*!< set camera tap zoom multiplier target point */
   DSTATUS("Set tap zoom target point : (%f,%f)", x, y);
   retCode = pm->tapZoomAtTargetSync(index, {x, y}, 1);
-  if (retCode != ErrorCode::UnifiedErrCode::kNoError) {
+  if (retCode != ErrCode::SysCommonErr::Success) {
     DERROR("Set tap zoom target fail. Error code : %d", retCode);
     DERROR("It is only supported Z30 camera.");
     return retCode;
@@ -286,14 +286,14 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::setTapZoomPointSyncSample(
   return retCode;
 }
 
-ErrorCode::ErrCodeType CameraManagerSyncSample::startZoomSyncSample(
+ErrCode::ErrCodeType CameraManagerSyncSample::startZoomSyncSample(
     PayloadIndexType index, CameraModule::zoomDirectionData direction,
     CameraModule::zoomSpeedData speed) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
-    return ErrorCode::UnifiedErrCode::kErrorSystemError;
+    return ErrCode::SysCommonErr::ReqHandlerNotFound;
   }
-  ErrorCode::ErrCodeType retCode;
+  ErrCode::ErrCodeType retCode;
   CameraManager *pm = vehicle->cameraManager;
 
   DSTATUS(
@@ -303,42 +303,42 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::startZoomSyncSample(
   DSTATUS("Start continuous optical zoom parameters : direction=%d, speed=%d",
           direction, speed);
   retCode = pm->startContinuousOpticalZoomSync(index, direction, speed, 1);
-  if (retCode != ErrorCode::UnifiedErrCode::kNoError) {
+  if (retCode != ErrCode::SysCommonErr::Success) {
     DERROR("Start continuous zoom fail. Error code : %d", retCode);
   }
   return retCode;
 }
 
-ErrorCode::ErrCodeType CameraManagerSyncSample::stopZoomSyncSample(
+ErrCode::ErrCodeType CameraManagerSyncSample::stopZoomSyncSample(
     PayloadIndexType index) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
-    return ErrorCode::UnifiedErrCode::kErrorSystemError;
+    return ErrCode::SysCommonErr::ReqHandlerNotFound;
   }
-  ErrorCode::ErrCodeType retCode;
+  ErrCode::ErrCodeType retCode;
   CameraManager *pm = vehicle->cameraManager;
 
   DSTATUS("Stop continuous optical zoom.");
   retCode = pm->stopContinuousOpticalZoomSync(index, 1);
-  if (retCode != ErrorCode::UnifiedErrCode::kNoError) {
+  if (retCode != ErrCode::SysCommonErr::Success) {
     DERROR("Stop continuous zoom fail. Error code : %d", retCode);
   }
   return retCode;
 }
 
-ErrorCode::ErrCodeType CameraManagerSyncSample::startShootSinglePhotoSyncSample(
+ErrCode::ErrCodeType CameraManagerSyncSample::startShootSinglePhotoSyncSample(
     PayloadIndexType index) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
-    return ErrorCode::UnifiedErrCode::kErrorSystemError;
+    return ErrCode::SysCommonErr::ReqHandlerNotFound;
   }
-  ErrorCode::ErrCodeType retCode;
+  ErrCode::ErrCodeType retCode;
   CameraManager *pm = vehicle->cameraManager;
 
   /*!< set camera work mode as shoot photo */
   DSTATUS("set camera work mode as SHOOT_PHOTO");
   retCode = pm->setModeSync(index, CameraModule::WorkMode::SHOOT_PHOTO, 1);
-  if (retCode != ErrorCode::UnifiedErrCode::kNoError) {
+  if (retCode != ErrCode::SysCommonErr::Success) {
     DERROR("Camera take photo fail. Error code : %d", retCode);
     return retCode;
   }
@@ -347,7 +347,7 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::startShootSinglePhotoSyncSample(
   DSTATUS("set shoot-photo mode as SINGLE");
   retCode =
       pm->setShootPhotoModeSync(index, CameraModule::ShootPhotoMode::SINGLE, 1);
-  if (retCode != ErrorCode::UnifiedErrCode::kNoError) {
+  if (retCode != ErrCode::SysCommonErr::Success) {
     DERROR("Set shoot-photo mode as SINGLE fail. Error code : %d", retCode);
     return retCode;
   }
@@ -359,7 +359,7 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::startShootSinglePhotoSyncSample(
   DSTATUS("start to shoot SINGLE photo");
   retCode =
       pm->startShootPhotoSync(index, CameraModule::ShootPhotoMode::SINGLE, 2);
-  if (retCode != ErrorCode::UnifiedErrCode::kNoError) {
+  if (retCode != ErrCode::SysCommonErr::Success) {
     DERROR("Take SINGLE photo fail. Error code : %d", retCode);
     return retCode;
   }
@@ -367,19 +367,19 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::startShootSinglePhotoSyncSample(
   return retCode;
 }
 
-ErrorCode::ErrCodeType CameraManagerSyncSample::startShootBurstPhotoSyncSample(
+ErrCode::ErrCodeType CameraManagerSyncSample::startShootBurstPhotoSyncSample(
     PayloadIndexType index, CameraModule::PhotoBurstCount count) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
-    return ErrorCode::UnifiedErrCode::kErrorSystemError;
+    return ErrCode::SysCommonErr::ReqHandlerNotFound;
   }
-  ErrorCode::ErrCodeType retCode;
+  ErrCode::ErrCodeType retCode;
   CameraManager *pm = vehicle->cameraManager;
 
   /*!< set camera work mode as SHOOT_PHOTO */
   DSTATUS("set camera work mode as SHOOT_PHOTO");
   retCode = pm->setModeSync(index, CameraModule::WorkMode::SHOOT_PHOTO, 1);
-  if (retCode != ErrorCode::UnifiedErrCode::kNoError) {
+  if (retCode != ErrCode::SysCommonErr::Success) {
     DERROR("Set camera as SHOOT_PHOTO fail. Error code : %d", retCode);
     return retCode;
   }
@@ -388,7 +388,7 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::startShootBurstPhotoSyncSample(
   DSTATUS("set shoot-photo mode as BURST");
   retCode =
       pm->setShootPhotoModeSync(index, CameraModule::ShootPhotoMode::BURST, 1);
-  if (retCode != ErrorCode::UnifiedErrCode::kNoError) {
+  if (retCode != ErrCode::SysCommonErr::Success) {
     DERROR("Set shoot-photo mode as BURST fail. Error code : %d", retCode);
     return retCode;
   }
@@ -399,7 +399,7 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::startShootBurstPhotoSyncSample(
   /*!< set shoot-photo mode parameter */
   DSTATUS("set count = %d", count);
   retCode = pm->setPhotoBurstCountSync(index, count, 1);
-  if (retCode != ErrorCode::UnifiedErrCode::kNoError) {
+  if (retCode != ErrCode::SysCommonErr::Success) {
     DERROR("Set the parameter of BURST mode fail. Error code : %d", retCode);
     return retCode;
   }
@@ -408,7 +408,7 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::startShootBurstPhotoSyncSample(
   DSTATUS("start to shoot BURST photo");
   retCode =
       pm->startShootPhotoSync(index, CameraModule::ShootPhotoMode::BURST, 2);
-  if (retCode != ErrorCode::UnifiedErrCode::kNoError) {
+  if (retCode != ErrCode::SysCommonErr::Success) {
     DERROR("Take BURST photo fail. Error code : %d", retCode);
     return retCode;
   }
@@ -416,19 +416,19 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::startShootBurstPhotoSyncSample(
   return retCode;
 }
 
-ErrorCode::ErrCodeType CameraManagerSyncSample::startShootAEBPhotoSyncSample(
+ErrCode::ErrCodeType CameraManagerSyncSample::startShootAEBPhotoSyncSample(
     PayloadIndexType index, CameraModule::PhotoAEBCount photoNum) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
-    return ErrorCode::UnifiedErrCode::kErrorSystemError;
+    return ErrCode::SysCommonErr::ReqHandlerNotFound;
   }
-  ErrorCode::ErrCodeType retCode;
+  ErrCode::ErrCodeType retCode;
   CameraManager *pm = vehicle->cameraManager;
 
   /*!< set camera work mode as SHOOT_PHOTO */
   DSTATUS("set camera work mode as SHOOT_PHOTO");
   retCode = pm->setModeSync(index, CameraModule::WorkMode::SHOOT_PHOTO, 1);
-  if (retCode != ErrorCode::UnifiedErrCode::kNoError) {
+  if (retCode != ErrCode::SysCommonErr::Success) {
     DERROR("Set camera as SHOOT_PHOTO fail. Error code : %d", retCode);
     return retCode;
   }
@@ -437,7 +437,7 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::startShootAEBPhotoSyncSample(
   DSTATUS("set shoot-photo mode as AEB");
   retCode =
       pm->setShootPhotoModeSync(index, CameraModule::ShootPhotoMode::AEB, 1);
-  if (retCode != ErrorCode::UnifiedErrCode::kNoError) {
+  if (retCode != ErrCode::SysCommonErr::Success) {
     DERROR("Set shoot-photo mode as AEB fail. Error code : %d", retCode);
     return retCode;
   }
@@ -448,7 +448,7 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::startShootAEBPhotoSyncSample(
   /*!< set shoot-photo mode parameter */
   DSTATUS("set AEB photo number = %d", photoNum);
   retCode = pm->setPhotoAEBCountSync(index, photoNum, 1);
-  if (retCode != ErrorCode::UnifiedErrCode::kNoError) {
+  if (retCode != ErrCode::SysCommonErr::Success) {
     DERROR("Set the parameter of AEB mode fail. Error code : %d", retCode);
     return retCode;
   }
@@ -457,7 +457,7 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::startShootAEBPhotoSyncSample(
   DSTATUS("start to shoot AEB photo");
   retCode =
       pm->startShootPhotoSync(index, CameraModule::ShootPhotoMode::AEB, 2);
-  if (retCode != ErrorCode::UnifiedErrCode::kNoError) {
+  if (retCode != ErrCode::SysCommonErr::Success) {
     DERROR("Take AEB photo fail. Error code : %d", retCode);
     return retCode;
   }
@@ -465,19 +465,19 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::startShootAEBPhotoSyncSample(
   return retCode;
 }
 
-ErrorCode::ErrCodeType CameraManagerSyncSample::startShootIntervalPhotoSyncSample(
+ErrCode::ErrCodeType CameraManagerSyncSample::startShootIntervalPhotoSyncSample(
     PayloadIndexType index, CameraModule::PhotoIntervalData intervalData) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
-    return ErrorCode::UnifiedErrCode::kErrorSystemError;
+    return ErrCode::SysCommonErr::ReqHandlerNotFound;
   }
-  ErrorCode::ErrCodeType retCode;
+  ErrCode::ErrCodeType retCode;
   CameraManager *pm = vehicle->cameraManager;
 
   /*!< set camera work mode as SHOOT_PHOTO */
   DSTATUS("set camera work mode as SHOOT_PHOTO");
   retCode = pm->setModeSync(index, CameraModule::WorkMode::SHOOT_PHOTO, 2);
-  if (retCode != ErrorCode::UnifiedErrCode::kNoError) {
+  if (retCode != ErrCode::SysCommonErr::Success) {
     DERROR("Set camera as SHOOT_PHOTO fail. Error code : %d", retCode);
     return retCode;
   }
@@ -486,7 +486,7 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::startShootIntervalPhotoSyncSampl
   DSTATUS("set shoot-photo mode as INTERVAL");
   retCode = pm->setShootPhotoModeSync(
       index, CameraModule::ShootPhotoMode::INTERVAL, 1);
-  if (retCode != ErrorCode::UnifiedErrCode::kNoError) {
+  if (retCode != ErrCode::SysCommonErr::Success) {
     DERROR("Set shoot-photo mode as INTERVAL fail. Error code : %d", retCode);
     return retCode;
   }
@@ -498,7 +498,7 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::startShootIntervalPhotoSyncSampl
   DSTATUS("set intervalData : photoNumConticap = %d ,timeInterval = %d",
           intervalData.photoNumConticap, intervalData.timeInterval);
   retCode = pm->setPhotoTimeIntervalSettingsSync(index, intervalData, 1);
-  if (retCode != ErrorCode::UnifiedErrCode::kNoError) {
+  if (retCode != ErrCode::SysCommonErr::Success) {
     DERROR("Set the parameter of INTERVAL mode fail. Error code : %d", retCode);
     return retCode;
   }
@@ -507,7 +507,7 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::startShootIntervalPhotoSyncSampl
   DSTATUS("start to shoot INTERVAL photo");
   retCode =
       pm->startShootPhotoSync(index, CameraModule::ShootPhotoMode::INTERVAL, 2);
-  if (retCode != ErrorCode::UnifiedErrCode::kNoError) {
+  if (retCode != ErrCode::SysCommonErr::Success) {
     DERROR("Take INTERVAL photo fail. Error code : %d", retCode);
     return retCode;
   }
@@ -515,19 +515,19 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::startShootIntervalPhotoSyncSampl
   return retCode;
 }
 
-ErrorCode::ErrCodeType CameraManagerSyncSample::shootPhotoStopSyncSample(
+ErrCode::ErrCodeType CameraManagerSyncSample::shootPhotoStopSyncSample(
     PayloadIndexType index) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
-    return ErrorCode::UnifiedErrCode::kErrorSystemError;
+    return ErrCode::SysCommonErr::ReqHandlerNotFound;
   }
-  ErrorCode::ErrCodeType retCode;
+  ErrCode::ErrCodeType retCode;
   CameraManager *pm = vehicle->cameraManager;
 
   /*!< stop camera shooting photo */
   DSTATUS("Stop to shoot photo");
   retCode = pm->stopShootPhotoSync(index, 1);
-  if (retCode != ErrorCode::UnifiedErrCode::kNoError) {
+  if (retCode != ErrCode::SysCommonErr::Success) {
     DERROR("stop camera shooting photo fail. Error code : %d", retCode);
     return retCode;
   }
@@ -535,19 +535,19 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::shootPhotoStopSyncSample(
   return retCode;
 }
 
-ErrorCode::ErrCodeType CameraManagerSyncSample::startRecordVideoSyncSample(
+ErrCode::ErrCodeType CameraManagerSyncSample::startRecordVideoSyncSample(
     PayloadIndexType index) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
-    return ErrorCode::UnifiedErrCode::kErrorSystemError;
+    return ErrCode::SysCommonErr::ReqHandlerNotFound;
   }
-  ErrorCode::ErrCodeType retCode;
+  ErrCode::ErrCodeType retCode;
   CameraManager *pm = vehicle->cameraManager;
 
   /*!< set camera work mode as RECORD_VIDEO */
   DSTATUS("Set camera mode to RECORD_VIDEO");
   retCode = pm->setModeSync(index, CameraModule::WorkMode::RECORD_VIDEO, 2);
-  if (retCode != ErrorCode::UnifiedErrCode::kNoError) {
+  if (retCode != ErrCode::SysCommonErr::Success) {
     DERROR("Set camera as RECORD_VIDEO mode fail. Error code : %d", retCode);
     return retCode;
   }
@@ -555,7 +555,7 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::startRecordVideoSyncSample(
   /*!< start to take video */
   DSTATUS("Start to RECORD_VIDEO");
   retCode = pm->startRecordVideoSync(index, 1);
-  if (retCode != ErrorCode::UnifiedErrCode::kNoError) {
+  if (retCode != ErrCode::SysCommonErr::Success) {
     DERROR("Start to record video fail. Error code : %d", retCode);
     return retCode;
   }
@@ -563,19 +563,19 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::startRecordVideoSyncSample(
   return retCode;
 }
 
-ErrorCode::ErrCodeType CameraManagerSyncSample::stopRecordVideoSyncSample(
+ErrCode::ErrCodeType CameraManagerSyncSample::stopRecordVideoSyncSample(
     PayloadIndexType index) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
-    return ErrorCode::UnifiedErrCode::kErrorSystemError;
+    return ErrCode::SysCommonErr::ReqHandlerNotFound;
   }
-  ErrorCode::ErrCodeType retCode;
+  ErrCode::ErrCodeType retCode;
   CameraManager *pm = vehicle->cameraManager;
 
   /*!< stop to take video */
   retCode = pm->stopRecordVideoSync(index, 1);
   DSTATUS("Stop RECORD_VIDEO");
-  if (retCode != ErrorCode::UnifiedErrCode::kNoError) {
+  if (retCode != ErrCode::SysCommonErr::Success) {
     DERROR("Stop to record video fail. Error code : %d", retCode);
     return retCode;
   }

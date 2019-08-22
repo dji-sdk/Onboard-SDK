@@ -41,6 +41,15 @@ namespace OSDK {
  */
 class ErrCode {
  public:
+
+  /*! @brief Module ID type used in OnboardSDK Unified error
+   */
+  typedef uint8_t ModuleIDType;
+
+  /*! @brief Function ID type used in OnboardSDK Unified error
+   */
+  typedef uint8_t FunctionIDType;
+
   /*! @brief Module ID used in OnboardSDK Unified error
    */
   enum ModuleID {
@@ -98,7 +107,7 @@ class ErrCode {
    *  @param rawRetCode raw return code from the ack data
    *  @return Unified error type
    */
-  static constexpr ErrCodeType errorCode(uint8_t moduleID, uint8_t functionID,
+  static constexpr ErrCodeType errorCode(ModuleIDType moduleID, FunctionIDType functionID,
                                          uint32_t rawRetCode) {
     return (((ErrCodeType)moduleID << moduleIDLeftMove) |
             ((ErrCodeType)functionID << functionIDLeftMove) |
@@ -109,7 +118,7 @@ class ErrCode {
    *  @param errCode Unified error type
    *  @return Module ID ref to DJI::OSDK::ErrCode::ModuleID
    */
-  static uint8_t getModuleID(ErrCodeType errCode);
+  static ErrCode::ModuleIDType getModuleID(ErrCodeType errCode);
 
   /*! @brief Get the module name from errCode
    *  @param errCode Unified error type
@@ -121,7 +130,7 @@ class ErrCode {
    *  @param errCode Unified error type
    *  @return Function name
    */
-  static uint8_t getFunctionID(ErrCodeType errCode);
+  static ErrCode::FunctionIDType getFunctionID(ErrCodeType errCode);
 
   /*! @brief Get error code messages from errCode
    *  @param errCode Unified error type

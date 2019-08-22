@@ -56,7 +56,7 @@ class CameraManagerAsyncSample {
    */
   void setExposureModeAsyncSample(
       PayloadIndexType index, CameraModule::ExposureMode dataTarget,
-      void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+      void (*UserCallBack)(ErrCode::ErrCodeType retCode, UserData userData),
       UserData userData);
 
   /*! @brief Sample to set ISO value for camera, using async api
@@ -72,7 +72,7 @@ class CameraManagerAsyncSample {
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
   void setISOAsyncSample(PayloadIndexType index, CameraModule::ISO dataTarget,
-                         void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
+                         void (*UserCallBack)(ErrCode::ErrCodeType retCode,
                                               UserData userData),
                          UserData userData);
 
@@ -90,7 +90,7 @@ class CameraManagerAsyncSample {
    */
   void setShutterSpeedAsyncSample(
       PayloadIndexType index, CameraModule::ShutterSpeed dataTarget,
-      void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+      void (*UserCallBack)(ErrCode::ErrCodeType retCode, UserData userData),
       UserData userData);
 
   /*! @brief Sample to set shutter aperture value for camera, using async api
@@ -107,7 +107,7 @@ class CameraManagerAsyncSample {
    */
   void setApertureAsyncSample(
       PayloadIndexType index, CameraModule::Aperture dataTarget,
-      void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+      void (*UserCallBack)(ErrCode::ErrCodeType retCode, UserData userData),
       UserData userData);
 
   /*! @brief Sample to set exposure compensation value for camera, using async
@@ -126,7 +126,7 @@ class CameraManagerAsyncSample {
    */
   void setEVAsyncSample(PayloadIndexType index,
                         CameraModule::ExposureCompensation dataTarget,
-                        void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
+                        void (*UserCallBack)(ErrCode::ErrCodeType retCode,
                                              UserData userData),
                         UserData userData);
 
@@ -146,7 +146,7 @@ class CameraManagerAsyncSample {
    */
   void setFocusPointAsyncSample(
       PayloadIndexType index, float x, float y,
-      void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+      void (*UserCallBack)(ErrCode::ErrCodeType retCode, UserData userData),
       UserData userData);
 
   /*! @brief Sample to set tap-zoom point for camera, using async api
@@ -167,7 +167,7 @@ class CameraManagerAsyncSample {
    */
   void setTapZoomPointAsyncSample(
       PayloadIndexType index, uint8_t multiplier, float x, float y,
-      void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+      void (*UserCallBack)(ErrCode::ErrCodeType retCode, UserData userData),
       UserData userData);
 
   /*! @brief Sample to execute continuous zoom on camera, using async api
@@ -189,7 +189,7 @@ class CameraManagerAsyncSample {
   void startZoomAsyncSample(PayloadIndexType index,
                             CameraModule::zoomDirectionData direction,
                             CameraModule::zoomSpeedData speed,
-                            void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
+                            void (*UserCallBack)(ErrCode::ErrCodeType retCode,
                                                  UserData userData),
                             UserData userData);
 
@@ -208,7 +208,7 @@ class CameraManagerAsyncSample {
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
   void stopZoomAsyncSample(PayloadIndexType index,
-                           void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
+                           void (*UserCallBack)(ErrCode::ErrCodeType retCode,
                                                 UserData userData),
                            UserData userData);
 
@@ -226,7 +226,7 @@ class CameraManagerAsyncSample {
    */
   void startRecordVideoAsyncSample(
       PayloadIndexType index,
-      void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+      void (*UserCallBack)(ErrCode::ErrCodeType retCode, UserData userData),
       UserData userData);
 
   /*! @brief Sample to stop record video, using async api
@@ -243,7 +243,7 @@ class CameraManagerAsyncSample {
    */
   void stopRecordVideoAsyncSample(
       PayloadIndexType index,
-      void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+      void (*UserCallBack)(ErrCode::ErrCodeType retCode, UserData userData),
       UserData userData);
 
   /*! @brief Sample to shoot single photo, using async api
@@ -260,7 +260,7 @@ class CameraManagerAsyncSample {
    */
   void startShootSinglePhotoAsyncSample(
       PayloadIndexType index,
-      void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+      void (*UserCallBack)(ErrCode::ErrCodeType retCode, UserData userData),
       UserData userData);
 
   /*! @brief Sample to shoot burst photo, using async api
@@ -278,7 +278,7 @@ class CameraManagerAsyncSample {
    */
   void startShootBurstPhotoAsyncSample(
       PayloadIndexType index, CameraModule::PhotoBurstCount count,
-      void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+      void (*UserCallBack)(ErrCode::ErrCodeType retCode, UserData userData),
       UserData userData);
 
   /*! @brief Sample to shoot AEB photo, using async api
@@ -296,7 +296,7 @@ class CameraManagerAsyncSample {
    */
   void startShootAEBPhotoAsyncSample(
       PayloadIndexType index, CameraModule::PhotoAEBCount count,
-      void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+      void (*UserCallBack)(ErrCode::ErrCodeType retCode, UserData userData),
       UserData userData);
 
   /*! @brief Sample to start shooting interval photo, using async api
@@ -314,7 +314,7 @@ class CameraManagerAsyncSample {
    */
   void startShootIntervalPhotoAsyncSample(
       PayloadIndexType index, CameraModule::PhotoIntervalData intervalData,
-      void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+      void (*UserCallBack)(ErrCode::ErrCodeType retCode, UserData userData),
       UserData userData);
 
   /*! @brief Sample to stop shooting, using async api
@@ -330,7 +330,7 @@ class CameraManagerAsyncSample {
    */
   void stopShootPhotoAsyncSample(
       PayloadIndexType index,
-      void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+      void (*UserCallBack)(ErrCode::ErrCodeType retCode, UserData userData),
       UserData userData);
 
  private:
@@ -353,7 +353,7 @@ class CameraManagerAsyncSample {
    *  @param userData the interface to trans userData in when the callback is
    * called
    */
-  static void getExposureModeCb(ErrorCode::ErrCodeType retCode,
+  static void getExposureModeCb(ErrCode::ErrCodeType retCode,
                                 CameraModule::ExposureMode exposureModeGet,
                                 UserData userData);
 
@@ -364,7 +364,7 @@ class CameraManagerAsyncSample {
    *  @param userData the interface to trans userData in when the callback is
    * called
    */
-  static void getISOCb(ErrorCode::ErrCodeType retCode, CameraModule::ISO isoGet,
+  static void getISOCb(ErrCode::ErrCodeType retCode, CameraModule::ISO isoGet,
                        UserData userData);
 
   /*! @brief Callback of getShutterSpeedAsync, used in
@@ -375,7 +375,7 @@ class CameraManagerAsyncSample {
    *  @param userData the interface to trans userData in when the callback is
    * called
    */
-  static void getShutterSpeedCb(ErrorCode::ErrCodeType retCode,
+  static void getShutterSpeedCb(ErrCode::ErrCodeType retCode,
                                 CameraModule::ShutterSpeed shutterSpeedGet,
                                 UserData userData);
 
@@ -386,7 +386,7 @@ class CameraManagerAsyncSample {
    *  @param userData the interface to trans userData in when the callback is
    * called
    */
-  static void getApertureCb(ErrorCode::ErrCodeType retCode,
+  static void getApertureCb(ErrCode::ErrCodeType retCode,
                             CameraModule::Aperture apertureGet,
                             UserData userData);
 
@@ -397,7 +397,7 @@ class CameraManagerAsyncSample {
    *  @param userData the interface to trans userData in when the callback is
    * called
    */
-  static void getEVCb(ErrorCode::ErrCodeType retCode,
+  static void getEVCb(ErrCode::ErrCodeType retCode,
                       CameraModule::ExposureCompensation evGet,
                       UserData userData);
 
@@ -407,7 +407,7 @@ class CameraManagerAsyncSample {
    *  @param userData the interface to trans userData in when the callback is
    * called
    */
-  static void setFocusModeCb(ErrorCode::ErrCodeType retCode, UserData userData);
+  static void setFocusModeCb(ErrCode::ErrCodeType retCode, UserData userData);
 
   /*! @brief Callback of setTapZoomEnabledAsync, used in
    * setTapZoomPointAsyncSample
@@ -416,7 +416,7 @@ class CameraManagerAsyncSample {
    *  @param userData the interface to trans userData in when the callback is
    * called
    */
-  static void setTapZoomEnableCb(ErrorCode::ErrCodeType retCode,
+  static void setTapZoomEnableCb(ErrCode::ErrCodeType retCode,
                                  UserData userData);
 
   /*! @brief Callback of setTapZoomMultiplierAsync, used in
@@ -426,7 +426,7 @@ class CameraManagerAsyncSample {
    *  @param userData the interface to trans userData in when the callback is
    * called
    */
-  static void setTapZoomMultiplierCb(ErrorCode::ErrCodeType retCode,
+  static void setTapZoomMultiplierCb(ErrCode::ErrCodeType retCode,
                                      UserData userData);
 
   /*! @brief Callback of setModeAsync, used in
@@ -436,7 +436,7 @@ class CameraManagerAsyncSample {
    *  @param userData the interface to trans userData in when the callback is
    * called
    */
-  static void setCameraModeForSingleShootCb(ErrorCode::ErrCodeType retCode,
+  static void setCameraModeForSingleShootCb(ErrCode::ErrCodeType retCode,
                                             UserData userData);
 
   /*! @brief Callback of setShootPhotoModeAsync, used in
@@ -446,7 +446,7 @@ class CameraManagerAsyncSample {
    *  @param userData the interface to trans userData in when the callback is
    * called
    */
-  static void setShootPhotoModeForSingleShootCb(ErrorCode::ErrCodeType retCode,
+  static void setShootPhotoModeForSingleShootCb(ErrCode::ErrCodeType retCode,
                                                 UserData userData);
 
   /*! @brief Callback of setModeAsync, used in
@@ -456,7 +456,7 @@ class CameraManagerAsyncSample {
    *  @param userData the interface to trans userData in when the callback is
    * called
    */
-  static void setCameraModeForBurstShootCb(ErrorCode::ErrCodeType retCode,
+  static void setCameraModeForBurstShootCb(ErrCode::ErrCodeType retCode,
                                            UserData userData);
 
   /*! @brief Callback of setShootPhotoModeAsync, used in
@@ -466,7 +466,7 @@ class CameraManagerAsyncSample {
    *  @param userData the interface to trans userData in when the callback is
    * called
    */
-  static void setShootPhotoModeForBurstShootCb(ErrorCode::ErrCodeType retCode,
+  static void setShootPhotoModeForBurstShootCb(ErrCode::ErrCodeType retCode,
                                                UserData userData);
 
   /*! @brief Callback of setPhotoBurstCountAsync, used in
@@ -476,7 +476,7 @@ class CameraManagerAsyncSample {
    *  @param userData the interface to trans userData in when the callback is
    * called
    */
-  static void setPhotoBurstCountCb(ErrorCode::ErrCodeType retCode,
+  static void setPhotoBurstCountCb(ErrCode::ErrCodeType retCode,
                                    UserData userData);
 
   /*! @brief Callback of setModeAsync, used in
@@ -486,7 +486,7 @@ class CameraManagerAsyncSample {
    *  @param userData the interface to trans userData in when the callback is
    * called
    */
-  static void setCameraModeForAEBShootCb(ErrorCode::ErrCodeType retCode,
+  static void setCameraModeForAEBShootCb(ErrCode::ErrCodeType retCode,
                                          UserData userData);
 
   /*! @brief Callback of setShootPhotoModeAsync, used in
@@ -496,7 +496,7 @@ class CameraManagerAsyncSample {
    *  @param userData the interface to trans userData in when the callback is
    * called
    */
-  static void setShootPhotoModeForAEBShootCb(ErrorCode::ErrCodeType retCode,
+  static void setShootPhotoModeForAEBShootCb(ErrCode::ErrCodeType retCode,
                                              UserData userData);
 
   /*! @brief Callback of setPhotoAEBCountAsync, used in
@@ -506,7 +506,7 @@ class CameraManagerAsyncSample {
    *  @param userData the interface to trans userData in when the callback is
    * called
    */
-  static void setPhotoAEBCountCb(ErrorCode::ErrCodeType retCode,
+  static void setPhotoAEBCountCb(ErrCode::ErrCodeType retCode,
                                  UserData userData);
 
   /*! @brief Callback of setModeAsync, used in
@@ -516,7 +516,7 @@ class CameraManagerAsyncSample {
    *  @param userData the interface to trans userData in when the callback is
    * called
    */
-  static void setCameraModeForIntervalShootCb(ErrorCode::ErrCodeType retCode,
+  static void setCameraModeForIntervalShootCb(ErrCode::ErrCodeType retCode,
                                               UserData userData);
 
   /*! @brief Callback of setShootPhotoModeAsync, used in
@@ -527,7 +527,7 @@ class CameraManagerAsyncSample {
    * called
    */
   static void setShootPhotoModeForIntervalShootCb(
-      ErrorCode::ErrCodeType retCode, UserData userData);
+      ErrCode::ErrCodeType retCode, UserData userData);
 
   /*! @brief Callback of setPhotoTimeIntervalSettingsAsync, used in
    * setShootPhotoModeForIntervalShootCb
@@ -536,7 +536,7 @@ class CameraManagerAsyncSample {
    *  @param userData the interface to trans userData in when the callback is
    * called
    */
-  static void setPhotoIntervalCb(ErrorCode::ErrCodeType retCode,
+  static void setPhotoIntervalCb(ErrCode::ErrCodeType retCode,
                                  UserData userData);
 
   /*! @brief Callback of setModeAsync, used in
@@ -546,7 +546,7 @@ class CameraManagerAsyncSample {
    *  @param userData the interface to trans userData in when the callback is
    * called
    */
-  static void setCameraModeForRecordVideoCb(ErrorCode::ErrCodeType retCode,
+  static void setCameraModeForRecordVideoCb(ErrCode::ErrCodeType retCode,
                                             UserData userData);
 };
 
