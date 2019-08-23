@@ -93,10 +93,10 @@ class ErrCode {
    */
   typedef struct ErrCodeMsg {
     ErrCodeMsg(std::string s1, std::string s2, std::string s3)
-        : moduleMsg(s1), errorMsg(s2), resolutionMsg(s3){};
+        : moduleMsg(s1), errorMsg(s2), solutionMsg(s3){};
     std::string moduleMsg;
     std::string errorMsg;
-    std::string resolutionMsg;
+    std::string solutionMsg;
   } ErrCodeMsg;
 
   /*! @brief Build error code
@@ -107,12 +107,9 @@ class ErrCode {
    *  @param rawRetCode raw return code from the ack data
    *  @return Unified error type
    */
-  static constexpr ErrCodeType errorCode(ModuleIDType moduleID, FunctionIDType functionID,
-                                         uint32_t rawRetCode) {
-    return (((ErrCodeType)moduleID << moduleIDLeftMove) |
-            ((ErrCodeType)functionID << functionIDLeftMove) |
-            (ErrCodeType)rawRetCode);
-  }
+  static const ErrCodeType errorCode(ModuleIDType moduleID,
+                                     FunctionIDType functionID,
+                                     uint32_t rawRetCode);
 
   /*! @brief Get the module ID from errCode
    *  @param errCode Unified error type
@@ -138,11 +135,15 @@ class ErrCode {
    */
   static ErrCodeMsg getErrCodeMsg(ErrCodeType errCode);
 
+  /*! @brief Print error code messages to console
+   *  @param errCode Unified error type
+   */
+  static void printErrCodeMsg(ErrCodeType errCode);
+
   /*! @brief camera api error code
    */
   class CameraCommonErr {
    public:
-    static const ErrCodeType Success;
     static const ErrCodeType InvalidCMD;
     static const ErrCodeType Timeout;
     static const ErrCodeType OutOfMemory;

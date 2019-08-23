@@ -42,7 +42,7 @@ void CameraManagerAsyncSample::getExposureModeCb(
     UserData userData) {
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
-  DSTATUS("retCode : %d", retCode);
+  DSTATUS("retCode : 0x%lX", retCode);
   if (!uData) {
     DERROR("User data is a null value.");
     return;
@@ -67,7 +67,8 @@ void CameraManagerAsyncSample::getExposureModeCb(
     }
 
   } else {
-    DERROR("Get exposure mode error. Error code : %d", retCode);
+    DERROR("Get exposure mode error. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     if (uData->userCallBack) {
       void (*cb)(ErrCode::ErrCodeType, UserData);
       cb = (void (*)(ErrCode::ErrCodeType, UserData))uData->userCallBack;
@@ -81,7 +82,7 @@ void CameraManagerAsyncSample::getISOCb(ErrCode::ErrCodeType retCode,
                                    UserData userData) {
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
-  DSTATUS("retCode : %d", retCode);
+  DSTATUS("retCode : 0x%lX", retCode);
   if (!uData) {
     DERROR("User data is a null value.");
     return;
@@ -106,7 +107,8 @@ void CameraManagerAsyncSample::getISOCb(ErrCode::ErrCodeType retCode,
     }
 
   } else {
-    DERROR("Get iso error. Error code : %d", retCode);
+    DERROR("Get iso error. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     if (uData->userCallBack) {
       void (*cb)(ErrCode::ErrCodeType, UserData);
       cb = (void (*)(ErrCode::ErrCodeType, UserData))uData->userCallBack;
@@ -120,7 +122,7 @@ void CameraManagerAsyncSample::getShutterSpeedCb(
     UserData userData) {
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
-  DSTATUS("retCode : %d", retCode);
+  DSTATUS("retCode : 0x%lX", retCode);
   if (!uData) {
     DERROR("User data is a null value.");
     return;
@@ -145,7 +147,8 @@ void CameraManagerAsyncSample::getShutterSpeedCb(
     }
 
   } else {
-    DERROR("Get shutter speed error. Error code : %d", retCode);
+    DERROR("Get shutter speed error. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     if (uData->userCallBack) {
       void (*cb)(ErrCode::ErrCodeType, UserData);
       cb = (void (*)(ErrCode::ErrCodeType, UserData))uData->userCallBack;
@@ -159,7 +162,7 @@ void CameraManagerAsyncSample::getApertureCb(ErrCode::ErrCodeType retCode,
                                         UserData userData) {
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
-  DSTATUS("retCode : %d", retCode);
+  DSTATUS("retCode : 0x%lX", retCode);
   if (!uData) {
     DERROR("User data is a null value.");
     return;
@@ -184,7 +187,8 @@ void CameraManagerAsyncSample::getApertureCb(ErrCode::ErrCodeType retCode,
     }
 
   } else {
-    DERROR("Get aperture error. Error code : %d", retCode);
+    DERROR("Get aperture error. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     if (uData->userCallBack) {
       void (*cb)(ErrCode::ErrCodeType, UserData);
       cb = (void (*)(ErrCode::ErrCodeType, UserData))uData->userCallBack;
@@ -198,7 +202,7 @@ void CameraManagerAsyncSample::getEVCb(ErrCode::ErrCodeType retCode,
                                   UserData userData) {
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
-  DSTATUS("retCode : %d", retCode);
+  DSTATUS("retCode : 0x%lX", retCode);
   if (!uData) {
     DERROR("User data is a null value.");
     return;
@@ -224,7 +228,8 @@ void CameraManagerAsyncSample::getEVCb(ErrCode::ErrCodeType retCode,
     }
 
   } else {
-    DERROR("Get exposure compensation value error. Error code : %d", retCode);
+    DERROR("Get exposure compensation value error. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     if (uData->userCallBack) {
       void (*cb)(ErrCode::ErrCodeType, UserData);
       cb = (void (*)(ErrCode::ErrCodeType, UserData))uData->userCallBack;
@@ -352,7 +357,7 @@ void CameraManagerAsyncSample::setFocusModeCb(ErrCode::ErrCodeType retCode,
                                          UserData userData) {
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
-  DSTATUS("retCode : %d", retCode);
+  DSTATUS("retCode : 0x%lX", retCode);
   if (!uData) {
     DERROR("User data is a null value.");
     return;
@@ -368,7 +373,8 @@ void CameraManagerAsyncSample::setFocusModeCb(ErrCode::ErrCodeType retCode,
     }
 
   } else {
-    DERROR("Set focus mode error. Error code : %d", retCode);
+    DERROR("Set focus mode error. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     if (uData->userCallBack) {
       void (*cb)(ErrCode::ErrCodeType, UserData);
       cb = (void (*)(ErrCode::ErrCodeType, UserData))uData->userCallBack;
@@ -406,7 +412,7 @@ void CameraManagerAsyncSample::setTapZoomEnableCb(ErrCode::ErrCodeType retCode,
                                              UserData userData) {
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
-  DSTATUS("retCode : %d", retCode);
+  DSTATUS("retCode : 0x%lX", retCode);
   if (!uData) {
     DERROR("User data is a null value.");
     return;
@@ -422,7 +428,8 @@ void CameraManagerAsyncSample::setTapZoomEnableCb(ErrCode::ErrCodeType retCode,
     }
 
   } else {
-    DERROR("Tap zoom at enable error. Error code : %d", retCode);
+    DERROR("Tap zoom at enable error. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     if (uData->userCallBack) {
       void (*cb)(ErrCode::ErrCodeType, UserData);
       cb = (void (*)(ErrCode::ErrCodeType, UserData))uData->userCallBack;
@@ -435,7 +442,7 @@ void CameraManagerAsyncSample::setTapZoomMultiplierCb(ErrCode::ErrCodeType retCo
                                                  UserData userData) {
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
-  DSTATUS("retCode : %d", retCode);
+  DSTATUS("retCode : 0x%lX", retCode);
   if (!uData) {
     DERROR("User data is a null value.");
     return;
@@ -449,7 +456,8 @@ void CameraManagerAsyncSample::setTapZoomMultiplierCb(ErrCode::ErrCodeType retCo
     }
 
   } else {
-    DERROR("Set tap zoom multiplier error. Error code : %d", retCode);
+    DERROR("Set tap zoom multiplier error. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     if (uData->userCallBack) {
       void (*cb)(ErrCode::ErrCodeType, UserData);
       cb = (void (*)(ErrCode::ErrCodeType, UserData))uData->userCallBack;
@@ -523,7 +531,7 @@ void CameraManagerAsyncSample::setCameraModeForRecordVideoCb(
     ErrCode::ErrCodeType retCode, UserData userData) {
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
-  DSTATUS("retCode : %d", retCode);
+  DSTATUS("retCode : 0x%lX", retCode);
   if (!uData) {
     DERROR("User data is a null value.");
     return;
@@ -539,7 +547,8 @@ void CameraManagerAsyncSample::setCameraModeForRecordVideoCb(
           uData->userData);
     }
   } else {
-    DERROR("Start to record video error. Error code : %d", retCode);
+    DERROR("Start to record video error. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     if (uData->userCallBack) {
       void (*cb)(ErrCode::ErrCodeType, UserData);
       cb = (void (*)(ErrCode::ErrCodeType, UserData))uData->userCallBack;
@@ -592,7 +601,7 @@ void CameraManagerAsyncSample::setShootPhotoModeForSingleShootCb(
     ErrCode::ErrCodeType retCode, UserData userData) {
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
-  DSTATUS("retCode : %d", retCode);
+  DSTATUS("retCode : 0x%lX", retCode);
   if (!uData) {
     DERROR("User data is a null value.");
     return;
@@ -608,7 +617,8 @@ void CameraManagerAsyncSample::setShootPhotoModeForSingleShootCb(
           uData->userData);
     }
   } else {
-    DERROR("Set shoot photo mode error. Error code : %d", retCode);
+    DERROR("Set shoot photo mode error. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     if (uData->userCallBack) {
       void (*cb)(ErrCode::ErrCodeType, UserData);
       cb = (void (*)(ErrCode::ErrCodeType, UserData))uData->userCallBack;
@@ -621,7 +631,7 @@ void CameraManagerAsyncSample::setCameraModeForSingleShootCb(
     ErrCode::ErrCodeType retCode, UserData userData) {
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
-  DSTATUS("retCode : %d", retCode);
+  DSTATUS("retCode : 0x%lX", retCode);
   if (!uData) {
     DERROR("User data is a null value.");
     return;
@@ -636,7 +646,8 @@ void CameraManagerAsyncSample::setCameraModeForSingleShootCb(
           setShootPhotoModeForSingleShootCb, uData);
     }
   } else {
-    DERROR("Set camera mode error. Error code : %d", retCode);
+    DERROR("Set camera mode error. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     if (uData->userCallBack) {
       void (*cb)(ErrCode::ErrCodeType, UserData);
       cb = (void (*)(ErrCode::ErrCodeType, UserData))uData->userCallBack;
@@ -672,7 +683,7 @@ void CameraManagerAsyncSample::setPhotoBurstCountCb(ErrCode::ErrCodeType retCode
                                                UserData userData) {
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
-  DSTATUS("retCode : %d", retCode);
+  DSTATUS("retCode : 0x%lX", retCode);
   if (!uData) {
     DERROR("User data is a null value.");
     return;
@@ -688,7 +699,8 @@ void CameraManagerAsyncSample::setPhotoBurstCountCb(ErrCode::ErrCodeType retCode
           uData->userData);
     }
   } else {
-    DERROR("Set burst count error. Error code : %d", retCode);
+    DERROR("Set burst count error. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     if (uData->userCallBack) {
       void (*cb)(ErrCode::ErrCodeType, UserData);
       cb = (void (*)(ErrCode::ErrCodeType, UserData))uData->userCallBack;
@@ -701,7 +713,7 @@ void CameraManagerAsyncSample::setShootPhotoModeForBurstShootCb(
     ErrCode::ErrCodeType retCode, UserData userData) {
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
-  DSTATUS("retCode : %d", retCode);
+  DSTATUS("retCode : 0x%lX", retCode);
   if (!uData) {
     DERROR("User data is a null value.");
     return;
@@ -715,7 +727,8 @@ void CameraManagerAsyncSample::setShootPhotoModeForBurstShootCb(
           setPhotoBurstCountCb, uData);
     }
   } else {
-    DERROR("Set shoot photo mode as BURST error. Error code : %d", retCode);
+    DERROR("Set shoot photo mode as BURST error. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     if (uData->userCallBack) {
       void (*cb)(ErrCode::ErrCodeType, UserData);
       cb = (void (*)(ErrCode::ErrCodeType, UserData))uData->userCallBack;
@@ -729,7 +742,7 @@ void CameraManagerAsyncSample::setCameraModeForBurstShootCb(
     ErrCode::ErrCodeType retCode, UserData userData) {
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
-  DSTATUS("retCode : %d", retCode);
+  DSTATUS("retCode : 0x%lX", retCode);
   if (!uData) {
     DERROR("User data is a null value.");
     return;
@@ -744,7 +757,8 @@ void CameraManagerAsyncSample::setCameraModeForBurstShootCb(
           setShootPhotoModeForBurstShootCb, uData);
     }
   } else {
-    DERROR("Set camera mode error. Error code : %d", retCode);
+    DERROR("Set camera mode error. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     if (uData->userCallBack) {
       void (*cb)(ErrCode::ErrCodeType, UserData);
       cb = (void (*)(ErrCode::ErrCodeType, UserData))uData->userCallBack;
@@ -781,7 +795,7 @@ void CameraManagerAsyncSample::setPhotoAEBCountCb(ErrCode::ErrCodeType retCode,
                                              UserData userData) {
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
-  DSTATUS("retCode : %d", retCode);
+  DSTATUS("retCode : 0x%lX", retCode);
   if (!uData) {
     DERROR("User data is a null value.");
     return;
@@ -797,7 +811,8 @@ void CameraManagerAsyncSample::setPhotoAEBCountCb(ErrCode::ErrCodeType retCode,
           uData->userData);
     }
   } else {
-    DERROR("Set AEB count error. Error code : %d", retCode);
+    DERROR("Set AEB count error. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     if (uData->userCallBack) {
       void (*cb)(ErrCode::ErrCodeType, UserData);
       cb = (void (*)(ErrCode::ErrCodeType, UserData))uData->userCallBack;
@@ -810,7 +825,7 @@ void CameraManagerAsyncSample::setShootPhotoModeForAEBShootCb(
     ErrCode::ErrCodeType retCode, UserData userData) {
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
-  DSTATUS("retCode : %d", retCode);
+  DSTATUS("retCode : 0x%lX", retCode);
   if (!uData) {
     DERROR("User data is a null value.");
     return;
@@ -824,7 +839,8 @@ void CameraManagerAsyncSample::setShootPhotoModeForAEBShootCb(
           setPhotoAEBCountCb, uData);
     }
   } else {
-    DERROR("Set shoot photo mode as AEB error. Error code : %d", retCode);
+    DERROR("Set shoot photo mode as AEB error. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     if (uData->userCallBack) {
       void (*cb)(ErrCode::ErrCodeType, UserData);
       cb = (void (*)(ErrCode::ErrCodeType, UserData))uData->userCallBack;
@@ -837,7 +853,7 @@ void CameraManagerAsyncSample::setCameraModeForAEBShootCb(
     ErrCode::ErrCodeType retCode, UserData userData) {
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
-  DSTATUS("retCode : %d", retCode);
+  DSTATUS("retCode : 0x%lX", retCode);
   if (!uData) {
     DERROR("User data is a null value.");
     return;
@@ -852,7 +868,8 @@ void CameraManagerAsyncSample::setCameraModeForAEBShootCb(
                                         setShootPhotoModeForAEBShootCb, uData);
     }
   } else {
-    DERROR("Set camera mode error. Error code : %d", retCode);
+    DERROR("Set camera mode error. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     if (uData->userCallBack) {
       void (*cb)(ErrCode::ErrCodeType, UserData);
       cb = (void (*)(ErrCode::ErrCodeType, UserData))uData->userCallBack;
@@ -889,7 +906,7 @@ void CameraManagerAsyncSample::setPhotoIntervalCb(ErrCode::ErrCodeType retCode,
                                              UserData userData) {
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
-  DSTATUS("retCode : %d", retCode);
+  DSTATUS("retCode : 0x%lX", retCode);
   if (!uData) {
     DERROR("User data is a null value.");
     return;
@@ -905,7 +922,8 @@ void CameraManagerAsyncSample::setPhotoIntervalCb(ErrCode::ErrCodeType retCode,
           uData->userData);
     }
   } else {
-    DERROR("Set time interval parameter error. Error code : %d", retCode);
+    DERROR("Set time interval parameter error. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     if (uData->userCallBack) {
       void (*cb)(ErrCode::ErrCodeType, UserData);
       cb = (void (*)(ErrCode::ErrCodeType, UserData))uData->userCallBack;
@@ -918,7 +936,7 @@ void CameraManagerAsyncSample::setShootPhotoModeForIntervalShootCb(
     ErrCode::ErrCodeType retCode, UserData userData) {
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
-  DSTATUS("retCode : %d", retCode);
+  DSTATUS("retCode : 0x%lX", retCode);
   if (!uData) {
     DERROR("User data is a null value.");
     return;
@@ -932,7 +950,8 @@ void CameraManagerAsyncSample::setShootPhotoModeForIntervalShootCb(
           setPhotoIntervalCb, uData);
     }
   } else {
-    DERROR("Set shoot photo mode as INTERVAL error. Error code : %d", retCode);
+    DERROR("Set shoot photo mode as INTERVAL error. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     if (uData->userCallBack) {
       void (*cb)(ErrCode::ErrCodeType, UserData);
       cb = (void (*)(ErrCode::ErrCodeType, UserData))uData->userCallBack;
@@ -945,7 +964,7 @@ void CameraManagerAsyncSample::setCameraModeForIntervalShootCb(
     ErrCode::ErrCodeType retCode, UserData userData) {
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
-  DSTATUS("retCode : %d", retCode);
+  DSTATUS("retCode : 0x%lX", retCode);
   if (!uData) {
     DERROR("User data is a null value.");
     return;
@@ -960,7 +979,8 @@ void CameraManagerAsyncSample::setCameraModeForIntervalShootCb(
           setShootPhotoModeForIntervalShootCb, uData);
     }
   } else {
-    DERROR("Set camera mode error. Error code : %d", retCode);
+    DERROR("Set camera mode error. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     if (uData->userCallBack) {
       void (*cb)(ErrCode::ErrCodeType, UserData);
       cb = (void (*)(ErrCode::ErrCodeType, UserData))uData->userCallBack;

@@ -56,7 +56,8 @@ ErrCode::ErrCodeType CameraManagerSyncSample::setEVSyncSample(
       if (retCode == ErrCode::SysCommonErr::Success) {
         DSTATUS("Set ev value successfully.");
       } else {
-        DERROR("Set ev parameter error. Error code : %d", retCode);
+        DERROR("Set ev parameter error. Error code : 0x%lX", retCode);
+        ErrCode::printErrCodeMsg(retCode);
         DERROR(
             "In order to use this function, the camera exposure mode should be "
             "set to be PROGRAM_AUTO, SHUTTER_PRIORITY or APERTURE_PRIORITY "
@@ -66,7 +67,8 @@ ErrCode::ErrCodeType CameraManagerSyncSample::setEVSyncSample(
       DSTATUS("The ev value is already %d.", dataTarget);
     }
   } else {
-    DERROR("Get ev error. Error code : %d", retCode);
+    DERROR("Get ev error. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
   }
 
   return retCode;
@@ -91,13 +93,15 @@ ErrCode::ErrCodeType CameraManagerSyncSample::setExposureModeSyncSample(
       if (retCode == ErrCode::SysCommonErr::Success) {
         DSTATUS("Set exposure mode successfully.");
       } else {
-        DERROR("Set exposure mode error. Error code : %d", retCode);
+        DERROR("Set exposure mode error. Error code : 0x%lX", retCode);
+        ErrCode::printErrCodeMsg(retCode);
       }
     } else {
       DSTATUS("The exposure mode is already %d.", dataTarget);
     }
   } else {
-    DERROR("Get exposure mode error. Error code : %d", retCode);
+    DERROR("Get exposure mode error. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
   }
 
   return retCode;
@@ -122,7 +126,8 @@ ErrCode::ErrCodeType CameraManagerSyncSample::setISOSyncSample(
       if (retCode == ErrCode::SysCommonErr::Success) {
         DSTATUS("Set iso successfully");
       } else {
-        DERROR("Set ISO parameter error. Error code : %d", retCode);
+        DERROR("Set ISO parameter error. Error code : 0x%lX", retCode);
+        ErrCode::printErrCodeMsg(retCode);
         DERROR(
             "For the X5, X5R, X4S and X5S, the ISO value can be set for all "
             "modes. For the other cameras, the ISO value can only be set when "
@@ -132,7 +137,8 @@ ErrCode::ErrCodeType CameraManagerSyncSample::setISOSyncSample(
       DSTATUS("The iso parameter is already %d.", dataTarget);
     }
   } else {
-    DERROR("Get iso error. Error code : %d", retCode);
+    DERROR("Get iso error. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
   }
 
   return retCode;
@@ -157,7 +163,8 @@ ErrCode::ErrCodeType CameraManagerSyncSample::setShutterSpeedSyncSample(
       if (retCode == ErrCode::SysCommonErr::Success) {
         DSTATUS("Set iso successfully");
       } else {
-        DERROR("Set shutterSpeed parameter error. Error code : %d", retCode);
+        DERROR("Set shutterSpeed parameter error. Error code : 0x%lX", retCode);
+        ErrCode::printErrCodeMsg(retCode);
         DERROR(
             "The shutter speed can be set only when the camera exposure mode "
             "is Shutter mode or Manual mode. The shutter speed should not be "
@@ -168,7 +175,8 @@ ErrCode::ErrCodeType CameraManagerSyncSample::setShutterSpeedSyncSample(
       DSTATUS("The shutterSpeed is already %d.", dataTarget);
     }
   } else {
-    DERROR("Get shutterSpeed error. Error code : %d", retCode);
+    DERROR("Get shutterSpeed error. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
   }
 
   return retCode;
@@ -193,7 +201,8 @@ ErrCode::ErrCodeType CameraManagerSyncSample::setApertureSyncSample(
       if (retCode == ErrCode::SysCommonErr::Success) {
         DSTATUS("Set aperture successfully");
       } else {
-        DERROR("Set aperture parameter error. Error code : %d", retCode);
+        DERROR("Set aperture parameter error. Error code : 0x%lX", retCode);
+        ErrCode::printErrCodeMsg(retCode);
         DERROR(
             "In order to use this function, the exposure mode ExposureMode "
             "must be in MANUAL or APERTURE_PRIORITY. Supported only by the X5, "
@@ -203,7 +212,8 @@ ErrCode::ErrCodeType CameraManagerSyncSample::setApertureSyncSample(
       DSTATUS("The aperture is already %d.", dataTarget);
     }
   } else {
-    DERROR("Get aperture error. Error code : %d", retCode);
+    DERROR("Get aperture error. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
   }
 
   return retCode;
@@ -228,12 +238,14 @@ ErrCode::ErrCodeType CameraManagerSyncSample::setFocusPointSyncSample(
     if (retCode == ErrCode::SysCommonErr::Success) {
       DSTATUS("Set focus point successfully");
     } else {
-      DERROR("Set focus point error. Error code : %d", retCode);
+      DERROR("Set focus point error. Error code : 0x%lX", retCode);
+      ErrCode::printErrCodeMsg(retCode);
       DERROR(
           "Supported only by the X5, X5R, X4S and X5S. camera, X4S and X5S.");
     }
   } else {
-    DERROR("Set focus mode parameter error. Error code : %d", retCode);
+    DERROR("Set focus mode parameter error. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     DERROR(
         "Supported only by the X5, X5R, Z3 cameras(only support AUTO mode), "
         "X4S and X5S. camera, X4S and X5S.");
@@ -255,7 +267,8 @@ ErrCode::ErrCodeType CameraManagerSyncSample::setTapZoomPointSyncSample(
   DSTATUS("Set tap zoom enable  = %d", true);
   retCode = pm->setTapZoomEnabledSync(index, true, 1);
   if (retCode != ErrCode::SysCommonErr::Success) {
-    DERROR("Set tap zoom enable fail. Error code : %d", retCode);
+    DERROR("Set tap zoom enable fail. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     DERROR("It is only supported Z30 camera.");
     return retCode;
   }
@@ -264,7 +277,8 @@ ErrCode::ErrCodeType CameraManagerSyncSample::setTapZoomPointSyncSample(
   DSTATUS("Set tap zoom multiplier = %d", multiplier);
   retCode = pm->setTapZoomMultiplierSync(index, multiplier, 1);
   if (retCode != ErrCode::SysCommonErr::Success) {
-    DERROR("Set tap zoom multiplier fail. Error code : %d", retCode);
+    DERROR("Set tap zoom multiplier fail. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     DERROR("It is only supported Z30 camera.");
     return retCode;
   }
@@ -273,7 +287,8 @@ ErrCode::ErrCodeType CameraManagerSyncSample::setTapZoomPointSyncSample(
   DSTATUS("Set tap zoom target point : (%f,%f)", x, y);
   retCode = pm->tapZoomAtTargetSync(index, {x, y}, 1);
   if (retCode != ErrCode::SysCommonErr::Success) {
-    DERROR("Set tap zoom target fail. Error code : %d", retCode);
+    DERROR("Set tap zoom target fail. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     DERROR("It is only supported Z30 camera.");
     return retCode;
   } else {
@@ -304,7 +319,8 @@ ErrCode::ErrCodeType CameraManagerSyncSample::startZoomSyncSample(
           direction, speed);
   retCode = pm->startContinuousOpticalZoomSync(index, direction, speed, 1);
   if (retCode != ErrCode::SysCommonErr::Success) {
-    DERROR("Start continuous zoom fail. Error code : %d", retCode);
+    DERROR("Start continuous zoom fail. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
   }
   return retCode;
 }
@@ -321,7 +337,8 @@ ErrCode::ErrCodeType CameraManagerSyncSample::stopZoomSyncSample(
   DSTATUS("Stop continuous optical zoom.");
   retCode = pm->stopContinuousOpticalZoomSync(index, 1);
   if (retCode != ErrCode::SysCommonErr::Success) {
-    DERROR("Stop continuous zoom fail. Error code : %d", retCode);
+    DERROR("Stop continuous zoom fail. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
   }
   return retCode;
 }
@@ -339,7 +356,8 @@ ErrCode::ErrCodeType CameraManagerSyncSample::startShootSinglePhotoSyncSample(
   DSTATUS("set camera work mode as SHOOT_PHOTO");
   retCode = pm->setModeSync(index, CameraModule::WorkMode::SHOOT_PHOTO, 1);
   if (retCode != ErrCode::SysCommonErr::Success) {
-    DERROR("Camera take photo fail. Error code : %d", retCode);
+    DERROR("Camera take photo fail. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     return retCode;
   }
 
@@ -348,7 +366,8 @@ ErrCode::ErrCodeType CameraManagerSyncSample::startShootSinglePhotoSyncSample(
   retCode =
       pm->setShootPhotoModeSync(index, CameraModule::ShootPhotoMode::SINGLE, 1);
   if (retCode != ErrCode::SysCommonErr::Success) {
-    DERROR("Set shoot-photo mode as SINGLE fail. Error code : %d", retCode);
+    DERROR("Set shoot-photo mode as SINGLE fail. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     return retCode;
   }
 
@@ -360,7 +379,8 @@ ErrCode::ErrCodeType CameraManagerSyncSample::startShootSinglePhotoSyncSample(
   retCode =
       pm->startShootPhotoSync(index, CameraModule::ShootPhotoMode::SINGLE, 2);
   if (retCode != ErrCode::SysCommonErr::Success) {
-    DERROR("Take SINGLE photo fail. Error code : %d", retCode);
+    DERROR("Take SINGLE photo fail. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     return retCode;
   }
 
@@ -380,7 +400,8 @@ ErrCode::ErrCodeType CameraManagerSyncSample::startShootBurstPhotoSyncSample(
   DSTATUS("set camera work mode as SHOOT_PHOTO");
   retCode = pm->setModeSync(index, CameraModule::WorkMode::SHOOT_PHOTO, 1);
   if (retCode != ErrCode::SysCommonErr::Success) {
-    DERROR("Set camera as SHOOT_PHOTO fail. Error code : %d", retCode);
+    DERROR("Set camera as SHOOT_PHOTO fail. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     return retCode;
   }
 
@@ -389,7 +410,8 @@ ErrCode::ErrCodeType CameraManagerSyncSample::startShootBurstPhotoSyncSample(
   retCode =
       pm->setShootPhotoModeSync(index, CameraModule::ShootPhotoMode::BURST, 1);
   if (retCode != ErrCode::SysCommonErr::Success) {
-    DERROR("Set shoot-photo mode as BURST fail. Error code : %d", retCode);
+    DERROR("Set shoot-photo mode as BURST fail. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     return retCode;
   }
 
@@ -400,7 +422,8 @@ ErrCode::ErrCodeType CameraManagerSyncSample::startShootBurstPhotoSyncSample(
   DSTATUS("set count = %d", count);
   retCode = pm->setPhotoBurstCountSync(index, count, 1);
   if (retCode != ErrCode::SysCommonErr::Success) {
-    DERROR("Set the parameter of BURST mode fail. Error code : %d", retCode);
+    DERROR("Set the parameter of BURST mode fail. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     return retCode;
   }
 
@@ -409,7 +432,8 @@ ErrCode::ErrCodeType CameraManagerSyncSample::startShootBurstPhotoSyncSample(
   retCode =
       pm->startShootPhotoSync(index, CameraModule::ShootPhotoMode::BURST, 2);
   if (retCode != ErrCode::SysCommonErr::Success) {
-    DERROR("Take BURST photo fail. Error code : %d", retCode);
+    DERROR("Take BURST photo fail. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     return retCode;
   }
 
@@ -429,7 +453,8 @@ ErrCode::ErrCodeType CameraManagerSyncSample::startShootAEBPhotoSyncSample(
   DSTATUS("set camera work mode as SHOOT_PHOTO");
   retCode = pm->setModeSync(index, CameraModule::WorkMode::SHOOT_PHOTO, 1);
   if (retCode != ErrCode::SysCommonErr::Success) {
-    DERROR("Set camera as SHOOT_PHOTO fail. Error code : %d", retCode);
+    DERROR("Set camera as SHOOT_PHOTO fail. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     return retCode;
   }
 
@@ -438,7 +463,8 @@ ErrCode::ErrCodeType CameraManagerSyncSample::startShootAEBPhotoSyncSample(
   retCode =
       pm->setShootPhotoModeSync(index, CameraModule::ShootPhotoMode::AEB, 1);
   if (retCode != ErrCode::SysCommonErr::Success) {
-    DERROR("Set shoot-photo mode as AEB fail. Error code : %d", retCode);
+    DERROR("Set shoot-photo mode as AEB fail. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     return retCode;
   }
 
@@ -449,7 +475,8 @@ ErrCode::ErrCodeType CameraManagerSyncSample::startShootAEBPhotoSyncSample(
   DSTATUS("set AEB photo number = %d", photoNum);
   retCode = pm->setPhotoAEBCountSync(index, photoNum, 1);
   if (retCode != ErrCode::SysCommonErr::Success) {
-    DERROR("Set the parameter of AEB mode fail. Error code : %d", retCode);
+    DERROR("Set the parameter of AEB mode fail. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     return retCode;
   }
 
@@ -458,7 +485,8 @@ ErrCode::ErrCodeType CameraManagerSyncSample::startShootAEBPhotoSyncSample(
   retCode =
       pm->startShootPhotoSync(index, CameraModule::ShootPhotoMode::AEB, 2);
   if (retCode != ErrCode::SysCommonErr::Success) {
-    DERROR("Take AEB photo fail. Error code : %d", retCode);
+    DERROR("Take AEB photo fail. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     return retCode;
   }
 
@@ -478,7 +506,8 @@ ErrCode::ErrCodeType CameraManagerSyncSample::startShootIntervalPhotoSyncSample(
   DSTATUS("set camera work mode as SHOOT_PHOTO");
   retCode = pm->setModeSync(index, CameraModule::WorkMode::SHOOT_PHOTO, 2);
   if (retCode != ErrCode::SysCommonErr::Success) {
-    DERROR("Set camera as SHOOT_PHOTO fail. Error code : %d", retCode);
+    DERROR("Set camera as SHOOT_PHOTO fail. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     return retCode;
   }
 
@@ -487,7 +516,8 @@ ErrCode::ErrCodeType CameraManagerSyncSample::startShootIntervalPhotoSyncSample(
   retCode = pm->setShootPhotoModeSync(
       index, CameraModule::ShootPhotoMode::INTERVAL, 1);
   if (retCode != ErrCode::SysCommonErr::Success) {
-    DERROR("Set shoot-photo mode as INTERVAL fail. Error code : %d", retCode);
+    DERROR("Set shoot-photo mode as INTERVAL fail. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     return retCode;
   }
 
@@ -499,7 +529,8 @@ ErrCode::ErrCodeType CameraManagerSyncSample::startShootIntervalPhotoSyncSample(
           intervalData.photoNumConticap, intervalData.timeInterval);
   retCode = pm->setPhotoTimeIntervalSettingsSync(index, intervalData, 1);
   if (retCode != ErrCode::SysCommonErr::Success) {
-    DERROR("Set the parameter of INTERVAL mode fail. Error code : %d", retCode);
+    DERROR("Set the parameter of INTERVAL mode fail. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     return retCode;
   }
 
@@ -508,7 +539,8 @@ ErrCode::ErrCodeType CameraManagerSyncSample::startShootIntervalPhotoSyncSample(
   retCode =
       pm->startShootPhotoSync(index, CameraModule::ShootPhotoMode::INTERVAL, 2);
   if (retCode != ErrCode::SysCommonErr::Success) {
-    DERROR("Take INTERVAL photo fail. Error code : %d", retCode);
+    DERROR("Take INTERVAL photo fail. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     return retCode;
   }
 
@@ -528,7 +560,8 @@ ErrCode::ErrCodeType CameraManagerSyncSample::shootPhotoStopSyncSample(
   DSTATUS("Stop to shoot photo");
   retCode = pm->stopShootPhotoSync(index, 1);
   if (retCode != ErrCode::SysCommonErr::Success) {
-    DERROR("stop camera shooting photo fail. Error code : %d", retCode);
+    DERROR("stop camera shooting photo fail. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     return retCode;
   }
 
@@ -548,7 +581,8 @@ ErrCode::ErrCodeType CameraManagerSyncSample::startRecordVideoSyncSample(
   DSTATUS("Set camera mode to RECORD_VIDEO");
   retCode = pm->setModeSync(index, CameraModule::WorkMode::RECORD_VIDEO, 2);
   if (retCode != ErrCode::SysCommonErr::Success) {
-    DERROR("Set camera as RECORD_VIDEO mode fail. Error code : %d", retCode);
+    DERROR("Set camera as RECORD_VIDEO mode fail. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     return retCode;
   }
 
@@ -556,7 +590,8 @@ ErrCode::ErrCodeType CameraManagerSyncSample::startRecordVideoSyncSample(
   DSTATUS("Start to RECORD_VIDEO");
   retCode = pm->startRecordVideoSync(index, 1);
   if (retCode != ErrCode::SysCommonErr::Success) {
-    DERROR("Start to record video fail. Error code : %d", retCode);
+    DERROR("Start to record video fail. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     return retCode;
   }
 
@@ -576,7 +611,8 @@ ErrCode::ErrCodeType CameraManagerSyncSample::stopRecordVideoSyncSample(
   retCode = pm->stopRecordVideoSync(index, 1);
   DSTATUS("Stop RECORD_VIDEO");
   if (retCode != ErrCode::SysCommonErr::Success) {
-    DERROR("Stop to record video fail. Error code : %d", retCode);
+    DERROR("Stop to record video fail. Error code : 0x%lX", retCode);
+    ErrCode::printErrCodeMsg(retCode);
     return retCode;
   }
 

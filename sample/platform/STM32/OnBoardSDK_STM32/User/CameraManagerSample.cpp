@@ -34,17 +34,18 @@ using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
 
 void asyncSampleCallBack(ErrCode::ErrCodeType retCode, UserData SampleLog) {
-  DSTATUS("retCode : %d", retCode);
+  DSTATUS("retCode : 0x%lX", retCode);
   if (retCode == ErrCode::SysCommonErr::Success) {
     DSTATUS("Pass : %s.", SampleLog);
   } else {
     DERROR("Error : %s. Error code : %d", SampleLog, retCode);
+    printErrCodeMsg(retCode);
   }
 }
 
 void callbackToSetShutterSpeed(ErrCode::ErrCodeType retCode,
                                UserData userData) {
-  DSTATUS("retCode : %d", retCode);
+  DSTATUS("retCode : 0x%lX", retCode);
   if (retCode == ErrCode::SysCommonErr::Success) {
     CameraManagerAsyncSample *p = (CameraManagerAsyncSample *)userData;
     if (p)
@@ -52,12 +53,13 @@ void callbackToSetShutterSpeed(ErrCode::ErrCodeType retCode,
           PAYLOAD_INDEX_0, CameraModule::SHUTTER_SPEED_1_50,
           asyncSampleCallBack, (UserData) "Set exposure mode");
   } else {
-    DERROR("Set exposure mode failure, Error code : %d", retCode);
+    DERROR("Set exposure mode failure, Error code : 0x%lX", retCode);
+    printErrCodeMsg(retCode);
   }
 }
 
 void callbackToSetAperture(ErrCode::ErrCodeType retCode, UserData userData) {
-  DSTATUS("retCode : %d", retCode);
+  DSTATUS("retCode : 0x%lX", retCode);
   if (retCode == ErrCode::SysCommonErr::Success) {
     CameraManagerAsyncSample *p = (CameraManagerAsyncSample *)userData;
     if (p)
@@ -65,25 +67,27 @@ void callbackToSetAperture(ErrCode::ErrCodeType retCode, UserData userData) {
                                 asyncSampleCallBack,
                                 (UserData) "Set camera aperture");
   } else {
-    DERROR("Set exposure mode failure, Error code : %d", retCode);
+    DERROR("Set exposure mode failure, Error code : 0x%lX", retCode);
+    printErrCodeMsg(retCode);
   }
 }
 
 void callbackToSetISO(ErrCode::ErrCodeType retCode, UserData userData) {
-  DSTATUS("retCode : %d", retCode);
+  DSTATUS("retCode : 0x%lX", retCode);
   if (retCode == ErrCode::SysCommonErr::Success) {
     CameraManagerAsyncSample *p = (CameraManagerAsyncSample *)userData;
     if (p)
       p->setISOAsyncSample(PAYLOAD_INDEX_0, CameraModule::ISO_200,
                            asyncSampleCallBack, (UserData) "Set camera ISO");
   } else {
-    DERROR("Set exposure mode failure, Error code : %d", retCode);
+    DERROR("Set exposure mode failure, Error code : 0x%lX", retCode);
+    printErrCodeMsg(retCode);
   }
 }
 
 void callbackToSetExposureCompensation(ErrCode::ErrCodeType retCode,
                                        UserData userData) {
-  DSTATUS("retCode : %d", retCode);
+  DSTATUS("retCode : 0x%lX", retCode);
   if (retCode == ErrCode::SysCommonErr::Success) {
     CameraManagerAsyncSample *p = (CameraManagerAsyncSample *)userData;
     if (p)
@@ -91,7 +95,8 @@ void callbackToSetExposureCompensation(ErrCode::ErrCodeType retCode,
                           asyncSampleCallBack,
                           (UserData) "Set camera EV(exposure compensation)");
   } else {
-    DERROR("Set exposure mode failure, Error code : %d", retCode);
+    DERROR("Set exposure mode failure, Error code : 0x%lX", retCode);
+    printErrCodeMsg(retCode);
   }
 }
 

@@ -28,6 +28,7 @@
 
 #include "dji_unified_error_code.hpp"
 #include "dji_type.hpp"
+#include "dji_log.hpp"
 
 using namespace DJI;
 using namespace DJI::OSDK;
@@ -35,7 +36,6 @@ using namespace DJI::OSDK;
 // clang-format off
 
 /*! camera api error code */
-const ErrCode::ErrCodeType ErrCode::CameraCommonErr::Success            = ErrCode::errorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::SUCCESS);
 const ErrCode::ErrCodeType ErrCode::CameraCommonErr::InvalidCMD         = ErrCode::errorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::UNSUPPORTED_COMMAND);
 const ErrCode::ErrCodeType ErrCode::CameraCommonErr::Timeout            = ErrCode::errorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::TIMEOUT);
 const ErrCode::ErrCodeType ErrCode::CameraCommonErr::OutOfMemory        = ErrCode::errorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::RAM_ALLOCATION_FAILED);
@@ -203,6 +203,31 @@ ErrCode::ErrCodeMsg ErrCode::getErrCodeMsg(ErrCode::ErrCodeType errCode) {
       break;
   }
   return retMsg;
+}
+
+void ErrCode::printErrCodeMsg(ErrCode::ErrCodeType errCode) {
+  ErrCodeMsg errMsg = getErrCodeMsg(errCode);
+  DERROR("\033[;31m Error module   : %s\033[0m", errMsg.moduleMsg.c_str());
+  DERROR("\033[;31m Error message  : %s\033[0m", errMsg.errorMsg.c_str());
+  DERROR("\033[;31m Error solution : %s\033[0m", errMsg.solutionMsg.c_str());
+}
+
+const ErrCode::ErrCodeType ErrCode::errorCode(ErrCode::ModuleIDType moduleID,
+                                              ErrCode::FunctionIDType functionID,
+                                              uint32_t rawRetCode) {
+  ErrCodeType retErrCode = 0;
+  /*! If the rawRetCode = 0, then the ErrCode should be
+   * ErrCode::SysCommonErr::Success */
+  if (!rawRetCode) {
+    retErrCode = (((ErrCodeType) ErrCode::SysModule << moduleIDLeftMove) |
+        ((ErrCodeType) ErrCode::SystemCommon << functionIDLeftMove) |
+        (ErrCodeType) 0x00000000);
+  } else {
+    retErrCode = (((ErrCodeType) moduleID << moduleIDLeftMove) |
+        ((ErrCodeType) functionID << functionIDLeftMove) |
+        (ErrCodeType) rawRetCode);
+  }
+  return retErrCode;
 }
 
 ErrCode::ModuleIDType ErrCode::getModuleID(ErrCodeType errCode) {

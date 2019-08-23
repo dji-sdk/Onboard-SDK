@@ -840,19 +840,15 @@ void CameraModule::commonAckDecoder(Vehicle* vehicle, RecvContainer recvFrame,
     if (recvFrame.recvInfo.len - OpenProtocol::PackageMin >=
         sizeof(CommonAck)) {
       ack = *(CommonAck*)(recvFrame.recvData.raw_ack_array);
-      ret = ErrCode::SysCommonErr::Success;
+      ret = ErrCode::errorCode(ErrCode::CameraModule, ErrCode::CameraCommon,
+                               ack.ret_code);
     } else {
       DERROR("ACK is exception, data len %d (expect >= %d)\n",
              recvFrame.recvInfo.len - OpenProtocol::PackageMin,
              sizeof(CommonAck));
       ret = ErrCode::SysCommonErr::InvalidRespond;
     }
-    ucb->UserCallBack(
-        (ret != ErrCode::SysCommonErr::Success)
-            ? ret
-            : ErrCode::errorCode(ErrCode::CameraModule, ErrCode::CameraCommon,
-                                 ack.ret_code),
-        ucb->userData);
+    ucb->UserCallBack(ret, ucb->userData);
   }
 }
 
