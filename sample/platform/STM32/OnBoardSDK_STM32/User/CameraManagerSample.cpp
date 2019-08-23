@@ -39,7 +39,7 @@ void asyncSampleCallBack(ErrCode::ErrCodeType retCode, UserData SampleLog) {
     DSTATUS("Pass : %s.", SampleLog);
   } else {
     DERROR("Error : %s. Error code : %d", SampleLog, retCode);
-    printErrCodeMsg(retCode);
+    ErrCode::printErrCodeMsg(retCode);
   }
 }
 
@@ -54,7 +54,7 @@ void callbackToSetShutterSpeed(ErrCode::ErrCodeType retCode,
           asyncSampleCallBack, (UserData) "Set exposure mode");
   } else {
     DERROR("Set exposure mode failure, Error code : 0x%lX", retCode);
-    printErrCodeMsg(retCode);
+    ErrCode::printErrCodeMsg(retCode);
   }
 }
 
@@ -68,7 +68,7 @@ void callbackToSetAperture(ErrCode::ErrCodeType retCode, UserData userData) {
                                 (UserData) "Set camera aperture");
   } else {
     DERROR("Set exposure mode failure, Error code : 0x%lX", retCode);
-    printErrCodeMsg(retCode);
+    ErrCode::printErrCodeMsg(retCode);
   }
 }
 
@@ -81,7 +81,7 @@ void callbackToSetISO(ErrCode::ErrCodeType retCode, UserData userData) {
                            asyncSampleCallBack, (UserData) "Set camera ISO");
   } else {
     DERROR("Set exposure mode failure, Error code : 0x%lX", retCode);
-    printErrCodeMsg(retCode);
+    ErrCode::printErrCodeMsg(retCode);
   }
 }
 
@@ -96,7 +96,7 @@ void callbackToSetExposureCompensation(ErrCode::ErrCodeType retCode,
                           (UserData) "Set camera EV(exposure compensation)");
   } else {
     DERROR("Set exposure mode failure, Error code : 0x%lX", retCode);
-    printErrCodeMsg(retCode);
+    ErrCode::printErrCodeMsg(retCode);
   }
 }
 

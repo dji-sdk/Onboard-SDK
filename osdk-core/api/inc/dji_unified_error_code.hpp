@@ -99,6 +99,10 @@ class ErrCode {
     std::string solutionMsg;
   } ErrCodeMsg;
 
+  /*! @brief Map container type of errCode ID and msg
+   */
+  typedef std::map<const ErrCodeType, ErrCodeMsg> ErrCodeMapType;
+
   /*! @brief Build error code
    *  @param moduleID module ID used in errCode ref to
    * DJI::OSDK::ErrCode::ModuleID
@@ -197,11 +201,11 @@ class ErrCode {
 
   /*! @brief The map container of the CameraCommonErr error code messages.
    */
-  static const std::map<const ErrCodeType, ErrCodeMsg> CameraCommonErrMap;
+  static const ErrCodeMapType CameraCommonErrMap;
 
   /*! @brief The map container of the SystemCommonErr error code messages.
    */
-  static const std::map<const ErrCodeType, ErrCodeMsg> SystemCommonErrMap;
+  static const ErrCodeMapType SystemCommonErrMap;
 };
 
 }  // namespace OSDK
