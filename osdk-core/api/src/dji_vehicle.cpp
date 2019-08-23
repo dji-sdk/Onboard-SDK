@@ -60,7 +60,8 @@ Vehicle::Vehicle(const char* device,
   , USBThreadReady(false)
   , payloadDevice(NULL)
   , cameraManager(NULL)
-  , flightController(NULL)
+  , flightActions(NULL)
+  , flightAssistant(NULL)
 {
   if (!device)
   {
@@ -92,7 +93,8 @@ Vehicle::Vehicle(bool threadSupport)
   , callbackThread(NULL)
   , payloadDevice(NULL)
   , cameraManager(NULL)
-  , flightController(NULL)
+  , flightActions(NULL)
+  , flightAssistant(NULL)
 {
   this->threadSupported = threadSupport;
   callbackId            = 0;
@@ -190,11 +192,30 @@ Vehicle::functionalSetUp()
   }
 
   /*
-   * @note Initialize Movement Control
+   * @note Initialize Movement Control,
+   * @note it will be replaced by FlightActions and FlightAssistant in the future.
    */
   if (!initControl())
   {
     DERROR("Failed to initialize Control!\n");
+    return 1;
+  }
+
+  /*
+   * Initialize Flight Actions
+   */
+  if(!initFlightActions())
+  {
+    DERROR("Failed to initialize FlightActions!\n");
+    return 1;
+  }
+
+  /*
+   *  Initialize Flight Assistant
+   */
+  if(!initFlightAssistant())
+  {
+    DERROR("Failed to initialize FlightAssistant!\n");
     return 1;
   }
 
@@ -262,11 +283,6 @@ Vehicle::functionalSetUp()
     return 1;
   }
 
-  if(!initFlightController())
-  {
-    DERROR("Failed to initialize FlightController!\n");
-    return 1;
-  }
 #ifdef ADVANCED_SENSING
   if (advancedSensingEnabled)
   {
@@ -954,21 +970,39 @@ Vehicle::initGimbal()
 }
 
 bool
-Vehicle::initFlightController()
+Vehicle::initFlightActions()
 {
-  if(this->flightController)
+  if(this->flightActions)
   {
-    DDEBUG("flightController already initalized!");
+    DDEBUG("flightActions already initalized!");
     return true;
   }
-  this->flightController = new (std::nothrow) FlightController(this);
-  if (this->flightController == 0)
+  this->flightActions = new (std::nothrow) FlightActions(this);
+  if (this->flightActions == 0)
   {
-    DERROR("Failed to allocate memory for flightController!\n");
+    DERROR("Failed to allocate memory for flightActions!\n");
     return false;
   }
   return true;
 }
+
+bool
+Vehicle::initFlightAssistant()
+{
+  if(this->flightAssistant)
+  {
+    DDEBUG("flightAssistant already initalized!");
+    return true;
+  }
+  this->flightAssistant = new (std::nothrow) FlightAssistant(this);
+  if (this->flightAssistant == 0)
+  {
+    DERROR("Failed to allocate memory for flightAssistant!\n");
+    return false;
+  }
+  return true;
+}
+
 #ifdef ADVANCED_SENSING
 bool
 Vehicle::initAdvancedSensing()

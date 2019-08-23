@@ -28,15 +28,17 @@
 
 #ifndef DJI_FLIGHT_ASSISTANT_HPP
 #define DJI_FLIGHT_ASSISTANT_HPP
-#include "dji_control_link.hpp"
+
+#include "dji_open_protocol.hpp"
 namespace DJI {
 namespace OSDK {
 #define MAX_FLIGHT_HEIGHT 500
+#define MIN_GO_HOME_HEIGHT 20
 #define MAX_PARAMETER_VALUE_LENGTH 8
 class ControlLink;
 class FlightAssistant {
  public:
-  FlightAssistant(ControlLink *controlLink);
+  FlightAssistant(Vehicle *vehicle);
   ~FlightAssistant();
 
  public:
@@ -61,7 +63,7 @@ class FlightAssistant {
   typedef uint16_t rtkYaw;
 
 #pragma pack(1)
-
+  /*TODO：修改首字母大小写*/
   typedef struct ParameterData {
     uint32_t hashValue; /*!< parameter's hash value */
     uint8_t paramValue[MAX_PARAMETER_VALUE_LENGTH];
@@ -94,6 +96,7 @@ class FlightAssistant {
   enum HomePointType {
     DJI_HOMEPOINT_AIRCRAFT_LOACTON =
         0, /*!< Make aircraft current position as the homepoint*/
+        /*TODO:remove 1and 2*/
     DJI_HOMEPOINT_RC_LOCATION = 1,  /*!< Make RC's position as the homepoint */
     DJI_HOMEPOINT_APP_LOCATION = 2, /*!< Make APP's position as the homepoint */
     DJI_HOMEPOINT_SDK_SET_LOCAIION =
@@ -166,7 +169,7 @@ class FlightAssistant {
    *  userData the interface to trans userData in when the callback is called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
-  void setRTKEnableAsync(rtkEnableData rtkEnable,
+  void setRtkEnableAsync(rtkEnableData rtkEnable,
                          void (*UserCallBack)(ErrorCode::ErrCodeType,
                                               UserData userData),
                          UserData userData);
@@ -186,7 +189,7 @@ class FlightAssistant {
    *  userData the interface to trans userData in when the callback is called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
-  void getRTKEnableAsync(void (*UserCallBack)(ErrorCode::ErrCodeType,
+  void getRtkEnableAsync(void (*UserCallBack)(ErrorCode::ErrCodeType,
                                               rtkEnableData rtkEnable,
                                               UserData userData),
                          UserData userData);
@@ -243,7 +246,7 @@ class FlightAssistant {
    *  MAX_FLY_RADIUS(20km)
    */
   ErrorCode::ErrCodeType setHomePointSync(SetHomepointData homePoint,
-                                          int wait_timeout);
+                                          int timeout);
 
   /*! @brief Set homepoint position, non-blocking calls
    *
@@ -255,6 +258,9 @@ class FlightAssistant {
                          void (*UserCallBack)(ErrorCode::ErrCodeType,
                                               UserData userData),
                          UserData userData);
+
+  ErrorCode::ErrCodeType getHomePointSync(SetHomepointData homePoint,
+                                          int timeout);
 
   /*! @brief Set avoid obstacle switch enable or disable, blocking calls
    *
@@ -332,10 +338,13 @@ class FlightAssistant {
       UserData userData, int timeout = 500, int retry_time = 2);
   static void commonAckDecoder(Vehicle *vehicle, RecvContainer recvFrame,
                                UCBRetCodeHandler *ucb);
+
+  static void avoidObstacleAckDecoder(Vehicle *vehicle, RecvContainer recvFrame,
+                                      UCBRetCodeHandler *ucb);
   template <typename AckT>
   static ErrorCode::ErrCodeType commonDataUnpacker(RecvContainer recvFrame,
                                                    AckT &ack);
-  static void getRTKEnableDecoder(Vehicle *vehicle, RecvContainer recvFrame,
+  static void getRtkEnableDecoder(Vehicle *vehicle, RecvContainer recvFrame,
                                   UCBRetParamHandler<rtkEnableData> *ucb);
 
   static void getGoHomeAltitudeDecoder(Vehicle *vehicle,

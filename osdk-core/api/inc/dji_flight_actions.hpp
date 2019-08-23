@@ -28,25 +28,22 @@
 
 #ifndef DJI_FLIGHT_ACTIONS_HPP
 #define DJI_FLIGHT_ACTIONS_HPP
-
-#include "dji_ack.hpp"
-#include "dji_control_link.hpp"
 #include "dji_open_protocol.hpp"
-#include "dji_type.hpp"
-#include "dji_vehicle_callback.hpp"
 
 namespace DJI {
 namespace OSDK {
+class ControlLink;
 class FlightActions {
  public:
-  FlightActions(ControlLink *controlLink);
+  FlightActions(Vehicle *vehicle);
   ~FlightActions();
 
  public:
   /*! @brief Basic flight control commands
    */
-  enum FlightCommand {
+  enum FlightCommand : uint8_t {
     TAKE_OFF = 1,                    /*!< vehicle takeoff*/
+    GO_HOME = 6,                     /*!< vehicle return home position*/
     FORCE_LANDING_AVOID_GROUND = 30, /*!< force landing and avoid ground*/
     FORCE_LANDING = 31,              /*!< force landing */
 
@@ -71,32 +68,32 @@ class FlightActions {
    *  @param timeout blocking timeout in seconds
    *  @return ACK::ErrorCode struct with the acknowledgement from the FC
    */
-  ErrorCode::ErrCodeType takeoffSync(int timeout);
+  ErrorCode::ErrCodeType startTakeoffSync(int timeout);
 
   /*! @brief Wrapper function for aircraft take off, non-blocking calls
    *
    *  @param UserCallBack callback function defined by user
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
-  void takeoffAsync(void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
-                                         UserData userData),
-                    UserData userData);
+  void startTakeoffAsync(void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
+                                              UserData userData),
+                         UserData userData);
 
   /*! @brief Wrapper function for aircraft force landing, blocking calls
    *
    *  @param timeout blocking timeout in seconds
    *  @return ACK::ErrorCode struct with the acknowledgement from the FC
    */
-  ErrorCode::ErrCodeType forceLandingSync(int timeout);
+  ErrorCode::ErrCodeType startForceLandingSync(int timeout);
 
   /*! @brief Wrapper function for aircraft force landing, non-blocking calls
    *
    *  @param UserCallBack callback function defined by user
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
-  void forceLandingAsync(void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
-                                              UserData userData),
-                         UserData userData);
+  void startForceLandingAsync(
+      void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+      UserData userData);
 
   /*! @brief Wrapper function for aircraft force landing and avoid ground,
    * blocking calls
@@ -104,7 +101,7 @@ class FlightActions {
    *  @param timeout blocking timeout in seconds
    *  @return ACK::ErrorCode struct with the acknowledgement from the FC
    */
-  ErrorCode::ErrCodeType forceLandingAvoidGroundSync(int wait_timeout);
+  ErrorCode::ErrCodeType startForceLandingAvoidGroundSync(int timeout);
 
   /*! @brief Wrapper function for aircraft force landing and avoid ground,
    * non-blocking calls
@@ -112,50 +109,15 @@ class FlightActions {
    *  @param UserCallBack callback function defined by user
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
-  void forceLandingAvoidGroundAsync(
+  void startForceLandingAvoidGroundAsync(
       void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
       UserData userData);
 
-  /*! @brief Control the position and yaw angle of the vehicle.
-   *  @param xOffsetDesired position set-point in x axis of ground frame (m)
-   *  @param yOffsetDesired position set-point in y axis of ground frame (m)
-   *  @param zOffsetDesired position set-point in z axis of ground frame (m),
-   *  input limit see DJI::OSDK::Control::VERTICAL_POSITION
-   *  @param yawDesired yaw set-point (deg)
-   *  @param posThreshold position threshold (m)
-   *  @param yawThreshold yaw threshold (deg)
-   */
-  void moveByPositionReference(ControlLink *controlLink, float xOffsetDesired,
-                               float yOffsetDesired, float zOffsetDesired,
-                               float yawDesired, float posThreshold,
-                               float yawThreshold);
+  ErrorCode::ErrCodeType startGoHomeSync(int timeout);
 
-  /*! @brief Control the velocity and yaw rate of the vehicle.
-   *  The reference frame is the DJI::OSDK::Control::HORIZONTAL_GROUND (NEU).
-   *
-   *  @param Vx velocity set-point in x axis of ground frame (m/s), input limit
-   * see DJI::OSDK::Control::HORIZONTAL_VELOCITY
-   *  @param Vy velocity set-point in y axis of ground frame (m/s), input limit
-   * see DJI::OSDK::Control::HORIZONTAL_VELOCITY
-   *  @param Vz velocity set-point in z axis of ground frame (m/s), input limit
-   * see DJI::OSDK::Control::VERTICAL_VELOCITY
-   *  @param yawRate yawRate set-point (deg/s)
-   */
-  void moveByVelocityReference(ControlLink *controlLink, float xVelocity,
-                               float yVelocity, float zVelocity, float yawRate);
-
-  /*! @brief Control the attitude and yaw rate of the vehicle
-   *
-   *  @param roll  attitude set-point in x axis of body frame (FRD) (deg),
-   * input limit see DJI::OSDK::Control::HORIZONTAL_ANGLE
-   *  @param pitch  attitude set-point in y axis of body frame (FRD) (deg),
-   * input limit see DJI::OSDK::Control::HORIZONTAL_ANGLE
-   *  @param zVelocity  z velocity set-point in z axis of ground frame (NED)
-   * (m/s)
-   *  @param yawRate  set-point in z axis of ground frame (NED) (deg/s)
-   */
-  void moveByAttitudeReference(ControlLink *controlLink, float roll,
-                               float pitch, float zVelocity, float yawRate);
+  void startGoHomeAsync(void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
+                                             UserData userData),
+                        UserData userData);
 
  private:
   ControlLink *controlLink;

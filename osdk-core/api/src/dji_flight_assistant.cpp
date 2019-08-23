@@ -28,12 +28,12 @@
  */
 
 #include "dji_flight_assistant.hpp"
-
+#include "dji_control_link.hpp"
 using namespace DJI;
 using namespace DJI::OSDK;
 
-FlightAssistant::FlightAssistant(ControlLink* controlLink) {
-  this->controlLink = controlLink;
+FlightAssistant::FlightAssistant(Vehicle* vehicle) {
+  this->controlLink = new ControlLink(vehicle);
 }
 FlightAssistant::~FlightAssistant() { delete this->controlLink; }
 
@@ -152,6 +152,27 @@ void FlightAssistant::commonAckDecoder(Vehicle* vehicle,
   }
 }
 
+void FlightAssistant::avoidObstacleAckDecoder(Vehicle* vehicle,
+                                              RecvContainer recvFrame,
+                                              UCBRetCodeHandler* ucb) {
+  if (ucb && ucb->UserCallBack) {
+    CommonAck ack = {0};
+    ErrorCode::ErrCodeType ackRetCode;
+    ErrorCode::ErrCodeType ret = 0;
+    if (recvFrame.recvInfo.len - OpenProtocol::PackageMin >=
+        sizeof(CommonAck)) {
+      /*TODO ack is the data of setings*/
+      ack = *(CommonAck*)(recvFrame.recvData.raw_ack_array);
+    } else {
+      DERROR("ACK is exception, data len %d (expect >= %d)\n",
+             recvFrame.recvInfo.len - OpenProtocol::PackageMin,
+             sizeof(CommonAck));
+      ret = ErrorCode::UnifiedErrCode::kErrorInvalidRespond;
+    }
+    ucb->UserCallBack(ret, ucb->userData);
+  }
+}
+
 FlightAssistant::UCBRetCodeHandler* FlightAssistant::allocUCBHandler(
     void* callback, UserData userData) {
   static int ucbHandlerIndex = 0;
@@ -165,7 +186,7 @@ FlightAssistant::UCBRetCodeHandler* FlightAssistant::allocUCBHandler(
   return &(ucbHandler[ucbHandlerIndex]);
 }
 
-void FlightAssistant::getRTKEnableDecoder(
+void FlightAssistant::getRtkEnableDecoder(
     Vehicle* vehicle, RecvContainer recvFrame,
     UCBRetParamHandler<rtkEnableData>* ucb) {
   if (ucb && ucb->UserCallBack) {
@@ -194,7 +215,7 @@ ErrorCode::ErrCodeType FlightAssistant::setRtkEnableSync(
                                   timeout);
 }
 
-void FlightAssistant::setRTKEnableAsync(
+void FlightAssistant::setRtkEnableAsync(
     rtkEnableData rtkEnable,
     void (*UserCallBack)(ErrorCode::ErrCodeType, UserData userData),
     UserData userData) {
@@ -214,12 +235,12 @@ ErrorCode::ErrCodeType FlightAssistant::getRtkEnableSync(
   return ret;
 }
 
-void FlightAssistant::getRTKEnableAsync(
+void FlightAssistant::getRtkEnableAsync(
     void (*UserCallBack)(ErrorCode::ErrCodeType, rtkEnableData rtkEnable,
                          UserData userData),
     UserData userData) {
   readParameterByHashAsync<rtkEnableData>(ParamHashValue::USE_RTK_DATA,
-                                          getRTKEnableDecoder, UserCallBack,
+                                          getRtkEnableDecoder, UserCallBack,
                                           userData);
 }
 
@@ -271,12 +292,23 @@ void FlightAssistant::getGoHomeAltitudeAsync(
 ErrorCode::ErrCodeType FlightAssistant::setAvoidObstacleSwitchSync(
     AvoidObstacleData avoidObstacle, int timeout) {
   if (controlLink) {
-    ACK::ErrorCode rsp = *(ACK::ErrorCode*)controlLink->sendSync(
+    ACK::ErrorCode ack = *(ACK::ErrorCode*)controlLink->sendSync(
         OpenProtocolCMD::CMDSet::Intelligent::setAvoidObstacleEnable,
         &avoidObstacle, sizeof(avoidObstacle), timeout);
-    if ((rsp.info.len - OpenProtocol::PackageMin <=
-         sizeof(ACK::ParamAckInternal))) {
-      return rsp.data;
+
+    uint8_t ack_data = (uint8_t)ack.data;
+    if ((ack.info.len - OpenProtocol::PackageMin <=
+         sizeof(ACK::ParamAckInternal)) &&
+        ((ack_data & 0x01) == avoidObstacle.frontBrakeFLag) &&
+        (((ack_data & 0x02) >> 1) == avoidObstacle.rightBrakeFlag) &&
+        (((ack_data & 0x04) >> 2) == avoidObstacle.backBrakeFlag) &&
+        (((ack_data & 0x08) >> 3) == avoidObstacle.leftBrakeFlag) &&
+        (((ack_data & 0x10) >> 4) == avoidObstacle.activeAvoidFlag)) {
+      DSTATUS(
+          "Set avoid obstacle switch successfully! Avoid obstacle data is"
+          "%d\n",
+          ack_data);
+      return ErrorCode::UnifiedErrCode::kNoError;
     } else {
       return ErrorCode::UnifiedErrCode::kErrorInvalidRespond;
     }
@@ -292,7 +324,7 @@ void FlightAssistant::setAvoidObstacleSwitchAsync(
   if (controlLink) {
     controlLink->sendAsync(
         OpenProtocolCMD::CMDSet::Intelligent::setAvoidObstacleEnable,
-        &avoidObstacle, sizeof(avoidObstacle), (void*)commonAckDecoder,
+        &avoidObstacle, sizeof(avoidObstacle), (void*)avoidObstacleAckDecoder,
         allocUCBHandler((void*)UserCallBack, userData));
   } else {
     if (UserCallBack)
@@ -317,6 +349,11 @@ ErrorCode::ErrCodeType FlightAssistant::setHomePointSync(
   }
 }
 
+ErrorCode::ErrCodeType FlightAssistant::getHomePointSync(
+    SetHomepointData homePoint, int timeout) {
+
+}
+
 void FlightAssistant::setHomePointAsync(
     SetHomepointData homePoint,
     void (*UserCallBack)(ErrorCode::ErrCodeType, UserData userData),
@@ -333,8 +370,11 @@ void FlightAssistant::setHomePointAsync(
 }
 
 bool FlightAssistant::goHomeAltitudeValidCheck(goHomeAltitude altitude) {
-  if (altitude > MAX_FLIGHT_HEIGHT) {
-    DERROR("Go home altitude is larger than MAX_FLIGHT_HEIGHT:%d\n", altitude);
+  if (altitude < MIN_GO_HOME_HEIGHT || altitude > MAX_FLIGHT_HEIGHT) {
+    DERROR(
+        "Go home altitude is not in between MIN_GO_HOME_HEIGHT and  "
+        "MAX_FLIGHT_HEIGHT:%d\n",
+        altitude);
     return false;
   } else
     return true;

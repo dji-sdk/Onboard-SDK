@@ -330,11 +330,10 @@ typedef struct PositionData
   float64_t latitude;  /*!< deg */
   float32_t HFSL;      /*!< height above mean sea level (m) */
 } PositionData;        // pack(1)
-
 typedef struct HomePointData
 {
-  float64_t longitude; /*!< TODO 确认单位deg */
-  float64_t latitude;  /*!< deg */
+  float64_t latitude;  /*!< unit: rad */
+  float64_t longitude; /*!< unit: rad */
 }HomePointData; // pack(1)
 
 typedef struct HomePointStatus

@@ -42,7 +42,7 @@ add_subdirectory(logging)
 add_subdirectory(time-sync)
 add_subdirectory(payload-3rd-party)
 add_subdirectory(payloads)
-add_subdirectory(flight-control-4.0)
+add_subdirectory(flight-controller)
 
 
 if(ADVANCED_SENSING)

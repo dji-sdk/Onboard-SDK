@@ -27,12 +27,14 @@
  *
  */
 #include "dji_flight_actions.hpp"
-#include "dji_ack.hpp"
+#include "dji_control_link.hpp"
+
 using namespace DJI;
 using namespace DJI::OSDK;
 
-FlightActions::FlightActions(ControlLink *controlLink)
-    : controlLink(controlLink) {}
+FlightActions::FlightActions(Vehicle *vehicle) {
+  controlLink = new ControlLink(vehicle);
+}
 
 FlightActions::~FlightActions() {}
 /*! TODO move this part's code to independent class (down)*/
@@ -78,7 +80,7 @@ ErrorCode::ErrCodeType FlightActions::actionSync(ReqT req, int timeout) {
         timeout);
     if (rsp->info.buf &&
         (rsp->info.len - OpenProtocol::PackageMin >= sizeof(CommonAck))) {
-      return ((CommonAck *)rsp->info.buf)->ret_code;
+      return rsp->data;
     } else {
       return ErrorCode::UnifiedErrCode::kErrorInvalidRespond;
     }
@@ -103,35 +105,47 @@ void FlightActions::actionAsync(
   }
 }
 
-ErrorCode::ErrCodeType FlightActions::takeoffSync(int timeout) {
+ErrorCode::ErrCodeType FlightActions::startTakeoffSync(int timeout) {
   return actionSync(FlightCommand::TAKE_OFF, timeout);
 }
 
-void FlightActions::takeoffAsync(
+void FlightActions::startTakeoffAsync(
     void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
     UserData userData) {
   this->actionAsync(FlightCommand::TAKE_OFF, commonAckDecoder, UserCallBack,
                     userData);
 }
 
-ErrorCode::ErrCodeType FlightActions::forceLandingSync(int timeout) {
+ErrorCode::ErrCodeType FlightActions::startForceLandingSync(int timeout) {
   return actionSync(FlightCommand::FORCE_LANDING, timeout);
 }
 
-void FlightActions::forceLandingAsync(
+void FlightActions::startForceLandingAsync(
     void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
     UserData userData) {
   this->actionAsync(FlightCommand::FORCE_LANDING, commonAckDecoder,
                     UserCallBack, userData);
 }
 
-ErrorCode::ErrCodeType FlightActions::forceLandingAvoidGroundSync(int timeout) {
+ErrorCode::ErrCodeType FlightActions::startForceLandingAvoidGroundSync(
+    int timeout) {
   return actionSync(FlightCommand::FORCE_LANDING_AVOID_GROUND, timeout);
 }
 
-void FlightActions::forceLandingAvoidGroundAsync(
+void FlightActions::startForceLandingAvoidGroundAsync(
     void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
     UserData userData) {
   this->actionAsync(FlightCommand::FORCE_LANDING_AVOID_GROUND, commonAckDecoder,
                     UserCallBack, userData);
+}
+
+ErrorCode::ErrCodeType FlightActions::startGoHomeSync(int timeout) {
+  return actionSync(FlightCommand::GO_HOME, timeout);
+}
+
+void FlightActions::startGoHomeAsync(
+    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    UserData userData) {
+  this->actionAsync(FlightCommand::GO_HOME, commonAckDecoder, UserCallBack,
+                    userData);
 }

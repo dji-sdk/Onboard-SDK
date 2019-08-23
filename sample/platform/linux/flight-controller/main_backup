@@ -73,35 +73,32 @@ int main(int argc, char **argv) {
     case 'a':
       FlightAssistant::rtkEnableData rtkEnable;
       ErrorCode::ErrCodeType ret;
-      vehicle->flightController->flightAssistant->setRTKEnableAsync(
-          FlightAssistant::rtkEnableData::RTK_ENABLE, setSampleCallBack,
-          (UserData) "rtk enable");
-      vehicle->flightController->flightAssistant->getRTKEnableAsync(
-          getSampleCallBack, (UserData) "rtk enable");
-      ret = vehicle->flightController->flightAssistant->getRtkEnableSync(
-          rtkEnable, 1);
+      vehicle->flightAssistant->setRtkEnableAsync(
+        FlightAssistant::rtkEnableData::RTK_ENABLE, setSampleCallBack,
+        (UserData) "rtk enable");
+      vehicle->flightAssistant->getRtkEnableAsync(getSampleCallBack,
+                                                  (UserData) "rtk enable");
+      ret = vehicle->flightAssistant->getRtkEnableSync(rtkEnable, 1);
       DSTATUS("rtkEanble:%d, ret:%d", rtkEnable, ret);
       sleep(3);
-      ret = vehicle->flightController->flightAssistant->setRtkEnableSync(
+      ret = vehicle->flightAssistant->setRtkEnableSync(
           FlightAssistant::rtkEnableData::RTK_DISABLE, 1);
       DSTATUS("ret:%d", ret);
 
-      ret = vehicle->flightController->flightAssistant->getRtkEnableSync(
-          rtkEnable, 1);
+      ret = vehicle->flightAssistant->getRtkEnableSync(rtkEnable, 1);
       DSTATUS("rtkEanble:%d, ret:%d", rtkEnable, ret);
       break;
 
     case 'b':
       FlightAssistant::goHomeAltitude altitude;
-      vehicle->flightController->flightAssistant->setGoHomeAltitudeAsync(
-          200, setSampleCallBack, (UserData) "go home altitude");
-      vehicle->flightController->flightAssistant->getGoHomeAltitudeAsync(
+      vehicle->flightAssistant->setGoHomeAltitudeAsync(
+          300, setSampleCallBack, (UserData) "go home altitude");
+      vehicle->flightAssistant->getGoHomeAltitudeAsync(
           getSampleCallBack, (UserData) "go home altitude");
-      ret = vehicle->flightController->flightAssistant->setGoHomeAltitudeSync(
-          550, 1);
+      sleep(1);
+      ret = vehicle->flightAssistant->setGoHomeAltitudeSync(19, 1);
       DSTATUS("ret:%d", ret);
-      ret = vehicle->flightController->flightAssistant->getGoHomeAltitudeSync(
-          altitude, 1);
+      ret = vehicle->flightAssistant->getGoHomeAltitudeSync(altitude, 1);
       DSTATUS("ret:%d, altitude:%d", ret, altitude);
       break;
 
@@ -111,10 +108,9 @@ int main(int argc, char **argv) {
       req.healthy = 0;
       req.latitude = 22.583360483302915 * 3.1415926 / 180;
       req.longitude = 113.95725278010300 * 3.1415926 / 180;
-      vehicle->flightController->flightAssistant->setHomePointAsync(
-          req, setSampleCallBack, (UserData) "home point");
-      ret =
-          vehicle->flightController->flightAssistant->setHomePointSync(req, 1);
+      vehicle->flightAssistant->setHomePointAsync(req, setSampleCallBack,
+                                                  (UserData) "home point");
+      ret = vehicle->flightAssistant->setHomePointSync(req, 1);
       DSTATUS("ret:%d", ret);
       break;
 
@@ -125,12 +121,15 @@ int main(int argc, char **argv) {
       data.backBrakeFlag = 0;
       data.rightBrakeFlag = 0;
       data.frontBrakeFLag = 0;
-      vehicle->flightController->flightAssistant->setAvoidObstacleSwitchAsync(
+      vehicle->flightAssistant->setAvoidObstacleSwitchAsync(
           data, setSampleCallBack, (UserData) "avoid obstacle data");
-      ret = vehicle->flightController->flightAssistant
-                ->setAvoidObstacleSwitchSync(data, 1);
+      ret = vehicle->flightAssistant->setAvoidObstacleSwitchSync(data, 1);
       DSTATUS("ret:%d", ret);
       break;
+    case 'e':
+      vehicle->flightActions->startTakeoffSync(1);
+      break;
+
     default:
       break;
   }

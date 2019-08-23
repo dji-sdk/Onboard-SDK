@@ -81,7 +81,7 @@ include (${CMAKE_CURRENT_SOURCE_DIR}/../contrib/DJIConfig.cmake)
 include_directories(
         api/inc
         modules/inc/payload
-        api/inc/dji_flight_controller
+        modules/inc/flight-controller
         protocol/inc
         hal/inc
         utility/inc
@@ -97,7 +97,7 @@ endif()
 FILE(GLOB OSDK_LIB_SRCS
         api/src/*.cpp
         modules/src/payload/*.cpp
-        api/src/dji_flight_controller/*.cpp
+        modules/src/flight-controller/*.cpp
         protocol/src/*.cpp
         hal/src/*.cpp
         utility/src/*.cpp

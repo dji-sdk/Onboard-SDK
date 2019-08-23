@@ -26,7 +26,7 @@
  *
  */
 
-#include "dji_flight_controller/dji_control_link.hpp"
+#include "dji_control_link.hpp"
 #include <dji_vehicle.hpp>
 
 using namespace DJI;
