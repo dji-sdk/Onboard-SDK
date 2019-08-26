@@ -870,11 +870,6 @@
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\osdk-core\platform\default\src\dji_memory_default.cpp</FilePath>
             </File>
-            <File>
-              <FileName>dji_unified_error_code.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\..\..\..\osdk-core\api\src\dji_unified_error_code.cpp</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>

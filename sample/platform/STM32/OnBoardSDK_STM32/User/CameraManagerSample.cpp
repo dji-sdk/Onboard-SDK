@@ -33,20 +33,20 @@
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
 
-void asyncSampleCallBack(ErrCode::ErrCodeType retCode, UserData SampleLog) {
+void asyncSampleCallBack(ErrorCode::ErrCodeType retCode, UserData SampleLog) {
   DSTATUS("retCode : 0x%lX", retCode);
-  if (retCode == ErrCode::SysCommonErr::Success) {
+  if (retCode == ErrorCode::SysCommonErr::Success) {
     DSTATUS("Pass : %s.", SampleLog);
   } else {
     DERROR("Error : %s. Error code : %d", SampleLog, retCode);
-    ErrCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrCodeMsg(retCode);
   }
 }
 
-void callbackToSetShutterSpeed(ErrCode::ErrCodeType retCode,
+void callbackToSetShutterSpeed(ErrorCode::ErrCodeType retCode,
                                UserData userData) {
   DSTATUS("retCode : 0x%lX", retCode);
-  if (retCode == ErrCode::SysCommonErr::Success) {
+  if (retCode == ErrorCode::SysCommonErr::Success) {
     CameraManagerAsyncSample *p = (CameraManagerAsyncSample *)userData;
     if (p)
       p->setShutterSpeedAsyncSample(
@@ -54,13 +54,13 @@ void callbackToSetShutterSpeed(ErrCode::ErrCodeType retCode,
           asyncSampleCallBack, (UserData) "Set exposure mode");
   } else {
     DERROR("Set exposure mode failure, Error code : 0x%lX", retCode);
-    ErrCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrCodeMsg(retCode);
   }
 }
 
-void callbackToSetAperture(ErrCode::ErrCodeType retCode, UserData userData) {
+void callbackToSetAperture(ErrorCode::ErrCodeType retCode, UserData userData) {
   DSTATUS("retCode : 0x%lX", retCode);
-  if (retCode == ErrCode::SysCommonErr::Success) {
+  if (retCode == ErrorCode::SysCommonErr::Success) {
     CameraManagerAsyncSample *p = (CameraManagerAsyncSample *)userData;
     if (p)
       p->setApertureAsyncSample(PAYLOAD_INDEX_0, CameraModule::F_3_DOT_5,
@@ -68,27 +68,27 @@ void callbackToSetAperture(ErrCode::ErrCodeType retCode, UserData userData) {
                                 (UserData) "Set camera aperture");
   } else {
     DERROR("Set exposure mode failure, Error code : 0x%lX", retCode);
-    ErrCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrCodeMsg(retCode);
   }
 }
 
-void callbackToSetISO(ErrCode::ErrCodeType retCode, UserData userData) {
+void callbackToSetISO(ErrorCode::ErrCodeType retCode, UserData userData) {
   DSTATUS("retCode : 0x%lX", retCode);
-  if (retCode == ErrCode::SysCommonErr::Success) {
+  if (retCode == ErrorCode::SysCommonErr::Success) {
     CameraManagerAsyncSample *p = (CameraManagerAsyncSample *)userData;
     if (p)
       p->setISOAsyncSample(PAYLOAD_INDEX_0, CameraModule::ISO_200,
                            asyncSampleCallBack, (UserData) "Set camera ISO");
   } else {
     DERROR("Set exposure mode failure, Error code : 0x%lX", retCode);
-    ErrCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrCodeMsg(retCode);
   }
 }
 
-void callbackToSetExposureCompensation(ErrCode::ErrCodeType retCode,
+void callbackToSetExposureCompensation(ErrorCode::ErrCodeType retCode,
                                        UserData userData) {
   DSTATUS("retCode : 0x%lX", retCode);
-  if (retCode == ErrCode::SysCommonErr::Success) {
+  if (retCode == ErrorCode::SysCommonErr::Success) {
     CameraManagerAsyncSample *p = (CameraManagerAsyncSample *)userData;
     if (p)
       p->setEVAsyncSample(PAYLOAD_INDEX_0, CameraModule::P_0_3,
@@ -96,7 +96,7 @@ void callbackToSetExposureCompensation(ErrCode::ErrCodeType retCode,
                           (UserData) "Set camera EV(exposure compensation)");
   } else {
     DERROR("Set exposure mode failure, Error code : 0x%lX", retCode);
-    ErrCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrCodeMsg(retCode);
   }
 }
 
@@ -112,7 +112,7 @@ int cameraManagerTest(Vehicle *vehicle, CameraManagerTestCase testCase) {
     return -1;
   }
   if (!p) {
-    ErrCode::ErrCodeType ret = vehicle->cameraManager->initCameraModule(
+    ErrorCode::ErrCodeType ret = vehicle->cameraManager->initCameraModule(
         PAYLOAD_INDEX_0, "sample_camera_1");
     ret |= vehicle->cameraManager->initCameraModule(PAYLOAD_INDEX_1,
                                                     "sample_camera_2");

@@ -30,7 +30,8 @@
 #define DJI_ERROR_H
 
 #include <stdint.h>
-#include "dji_unified_error_code.hpp"
+#include <map>
+#include <string>
 
 namespace DJI
 {
@@ -44,6 +45,149 @@ namespace OSDK
 class ErrorCode
 {
 public:
+
+  /*! @brief Module ID type used in OnboardSDK Unified error
+   */
+  typedef uint8_t ModuleIDType;
+
+  /*! @brief Function ID type used in OnboardSDK Unified error
+   */
+  typedef uint8_t FunctionIDType;
+
+  /*! @brief Module ID used in OnboardSDK Unified error
+   */
+  enum ModuleID {
+    SysModule     = 0,
+    FCModule      = 11,
+    GimbalModule  = 12,
+    CameraModule  = 13,
+    PSDKModule    = 14,
+    RCModule      = 15,
+    BatteryModule = 16,
+  };
+
+  /*! @brief Function ID used with SystemModule in error codes
+   */
+  enum SystemFunctionID {
+    SystemCommon = 0,
+  };
+  /*! @brief Function ID used with FCModule in error codes
+   */
+  enum FCFunctionID {
+    FCControl   = 0,
+    FCSubscribe = 1,
+    FCMission   = 2,
+  };
+
+  /*! @brief Function ID used with CameraModule in error codes
+   */
+  enum CameraFunctionID {
+    CameraCommon = 0,
+  };
+
+  /*! @brief Unified error type
+   */
+  typedef int64_t ErrCodeType;
+
+  /*! @brief Releated messages about error codes
+   */
+  typedef struct ErrCodeMsg {
+    ErrCodeMsg(std::string moduleMsg,
+               std::string errorMsg,
+               std::string solutionMsg)
+        : moduleMsg(moduleMsg), errorMsg(errorMsg), solutionMsg(solutionMsg) {};
+    std::string moduleMsg;
+    std::string errorMsg;
+    std::string solutionMsg;
+  } ErrCodeMsg;
+
+  /*! @brief Map container type of errCode ID and msg
+   */
+  typedef std::map<const ErrCodeType, ErrCodeMsg> ErrCodeMapType;
+
+  /*! @brief Build error code
+   *  @param moduleID module ID used in errCode ref to
+   * DJI::OSDK::ErrorCode::ModuleID
+   *  @param functionID function ID used in errCode ref to
+   * DJI::OSDK::ErrorCode::xxxxFunctionID
+   *  @param rawRetCode raw return code from the ack data
+   *  @return Unified error type
+   */
+  static const ErrCodeType getErrorCode(ModuleIDType moduleID,
+                                        FunctionIDType functionID,
+                                        uint32_t rawRetCode);
+
+  /*! @brief Get the module ID from errCode
+   *  @param errCode Unified error type
+   *  @return Module ID ref to DJI::OSDK::ErrorCode::ModuleID
+   */
+  static ErrorCode::ModuleIDType getModuleID(ErrCodeType errCode);
+
+  /*! @brief Get the module name from errCode
+   *  @param errCode Unified error type
+   *  @return Module name
+   */
+  static std::string getModuleName(ErrCodeType errCode);
+
+  /*! @brief Get the function name from errCode
+   *  @param errCode Unified error type
+   *  @return Function name
+   */
+  static ErrorCode::FunctionIDType getFunctionID(ErrCodeType errCode);
+
+  /*! @brief Get error code messages from errCode
+   *  @param errCode Unified error type
+   *  @return Releated error code messages
+   */
+  static ErrCodeMsg getErrCodeMsg(ErrCodeType errCode);
+
+  /*! @brief Print error code messages to console
+   *  @param errCode Unified error type
+   */
+  static void printErrCodeMsg(ErrCodeType errCode);
+
+  /*! @brief camera api error code
+   */
+  class CameraCommonErr {
+   public:
+    static const ErrCodeType InvalidCMD;
+    static const ErrCodeType Timeout;
+    static const ErrCodeType OutOfMemory;
+    static const ErrCodeType InvalidParam;
+    static const ErrCodeType InvalidState;
+    static const ErrCodeType TimeNotSync;
+    static const ErrCodeType ParamSetFailed;
+    static const ErrCodeType ParamGetFailed;
+    static const ErrCodeType SDCardMISSING;
+    static const ErrCodeType SDCardFull;
+    static const ErrCodeType SDCardError;
+    static const ErrCodeType SensorError;
+    static const ErrCodeType SystemError;
+    static const ErrCodeType ParamLenTooLong;
+    static const ErrCodeType ModuleInactivated;
+    static const ErrCodeType FWSeqNumNotInOrder;
+    static const ErrCodeType FWCheckErr;
+    static const ErrCodeType FlashWriteError;
+    static const ErrCodeType FWInvalidType;
+    static const ErrCodeType RCDisconnect;
+    static const ErrCodeType HardwareErr;
+    static const ErrCodeType UAVDisconnect;
+    static const ErrCodeType UpgradeErrNow;
+    static const ErrCodeType UndefineError;
+  };
+
+  /*! @brief system releated error code
+   */
+  class SysCommonErr {
+   public:
+    static const ErrCodeType Success;
+    static const ErrCodeType AllocMemoryFailed;
+    static const ErrCodeType ReqNotSupported;
+    static const ErrCodeType ReqTimeout;
+    static const ErrCodeType UnpackDataMismatch;
+    static const ErrCodeType InstInitParamInvalid;
+  };
+
   /*!
    * @brief Common ACK Error Codes
    */
@@ -636,6 +780,18 @@ public:
     } get;
 
   }; // Class MFIO
+
+ private:
+  static const uint8_t moduleIDLeftMove = 40;
+  static const uint8_t functionIDLeftMove = 32;
+
+  /*! @brief The map container of the CameraCommonErr error code messages.
+   */
+  static const ErrCodeMapType CameraCommonErrMap;
+
+  /*! @brief The map container of the SystemCommonErr error code messages.
+   */
+  static const ErrCodeMapType SystemCommonErrMap;
 
 }; // Class ErrorCode
 

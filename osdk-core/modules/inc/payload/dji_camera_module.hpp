@@ -897,7 +897,7 @@ class CameraModule : public PayloadBase {
   /*! @brief type of callback only deal the retCode for user
    */
   typedef struct UCBRetCodeHandler {
-    void (*UserCallBack)(ErrCode::ErrCodeType errCode, UserData userData);
+    void (*UserCallBack)(ErrorCode::ErrCodeType errCode, UserData userData);
 
     UserData userData;
   } UCBRetCodeHandler;
@@ -906,7 +906,7 @@ class CameraModule : public PayloadBase {
    */
   template <typename T>
   struct UCBRetParamStruct {
-    void (*UserCallBack)(ErrCode::ErrCodeType errCode, T param,
+    void (*UserCallBack)(ErrorCode::ErrCodeType errCode, T param,
                          UserData userData);
 
     UserData userData;
@@ -935,7 +935,7 @@ class CameraModule : public PayloadBase {
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
   void startShootPhotoAsync(ShootPhotoMode mode,
-                            void (*UserCallBack)(ErrCode::ErrCodeType retCode,
+                            void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
                                                  UserData userData),
                             UserData userData);
 
@@ -946,7 +946,7 @@ class CameraModule : public PayloadBase {
    *  @param timeout blocking timeout in seconds
    *  @return OSDK unitified error code
    */
-  ErrCode::ErrCodeType startShootPhotoSync(ShootPhotoMode mode, int timeout);
+  ErrorCode::ErrCodeType startShootPhotoSync(ShootPhotoMode mode, int timeout);
 
   /*! @brief stop to shoot photo, non-blocking calls
    *
@@ -956,7 +956,7 @@ class CameraModule : public PayloadBase {
    * is called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
-  void stopShootPhotoAsync(void (*UserCallBack)(ErrCode::ErrCodeType retCode,
+  void stopShootPhotoAsync(void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
                                                 UserData userData),
                            UserData userData);
 
@@ -965,7 +965,7 @@ class CameraModule : public PayloadBase {
    *  @param timeout blocking timeout in seconds
    *  @return OSDK unitified error code
    */
-  ErrCode::ErrCodeType stopShootPhotoSync(int timeout);
+  ErrorCode::ErrCodeType stopShootPhotoSync(int timeout);
 
   /*! @brief set the shoot photo mode, non-blocking calls
    *
@@ -978,7 +978,7 @@ class CameraModule : public PayloadBase {
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
   void setShootPhotoModeAsync(ShootPhotoMode takePhotoMode,
-                              void (*UserCallBack)(ErrCode::ErrCodeType retCode,
+                              void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
                                                    UserData userData),
                               UserData userData);
 
@@ -989,7 +989,7 @@ class CameraModule : public PayloadBase {
    *  @param timeout blocking timeout in seconds
    *  @return OSDK unitified error code
    */
-  ErrCode::ErrCodeType setShootPhotoModeSync(ShootPhotoMode takePhotoMode,
+  ErrorCode::ErrCodeType setShootPhotoModeSync(ShootPhotoMode takePhotoMode,
                                              int timeout);
 
   /*! @brief get the shoot photo mode, non-blocking calls
@@ -1002,7 +1002,7 @@ class CameraModule : public PayloadBase {
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
-  void getShootPhotoModeAsync(void (*UserCallBack)(ErrCode::ErrCodeType retCode,
+  void getShootPhotoModeAsync(void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
                                                    ShootPhotoMode takePhotoMode,
                                                    UserData userData),
                               UserData userData);
@@ -1014,7 +1014,7 @@ class CameraModule : public PayloadBase {
    *  @param timeout blocking timeout in seconds
    *  @return OSDK unitified error code
    */
-  ErrCode::ErrCodeType getShootPhotoModeSync(ShootPhotoMode& takePhotoMode,
+  ErrorCode::ErrCodeType getShootPhotoModeSync(ShootPhotoMode& takePhotoMode,
                                              int timeout);
 
   /*! @brief set the burst count in the Burst take-photo mode, non-blocking
@@ -1030,7 +1030,7 @@ class CameraModule : public PayloadBase {
    */
   void setPhotoBurstCountAsync(
       PhotoBurstCount count,
-      void (*UserCallBack)(ErrCode::ErrCodeType retCode, UserData userData),
+      void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
       UserData userData);
 
   /*! @brief set the burst count in the Burst take-photo mode, blocking calls
@@ -1040,7 +1040,7 @@ class CameraModule : public PayloadBase {
    *  @param timeout blocking timeout in seconds
    *  @return OSDK unitified error code
    */
-  ErrCode::ErrCodeType setPhotoBurstCountSync(PhotoBurstCount count,
+  ErrorCode::ErrCodeType setPhotoBurstCountSync(PhotoBurstCount count,
                                               int timeout);
 
   /*! get the burst count in the Burst take-photo mode, non-blocking calls
@@ -1054,7 +1054,7 @@ class CameraModule : public PayloadBase {
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
   void getPhotoBurstCountAsync(
-      void (*UserCallBack)(ErrCode::ErrCodeType retCode, PhotoBurstCount count,
+      void (*UserCallBack)(ErrorCode::ErrCodeType retCode, PhotoBurstCount count,
                            UserData userData),
       UserData userData);
 
@@ -1065,7 +1065,7 @@ class CameraModule : public PayloadBase {
    *  @param timeout blocking timeout in seconds
    *  @return OSDK unitified error code
    */
-  ErrCode::ErrCodeType getPhotoBurstCountSync(PhotoBurstCount& count,
+  ErrorCode::ErrCodeType getPhotoBurstCountSync(PhotoBurstCount& count,
                                               int timeout);
 
   /*! @brief set the burst count in the AEB take-photo mode, non-blocking calls
@@ -1079,7 +1079,7 @@ class CameraModule : public PayloadBase {
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
   void setPhotoAEBCountAsync(PhotoAEBCount count,
-                             void (*UserCallBack)(ErrCode::ErrCodeType retCode,
+                             void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
                                                   UserData userData),
                              UserData userData);
 
@@ -1090,7 +1090,7 @@ class CameraModule : public PayloadBase {
    *  @param timeout blocking timeout in seconds
    *  @return OSDK unitified error code
    */
-  ErrCode::ErrCodeType setPhotoAEBCountSync(PhotoAEBCount count, int timeout);
+  ErrorCode::ErrCodeType setPhotoAEBCountSync(PhotoAEBCount count, int timeout);
 
   /*! get the burst count in the AEB take-photo mode, non-blocking calls
    *
@@ -1102,7 +1102,7 @@ class CameraModule : public PayloadBase {
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
-  void getPhotoAEBCountAsync(void (*UserCallBack)(ErrCode::ErrCodeType retCode,
+  void getPhotoAEBCountAsync(void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
                                                   PhotoAEBCount count,
                                                   UserData userData),
                              UserData userData);
@@ -1114,7 +1114,7 @@ class CameraModule : public PayloadBase {
    *  @param timeout blocking timeout in seconds
    *  @return OSDK unitified error code
    */
-  ErrCode::ErrCodeType getPhotoAEBCountSync(PhotoAEBCount& count, int timeout);
+  ErrorCode::ErrCodeType getPhotoAEBCountSync(PhotoAEBCount& count, int timeout);
 
   /*! @brief set the parameters in the INTERVAL take-photo mode, non-blocking
    * calls
@@ -1129,7 +1129,7 @@ class CameraModule : public PayloadBase {
    */
   void setPhotoTimeIntervalSettingsAsync(
       PhotoIntervalData intervalSetting,
-      void (*UserCallBack)(ErrCode::ErrCodeType retCode, UserData userData),
+      void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
       UserData userData);
 
   /*! @brief set the parameters in the INTERVAL take-photo mode, blocking calls
@@ -1139,7 +1139,7 @@ class CameraModule : public PayloadBase {
    *  @param timeout blocking timeout in seconds
    *  @return OSDK unitified error code
    */
-  ErrCode::ErrCodeType setPhotoTimeIntervalSettingsSync(
+  ErrorCode::ErrCodeType setPhotoTimeIntervalSettingsSync(
       PhotoIntervalData intervalSetting, int timeout);
 
   /*! @brief get the parameters in the INTERVAL take-photo mode, non-blocking
@@ -1154,7 +1154,7 @@ class CameraModule : public PayloadBase {
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
   void getPhotoIntervalDatasAsync(
-      void (*UserCallBack)(ErrCode::ErrCodeType retCode,
+      void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
                            PhotoIntervalData intervalSetting,
                            UserData userData),
       UserData userData);
@@ -1166,7 +1166,7 @@ class CameraModule : public PayloadBase {
    *  @param timeout blocking timeout in seconds
    *  @return OSDK unitified error code
    */
-  ErrCode::ErrCodeType getPhotoIntervalDatasSync(
+  ErrorCode::ErrCodeType getPhotoIntervalDatasSync(
       PhotoIntervalData& intervalSetting, int timeout);
 
   /*! @brief start to take video, non-blocking calls
@@ -1177,7 +1177,7 @@ class CameraModule : public PayloadBase {
    * is called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
-  void startRecordVideoAsync(void (*UserCallBack)(ErrCode::ErrCodeType retCode,
+  void startRecordVideoAsync(void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
                                                   UserData userData),
                              UserData userData);
 
@@ -1186,7 +1186,7 @@ class CameraModule : public PayloadBase {
    *  @param timeout blocking timeout in seconds
    *  @return OSDK unitified error code
    */
-  ErrCode::ErrCodeType startRecordVideoSync(int timeout);
+  ErrorCode::ErrCodeType startRecordVideoSync(int timeout);
 
   /*! @brief stop to take video, non-blocking calls
    *
@@ -1196,7 +1196,7 @@ class CameraModule : public PayloadBase {
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
-  void stopRecordVideoAsync(void (*UserCallBack)(ErrCode::ErrCodeType retCode,
+  void stopRecordVideoAsync(void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
                                                  UserData userData),
                             UserData userData);
 
@@ -1205,7 +1205,7 @@ class CameraModule : public PayloadBase {
    *  @param timeout blocking timeout in seconds
    *  @return OSDK unitified error code
    */
-  ErrCode::ErrCodeType stopRecordVideoSync(int timeout);
+  ErrorCode::ErrCodeType stopRecordVideoSync(int timeout);
 
   /*! @brief set camera working mode, non-blocking calls
    *
@@ -1218,7 +1218,7 @@ class CameraModule : public PayloadBase {
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
   void setModeAsync(WorkMode mode,
-                    void (*UserCallBack)(ErrCode::ErrCodeType retCode,
+                    void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
                                          UserData userData),
                     UserData userData);
 
@@ -1229,7 +1229,7 @@ class CameraModule : public PayloadBase {
    *  @param timeout blocking timeout in seconds
    *  @return OSDK unitified error code
    */
-  ErrCode::ErrCodeType setModeSync(WorkMode mode, int timeout);
+  ErrorCode::ErrCodeType setModeSync(WorkMode mode, int timeout);
 
   /*! @brief get camera working mode, non-blocking calls
    *
@@ -1240,7 +1240,7 @@ class CameraModule : public PayloadBase {
    *  @arg @b userData in when the callback is called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
-  void getModeAsync(void (*UserCallBack)(ErrCode::ErrCodeType retCode,
+  void getModeAsync(void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
                                          WorkMode workingMode,
                                          UserData userData),
                     UserData userData);
@@ -1252,7 +1252,7 @@ class CameraModule : public PayloadBase {
    *  @param timeout blocking timeout in seconds
    *  @return OSDK unitified error code
    */
-  ErrCode::ErrCodeType getModeSync(WorkMode& workingMode, int timeout);
+  ErrorCode::ErrCodeType getModeSync(WorkMode& workingMode, int timeout);
 
   /*! @brief set camera focus mode, non-blocking calls
    *
@@ -1265,7 +1265,7 @@ class CameraModule : public PayloadBase {
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
   void setFocusModeAsync(FocusMode mode,
-                         void (*UserCallBack)(ErrCode::ErrCodeType retCode,
+                         void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
                                               UserData userData),
                          UserData userData);
 
@@ -1276,7 +1276,7 @@ class CameraModule : public PayloadBase {
    *  @param timeout blocking timeout in seconds
    *  @return OSDK unitified error code
    */
-  ErrCode::ErrCodeType setFocusModeSync(FocusMode mode, int timeout);
+  ErrorCode::ErrCodeType setFocusModeSync(FocusMode mode, int timeout);
 
   /*! @brief get camera focus mode, non-blocking calls
    *
@@ -1287,7 +1287,7 @@ class CameraModule : public PayloadBase {
    * in when the callback is called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
-  void getFocusModeAsync(void (*UserCallBack)(ErrCode::ErrCodeType retCode,
+  void getFocusModeAsync(void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
                                               FocusMode mode,
                                               UserData userData),
                          UserData userData);
@@ -1299,7 +1299,7 @@ class CameraModule : public PayloadBase {
    *  @param timeout blocking timeout in seconds
    *  @return OSDK unitified error code
    */
-  ErrCode::ErrCodeType getFocusModeSync(FocusMode& focusMode, int timeout);
+  ErrorCode::ErrCodeType getFocusModeSync(FocusMode& focusMode, int timeout);
 
   /*! @brief set camera tap focus target point, non-blocking calls
    *
@@ -1311,7 +1311,7 @@ class CameraModule : public PayloadBase {
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
   void setFocusTargetAsync(TapFocusPosData tapFocusPos,
-                           void (*UserCallBack)(ErrCode::ErrCodeType retCode,
+                           void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
                                                 UserData userData),
                            UserData userData);
 
@@ -1321,7 +1321,7 @@ class CameraModule : public PayloadBase {
    *  @param timeout blocking timeout in seconds
    *  @return OSDK unitified error code
    */
-  ErrCode::ErrCodeType setFocusTargetSync(TapFocusPosData tapFocusPos,
+  ErrorCode::ErrCodeType setFocusTargetSync(TapFocusPosData tapFocusPos,
                                           int timeout);
 
   /*! @brief get camera tap focus target point, non-blocking calls
@@ -1333,7 +1333,7 @@ class CameraModule : public PayloadBase {
    * callback is called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
-  void getFocusTargetAsync(void (*UserCallBack)(ErrCode::ErrCodeType,
+  void getFocusTargetAsync(void (*UserCallBack)(ErrorCode::ErrCodeType,
                                                 TapFocusPosData tapFocusPos,
                                                 UserData userData),
                            UserData userData);
@@ -1345,7 +1345,7 @@ class CameraModule : public PayloadBase {
    *  @param timeout blocking timeout in seconds
    *  @return OSDK unitified error code
    */
-  ErrCode::ErrCodeType getFocusTargetSync(TapFocusPosData& tapFocusPos,
+  ErrorCode::ErrCodeType getFocusTargetSync(TapFocusPosData& tapFocusPos,
                                           int timeout);
 
   /*! @brief start camera optical zooming, non-blocking calls
@@ -1362,7 +1362,7 @@ class CameraModule : public PayloadBase {
    */
   void startContinuousOpticalZoomAsync(
       zoomDirectionData zoomDirection, zoomSpeedData zoomSpeed,
-      void (*UserCallBack)(ErrCode::ErrCodeType retCode, UserData userData),
+      void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
       UserData userData);
 
   /*! @brief start camera optical zooming, blocking calls
@@ -1374,7 +1374,7 @@ class CameraModule : public PayloadBase {
    *  @param timeout blocking timeout in seconds
    *  @return OSDK unitified error code
    */
-  ErrCode::ErrCodeType startContinuousOpticalZoomSync(
+  ErrorCode::ErrCodeType startContinuousOpticalZoomSync(
       zoomDirectionData zoomDirection, zoomSpeedData zoomSpeed, int timeout);
 
   /*! @brief stop camera optical zooming, non-blocking calls
@@ -1386,7 +1386,7 @@ class CameraModule : public PayloadBase {
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
   void stopContinuousOpticalZoomAsync(
-      void (*UserCallBack)(ErrCode::ErrCodeType retCode, UserData userData),
+      void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
       UserData userData);
 
   /*! @brief stop camera optical zooming, blocking calls
@@ -1394,7 +1394,7 @@ class CameraModule : public PayloadBase {
    *  @param timeout blocking timeout in seconds
    *  @return OSDK unitified error code
    */
-  ErrCode::ErrCodeType stopContinuousOpticalZoomSync(int timeout);
+  ErrorCode::ErrCodeType stopContinuousOpticalZoomSync(int timeout);
 
   /*! @brief set camera tap zoom function parameters, non-blocking calls
    *
@@ -1408,7 +1408,7 @@ class CameraModule : public PayloadBase {
    * API
    */
   void setTapZoomEnabledAsync(bool param,
-                              void (*UserCallBack)(ErrCode::ErrCodeType retCode,
+                              void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
                                                    UserData userData),
                               UserData userData);
 
@@ -1419,7 +1419,7 @@ class CameraModule : public PayloadBase {
    *  @details It should be paid attention that, tap zoom have not getter API
    *  @return OSDK unitified error code
    */
-  ErrCode::ErrCodeType setTapZoomEnabledSync(bool param, int timeout);
+  ErrorCode::ErrCodeType setTapZoomEnabledSync(bool param, int timeout);
 
   /*! @brief get camera tap zoom function parameters, non-blocking calls
    *
@@ -1430,7 +1430,7 @@ class CameraModule : public PayloadBase {
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
-  void getTapZoomEnabledAsync(void (*UserCallBack)(ErrCode::ErrCodeType retCode,
+  void getTapZoomEnabledAsync(void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
                                                    bool param,
                                                    UserData userData),
                               UserData userData);
@@ -1441,7 +1441,7 @@ class CameraModule : public PayloadBase {
    *  @param timeout blocking timeout in seconds
    *  @return OSDK unitified error code
    */
-  ErrCode::ErrCodeType getTapZoomEnabledSync(bool& param, int timeout);
+  ErrorCode::ErrCodeType getTapZoomEnabledSync(bool& param, int timeout);
 
   /*! @brief set camera tap zoom function parameters, non-blocking calls
    *
@@ -1455,7 +1455,7 @@ class CameraModule : public PayloadBase {
    */
   void setTapZoomMultiplierAsync(
       TapZoomMultiplierData param,
-      void (*UserCallBack)(ErrCode::ErrCodeType retCode, UserData userData),
+      void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
       UserData userData);
 
   /*! @brief set camera tap zoom parameters, blocking calls
@@ -1465,7 +1465,7 @@ class CameraModule : public PayloadBase {
    *  @details It should be paid attention that, tap zoom have not getter API
    *  @return OSDK unitified error code
    */
-  ErrCode::ErrCodeType setTapZoomMultiplierSync(TapZoomMultiplierData param,
+  ErrorCode::ErrCodeType setTapZoomMultiplierSync(TapZoomMultiplierData param,
                                                 int timeout);
 
   /*! @brief get camera tap zoom function parameters, non-blocking calls
@@ -1478,7 +1478,7 @@ class CameraModule : public PayloadBase {
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
   void getTapZoomMultiplierAsync(
-      void (*UserCallBack)(ErrCode::ErrCodeType retCode,
+      void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
                            TapZoomMultiplierData param, UserData userData),
       UserData userData);
 
@@ -1488,7 +1488,7 @@ class CameraModule : public PayloadBase {
    *  @param timeout blocking timeout in seconds
    *  @return OSDK unitified error code
    */
-  ErrCode::ErrCodeType getTapZoomMultiplierSync(TapZoomMultiplierData& param,
+  ErrorCode::ErrCodeType getTapZoomMultiplierSync(TapZoomMultiplierData& param,
                                                 int timeout);
 
   /*! @brief set camera tap zoom point, non-blocking calls
@@ -1501,7 +1501,7 @@ class CameraModule : public PayloadBase {
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
   void tapZoomAtTargetAsync(TapZoomPosData tapZoomPos,
-                            void (*UserCallBack)(ErrCode::ErrCodeType retCode,
+                            void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
                                                  UserData userData),
                             UserData userData);
 
@@ -1511,7 +1511,7 @@ class CameraModule : public PayloadBase {
    *  @param timeout blocking timeout in seconds
    *  @return OSDK unitified error code
    */
-  ErrCode::ErrCodeType tapZoomAtTargetSync(TapZoomPosData tapZoomPos,
+  ErrorCode::ErrCodeType tapZoomAtTargetSync(TapZoomPosData tapZoomPos,
                                            int timeout);
 
   /*! @brief set camera exposure mode, non-blocking calls
@@ -1537,7 +1537,7 @@ class CameraModule : public PayloadBase {
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
   void setExposureModeAsync(ExposureMode mode,
-                            void (*UserCallBack)(ErrCode::ErrCodeType retCode,
+                            void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
                                                  UserData userData),
                             UserData userData);
 
@@ -1548,7 +1548,7 @@ class CameraModule : public PayloadBase {
    *  @param timeout blocking timeout in seconds
    *  @return OSDK unitified error code
    */
-  ErrCode::ErrCodeType setExposureModeSync(ExposureMode mode, int timeout);
+  ErrorCode::ErrCodeType setExposureModeSync(ExposureMode mode, int timeout);
 
   /*! @brief get camera exposure mode, non-blocking calls
    *
@@ -1571,7 +1571,7 @@ class CameraModule : public PayloadBase {
    *  @arg @b userData in when the callback is called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
-  void getExposureModeAsync(void (*UserCallBack)(ErrCode::ErrCodeType retCode,
+  void getExposureModeAsync(void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
                                                  ExposureMode mode,
                                                  UserData userData),
                             UserData userData);
@@ -1583,7 +1583,7 @@ class CameraModule : public PayloadBase {
    *  @param timeout blocking timeout in seconds
    *  @return OSDK unitified error code
    */
-  ErrCode::ErrCodeType getExposureModeSync(ExposureMode& mode, int timeout);
+  ErrorCode::ErrCodeType getExposureModeSync(ExposureMode& mode, int timeout);
 
   /*! @brief set camera iso value, non-blocking calls
    *
@@ -1596,7 +1596,7 @@ class CameraModule : public PayloadBase {
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
   void setISOAsync(ISO iso,
-                   void (*UserCallBack)(ErrCode::ErrCodeType retCode,
+                   void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
                                         UserData userData),
                    UserData userData);
 
@@ -1607,7 +1607,7 @@ class CameraModule : public PayloadBase {
    *  @param timeout blocking timeout in seconds
    *  @return OSDK unitified error code
    */
-  ErrCode::ErrCodeType setISOSync(ISO iso, int timeout);
+  ErrorCode::ErrCodeType setISOSync(ISO iso, int timeout);
 
   /*! @brief get camera iso value, non-blocking calls
    *
@@ -1618,7 +1618,7 @@ class CameraModule : public PayloadBase {
    *  @arg @b userData in when the callback is called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
-  void getISOAsync(void (*UserCallBack)(ErrCode::ErrCodeType, ISO iso,
+  void getISOAsync(void (*UserCallBack)(ErrorCode::ErrCodeType, ISO iso,
                                         UserData userData),
                    UserData userData);
 
@@ -1629,7 +1629,7 @@ class CameraModule : public PayloadBase {
    *  @param timeout blocking timeout in seconds
    *  @return OSDK unitified error code
    */
-  ErrCode::ErrCodeType getISOSync(ISO& iso, int timeout);
+  ErrorCode::ErrCodeType getISOSync(ISO& iso, int timeout);
 
   /*! @brief set camera aperture size value, non-blocking calls
    *
@@ -1642,7 +1642,7 @@ class CameraModule : public PayloadBase {
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
   void setApertureAsync(Aperture size,
-                        void (*UserCallBack)(ErrCode::ErrCodeType retCode,
+                        void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
                                              UserData userData),
                         UserData userData);
 
@@ -1653,7 +1653,7 @@ class CameraModule : public PayloadBase {
    *  @param timeout blocking timeout in seconds
    *  @return OSDK unitified error code
    */
-  ErrCode::ErrCodeType setApertureSync(Aperture size, int timeout);
+  ErrorCode::ErrCodeType setApertureSync(Aperture size, int timeout);
 
   /*! @brief get camera aperture size value, non-blocking calls
    *
@@ -1665,7 +1665,7 @@ class CameraModule : public PayloadBase {
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
-  void getApertureAsync(void (*UserCallBack)(ErrCode::ErrCodeType,
+  void getApertureAsync(void (*UserCallBack)(ErrorCode::ErrCodeType,
                                              Aperture size, UserData userData),
                         UserData userData);
 
@@ -1676,7 +1676,7 @@ class CameraModule : public PayloadBase {
    *  @param timeout blocking timeout in seconds
    *  @return OSDK unitified error code
    */
-  ErrCode::ErrCodeType getApertureSync(Aperture& size, int timeout);
+  ErrorCode::ErrCodeType getApertureSync(Aperture& size, int timeout);
 
   /*! @brief set camera shutter value, non-blocking calls
    *
@@ -1689,7 +1689,7 @@ class CameraModule : public PayloadBase {
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
   void setShutterSpeedAsync(ShutterSpeed shutterSpeed,
-                            void (*UserCallBack)(ErrCode::ErrCodeType retCode,
+                            void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
                                                  UserData userData),
                             UserData userData);
 
@@ -1700,7 +1700,7 @@ class CameraModule : public PayloadBase {
    *  @param timeout blocking timeout in seconds
    *  @return OSDK unitified error code
    */
-  ErrCode::ErrCodeType setShutterSpeedSync(ShutterSpeed shutterSpeed,
+  ErrorCode::ErrCodeType setShutterSpeedSync(ShutterSpeed shutterSpeed,
                                            int timeout);
 
   /*! @brief get camera shutter value, non-blocking calls
@@ -1712,7 +1712,7 @@ class CameraModule : public PayloadBase {
    * the interface to trans userData in when the callback is called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
-  void getShutterSpeedAsync(void (*UserCallBack)(ErrCode::ErrCodeType retCode,
+  void getShutterSpeedAsync(void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
                                                  ShutterSpeed shutterSpeed,
                                                  UserData userData),
                             UserData userData);
@@ -1724,7 +1724,7 @@ class CameraModule : public PayloadBase {
    *  @param timeout blocking timeout in seconds
    *  @return OSDK unitified error code
    */
-  ErrCode::ErrCodeType getShutterSpeedSync(ShutterSpeed& shutterSpeed,
+  ErrorCode::ErrCodeType getShutterSpeedSync(ShutterSpeed& shutterSpeed,
                                            int timeout);
 
   /*! @brief set camera EV value, non-blocking calls
@@ -1739,7 +1739,7 @@ class CameraModule : public PayloadBase {
    */
   void setExposureCompensationAsync(
       ExposureCompensation ev,
-      void (*UserCallBack)(ErrCode::ErrCodeType retCode, UserData userData),
+      void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
       UserData userData);
 
   /*! @brief set camera EV value, blocking calls
@@ -1749,7 +1749,7 @@ class CameraModule : public PayloadBase {
    *  @param timeout blocking timeout in seconds
    *  @return OSDK unitified error code
    */
-  ErrCode::ErrCodeType setExposureCompensationSync(ExposureCompensation ev,
+  ErrorCode::ErrCodeType setExposureCompensationSync(ExposureCompensation ev,
                                                    int timeout);
 
   /*! @brief get camera EV value, non-blocking calls
@@ -1762,7 +1762,7 @@ class CameraModule : public PayloadBase {
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
   void getExposureCompensationAsync(
-      void (*UserCallBack)(ErrCode::ErrCodeType retCode,
+      void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
                            ExposureCompensation ev, UserData userData),
       UserData userData);
 
@@ -1773,7 +1773,7 @@ class CameraModule : public PayloadBase {
    *  @param timeout blocking timeout in seconds
    *  @return OSDK unitified error code
    */
-  ErrCode::ErrCodeType getExposureCompensationSync(ExposureCompensation& ev,
+  ErrorCode::ErrCodeType getExposureCompensationSync(ExposureCompensation& ev,
                                                    int timeout);
 
  private:
@@ -1940,19 +1940,19 @@ class CameraModule : public PayloadBase {
       Vehicle* vehicle, RecvContainer recvFrame,
       UCBRetParamHandler<PhotoIntervalData>* ucb);
 
-  static void callbackToSetTapZoomMultiplier(ErrCode::ErrCodeType retCode,
+  static void callbackToSetTapZoomMultiplier(ErrorCode::ErrCodeType retCode,
                                              bool enable, UserData userData);
-  static void callbackToSetTapZoomEnabled(ErrCode::ErrCodeType retCode,
+  static void callbackToSetTapZoomEnabled(ErrorCode::ErrCodeType retCode,
                                           TapZoomMultiplierData multiplier,
                                           UserData userData);
-  static void callbackToSetShootPhotoMode(ErrCode::ErrCodeType retCode,
+  static void callbackToSetShootPhotoMode(ErrorCode::ErrCodeType retCode,
                                           CaptureParamData captureParam,
                                           UserData userData);
-  static void callbackToSetPhotoBurstCount(ErrCode::ErrCodeType retCode,
+  static void callbackToSetPhotoBurstCount(ErrorCode::ErrCodeType retCode,
                                            CaptureParamData captureParam,
                                            UserData userData);
   static void callbackToSetPhotoTimeIntervalSettings(
-      ErrCode::ErrCodeType retCode, CaptureParamData captureParam,
+      ErrorCode::ErrCodeType retCode, CaptureParamData captureParam,
       UserData userData);
 
   /*
@@ -1979,7 +1979,7 @@ class CameraModule : public PayloadBase {
   UCBRetCodeHandler* allocUCBHandler(void* callback, UserData userData);
 
   template <typename AckT>
-  static ErrCode::ErrCodeType commonDataUnpacker(RecvContainer recvFrame,
+  static ErrorCode::ErrCodeType commonDataUnpacker(RecvContainer recvFrame,
                                                  AckT& ack);
 
   template <typename DataT>
@@ -1987,32 +1987,32 @@ class CameraModule : public PayloadBase {
       FuncParam req,
       void (*ackDecoderCB)(Vehicle* vehicle, RecvContainer recvFrame,
                            UCBRetParamHandler<DataT>* ucb),
-      void (*userCB)(ErrCode::ErrCodeType, DataT data, UserData userData),
+      void (*userCB)(ErrorCode::ErrCodeType, DataT data, UserData userData),
       UserData userData, int timeout = 500, int retry_time = 2);
 
   template <typename AckT>
-  ErrCode::ErrCodeType getInterfaceSync(FuncParam req, AckT& ack, int timeout);
+  ErrorCode::ErrCodeType getInterfaceSync(FuncParam req, AckT& ack, int timeout);
 
   template <typename ReqT>
   void setInterfaceAsync(
       ReqT req,
       void (*ackDecoderCB)(Vehicle* vehicle, RecvContainer recvFrame,
                            UCBRetCodeHandler* ucb),
-      void (*userCB)(ErrCode::ErrCodeType, UserData userData),
+      void (*userCB)(ErrorCode::ErrCodeType, UserData userData),
       UserData userData, int timeout = 500, int retry_time = 2);
 
   template <typename ReqT>
-  ErrCode::ErrCodeType setInterfaceSync(ReqT req, int timeout);
+  ErrorCode::ErrCodeType setInterfaceSync(ReqT req, int timeout);
 
   template <typename ReqT>
   void actionInterfaceAsync(
       ReqT req,
       void (*ackDecoderCB)(Vehicle* vehicle, RecvContainer recvFrame,
                            UCBRetCodeHandler* ucb),
-      void (*userCB)(ErrCode::ErrCodeType, UserData userData),
+      void (*userCB)(ErrorCode::ErrCodeType, UserData userData),
       UserData userData, int timeout = 500, int retry_time = 2);
   template <typename ReqT>
-  ErrCode::ErrCodeType actionInterfaceSync(ReqT req, int timeout);
+  ErrorCode::ErrCodeType actionInterfaceSync(ReqT req, int timeout);
 
  private:
   PayloadLink* payloadLink;
@@ -2029,11 +2029,11 @@ class CameraModule : public PayloadBase {
                                                          int decimal_part);
 
   void getCaptureParamDataAsync(
-      void (*UserCallBack)(ErrCode::ErrCodeType retCode,
+      void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
                            CaptureParamData captureParam, UserData userData),
       UserData userData);
 
-  ErrCode::ErrCodeType getCaptureParamDataSync(CaptureParamData& captureParam,
+  ErrorCode::ErrCodeType getCaptureParamDataSync(CaptureParamData& captureParam,
                                                int timeout);
 
 }; /* CameraModule camera */

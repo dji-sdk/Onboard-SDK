@@ -67,7 +67,7 @@ CameraModule* CameraManager::getCameraModule(std::string name) {
   return NULL;
 }
 
-ErrCode::ErrCodeType CameraManager::initCameraModule(PayloadIndexType index,
+ErrorCode::ErrCodeType CameraManager::initCameraModule(PayloadIndexType index,
                                                      const char* name) {
   /* @TODO lock protest CameraModule */
   CameraModule* cameraMgr = getCameraModule(index);
@@ -75,21 +75,21 @@ ErrCode::ErrCodeType CameraManager::initCameraModule(PayloadIndexType index,
     cameraMgr->setName(name);
     cameraMgr->setEnable(true);
 
-    return ErrCode::SysCommonErr::Success;
+    return ErrorCode::SysCommonErr::Success;
   } else {
-    return ErrCode::SysCommonErr::ReqHandlerNotFound;
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
 
-ErrCode::ErrCodeType CameraManager::deinitCameraModule(PayloadIndexType index) {
+ErrorCode::ErrCodeType CameraManager::deinitCameraModule(PayloadIndexType index) {
   /* @TODO lock protest cameraMgr */
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     cameraMgr->setName(defaultCameraName);
     cameraMgr->setEnable(false);
-    return ErrCode::SysCommonErr::Success;
+    return ErrorCode::SysCommonErr::Success;
   } else {
-    return ErrCode::SysCommonErr::ReqHandlerNotFound;
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
 
@@ -100,88 +100,88 @@ void CameraManager::deinitAllCameraModule() {
   }
 }
 
-ErrCode::ErrCodeType CameraManager::getCameraModuleName(PayloadIndexType index,
+ErrorCode::ErrCodeType CameraManager::getCameraModuleName(PayloadIndexType index,
                                                         std::string& name) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     name = cameraMgr->getName();
-    return ErrCode::SysCommonErr::Success;
+    return ErrorCode::SysCommonErr::Success;
   } else {
-    return ErrCode::SysCommonErr::ReqHandlerNotFound;
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
 
-ErrCode::ErrCodeType CameraManager::getCameraModuleIndex(const char* name,
+ErrorCode::ErrCodeType CameraManager::getCameraModuleIndex(const char* name,
                                                          uint8_t& index) {
   CameraModule* cameraMgr = getCameraModule(name);
   if (cameraMgr) {
     index = cameraMgr->getIndex();
-    return ErrCode::SysCommonErr::Success;
+    return ErrorCode::SysCommonErr::Success;
   } else {
-    return ErrCode::SysCommonErr::ReqHandlerNotFound;
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
 
-ErrCode::ErrCodeType CameraManager::getCameraModuleEnable(
+ErrorCode::ErrCodeType CameraManager::getCameraModuleEnable(
     PayloadIndexType index, bool& enable) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     enable = cameraMgr->getEnable();
-    return ErrCode::SysCommonErr::Success;
+    return ErrorCode::SysCommonErr::Success;
   } else {
-    return ErrCode::SysCommonErr::ReqHandlerNotFound;
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
 
 void CameraManager::startShootPhotoAsync(
     PayloadIndexType index, CameraModule::ShootPhotoMode mode,
-    void (*UserCallBack)(ErrCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     cameraMgr->startShootPhotoAsync(mode, UserCallBack, userData);
   } else {
     if (UserCallBack)
-      UserCallBack(ErrCode::SysCommonErr::ReqHandlerNotFound, userData);
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
   }
 }
 
-ErrCode::ErrCodeType CameraManager::startShootPhotoSync(
+ErrorCode::ErrCodeType CameraManager::startShootPhotoSync(
     PayloadIndexType index, CameraModule::ShootPhotoMode mode, int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     return cameraMgr->startShootPhotoSync(mode, timeout);
   } else {
-    return ErrCode::SysCommonErr::ReqHandlerNotFound;
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
 
 void CameraManager::setISOAsync(
     PayloadIndexType index, CameraModule::ISO iso,
-    void (*UserCallBack)(ErrCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     cameraMgr->setISOAsync(iso, UserCallBack, userData);
   } else {
     if (UserCallBack)
-      UserCallBack(ErrCode::SysCommonErr::ReqHandlerNotFound, userData);
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
   }
 }
 
-ErrCode::ErrCodeType CameraManager::setISOSync(PayloadIndexType index,
+ErrorCode::ErrCodeType CameraManager::setISOSync(PayloadIndexType index,
                                                CameraModule::ISO iso,
                                                int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     return cameraMgr->setISOSync(iso, timeout);
   } else {
-    return ErrCode::SysCommonErr::ReqHandlerNotFound;
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
 
 void CameraManager::getISOAsync(PayloadIndexType index,
-                                void (*UserCallBack)(ErrCode::ErrCodeType,
+                                void (*UserCallBack)(ErrorCode::ErrCodeType,
                                                      CameraModule::ISO iso,
                                                      UserData userData),
                                 UserData userData) {
@@ -190,72 +190,72 @@ void CameraManager::getISOAsync(PayloadIndexType index,
     cameraMgr->getISOAsync(UserCallBack, userData);
   } else {
     if (UserCallBack)
-      UserCallBack(ErrCode::SysCommonErr::ReqHandlerNotFound,
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed,
                    CameraModule::ISO::ISO_UNKNOWN, userData);
   }
 }
 
-ErrCode::ErrCodeType CameraManager::getISOSync(PayloadIndexType index,
+ErrorCode::ErrCodeType CameraManager::getISOSync(PayloadIndexType index,
                                                CameraModule::ISO& iso,
                                                int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     return cameraMgr->getISOSync(iso, timeout);
   } else {
-    return ErrCode::SysCommonErr::ReqHandlerNotFound;
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
 
 void CameraManager::stopShootPhotoAsync(
     PayloadIndexType index,
-    void (*UserCallBack)(ErrCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     cameraMgr->stopShootPhotoAsync(UserCallBack, userData);
   } else {
     if (UserCallBack)
-      UserCallBack(ErrCode::SysCommonErr::ReqHandlerNotFound, userData);
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
   }
 }
 
-ErrCode::ErrCodeType CameraManager::stopShootPhotoSync(PayloadIndexType index,
+ErrorCode::ErrCodeType CameraManager::stopShootPhotoSync(PayloadIndexType index,
                                                        int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     return cameraMgr->stopShootPhotoSync(timeout);
   } else {
-    return ErrCode::SysCommonErr::ReqHandlerNotFound;
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
 
 void CameraManager::setShootPhotoModeAsync(
     PayloadIndexType index, CameraModule::ShootPhotoMode takePhotoMode,
-    void (*UserCallBack)(ErrCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     cameraMgr->setShootPhotoModeAsync(takePhotoMode, UserCallBack, userData);
   } else {
     if (UserCallBack)
-      UserCallBack(ErrCode::SysCommonErr::ReqHandlerNotFound, userData);
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
   }
 }
 
-ErrCode::ErrCodeType CameraManager::setShootPhotoModeSync(
+ErrorCode::ErrCodeType CameraManager::setShootPhotoModeSync(
     PayloadIndexType index, CameraModule::ShootPhotoMode takePhotoMode,
     int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     return cameraMgr->setShootPhotoModeSync(takePhotoMode, timeout);
   } else {
-    return ErrCode::SysCommonErr::ReqHandlerNotFound;
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
 
 void CameraManager::getShootPhotoModeAsync(
     PayloadIndexType index,
-    void (*UserCallBack)(ErrCode::ErrCodeType retCode,
+    void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
                          CameraModule::ShootPhotoMode takePhotoMode,
                          UserData userData),
     UserData userData) {
@@ -264,49 +264,49 @@ void CameraManager::getShootPhotoModeAsync(
     cameraMgr->getShootPhotoModeAsync(UserCallBack, userData);
   } else {
     if (UserCallBack)
-      UserCallBack(ErrCode::SysCommonErr::ReqHandlerNotFound,
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed,
                    CameraModule::ShootPhotoMode::SHOOT_PHOTO_MODE_UNKNOWN,
                    userData);
   }
 }
 
-ErrCode::ErrCodeType CameraManager::getShootPhotoModeSync(
+ErrorCode::ErrCodeType CameraManager::getShootPhotoModeSync(
     PayloadIndexType index, CameraModule::ShootPhotoMode& takePhotoMode,
     int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     return cameraMgr->getShootPhotoModeSync(takePhotoMode, timeout);
   } else {
-    return ErrCode::SysCommonErr::ReqHandlerNotFound;
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
 
 void CameraManager::setPhotoBurstCountAsync(
     PayloadIndexType index, CameraModule::PhotoBurstCount count,
-    void (*UserCallBack)(ErrCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     cameraMgr->setPhotoBurstCountAsync(count, UserCallBack, userData);
   } else {
     if (UserCallBack)
-      UserCallBack(ErrCode::SysCommonErr::ReqHandlerNotFound, userData);
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
   }
 }
 
-ErrCode::ErrCodeType CameraManager::setPhotoBurstCountSync(
+ErrorCode::ErrCodeType CameraManager::setPhotoBurstCountSync(
     PayloadIndexType index, CameraModule::PhotoBurstCount count, int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     return cameraMgr->setPhotoBurstCountSync(count, timeout);
   } else {
-    return ErrCode::SysCommonErr::ReqHandlerNotFound;
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
 
 void CameraManager::getPhotoBurstCountAsync(
     PayloadIndexType index,
-    void (*UserCallBack)(ErrCode::ErrCodeType retCode,
+    void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
                          CameraModule::PhotoBurstCount count,
                          UserData userData),
     UserData userData) {
@@ -315,47 +315,47 @@ void CameraManager::getPhotoBurstCountAsync(
     cameraMgr->getPhotoBurstCountAsync(UserCallBack, userData);
   } else {
     if (UserCallBack)
-      UserCallBack(ErrCode::SysCommonErr::ReqHandlerNotFound,
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed,
                    CameraModule::PhotoBurstCount::BURST_COUNT_KNOWN, userData);
   }
 }
 
-ErrCode::ErrCodeType CameraManager::getPhotoBurstCountSync(
+ErrorCode::ErrCodeType CameraManager::getPhotoBurstCountSync(
     PayloadIndexType index, CameraModule::PhotoBurstCount& count, int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     return cameraMgr->getPhotoBurstCountSync(count, timeout);
   } else {
-    return ErrCode::SysCommonErr::ReqHandlerNotFound;
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
 
 void CameraManager::setPhotoAEBCountAsync(
     PayloadIndexType index, CameraModule::PhotoAEBCount count,
-    void (*UserCallBack)(ErrCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     cameraMgr->setPhotoAEBCountAsync(count, UserCallBack, userData);
   } else {
     if (UserCallBack)
-      UserCallBack(ErrCode::SysCommonErr::ReqHandlerNotFound, userData);
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
   }
 }
 
-ErrCode::ErrCodeType CameraManager::setPhotoAEBCountSync(
+ErrorCode::ErrCodeType CameraManager::setPhotoAEBCountSync(
     PayloadIndexType index, CameraModule::PhotoAEBCount count, int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     return cameraMgr->setPhotoAEBCountSync(count, timeout);
   } else {
-    return ErrCode::SysCommonErr::ReqHandlerNotFound;
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
 
 void CameraManager::getPhotoAEBCountAsync(
     PayloadIndexType index,
-    void (*UserCallBack)(ErrCode::ErrCodeType retCode,
+    void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
                          CameraModule::PhotoAEBCount count, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
@@ -363,24 +363,24 @@ void CameraManager::getPhotoAEBCountAsync(
     cameraMgr->getPhotoAEBCountAsync(UserCallBack, userData);
   } else {
     if (UserCallBack)
-      UserCallBack(ErrCode::SysCommonErr::ReqHandlerNotFound,
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed,
                    CameraModule::PhotoAEBCount::AEB_COUNT_KNOWN, userData);
   }
 }
 
-ErrCode::ErrCodeType CameraManager::getPhotoAEBCountSync(
+ErrorCode::ErrCodeType CameraManager::getPhotoAEBCountSync(
     PayloadIndexType index, CameraModule::PhotoAEBCount& count, int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     return cameraMgr->getPhotoAEBCountSync(count, timeout);
   } else {
-    return ErrCode::SysCommonErr::ReqHandlerNotFound;
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
 
 void CameraManager::setPhotoTimeIntervalSettingsAsync(
     PayloadIndexType index, CameraModule::PhotoIntervalData intervalSetting,
-    void (*UserCallBack)(ErrCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
@@ -388,11 +388,11 @@ void CameraManager::setPhotoTimeIntervalSettingsAsync(
                                                  userData);
   } else {
     if (UserCallBack)
-      UserCallBack(ErrCode::SysCommonErr::ReqHandlerNotFound, userData);
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
   }
 }
 
-ErrCode::ErrCodeType CameraManager::setPhotoTimeIntervalSettingsSync(
+ErrorCode::ErrCodeType CameraManager::setPhotoTimeIntervalSettingsSync(
     PayloadIndexType index, CameraModule::PhotoIntervalData intervalSetting,
     int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
@@ -400,13 +400,13 @@ ErrCode::ErrCodeType CameraManager::setPhotoTimeIntervalSettingsSync(
     return cameraMgr->setPhotoTimeIntervalSettingsSync(intervalSetting,
                                                        timeout);
   } else {
-    return ErrCode::SysCommonErr::ReqHandlerNotFound;
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
 
 void CameraManager::getPhotoIntervalDatasAsync(
     PayloadIndexType index,
-    void (*UserCallBack)(ErrCode::ErrCodeType retCode,
+    void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
                          CameraModule::PhotoIntervalData intervalSetting,
                          UserData userData),
     UserData userData) {
@@ -416,95 +416,95 @@ void CameraManager::getPhotoIntervalDatasAsync(
   } else {
     CameraModule::PhotoIntervalData intervalSetting = {0};
     if (UserCallBack)
-      UserCallBack(ErrCode::SysCommonErr::ReqHandlerNotFound, intervalSetting,
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, intervalSetting,
                    userData);
   }
 }
 
-ErrCode::ErrCodeType CameraManager::getPhotoIntervalDatasSync(
+ErrorCode::ErrCodeType CameraManager::getPhotoIntervalDatasSync(
     PayloadIndexType index, CameraModule::PhotoIntervalData& intervalSetting,
     int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     return cameraMgr->getPhotoIntervalDatasSync(intervalSetting, timeout);
   } else {
-    return ErrCode::SysCommonErr::ReqHandlerNotFound;
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
 
 void CameraManager::startRecordVideoAsync(
     PayloadIndexType index,
-    void (*UserCallBack)(ErrCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     cameraMgr->startRecordVideoAsync(UserCallBack, userData);
   } else {
     if (UserCallBack)
-      UserCallBack(ErrCode::SysCommonErr::ReqHandlerNotFound, userData);
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
   }
 }
 
-ErrCode::ErrCodeType CameraManager::startRecordVideoSync(PayloadIndexType index,
+ErrorCode::ErrCodeType CameraManager::startRecordVideoSync(PayloadIndexType index,
                                                          int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     return cameraMgr->startRecordVideoSync(timeout);
   } else {
-    return ErrCode::SysCommonErr::ReqHandlerNotFound;
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
 
 void CameraManager::stopRecordVideoAsync(
     PayloadIndexType index,
-    void (*UserCallBack)(ErrCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     cameraMgr->stopRecordVideoAsync(UserCallBack, userData);
   } else {
     if (UserCallBack)
-      UserCallBack(ErrCode::SysCommonErr::ReqHandlerNotFound, userData);
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
   }
 }
 
-ErrCode::ErrCodeType CameraManager::stopRecordVideoSync(PayloadIndexType index,
+ErrorCode::ErrCodeType CameraManager::stopRecordVideoSync(PayloadIndexType index,
                                                         int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     return cameraMgr->stopRecordVideoSync(timeout);
   } else {
-    return ErrCode::SysCommonErr::ReqHandlerNotFound;
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
 
 void CameraManager::setModeAsync(
     PayloadIndexType index, CameraModule::WorkMode mode,
-    void (*UserCallBack)(ErrCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     cameraMgr->setModeAsync(mode, UserCallBack, userData);
   } else {
     if (UserCallBack)
-      UserCallBack(ErrCode::SysCommonErr::ReqHandlerNotFound, userData);
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
   }
 }
 
-ErrCode::ErrCodeType CameraManager::setModeSync(PayloadIndexType index,
+ErrorCode::ErrCodeType CameraManager::setModeSync(PayloadIndexType index,
                                                 CameraModule::WorkMode mode,
                                                 int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     return cameraMgr->setModeSync(mode, timeout);
   } else {
-    return ErrCode::SysCommonErr::ReqHandlerNotFound;
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
 
 void CameraManager::getModeAsync(
     PayloadIndexType index,
-    void (*UserCallBack)(ErrCode::ErrCodeType retCode,
+    void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
                          CameraModule::WorkMode workingMode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
@@ -512,57 +512,57 @@ void CameraManager::getModeAsync(
     cameraMgr->getModeAsync(UserCallBack, userData);
   } else {
     if (UserCallBack)
-      UserCallBack(ErrCode::SysCommonErr::ReqHandlerNotFound,
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed,
                    CameraModule::WorkMode::WORK_MODE_UNKNOWN, userData);
   }
 }
 
-ErrCode::ErrCodeType CameraManager::getModeSync(
+ErrorCode::ErrCodeType CameraManager::getModeSync(
     PayloadIndexType index, CameraModule::WorkMode& workingMode, int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     return cameraMgr->getModeSync(workingMode, timeout);
   } else {
-    return ErrCode::SysCommonErr::ReqHandlerNotFound;
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
 
 void CameraManager::setFocusModeAsync(
     PayloadIndexType index, CameraModule::FocusMode mode,
-    void (*UserCallBack)(ErrCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     cameraMgr->setFocusModeAsync(mode, UserCallBack, userData);
   } else {
     if (UserCallBack)
-      UserCallBack(ErrCode::SysCommonErr::ReqHandlerNotFound, userData);
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
   }
 }
 
-ErrCode::ErrCodeType CameraManager::setFocusModeSync(
+ErrorCode::ErrCodeType CameraManager::setFocusModeSync(
     PayloadIndexType index, CameraModule::FocusMode mode, int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     return cameraMgr->setFocusModeSync(mode, timeout);
   } else {
-    return ErrCode::SysCommonErr::ReqHandlerNotFound;
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
 
-ErrCode::ErrCodeType CameraManager::getFocusModeSync(
+ErrorCode::ErrCodeType CameraManager::getFocusModeSync(
     PayloadIndexType index, CameraModule::FocusMode& focusMode, int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     return cameraMgr->getFocusModeSync(focusMode, timeout);
   } else {
-    return ErrCode::SysCommonErr::ReqHandlerNotFound;
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
 
 void CameraManager::getFocusModeAsync(
     PayloadIndexType index,
-    void (*UserCallBack)(ErrCode::ErrCodeType retCode,
+    void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
                          CameraModule::FocusMode focusMode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
@@ -570,38 +570,38 @@ void CameraManager::getFocusModeAsync(
     cameraMgr->getFocusModeAsync(UserCallBack, userData);
   } else {
     if (UserCallBack)
-      UserCallBack(ErrCode::SysCommonErr::ReqHandlerNotFound,
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed,
                    CameraModule::FocusMode::FOCUS_MODE_UNKNOWN, userData);
   }
 }
 
 void CameraManager::setFocusTargetAsync(
     PayloadIndexType index, CameraModule::TapFocusPosData tapFocusPos,
-    void (*UserCallBack)(ErrCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     cameraMgr->setFocusTargetAsync(tapFocusPos, UserCallBack, userData);
   } else {
     if (UserCallBack)
-      UserCallBack(ErrCode::SysCommonErr::ReqHandlerNotFound, userData);
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
   }
 }
 
-ErrCode::ErrCodeType CameraManager::setFocusTargetSync(
+ErrorCode::ErrCodeType CameraManager::setFocusTargetSync(
     PayloadIndexType index, CameraModule::TapFocusPosData tapFocusPos,
     int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     return cameraMgr->setFocusTargetSync(tapFocusPos, timeout);
   } else {
-    return ErrCode::SysCommonErr::ReqHandlerNotFound;
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
 
 void CameraManager::getFocusTargetAsync(
     PayloadIndexType index,
-    void (*UserCallBack)(ErrCode::ErrCodeType,
+    void (*UserCallBack)(ErrorCode::ErrCodeType,
                          CameraModule::TapFocusPosData tapFocusPos,
                          UserData userData),
     UserData userData) {
@@ -611,25 +611,25 @@ void CameraManager::getFocusTargetAsync(
   } else {
     CameraModule::TapFocusPosData pos = {0};
     if (UserCallBack)
-      UserCallBack(ErrCode::SysCommonErr::ReqHandlerNotFound, pos, userData);
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, pos, userData);
   }
 }
 
-ErrCode::ErrCodeType CameraManager::getFocusTargetSync(
+ErrorCode::ErrCodeType CameraManager::getFocusTargetSync(
     PayloadIndexType index, CameraModule::TapFocusPosData& tapFocusPos,
     int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     return cameraMgr->getFocusTargetSync(tapFocusPos, timeout);
   } else {
-    return ErrCode::SysCommonErr::ReqHandlerNotFound;
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
 
 void CameraManager::startContinuousOpticalZoomAsync(
     PayloadIndexType index, CameraModule::zoomDirectionData zoomDirection,
     CameraModule::zoomSpeedData zoomSpeed,
-    void (*UserCallBack)(ErrCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
@@ -637,11 +637,11 @@ void CameraManager::startContinuousOpticalZoomAsync(
                                                UserCallBack, userData);
   } else {
     if (UserCallBack)
-      UserCallBack(ErrCode::SysCommonErr::ReqHandlerNotFound, userData);
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
   }
 }
 
-ErrCode::ErrCodeType CameraManager::startContinuousOpticalZoomSync(
+ErrorCode::ErrCodeType CameraManager::startContinuousOpticalZoomSync(
     PayloadIndexType index, CameraModule::zoomDirectionData zoomDirection,
     CameraModule::zoomSpeedData zoomSpeed, int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
@@ -649,59 +649,59 @@ ErrCode::ErrCodeType CameraManager::startContinuousOpticalZoomSync(
     return cameraMgr->startContinuousOpticalZoomSync(zoomDirection, zoomSpeed,
                                                      timeout);
   } else {
-    return ErrCode::SysCommonErr::ReqHandlerNotFound;
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
 
 void CameraManager::stopContinuousOpticalZoomAsync(
     PayloadIndexType index,
-    void (*UserCallBack)(ErrCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     cameraMgr->stopContinuousOpticalZoomAsync(UserCallBack, userData);
   } else {
     if (UserCallBack)
-      UserCallBack(ErrCode::SysCommonErr::ReqHandlerNotFound, userData);
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
   }
 }
 
-ErrCode::ErrCodeType CameraManager::stopContinuousOpticalZoomSync(
+ErrorCode::ErrCodeType CameraManager::stopContinuousOpticalZoomSync(
     PayloadIndexType index, int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     return cameraMgr->stopContinuousOpticalZoomSync(timeout);
   } else {
-    return ErrCode::SysCommonErr::ReqHandlerNotFound;
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
 
 void CameraManager::setTapZoomEnabledAsync(
     PayloadIndexType index, bool param,
-    void (*UserCallBack)(ErrCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     cameraMgr->setTapZoomEnabledAsync(param, UserCallBack, userData);
   } else {
     if (UserCallBack)
-      UserCallBack(ErrCode::SysCommonErr::ReqHandlerNotFound, userData);
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
   }
 }
 
-ErrCode::ErrCodeType CameraManager::setTapZoomEnabledSync(
+ErrorCode::ErrCodeType CameraManager::setTapZoomEnabledSync(
     PayloadIndexType index, bool param, int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     return cameraMgr->setTapZoomEnabledSync(param, timeout);
   } else {
-    return ErrCode::SysCommonErr::ReqHandlerNotFound;
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
 
 void CameraManager::getTapZoomEnabledAsync(
     PayloadIndexType index,
-    void (*UserCallBack)(ErrCode::ErrCodeType retCode, bool param,
+    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, bool param,
                          UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
@@ -709,47 +709,47 @@ void CameraManager::getTapZoomEnabledAsync(
     cameraMgr->getTapZoomEnabledAsync(UserCallBack, userData);
   } else {
     if (UserCallBack)
-      UserCallBack(ErrCode::SysCommonErr::ReqHandlerNotFound, false, userData);
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, false, userData);
   }
 }
 
-ErrCode::ErrCodeType CameraManager::getTapZoomEnabledSync(
+ErrorCode::ErrCodeType CameraManager::getTapZoomEnabledSync(
     PayloadIndexType index, bool& param, int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     return cameraMgr->getTapZoomEnabledSync(param, timeout);
   } else {
-    return ErrCode::SysCommonErr::ReqHandlerNotFound;
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
 
 void CameraManager::setTapZoomMultiplierAsync(
     PayloadIndexType index, CameraModule::TapZoomMultiplierData param,
-    void (*UserCallBack)(ErrCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr && (param >= 1) && (param <= 5)) {
     cameraMgr->setTapZoomMultiplierAsync(param, UserCallBack, userData);
   } else {
     if (UserCallBack)
-      UserCallBack(ErrCode::SysCommonErr::ReqHandlerNotFound, userData);
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
   }
 }
 
-ErrCode::ErrCodeType CameraManager::setTapZoomMultiplierSync(
+ErrorCode::ErrCodeType CameraManager::setTapZoomMultiplierSync(
     PayloadIndexType index, CameraModule::TapZoomMultiplierData param,
     int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr && (param >= 1) && (param <= 5)) {
     return cameraMgr->setTapZoomMultiplierSync(param, timeout);
   } else {
-    return ErrCode::SysCommonErr::ReqHandlerNotFound;
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
 
 void CameraManager::getTapZoomMultiplierAsync(
     PayloadIndexType index,
-    void (*UserCallBack)(ErrCode::ErrCodeType retCode,
+    void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
                          CameraModule::TapZoomMultiplierData param,
                          UserData userData),
     UserData userData) {
@@ -760,72 +760,72 @@ void CameraManager::getTapZoomMultiplierAsync(
     CameraModule::TapZoomMultiplierData multiplier = {0};
 
     if (UserCallBack)
-      UserCallBack(ErrCode::SysCommonErr::ReqHandlerNotFound, multiplier,
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, multiplier,
                    userData);
   }
 }
 
-ErrCode::ErrCodeType CameraManager::getTapZoomMultiplierSync(
+ErrorCode::ErrCodeType CameraManager::getTapZoomMultiplierSync(
     PayloadIndexType index, CameraModule::TapZoomMultiplierData& param,
     int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     return cameraMgr->getTapZoomMultiplierSync(param, timeout);
   } else {
-    return ErrCode::SysCommonErr::ReqHandlerNotFound;
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
 
 void CameraManager::tapZoomAtTargetAsync(
     PayloadIndexType index, CameraModule::TapZoomPosData tapZoomPos,
-    void (*UserCallBack)(ErrCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     cameraMgr->tapZoomAtTargetAsync(tapZoomPos, UserCallBack, userData);
   } else {
     if (UserCallBack)
-      UserCallBack(ErrCode::SysCommonErr::ReqHandlerNotFound, userData);
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
   }
 }
 
-ErrCode::ErrCodeType CameraManager::tapZoomAtTargetSync(
+ErrorCode::ErrCodeType CameraManager::tapZoomAtTargetSync(
     PayloadIndexType index, CameraModule::TapZoomPosData tapZoomPos,
     int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     return cameraMgr->tapZoomAtTargetSync(tapZoomPos, timeout);
   } else {
-    return ErrCode::SysCommonErr::ReqHandlerNotFound;
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
 
 void CameraManager::setExposureModeAsync(
     PayloadIndexType index, CameraModule::ExposureMode mode,
-    void (*UserCallBack)(ErrCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     cameraMgr->setExposureModeAsync(mode, UserCallBack, userData);
   } else {
     if (UserCallBack)
-      UserCallBack(ErrCode::SysCommonErr::ReqHandlerNotFound, userData);
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
   }
 }
 
-ErrCode::ErrCodeType CameraManager::setExposureModeSync(
+ErrorCode::ErrCodeType CameraManager::setExposureModeSync(
     PayloadIndexType index, CameraModule::ExposureMode mode, int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     return cameraMgr->setExposureModeSync(mode, timeout);
   } else {
-    return ErrCode::SysCommonErr::ReqHandlerNotFound;
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
 
 void CameraManager::getExposureModeAsync(
     PayloadIndexType index,
-    void (*UserCallBack)(ErrCode::ErrCodeType retCode,
+    void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
                          CameraModule::ExposureMode mode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
@@ -833,47 +833,47 @@ void CameraManager::getExposureModeAsync(
     cameraMgr->getExposureModeAsync(UserCallBack, userData);
   } else {
     if (UserCallBack)
-      UserCallBack(ErrCode::SysCommonErr::ReqHandlerNotFound,
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed,
                    CameraModule::ExposureMode::EXPOSURE_UNKNOWN, userData);
   }
 }
 
-ErrCode::ErrCodeType CameraManager::getExposureModeSync(
+ErrorCode::ErrCodeType CameraManager::getExposureModeSync(
     PayloadIndexType index, CameraModule::ExposureMode& mode, int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     return cameraMgr->getExposureModeSync(mode, timeout);
   } else {
-    return ErrCode::SysCommonErr::ReqHandlerNotFound;
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
 
 void CameraManager::setApertureAsync(
     PayloadIndexType index, CameraModule::Aperture aperture,
-    void (*UserCallBack)(ErrCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     cameraMgr->setApertureAsync(aperture, UserCallBack, userData);
   } else {
     if (UserCallBack)
-      UserCallBack(ErrCode::SysCommonErr::ReqHandlerNotFound, userData);
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
   }
 }
 
-ErrCode::ErrCodeType CameraManager::setApertureSync(
+ErrorCode::ErrCodeType CameraManager::setApertureSync(
     PayloadIndexType index, CameraModule::Aperture aperture, int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     return cameraMgr->setApertureSync(aperture, timeout);
   } else {
-    return ErrCode::SysCommonErr::ReqHandlerNotFound;
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
 
 void CameraManager::getApertureAsync(
     PayloadIndexType index,
-    void (*UserCallBack)(ErrCode::ErrCodeType, CameraModule::Aperture aperture,
+    void (*UserCallBack)(ErrorCode::ErrCodeType, CameraModule::Aperture aperture,
                          UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
@@ -881,48 +881,48 @@ void CameraManager::getApertureAsync(
     cameraMgr->getApertureAsync(UserCallBack, userData);
   } else {
     if (UserCallBack)
-      UserCallBack(ErrCode::SysCommonErr::ReqHandlerNotFound,
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed,
                    CameraModule::Aperture::F_UNKNOWN, userData);
   }
 }
 
-ErrCode::ErrCodeType CameraManager::getApertureSync(
+ErrorCode::ErrCodeType CameraManager::getApertureSync(
     PayloadIndexType index, CameraModule::Aperture& aperture, int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     return cameraMgr->getApertureSync(aperture, timeout);
   } else {
-    return ErrCode::SysCommonErr::ReqHandlerNotFound;
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
 
 void CameraManager::setShutterSpeedAsync(
     PayloadIndexType index, CameraModule::ShutterSpeed shutterSpeed,
-    void (*UserCallBack)(ErrCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     cameraMgr->setShutterSpeedAsync(shutterSpeed, UserCallBack, userData);
   } else {
     if (UserCallBack)
-      UserCallBack(ErrCode::SysCommonErr::ReqHandlerNotFound, userData);
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
   }
 }
 
-ErrCode::ErrCodeType CameraManager::setShutterSpeedSync(
+ErrorCode::ErrCodeType CameraManager::setShutterSpeedSync(
     PayloadIndexType index, CameraModule::ShutterSpeed shutterSpeed,
     int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     return cameraMgr->setShutterSpeedSync(shutterSpeed, timeout);
   } else {
-    return ErrCode::SysCommonErr::ReqHandlerNotFound;
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
 
 void CameraManager::getShutterSpeedAsync(
     PayloadIndexType index,
-    void (*UserCallBack)(ErrCode::ErrCodeType retCode,
+    void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
                          CameraModule::ShutterSpeed shutterSpeed,
                          UserData userData),
     UserData userData) {
@@ -931,49 +931,49 @@ void CameraManager::getShutterSpeedAsync(
     cameraMgr->getShutterSpeedAsync(UserCallBack, userData);
   } else {
     if (UserCallBack)
-      UserCallBack(ErrCode::SysCommonErr::ReqHandlerNotFound,
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed,
                    CameraModule::ShutterSpeed::SHUTTER_SPEED_UNKNOWN, userData);
   }
 }
 
-ErrCode::ErrCodeType CameraManager::getShutterSpeedSync(
+ErrorCode::ErrCodeType CameraManager::getShutterSpeedSync(
     PayloadIndexType index, CameraModule::ShutterSpeed& shutterSpeed,
     int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     return cameraMgr->getShutterSpeedSync(shutterSpeed, timeout);
   } else {
-    return ErrCode::SysCommonErr::ReqHandlerNotFound;
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
 
 void CameraManager::setExposureCompensationAsync(
     PayloadIndexType index, CameraModule::ExposureCompensation ev,
-    void (*UserCallBack)(ErrCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     cameraMgr->setExposureCompensationAsync(ev, UserCallBack, userData);
   } else {
     if (UserCallBack)
-      UserCallBack(ErrCode::SysCommonErr::ReqHandlerNotFound, userData);
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
   }
 }
 
-ErrCode::ErrCodeType CameraManager::setExposureCompensationSync(
+ErrorCode::ErrCodeType CameraManager::setExposureCompensationSync(
     PayloadIndexType index, CameraModule::ExposureCompensation ev,
     int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     return cameraMgr->setExposureCompensationSync(ev, timeout);
   } else {
-    return ErrCode::SysCommonErr::ReqHandlerNotFound;
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
 
 void CameraManager::getExposureCompensationAsync(
     PayloadIndexType index,
-    void (*UserCallBack)(ErrCode::ErrCodeType retCode,
+    void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
                          CameraModule::ExposureCompensation ev,
                          UserData userData),
     UserData userData) {
@@ -982,18 +982,18 @@ void CameraManager::getExposureCompensationAsync(
     cameraMgr->getExposureCompensationAsync(UserCallBack, userData);
   } else {
     if (UserCallBack)
-      UserCallBack(ErrCode::SysCommonErr::ReqHandlerNotFound,
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed,
                    CameraModule::ExposureCompensation::UNKNOWN, userData);
   }
 }
 
-ErrCode::ErrCodeType CameraManager::getExposureCompensationSync(
+ErrorCode::ErrCodeType CameraManager::getExposureCompensationSync(
     PayloadIndexType index, CameraModule::ExposureCompensation& ev,
     int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     return cameraMgr->getExposureCompensationSync(ev, timeout);
   } else {
-    return ErrCode::SysCommonErr::ReqHandlerNotFound;
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
