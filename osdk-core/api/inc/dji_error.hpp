@@ -190,10 +190,11 @@ public:
 
   /*!
    * @brief Common ACK Error Codes
+   * @deprecated This error code type is deprecated and will replaced
+   * by new errorcode in the future.
    */
-  class CommonACK
-  {
-  public:
+  class CommonACK {
+   public:
     const static uint16_t SUCCESS;
     const static uint16_t KEY_ERROR;
     const static uint16_t NO_AUTHORIZATION_ERROR;
@@ -487,10 +488,11 @@ public:
 
   /*!
    * @brief CMDSet: Activation ACK Error Codes
+   * @deprecated This error code type is deprecated and will replaced
+   * by new errorcode in the future.
    */
-  class ActivationACK
-  {
-  public:
+  class ActivationACK {
+   public:
     const static uint16_t SUCCESS;
     const static uint16_t PARAMETER_ERROR;
     const static uint16_t ENCODE_ERROR;
@@ -504,10 +506,11 @@ public:
 
   /*!
    * @brief CMDSet: Control ACK Error Codes
+   * @deprecated This error code type is deprecated and will replaced
+   * by new errorcode in the future.
    */
-  class ControlACK
-  {
-  public:
+  class ControlACK {
+   public:
     /*!
      * @brief CMDID: SetControl
      */
@@ -583,10 +586,11 @@ public:
    * @note New in 3.3 release
    *
    * @brief CMDSet: Subscribe
+   * @deprecated This error code type is deprecated and will replaced
+   * by new errorcode in the future.
    */
-  class SubscribeACK
-  {
-  public:
+   class SubscribeACK {
+   public:
     const static uint8_t SUCCESS;
     const static uint8_t ILLEGAL_DATA_LENGTH;
     const static uint8_t VERSION_DOES_NOT_MATCH;
@@ -614,10 +618,11 @@ public:
 
   /*!
    * @brief Mission ACK Error Codes
+   * @deprecated This error code type is deprecated and will replaced
+   * by new errorcode in the future.
    */
-  class MissionACK
-  {
-  public:
+  class MissionACK {
+   public:
     /*! @brief Common Mission ACK codes
      *
      */
@@ -743,10 +748,11 @@ public:
   /*!
    * @brief CMDSet: MFIO
    * @note New in 3.3 release
+   * @deprecated This error code type is deprecated and will replaced
+   * by new errorcode in the future.
    */
-  class MFIOACK
-  {
-  public:
+  class MFIOACK {
+   public:
     /*!
      * @brief CMDID: init
      */

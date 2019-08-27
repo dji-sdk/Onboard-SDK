@@ -3,7 +3,7 @@
  *  @date Jun 15 2017
  *
  *  @brief
- *  Pthread-based threading for DJI Onboard SDK Linux/*NIX platforms
+ *  Pthread-based threading for DJI Onboard SDK Linux
  *
  *  @Copyright (c) 2016-2017 DJI
  *

@@ -78,7 +78,7 @@ namespace DJI
 namespace OSDK
 {
 
-static int callbackId;
+
 
 /*! @brief A top-level encapsulation of a DJI drone/FC connected to your OES.
  *
@@ -307,6 +307,7 @@ private:
   bool        advancedSensingEnabled;
   const char* device;
   uint32_t    baudRate;
+  int callbackId;
 
   //! ACK management
   // Internal space

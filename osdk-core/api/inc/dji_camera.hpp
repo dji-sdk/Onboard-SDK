@@ -44,9 +44,10 @@ class Vehicle;
 
 /*! @brief Camera class for controlling camera-related functions
  * available through open protocol
- *
+ * @deprecated This class is deprecated and replaced by
+ * DJI::OSDK::CameraManager.
  */
-DJI_DEPRECATED class Camera
+class Camera
 {
 public:
   Camera(Vehicle* vehicle);
