@@ -38,8 +38,8 @@ CameraManagerAsyncSample::CameraManagerAsyncSample(Vehicle *vehiclePtr)
 CameraManagerAsyncSample::~CameraManagerAsyncSample() {}
 
 void CameraManagerAsyncSample::getExposureModeCb(
-    ErrorCode::ErrCodeType retCode, CameraModule::ExposureMode exposureModeGet,
-    UserData userData) {
+    ErrorCode::ErrorCodeType retCode,
+    CameraModule::ExposureMode exposureModeGet, UserData userData) {
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
   DSTATUS("retCode : 0x%lX", retCode);
@@ -54,32 +54,33 @@ void CameraManagerAsyncSample::getExposureModeCb(
       if (*(CameraModule::ExposureMode *)uData->dataTarget == exposureModeGet) {
         DSTATUS("The exposure mode is already %d.", exposureModeGet);
         if (uData->userCallBack) {
-          void (*cb)(ErrorCode::ErrCodeType, UserData);
-          cb = (void (*)(ErrorCode::ErrCodeType, UserData))uData->userCallBack;
+          void (*cb)(ErrorCode::ErrorCodeType, UserData);
+          cb =
+              (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack;
           cb(ErrorCode::SysCommonErr::Success, uData->userData);
         }
       } else {
         uData->pm->setExposureModeAsync(
             uData->index, *(CameraModule::ExposureMode *)uData->dataTarget,
-            (void (*)(ErrorCode::ErrCodeType, UserData))uData->userCallBack,
+            (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack,
             uData->userData);
       }
     }
 
   } else {
     DERROR("Get exposure mode error. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     if (uData->userCallBack) {
-      void (*cb)(ErrorCode::ErrCodeType, UserData);
-      cb = (void (*)(ErrorCode::ErrCodeType, UserData))uData->userCallBack;
+      void (*cb)(ErrorCode::ErrorCodeType, UserData);
+      cb = (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack;
       cb(retCode, uData->userData);
     }
   }
 }
 
-void CameraManagerAsyncSample::getISOCb(ErrorCode::ErrCodeType retCode,
-                                   CameraModule::ISO isoGet,
-                                   UserData userData) {
+void CameraManagerAsyncSample::getISOCb(ErrorCode::ErrorCodeType retCode,
+                                        CameraModule::ISO isoGet,
+                                        UserData userData) {
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
   DSTATUS("retCode : 0x%lX", retCode);
@@ -94,32 +95,33 @@ void CameraManagerAsyncSample::getISOCb(ErrorCode::ErrCodeType retCode,
       if (*(CameraModule::ISO *)uData->dataTarget == isoGet) {
         DSTATUS("The iso value is already %d.", isoGet);
         if (uData->userCallBack) {
-          void (*cb)(ErrorCode::ErrCodeType, UserData);
-          cb = (void (*)(ErrorCode::ErrCodeType, UserData))uData->userCallBack;
+          void (*cb)(ErrorCode::ErrorCodeType, UserData);
+          cb =
+              (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack;
           cb(ErrorCode::SysCommonErr::Success, uData->userData);
         }
       } else {
         uData->pm->setISOAsync(
             uData->index, *(CameraModule::ISO *)uData->dataTarget,
-            (void (*)(ErrorCode::ErrCodeType, UserData))uData->userCallBack,
+            (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack,
             uData->userData);
       }
     }
 
   } else {
     DERROR("Get iso error. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     if (uData->userCallBack) {
-      void (*cb)(ErrorCode::ErrCodeType, UserData);
-      cb = (void (*)(ErrorCode::ErrCodeType, UserData))uData->userCallBack;
+      void (*cb)(ErrorCode::ErrorCodeType, UserData);
+      cb = (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack;
       cb(retCode, uData->userData);
     }
   }
 }
 
 void CameraManagerAsyncSample::getShutterSpeedCb(
-    ErrorCode::ErrCodeType retCode, CameraModule::ShutterSpeed shutterSpeedGet,
-    UserData userData) {
+    ErrorCode::ErrorCodeType retCode,
+    CameraModule::ShutterSpeed shutterSpeedGet, UserData userData) {
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
   DSTATUS("retCode : 0x%lX", retCode);
@@ -134,32 +136,33 @@ void CameraManagerAsyncSample::getShutterSpeedCb(
       if (*(CameraModule::ShutterSpeed *)uData->dataTarget == shutterSpeedGet) {
         DSTATUS("The shutter speed  value is already %d.", shutterSpeedGet);
         if (uData->userCallBack) {
-          void (*cb)(ErrorCode::ErrCodeType, UserData);
-          cb = (void (*)(ErrorCode::ErrCodeType, UserData))uData->userCallBack;
+          void (*cb)(ErrorCode::ErrorCodeType, UserData);
+          cb =
+              (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack;
           cb(ErrorCode::SysCommonErr::Success, uData->userData);
         }
       } else {
         uData->pm->setShutterSpeedAsync(
             uData->index, *(CameraModule::ShutterSpeed *)uData->dataTarget,
-            (void (*)(ErrorCode::ErrCodeType, UserData))uData->userCallBack,
+            (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack,
             uData->userData);
       }
     }
 
   } else {
     DERROR("Get shutter speed error. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     if (uData->userCallBack) {
-      void (*cb)(ErrorCode::ErrCodeType, UserData);
-      cb = (void (*)(ErrorCode::ErrCodeType, UserData))uData->userCallBack;
+      void (*cb)(ErrorCode::ErrorCodeType, UserData);
+      cb = (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack;
       cb(retCode, uData->userData);
     }
   }
 }
 
-void CameraManagerAsyncSample::getApertureCb(ErrorCode::ErrCodeType retCode,
-                                        CameraModule::Aperture apertureGet,
-                                        UserData userData) {
+void CameraManagerAsyncSample::getApertureCb(ErrorCode::ErrorCodeType retCode,
+                                             CameraModule::Aperture apertureGet,
+                                             UserData userData) {
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
   DSTATUS("retCode : 0x%lX", retCode);
@@ -174,32 +177,33 @@ void CameraManagerAsyncSample::getApertureCb(ErrorCode::ErrCodeType retCode,
       if (*(CameraModule::Aperture *)uData->dataTarget == apertureGet) {
         DSTATUS("The aperture value is already %d.", apertureGet);
         if (uData->userCallBack) {
-          void (*cb)(ErrorCode::ErrCodeType, UserData);
-          cb = (void (*)(ErrorCode::ErrCodeType, UserData))uData->userCallBack;
+          void (*cb)(ErrorCode::ErrorCodeType, UserData);
+          cb =
+              (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack;
           cb(ErrorCode::SysCommonErr::Success, uData->userData);
         }
       } else {
         uData->pm->setApertureAsync(
             uData->index, *(CameraModule::Aperture *)uData->dataTarget,
-            (void (*)(ErrorCode::ErrCodeType, UserData))uData->userCallBack,
+            (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack,
             uData->userData);
       }
     }
 
   } else {
     DERROR("Get aperture error. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     if (uData->userCallBack) {
-      void (*cb)(ErrorCode::ErrCodeType, UserData);
-      cb = (void (*)(ErrorCode::ErrCodeType, UserData))uData->userCallBack;
+      void (*cb)(ErrorCode::ErrorCodeType, UserData);
+      cb = (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack;
       cb(retCode, uData->userData);
     }
   }
 }
 
-void CameraManagerAsyncSample::getEVCb(ErrorCode::ErrCodeType retCode,
-                                  CameraModule::ExposureCompensation evGet,
-                                  UserData userData) {
+void CameraManagerAsyncSample::getEVCb(ErrorCode::ErrorCodeType retCode,
+                                       CameraModule::ExposureCompensation evGet,
+                                       UserData userData) {
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
   DSTATUS("retCode : 0x%lX", retCode);
@@ -214,25 +218,27 @@ void CameraManagerAsyncSample::getEVCb(ErrorCode::ErrCodeType retCode,
       if (*(CameraModule::ExposureCompensation *)uData->dataTarget == evGet) {
         DSTATUS("The exposure compensation value is already %d.", evGet);
         if (uData->userCallBack) {
-          void (*cb)(ErrorCode::ErrCodeType, UserData);
-          cb = (void (*)(ErrorCode::ErrCodeType, UserData))uData->userCallBack;
+          void (*cb)(ErrorCode::ErrorCodeType, UserData);
+          cb =
+              (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack;
           cb(ErrorCode::SysCommonErr::Success, uData->userData);
         }
       } else {
         uData->pm->setExposureCompensationAsync(
             uData->index,
             *(CameraModule::ExposureCompensation *)uData->dataTarget,
-            (void (*)(ErrorCode::ErrCodeType, UserData))uData->userCallBack,
+            (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack,
             uData->userData);
       }
     }
 
   } else {
-    DERROR("Get exposure compensation value error. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    DERROR("Get exposure compensation value error. Error code : 0x%lX",
+           retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     if (uData->userCallBack) {
-      void (*cb)(ErrorCode::ErrCodeType, UserData);
-      cb = (void (*)(ErrorCode::ErrCodeType, UserData))uData->userCallBack;
+      void (*cb)(ErrorCode::ErrorCodeType, UserData);
+      cb = (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack;
       cb(retCode, uData->userData);
     }
   }
@@ -240,7 +246,7 @@ void CameraManagerAsyncSample::getEVCb(ErrorCode::ErrCodeType retCode,
 
 void CameraManagerAsyncSample::setExposureModeAsyncSample(
     PayloadIndexType index, CameraModule::ExposureMode dataTarget,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
@@ -263,7 +269,7 @@ void CameraManagerAsyncSample::setExposureModeAsyncSample(
 
 void CameraManagerAsyncSample::setISOAsyncSample(
     PayloadIndexType index, CameraModule::ISO dataTarget,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
@@ -286,7 +292,7 @@ void CameraManagerAsyncSample::setISOAsyncSample(
 
 void CameraManagerAsyncSample::setShutterSpeedAsyncSample(
     PayloadIndexType index, CameraModule::ShutterSpeed dataTarget,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
@@ -309,7 +315,7 @@ void CameraManagerAsyncSample::setShutterSpeedAsyncSample(
 
 void CameraManagerAsyncSample::setApertureAsyncSample(
     PayloadIndexType index, CameraModule::Aperture dataTarget,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
@@ -332,7 +338,7 @@ void CameraManagerAsyncSample::setApertureAsyncSample(
 
 void CameraManagerAsyncSample::setEVAsyncSample(
     PayloadIndexType index, CameraModule::ExposureCompensation dataTarget,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
@@ -353,8 +359,8 @@ void CameraManagerAsyncSample::setEVAsyncSample(
   pm->getExposureCompensationAsync(index, getEVCb, &uData);
 }
 
-void CameraManagerAsyncSample::setFocusModeCb(ErrorCode::ErrCodeType retCode,
-                                         UserData userData) {
+void CameraManagerAsyncSample::setFocusModeCb(ErrorCode::ErrorCodeType retCode,
+                                              UserData userData) {
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
   DSTATUS("retCode : 0x%lX", retCode);
@@ -368,16 +374,16 @@ void CameraManagerAsyncSample::setFocusModeCb(ErrorCode::ErrCodeType retCode,
       /*! set focus point */
       uData->pm->setFocusTargetAsync(
           uData->index, *(CameraModule::TapFocusPosData *)uData->dataTarget,
-          (void (*)(ErrorCode::ErrCodeType, UserData))uData->userCallBack,
+          (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack,
           uData->userData);
     }
 
   } else {
     DERROR("Set focus mode error. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     if (uData->userCallBack) {
-      void (*cb)(ErrorCode::ErrCodeType, UserData);
-      cb = (void (*)(ErrorCode::ErrCodeType, UserData))uData->userCallBack;
+      void (*cb)(ErrorCode::ErrorCodeType, UserData);
+      cb = (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack;
       cb(retCode, uData->userData);
     }
   }
@@ -385,7 +391,7 @@ void CameraManagerAsyncSample::setFocusModeCb(ErrorCode::ErrCodeType retCode,
 
 void CameraManagerAsyncSample::setFocusPointAsyncSample(
     PayloadIndexType index, float x, float y,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
@@ -408,8 +414,8 @@ void CameraManagerAsyncSample::setFocusPointAsyncSample(
                         &uData);
 }
 
-void CameraManagerAsyncSample::setTapZoomEnableCb(ErrorCode::ErrCodeType retCode,
-                                             UserData userData) {
+void CameraManagerAsyncSample::setTapZoomEnableCb(
+    ErrorCode::ErrorCodeType retCode, UserData userData) {
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
   DSTATUS("retCode : 0x%lX", retCode);
@@ -423,23 +429,23 @@ void CameraManagerAsyncSample::setTapZoomEnableCb(ErrorCode::ErrCodeType retCode
       /*! set tap zoom point */
       uData->pm->tapZoomAtTargetAsync(
           uData->index, *(CameraModule::TapZoomPosData *)uData->dataTarget,
-          (void (*)(ErrorCode::ErrCodeType, UserData))uData->userCallBack,
+          (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack,
           uData->userData);
     }
 
   } else {
     DERROR("Tap zoom at enable error. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     if (uData->userCallBack) {
-      void (*cb)(ErrorCode::ErrCodeType, UserData);
-      cb = (void (*)(ErrorCode::ErrCodeType, UserData))uData->userCallBack;
+      void (*cb)(ErrorCode::ErrorCodeType, UserData);
+      cb = (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack;
       cb(retCode, uData->userData);
     }
   }
 }
 
-void CameraManagerAsyncSample::setTapZoomMultiplierCb(ErrorCode::ErrCodeType retCode,
-                                                 UserData userData) {
+void CameraManagerAsyncSample::setTapZoomMultiplierCb(
+    ErrorCode::ErrorCodeType retCode, UserData userData) {
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
   DSTATUS("retCode : 0x%lX", retCode);
@@ -457,10 +463,10 @@ void CameraManagerAsyncSample::setTapZoomMultiplierCb(ErrorCode::ErrCodeType ret
 
   } else {
     DERROR("Set tap zoom multiplier error. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     if (uData->userCallBack) {
-      void (*cb)(ErrorCode::ErrCodeType, UserData);
-      cb = (void (*)(ErrorCode::ErrCodeType, UserData))uData->userCallBack;
+      void (*cb)(ErrorCode::ErrorCodeType, UserData);
+      cb = (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack;
       cb(retCode, uData->userData);
     }
   }
@@ -468,7 +474,7 @@ void CameraManagerAsyncSample::setTapZoomMultiplierCb(ErrorCode::ErrCodeType ret
 
 void CameraManagerAsyncSample::setTapZoomPointAsyncSample(
     PayloadIndexType index, uint8_t multiplier, float x, float y,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
@@ -494,7 +500,7 @@ void CameraManagerAsyncSample::setTapZoomPointAsyncSample(
 void CameraManagerAsyncSample::startZoomAsyncSample(
     PayloadIndexType index, CameraModule::zoomDirectionData direction,
     CameraModule::zoomSpeedData speed,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
@@ -512,7 +518,7 @@ void CameraManagerAsyncSample::startZoomAsyncSample(
 
 void CameraManagerAsyncSample::stopZoomAsyncSample(
     PayloadIndexType index,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
@@ -528,7 +534,7 @@ void CameraManagerAsyncSample::stopZoomAsyncSample(
 }
 
 void CameraManagerAsyncSample::setCameraModeForRecordVideoCb(
-    ErrorCode::ErrCodeType retCode, UserData userData) {
+    ErrorCode::ErrorCodeType retCode, UserData userData) {
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
   DSTATUS("retCode : 0x%lX", retCode);
@@ -543,15 +549,15 @@ void CameraManagerAsyncSample::setCameraModeForRecordVideoCb(
       DSTATUS("Start to RECORD_VIDEO");
       uData->pm->startRecordVideoAsync(
           uData->index,
-          (void (*)(ErrorCode::ErrCodeType, UserData))uData->userCallBack,
+          (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack,
           uData->userData);
     }
   } else {
     DERROR("Start to record video error. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     if (uData->userCallBack) {
-      void (*cb)(ErrorCode::ErrCodeType, UserData);
-      cb = (void (*)(ErrorCode::ErrCodeType, UserData))uData->userCallBack;
+      void (*cb)(ErrorCode::ErrorCodeType, UserData);
+      cb = (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack;
       cb(retCode, uData->userData);
     }
   }
@@ -559,7 +565,7 @@ void CameraManagerAsyncSample::setCameraModeForRecordVideoCb(
 
 void CameraManagerAsyncSample::startRecordVideoAsyncSample(
     PayloadIndexType index,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
@@ -582,7 +588,7 @@ void CameraManagerAsyncSample::startRecordVideoAsyncSample(
 
 void CameraManagerAsyncSample::stopRecordVideoAsyncSample(
     PayloadIndexType index,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
@@ -598,7 +604,7 @@ void CameraManagerAsyncSample::stopRecordVideoAsyncSample(
 }
 
 void CameraManagerAsyncSample::setShootPhotoModeForSingleShootCb(
-    ErrorCode::ErrCodeType retCode, UserData userData) {
+    ErrorCode::ErrorCodeType retCode, UserData userData) {
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
   DSTATUS("retCode : 0x%lX", retCode);
@@ -612,23 +618,23 @@ void CameraManagerAsyncSample::setShootPhotoModeForSingleShootCb(
       /*! start to shoot SINGLE photo */
       uData->pm->startShootPhotoAsync(
           uData->index, CameraModule::ShootPhotoMode::SINGLE,
-          (void (*)(ErrorCode::ErrCodeType retCode,
+          (void (*)(ErrorCode::ErrorCodeType retCode,
                     UserData userData))uData->userCallBack,
           uData->userData);
     }
   } else {
     DERROR("Set shoot photo mode error. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     if (uData->userCallBack) {
-      void (*cb)(ErrorCode::ErrCodeType, UserData);
-      cb = (void (*)(ErrorCode::ErrCodeType, UserData))uData->userCallBack;
+      void (*cb)(ErrorCode::ErrorCodeType, UserData);
+      cb = (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack;
       cb(retCode, uData->userData);
     }
   }
 }
 
 void CameraManagerAsyncSample::setCameraModeForSingleShootCb(
-    ErrorCode::ErrCodeType retCode, UserData userData) {
+    ErrorCode::ErrorCodeType retCode, UserData userData) {
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
   DSTATUS("retCode : 0x%lX", retCode);
@@ -647,10 +653,10 @@ void CameraManagerAsyncSample::setCameraModeForSingleShootCb(
     }
   } else {
     DERROR("Set camera mode error. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     if (uData->userCallBack) {
-      void (*cb)(ErrorCode::ErrCodeType, UserData);
-      cb = (void (*)(ErrorCode::ErrCodeType, UserData))uData->userCallBack;
+      void (*cb)(ErrorCode::ErrorCodeType, UserData);
+      cb = (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack;
       cb(retCode, uData->userData);
     }
   }
@@ -658,7 +664,7 @@ void CameraManagerAsyncSample::setCameraModeForSingleShootCb(
 
 void CameraManagerAsyncSample::startShootSinglePhotoAsyncSample(
     PayloadIndexType index,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
@@ -679,8 +685,8 @@ void CameraManagerAsyncSample::startShootSinglePhotoAsyncSample(
                    setCameraModeForSingleShootCb, &uData);
 }
 
-void CameraManagerAsyncSample::setPhotoBurstCountCb(ErrorCode::ErrCodeType retCode,
-                                               UserData userData) {
+void CameraManagerAsyncSample::setPhotoBurstCountCb(
+    ErrorCode::ErrorCodeType retCode, UserData userData) {
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
   DSTATUS("retCode : 0x%lX", retCode);
@@ -694,23 +700,23 @@ void CameraManagerAsyncSample::setPhotoBurstCountCb(ErrorCode::ErrCodeType retCo
       /*! set BURST parameter */
       uData->pm->startShootPhotoAsync(
           uData->index, CameraModule::ShootPhotoMode::BURST,
-          (void (*)(ErrorCode::ErrCodeType retCode,
+          (void (*)(ErrorCode::ErrorCodeType retCode,
                     UserData userData))uData->userCallBack,
           uData->userData);
     }
   } else {
     DERROR("Set burst count error. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     if (uData->userCallBack) {
-      void (*cb)(ErrorCode::ErrCodeType, UserData);
-      cb = (void (*)(ErrorCode::ErrCodeType, UserData))uData->userCallBack;
+      void (*cb)(ErrorCode::ErrorCodeType, UserData);
+      cb = (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack;
       cb(retCode, uData->userData);
     }
   }
 }
 
 void CameraManagerAsyncSample::setShootPhotoModeForBurstShootCb(
-    ErrorCode::ErrCodeType retCode, UserData userData) {
+    ErrorCode::ErrorCodeType retCode, UserData userData) {
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
   DSTATUS("retCode : 0x%lX", retCode);
@@ -728,10 +734,10 @@ void CameraManagerAsyncSample::setShootPhotoModeForBurstShootCb(
     }
   } else {
     DERROR("Set shoot photo mode as BURST error. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     if (uData->userCallBack) {
-      void (*cb)(ErrorCode::ErrCodeType, UserData);
-      cb = (void (*)(ErrorCode::ErrCodeType, UserData))uData->userCallBack;
+      void (*cb)(ErrorCode::ErrorCodeType, UserData);
+      cb = (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack;
 
       cb(retCode, uData->userData);
     }
@@ -739,7 +745,7 @@ void CameraManagerAsyncSample::setShootPhotoModeForBurstShootCb(
 }
 
 void CameraManagerAsyncSample::setCameraModeForBurstShootCb(
-    ErrorCode::ErrCodeType retCode, UserData userData) {
+    ErrorCode::ErrorCodeType retCode, UserData userData) {
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
   DSTATUS("retCode : 0x%lX", retCode);
@@ -758,10 +764,10 @@ void CameraManagerAsyncSample::setCameraModeForBurstShootCb(
     }
   } else {
     DERROR("Set camera mode error. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     if (uData->userCallBack) {
-      void (*cb)(ErrorCode::ErrCodeType, UserData);
-      cb = (void (*)(ErrorCode::ErrCodeType, UserData))uData->userCallBack;
+      void (*cb)(ErrorCode::ErrorCodeType, UserData);
+      cb = (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack;
       cb(retCode, uData->userData);
     }
   }
@@ -769,7 +775,7 @@ void CameraManagerAsyncSample::setCameraModeForBurstShootCb(
 
 void CameraManagerAsyncSample::startShootBurstPhotoAsyncSample(
     PayloadIndexType index, CameraModule::PhotoBurstCount count,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
@@ -791,8 +797,8 @@ void CameraManagerAsyncSample::startShootBurstPhotoAsyncSample(
                    setCameraModeForBurstShootCb, &uData);
 }
 
-void CameraManagerAsyncSample::setPhotoAEBCountCb(ErrorCode::ErrCodeType retCode,
-                                             UserData userData) {
+void CameraManagerAsyncSample::setPhotoAEBCountCb(
+    ErrorCode::ErrorCodeType retCode, UserData userData) {
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
   DSTATUS("retCode : 0x%lX", retCode);
@@ -806,23 +812,23 @@ void CameraManagerAsyncSample::setPhotoAEBCountCb(ErrorCode::ErrCodeType retCode
       /*! set AEB parameter */
       uData->pm->startShootPhotoAsync(
           uData->index, CameraModule::ShootPhotoMode::AEB,
-          (void (*)(ErrorCode::ErrCodeType retCode,
+          (void (*)(ErrorCode::ErrorCodeType retCode,
                     UserData userData))uData->userCallBack,
           uData->userData);
     }
   } else {
     DERROR("Set AEB count error. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     if (uData->userCallBack) {
-      void (*cb)(ErrorCode::ErrCodeType, UserData);
-      cb = (void (*)(ErrorCode::ErrCodeType, UserData))uData->userCallBack;
+      void (*cb)(ErrorCode::ErrorCodeType, UserData);
+      cb = (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack;
       cb(retCode, uData->userData);
     }
   }
 }
 
 void CameraManagerAsyncSample::setShootPhotoModeForAEBShootCb(
-    ErrorCode::ErrCodeType retCode, UserData userData) {
+    ErrorCode::ErrorCodeType retCode, UserData userData) {
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
   DSTATUS("retCode : 0x%lX", retCode);
@@ -840,17 +846,17 @@ void CameraManagerAsyncSample::setShootPhotoModeForAEBShootCb(
     }
   } else {
     DERROR("Set shoot photo mode as AEB error. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     if (uData->userCallBack) {
-      void (*cb)(ErrorCode::ErrCodeType, UserData);
-      cb = (void (*)(ErrorCode::ErrCodeType, UserData))uData->userCallBack;
+      void (*cb)(ErrorCode::ErrorCodeType, UserData);
+      cb = (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack;
       cb(retCode, uData->userData);
     }
   }
 }
 
 void CameraManagerAsyncSample::setCameraModeForAEBShootCb(
-    ErrorCode::ErrCodeType retCode, UserData userData) {
+    ErrorCode::ErrorCodeType retCode, UserData userData) {
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
   DSTATUS("retCode : 0x%lX", retCode);
@@ -869,10 +875,10 @@ void CameraManagerAsyncSample::setCameraModeForAEBShootCb(
     }
   } else {
     DERROR("Set camera mode error. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     if (uData->userCallBack) {
-      void (*cb)(ErrorCode::ErrCodeType, UserData);
-      cb = (void (*)(ErrorCode::ErrCodeType, UserData))uData->userCallBack;
+      void (*cb)(ErrorCode::ErrorCodeType, UserData);
+      cb = (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack;
       cb(retCode, uData->userData);
     }
   }
@@ -880,7 +886,7 @@ void CameraManagerAsyncSample::setCameraModeForAEBShootCb(
 
 void CameraManagerAsyncSample::startShootAEBPhotoAsyncSample(
     PayloadIndexType index, CameraModule::PhotoAEBCount count,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
@@ -902,8 +908,8 @@ void CameraManagerAsyncSample::startShootAEBPhotoAsyncSample(
                    setCameraModeForAEBShootCb, &uData);
 }
 
-void CameraManagerAsyncSample::setPhotoIntervalCb(ErrorCode::ErrCodeType retCode,
-                                             UserData userData) {
+void CameraManagerAsyncSample::setPhotoIntervalCb(
+    ErrorCode::ErrorCodeType retCode, UserData userData) {
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
   DSTATUS("retCode : 0x%lX", retCode);
@@ -917,23 +923,23 @@ void CameraManagerAsyncSample::setPhotoIntervalCb(ErrorCode::ErrCodeType retCode
       /*! start to shoot interval photo */
       uData->pm->startShootPhotoAsync(
           uData->index, CameraModule::ShootPhotoMode::INTERVAL,
-          (void (*)(ErrorCode::ErrCodeType retCode,
+          (void (*)(ErrorCode::ErrorCodeType retCode,
                     UserData userData))uData->userCallBack,
           uData->userData);
     }
   } else {
     DERROR("Set time interval parameter error. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     if (uData->userCallBack) {
-      void (*cb)(ErrorCode::ErrCodeType, UserData);
-      cb = (void (*)(ErrorCode::ErrCodeType, UserData))uData->userCallBack;
+      void (*cb)(ErrorCode::ErrorCodeType, UserData);
+      cb = (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack;
       cb(retCode, uData->userData);
     }
   }
 }
 
 void CameraManagerAsyncSample::setShootPhotoModeForIntervalShootCb(
-    ErrorCode::ErrCodeType retCode, UserData userData) {
+    ErrorCode::ErrorCodeType retCode, UserData userData) {
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
   DSTATUS("retCode : 0x%lX", retCode);
@@ -950,18 +956,19 @@ void CameraManagerAsyncSample::setShootPhotoModeForIntervalShootCb(
           setPhotoIntervalCb, uData);
     }
   } else {
-    DERROR("Set shoot photo mode as INTERVAL error. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    DERROR("Set shoot photo mode as INTERVAL error. Error code : 0x%lX",
+           retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     if (uData->userCallBack) {
-      void (*cb)(ErrorCode::ErrCodeType, UserData);
-      cb = (void (*)(ErrorCode::ErrCodeType, UserData))uData->userCallBack;
+      void (*cb)(ErrorCode::ErrorCodeType, UserData);
+      cb = (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack;
       cb(retCode, uData->userData);
     }
   }
 }
 
 void CameraManagerAsyncSample::setCameraModeForIntervalShootCb(
-    ErrorCode::ErrCodeType retCode, UserData userData) {
+    ErrorCode::ErrorCodeType retCode, UserData userData) {
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
   DSTATUS("retCode : 0x%lX", retCode);
@@ -980,10 +987,10 @@ void CameraManagerAsyncSample::setCameraModeForIntervalShootCb(
     }
   } else {
     DERROR("Set camera mode error. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     if (uData->userCallBack) {
-      void (*cb)(ErrorCode::ErrCodeType, UserData);
-      cb = (void (*)(ErrorCode::ErrCodeType, UserData))uData->userCallBack;
+      void (*cb)(ErrorCode::ErrorCodeType, UserData);
+      cb = (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack;
       cb(retCode, uData->userData);
     }
   }
@@ -991,7 +998,7 @@ void CameraManagerAsyncSample::setCameraModeForIntervalShootCb(
 
 void CameraManagerAsyncSample::startShootIntervalPhotoAsyncSample(
     PayloadIndexType index, CameraModule::PhotoIntervalData intervalData,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
@@ -1015,7 +1022,7 @@ void CameraManagerAsyncSample::startShootIntervalPhotoAsyncSample(
 
 void CameraManagerAsyncSample::stopShootPhotoAsyncSample(
     PayloadIndexType index,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");

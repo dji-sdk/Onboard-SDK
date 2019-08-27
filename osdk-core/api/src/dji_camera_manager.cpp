@@ -67,8 +67,8 @@ CameraModule* CameraManager::getCameraModule(std::string name) {
   return NULL;
 }
 
-ErrorCode::ErrCodeType CameraManager::initCameraModule(PayloadIndexType index,
-                                                     const char* name) {
+ErrorCode::ErrorCodeType CameraManager::initCameraModule(PayloadIndexType index,
+                                                         const char* name) {
   /* @TODO lock protest CameraModule */
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
@@ -81,7 +81,8 @@ ErrorCode::ErrCodeType CameraManager::initCameraModule(PayloadIndexType index,
   }
 }
 
-ErrorCode::ErrCodeType CameraManager::deinitCameraModule(PayloadIndexType index) {
+ErrorCode::ErrorCodeType CameraManager::deinitCameraModule(
+    PayloadIndexType index) {
   /* @TODO lock protest cameraMgr */
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
@@ -100,8 +101,8 @@ void CameraManager::deinitAllCameraModule() {
   }
 }
 
-ErrorCode::ErrCodeType CameraManager::getCameraModuleName(PayloadIndexType index,
-                                                        std::string& name) {
+ErrorCode::ErrorCodeType CameraManager::getCameraModuleName(
+    PayloadIndexType index, std::string& name) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     name = cameraMgr->getName();
@@ -111,8 +112,8 @@ ErrorCode::ErrCodeType CameraManager::getCameraModuleName(PayloadIndexType index
   }
 }
 
-ErrorCode::ErrCodeType CameraManager::getCameraModuleIndex(const char* name,
-                                                         uint8_t& index) {
+ErrorCode::ErrorCodeType CameraManager::getCameraModuleIndex(const char* name,
+                                                             uint8_t& index) {
   CameraModule* cameraMgr = getCameraModule(name);
   if (cameraMgr) {
     index = cameraMgr->getIndex();
@@ -122,7 +123,7 @@ ErrorCode::ErrCodeType CameraManager::getCameraModuleIndex(const char* name,
   }
 }
 
-ErrorCode::ErrCodeType CameraManager::getCameraModuleEnable(
+ErrorCode::ErrorCodeType CameraManager::getCameraModuleEnable(
     PayloadIndexType index, bool& enable) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
@@ -135,7 +136,7 @@ ErrorCode::ErrCodeType CameraManager::getCameraModuleEnable(
 
 void CameraManager::startShootPhotoAsync(
     PayloadIndexType index, CameraModule::ShootPhotoMode mode,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
@@ -146,7 +147,7 @@ void CameraManager::startShootPhotoAsync(
   }
 }
 
-ErrorCode::ErrCodeType CameraManager::startShootPhotoSync(
+ErrorCode::ErrorCodeType CameraManager::startShootPhotoSync(
     PayloadIndexType index, CameraModule::ShootPhotoMode mode, int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
@@ -158,7 +159,7 @@ ErrorCode::ErrCodeType CameraManager::startShootPhotoSync(
 
 void CameraManager::setISOAsync(
     PayloadIndexType index, CameraModule::ISO iso,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
@@ -169,9 +170,9 @@ void CameraManager::setISOAsync(
   }
 }
 
-ErrorCode::ErrCodeType CameraManager::setISOSync(PayloadIndexType index,
-                                               CameraModule::ISO iso,
-                                               int timeout) {
+ErrorCode::ErrorCodeType CameraManager::setISOSync(PayloadIndexType index,
+                                                   CameraModule::ISO iso,
+                                                   int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     return cameraMgr->setISOSync(iso, timeout);
@@ -181,7 +182,7 @@ ErrorCode::ErrCodeType CameraManager::setISOSync(PayloadIndexType index,
 }
 
 void CameraManager::getISOAsync(PayloadIndexType index,
-                                void (*UserCallBack)(ErrorCode::ErrCodeType,
+                                void (*UserCallBack)(ErrorCode::ErrorCodeType,
                                                      CameraModule::ISO iso,
                                                      UserData userData),
                                 UserData userData) {
@@ -195,9 +196,9 @@ void CameraManager::getISOAsync(PayloadIndexType index,
   }
 }
 
-ErrorCode::ErrCodeType CameraManager::getISOSync(PayloadIndexType index,
-                                               CameraModule::ISO& iso,
-                                               int timeout) {
+ErrorCode::ErrorCodeType CameraManager::getISOSync(PayloadIndexType index,
+                                                   CameraModule::ISO& iso,
+                                                   int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     return cameraMgr->getISOSync(iso, timeout);
@@ -208,7 +209,7 @@ ErrorCode::ErrCodeType CameraManager::getISOSync(PayloadIndexType index,
 
 void CameraManager::stopShootPhotoAsync(
     PayloadIndexType index,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
@@ -219,8 +220,8 @@ void CameraManager::stopShootPhotoAsync(
   }
 }
 
-ErrorCode::ErrCodeType CameraManager::stopShootPhotoSync(PayloadIndexType index,
-                                                       int timeout) {
+ErrorCode::ErrorCodeType CameraManager::stopShootPhotoSync(
+    PayloadIndexType index, int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     return cameraMgr->stopShootPhotoSync(timeout);
@@ -231,7 +232,7 @@ ErrorCode::ErrCodeType CameraManager::stopShootPhotoSync(PayloadIndexType index,
 
 void CameraManager::setShootPhotoModeAsync(
     PayloadIndexType index, CameraModule::ShootPhotoMode takePhotoMode,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
@@ -242,7 +243,7 @@ void CameraManager::setShootPhotoModeAsync(
   }
 }
 
-ErrorCode::ErrCodeType CameraManager::setShootPhotoModeSync(
+ErrorCode::ErrorCodeType CameraManager::setShootPhotoModeSync(
     PayloadIndexType index, CameraModule::ShootPhotoMode takePhotoMode,
     int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
@@ -255,7 +256,7 @@ ErrorCode::ErrCodeType CameraManager::setShootPhotoModeSync(
 
 void CameraManager::getShootPhotoModeAsync(
     PayloadIndexType index,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
                          CameraModule::ShootPhotoMode takePhotoMode,
                          UserData userData),
     UserData userData) {
@@ -270,7 +271,7 @@ void CameraManager::getShootPhotoModeAsync(
   }
 }
 
-ErrorCode::ErrCodeType CameraManager::getShootPhotoModeSync(
+ErrorCode::ErrorCodeType CameraManager::getShootPhotoModeSync(
     PayloadIndexType index, CameraModule::ShootPhotoMode& takePhotoMode,
     int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
@@ -283,7 +284,7 @@ ErrorCode::ErrCodeType CameraManager::getShootPhotoModeSync(
 
 void CameraManager::setPhotoBurstCountAsync(
     PayloadIndexType index, CameraModule::PhotoBurstCount count,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
@@ -294,7 +295,7 @@ void CameraManager::setPhotoBurstCountAsync(
   }
 }
 
-ErrorCode::ErrCodeType CameraManager::setPhotoBurstCountSync(
+ErrorCode::ErrorCodeType CameraManager::setPhotoBurstCountSync(
     PayloadIndexType index, CameraModule::PhotoBurstCount count, int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
@@ -306,7 +307,7 @@ ErrorCode::ErrCodeType CameraManager::setPhotoBurstCountSync(
 
 void CameraManager::getPhotoBurstCountAsync(
     PayloadIndexType index,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
                          CameraModule::PhotoBurstCount count,
                          UserData userData),
     UserData userData) {
@@ -320,7 +321,7 @@ void CameraManager::getPhotoBurstCountAsync(
   }
 }
 
-ErrorCode::ErrCodeType CameraManager::getPhotoBurstCountSync(
+ErrorCode::ErrorCodeType CameraManager::getPhotoBurstCountSync(
     PayloadIndexType index, CameraModule::PhotoBurstCount& count, int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
@@ -332,7 +333,7 @@ ErrorCode::ErrCodeType CameraManager::getPhotoBurstCountSync(
 
 void CameraManager::setPhotoAEBCountAsync(
     PayloadIndexType index, CameraModule::PhotoAEBCount count,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
@@ -343,7 +344,7 @@ void CameraManager::setPhotoAEBCountAsync(
   }
 }
 
-ErrorCode::ErrCodeType CameraManager::setPhotoAEBCountSync(
+ErrorCode::ErrorCodeType CameraManager::setPhotoAEBCountSync(
     PayloadIndexType index, CameraModule::PhotoAEBCount count, int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
@@ -355,7 +356,7 @@ ErrorCode::ErrCodeType CameraManager::setPhotoAEBCountSync(
 
 void CameraManager::getPhotoAEBCountAsync(
     PayloadIndexType index,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
                          CameraModule::PhotoAEBCount count, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
@@ -368,7 +369,7 @@ void CameraManager::getPhotoAEBCountAsync(
   }
 }
 
-ErrorCode::ErrCodeType CameraManager::getPhotoAEBCountSync(
+ErrorCode::ErrorCodeType CameraManager::getPhotoAEBCountSync(
     PayloadIndexType index, CameraModule::PhotoAEBCount& count, int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
@@ -380,7 +381,7 @@ ErrorCode::ErrCodeType CameraManager::getPhotoAEBCountSync(
 
 void CameraManager::setPhotoTimeIntervalSettingsAsync(
     PayloadIndexType index, CameraModule::PhotoIntervalData intervalSetting,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
@@ -392,7 +393,7 @@ void CameraManager::setPhotoTimeIntervalSettingsAsync(
   }
 }
 
-ErrorCode::ErrCodeType CameraManager::setPhotoTimeIntervalSettingsSync(
+ErrorCode::ErrorCodeType CameraManager::setPhotoTimeIntervalSettingsSync(
     PayloadIndexType index, CameraModule::PhotoIntervalData intervalSetting,
     int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
@@ -406,7 +407,7 @@ ErrorCode::ErrCodeType CameraManager::setPhotoTimeIntervalSettingsSync(
 
 void CameraManager::getPhotoIntervalDatasAsync(
     PayloadIndexType index,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
                          CameraModule::PhotoIntervalData intervalSetting,
                          UserData userData),
     UserData userData) {
@@ -421,7 +422,7 @@ void CameraManager::getPhotoIntervalDatasAsync(
   }
 }
 
-ErrorCode::ErrCodeType CameraManager::getPhotoIntervalDatasSync(
+ErrorCode::ErrorCodeType CameraManager::getPhotoIntervalDatasSync(
     PayloadIndexType index, CameraModule::PhotoIntervalData& intervalSetting,
     int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
@@ -434,7 +435,7 @@ ErrorCode::ErrCodeType CameraManager::getPhotoIntervalDatasSync(
 
 void CameraManager::startRecordVideoAsync(
     PayloadIndexType index,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
@@ -445,8 +446,8 @@ void CameraManager::startRecordVideoAsync(
   }
 }
 
-ErrorCode::ErrCodeType CameraManager::startRecordVideoSync(PayloadIndexType index,
-                                                         int timeout) {
+ErrorCode::ErrorCodeType CameraManager::startRecordVideoSync(
+    PayloadIndexType index, int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     return cameraMgr->startRecordVideoSync(timeout);
@@ -457,7 +458,7 @@ ErrorCode::ErrCodeType CameraManager::startRecordVideoSync(PayloadIndexType inde
 
 void CameraManager::stopRecordVideoAsync(
     PayloadIndexType index,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
@@ -468,8 +469,8 @@ void CameraManager::stopRecordVideoAsync(
   }
 }
 
-ErrorCode::ErrCodeType CameraManager::stopRecordVideoSync(PayloadIndexType index,
-                                                        int timeout) {
+ErrorCode::ErrorCodeType CameraManager::stopRecordVideoSync(
+    PayloadIndexType index, int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     return cameraMgr->stopRecordVideoSync(timeout);
@@ -480,7 +481,7 @@ ErrorCode::ErrCodeType CameraManager::stopRecordVideoSync(PayloadIndexType index
 
 void CameraManager::setModeAsync(
     PayloadIndexType index, CameraModule::WorkMode mode,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
@@ -491,9 +492,9 @@ void CameraManager::setModeAsync(
   }
 }
 
-ErrorCode::ErrCodeType CameraManager::setModeSync(PayloadIndexType index,
-                                                CameraModule::WorkMode mode,
-                                                int timeout) {
+ErrorCode::ErrorCodeType CameraManager::setModeSync(PayloadIndexType index,
+                                                    CameraModule::WorkMode mode,
+                                                    int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
     return cameraMgr->setModeSync(mode, timeout);
@@ -504,7 +505,7 @@ ErrorCode::ErrCodeType CameraManager::setModeSync(PayloadIndexType index,
 
 void CameraManager::getModeAsync(
     PayloadIndexType index,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
                          CameraModule::WorkMode workingMode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
@@ -517,7 +518,7 @@ void CameraManager::getModeAsync(
   }
 }
 
-ErrorCode::ErrCodeType CameraManager::getModeSync(
+ErrorCode::ErrorCodeType CameraManager::getModeSync(
     PayloadIndexType index, CameraModule::WorkMode& workingMode, int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
@@ -529,7 +530,7 @@ ErrorCode::ErrCodeType CameraManager::getModeSync(
 
 void CameraManager::setFocusModeAsync(
     PayloadIndexType index, CameraModule::FocusMode mode,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
@@ -540,7 +541,7 @@ void CameraManager::setFocusModeAsync(
   }
 }
 
-ErrorCode::ErrCodeType CameraManager::setFocusModeSync(
+ErrorCode::ErrorCodeType CameraManager::setFocusModeSync(
     PayloadIndexType index, CameraModule::FocusMode mode, int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
@@ -550,7 +551,7 @@ ErrorCode::ErrCodeType CameraManager::setFocusModeSync(
   }
 }
 
-ErrorCode::ErrCodeType CameraManager::getFocusModeSync(
+ErrorCode::ErrorCodeType CameraManager::getFocusModeSync(
     PayloadIndexType index, CameraModule::FocusMode& focusMode, int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
@@ -562,7 +563,7 @@ ErrorCode::ErrCodeType CameraManager::getFocusModeSync(
 
 void CameraManager::getFocusModeAsync(
     PayloadIndexType index,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
                          CameraModule::FocusMode focusMode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
@@ -577,7 +578,7 @@ void CameraManager::getFocusModeAsync(
 
 void CameraManager::setFocusTargetAsync(
     PayloadIndexType index, CameraModule::TapFocusPosData tapFocusPos,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
@@ -588,7 +589,7 @@ void CameraManager::setFocusTargetAsync(
   }
 }
 
-ErrorCode::ErrCodeType CameraManager::setFocusTargetSync(
+ErrorCode::ErrorCodeType CameraManager::setFocusTargetSync(
     PayloadIndexType index, CameraModule::TapFocusPosData tapFocusPos,
     int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
@@ -601,7 +602,7 @@ ErrorCode::ErrCodeType CameraManager::setFocusTargetSync(
 
 void CameraManager::getFocusTargetAsync(
     PayloadIndexType index,
-    void (*UserCallBack)(ErrorCode::ErrCodeType,
+    void (*UserCallBack)(ErrorCode::ErrorCodeType,
                          CameraModule::TapFocusPosData tapFocusPos,
                          UserData userData),
     UserData userData) {
@@ -615,7 +616,7 @@ void CameraManager::getFocusTargetAsync(
   }
 }
 
-ErrorCode::ErrCodeType CameraManager::getFocusTargetSync(
+ErrorCode::ErrorCodeType CameraManager::getFocusTargetSync(
     PayloadIndexType index, CameraModule::TapFocusPosData& tapFocusPos,
     int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
@@ -629,7 +630,7 @@ ErrorCode::ErrCodeType CameraManager::getFocusTargetSync(
 void CameraManager::startContinuousOpticalZoomAsync(
     PayloadIndexType index, CameraModule::zoomDirectionData zoomDirection,
     CameraModule::zoomSpeedData zoomSpeed,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
@@ -641,7 +642,7 @@ void CameraManager::startContinuousOpticalZoomAsync(
   }
 }
 
-ErrorCode::ErrCodeType CameraManager::startContinuousOpticalZoomSync(
+ErrorCode::ErrorCodeType CameraManager::startContinuousOpticalZoomSync(
     PayloadIndexType index, CameraModule::zoomDirectionData zoomDirection,
     CameraModule::zoomSpeedData zoomSpeed, int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
@@ -655,7 +656,7 @@ ErrorCode::ErrCodeType CameraManager::startContinuousOpticalZoomSync(
 
 void CameraManager::stopContinuousOpticalZoomAsync(
     PayloadIndexType index,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
@@ -666,7 +667,7 @@ void CameraManager::stopContinuousOpticalZoomAsync(
   }
 }
 
-ErrorCode::ErrCodeType CameraManager::stopContinuousOpticalZoomSync(
+ErrorCode::ErrorCodeType CameraManager::stopContinuousOpticalZoomSync(
     PayloadIndexType index, int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
@@ -678,7 +679,7 @@ ErrorCode::ErrCodeType CameraManager::stopContinuousOpticalZoomSync(
 
 void CameraManager::setTapZoomEnabledAsync(
     PayloadIndexType index, bool param,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
@@ -689,7 +690,7 @@ void CameraManager::setTapZoomEnabledAsync(
   }
 }
 
-ErrorCode::ErrCodeType CameraManager::setTapZoomEnabledSync(
+ErrorCode::ErrorCodeType CameraManager::setTapZoomEnabledSync(
     PayloadIndexType index, bool param, int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
@@ -701,7 +702,7 @@ ErrorCode::ErrCodeType CameraManager::setTapZoomEnabledSync(
 
 void CameraManager::getTapZoomEnabledAsync(
     PayloadIndexType index,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, bool param,
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, bool param,
                          UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
@@ -713,7 +714,7 @@ void CameraManager::getTapZoomEnabledAsync(
   }
 }
 
-ErrorCode::ErrCodeType CameraManager::getTapZoomEnabledSync(
+ErrorCode::ErrorCodeType CameraManager::getTapZoomEnabledSync(
     PayloadIndexType index, bool& param, int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
@@ -725,7 +726,7 @@ ErrorCode::ErrCodeType CameraManager::getTapZoomEnabledSync(
 
 void CameraManager::setTapZoomMultiplierAsync(
     PayloadIndexType index, CameraModule::TapZoomMultiplierData param,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr && (param >= 1) && (param <= 5)) {
@@ -736,7 +737,7 @@ void CameraManager::setTapZoomMultiplierAsync(
   }
 }
 
-ErrorCode::ErrCodeType CameraManager::setTapZoomMultiplierSync(
+ErrorCode::ErrorCodeType CameraManager::setTapZoomMultiplierSync(
     PayloadIndexType index, CameraModule::TapZoomMultiplierData param,
     int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
@@ -749,7 +750,7 @@ ErrorCode::ErrCodeType CameraManager::setTapZoomMultiplierSync(
 
 void CameraManager::getTapZoomMultiplierAsync(
     PayloadIndexType index,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
                          CameraModule::TapZoomMultiplierData param,
                          UserData userData),
     UserData userData) {
@@ -765,7 +766,7 @@ void CameraManager::getTapZoomMultiplierAsync(
   }
 }
 
-ErrorCode::ErrCodeType CameraManager::getTapZoomMultiplierSync(
+ErrorCode::ErrorCodeType CameraManager::getTapZoomMultiplierSync(
     PayloadIndexType index, CameraModule::TapZoomMultiplierData& param,
     int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
@@ -778,7 +779,7 @@ ErrorCode::ErrCodeType CameraManager::getTapZoomMultiplierSync(
 
 void CameraManager::tapZoomAtTargetAsync(
     PayloadIndexType index, CameraModule::TapZoomPosData tapZoomPos,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
@@ -789,7 +790,7 @@ void CameraManager::tapZoomAtTargetAsync(
   }
 }
 
-ErrorCode::ErrCodeType CameraManager::tapZoomAtTargetSync(
+ErrorCode::ErrorCodeType CameraManager::tapZoomAtTargetSync(
     PayloadIndexType index, CameraModule::TapZoomPosData tapZoomPos,
     int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
@@ -802,7 +803,7 @@ ErrorCode::ErrCodeType CameraManager::tapZoomAtTargetSync(
 
 void CameraManager::setExposureModeAsync(
     PayloadIndexType index, CameraModule::ExposureMode mode,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
@@ -813,7 +814,7 @@ void CameraManager::setExposureModeAsync(
   }
 }
 
-ErrorCode::ErrCodeType CameraManager::setExposureModeSync(
+ErrorCode::ErrorCodeType CameraManager::setExposureModeSync(
     PayloadIndexType index, CameraModule::ExposureMode mode, int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
@@ -825,7 +826,7 @@ ErrorCode::ErrCodeType CameraManager::setExposureModeSync(
 
 void CameraManager::getExposureModeAsync(
     PayloadIndexType index,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
                          CameraModule::ExposureMode mode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
@@ -838,7 +839,7 @@ void CameraManager::getExposureModeAsync(
   }
 }
 
-ErrorCode::ErrCodeType CameraManager::getExposureModeSync(
+ErrorCode::ErrorCodeType CameraManager::getExposureModeSync(
     PayloadIndexType index, CameraModule::ExposureMode& mode, int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
@@ -850,7 +851,7 @@ ErrorCode::ErrCodeType CameraManager::getExposureModeSync(
 
 void CameraManager::setApertureAsync(
     PayloadIndexType index, CameraModule::Aperture aperture,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
@@ -861,7 +862,7 @@ void CameraManager::setApertureAsync(
   }
 }
 
-ErrorCode::ErrCodeType CameraManager::setApertureSync(
+ErrorCode::ErrorCodeType CameraManager::setApertureSync(
     PayloadIndexType index, CameraModule::Aperture aperture, int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
@@ -873,8 +874,8 @@ ErrorCode::ErrCodeType CameraManager::setApertureSync(
 
 void CameraManager::getApertureAsync(
     PayloadIndexType index,
-    void (*UserCallBack)(ErrorCode::ErrCodeType, CameraModule::Aperture aperture,
-                         UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType,
+                         CameraModule::Aperture aperture, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
@@ -886,7 +887,7 @@ void CameraManager::getApertureAsync(
   }
 }
 
-ErrorCode::ErrCodeType CameraManager::getApertureSync(
+ErrorCode::ErrorCodeType CameraManager::getApertureSync(
     PayloadIndexType index, CameraModule::Aperture& aperture, int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
@@ -898,7 +899,7 @@ ErrorCode::ErrCodeType CameraManager::getApertureSync(
 
 void CameraManager::setShutterSpeedAsync(
     PayloadIndexType index, CameraModule::ShutterSpeed shutterSpeed,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
@@ -909,7 +910,7 @@ void CameraManager::setShutterSpeedAsync(
   }
 }
 
-ErrorCode::ErrCodeType CameraManager::setShutterSpeedSync(
+ErrorCode::ErrorCodeType CameraManager::setShutterSpeedSync(
     PayloadIndexType index, CameraModule::ShutterSpeed shutterSpeed,
     int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
@@ -922,7 +923,7 @@ ErrorCode::ErrCodeType CameraManager::setShutterSpeedSync(
 
 void CameraManager::getShutterSpeedAsync(
     PayloadIndexType index,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
                          CameraModule::ShutterSpeed shutterSpeed,
                          UserData userData),
     UserData userData) {
@@ -936,7 +937,7 @@ void CameraManager::getShutterSpeedAsync(
   }
 }
 
-ErrorCode::ErrCodeType CameraManager::getShutterSpeedSync(
+ErrorCode::ErrorCodeType CameraManager::getShutterSpeedSync(
     PayloadIndexType index, CameraModule::ShutterSpeed& shutterSpeed,
     int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
@@ -949,7 +950,7 @@ ErrorCode::ErrCodeType CameraManager::getShutterSpeedSync(
 
 void CameraManager::setExposureCompensationAsync(
     PayloadIndexType index, CameraModule::ExposureCompensation ev,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
@@ -960,7 +961,7 @@ void CameraManager::setExposureCompensationAsync(
   }
 }
 
-ErrorCode::ErrCodeType CameraManager::setExposureCompensationSync(
+ErrorCode::ErrorCodeType CameraManager::setExposureCompensationSync(
     PayloadIndexType index, CameraModule::ExposureCompensation ev,
     int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
@@ -973,7 +974,7 @@ ErrorCode::ErrCodeType CameraManager::setExposureCompensationSync(
 
 void CameraManager::getExposureCompensationAsync(
     PayloadIndexType index,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
                          CameraModule::ExposureCompensation ev,
                          UserData userData),
     UserData userData) {
@@ -987,7 +988,7 @@ void CameraManager::getExposureCompensationAsync(
   }
 }
 
-ErrorCode::ErrCodeType CameraManager::getExposureCompensationSync(
+ErrorCode::ErrorCodeType CameraManager::getExposureCompensationSync(
     PayloadIndexType index, CameraModule::ExposureCompensation& ev,
     int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);

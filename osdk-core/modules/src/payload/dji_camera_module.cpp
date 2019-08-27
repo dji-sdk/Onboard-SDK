@@ -40,12 +40,12 @@ CameraModule::CameraModule(PayloadLink* payloadLink,
 CameraModule::~CameraModule() {}
 
 template <typename AckT>
-ErrorCode::ErrCodeType CameraModule::commonDataUnpacker(RecvContainer recvFrame,
-                                                      AckT& ack) {
+ErrorCode::ErrorCodeType CameraModule::commonDataUnpacker(
+    RecvContainer recvFrame, AckT& ack) {
   if (recvFrame.recvInfo.len - OpenProtocol::PackageMin >= sizeof(AckT)) {
     ack = *(AckT*)(recvFrame.recvData.raw_ack_array);
-    return ErrorCode::getErrorCode(ErrorCode::CameraModule, ErrorCode::CameraCommon,
-                                 ack.ret_code);
+    return ErrorCode::getErrorCode(ErrorCode::CameraModule,
+                                   ErrorCode::CameraCommon, ack.ret_code);
   } else {
     DERROR("ACK is exception, data len %d (expect >= %d)\n",
            recvFrame.recvInfo.len - OpenProtocol::PackageMin, sizeof(AckT));
@@ -58,7 +58,7 @@ void CameraModule::getInterfaceAsync(
     FuncParam req,
     void (*ackDecoderCB)(Vehicle* vehicle, RecvContainer recvFrame,
                          UCBRetParamHandler<DataT>* ucb),
-    void (*userCB)(ErrorCode::ErrCodeType, DataT data, UserData userData),
+    void (*userCB)(ErrorCode::ErrorCodeType, DataT data, UserData userData),
     UserData userData, int timeout, int retry_time) {
   if (getEnable()) {
     payloadLink->sendAsync(OpenProtocolCMD::CMDSet::Control::extendedFunction,
@@ -73,8 +73,9 @@ void CameraModule::getInterfaceAsync(
 }
 
 template <typename AckT>
-ErrorCode::ErrCodeType CameraModule::getInterfaceSync(FuncParam req, AckT& ack,
-                                                    int timeout) {
+ErrorCode::ErrorCodeType CameraModule::getInterfaceSync(FuncParam req,
+                                                        AckT& ack,
+                                                        int timeout) {
   if (getEnable()) {
     ACK::ExtendedFunctionRsp* rsp = payloadLink->sendSync(
         OpenProtocolCMD::CMDSet::Control::extendedFunction, &req, sizeof(req),
@@ -82,8 +83,8 @@ ErrorCode::ErrCodeType CameraModule::getInterfaceSync(FuncParam req, AckT& ack,
     if (rsp->updated && rsp->info.buf &&
         (rsp->info.len - OpenProtocol::PackageMin >= sizeof(AckT))) {
       ack = (*(AckT*)rsp->info.buf);
-      return ErrorCode::getErrorCode(ErrorCode::CameraModule, ErrorCode::CameraCommon,
-                                   ack.ret_code);
+      return ErrorCode::getErrorCode(ErrorCode::CameraModule,
+                                     ErrorCode::CameraCommon, ack.ret_code);
     } else {
       if (!rsp->updated)
         return ErrorCode::SysCommonErr::ReqTimeout;
@@ -99,8 +100,8 @@ void CameraModule::setInterfaceAsync(
     ReqT req,
     void (*ackDecoderCB)(Vehicle* vehicle, RecvContainer recvFrame,
                          UCBRetCodeHandler* ucb),
-    void (*userCB)(ErrorCode::ErrCodeType, UserData userData), UserData userData,
-    int timeout, int retry_time) {
+    void (*userCB)(ErrorCode::ErrorCodeType, UserData userData),
+    UserData userData, int timeout, int retry_time) {
   if (getEnable()) {
     payloadLink->sendAsync(OpenProtocolCMD::CMDSet::Control::extendedFunction,
                            &req, sizeof(req), (void*)ackDecoderCB,
@@ -112,15 +113,16 @@ void CameraModule::setInterfaceAsync(
 }
 
 template <typename ReqT>
-ErrorCode::ErrCodeType CameraModule::setInterfaceSync(ReqT req, int timeout) {
+ErrorCode::ErrorCodeType CameraModule::setInterfaceSync(ReqT req, int timeout) {
   if (getEnable()) {
     ACK::ExtendedFunctionRsp* rsp = payloadLink->sendSync(
         OpenProtocolCMD::CMDSet::Control::extendedFunction, &req, sizeof(ReqT),
         timeout);
     if (rsp->updated && rsp->info.buf &&
         (rsp->info.len - OpenProtocol::PackageMin >= sizeof(CommonAck))) {
-      return ErrorCode::getErrorCode(ErrorCode::CameraModule, ErrorCode::CameraCommon,
-                                   ((CommonAck *) rsp->info.buf)->ret_code);
+      return ErrorCode::getErrorCode(ErrorCode::CameraModule,
+                                     ErrorCode::CameraCommon,
+                                     ((CommonAck*)rsp->info.buf)->ret_code);
     } else {
       if (!rsp->updated)
         return ErrorCode::SysCommonErr::ReqTimeout;
@@ -136,14 +138,15 @@ void CameraModule::actionInterfaceAsync(
     ReqT req,
     void (*ackDecoderCB)(Vehicle* vehicle, RecvContainer recvFrame,
                          UCBRetCodeHandler* ucb),
-    void (*userCB)(ErrorCode::ErrCodeType, UserData userData), UserData userData,
-    int timeout, int retry_time) {
+    void (*userCB)(ErrorCode::ErrorCodeType, UserData userData),
+    UserData userData, int timeout, int retry_time) {
   setInterfaceAsync<ReqT>(req, ackDecoderCB, userCB, userData, timeout,
                           retry_time);
 }
 
 template <typename ReqT>
-ErrorCode::ErrCodeType CameraModule::actionInterfaceSync(ReqT req, int timeout) {
+ErrorCode::ErrorCodeType CameraModule::actionInterfaceSync(ReqT req,
+                                                           int timeout) {
   setInterfaceSync<ReqT>(req, timeout);
 }
 
@@ -162,14 +165,14 @@ CameraModule::UCBRetCodeHandler* CameraModule::allocUCBHandler(
     ucbHandlerIndex = 0;
   }
   ucbHandler[ucbHandlerIndex].UserCallBack =
-      (void (*)(ErrorCode::ErrCodeType errCode, UserData userData))callback;
+      (void (*)(ErrorCode::ErrorCodeType errCode, UserData userData))callback;
   ucbHandler[ucbHandlerIndex].userData = userData;
   return &(ucbHandler[ucbHandlerIndex]);
 }
 
 void CameraModule::setExposureModeAsync(
     ExposureMode mode,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   ExposureModeReq req;
   req.funcParam.funcIndex = FUNCTION_SET_EXPOSURE_MODE;
@@ -180,8 +183,8 @@ void CameraModule::setExposureModeAsync(
                                      userData);
 }
 
-ErrorCode::ErrCodeType CameraModule::setExposureModeSync(ExposureMode mode,
-                                                       int timeout) {
+ErrorCode::ErrorCodeType CameraModule::setExposureModeSync(ExposureMode mode,
+                                                           int timeout) {
   ExposureModeReq req;
   req.funcParam.funcIndex = FUNCTION_SET_EXPOSURE_MODE;
   req.funcParam.payloadNodeIndex = (uint8_t)(this->getIndex() + 1);
@@ -191,7 +194,7 @@ ErrorCode::ErrCodeType CameraModule::setExposureModeSync(ExposureMode mode,
 }
 
 void CameraModule::getExposureModeAsync(
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, ExposureMode mode,
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, ExposureMode mode,
                          UserData userData),
     UserData userData) {
   FuncParam req;
@@ -201,13 +204,13 @@ void CameraModule::getExposureModeAsync(
                                   userData);
 }
 
-ErrorCode::ErrCodeType CameraModule::getExposureModeSync(ExposureMode& mode,
-                                                       int timeout) {
+ErrorCode::ErrorCodeType CameraModule::getExposureModeSync(ExposureMode& mode,
+                                                           int timeout) {
   FuncParam req;
   ExposureModeAck ack;
   req.funcIndex = FUNCTION_GET_EXPOSURE_MODE;
   req.payloadNodeIndex = (uint8_t)(this->getIndex() + 1);
-  ErrorCode::ErrCodeType ret =
+  ErrorCode::ErrorCodeType ret =
       getInterfaceSync<ExposureModeAck>(req, ack, timeout);
   if (ret == ErrorCode::SysCommonErr::Success)
     mode = (ExposureMode)ack.exposureMode;
@@ -216,7 +219,7 @@ ErrorCode::ErrCodeType CameraModule::getExposureModeSync(ExposureMode& mode,
 
 void CameraModule::setISOAsync(
     ISO iso,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   ISOParamReq req;
   req.funcParam.funcIndex = FUNCTION_SET_ISO_PARAMETER;
@@ -225,7 +228,7 @@ void CameraModule::setISOAsync(
   setInterfaceAsync<ISOParamReq>(req, commonAckDecoder, UserCallBack, userData);
 }
 
-ErrorCode::ErrCodeType CameraModule::setISOSync(ISO iso, int timeout) {
+ErrorCode::ErrorCodeType CameraModule::setISOSync(ISO iso, int timeout) {
   ISOParamReq req;
   req.funcParam.funcIndex = FUNCTION_SET_ISO_PARAMETER;
   req.funcParam.payloadNodeIndex = (uint8_t)(this->getIndex() + 1);
@@ -233,7 +236,7 @@ ErrorCode::ErrCodeType CameraModule::setISOSync(ISO iso, int timeout) {
   return setInterfaceSync<ISOParamReq>(req, timeout);
 }
 
-void CameraModule::getISOAsync(void (*UserCallBack)(ErrorCode::ErrCodeType,
+void CameraModule::getISOAsync(void (*UserCallBack)(ErrorCode::ErrorCodeType,
                                                     ISO iso, UserData userData),
                                UserData userData) {
   FuncParam req;
@@ -242,19 +245,20 @@ void CameraModule::getISOAsync(void (*UserCallBack)(ErrorCode::ErrCodeType,
   getInterfaceAsync<ISO>(req, getISODecoder, UserCallBack, userData);
 }
 
-ErrorCode::ErrCodeType CameraModule::getISOSync(ISO& iso, int timeout) {
+ErrorCode::ErrorCodeType CameraModule::getISOSync(ISO& iso, int timeout) {
   FuncParam req;
   ISOParamAck ack;
   req.funcIndex = FUNCTION_GET_ISO_PARAMETER;
   req.payloadNodeIndex = (uint8_t)(this->getIndex() + 1);
-  ErrorCode::ErrCodeType ret = getInterfaceSync<ISOParamAck>(req, ack, timeout);
+  ErrorCode::ErrorCodeType ret =
+      getInterfaceSync<ISOParamAck>(req, ack, timeout);
   if (ret == ErrorCode::SysCommonErr::Success) iso = (ISO)ack.iso;
   return ret;
 }
 
 void CameraModule::startShootPhotoAsync(
     ShootPhotoMode mode,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   ShootPhotoReq req;
   req.funcParam.funcIndex = FUNCTION_SIMPLE_SHOT;
@@ -264,8 +268,8 @@ void CameraModule::startShootPhotoAsync(
                                       userData, 2000, 1);
 }
 
-ErrorCode::ErrCodeType CameraModule::startShootPhotoSync(ShootPhotoMode mode,
-                                                       int timeout) {
+ErrorCode::ErrorCodeType CameraModule::startShootPhotoSync(ShootPhotoMode mode,
+                                                           int timeout) {
   ShootPhotoReq req;
   req.funcParam.funcIndex = FUNCTION_SIMPLE_SHOT;
   req.funcParam.payloadNodeIndex = (uint8_t)(this->getIndex() + 1);
@@ -274,7 +278,7 @@ ErrorCode::ErrCodeType CameraModule::startShootPhotoSync(ShootPhotoMode mode,
 }
 
 void CameraModule::stopShootPhotoAsync(
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   ShootPhotoReq req;
   req.funcParam.funcIndex = FUNCTION_SIMPLE_SHOT;
@@ -284,7 +288,7 @@ void CameraModule::stopShootPhotoAsync(
                                       userData);
 }
 
-ErrorCode::ErrCodeType CameraModule::stopShootPhotoSync(int timeout) {
+ErrorCode::ErrorCodeType CameraModule::stopShootPhotoSync(int timeout) {
   ShootPhotoReq req;
   req.funcParam.funcIndex = FUNCTION_SIMPLE_SHOT;
   req.funcParam.payloadNodeIndex = (uint8_t)(this->getIndex() + 1);
@@ -293,7 +297,7 @@ ErrorCode::ErrCodeType CameraModule::stopShootPhotoSync(int timeout) {
 }
 
 void CameraModule::startRecordVideoAsync(
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   RecordVideoReq req;
   req.funcParam.funcIndex = FUNCTION_RECORD_VIDEO;
@@ -304,7 +308,7 @@ void CameraModule::startRecordVideoAsync(
                                        userData);
 }
 
-ErrorCode::ErrCodeType CameraModule::startRecordVideoSync(int timeout) {
+ErrorCode::ErrorCodeType CameraModule::startRecordVideoSync(int timeout) {
   RecordVideoReq req;
   req.funcParam.funcIndex = FUNCTION_RECORD_VIDEO;
   req.funcParam.payloadNodeIndex = (uint8_t)(this->getIndex() + 1);
@@ -314,7 +318,7 @@ ErrorCode::ErrCodeType CameraModule::startRecordVideoSync(int timeout) {
 }
 
 void CameraModule::stopRecordVideoAsync(
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   RecordVideoReq req;
   req.funcParam.funcIndex = FUNCTION_RECORD_VIDEO;
@@ -325,7 +329,7 @@ void CameraModule::stopRecordVideoAsync(
                                        userData);
 }
 
-ErrorCode::ErrCodeType CameraModule::stopRecordVideoSync(int timeout) {
+ErrorCode::ErrorCodeType CameraModule::stopRecordVideoSync(int timeout) {
   RecordVideoReq req;
   req.funcParam.funcIndex = FUNCTION_RECORD_VIDEO;
   req.funcParam.payloadNodeIndex = (uint8_t)(this->getIndex() + 1);
@@ -336,7 +340,7 @@ ErrorCode::ErrCodeType CameraModule::stopRecordVideoSync(int timeout) {
 
 void CameraModule::setModeAsync(
     WorkMode mode,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   WorkModeReq req;
   req.funcParam.funcIndex = FUNCTION_SET_WORKING_MODE;
@@ -346,7 +350,7 @@ void CameraModule::setModeAsync(
                                  2000, 1);
 }
 
-ErrorCode::ErrCodeType CameraModule::setModeSync(WorkMode mode, int timeout) {
+ErrorCode::ErrorCodeType CameraModule::setModeSync(WorkMode mode, int timeout) {
   WorkModeReq req;
   req.funcParam.funcIndex = FUNCTION_SET_WORKING_MODE;
   req.funcParam.payloadNodeIndex = (uint8_t)(this->getIndex() + 1);
@@ -355,7 +359,7 @@ ErrorCode::ErrCodeType CameraModule::setModeSync(WorkMode mode, int timeout) {
 }
 
 void CameraModule::getModeAsync(
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, WorkMode workingMode,
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, WorkMode workingMode,
                          UserData userData),
     UserData userData) {
   FuncParam req;
@@ -364,13 +368,14 @@ void CameraModule::getModeAsync(
   getInterfaceAsync<WorkMode>(req, getModeDecoder, UserCallBack, userData);
 }
 
-ErrorCode::ErrCodeType CameraModule::getModeSync(WorkMode& workingMode,
-                                               int timeout) {
+ErrorCode::ErrorCodeType CameraModule::getModeSync(WorkMode& workingMode,
+                                                   int timeout) {
   FuncParam req;
   WorkModeAck ack;
   req.funcIndex = FUNCTION_GET_WORKING_MODE;
   req.payloadNodeIndex = (uint8_t)(this->getIndex() + 1);
-  ErrorCode::ErrCodeType ret = getInterfaceSync<WorkModeAck>(req, ack, timeout);
+  ErrorCode::ErrorCodeType ret =
+      getInterfaceSync<WorkModeAck>(req, ack, timeout);
   if (ret == ErrorCode::SysCommonErr::Success)
     workingMode = (WorkMode)ack.workingMode;
   return ret;
@@ -378,7 +383,7 @@ ErrorCode::ErrCodeType CameraModule::getModeSync(WorkMode& workingMode,
 
 void CameraModule::setFocusModeAsync(
     FocusMode mode,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   FocusModeReq req;
   req.funcParam.funcIndex = FUNCTION_SET_FOCUS_MODE;
@@ -388,8 +393,8 @@ void CameraModule::setFocusModeAsync(
                                   userData);
 }
 
-ErrorCode::ErrCodeType CameraModule::setFocusModeSync(FocusMode mode,
-                                                    int timeout) {
+ErrorCode::ErrorCodeType CameraModule::setFocusModeSync(FocusMode mode,
+                                                        int timeout) {
   FocusModeReq req;
   req.funcParam.funcIndex = FUNCTION_SET_FOCUS_MODE;
   req.funcParam.payloadNodeIndex = (uint8_t)(this->getIndex() + 1);
@@ -398,7 +403,7 @@ ErrorCode::ErrCodeType CameraModule::setFocusModeSync(FocusMode mode,
 }
 
 void CameraModule::getFocusModeAsync(
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, FocusMode focusMode,
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, FocusMode focusMode,
                          UserData userData),
     UserData userData) {
   FuncParam req;
@@ -408,13 +413,14 @@ void CameraModule::getFocusModeAsync(
                                userData);
 }
 
-ErrorCode::ErrCodeType CameraModule::getFocusModeSync(FocusMode& focusMode,
-                                                    int timeout) {
+ErrorCode::ErrorCodeType CameraModule::getFocusModeSync(FocusMode& focusMode,
+                                                        int timeout) {
   FuncParam req;
   FocusModeAck ack;
   req.funcIndex = FUNCTION_GET_FOCUS_MODE;
   req.payloadNodeIndex = (uint8_t)(this->getIndex() + 1);
-  ErrorCode::ErrCodeType ret = getInterfaceSync<FocusModeAck>(req, ack, timeout);
+  ErrorCode::ErrorCodeType ret =
+      getInterfaceSync<FocusModeAck>(req, ack, timeout);
   if (ret == ErrorCode::SysCommonErr::Success)
     focusMode = (FocusMode)ack.focusMode;
   return ret;
@@ -422,7 +428,7 @@ ErrorCode::ErrCodeType CameraModule::getFocusModeSync(FocusMode& focusMode,
 
 void CameraModule::setFocusTargetAsync(
     TapFocusPosData tapFocusPos,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   TapFocusPosReq req;
   req.funcParam.funcIndex = FUNCTION_SET_FOCUS_PARAMETER;
@@ -432,7 +438,7 @@ void CameraModule::setFocusTargetAsync(
                                     userData);
 }
 
-ErrorCode::ErrCodeType CameraModule::setFocusTargetSync(
+ErrorCode::ErrorCodeType CameraModule::setFocusTargetSync(
     TapFocusPosData tapFocusPos, int timeout) {
   TapFocusPosReq req;
   req.funcParam.funcIndex = FUNCTION_SET_FOCUS_PARAMETER;
@@ -443,7 +449,7 @@ ErrorCode::ErrCodeType CameraModule::setFocusTargetSync(
 
 void CameraModule::tapZoomAtTargetAsync(
     TapZoomPosData tapZoomPos,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   TapZoomPosReq req;
   req.funcParam.funcIndex = FUNCTION_POINT_ZOOM_CTRL;
@@ -453,7 +459,7 @@ void CameraModule::tapZoomAtTargetAsync(
                                    userData);
 }
 
-ErrorCode::ErrCodeType CameraModule::tapZoomAtTargetSync(
+ErrorCode::ErrorCodeType CameraModule::tapZoomAtTargetSync(
     TapZoomPosData tapZoomPos, int timeout) {
   TapZoomPosReq req;
   req.funcParam.funcIndex = FUNCTION_POINT_ZOOM_CTRL;
@@ -463,7 +469,7 @@ ErrorCode::ErrCodeType CameraModule::tapZoomAtTargetSync(
 }
 
 void CameraModule::getFocusTargetAsync(
-    void (*UserCallBack)(ErrorCode::ErrCodeType, TapFocusPosData tapFocusPos,
+    void (*UserCallBack)(ErrorCode::ErrorCodeType, TapFocusPosData tapFocusPos,
                          UserData userData),
     UserData userData) {
   FuncParam req;
@@ -473,13 +479,13 @@ void CameraModule::getFocusTargetAsync(
                                      userData);
 }
 
-ErrorCode::ErrCodeType CameraModule::getFocusTargetSync(
+ErrorCode::ErrorCodeType CameraModule::getFocusTargetSync(
     TapFocusPosData& tapFocusPos, int timeout) {
   FuncParam req;
   TapFocusPosAck ack;
   req.funcIndex = FUNCTION_GET_FOCUS_PARAMETER;
   req.payloadNodeIndex = (uint8_t)(this->getIndex() + 1);
-  ErrorCode::ErrCodeType ret =
+  ErrorCode::ErrorCodeType ret =
       getInterfaceSync<TapFocusPosAck>(req, ack, timeout);
   if (ret == ErrorCode::SysCommonErr::Success) tapFocusPos = ack.p;
   return ret;
@@ -487,7 +493,7 @@ ErrorCode::ErrCodeType CameraModule::getFocusTargetSync(
 
 void CameraModule::setApertureAsync(
     Aperture size,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   ApertureReq req;
   req.funcParam.funcIndex = FUNCTION_SET_APERTURE_SIZE;
@@ -496,7 +502,8 @@ void CameraModule::setApertureAsync(
   setInterfaceAsync<ApertureReq>(req, commonAckDecoder, UserCallBack, userData);
 }
 
-ErrorCode::ErrCodeType CameraModule::setApertureSync(Aperture size, int timeout) {
+ErrorCode::ErrorCodeType CameraModule::setApertureSync(Aperture size,
+                                                       int timeout) {
   ApertureReq req;
   req.funcParam.funcIndex = FUNCTION_SET_APERTURE_SIZE;
   req.funcParam.payloadNodeIndex = (uint8_t)(this->getIndex() + 1);
@@ -504,30 +511,31 @@ ErrorCode::ErrCodeType CameraModule::setApertureSync(Aperture size, int timeout)
   return setInterfaceSync<ApertureReq>(req, timeout);
 }
 
-void CameraModule::getApertureAsync(void (*UserCallBack)(ErrorCode::ErrCodeType,
-                                                         Aperture size,
-                                                         UserData userData),
-                                    UserData userData) {
+void CameraModule::getApertureAsync(
+    void (*UserCallBack)(ErrorCode::ErrorCodeType, Aperture size,
+                         UserData userData),
+    UserData userData) {
   FuncParam req;
   req.funcIndex = FUNCTION_GET_APERTURE_SIZE;
   req.payloadNodeIndex = (uint8_t)(this->getIndex() + 1);
   getInterfaceAsync<Aperture>(req, getApertureDecoder, UserCallBack, userData);
 }
 
-ErrorCode::ErrCodeType CameraModule::getApertureSync(Aperture& size,
-                                                   int timeout) {
+ErrorCode::ErrorCodeType CameraModule::getApertureSync(Aperture& size,
+                                                       int timeout) {
   FuncParam req;
   ApertureAck ack;
   req.funcIndex = FUNCTION_GET_APERTURE_SIZE;
   req.payloadNodeIndex = (uint8_t)(this->getIndex() + 1);
-  ErrorCode::ErrCodeType ret = getInterfaceSync<ApertureAck>(req, ack, timeout);
+  ErrorCode::ErrorCodeType ret =
+      getInterfaceSync<ApertureAck>(req, ack, timeout);
   if (ret == ErrorCode::SysCommonErr::Success) size = (Aperture)ack.size;
   return ret;
 }
 
 void CameraModule::setShutterSpeedAsync(
     ShutterSpeed shutterSpeed,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   ShutterReq req;
   req.funcParam.funcIndex = FunctionID::FUNCTION_SET_SHUTTER_SPEED;
@@ -539,7 +547,7 @@ void CameraModule::setShutterSpeedAsync(
 }
 
 void CameraModule::getShutterSpeedAsync(
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
                          ShutterSpeed shutterSpeed, UserData userData),
     UserData userData) {
   FuncParam req;
@@ -549,7 +557,7 @@ void CameraModule::getShutterSpeedAsync(
                                   userData);
 }
 
-ErrorCode::ErrCodeType CameraModule::setShutterSpeedSync(
+ErrorCode::ErrorCodeType CameraModule::setShutterSpeedSync(
     ShutterSpeed shutterSpeed, int timeout) {
   ShutterReq req;
   req.funcParam.funcIndex = FUNCTION_SET_SHUTTER_SPEED;
@@ -560,13 +568,14 @@ ErrorCode::ErrCodeType CameraModule::setShutterSpeedSync(
   return setInterfaceSync<ShutterReq>(req, timeout);
 }
 
-ErrorCode::ErrCodeType CameraModule::getShutterSpeedSync(
+ErrorCode::ErrorCodeType CameraModule::getShutterSpeedSync(
     ShutterSpeed& shutterSpeed, int timeout) {
   FuncParam req;
   ShutterAck ack;
   req.funcIndex = FUNCTION_GET_SHUTTER_SPEED;
   req.payloadNodeIndex = (uint8_t)(this->getIndex() + 1);
-  ErrorCode::ErrCodeType ret = getInterfaceSync<ShutterAck>(req, ack, timeout);
+  ErrorCode::ErrorCodeType ret =
+      getInterfaceSync<ShutterAck>(req, ack, timeout);
   if (ret == ErrorCode::SysCommonErr::Success)
     shutterSpeed = ShutterSpeedTypeToShutterSpeedEnum(ack.shutter.reciprocal,
                                                       ack.shutter.integer_part,
@@ -576,7 +585,7 @@ ErrorCode::ErrCodeType CameraModule::getShutterSpeedSync(
 
 void CameraModule::setExposureCompensationAsync(
     ExposureCompensation ev,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   ExposureCompensationReq req;
   req.funcParam.funcIndex = FUNCTION_SET_EV_PARAMETER;
@@ -586,7 +595,7 @@ void CameraModule::setExposureCompensationAsync(
                                              UserCallBack, userData);
 }
 
-ErrorCode::ErrCodeType CameraModule::setExposureCompensationSync(
+ErrorCode::ErrorCodeType CameraModule::setExposureCompensationSync(
     ExposureCompensation ev, int timeout) {
   ExposureCompensationReq req;
   req.funcParam.funcIndex = FUNCTION_SET_EV_PARAMETER;
@@ -596,8 +605,8 @@ ErrorCode::ErrCodeType CameraModule::setExposureCompensationSync(
 }
 
 void CameraModule::getExposureCompensationAsync(
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, ExposureCompensation ev,
-                         UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
+                         ExposureCompensation ev, UserData userData),
     UserData userData) {
   FuncParam req;
   req.funcIndex = FUNCTION_GET_EV_PARAMETER;
@@ -606,13 +615,13 @@ void CameraModule::getExposureCompensationAsync(
                                           userData);
 }
 
-ErrorCode::ErrCodeType CameraModule::getExposureCompensationSync(
+ErrorCode::ErrorCodeType CameraModule::getExposureCompensationSync(
     ExposureCompensation& ev, int timeout) {
   FuncParam req;
   ExposureCompensationAck ack;
   req.funcIndex = FUNCTION_GET_EV_PARAMETER;
   req.payloadNodeIndex = (uint8_t)(this->getIndex() + 1);
-  ErrorCode::ErrCodeType ret =
+  ErrorCode::ErrorCodeType ret =
       getInterfaceSync<ExposureCompensationAck>(req, ack, timeout);
   if (ret == ErrorCode::SysCommonErr::Success)
     ev = (ExposureCompensation)ack.ev_param;
@@ -621,7 +630,7 @@ ErrorCode::ErrCodeType CameraModule::getExposureCompensationSync(
 
 void CameraModule::startContinuousOpticalZoomAsync(
     zoomDirectionData zoomDirection, zoomSpeedData zoomSpeed,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   zoomOptiParamReq req = {0};
   req.funcParam.funcIndex = FUNCTION_CONTROL_OPTIZOOM;
@@ -634,7 +643,7 @@ void CameraModule::startContinuousOpticalZoomAsync(
                                       userData);
 }
 
-ErrorCode::ErrCodeType CameraModule::startContinuousOpticalZoomSync(
+ErrorCode::ErrorCodeType CameraModule::startContinuousOpticalZoomSync(
     zoomDirectionData zoomDirection, zoomSpeedData zoomSpeed, int timeout) {
   zoomOptiParamReq req = {0};
   req.funcParam.funcIndex = FUNCTION_CONTROL_OPTIZOOM;
@@ -647,7 +656,7 @@ ErrorCode::ErrCodeType CameraModule::startContinuousOpticalZoomSync(
 }
 
 void CameraModule::stopContinuousOpticalZoomAsync(
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   zoomOptiParamReq req = {0};
   req.funcParam.funcIndex = FUNCTION_CONTROL_OPTIZOOM;
@@ -657,7 +666,8 @@ void CameraModule::stopContinuousOpticalZoomAsync(
                                       userData);
 }
 
-ErrorCode::ErrCodeType CameraModule::stopContinuousOpticalZoomSync(int timeout) {
+ErrorCode::ErrorCodeType CameraModule::stopContinuousOpticalZoomSync(
+    int timeout) {
   zoomOptiParamReq req = {0};
   req.funcParam.funcIndex = FUNCTION_CONTROL_OPTIZOOM;
   req.funcParam.payloadNodeIndex = (uint8_t)(this->getIndex() + 1);
@@ -669,7 +679,7 @@ typedef struct TapZoomEnabledHandler {
   CameraModule* cameraModule;
   CameraModule::TapZoomEnableData enable;
   CameraModule::TapZoomMultiplierData multiplier;
-  void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData);
+  void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData);
   UserData userData;
 } TapZoomEnabledHandler;
 
@@ -693,7 +703,7 @@ TapZoomEnabledHandler* allocTapZoomEnabledHandlerMemory() {
 
 void CameraModule::setTapZoomEnabledAsync(
     bool param,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   TapZoomEnabledHandler* handler = allocTapZoomEnabledHandlerMemory();
   handler->cameraModule = this;
@@ -703,10 +713,10 @@ void CameraModule::setTapZoomEnabledAsync(
   getTapZoomMultiplierAsync(callbackToSetTapZoomEnabled, handler);
 }
 
-ErrorCode::ErrCodeType CameraModule::setTapZoomEnabledSync(bool param,
-                                                         int timeout) {
+ErrorCode::ErrorCodeType CameraModule::setTapZoomEnabledSync(bool param,
+                                                             int timeout) {
   TapZoomMultiplierData multiplier;
-  ErrorCode::ErrCodeType errCode = getTapZoomMultiplierSync(multiplier, 1);
+  ErrorCode::ErrorCodeType errCode = getTapZoomMultiplierSync(multiplier, 1);
   if (errCode != ErrorCode::SysCommonErr::Success) {
     return errCode;
   } else {
@@ -719,7 +729,7 @@ ErrorCode::ErrCodeType CameraModule::setTapZoomEnabledSync(bool param,
   }
 }
 
-void CameraModule::callbackToSetTapZoomEnabled(ErrorCode::ErrCodeType retCode,
+void CameraModule::callbackToSetTapZoomEnabled(ErrorCode::ErrorCodeType retCode,
                                                TapZoomMultiplierData multiplier,
                                                UserData userData) {
   if (!userData) return;
@@ -739,7 +749,7 @@ void CameraModule::callbackToSetTapZoomEnabled(ErrorCode::ErrCodeType retCode,
 }
 
 void CameraModule::getTapZoomEnabledAsync(
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, bool param,
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, bool param,
                          UserData userData),
     UserData userData) {
   FuncParam req;
@@ -749,13 +759,13 @@ void CameraModule::getTapZoomEnabledAsync(
                           userData);
 }
 
-ErrorCode::ErrCodeType CameraModule::getTapZoomEnabledSync(bool& param,
-                                                         int timeout) {
+ErrorCode::ErrorCodeType CameraModule::getTapZoomEnabledSync(bool& param,
+                                                             int timeout) {
   FuncParam req;
   TapZoomEnableAck ack;
   req.funcIndex = FUNCTION_GET_POINT_ZOOM_MODE;
   req.payloadNodeIndex = (uint8_t)(this->getIndex() + 1);
-  ErrorCode::ErrCodeType ret =
+  ErrorCode::ErrorCodeType ret =
       getInterfaceSync<TapZoomEnableAck>(req, ack, timeout);
   if (ret == ErrorCode::SysCommonErr::Success) param = (bool)ack.tapZoomEnable;
   return ret;
@@ -763,7 +773,7 @@ ErrorCode::ErrCodeType CameraModule::getTapZoomEnabledSync(bool& param,
 
 void CameraModule::setTapZoomMultiplierAsync(
     TapZoomMultiplierData param,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   TapZoomEnabledHandler* handler = allocTapZoomEnabledHandlerMemory();
   handler->cameraModule = this;
@@ -774,10 +784,10 @@ void CameraModule::setTapZoomMultiplierAsync(
   getTapZoomEnabledAsync(callbackToSetTapZoomMultiplier, handler);
 }
 
-ErrorCode::ErrCodeType CameraModule::setTapZoomMultiplierSync(
+ErrorCode::ErrorCodeType CameraModule::setTapZoomMultiplierSync(
     TapZoomMultiplierData param, int timeout) {
   bool enableData;
-  ErrorCode::ErrCodeType errCode = getTapZoomEnabledSync(enableData, 1);
+  ErrorCode::ErrorCodeType errCode = getTapZoomEnabledSync(enableData, 1);
   if (errCode != ErrorCode::SysCommonErr::Success) {
     return errCode;
   } else {
@@ -790,9 +800,8 @@ ErrorCode::ErrCodeType CameraModule::setTapZoomMultiplierSync(
   }
 }
 
-void CameraModule::callbackToSetTapZoomMultiplier(ErrorCode::ErrCodeType retCode,
-                                                  bool enable,
-                                                  UserData userData) {
+void CameraModule::callbackToSetTapZoomMultiplier(
+    ErrorCode::ErrorCodeType retCode, bool enable, UserData userData) {
   if (!userData) return;
   TapZoomEnabledHandler handler = *(TapZoomEnabledHandler*)userData;
   if (retCode != ErrorCode::SysCommonErr::Success) {
@@ -810,7 +819,7 @@ void CameraModule::callbackToSetTapZoomMultiplier(ErrorCode::ErrCodeType retCode
 }
 
 void CameraModule::getTapZoomMultiplierAsync(
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
                          TapZoomMultiplierData param, UserData userData),
     UserData userData) {
   FuncParam req;
@@ -820,13 +829,13 @@ void CameraModule::getTapZoomMultiplierAsync(
                                            UserCallBack, userData);
 }
 
-ErrorCode::ErrCodeType CameraModule::getTapZoomMultiplierSync(
+ErrorCode::ErrorCodeType CameraModule::getTapZoomMultiplierSync(
     TapZoomMultiplierData& param, int timeout) {
   FuncParam req;
   TapZoomEnableAck ack;
   req.funcIndex = FUNCTION_GET_POINT_ZOOM_MODE;
   req.payloadNodeIndex = (uint8_t)(this->getIndex() + 1);
-  ErrorCode::ErrCodeType ret =
+  ErrorCode::ErrorCodeType ret =
       getInterfaceSync<TapZoomEnableAck>(req, ack, timeout);
   if (ret == ErrorCode::SysCommonErr::Success) param = ack.multiplier;
   return ret;
@@ -836,12 +845,12 @@ void CameraModule::commonAckDecoder(Vehicle* vehicle, RecvContainer recvFrame,
                                     UCBRetCodeHandler* ucb) {
   if (ucb && ucb->UserCallBack) {
     CommonAck ack = {0};
-    ErrorCode::ErrCodeType ret = 0;
+    ErrorCode::ErrorCodeType ret = 0;
     if (recvFrame.recvInfo.len - OpenProtocol::PackageMin >=
         sizeof(CommonAck)) {
       ack = *(CommonAck*)(recvFrame.recvData.raw_ack_array);
-      ret = ErrorCode::getErrorCode(ErrorCode::CameraModule, ErrorCode::CameraCommon,
-                                  ack.ret_code);
+      ret = ErrorCode::getErrorCode(ErrorCode::CameraModule,
+                                    ErrorCode::CameraCommon, ack.ret_code);
     } else {
       DERROR("ACK is exception, data len %d (expect >= %d)\n",
              recvFrame.recvInfo.len - OpenProtocol::PackageMin,
@@ -856,7 +865,7 @@ void CameraModule::getISODecoder(Vehicle* vehicle, RecvContainer recvFrame,
                                  UCBRetParamHandler<ISO>* ucb) {
   if (ucb && ucb->UserCallBack) {
     ISOParamAck ack = {0};
-    ErrorCode::ErrCodeType retCode =
+    ErrorCode::ErrorCodeType retCode =
         commonDataUnpacker<ISOParamAck>(recvFrame, ack);
     ucb->UserCallBack(retCode, (ISO)ack.iso, ucb->userData);
   }
@@ -867,7 +876,7 @@ void CameraModule::getExposureModeDecoder(
     UCBRetParamHandler<ExposureMode>* ucb) {
   if (ucb && ucb->UserCallBack) {
     ExposureModeAck ack = {0};
-    ErrorCode::ErrCodeType retCode =
+    ErrorCode::ErrorCodeType retCode =
         commonDataUnpacker<ExposureModeAck>(recvFrame, ack);
     ucb->UserCallBack(retCode, (ExposureMode)ack.exposureMode, ucb->userData);
   }
@@ -877,7 +886,7 @@ void CameraModule::getModeDecoder(Vehicle* vehicle, RecvContainer recvFrame,
                                   UCBRetParamHandler<WorkMode>* ucb) {
   if (ucb && ucb->UserCallBack) {
     WorkModeAck ack = {0};
-    ErrorCode::ErrCodeType retCode =
+    ErrorCode::ErrorCodeType retCode =
         commonDataUnpacker<WorkModeAck>(recvFrame, ack);
     ucb->UserCallBack(retCode, (WorkMode)ack.workingMode, ucb->userData);
   }
@@ -888,7 +897,7 @@ void CameraModule::getFocusModeDecoder(Vehicle* vehicle,
                                        UCBRetParamHandler<FocusMode>* ucb) {
   if (ucb && ucb->UserCallBack) {
     FocusModeAck ack = {0};
-    ErrorCode::ErrCodeType retCode =
+    ErrorCode::ErrorCodeType retCode =
         commonDataUnpacker<FocusModeAck>(recvFrame, ack);
     ucb->UserCallBack(retCode, (FocusMode)ack.focusMode, ucb->userData);
   }
@@ -899,7 +908,7 @@ void CameraModule::getFocusTargetDecoder(
     UCBRetParamHandler<TapFocusPosData>* ucb) {
   if (ucb && ucb->UserCallBack) {
     TapFocusPosAck ack = {0};
-    ErrorCode::ErrCodeType retCode =
+    ErrorCode::ErrorCodeType retCode =
         commonDataUnpacker<TapFocusPosAck>(recvFrame, ack);
     ucb->UserCallBack(retCode, ack.p, ucb->userData);
   }
@@ -909,7 +918,7 @@ void CameraModule::getApertureDecoder(Vehicle* vehicle, RecvContainer recvFrame,
                                       UCBRetParamHandler<Aperture>* ucb) {
   if (ucb && ucb->UserCallBack) {
     ApertureAck ack = {0};
-    ErrorCode::ErrCodeType retCode =
+    ErrorCode::ErrorCodeType retCode =
         commonDataUnpacker<ApertureAck>(recvFrame, ack);
     ucb->UserCallBack(retCode, (Aperture)ack.size, ucb->userData);
   }
@@ -920,7 +929,7 @@ void CameraModule::getCaptureParamDataDecoder(
     UCBRetParamHandler<CaptureParamData>* ucb) {
   if (ucb && ucb->UserCallBack) {
     CaptureParamAck ack = {0};
-    ErrorCode::ErrCodeType retCode =
+    ErrorCode::ErrorCodeType retCode =
         commonDataUnpacker<CaptureParamAck>(recvFrame, ack);
     ucb->UserCallBack(retCode, ack.captureParam, ucb->userData);
   }
@@ -931,7 +940,7 @@ void CameraModule::getShootPhotoModeDataDecoder(
     UCBRetParamHandler<ShootPhotoMode>* ucb) {
   if (ucb && ucb->UserCallBack) {
     CaptureParamAck ack = {0};
-    ErrorCode::ErrCodeType retCode =
+    ErrorCode::ErrorCodeType retCode =
         commonDataUnpacker<CaptureParamAck>(recvFrame, ack);
     ucb->UserCallBack(retCode, (ShootPhotoMode)ack.captureParam.captureMode,
                       ucb->userData);
@@ -943,7 +952,7 @@ void CameraModule::getPhotoAEBCountDecoder(
     UCBRetParamHandler<PhotoAEBCount>* ucb) {
   if (ucb && ucb->UserCallBack) {
     CaptureParamAck ack = {0};
-    ErrorCode::ErrCodeType retCode =
+    ErrorCode::ErrorCodeType retCode =
         commonDataUnpacker<CaptureParamAck>(recvFrame, ack);
     ucb->UserCallBack(retCode, (PhotoAEBCount)ack.captureParam.photoNumBurst,
                       ucb->userData);
@@ -955,7 +964,7 @@ void CameraModule::getPhotoBurstCountDecoder(
     UCBRetParamHandler<PhotoBurstCount>* ucb) {
   if (ucb && ucb->UserCallBack) {
     CaptureParamAck ack = {0};
-    ErrorCode::ErrCodeType retCode =
+    ErrorCode::ErrorCodeType retCode =
         commonDataUnpacker<CaptureParamAck>(recvFrame, ack);
     ucb->UserCallBack(retCode, (PhotoBurstCount)ack.captureParam.photoNumBurst,
                       ucb->userData);
@@ -967,7 +976,7 @@ void CameraModule::getPhotoIntervalDatasDecoder(
     UCBRetParamHandler<PhotoIntervalData>* ucb) {
   if (ucb && ucb->UserCallBack) {
     CaptureParamAck ack = {0};
-    ErrorCode::ErrCodeType retCode =
+    ErrorCode::ErrorCodeType retCode =
         commonDataUnpacker<CaptureParamAck>(recvFrame, ack);
     ucb->UserCallBack(retCode, ack.captureParam.intervalSetting, ucb->userData);
   }
@@ -978,7 +987,7 @@ void CameraModule::getShutterSpeedDecoder(
     UCBRetParamHandler<ShutterSpeed>* ucb) {
   ShutterAck ack = {0};
   if (ucb && ucb->UserCallBack) {
-    ErrorCode::ErrCodeType retCode =
+    ErrorCode::ErrorCodeType retCode =
         commonDataUnpacker<ShutterAck>(recvFrame, ack);
     ShutterSpeed shutterSpeed = ShutterSpeedTypeToShutterSpeedEnum(
         ack.shutter.reciprocal, ack.shutter.integer_part,
@@ -991,7 +1000,7 @@ void CameraModule::getEVDecoder(Vehicle* vehicle, RecvContainer recvFrame,
                                 UCBRetParamHandler<ExposureCompensation>* ucb) {
   if (ucb && ucb->UserCallBack) {
     ExposureCompensationAck ack = {0};
-    ErrorCode::ErrCodeType retCode =
+    ErrorCode::ErrorCodeType retCode =
         commonDataUnpacker<ExposureCompensationAck>(recvFrame, ack);
     ucb->UserCallBack(retCode, (ExposureCompensation)ack.ev_param,
                       ucb->userData);
@@ -1003,7 +1012,7 @@ void CameraModule::getTapZoomEnabledDecoder(Vehicle* vehicle,
                                             UCBRetParamHandler<bool>* ucb) {
   if (ucb && ucb->UserCallBack) {
     TapZoomEnableAck ack = {0};
-    ErrorCode::ErrCodeType retCode =
+    ErrorCode::ErrorCodeType retCode =
         commonDataUnpacker<TapZoomEnableAck>(recvFrame, ack);
     ucb->UserCallBack(retCode, (bool)ack.tapZoomEnable, ucb->userData);
   }
@@ -1014,7 +1023,7 @@ void CameraModule::getTapZoomMultiplierDecoder(
     UCBRetParamHandler<TapZoomMultiplierData>* ucb) {
   if (ucb && ucb->UserCallBack) {
     TapZoomEnableAck ack = {0};
-    ErrorCode::ErrCodeType retCode =
+    ErrorCode::ErrorCodeType retCode =
         commonDataUnpacker<TapZoomEnableAck>(recvFrame, ack);
     ucb->UserCallBack(retCode, ack.multiplier, ucb->userData);
   }
@@ -1385,7 +1394,7 @@ CameraModule::ShutterSpeed CameraModule::ShutterSpeedTypeToShutterSpeedEnum(
 }
 
 void CameraModule::getCaptureParamDataAsync(
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
                          CaptureParamData captureParam, UserData userData),
     UserData userData) {
   FuncParam req;
@@ -1395,13 +1404,13 @@ void CameraModule::getCaptureParamDataAsync(
                                       UserCallBack, userData);
 }
 
-ErrorCode::ErrCodeType CameraModule::getCaptureParamDataSync(
+ErrorCode::ErrorCodeType CameraModule::getCaptureParamDataSync(
     CaptureParamData& captureParam, int timeout) {
   FuncParam req;
   CaptureParamAck ack;
   req.funcIndex = FUNCTION_GET_SHOT_MODE;
   req.payloadNodeIndex = (uint8_t)(this->getIndex() + 1);
-  ErrorCode::ErrCodeType ret =
+  ErrorCode::ErrorCodeType ret =
       getInterfaceSync<CaptureParamAck>(req, ack, timeout);
   if (ret == ErrorCode::SysCommonErr::Success) captureParam = ack.captureParam;
   return ret;
@@ -1410,7 +1419,7 @@ ErrorCode::ErrCodeType CameraModule::getCaptureParamDataSync(
 typedef struct shootPhotoParamHandler {
   CameraModule* cameraModule;
   CameraModule::CaptureParamData paramData;
-  void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData);
+  void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData);
   UserData userData;
 } shootPhotoParamHandler;
 
@@ -1432,7 +1441,7 @@ shootPhotoParamHandler* allocShootPhotoParamHandlerMemory() {
   return &(handler[index]);
 }
 
-void CameraModule::callbackToSetShootPhotoMode(ErrorCode::ErrCodeType retCode,
+void CameraModule::callbackToSetShootPhotoMode(ErrorCode::ErrorCodeType retCode,
                                                CaptureParamData captureParam,
                                                UserData userData) {
   if (!userData) return;
@@ -1454,7 +1463,7 @@ void CameraModule::callbackToSetShootPhotoMode(ErrorCode::ErrCodeType retCode,
 
 void CameraModule::setShootPhotoModeAsync(
     ShootPhotoMode takePhotoMode,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   shootPhotoParamHandler* handler = allocShootPhotoParamHandlerMemory();
   handler->cameraModule = this;
@@ -1464,10 +1473,11 @@ void CameraModule::setShootPhotoModeAsync(
   getCaptureParamDataAsync(callbackToSetShootPhotoMode, handler);
 }
 
-ErrorCode::ErrCodeType CameraModule::setShootPhotoModeSync(
+ErrorCode::ErrorCodeType CameraModule::setShootPhotoModeSync(
     ShootPhotoMode takePhotoMode, int timeout) {
   CaptureParamData captureParamData;
-  ErrorCode::ErrCodeType errCode = getCaptureParamDataSync(captureParamData, 1);
+  ErrorCode::ErrorCodeType errCode =
+      getCaptureParamDataSync(captureParamData, 1);
   if (errCode != ErrorCode::SysCommonErr::Success) {
     return errCode;
   } else {
@@ -1481,7 +1491,7 @@ ErrorCode::ErrCodeType CameraModule::setShootPhotoModeSync(
 }
 
 void CameraModule::getShootPhotoModeAsync(
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
                          ShootPhotoMode takePhotoMode, UserData userData),
     UserData userData) {
   FuncParam req;
@@ -1491,18 +1501,19 @@ void CameraModule::getShootPhotoModeAsync(
                                     UserCallBack, userData);
 }
 
-ErrorCode::ErrCodeType CameraModule::getShootPhotoModeSync(
+ErrorCode::ErrorCodeType CameraModule::getShootPhotoModeSync(
     ShootPhotoMode& takePhotoMode, int timeout) {
   CaptureParamData captureParam;
-  ErrorCode::ErrCodeType errCode = getCaptureParamDataSync(captureParam, timeout);
+  ErrorCode::ErrorCodeType errCode =
+      getCaptureParamDataSync(captureParam, timeout);
   if (errCode == ErrorCode::SysCommonErr::Success)
     takePhotoMode = (ShootPhotoMode)captureParam.captureMode;
   return errCode;
 }
 
-void CameraModule::callbackToSetPhotoBurstCount(ErrorCode::ErrCodeType retCode,
-                                                CaptureParamData captureParam,
-                                                UserData userData) {
+void CameraModule::callbackToSetPhotoBurstCount(
+    ErrorCode::ErrorCodeType retCode, CaptureParamData captureParam,
+    UserData userData) {
   if (!userData) return;
   shootPhotoParamHandler handler = *(shootPhotoParamHandler*)userData;
   if (retCode != ErrorCode::SysCommonErr::Success) {
@@ -1522,7 +1533,7 @@ void CameraModule::callbackToSetPhotoBurstCount(ErrorCode::ErrCodeType retCode,
 
 void CameraModule::setPhotoBurstCountAsync(
     PhotoBurstCount count,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   shootPhotoParamHandler* handler = allocShootPhotoParamHandlerMemory();
   handler->cameraModule = this;
@@ -1532,10 +1543,11 @@ void CameraModule::setPhotoBurstCountAsync(
   getCaptureParamDataAsync(callbackToSetPhotoBurstCount, handler);
 }
 
-ErrorCode::ErrCodeType CameraModule::setPhotoBurstCountSync(PhotoBurstCount count,
-                                                          int timeout) {
+ErrorCode::ErrorCodeType CameraModule::setPhotoBurstCountSync(
+    PhotoBurstCount count, int timeout) {
   CaptureParamData captureParamData;
-  ErrorCode::ErrCodeType errCode = getCaptureParamDataSync(captureParamData, 1);
+  ErrorCode::ErrorCodeType errCode =
+      getCaptureParamDataSync(captureParamData, 1);
   if (errCode != ErrorCode::SysCommonErr::Success) {
     return errCode;
   } else {
@@ -1549,8 +1561,8 @@ ErrorCode::ErrCodeType CameraModule::setPhotoBurstCountSync(PhotoBurstCount coun
 }
 
 void CameraModule::getPhotoBurstCountAsync(
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, PhotoBurstCount count,
-                         UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
+                         PhotoBurstCount count, UserData userData),
     UserData userData) {
   FuncParam req;
   req.funcIndex = FUNCTION_GET_SHOT_MODE;
@@ -1559,10 +1571,11 @@ void CameraModule::getPhotoBurstCountAsync(
                                      UserCallBack, userData);
 }
 
-ErrorCode::ErrCodeType CameraModule::getPhotoBurstCountSync(
+ErrorCode::ErrorCodeType CameraModule::getPhotoBurstCountSync(
     PhotoBurstCount& count, int timeout) {
   CaptureParamData captureParam;
-  ErrorCode::ErrCodeType errCode = getCaptureParamDataSync(captureParam, timeout);
+  ErrorCode::ErrorCodeType errCode =
+      getCaptureParamDataSync(captureParam, timeout);
   if (errCode == ErrorCode::SysCommonErr::Success)
     count = (PhotoBurstCount)captureParam.photoNumBurst;
   return errCode;
@@ -1570,13 +1583,13 @@ ErrorCode::ErrCodeType CameraModule::getPhotoBurstCountSync(
 
 void CameraModule::setPhotoAEBCountAsync(
     PhotoAEBCount count,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   setPhotoBurstCountAsync((PhotoBurstCount)count, UserCallBack, userData);
 }
 
 void CameraModule::getPhotoAEBCountAsync(
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, PhotoAEBCount count,
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, PhotoAEBCount count,
                          UserData userData),
     UserData userData) {
   FuncParam req;
@@ -1586,22 +1599,23 @@ void CameraModule::getPhotoAEBCountAsync(
                                    userData);
 }
 
-ErrorCode::ErrCodeType CameraModule::setPhotoAEBCountSync(PhotoAEBCount count,
-                                                        int timeout) {
+ErrorCode::ErrorCodeType CameraModule::setPhotoAEBCountSync(PhotoAEBCount count,
+                                                            int timeout) {
   return setPhotoBurstCountSync((PhotoBurstCount)count, timeout);
 }
 
-ErrorCode::ErrCodeType CameraModule::getPhotoAEBCountSync(PhotoAEBCount& count,
-                                                        int timeout) {
+ErrorCode::ErrorCodeType CameraModule::getPhotoAEBCountSync(
+    PhotoAEBCount& count, int timeout) {
   CaptureParamData captureParam;
-  ErrorCode::ErrCodeType errCode = getCaptureParamDataSync(captureParam, timeout);
+  ErrorCode::ErrorCodeType errCode =
+      getCaptureParamDataSync(captureParam, timeout);
   if (errCode == ErrorCode::SysCommonErr::Success)
     count = (PhotoAEBCount)captureParam.photoNumBurst;
   return errCode;
 }
 
 void CameraModule::callbackToSetPhotoTimeIntervalSettings(
-    ErrorCode::ErrCodeType retCode, CaptureParamData captureParam,
+    ErrorCode::ErrorCodeType retCode, CaptureParamData captureParam,
     UserData userData) {
   if (!userData) return;
   shootPhotoParamHandler handler = *(shootPhotoParamHandler*)userData;
@@ -1622,7 +1636,7 @@ void CameraModule::callbackToSetPhotoTimeIntervalSettings(
 
 void CameraModule::setPhotoTimeIntervalSettingsAsync(
     PhotoIntervalData intervalSetting,
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   shootPhotoParamHandler* handler = allocShootPhotoParamHandlerMemory();
   handler->cameraModule = this;
@@ -1632,10 +1646,11 @@ void CameraModule::setPhotoTimeIntervalSettingsAsync(
   getCaptureParamDataAsync(callbackToSetPhotoTimeIntervalSettings, handler);
 }
 
-ErrorCode::ErrCodeType CameraModule::setPhotoTimeIntervalSettingsSync(
+ErrorCode::ErrorCodeType CameraModule::setPhotoTimeIntervalSettingsSync(
     PhotoIntervalData intervalSetting, int timeout) {
   CaptureParamData captureParamData;
-  ErrorCode::ErrCodeType errCode = getCaptureParamDataSync(captureParamData, 1);
+  ErrorCode::ErrorCodeType errCode =
+      getCaptureParamDataSync(captureParamData, 1);
   if (errCode != ErrorCode::SysCommonErr::Success) {
     return errCode;
   } else {
@@ -1649,7 +1664,7 @@ ErrorCode::ErrCodeType CameraModule::setPhotoTimeIntervalSettingsSync(
 }
 
 void CameraModule::getPhotoIntervalDatasAsync(
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
                          PhotoIntervalData intervalSetting, UserData userData),
     UserData userData) {
   FuncParam req;
@@ -1659,10 +1674,11 @@ void CameraModule::getPhotoIntervalDatasAsync(
                                        UserCallBack, userData);
 }
 
-ErrorCode::ErrCodeType CameraModule::getPhotoIntervalDatasSync(
+ErrorCode::ErrorCodeType CameraModule::getPhotoIntervalDatasSync(
     PhotoIntervalData& intervalSetting, int timeout) {
   CaptureParamData captureParam;
-  ErrorCode::ErrCodeType errCode = getCaptureParamDataSync(captureParam, timeout);
+  ErrorCode::ErrorCodeType errCode =
+      getCaptureParamDataSync(captureParam, timeout);
   if (errCode == ErrorCode::SysCommonErr::Success)
     intervalSetting = captureParam.intervalSetting;
   return errCode;
