@@ -1484,6 +1484,16 @@ ErrorCode::ErrorCodeType CameraModule::setShootPhotoModeSync(
     CaptureParamReq req;
     req.funcParam.funcIndex = FUNCTION_SET_SHOT_MODE;
     req.funcParam.payloadNodeIndex = (uint8_t)(this->getIndex() + 1);
+    /*! @TODO Here strange code is to deal with issue that the AEB and BURST
+     * share the same setting and getting CMD and the same byte in the
+     * protocol. After the camera info pushing is supported by OSDK, here will
+     * be fixed. */
+    if (takePhotoMode == ShootPhotoMode::AEB) {
+      if (captureParamData.photoNumBurst > AEB_COUNT_5)
+      captureParamData.photoNumBurst = AEB_COUNT_5;
+      else if (captureParamData.photoNumBurst < AEB_COUNT_3)
+        captureParamData.photoNumBurst = AEB_COUNT_3;
+    }
     req.captureParam = captureParamData;
     req.captureParam.captureMode = takePhotoMode;
     return setInterfaceSync<CaptureParamReq>(req, timeout);
