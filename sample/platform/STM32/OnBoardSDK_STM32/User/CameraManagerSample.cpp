@@ -194,41 +194,41 @@ int cameraManagerTest(Vehicle *vehicle, CameraManagerTestCase testCase) {
                                    (UserData) "stop shooting interval photos");
       break;
 
-    case Z30_AT_PAYLOAD_0:
+    case Z30_AT_PAYLOAD_1:
       /*! take video test */
       DSTATUS("Test video function on Z30");
-      p->startRecordVideoAsyncSample(PAYLOAD_INDEX_0, asyncSampleCallBack,
+      p->startRecordVideoAsyncSample(PAYLOAD_INDEX_1, asyncSampleCallBack,
                                      (UserData) "start to record video");
       delay_nms(2000);
 
       /*! tap zoom test */
       DSTATUS("Test tap-zoom function on Z30");
-      p->setTapZoomPointAsyncSample(PAYLOAD_INDEX_0, 5, 0.3, 0.3,
+      p->setTapZoomPointAsyncSample(PAYLOAD_INDEX_1, 5, 0.3, 0.3,
                                     asyncSampleCallBack,
                                     (UserData) "set tap zoom point (0.3, 0.3)");
       delay_nms(5000);
-      p->setTapZoomPointAsyncSample(PAYLOAD_INDEX_0, 5, 0.8, 0.7,
+      p->setTapZoomPointAsyncSample(PAYLOAD_INDEX_1, 5, 0.8, 0.7,
                                     asyncSampleCallBack,
                                     (UserData) "set tap zoom point (0.8, 0.7)");
 
       /*! zoom test */
       DSTATUS("Test zoom function on Z30");
-      p->startZoomAsyncSample(PAYLOAD_INDEX_0, CameraModule::ZOOM_IN,
+      p->startZoomAsyncSample(PAYLOAD_INDEX_1, CameraModule::ZOOM_IN,
                               CameraModule::NORMAL, asyncSampleCallBack,
                               (UserData) "start continuous zoom");
       delay_nms(4000);
-      p->stopZoomAsyncSample(PAYLOAD_INDEX_0, asyncSampleCallBack,
+      p->stopZoomAsyncSample(PAYLOAD_INDEX_1, asyncSampleCallBack,
                              (UserData) "stop continuous zoom");
       delay_nms(2000);
-      p->startZoomAsyncSample(PAYLOAD_INDEX_0, CameraModule::ZOOM_OUT,
+      p->startZoomAsyncSample(PAYLOAD_INDEX_1, CameraModule::ZOOM_OUT,
                               CameraModule::FASTEST, asyncSampleCallBack,
                               (UserData) "start continuous zoom");
       delay_nms(8000);
-      p->stopZoomAsyncSample(PAYLOAD_INDEX_0, asyncSampleCallBack,
+      p->stopZoomAsyncSample(PAYLOAD_INDEX_1, asyncSampleCallBack,
                              (UserData) "stop continuous zoom");
 
       /*! take video finished */
-      p->stopRecordVideoAsyncSample(PAYLOAD_INDEX_0, asyncSampleCallBack,
+      p->stopRecordVideoAsyncSample(PAYLOAD_INDEX_1, asyncSampleCallBack,
                                     (UserData) "stop recording video");
       break;
 

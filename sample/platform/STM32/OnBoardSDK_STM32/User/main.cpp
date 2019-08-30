@@ -241,7 +241,7 @@ int main() {
         case 11:
           printf("\n\nStarting executing payload manager sample 1:\r\n");
           printf("Please make sure Z30 camera is at the payload 0 site\r\n");
-          cameraManagerTest(v, Z30_AT_PAYLOAD_0);
+          cameraManagerTest(v, Z30_AT_PAYLOAD_1);
           break;
         default:
           printf("\n\nPass as preprocessor flag to run desired sample:\r\n");

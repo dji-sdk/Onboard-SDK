@@ -34,7 +34,7 @@
 
 enum CameraManagerTestCase {
   X5S_AT_PAYLOAD_0 = 0,
-  Z30_AT_PAYLOAD_0 = 1,
+  Z30_AT_PAYLOAD_1 = 1,
   UNKNOWN_TEST_CASE,
 };
 
