@@ -5,10 +5,9 @@
  *  @brief
  *  Flight Control API usage in a Linux environment.
  *  Provides a number of helpful additions to core API calls,
- *  especially for position control, attitude control, takeoff,
- *  landing.
+ *  especially for go home ,landing, set rtk and avoid obstacle switch.
  *
- *  @Copyright (c) 2016-2017 DJI
+ *  @Copyright (c) 2019 DJI
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,26 +32,97 @@
 #ifndef DJIOSDK_FLIGHT_CONTROLLER_SAMPLE_HPP
 #define DJIOSDK_FLIGHT_CONTROLLER_SAMPLE_HPP
 
-// System Includes
-#include <cmath>
-// DJI OSDK includes
 #include <dji_vehicle.hpp>
-#include "dji_status.hpp"
 
-#define PI 3.1415926535898
-
-/*write by sandy.yu*/
+/*! @brief Sample to setup subscription
+  *
+  *  @param vehicle Vehicle pointer
+  *  @param pkgIndex subscription package index
+  *  @param freq subscription frequency
+  *  @param topicList topic list array and see TopicName enum
+  *  @param topicSize topic list array size
+  *  @param timeout timeout
+  *  @return result:true:success, false:fail
+  */
 bool setUpSubscription(DJI::OSDK::Vehicle* vehicle, int pkgIndex, int freq,
                        Telemetry::TopicName topicList[], uint8_t topicSize,
-                       int timeout);
-bool teardownSubscription(Vehicle* vehicle, const int pkgIndex, int timeout);
+                       int timeout = 1);
+
+/*! @brief Sample to teardown subscription
+  *
+  *  @param vehicle Vehicle pointer
+  *  @param pkgIndex subscription package index
+  *  @param timeout timeout
+  *  @return result:true:success, false:fail
+  */
+bool teardownSubscription(Vehicle* vehicle, const int pkgIndex,
+                          int timeout = 1);
+
+/*! @brief Sample check flight action started or not
+  *
+  *  @param vehicle Vehicle pointer
+  *  @param mode see the DisplayMode enum
+  *  @return result:true:success, false:fail
+  */
 bool checkActionStarted(Vehicle* vehicle, uint8_t mode);
 
+/*! @brief Sample set go home altitude
+  *
+  *  @param vehicle Vehicle pointer
+  *  @param altitude go home altitude request
+  *  @param timeout timeout
+  *  @return result:true:success, false:fail
+  */
 bool setGoHomeAltitude(Vehicle* vehicle,
-                       FlightAssistant::goHomeAltitude altitude, int timeout=1);
-bool setNewHomePoint(Vehicle* vehicle, int timeout=1);
-bool openAvoidObstacle(Vehicle* vehicle, int timeout=1);
-bool closeAvoidObstacle(Vehicle* vehicle, int timeout=1);
-bool goHomeAndForceLanding(Vehicle* vehicle, int timeout=1);
+                       FlightAssistant::GoHomeAltitude altitude,
+                       int timeout = 1);
+
+/*! @brief Sample to set current aircraft position as an new home point
+ *
+ *  @param vehicle Vehicle pointer
+ *  @param timeout timeout
+ *  @return result:true:success, false:fail
+ */
+bool setNewHomePoint(Vehicle* vehicle, int timeout = 1);
+
+/*! @brief Sample to open avoid obstacle
+ *
+ *  @param vehicle Vehicle pointer
+ *  @param timeout timeout
+ *  @return result:true:success, false:fail
+ */
+bool openAvoidObstacle(Vehicle* vehicle, int timeout = 1);
+
+/*! @brief Sample to close avoid obstacle
+ *
+ *  @param vehicle Vehicle pointer
+ *  @param timeout timeout
+ *  @return result:true:success, false:fail
+ */
+bool closeAvoidObstacle(Vehicle* vehicle, int timeout = 1);
+
+/*! @brief Sample to open RTK switch
+ *
+ *  @param vehicle Vehicle pointer
+ *  @param timeout timeout
+ *  @return result:true:success, false:fail
+ */
+bool openRtkSwtich(Vehicle* vehicle, int timeout = 1);
+
+/*! @brief Sample to close  RTK switch
+ *
+ *  @param vehicle Vehicle pointer
+ *  @param timeout timeout
+ *  @return result:true:success, false:fail
+ */
+bool closeRtkSwtich(Vehicle* vehicle, int timeout = 1);
+
+/*! @brief Sample to go home, landing and force landing avoid ground
+ *
+ *  @param vehicle Vehicle pointer
+ *  @param timeout timeout
+ *  @return result:true:success, false:fail
+ */
+bool goHomeAndForceLanding(Vehicle* vehicle, int timeout = 1);
 
 #endif  // DJIOSDK_FLIGHT_CONTROLLER_SAMPLE_HPP

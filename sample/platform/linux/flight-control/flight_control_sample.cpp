@@ -300,7 +300,7 @@ moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired,
   // the
   // mission
   int responseTimeout              = 1;
-  int timeoutInMilSec              = 20000;
+  int timeoutInMilSec              = 40000;
   int controlFreqInHz              = 50; // Hz
   int cycleTimeInMs                = 1000 / controlFreqInHz;
   int outOfControlBoundsTimeLimit  = 10 * cycleTimeInMs; // 10 cycles

@@ -3,12 +3,11 @@
  *  @date  August 05 2019
  *
  *  @brief
- *  Flight Control API usage in a Linux environment.
+ *  Flight Controller API usage in a Linux environment.
  *  Provides a number of helpful additions to core API calls,
- *  especially for position control, attitude control, takeoff,
- *  landing.
+ *  especially for go home ,landing, set rtk and avoid obstacle switch.
  *
- *  @Copyright (c) 2016-2019 DJI
+ *  @Copyright (c) 2019 DJI
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,27 +28,15 @@
  * SOFTWARE.
  *
  */
-/*modify the path of include*/
-#include "../inc/flight_controller_sample.hpp"
-#include "dji_flight_assistant.hpp"
+
+#include "flight_controller_sample.hpp"
+
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
 
-/*bool getLLAfromOffset(HomePointData origin, float northOffset, float
-eastOffset,
-                      HomePointData& target) {
-  if ((-PI / 2 <= origin.latitude) && (origin.latitude <= PI / 2) &&
-      (-PI <= origin.longitude) && (origin.longitude <= PI)) {
-    target.latitude = origin.latitude + northOffset / C_EARTH;
-    target.longitude =
-      origin.longitude + eastOffset / C_EARTH / cos(origin.latitude);
-    return true;
-  } else
-    return false;
-}*/
 bool setUpSubscription(Vehicle* vehicle, int pkgIndex, int freq,
                        TopicName topicList[], uint8_t topicSize, int timeout) {
-  // Telemetry: Verify the subscription
+  /*! Telemetry: Verify the subscription*/
   ACK::ErrorCode subscribeStatus;
   subscribeStatus = vehicle->subscribe->verify(timeout);
   if (ACK::getError(subscribeStatus) != ACK::SUCCESS) {
@@ -58,18 +45,17 @@ bool setUpSubscription(Vehicle* vehicle, int pkgIndex, int freq,
   }
 
   bool enableTimestamp = false;
-
   bool pkgStatus = vehicle->subscribe->initPackageFromTopicList(
       pkgIndex, topicSize, topicList, enableTimestamp, freq);
   if (!(pkgStatus)) {
     return pkgStatus;
   }
 
-  // Start listening to the telemetry data
+  /*! Start listening to the telemetry data */
   subscribeStatus = vehicle->subscribe->startPackage(pkgIndex, timeout);
   if (ACK::getError(subscribeStatus) != ACK::SUCCESS) {
     ACK::getErrorCodeMessage(subscribeStatus, __func__);
-    // Cleanup
+    /*! Cleanup*/
     ACK::ErrorCode ack = vehicle->subscribe->removePackage(pkgIndex, timeout);
     if (ACK::getError(ack)) {
       DERROR(
@@ -98,8 +84,7 @@ bool checkActionStarted(Vehicle* vehicle, uint8_t mode) {
   while (vehicle->subscribe->getValue<TOPIC_STATUS_DISPLAYMODE>() != mode &&
          actionNotStarted < timeoutCycles) {
     actionNotStarted++;
-    DSTATUS("vehicle->subscribe->getValue<TOPIC_STATUS_DISPLAYMODE>():%d",
-            vehicle->subscribe->getValue<TOPIC_STATUS_DISPLAYMODE>());
+    vehicle->subscribe->getValue<TOPIC_STATUS_DISPLAYMODE>();
     usleep(100000);
   }
   if (actionNotStarted == timeoutCycles) {
@@ -134,11 +119,11 @@ bool getHomePoint(Vehicle* vehicle, HomePointStatus& homePointSetStatus,
   subscribeStatus = vehicle->subscribe->startPackage(pkgIndex, responseTimeout);
   if (ACK::getError(subscribeStatus) != ACK::SUCCESS) {
     ACK::getErrorCodeMessage(subscribeStatus, __func__);
-    // Cleanup before return
+    /*! Cleanup before return */
     vehicle->subscribe->removePackage(pkgIndex, responseTimeout);
     return false;
   }
-  // Wait for the data to start coming in.
+  /*! Wait for the data to start coming in.*/
   sleep(2);
   homePointSetStatus =
       vehicle->subscribe->getValue<TOPIC_HOME_POINT_SET_STATUS>();
@@ -147,18 +132,17 @@ bool getHomePoint(Vehicle* vehicle, HomePointStatus& homePointSetStatus,
       vehicle->subscribe->removePackage(pkgIndex, responseTimeout);
   if (ACK::getError(ack)) {
     DERROR(
-        "Error unsubscribing; please restart the drone/FC to get back "
-
+        "Error unsubscription; please restart the drone/FC to get back "
         "to a clean state.");
   }
   return true;
 }
+
 bool setGoHomeAltitude(Vehicle* vehicle,
-                       FlightAssistant::goHomeAltitude altitude, int timeout) {
-  return (vehicle->flightAssistant->setGoHomeAltitudeSync(altitude, timeout) ==
-          ErrorCode::UnifiedErrCode::kNoError)
-             ? true
-             : false;
+                       FlightAssistant::GoHomeAltitude altitude, int timeout) {
+  ErrorCode::ErrCodeType ret =
+      vehicle->flightAssistant->setGoHomeAltitudeSync(altitude, timeout);
+  return (ret == ErrorCode::SysCommonErr::Success) ? true : false;
 }
 
 bool setNewHomePoint(Vehicle* vehicle, int timeout) {
@@ -170,7 +154,7 @@ bool setNewHomePoint(Vehicle* vehicle, int timeout) {
       getHomePoint(vehicle, homePointSetStatus, originHomePoint, timeout);
   if (retCode && (homePointSetStatus.status == 1)) {
     if (vehicle->flightAssistant->setHomePointSync(homepoint, timeout) ==
-        ErrorCode::UnifiedErrCode::kNoError) {
+        ErrorCode::SysCommonErr::Success) {
       return true;
     }
   }
@@ -182,7 +166,7 @@ bool openAvoidObstacle(Vehicle* vehicle, int timeout) {
   data.frontBrakeFLag = 1;
   ErrorCode::ErrCodeType ret =
       vehicle->flightAssistant->setAvoidObstacleSwitchSync(data, timeout);
-  if (ret == ErrorCode::UnifiedErrCode::kNoError)
+  if (ret == ErrorCode::SysCommonErr::Success)
     return true;
   else
     return false;
@@ -193,30 +177,52 @@ bool closeAvoidObstacle(Vehicle* vehicle, int timeout) {
   data.frontBrakeFLag = 0;
   ErrorCode::ErrCodeType ret =
       vehicle->flightAssistant->setAvoidObstacleSwitchSync(data, timeout);
-  if (ret == ErrorCode::UnifiedErrCode::kNoError)
+  if (ret == ErrorCode::SysCommonErr::Success)
     return true;
   else
     return false;
+}
+
+bool openRtkSwtich(Vehicle* vehicle, int timeout) {
+  ErrorCode::ErrCodeType ret = vehicle->flightAssistant->setRtkEnableSync(
+      FlightAssistant::RtkEnableData::RTK_ENABLE, 1);
+  if (ret == ErrorCode::SysCommonErr::Success) {
+    return true;
+  } else {
+    DSTATUS("Open rtk switch failed, ErrorCode is:%8x", ret);
+    return false;
+  }
+}
+
+bool closeRtkSwtich(Vehicle* vehicle, int timeout) {
+  ErrorCode::ErrCodeType ret = vehicle->flightAssistant->setRtkEnableSync(
+      FlightAssistant::RtkEnableData::RTK_DISABLE, 1);
+  if (ret == ErrorCode::SysCommonErr::Success) {
+    return true;
+  } else {
+    DSTATUS("Close rtk switch failed, ErrorCode is:%8x", ret);
+    return false;
+  }
 }
 
 bool goHomeAndForceLanding(Vehicle* vehicle, int timeout) {
   const int pkgIndex = 0;
   int freq = 10;
   TopicName topicList[] = {TOPIC_STATUS_FLIGHT, TOPIC_STATUS_DISPLAYMODE,
-                           TOPIC_AVOID_DATA};
+                           TOPIC_AVOID_DATA, TOPIC_VELOCITY};
   int topicSize = sizeof(topicList) / sizeof(topicList[0]);
-  // Step 1: Verify the subscription
+
+  /*! Step 1: Verify and setup the subscription */
   setUpSubscription(vehicle, pkgIndex, freq, topicList, topicSize, timeout);
 
-  // Step 2: Start go home
+  /*! Step 2: Start go home */
+  DSTATUS("Start go home action");
   ErrorCode::ErrCodeType goHomeAck =
       vehicle->flightActions->startGoHomeSync(timeout);
-  if (goHomeAck != ErrorCode::UnifiedErrCode::kNoError) {
+  if (goHomeAck != ErrorCode::SysCommonErr::Success) {
     DERROR("Fail to execute go home action! ");
     return false;
   }
-
-  // Step 3: Check go home started or not
   if (!checkActionStarted(vehicle,
                           VehicleStatus::DisplayMode::MODE_NAVI_GO_HOME)) {
     return false;
@@ -228,14 +234,38 @@ bool goHomeAndForceLanding(Vehicle* vehicle, int timeout) {
       sleep(1);  // waiting for this action finished
     }
   }
-  // Step 4: start force landing avoid ground
+  DSTATUS("Finished go home action");
+
+  /*! Step 3: Start landing */
+  DSTATUS("Start landing action");
+  if (!checkActionStarted(vehicle,
+                          VehicleStatus::DisplayMode::MODE_AUTO_LANDING)) {
+    DERROR("Fail to execute Landing action! ");
+    return false;
+  } else {
+    while (vehicle->subscribe->getValue<TOPIC_STATUS_DISPLAYMODE>() ==
+               VehicleStatus::DisplayMode::MODE_AUTO_LANDING &&
+           vehicle->subscribe->getValue<TOPIC_STATUS_FLIGHT>() ==
+               VehicleStatus::FlightStatus::IN_AIR) {
+      Telemetry::TypeMap<TOPIC_AVOID_DATA>::type avoidData =
+          vehicle->subscribe->getValue<TOPIC_AVOID_DATA>();
+      sleep(1);
+      if ((0.65 < avoidData.down && avoidData.down < 0.75) &&
+          (avoidData.downHealth == 1)) {
+        break;
+      }
+    }
+  }
+  DSTATUS("Finished landing action");
+
+  /*! Step 4: Force landing and avoid ground */
+  DSTATUS("Start force Landing and avoid ground action");
   ErrorCode::ErrCodeType forceLandingAvoidGroundAck =
       vehicle->flightActions->startForceLandingAvoidGroundSync(timeout);
-  if (forceLandingAvoidGroundAck != ErrorCode::UnifiedErrCode::kNoError) {
+  if (forceLandingAvoidGroundAck != ErrorCode::SysCommonErr::Success) {
     DERROR("Fail to execute force landing avoid ground action! ");
     return false;
   }
-  // Step 5: check force landing avoid ground action started or not
   if (!checkActionStarted(vehicle,
                           VehicleStatus::DisplayMode::MODE_AUTO_LANDING)) {
     return false;
@@ -244,15 +274,12 @@ bool goHomeAndForceLanding(Vehicle* vehicle, int timeout) {
                VehicleStatus::DisplayMode::MODE_AUTO_LANDING &&
            vehicle->subscribe->getValue<TOPIC_STATUS_FLIGHT>() ==
                VehicleStatus::FlightStatus::IN_AIR) {
-      DSTATUS("Current display mode:%d",
-              vehicle->subscribe->getValue<TOPIC_STATUS_DISPLAYMODE>());
-      Telemetry::TypeMap<TOPIC_AVOID_DATA>::type avoidData;
-      avoidData = vehicle->subscribe->getValue<TOPIC_AVOID_DATA>();
-      DSTATUS("Down distance:%d", avoidData.down);
       sleep(1);
     }
   }
-  /* 这个地方有问题*/
+  DSTATUS("Finished force Landing and avoid ground action");
+
+  /*! Step 5: Landing finished check*/
   if (vehicle->subscribe->getValue<TOPIC_STATUS_DISPLAYMODE>() !=
           VehicleStatus::DisplayMode::MODE_P_GPS ||
       vehicle->subscribe->getValue<TOPIC_STATUS_DISPLAYMODE>() !=
@@ -265,7 +292,7 @@ bool goHomeAndForceLanding(Vehicle* vehicle, int timeout) {
     teardownSubscription(vehicle, pkgIndex, timeout);
     return false;
   }
-  // Cleanup
+  /*! Step 6: Cleanup */
   teardownSubscription(vehicle, pkgIndex, timeout);
   return true;
 }

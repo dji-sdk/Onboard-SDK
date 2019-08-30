@@ -46,15 +46,15 @@ void FlightActions::commonAckDecoder(Vehicle *vehicle, RecvContainer recvFrame,
     if (recvFrame.recvInfo.len - OpenProtocol::PackageMin >=
         sizeof(CommonAck)) {
       ack = *(CommonAck *)(recvFrame.recvData.raw_ack_array);
-      ret = ErrorCode::UnifiedErrCode::kNoError;
+      ret = ErrorCode::SysCommonErr::Success;
     } else {
       DERROR("ACK is exception, data len %d (expect >= %d)\n",
              recvFrame.recvInfo.len - OpenProtocol::PackageMin,
              sizeof(CommonAck));
-      ret = ErrorCode::UnifiedErrCode::kErrorInvalidRespond;
+      ret = ErrorCode::SysCommonErr::UnpackDataMismatch;
     }
     ucb->UserCallBack(
-        (ret != ErrorCode::UnifiedErrCode::kNoError) ? ret : ack.ret_code,
+        (ret != ErrorCode::SysCommonErr::Success) ? ret : ack.ret_code,
         ucb->userData);
   }
 }
@@ -82,10 +82,10 @@ ErrorCode::ErrCodeType FlightActions::actionSync(ReqT req, int timeout) {
         (rsp->info.len - OpenProtocol::PackageMin >= sizeof(CommonAck))) {
       return rsp->data;
     } else {
-      return ErrorCode::UnifiedErrCode::kErrorInvalidRespond;
+      return ErrorCode::SysCommonErr::UnpackDataMismatch;
     }
   } else
-    return ErrorCode::UnifiedErrCode::kErrorSystemError;
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
 }
 /*! TODO move this part's code to independent class (up)*/
 
@@ -101,7 +101,7 @@ void FlightActions::actionAsync(
                            allocUCBHandler((void *)userCB, userData), timeout,
                            retry_time);
   } else {
-    if (userCB) userCB(ErrorCode::UnifiedErrCode::kErrorSystemError, userData);
+    if (userCB) userCB(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
   }
 }
 

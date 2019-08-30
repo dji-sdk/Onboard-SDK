@@ -1,12 +1,9 @@
-/*! @file flight-control-4.0/main.cpp
+/*! @file flight-controller/main.cpp
  *  @version 3.9
- *  @date JULY 24 2019
+ *  @date August 05 2019
  *
  *  @brief
- *  main for Flight Control API usage in a Linux environment.
- *  Provides a number of helpful additions to core API calls,
- *  especially for position control, attitude control, takeoff,
- *  landing.
+ *  main for flight actions and flight assistant usage in a Linux environment.
  *
  *  @Copyright (c) 2016-2019 DJI
  *
@@ -29,16 +26,16 @@
  * SOFTWARE.
  *
  */
+/*! use some flight_control_sample api */
+#include "../flight-control/flight_control_sample.hpp"
+
 #include <dji_linux_helpers.hpp>
 #include <dji_vehicle.hpp>
-#include "dji_flight_assistant.hpp"
 #include "flight_controller_sample.hpp"
-#include "../flight-control/flight_control_sample.hpp"
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
 
 int main(int argc, char **argv) {
-  // Initialize variables
   int functionTimeout = 1;
   LinuxSetup linuxEnvironment(argc, argv);
   Vehicle *vehicle = linuxEnvironment.getVehicle();
@@ -48,36 +45,33 @@ int main(int argc, char **argv) {
   }
   vehicle->obtainCtrlAuthority(functionTimeout);
 
-  /*Set rtk enable*/
-  vehicle->flightAssistant->setRtkEnableSync(
-      FlightAssistant::rtkEnableData::RTK_DISABLE, 1);
+  /*! Open rtk switch */
+  openRtkSwtich(vehicle);
 
-  /*Take off*/
+  /*! Open avoid obstacle switch */
+  openAvoidObstacle(vehicle, 1);
+
+  /*!  Take off */
   monitoredTakeoff(vehicle);
 
-  /*Open avoid obstacle switch*/
-  // openAvoidObstacle(vehicle, 1);
-
-  /*Move to high altitude*/
+  /*! Move to higher altitude */
   moveByPositionOffset(vehicle, 0, 0, 30, 0);
 
-  /*Move to anther position*/
-  moveByPositionOffset(vehicle, 0, 10, 0, -30);
+  /*! Move a short distance*/
+  moveByPositionOffset(vehicle, 10, 0, 0, -30);
 
-  /*Set aircraft current position as home point */
+  /*! Set aircraft current position as new home point */
   setNewHomePoint(vehicle);
 
-  /*Set go home altitude*/
+  /*! Set new go home altitude */
   setGoHomeAltitude(vehicle, 50);
 
-  /*Move to anther position*/
-  moveByPositionOffset(vehicle, 0, 40, 0, -30);
+  /*! Move to another position */
+  moveByPositionOffset(vehicle, 40, 0, 0, 0);
 
-  /*Close avoid obstacle switch*/
-  // closeAvoidObstacle(vehicle, 1);
+  /*! Close avoid obstacle switch */
+  closeAvoidObstacle(vehicle, 1);
 
-  /*go home*/
+  /*! go home and force landing avoid ground */
   goHomeAndForceLanding(vehicle, 1);
-
-  /*force landing*/
 }

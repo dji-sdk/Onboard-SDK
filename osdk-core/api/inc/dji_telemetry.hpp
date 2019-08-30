@@ -338,7 +338,7 @@ typedef struct HomePointData
 
 typedef struct HomePointStatus
 {
-  uint8_t status;
+  uint8_t status;     /*!<0:fail, 1:success*/
 }HomePointStatus;// pack(1)
 /*!
  * @brief struct for TOPIC_GPS_DETAILS and sub struct for GPSInfo of data

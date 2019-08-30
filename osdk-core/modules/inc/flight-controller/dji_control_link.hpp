@@ -1,7 +1,7 @@
 
 /** @file dji_control_link.hpp
  *  @version 3.9
- *  @date July 2019
+ *  @date August 2019
  *
  *  @brief Implementation of control link
  *

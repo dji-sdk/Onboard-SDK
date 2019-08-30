@@ -94,9 +94,11 @@ class ErrorCode {
   /*! @brief Function ID used with FCModule in error codes
    */
   enum FCFunctionID {
-    FCControl = 0,
-    FCSubscribe = 1,
-    FCMission = 2,
+    FCControl        = 0,
+    FCSubscribe      = 1,
+    FCMission        = 2,
+    FCParameterTable = 4,
+    FCSetHomePoint   = 5,
   };
 
   /*! @brief Function ID used with CameraModule in error codes
@@ -192,6 +194,20 @@ class ErrorCode {
    */
   static void printErrorCodeMsg(int64_t errCode);
 
+  class FlightControllerErr
+  {
+  public:
+    typedef struct ParamReadWirteErr
+    {
+      static const ErrCodeType Fail;
+      static const ErrCodeType InvalidParameter;
+    }ParamReadWirteErr;
+
+    typedef struct SetHomePointErr
+    {
+      static const ErrCodeType Fail;
+    }SetHomePointErr;
+  };
   /*! @brief camera api error code
    */
   class CameraCommonErr {
@@ -621,8 +637,20 @@ class ErrorCode {
       const static uint16_t SUCCESS;
     } KillSwitch;
 
-  };  // Control class
+    typedef struct ParamReadWrite
+    {
+      static const uint8_t SUCCESS;
+      static const uint8_t FAIL;
+    }ParamReadWrite;
 
+    typedef struct SetHomePoint
+    {
+      static const uint8_t SUCCESS;
+      static const uint8_t FAIL;
+    }SetHomePoint;
+
+  }; // Control class
+  
   /*!
    * @note New in 3.3 release
    *

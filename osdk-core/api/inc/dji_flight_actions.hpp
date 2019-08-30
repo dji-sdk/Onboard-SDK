@@ -46,14 +46,13 @@ class FlightActions {
     GO_HOME = 6,                     /*!< vehicle return home position*/
     FORCE_LANDING_AVOID_GROUND = 30, /*!< force landing and avoid ground*/
     FORCE_LANDING = 31,              /*!< force landing */
-
   };
 
   typedef struct CommonAck {
     uint8_t ret_code; /*!< original return code from vehicle */
   } CommonAck;        // pack(1)
 
-  /*TODO: move this part code to an new class(down)*/
+  /*TODO: move this part code to an new class*/
   typedef struct UCBRetCodeHandler {
     void (*UserCallBack)(ErrorCode::ErrCodeType errCode, UserData userData);
     UserData userData;
@@ -61,18 +60,20 @@ class FlightActions {
 
   static const int maxSize = 32;
   UCBRetCodeHandler ucbHandler[maxSize];
-  /*TODO: move this part code to an new class(up)*/
 
   /*! @brief Wrapper function for aircraft take off, blocking calls
    *
    *  @param timeout blocking timeout in seconds
-   *  @return ACK::ErrorCode struct with the acknowledgement from the FC
+   *  @return OSDK ErrorCode::ErrCodeType error code
    */
   ErrorCode::ErrCodeType startTakeoffSync(int timeout);
 
   /*! @brief Wrapper function for aircraft take off, non-blocking calls
    *
    *  @param UserCallBack callback function defined by user
+   *  @arg @b retCode is the OSDK ErrorCode::ErrCodeType error code
+   *  @arg @b userData the interface to trans userData in when the callback
+   *  is called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
   void startTakeoffAsync(void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
@@ -81,40 +82,71 @@ class FlightActions {
 
   /*! @brief Wrapper function for aircraft force landing, blocking calls
    *
+   *  @note this api will ignore the smart landing function, when use this
+   * function api, it will landing directly (would not stop at 0.7m and wait
+   * user's  command),it may make the aircraft crash.
    *  @param timeout blocking timeout in seconds
-   *  @return ACK::ErrorCode struct with the acknowledgement from the FC
+   *  @return OSDK ErrorCode::ErrCodeType error code
    */
   ErrorCode::ErrCodeType startForceLandingSync(int timeout);
 
   /*! @brief Wrapper function for aircraft force landing, non-blocking calls
    *
+   *  @note this api will ignore the smart landing function, when use this
+   * api landing, it will landing directly (would not stop at 0.7m and wait
+   * user's  command),it may make the aircraft crash.
    *  @param UserCallBack callback function defined by user
+   *  @arg @b retCode is the OSDK ErrorCode::ErrCodeType error code
+   *  @arg @b userData the interface to trans userData in when the callback
+   *  is called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
   void startForceLandingAsync(
       void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
       UserData userData);
 
-  /*! @brief Wrapper function for aircraft force landing and avoid ground,
+  /*! @brief Wrapper function for  aircraft force landing and avoid ground,
    * blocking calls
    *
+   *  @note this api must be used after the aircraft is close to ground and
+   *  stop in the air (about 0.7m), if the ground is not suitable for landing
+   *  ,user must use RC to control it landing manually or force landing.
    *  @param timeout blocking timeout in seconds
-   *  @return ACK::ErrorCode struct with the acknowledgement from the FC
+   *  @return OSDK ErrorCode::ErrCodeType error code
    */
   ErrorCode::ErrCodeType startForceLandingAvoidGroundSync(int timeout);
 
-  /*! @brief Wrapper function for aircraft force landing and avoid ground,
+  /*! @brief Wrapper function for  aircraft force landing and avoid ground,
    * non-blocking calls
    *
+   *  @note this api must be used after the aircraft is close to ground and
+   *  stop in the air (about 0.7m), if the ground is not suitable for landing
+   *  ,user must use RC to control it landing manually or force landing.
    *  @param UserCallBack callback function defined by user
+   *  @arg @b retCode is the OSDK ErrorCode::ErrCodeType error code
+   *  @arg @b userData the interface to trans userData in when the callback is
+   *  called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
   void startForceLandingAvoidGroundAsync(
       void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
       UserData userData);
 
+  /*! @brief Wrapper function for  go home action, blocking calls
+   *
+   *  @param timeout blocking timeout in seconds
+   *  @return OSDK ErrorCode::ErrCodeType error code
+   */
   ErrorCode::ErrCodeType startGoHomeSync(int timeout);
 
+  /*! @brief Wrapper function for  go home action, non-blocking calls
+   *
+   *  @param UserCallBack callback function defined by user
+   *  @arg @b retCode is the OSDK ErrorCode::ErrCodeType error code
+   *  @arg @b userData the interface to trans userData in when the callback is
+   *  called
+   *  @param userData when UserCallBack is called, used in UserCallBack
+   */
   void startGoHomeAsync(void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
                                              UserData userData),
                         UserData userData);
@@ -127,23 +159,9 @@ class FlightActions {
   FlightActions::UCBRetCodeHandler *allocUCBHandler(void *callback,
                                                     UserData userData);
 
-  /*! @brief Control the vehicle using user-specified mode, see FlightCommand
-   * for cmd choices
-   *
-   *  @param cmd action command from FlightCommand
-   *  @param timeout blocking timeout in seconds
-   *  @return ACK::ErrorCode struct with the acknowledgement from the FC
-   */
   template <typename ReqT>
   ErrorCode::ErrCodeType actionSync(ReqT req, int timeout);
 
-  /*! @brief Execute basic command for the vehicle, see FlightCommand for cmd
-   * choices
-   *
-   *  @param cmd action command in FlightCommand
-   *  @param callback user callback function
-   *  @param userData user data (void ptr)
-   */
   template <typename ReqT>
   void actionAsync(ReqT req, void (*ackDecoderCB)(Vehicle *vehicle,
                                                   RecvContainer recvFrame,
