@@ -27,7 +27,7 @@
  *
  */
 /*! use some flight_control_sample api */
-#include "../flight-control/flight_control_sample.hpp"
+#include "flight_control_sample.hpp"
 
 #include <dji_linux_helpers.hpp>
 #include <dji_vehicle.hpp>
