@@ -52,16 +52,34 @@ class ErrorCode {
    */
   typedef uint8_t FunctionIDType;
 
+  /*! @brief RawRetCode ID type used in OnboardSDK Unified error
+   */
+  typedef uint32_t RawRetCodeType;
+
+  /*! @brief Function max count of each module
+   */
+  static const uint8_t functionMaxCnt = 20;
   /*! @brief Module ID used in OnboardSDK Unified error
    */
   enum ModuleID {
     SysModule = 0,
+    RESERVE_1 = 1,
+    RESERVE_2 = 2,
+    RESERVE_3 = 3,
+    RESERVE_4 = 4,
+    RESERVE_5 = 5,
+    RESERVE_6 = 6,
+    RESERVE_7 = 7,
+    RESERVE_8 = 8,
+    RESERVE_9 = 9,
+    RESERVE_10 = 10,
     FCModule = 11,
     GimbalModule = 12,
     CameraModule = 13,
     PSDKModule = 14,
     RCModule = 15,
     BatteryModule = 16,
+    ModuleMaxCnt,
   };
 
   /*! @brief Function ID used with SystemModule in error codes
@@ -83,6 +101,15 @@ class ErrorCode {
     CameraCommon = 0,
   };
 
+  enum SYSTEM_ERROR_RAW_CODE {
+    Success              = 0x00000000, /*!< Execute successfully */
+    AllocMemoryFailed    = 0x00000001, /*!< Out of memory */
+    ReqNotSupported      = 0x00000002, /*!< Request not supported */
+    Timeout              = 0x00000003, /*!< Execute timeout */
+    UnpackDataMismatch   = 0x00000004, /*!< Pack unpack failed */
+    InstInitParamInvalid = 0x00000005, /*!< Instance init parameter invalid */
+  };
+
   /*! @brief Unified error type
    */
   typedef int64_t ErrorCodeType;
@@ -100,7 +127,19 @@ class ErrorCode {
 
   /*! @brief Map container type of errCode ID and msg
    */
-  typedef std::map<const ErrorCodeType, ErrorCodeMsg> ErrorCodeMapType;
+  typedef std::map<const RawRetCodeType, ErrorCodeMsg> ErrorCodeMapType;
+
+  typedef struct FunctionDataType
+  {
+    std::string FunctionName;
+    const ErrorCodeMapType map;
+  } FunctionDataType;
+
+  typedef struct ModuleDataType
+  {
+    std::string ModuleName;
+    const FunctionDataType *data;
+  } ModuleDataType;
 
   /*! @brief Build error code
    *  @param moduleID module ID used in errCode ref to
@@ -112,7 +151,7 @@ class ErrorCode {
    */
   static const ErrorCodeType getErrorCode(ModuleIDType moduleID,
                                           FunctionIDType functionID,
-                                          uint32_t rawRetCode);
+                                          RawRetCodeType rawRetCode);
 
   /*! @brief Get the module ID from errCode
    *  @param errCode Unified error type
@@ -131,6 +170,12 @@ class ErrorCode {
    *  @return Function name
    */
   static ErrorCode::FunctionIDType getFunctionID(ErrorCodeType errCode);
+
+  /*! @brief Get the raw reture code from errCode
+   *  @param errCode Unified error type
+   *  @return Function name
+   */
+  static ErrorCode::RawRetCodeType getRawRetCode(ErrorCodeType errCode);
 
   /*! @brief Get error code messages from errCode
    *  @param errCode Unified error type
@@ -775,13 +820,34 @@ class ErrorCode {
   static const uint8_t moduleIDLeftMove = 40;
   static const uint8_t functionIDLeftMove = 32;
 
+  /*! @brief The err code message data of the CameraCommonErr error code messages.
+   */
+  static const std::pair<const ErrorCode::ErrorCodeType, ErrorCode::ErrorCodeMsg> CameraCommonErrData[];
+
   /*! @brief The map container of the CameraCommonErr error code messages.
    */
   static const ErrorCodeMapType CameraCommonErrorMap;
 
+  /*! @brief The err code message data of the SystemCommonErr error code messages.
+   */
+  static const std::pair<const ErrorCode::ErrorCodeType, ErrorCode::ErrorCodeMsg> SystemCommonErrData[];
+
   /*! @brief The map container of the SystemCommonErr error code messages.
    */
   static const ErrorCodeMapType SystemCommonErrorMap;
+
+  /*! @brief The array to contain all the function maps of camera.
+   */
+  static const FunctionDataType CameraFunction[functionMaxCnt];
+
+  /*! @brief The array to contain all the function maps of System.
+   */
+  static const FunctionDataType SystemFunction[functionMaxCnt];
+
+  /*! @brief The array to contain all the modules' function data.
+   */
+  static const ModuleDataType module[ModuleMaxCnt];
+
 
 };  // Class ErrorCode
 
