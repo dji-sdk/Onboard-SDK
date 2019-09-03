@@ -33,6 +33,7 @@
 #include "linux_serial_device.hpp"
 #include <algorithm>
 #include <iterator>
+#include <sys/time.h>
 
 using namespace DJI::OSDK;
 
@@ -76,7 +77,12 @@ LinuxSerialDevice::getDeviceStatus()
 DJI::OSDK::time_ms
 LinuxSerialDevice::getTimeStamp()
 {
-  return (uint32_t)time(NULL);
+  struct timeval tv = {0};
+
+  gettimeofday(&tv, NULL);
+
+  return (tv.tv_sec*1000 + tv.tv_usec/1000);
+  //return (uint32_t)time(NULL);
 }
 
 size_t

@@ -151,6 +151,12 @@ public:
 
   void sendPoll();
 
+  /*! @note Clear all the total-timeout sessions in OpenProtocol. Fix the issue that
+   * timeout more than 32 times than cannot send any packet in 2~32 sessions.
+   * It will be called when the sessions are full, than all the timeout sessions will
+   * be checkout. Whole this layer will be refactored in the future */
+  void clearTimeoutSession();
+
 private:
   int sendInterface(void* cmdContainer);
 
