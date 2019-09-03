@@ -85,7 +85,7 @@ bool checkActionStarted(Vehicle* vehicle, uint8_t mode);
   *  @param timeout timeout
   *  @return result:true:success, false:fail
   */
-ErrorCode::ErrCodeType setGoHomeAltitude(
+ErrorCode::ErrorCodeType setGoHomeAltitude(
     Vehicle* vehicle, FlightAssistant::GoHomeAltitude altitude,
     int timeout = 1);
 
@@ -95,7 +95,7 @@ ErrorCode::ErrCodeType setGoHomeAltitude(
  *  @param timeout timeout
  *  @return result:true:success, false:fail
  */
-ErrorCode::ErrCodeType setNewHomePoint(Vehicle* vehicle, int timeout = 1);
+ErrorCode::ErrorCodeType setNewHomePoint(Vehicle* vehicle, int timeout = 1);
 
 /*! @brief Sample to open avoid obstacle
  *
@@ -103,7 +103,7 @@ ErrorCode::ErrCodeType setNewHomePoint(Vehicle* vehicle, int timeout = 1);
  *  @param timeout timeout
  *  @return result:true:success, false:fail
  */
-ErrorCode::ErrCodeType openAvoidObstacle(Vehicle* vehicle, int timeout = 1);
+ErrorCode::ErrorCodeType openAvoidObstacle(Vehicle* vehicle, int timeout = 1);
 
 /*! @brief Sample to close avoid obstacle
  *
@@ -111,7 +111,7 @@ ErrorCode::ErrCodeType openAvoidObstacle(Vehicle* vehicle, int timeout = 1);
  *  @param timeout timeout
  *  @return result:true:success, false:fail
  */
-ErrorCode::ErrCodeType closeAvoidObstacle(Vehicle* vehicle, int timeout = 1);
+ErrorCode::ErrorCodeType closeAvoidObstacle(Vehicle* vehicle, int timeout = 1);
 
 /*! @brief Sample to open RTK switch
  *
@@ -119,7 +119,7 @@ ErrorCode::ErrCodeType closeAvoidObstacle(Vehicle* vehicle, int timeout = 1);
  *  @param timeout timeout
  *  @return result:true:success, false:fail
  */
-ErrorCode::ErrCodeType openRtkSwtich(Vehicle* vehicle, int timeout = 1);
+ErrorCode::ErrorCodeType openRtkSwtich(Vehicle* vehicle, int timeout = 1);
 
 /*! @brief Sample to close  RTK switch
  *
@@ -127,7 +127,7 @@ ErrorCode::ErrCodeType openRtkSwtich(Vehicle* vehicle, int timeout = 1);
  *  @param timeout timeout
  *  @return result:true:success, false:fail
  */
-ErrorCode::ErrCodeType closeRtkSwtich(Vehicle* vehicle, int timeout = 1);
+ErrorCode::ErrorCodeType closeRtkSwtich(Vehicle* vehicle, int timeout = 1);
 
 /*! @brief Sample to go home, landing and force landing avoid ground
  *

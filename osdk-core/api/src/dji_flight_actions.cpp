@@ -42,7 +42,7 @@ void FlightActions::commonAckDecoder(Vehicle *vehicle, RecvContainer recvFrame,
                                      UCBRetCodeHandler *ucb) {
   if (ucb && ucb->UserCallBack) {
     CommonAck ack = {0};
-    ErrorCode::ErrCodeType ret = 0;
+    ErrorCode::ErrorCodeType ret = 0;
     if (recvFrame.recvInfo.len - OpenProtocol::PackageMin >=
         sizeof(CommonAck)) {
       ack = *(CommonAck *)(recvFrame.recvData.raw_ack_array);
@@ -66,13 +66,13 @@ FlightActions::UCBRetCodeHandler *FlightActions::allocUCBHandler(
     ucbHandlerIndex = 0;
   }
   ucbHandler[ucbHandlerIndex].UserCallBack =
-      (void (*)(ErrorCode::ErrCodeType errCode, UserData userData))callback;
+      (void (*)(ErrorCode::ErrorCodeType errCode, UserData userData))callback;
   ucbHandler[ucbHandlerIndex].userData = userData;
   return &(ucbHandler[ucbHandlerIndex]);
 }
 
 template <typename ReqT>
-ErrorCode::ErrCodeType FlightActions::actionSync(ReqT req, int timeout) {
+ErrorCode::ErrorCodeType FlightActions::actionSync(ReqT req, int timeout) {
   if (controlLink) {
     ACK::ErrorCode *rsp = (ACK::ErrorCode *)controlLink->sendSync(
         OpenProtocolCMD::CMDSet::Control::task, (void *)&req, sizeof(req),
@@ -92,7 +92,7 @@ template <typename ReqT>
 void FlightActions::actionAsync(
     ReqT req, void (*ackDecoderCB)(Vehicle *vehicle, RecvContainer recvFrame,
                                    UCBRetCodeHandler *ucb),
-    void (*userCB)(ErrorCode::ErrCodeType, UserData userData),
+    void (*userCB)(ErrorCode::ErrorCodeType, UserData userData),
     UserData userData, int timeout, int retry_time) {
   if (controlLink) {
     controlLink->sendAsync(OpenProtocolCMD::CMDSet::Control::task, &req,
@@ -104,46 +104,46 @@ void FlightActions::actionAsync(
   }
 }
 
-ErrorCode::ErrCodeType FlightActions::startTakeoffSync(int timeout) {
+ErrorCode::ErrorCodeType FlightActions::startTakeoffSync(int timeout) {
   return actionSync(FlightCommand::TAKE_OFF, timeout);
 }
 
 void FlightActions::startTakeoffAsync(
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   this->actionAsync(FlightCommand::TAKE_OFF, commonAckDecoder, UserCallBack,
                     userData);
 }
 
-ErrorCode::ErrCodeType FlightActions::startForceLandingSync(int timeout) {
+ErrorCode::ErrorCodeType FlightActions::startForceLandingSync(int timeout) {
   return actionSync(FlightCommand::FORCE_LANDING, timeout);
 }
 
 void FlightActions::startForceLandingAsync(
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   this->actionAsync(FlightCommand::FORCE_LANDING, commonAckDecoder,
                     UserCallBack, userData);
 }
 
-ErrorCode::ErrCodeType FlightActions::startForceLandingAvoidGroundSync(
+ErrorCode::ErrorCodeType FlightActions::startForceLandingAvoidGroundSync(
     int timeout) {
   return actionSync(FlightCommand::FORCE_LANDING_AVOID_GROUND, timeout);
 }
 
 void FlightActions::startForceLandingAvoidGroundAsync(
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   this->actionAsync(FlightCommand::FORCE_LANDING_AVOID_GROUND, commonAckDecoder,
                     UserCallBack, userData);
 }
 
-ErrorCode::ErrCodeType FlightActions::startGoHomeSync(int timeout) {
+ErrorCode::ErrorCodeType FlightActions::startGoHomeSync(int timeout) {
   return actionSync(FlightCommand::GO_HOME, timeout);
 }
 
 void FlightActions::startGoHomeAsync(
-    void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   this->actionAsync(FlightCommand::GO_HOME, commonAckDecoder, UserCallBack,
                     userData);

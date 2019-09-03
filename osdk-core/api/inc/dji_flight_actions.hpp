@@ -58,7 +58,7 @@ class FlightActions {
 
   /*TODO: move this part code to an new class*/
   typedef struct UCBRetCodeHandler {
-    void (*UserCallBack)(ErrorCode::ErrCodeType errCode, UserData userData);
+    void (*UserCallBack)(ErrorCode::ErrorCodeType errCode, UserData userData);
     UserData userData;
   } UCBRetCodeHandler;
 
@@ -68,19 +68,19 @@ class FlightActions {
   /*! @brief Wrapper function for aircraft take off, blocking calls
    *
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK ErrorCode::ErrCodeType error code
+   *  @return OSDK ErrorCode::ErrorCodeType error code
    */
-  ErrorCode::ErrCodeType startTakeoffSync(int timeout);
+  ErrorCode::ErrorCodeType startTakeoffSync(int timeout);
 
   /*! @brief Wrapper function for aircraft take off, non-blocking calls
    *
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK ErrorCode::ErrCodeType error code
+   *  @arg @b retCode is the OSDK ErrorCode::ErrorCodeType error code
    *  @arg @b userData the interface to transfer userData in when the callback
    *  is called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
-  void startTakeoffAsync(void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
+  void startTakeoffAsync(void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
                                               UserData userData),
                          UserData userData);
 
@@ -90,9 +90,9 @@ class FlightActions {
    * function api, it will landing directly (would not stop at 0.7m and wait
    * user's  command),it may make the aircraft crash.
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK ErrorCode::ErrCodeType error code
+   *  @return OSDK ErrorCode::ErrorCodeType error code
    */
-  ErrorCode::ErrCodeType startForceLandingSync(int timeout);
+  ErrorCode::ErrorCodeType startForceLandingSync(int timeout);
 
   /*! @brief Wrapper function for aircraft force landing, non-blocking calls
    *
@@ -100,13 +100,13 @@ class FlightActions {
    * api landing, it will landing directly (would not stop at 0.7m and wait
    * user's  command),it may make the aircraft crash.
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK ErrorCode::ErrCodeType error code
+   *  @arg @b retCode is the OSDK ErrorCode::ErrorCodeType error code
    *  @arg @b userData the interface to transfer userData in when the callback
    *  is called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
   void startForceLandingAsync(
-      void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+      void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
       UserData userData);
 
   /*! @brief Wrapper function for  aircraft force landing and avoid ground,
@@ -116,9 +116,9 @@ class FlightActions {
    *  stop in the air (about 0.7m), if the ground is not suitable for landing
    *  ,user must use RC to control it landing manually or force landing.
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK ErrorCode::ErrCodeType error code
+   *  @return OSDK ErrorCode::ErrorCodeType error code
    */
-  ErrorCode::ErrCodeType startForceLandingAvoidGroundSync(int timeout);
+  ErrorCode::ErrorCodeType startForceLandingAvoidGroundSync(int timeout);
 
   /*! @brief Wrapper function for  aircraft force landing and avoid ground,
    * non-blocking calls
@@ -127,31 +127,31 @@ class FlightActions {
    *  stop in the air (about 0.7m), if the ground is not suitable for landing
    *  ,user must use RC to control it landing manually or force landing.
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK ErrorCode::ErrCodeType error code
+   *  @arg @b retCode is the OSDK ErrorCode::ErrorCodeType error code
    *  @arg @b userData the interface to transfer userData in when the callback is
    *  called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
   void startForceLandingAvoidGroundAsync(
-      void (*UserCallBack)(ErrorCode::ErrCodeType retCode, UserData userData),
+      void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
       UserData userData);
 
   /*! @brief Wrapper function for  go home action, blocking calls
    *
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK ErrorCode::ErrCodeType error code
+   *  @return OSDK ErrorCode::ErrorCodeType error code
    */
-  ErrorCode::ErrCodeType startGoHomeSync(int timeout);
+  ErrorCode::ErrorCodeType startGoHomeSync(int timeout);
 
   /*! @brief Wrapper function for  go home action, non-blocking calls
    *
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK ErrorCode::ErrCodeType error code
+   *  @arg @b retCode is the OSDK ErrorCode::ErrorCodeType error code
    *  @arg @b userData the interface to transfer userData in when the callback is
    *  called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
-  void startGoHomeAsync(void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
+  void startGoHomeAsync(void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
                                              UserData userData),
                         UserData userData);
 
@@ -164,13 +164,13 @@ class FlightActions {
                                                     UserData userData);
 
   template <typename ReqT>
-  ErrorCode::ErrCodeType actionSync(ReqT req, int timeout);
+  ErrorCode::ErrorCodeType actionSync(ReqT req, int timeout);
 
   template <typename ReqT>
   void actionAsync(ReqT req, void (*ackDecoderCB)(Vehicle *vehicle,
                                                   RecvContainer recvFrame,
                                                   UCBRetCodeHandler *ucb),
-                   void (*userCB)(ErrorCode::ErrCodeType, UserData userData),
+                   void (*userCB)(ErrorCode::ErrorCodeType, UserData userData),
                    UserData userData, int timeout = 2000, int retry_time = 1);
 };
 }  // namespace OSDK

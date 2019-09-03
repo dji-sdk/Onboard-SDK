@@ -138,9 +138,9 @@ bool getHomePoint(Vehicle* vehicle, HomePointStatus& homePointSetStatus,
   return true;
 }
 
-ErrorCode::ErrCodeType setGoHomeAltitude(
+ErrorCode::ErrorCodeType setGoHomeAltitude(
     Vehicle* vehicle, FlightAssistant::GoHomeAltitude altitude, int timeout) {
-  ErrorCode::ErrCodeType ret =
+  ErrorCode::ErrorCodeType ret =
       vehicle->flightAssistant->setGoHomeAltitudeSync(altitude, timeout);
   if (ret != ErrorCode::SysCommonErr::Success) {
     DSTATUS("Set go home altitude failed, ErrorCode is:%8x", ret);
@@ -150,10 +150,10 @@ ErrorCode::ErrCodeType setGoHomeAltitude(
   return ret;
 }
 
-ErrorCode::ErrCodeType setNewHomePoint(Vehicle* vehicle, int timeout) {
+ErrorCode::ErrorCodeType setNewHomePoint(Vehicle* vehicle, int timeout) {
   HomePointStatus homePointSetStatus;
   HomePointData originHomePoint;
-  ErrorCode::ErrCodeType ret =
+  ErrorCode::ErrorCodeType ret =
       ErrorCode::FlightControllerErr::SetHomePointErr::Fail;
   FlightAssistant::SetHomepointData homepoint = {
       FlightAssistant::HomePointType::DJI_HOMEPOINT_AIRCRAFT_LOACTON, 0, 0, 0};
@@ -172,10 +172,10 @@ ErrorCode::ErrCodeType setNewHomePoint(Vehicle* vehicle, int timeout) {
   return ret;
 }
 
-ErrorCode::ErrCodeType openAvoidObstacle(Vehicle* vehicle, int timeout) {
+ErrorCode::ErrorCodeType openAvoidObstacle(Vehicle* vehicle, int timeout) {
   FlightAssistant::AvoidObstacleData data = {0};
   data.frontBrakeFLag = 1;
-  ErrorCode::ErrCodeType ret =
+  ErrorCode::ErrorCodeType ret =
       vehicle->flightAssistant->setAvoidObstacleSwitchSync(data, timeout);
   if (ret != ErrorCode::SysCommonErr::Success) {
     DSTATUS("Open avoid obstacle switch failed, ErrorCode is:%8x", ret);
@@ -185,10 +185,10 @@ ErrorCode::ErrCodeType openAvoidObstacle(Vehicle* vehicle, int timeout) {
   return ret;
 }
 
-ErrorCode::ErrCodeType closeAvoidObstacle(Vehicle* vehicle, int timeout) {
+ErrorCode::ErrorCodeType closeAvoidObstacle(Vehicle* vehicle, int timeout) {
   FlightAssistant::AvoidObstacleData data = {0};
   data.frontBrakeFLag = 0;
-  ErrorCode::ErrCodeType ret =
+  ErrorCode::ErrorCodeType ret =
       vehicle->flightAssistant->setAvoidObstacleSwitchSync(data, timeout);
   if (ret != ErrorCode::SysCommonErr::Success) {
     DSTATUS("Close avoid obstacle switch failed, ErrorCode is:%8x", ret);
@@ -198,8 +198,8 @@ ErrorCode::ErrCodeType closeAvoidObstacle(Vehicle* vehicle, int timeout) {
   return ret;
 }
 
-ErrorCode::ErrCodeType openRtkSwtich(Vehicle* vehicle, int timeout) {
-  ErrorCode::ErrCodeType ret = vehicle->flightAssistant->setRtkEnableSync(
+ErrorCode::ErrorCodeType openRtkSwtich(Vehicle* vehicle, int timeout) {
+  ErrorCode::ErrorCodeType ret = vehicle->flightAssistant->setRtkEnableSync(
       FlightAssistant::RtkEnableData::RTK_ENABLE, timeout);
   if (ret != ErrorCode::SysCommonErr::Success) {
     DSTATUS("Open rtk switch failed, ErrorCode is:%8x", ret);
@@ -209,8 +209,8 @@ ErrorCode::ErrCodeType openRtkSwtich(Vehicle* vehicle, int timeout) {
   return ret;
 }
 
-ErrorCode::ErrCodeType closeRtkSwtich(Vehicle* vehicle, int timeout) {
-  ErrorCode::ErrCodeType ret = vehicle->flightAssistant->setRtkEnableSync(
+ErrorCode::ErrorCodeType closeRtkSwtich(Vehicle* vehicle, int timeout) {
+  ErrorCode::ErrorCodeType ret = vehicle->flightAssistant->setRtkEnableSync(
       FlightAssistant::RtkEnableData::RTK_DISABLE, timeout);
   if (ret != ErrorCode::SysCommonErr::Success) {
     DSTATUS("Close rtk switch failed, ErrorCode is:%8x", ret);
@@ -232,7 +232,7 @@ bool goHomeAndForceLanding(Vehicle* vehicle, int timeout) {
 
   /*! Step 2: Start go home */
   DSTATUS("Start go home action");
-  ErrorCode::ErrCodeType goHomeAck =
+  ErrorCode::ErrorCodeType goHomeAck =
       vehicle->flightActions->startGoHomeSync(timeout);
   if (goHomeAck != ErrorCode::SysCommonErr::Success) {
     DERROR("Fail to execute go home action! ");
@@ -275,7 +275,7 @@ bool goHomeAndForceLanding(Vehicle* vehicle, int timeout) {
 
   /*! Step 4: Force landing and avoid ground */
   DSTATUS("Start force Landing and avoid ground action");
-  ErrorCode::ErrCodeType forceLandingAvoidGroundAck =
+  ErrorCode::ErrorCodeType forceLandingAvoidGroundAck =
       vehicle->flightActions->startForceLandingAvoidGroundSync(timeout);
   if (forceLandingAvoidGroundAck != ErrorCode::SysCommonErr::Success) {
     DERROR("Fail to execute force landing avoid ground action! ");

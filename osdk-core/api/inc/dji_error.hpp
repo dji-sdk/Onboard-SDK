@@ -201,14 +201,14 @@ class ErrorCode {
     class ParamReadWirteErr
     {
     public:
-      static const ErrCodeType Fail;
-      static const ErrCodeType InvalidParameter;
+      static const ErrorCodeType Fail;
+      static const ErrorCodeType InvalidParameter;
     };
 
     class SetHomePointErr
     {
     public:
-      static const ErrCodeType Fail;
+      static const ErrorCodeType Fail;
     };
   };
   /*! @brief camera api error code
