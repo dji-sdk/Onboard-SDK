@@ -36,8 +36,8 @@ FlightActions::FlightActions(Vehicle *vehicle) {
   controlLink = new ControlLink(vehicle);
 }
 
-FlightActions::~FlightActions() {}
-/*! TODO move this part's code to independent class (down)*/
+FlightActions::~FlightActions() { delete this->controlLink; }
+/* TODO move this part's code to independent class*/
 void FlightActions::commonAckDecoder(Vehicle *vehicle, RecvContainer recvFrame,
                                      UCBRetCodeHandler *ucb) {
   if (ucb && ucb->UserCallBack) {
@@ -46,16 +46,15 @@ void FlightActions::commonAckDecoder(Vehicle *vehicle, RecvContainer recvFrame,
     if (recvFrame.recvInfo.len - OpenProtocol::PackageMin >=
         sizeof(CommonAck)) {
       ack = *(CommonAck *)(recvFrame.recvData.raw_ack_array);
-      ret = ErrorCode::SysCommonErr::Success;
+      ret = ErrorCode::getErrorCode(ErrorCode::FCModule,
+                                    ErrorCode::FCControlTask, ack.retCode);
     } else {
       DERROR("ACK is exception, data len %d (expect >= %d)\n",
              recvFrame.recvInfo.len - OpenProtocol::PackageMin,
              sizeof(CommonAck));
       ret = ErrorCode::SysCommonErr::UnpackDataMismatch;
     }
-    ucb->UserCallBack(
-        (ret != ErrorCode::SysCommonErr::Success) ? ret : ack.ret_code,
-        ucb->userData);
+    ucb->UserCallBack(ret, ucb->userData);
   }
 }
 
@@ -87,7 +86,7 @@ ErrorCode::ErrCodeType FlightActions::actionSync(ReqT req, int timeout) {
   } else
     return ErrorCode::SysCommonErr::AllocMemoryFailed;
 }
-/*! TODO move this part's code to independent class (up)*/
+
 
 template <typename ReqT>
 void FlightActions::actionAsync(

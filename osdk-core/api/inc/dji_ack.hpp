@@ -128,12 +128,6 @@ public:
     uint8_t paramValue[8]; /*!< parameter value*/
   } ParamAckInternal;      // pack(1)
 
-  typedef struct SetHomepointInternal
-  {
-    uint8_t ack;
-    uint8_t ret_code;
-  } SetHomepointInternal;  // pack(1)
-
   /*
    * ACK structures exposed to user
    */
@@ -156,7 +150,7 @@ public:
    */
   typedef struct ParamAck
   {
-    ErrorCode ack;
+    Entry info;
     ParamAckInternal data;
     bool updated = false;
   } ParamAck;  // pack(1)

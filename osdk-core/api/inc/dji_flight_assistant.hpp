@@ -37,22 +37,24 @@ namespace OSDK {
 #define MAX_PARAMETER_VALUE_LENGTH 8
 #define MAX_FLY_RADIUS 20000
 class ControlLink;
+
+/*! @brief Flight control assistant API: set or get parameter
+ *
+ */
 class FlightAssistant {
  public:
   FlightAssistant(Vehicle *vehicle);
   ~FlightAssistant();
 
  public:
-  enum ParamHashValue {
+  enum ParamHashValue : uint32_t {
     USE_RTK_DATA = 1288992843,    /*! Set rtk switch on or off*/
     GO_HOME_ALTITUDE = 952919004, /*! Set return home altitude*/
-                                  // AVOID_LANDING_ENABLE=901246535,
   };
 
-  enum RtkEnableData {
-    RTK_DISABLE = 0,         /*!< 0:disable */
-    RTK_ENABLE = 1,          /*!< 1:enable  */
-    RTK_STATUS_KNOWN = 0xFF, /*!< 0xFF: unknown status*/
+  enum RtkEnableData : uint8_t {
+    RTK_DISABLE = 0, /*!< 0: disable */
+    RTK_ENABLE = 1,  /*!< 1: enable  */
   };
 
   typedef uint16_t GoHomeAltitude;
@@ -71,17 +73,19 @@ class FlightAssistant {
     uint8_t paramValue[MAX_PARAMETER_VALUE_LENGTH];
   } ParameterData;
 
+  /*! set parameter and get parameter's return data is same*/
   typedef struct RtkEnableAck {
     uint8_t retCode;
     uint32_t hashValue;
     uint8_t rtkEnable;
-  } rtkEnableAck;
+  } RtkEnableAck;
 
-  typedef struct goHomeAltitudeAck {
+  /*! set parameter and get parameter's return data is same*/
+  typedef struct GoHomeAltitudeAck {
     uint8_t retCode;
     uint32_t hashValue;
     GoHomeAltitude altitude;
-  } goHomeAltitudeAck;
+  } GoHomeAltitudeAck;
 
   typedef struct AvoidObstacleData {
     uint8_t frontBrakeFLag : 1;  /*!< emergency brake flag for front direction,
@@ -102,10 +106,6 @@ class FlightAssistant {
     double longitude;  /*!< unit:rad, range: -pi ~ pi     */
     uint8_t healthy;   /*!< reverse data                  */
   } SetHomepointData;  // pack(1)
-
-  typedef struct CommonAck {
-    uint8_t ret_code; /*!< original return code from vehicle */
-  } CommonAck;        // pack(1)
 
 #pragma pack()
 
@@ -136,7 +136,7 @@ class FlightAssistant {
 
   /*! @brief Set RTK enable or disable, blocking calls
    *
-   *  @param rtkEnable RtkEnableData  0:disable, 1:enable
+   *  @param rtkEnable RtkEnableData  0: disable, 1: enable
    *  @param timeout blocking timeout in seconds
    *  @return OSDK ErrorCode::ErrCodeType error code
    */
@@ -144,10 +144,11 @@ class FlightAssistant {
 
   /*! @brief Set RTK enable or disable, non-blocking calls
    *
-   *  @param rtkEnable rtkEnableData, 0:disable, 1:enable
+   *  @param rtkEnable rtkEnableData, 0: disable, 1: enable
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode  OSDK ErrorCode::ErrCodeType error code
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b userData the interface to transfer userData in when the callback
+   * is
    *  called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -158,7 +159,7 @@ class FlightAssistant {
 
   /*! @brief Get rtk enable or disable, blocking calls
    *
-   *  @param rtkEnable rtkEnableData, 0:disable, 1:enable
+   *  @param rtkEnable rtkEnableData, 0: disable, 1: enable
    *  @param timeout blocking timeout in seconds
    *  @return OSDK ErrorCode::ErrCodeType error code
    */
@@ -169,7 +170,7 @@ class FlightAssistant {
    *
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode the OSDK ErrorCode::ErrCodeType error code
-   *  @arg @b rtkEnable rtkEnableData, 0:disable, 1:enable
+   *  @arg @b rtkEnable rtkEnableData, 0: disable, 1: enable
    *  @arg @b userData the interface to trans userData in when the callback is
    *  called
    *  @param userData when UserCallBack is called, used in UserCallBack
@@ -181,11 +182,11 @@ class FlightAssistant {
 
   /*! @brief Set go home altitude, blocking calls
    *
-   *  @note if current altitude is higher than settings, aircraft will go home
+   *  @note If current altitude is higher than settings, aircraft will go home
    *  by current altitude. the altitude setting is between 20m to 500m, if
-   *  setting exceed this range, for example setting is 10m or 510m, the real
-   *  value of flight controller setting is 20m or 500m, and won't remind you
-   *  error
+   *  setting exceed this range, for example setting is 10m or 510m, it will
+   * remind you
+   * ErrorCode::FlightControllerErr::ParamReadWirteErr::InvalidParameter.
    *  @param altitude go home altitude settings must between MIN_GO_HOME_HEIGHT
    * and MAX_FLIGHT_HEIGHT
    *  @param timeout blocking timeout in seconds
@@ -196,15 +197,16 @@ class FlightAssistant {
 
   /*! @brief Set go home altitude, non-blocking calls
    *
-   *  @note if current altitude is higher than settings, aircraft will go home
+   *  @note If current altitude is higher than settings, aircraft will go home
    *  by current altitude. the altitude setting is between 20m to 500m, if
-   *  setting exceed this range, for example setting is 10m or 510m, the real
-   *  value of flight controller setting is 20m or 500m, and won't remind you
-   *  error
+   *  setting exceed this range, for example setting is 10m or 510m, it will
+   * remind you
+   * ErrorCode::FlightControllerErr::ParamReadWirteErr::InvalidParameter.
    *  @param altitude go home altitude
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode the OSDK ErrorCode::ErrCodeType error code
    *  @arg @b userData the interface to trans userData in when the callback is
+   * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
   void setGoHomeAltitudeAsync(
@@ -244,7 +246,7 @@ class FlightAssistant {
    *  MAX_FLY_RADIUS(20km)
    *  @param homePoint SetHomepointData include latitude and longitude
    *  @param timeout blocking timeout in seconds
-   *  @ruturn  OSDK ErrorCode::ErrCodeType error code
+   *  @return  OSDK ErrorCode::ErrCodeType error code
    */
   ErrorCode::ErrCodeType setHomePointSync(SetHomepointData homePoint,
                                           int timeout);
@@ -252,15 +254,16 @@ class FlightAssistant {
   /*! @brief Set home point position, non-blocking calls
    *
    *  @note  Set home point failed reason may as follows:
-   *  1 Use the type DJI_HOMEPOINT_AIRCRAFT_LOACTON, but aircraft's gps level
+   *  1. Use the type DJI_HOMEPOINT_AIRCRAFT_LOACTON, but aircraft's gps level
    *  can't reach the status of record homepoint.
-   *  2 The distance between new home point and init home point is larger than
+   *  2. The distance between new home point and init home point is larger than
    *  MAX_FLY_RADIUS(20km)
    *  @param homePoint  SetHomepointData include latitude and longitude
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode the OSDK ErrorCode::ErrCodeType error code
-   *  @arg @b userData the interface to trans userData in when the callback is
-   *  @param userData when UserCallBack is called, used in UserCallBack
+   *  @arg @b userData the interface to transfer userData in when the callback
+   * is called
+   *  @param when UserCallBack is called, used in UserCallBack
    */
   void setHomePointAsync(SetHomepointData homePoint,
                          void (*UserCallBack)(ErrorCode::ErrCodeType retCode,
@@ -269,7 +272,7 @@ class FlightAssistant {
 
   /*! @brief Set avoid obstacle switch enable or disable, blocking calls
    *
-   *  @param avoidObstacle reference in struct of AvoidObstacleData
+   *  @param avoidObstacle reference in FlightAssistant::AvoidObstacleData
    *  @param timeout blocking timeout in seconds
    *  @return OSDK ErrorCode::ErrCodeType error code
    */
@@ -278,10 +281,11 @@ class FlightAssistant {
 
   /*! @brief Set set avoid obstacle switch enable or disable, non-blocking calls
    *
-   *  @param avoidObstacle reference in struct of AvoidObstacleData
+   *  @param avoidObstacle reference in FlightAssistant::AvoidObstacleData
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode  OSDK ErrorCode::ErrCodeType error code
    *  @arg @b userData the interface to trans userData in when the callback is
+   * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
   void setAvoidObstacleSwitchAsync(
@@ -302,6 +306,7 @@ class FlightAssistant {
    */
   ErrorCode::ErrCodeType readParameterByHashSync(ParamHashValue hashValue,
                                                  void *param, int timeout);
+
   template <typename DataT>
   void readParameterByHashAsync(
       ParamHashValue hashValue,
@@ -336,14 +341,18 @@ class FlightAssistant {
                            UCBRetCodeHandler *ucb),
       void (*userCB)(ErrorCode::ErrCodeType, UserData userData),
       UserData userData, int timeout = 500, int retry_time = 2);
-  static void commonAckDecoder(Vehicle *vehicle, RecvContainer recvFrame,
-                               UCBRetCodeHandler *ucb);
+  static void setHomePointAckDecoder(Vehicle *vehicle, RecvContainer recvFrame,
+                                     UCBRetCodeHandler *ucb);
 
   static void avoidObstacleAckDecoder(Vehicle *vehicle, RecvContainer recvFrame,
                                       UCBRetCodeHandler *ucb);
   template <typename AckT>
   static ErrorCode::ErrCodeType commonDataUnpacker(RecvContainer recvFrame,
                                                    AckT &ack);
+
+  static void setParameterDecoder(Vehicle *vehicle, RecvContainer recvFrame,
+                                  UCBRetCodeHandler *ucb);
+
   static void getRtkEnableDecoder(Vehicle *vehicle, RecvContainer recvFrame,
                                   UCBRetParamHandler<RtkEnableData> *ucb);
 

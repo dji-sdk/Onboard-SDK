@@ -84,8 +84,8 @@ TopicInfo Telemetry::TopicDataBase[] =
   {TOPIC_FLIGHT_ANOMALY            , UID_FLIGHT_ANOMALY           , sizeof(TypeMap<TOPIC_FLIGHT_ANOMALY          >::type), 50 ,   0,  255,  0},
   {TOPIC_POSITION_VO               , UID_POSITION_VO              , sizeof(TypeMap<TOPIC_POSITION_VO             >::type), 200,   0,  255,  0},
   {TOPIC_AVOID_DATA                , UID_AVOID_DATA               , sizeof(TypeMap<TOPIC_AVOID_DATA              >::type), 100,   0,  255,  0},
-  {TOPIC_HOME_POINT_SET_STATUS     , UID_HOME_POINT_SET_STATUS    , sizeof(TypeMap<TOPIC_HOME_POINT_SET_STATUS   >::type), 50  ,   0,  255,  0},
-  {TOPIC_HOME_POINT_INFO           , UID_HOME_POINT_INFO          , sizeof(TypeMap<TOPIC_HOME_POINT_INFO         >::type), 50  ,   0,  255,  0},
+  {TOPIC_HOME_POINT_SET_STATUS     , UID_HOME_POINT_SET_STATUS    , sizeof(TypeMap<TOPIC_HOME_POINT_SET_STATUS   >::type), 50  ,  0,  255,  0},
+  {TOPIC_HOME_POINT_INFO           , UID_HOME_POINT_INFO          , sizeof(TypeMap<TOPIC_HOME_POINT_INFO         >::type), 50  ,  0,  255,  0},
 };
 // clang-format on
 

@@ -49,7 +49,6 @@ void *ControlLink::sendSync(const uint8_t cmd[], void *pdata, size_t len,
                             int timeout) {
   vehicle->protocolLayer->send(2, vehicle->getEncryption(), cmd,
                                (uint8_t *)pdata, len, 500, 2, false, 2);
-  /*TODO: 修改此处的编译错误*/
   return vehicle->waitForACK({cmd[0],cmd[1]}, timeout);
 }
 

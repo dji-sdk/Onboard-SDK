@@ -33,6 +33,10 @@
 namespace DJI {
 namespace OSDK {
 class ControlLink;
+
+/*! @brief Flight control actions API: takeoff, landing, move etc.
+ *
+ */
 class FlightActions {
  public:
   FlightActions(Vehicle *vehicle);
@@ -49,7 +53,7 @@ class FlightActions {
   };
 
   typedef struct CommonAck {
-    uint8_t ret_code; /*!< original return code from vehicle */
+    uint8_t retCode; /*!< original return code from vehicle */
   } CommonAck;        // pack(1)
 
   /*TODO: move this part code to an new class*/
@@ -72,7 +76,7 @@ class FlightActions {
    *
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode is the OSDK ErrorCode::ErrCodeType error code
-   *  @arg @b userData the interface to trans userData in when the callback
+   *  @arg @b userData the interface to transfer userData in when the callback
    *  is called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -92,12 +96,12 @@ class FlightActions {
 
   /*! @brief Wrapper function for aircraft force landing, non-blocking calls
    *
-   *  @note this api will ignore the smart landing function, when use this
+   *  @note This api will ignore the smart landing function, when use this
    * api landing, it will landing directly (would not stop at 0.7m and wait
    * user's  command),it may make the aircraft crash.
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode is the OSDK ErrorCode::ErrCodeType error code
-   *  @arg @b userData the interface to trans userData in when the callback
+   *  @arg @b userData the interface to transfer userData in when the callback
    *  is called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -108,7 +112,7 @@ class FlightActions {
   /*! @brief Wrapper function for  aircraft force landing and avoid ground,
    * blocking calls
    *
-   *  @note this api must be used after the aircraft is close to ground and
+   *  @note This api must be used after the aircraft is close to ground and
    *  stop in the air (about 0.7m), if the ground is not suitable for landing
    *  ,user must use RC to control it landing manually or force landing.
    *  @param timeout blocking timeout in seconds
@@ -119,12 +123,12 @@ class FlightActions {
   /*! @brief Wrapper function for  aircraft force landing and avoid ground,
    * non-blocking calls
    *
-   *  @note this api must be used after the aircraft is close to ground and
+   *  @note This api must be used after the aircraft is close to ground and
    *  stop in the air (about 0.7m), if the ground is not suitable for landing
    *  ,user must use RC to control it landing manually or force landing.
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode is the OSDK ErrorCode::ErrCodeType error code
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b userData the interface to transfer userData in when the callback is
    *  called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -143,7 +147,7 @@ class FlightActions {
    *
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode is the OSDK ErrorCode::ErrCodeType error code
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b userData the interface to transfer userData in when the callback is
    *  called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */

@@ -73,7 +73,7 @@ bool checkActionStarted(Vehicle* vehicle, uint8_t mode);
   *  @param timeout timeout
   *  @return result:true:success, false:fail
   */
-bool setGoHomeAltitude(Vehicle* vehicle,
+ErrorCode::ErrCodeType setGoHomeAltitude(Vehicle* vehicle,
                        FlightAssistant::GoHomeAltitude altitude,
                        int timeout = 1);
 
@@ -83,7 +83,7 @@ bool setGoHomeAltitude(Vehicle* vehicle,
  *  @param timeout timeout
  *  @return result:true:success, false:fail
  */
-bool setNewHomePoint(Vehicle* vehicle, int timeout = 1);
+ErrorCode::ErrCodeType setNewHomePoint(Vehicle* vehicle, int timeout = 1);
 
 /*! @brief Sample to open avoid obstacle
  *
@@ -91,7 +91,7 @@ bool setNewHomePoint(Vehicle* vehicle, int timeout = 1);
  *  @param timeout timeout
  *  @return result:true:success, false:fail
  */
-bool openAvoidObstacle(Vehicle* vehicle, int timeout = 1);
+ErrorCode::ErrCodeType openAvoidObstacle(Vehicle* vehicle, int timeout = 1);
 
 /*! @brief Sample to close avoid obstacle
  *
@@ -99,7 +99,7 @@ bool openAvoidObstacle(Vehicle* vehicle, int timeout = 1);
  *  @param timeout timeout
  *  @return result:true:success, false:fail
  */
-bool closeAvoidObstacle(Vehicle* vehicle, int timeout = 1);
+ErrorCode::ErrCodeType closeAvoidObstacle(Vehicle* vehicle, int timeout = 1);
 
 /*! @brief Sample to open RTK switch
  *
@@ -107,7 +107,7 @@ bool closeAvoidObstacle(Vehicle* vehicle, int timeout = 1);
  *  @param timeout timeout
  *  @return result:true:success, false:fail
  */
-bool openRtkSwtich(Vehicle* vehicle, int timeout = 1);
+ErrorCode::ErrCodeType openRtkSwtich(Vehicle* vehicle, int timeout = 1);
 
 /*! @brief Sample to close  RTK switch
  *
@@ -115,7 +115,7 @@ bool openRtkSwtich(Vehicle* vehicle, int timeout = 1);
  *  @param timeout timeout
  *  @return result:true:success, false:fail
  */
-bool closeRtkSwtich(Vehicle* vehicle, int timeout = 1);
+ErrorCode::ErrCodeType closeRtkSwtich(Vehicle* vehicle, int timeout = 1);
 
 /*! @brief Sample to go home, landing and force landing avoid ground
  *

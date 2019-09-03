@@ -454,6 +454,15 @@ Vehicle::~Vehicle()
   {
     delete this->platformManager;
   }
+  if(this->flightActions)
+  {
+    delete this->flightActions;
+  }
+  if(this->flightAssistant)
+  {
+    delete this->flightAssistant;
+  }
+
 
   this->USBThreadReady = false;
 }
@@ -1768,10 +1777,10 @@ Vehicle::ACKHandler(void* eventData)
     else if(memcmp(cmd, OpenProtocolCMD::CMDSet::Control::parameterRead, sizeof(cmd))==0 ||
        memcmp(cmd, OpenProtocolCMD::CMDSet::Control::parameterWrite, sizeof(cmd))==0)
     {
-      paramAck.ack.info        = ackData->recvInfo;
+      paramAck.info            = ackData->recvInfo;
       paramAck.data.retCode    = ackData->recvData.paramAckData.retCode;
       paramAck.data.hashValue  = ackData->recvData.paramAckData.hashValue;
-      memcpy(paramAck.data.paramValue, ackData->recvData.paramAckData.paramValue, 8);
+      memcpy(paramAck.data.paramValue, ackData->recvData.paramAckData.paramValue, MAX_PARAMETER_VALUE_LENGTH);
       paramAck.updated         = true;
     }
     else
@@ -1790,6 +1799,12 @@ Vehicle::ACKHandler(void* eventData)
     mfioGetACK.ack.info = ackData->recvInfo;
     mfioGetACK.ack.data = ackData->recvData.mfioGetACK.result;
     mfioGetACK.value    = ackData->recvData.mfioGetACK.value;
+  }
+  else if (memcmp(cmd, OpenProtocolCMD::CMDSet::Intelligent::setAvoidObstacleEnable, sizeof(cmd)) == 0)
+  {
+    /*! data mean's the setting's data ref in AvoidObstacleData struct*/
+    ackErrorCode.info = ackData->recvInfo;
+    ackErrorCode.data = ackData->recvData.commandACK;
   }
   else
   {

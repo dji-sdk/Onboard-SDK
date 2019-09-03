@@ -74,4 +74,6 @@ int main(int argc, char **argv) {
 
   /*! go home and force landing avoid ground */
   goHomeAndForceLanding(vehicle, 1);
+
+  return 0;
 }

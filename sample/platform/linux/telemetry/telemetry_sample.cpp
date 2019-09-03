@@ -356,7 +356,7 @@ subscribeToDataForInteractivePrint(Vehicle* vehicle, int responseTimeout)
                                 ,TOPIC_GIMBAL_CONTROL_MODE
                                 ,TOPIC_FLIGHT_ANOMALY
                                 ,TOPIC_POSITION_VO
-                                //,TOPIC_AVOID_DATA
+                                ,TOPIC_AVOID_DATA
                                 ,TOPIC_HOME_POINT_SET_STATUS
                                 ,TOPIC_HOME_POINT_INFO
   };
