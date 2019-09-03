@@ -26,9 +26,12 @@
  *
  */
 
-#include "dji_error.hpp"
+#ifdef STM32
 #include <stdio.h>
-#include <cstdint>
+#else
+#include <cstdio>
+#endif
+#include "dji_error.hpp"
 #include "dji_log.hpp"
 #include "dji_type.hpp"
 

@@ -29,8 +29,11 @@
 #ifndef DJI_ERROR_H
 #define DJI_ERROR_H
 
+#ifdef STM32
 #include <stdint.h>
+#else
 #include <cstdint>
+#endif
 #include <dji_macros.hpp>
 #include <map>
 #include <string>
