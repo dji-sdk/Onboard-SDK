@@ -315,23 +315,23 @@ const uint8_t& DJI::OSDK::ErrorCode::MissionACK::WayPoint::TIMEOUT = DJI::OSDK::
 // clang-format off
 
 const ErrorCode::ModuleDataType ErrorCode::module[ModuleMaxCnt] = {
-    [SysModule]     = {"System",     SystemFunction},
-    [RESERVE_1]     = {"Reserve_1",  nullptr},
-    [RESERVE_2]     = {"Reserve_2",  nullptr},
-    [RESERVE_3]     = {"Reserve_3",  nullptr},
-    [RESERVE_4]     = {"Reserve_4",  nullptr},
-    [RESERVE_5]     = {"Reserve_5",  nullptr},
-    [RESERVE_6]     = {"Reserve_6",  nullptr},
-    [RESERVE_7]     = {"Reserve_7",  nullptr},
-    [RESERVE_8]     = {"Reserve_8",  nullptr},
-    [RESERVE_9]     = {"Reserve_9",  nullptr},
-    [RESERVE_10]    = {"Reserve_10", nullptr},
-    [FCModule]      = {"FC",         nullptr},
-    [GimbalModule]  = {"Gimbal",     nullptr},
-    [CameraModule]  = {"Camera",     CameraFunction},
-    [PSDKModule]    = {"PSDK",       nullptr},
-    [RCModule]      = {"RC",         nullptr},
-    [BatteryModule] = {"Battery",    nullptr},
+    {"System",    SystemFunction},  /*!< SysModule */
+    {"Reserve_1",  NULL},           /*!< RESERVE_1 */
+    {"Reserve_2",  NULL},           /*!< RESERVE_2 */
+    {"Reserve_3",  NULL},           /*!< RESERVE_3 */
+    {"Reserve_4",  NULL},           /*!< RESERVE_4 */
+    {"Reserve_5",  NULL},           /*!< RESERVE_5 */
+    {"Reserve_6",  NULL},           /*!< RESERVE_6 */
+    {"Reserve_7",  NULL},           /*!< RESERVE_7 */
+    {"Reserve_8",  NULL},           /*!< RESERVE_8 */
+    {"Reserve_9",  NULL},           /*!< RESERVE_9 */
+    {"Reserve_10", NULL},           /*!< RESERVE_10 */
+    {"FC",         NULL},           /*!< FCModule */
+    {"Gimbal",     NULL},           /*!< GimbalModule */
+    {"Camera",     CameraFunction}, /*!< CameraModule */
+    {"PSDK",       NULL},           /*!< PSDKModule */
+    {"RC",         NULL},           /*!< RCModule */
+    {"Battery",    NULL},           /*!< BatteryModule */
 };
 
 /*! camera api error code */
@@ -441,11 +441,11 @@ const ErrorCode::ErrorCodeMapType ErrorCode::SystemCommonErrorMap(SystemCommonEr
                                                                   SystemCommonErrData + sizeof SystemCommonErrData / sizeof SystemCommonErrData[0]);
 
 const ErrorCode::FunctionDataType ErrorCode::SystemFunction[functionMaxCnt] = {
-    [SystemCommon] = {"SystemCommon", SystemCommonErrorMap},
+    {"SystemCommon", SystemCommonErrorMap},   /*!< SystemCommon */
 };
 
 const ErrorCode::FunctionDataType ErrorCode::CameraFunction[functionMaxCnt] = {
-    [CameraCommon] = {"CameraCommon", CameraCommonErrorMap},
+    {"CameraCommon", CameraCommonErrorMap},   /*!< CameraCommon */
 };
 
 // clang-format on

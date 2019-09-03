@@ -50,7 +50,7 @@ __initial_sp
 ; </h>
 
 ;<h>Heap_Size       EQU     0x00019990;<>
-Heap_Size       EQU     0x000B000
+Heap_Size       EQU     0x000F000
 
                 AREA    HEAP, NOINIT, READWRITE, ALIGN=3
 __heap_base
