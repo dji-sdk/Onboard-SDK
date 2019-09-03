@@ -300,7 +300,7 @@ ErrorCode::ErrCodeType FlightAssistant::getGoHomeAltitudeSync(
   ErrorCode::ErrCodeType ret =
       readParameterByHashSync(ParamHashValue::GO_HOME_ALTITUDE, param, timeout);
   if (ret == ErrorCode::SysCommonErr::Success) {
-    altitude = *(RtkEnableData*)param;
+    altitude = *(GoHomeAltitude*)param;
   }
   return ret;
 }

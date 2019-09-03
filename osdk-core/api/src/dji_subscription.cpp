@@ -32,7 +32,7 @@
 
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
-const uint8_t  ADD_PACKAEG_DATA_LENGTH = 200;
+const uint8_t  ADD_PACKAEG_DATA_LENGTH = 250;
 const uint32_t DBVersion               = 0x00000100;
 //
 // @note: make sure the order of entry is the same as in the enum TopicName
@@ -657,7 +657,7 @@ SubscriptionPackage::setTopicList(TopicName* topics, int numberOfTopics,
     totalSize += TopicDataBase[topics[i]].size;
     if (totalSize > ADD_PACKAEG_DATA_LENGTH)
     {
-      DDEBUG(
+      DERROR(
         "Too many topics, data payload of the first %d topic is already %d", i,
         totalSize);
       return false;

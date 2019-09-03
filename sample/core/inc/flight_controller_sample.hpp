@@ -58,6 +58,18 @@ bool setUpSubscription(DJI::OSDK::Vehicle* vehicle, int pkgIndex, int freq,
 bool teardownSubscription(Vehicle* vehicle, const int pkgIndex,
                           int timeout = 1);
 
+/*! @brief Sample to get current home point and status
+  *
+  *  @param vehicle Vehicle pointer
+  *  @param homePointSetStatus see Telemetry::HomePointStatus
+  *  @param homePointInfo,see HomePointData struct define
+  *  @param responseTimeout blocking timeout
+  *  @return result true:success, false:fail
+  */
+bool getHomePoint(Vehicle* vehicle,
+                  Telemetry::HomePointStatus& homePointSetStatus,
+                  Telemetry::HomePointData& homePointInfo, int responseTimeout);
+
 /*! @brief Sample check flight action started or not
   *
   *  @param vehicle Vehicle pointer
@@ -73,9 +85,9 @@ bool checkActionStarted(Vehicle* vehicle, uint8_t mode);
   *  @param timeout timeout
   *  @return result:true:success, false:fail
   */
-ErrorCode::ErrCodeType setGoHomeAltitude(Vehicle* vehicle,
-                       FlightAssistant::GoHomeAltitude altitude,
-                       int timeout = 1);
+ErrorCode::ErrCodeType setGoHomeAltitude(
+    Vehicle* vehicle, FlightAssistant::GoHomeAltitude altitude,
+    int timeout = 1);
 
 /*! @brief Sample to set current aircraft position as an new home point
  *
