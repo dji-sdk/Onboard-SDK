@@ -45,10 +45,10 @@ int main(int argc, char **argv) {
   std::string sampleCase = linuxEnvironment.getEnvironment()->getSampleCase();
 
   /*! init camera modules for cameraManager */
-  ErrorCode::ErrCodeType ret = vehicle->cameraManager->initCameraModule(
+  ErrorCode::ErrorCodeType ret = vehicle->cameraManager->initCameraModule(
       PAYLOAD_INDEX_0, "Sample_camera_1");
-  ret |= vehicle->cameraManager->initCameraModule(
-      PAYLOAD_INDEX_1, "Sample_camera_2");
+  ret |= vehicle->cameraManager->initCameraModule(PAYLOAD_INDEX_1,
+                                                  "Sample_camera_2");
   /* @TODO 0 should be turned to a standrad error code */
   if (ret != 0) {
     DERROR("create camera module error\n");

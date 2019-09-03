@@ -37,13 +37,13 @@ CameraManagerSyncSample::CameraManagerSyncSample(Vehicle *vehiclePtr)
 
 CameraManagerSyncSample::~CameraManagerSyncSample() {}
 
-ErrorCode::ErrCodeType CameraManagerSyncSample::setEVSyncSample(
+ErrorCode::ErrorCodeType CameraManagerSyncSample::setEVSyncSample(
     PayloadIndexType index, CameraModule::ExposureCompensation dataTarget) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
     return ErrorCode::SysCommonErr::InstInitParamInvalid;
   }
-  ErrorCode::ErrCodeType retCode;
+  ErrorCode::ErrorCodeType retCode;
   CameraManager *pm = vehicle->cameraManager;
   CameraModule::ExposureCompensation evGet;
 
@@ -57,7 +57,7 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::setEVSyncSample(
         DSTATUS("Set ev value successfully.");
       } else {
         DERROR("Set ev parameter error. Error code : 0x%lX", retCode);
-        ErrorCode::printErrCodeMsg(retCode);
+        ErrorCode::printErrorCodeMsg(retCode);
         DERROR(
             "In order to use this function, the camera exposure mode should be "
             "set to be PROGRAM_AUTO, SHUTTER_PRIORITY or APERTURE_PRIORITY "
@@ -68,19 +68,19 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::setEVSyncSample(
     }
   } else {
     DERROR("Get ev error. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
   }
 
   return retCode;
 }
 
-ErrorCode::ErrCodeType CameraManagerSyncSample::setExposureModeSyncSample(
+ErrorCode::ErrorCodeType CameraManagerSyncSample::setExposureModeSyncSample(
     PayloadIndexType index, CameraModule::ExposureMode dataTarget) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
     return ErrorCode::SysCommonErr::InstInitParamInvalid;
   }
-  ErrorCode::ErrCodeType retCode;
+  ErrorCode::ErrorCodeType retCode;
   CameraManager *pm = vehicle->cameraManager;
   CameraModule::ExposureMode exposureModeGet;
 
@@ -94,26 +94,26 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::setExposureModeSyncSample(
         DSTATUS("Set exposure mode successfully.");
       } else {
         DERROR("Set exposure mode error. Error code : 0x%lX", retCode);
-        ErrorCode::printErrCodeMsg(retCode);
+        ErrorCode::printErrorCodeMsg(retCode);
       }
     } else {
       DSTATUS("The exposure mode is already %d.", dataTarget);
     }
   } else {
     DERROR("Get exposure mode error. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
   }
 
   return retCode;
 }
 
-ErrorCode::ErrCodeType CameraManagerSyncSample::setISOSyncSample(
+ErrorCode::ErrorCodeType CameraManagerSyncSample::setISOSyncSample(
     PayloadIndexType index, CameraModule::ISO dataTarget) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
     return ErrorCode::SysCommonErr::InstInitParamInvalid;
   }
-  ErrorCode::ErrCodeType retCode;
+  ErrorCode::ErrorCodeType retCode;
   CameraManager *pm = vehicle->cameraManager;
   CameraModule::ISO isoGet;
 
@@ -127,7 +127,7 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::setISOSyncSample(
         DSTATUS("Set iso successfully");
       } else {
         DERROR("Set ISO parameter error. Error code : 0x%lX", retCode);
-        ErrorCode::printErrCodeMsg(retCode);
+        ErrorCode::printErrorCodeMsg(retCode);
         DERROR(
             "For the X5, X5R, X4S and X5S, the ISO value can be set for all "
             "modes. For the other cameras, the ISO value can only be set when "
@@ -138,19 +138,19 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::setISOSyncSample(
     }
   } else {
     DERROR("Get iso error. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
   }
 
   return retCode;
 }
 
-ErrorCode::ErrCodeType CameraManagerSyncSample::setShutterSpeedSyncSample(
+ErrorCode::ErrorCodeType CameraManagerSyncSample::setShutterSpeedSyncSample(
     PayloadIndexType index, CameraModule::ShutterSpeed dataTarget) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
     return ErrorCode::SysCommonErr::InstInitParamInvalid;
   }
-  ErrorCode::ErrCodeType retCode;
+  ErrorCode::ErrorCodeType retCode;
   CameraManager *pm = vehicle->cameraManager;
   CameraModule::ShutterSpeed shutterSpeedGet;
 
@@ -164,7 +164,7 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::setShutterSpeedSyncSample(
         DSTATUS("Set iso successfully");
       } else {
         DERROR("Set shutterSpeed parameter error. Error code : 0x%lX", retCode);
-        ErrorCode::printErrCodeMsg(retCode);
+        ErrorCode::printErrorCodeMsg(retCode);
         DERROR(
             "The shutter speed can be set only when the camera exposure mode "
             "is Shutter mode or Manual mode. The shutter speed should not be "
@@ -176,19 +176,19 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::setShutterSpeedSyncSample(
     }
   } else {
     DERROR("Get shutterSpeed error. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
   }
 
   return retCode;
 }
 
-ErrorCode::ErrCodeType CameraManagerSyncSample::setApertureSyncSample(
+ErrorCode::ErrorCodeType CameraManagerSyncSample::setApertureSyncSample(
     PayloadIndexType index, CameraModule::Aperture dataTarget) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
     return ErrorCode::SysCommonErr::InstInitParamInvalid;
   }
-  ErrorCode::ErrCodeType retCode;
+  ErrorCode::ErrorCodeType retCode;
   CameraManager *pm = vehicle->cameraManager;
   CameraModule::Aperture apertureGet;
 
@@ -202,7 +202,7 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::setApertureSyncSample(
         DSTATUS("Set aperture successfully");
       } else {
         DERROR("Set aperture parameter error. Error code : 0x%lX", retCode);
-        ErrorCode::printErrCodeMsg(retCode);
+        ErrorCode::printErrorCodeMsg(retCode);
         DERROR(
             "In order to use this function, the exposure mode ExposureMode "
             "must be in MANUAL or APERTURE_PRIORITY. Supported only by the X5, "
@@ -213,19 +213,19 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::setApertureSyncSample(
     }
   } else {
     DERROR("Get aperture error. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
   }
 
   return retCode;
 }
 
-ErrorCode::ErrCodeType CameraManagerSyncSample::setFocusPointSyncSample(
+ErrorCode::ErrorCodeType CameraManagerSyncSample::setFocusPointSyncSample(
     PayloadIndexType index, float x, float y) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
     return ErrorCode::SysCommonErr::InstInitParamInvalid;
   }
-  ErrorCode::ErrCodeType retCode;
+  ErrorCode::ErrorCodeType retCode;
   CameraManager *pm = vehicle->cameraManager;
 
   /*!< set camera focus mode to be CameraModule::FocusMode::AUTO */
@@ -239,13 +239,13 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::setFocusPointSyncSample(
       DSTATUS("Set focus point successfully");
     } else {
       DERROR("Set focus point error. Error code : 0x%lX", retCode);
-      ErrorCode::printErrCodeMsg(retCode);
+      ErrorCode::printErrorCodeMsg(retCode);
       DERROR(
           "Supported only by the X5, X5R, X4S and X5S. camera, X4S and X5S.");
     }
   } else {
     DERROR("Set focus mode parameter error. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     DERROR(
         "Supported only by the X5, X5R, Z3 cameras(only support AUTO mode), "
         "X4S and X5S. camera, X4S and X5S.");
@@ -254,13 +254,13 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::setFocusPointSyncSample(
   return retCode;
 }
 
-ErrorCode::ErrCodeType CameraManagerSyncSample::setTapZoomPointSyncSample(
+ErrorCode::ErrorCodeType CameraManagerSyncSample::setTapZoomPointSyncSample(
     PayloadIndexType index, uint8_t multiplier, float x, float y) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
     return ErrorCode::SysCommonErr::InstInitParamInvalid;
   }
-  ErrorCode::ErrCodeType retCode;
+  ErrorCode::ErrorCodeType retCode;
   CameraManager *pm = vehicle->cameraManager;
 
   /*!< set camera tap zoom enable parameter to be enable */
@@ -268,7 +268,7 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::setTapZoomPointSyncSample(
   retCode = pm->setTapZoomEnabledSync(index, true, 1);
   if (retCode != ErrorCode::SysCommonErr::Success) {
     DERROR("Set tap zoom enable fail. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     DERROR("It is only supported Z30 camera.");
     return retCode;
   }
@@ -278,7 +278,7 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::setTapZoomPointSyncSample(
   retCode = pm->setTapZoomMultiplierSync(index, multiplier, 1);
   if (retCode != ErrorCode::SysCommonErr::Success) {
     DERROR("Set tap zoom multiplier fail. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     DERROR("It is only supported Z30 camera.");
     return retCode;
   }
@@ -288,7 +288,7 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::setTapZoomPointSyncSample(
   retCode = pm->tapZoomAtTargetSync(index, {x, y}, 1);
   if (retCode != ErrorCode::SysCommonErr::Success) {
     DERROR("Set tap zoom target fail. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     DERROR("It is only supported Z30 camera.");
     return retCode;
   } else {
@@ -301,14 +301,14 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::setTapZoomPointSyncSample(
   return retCode;
 }
 
-ErrorCode::ErrCodeType CameraManagerSyncSample::startZoomSyncSample(
+ErrorCode::ErrorCodeType CameraManagerSyncSample::startZoomSyncSample(
     PayloadIndexType index, CameraModule::zoomDirectionData direction,
     CameraModule::zoomSpeedData speed) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
     return ErrorCode::SysCommonErr::InstInitParamInvalid;
   }
-  ErrorCode::ErrCodeType retCode;
+  ErrorCode::ErrorCodeType retCode;
   CameraManager *pm = vehicle->cameraManager;
 
   DSTATUS(
@@ -320,36 +320,37 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::startZoomSyncSample(
   retCode = pm->startContinuousOpticalZoomSync(index, direction, speed, 1);
   if (retCode != ErrorCode::SysCommonErr::Success) {
     DERROR("Start continuous zoom fail. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
   }
   return retCode;
 }
 
-ErrorCode::ErrCodeType CameraManagerSyncSample::stopZoomSyncSample(
+ErrorCode::ErrorCodeType CameraManagerSyncSample::stopZoomSyncSample(
     PayloadIndexType index) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
     return ErrorCode::SysCommonErr::InstInitParamInvalid;
   }
-  ErrorCode::ErrCodeType retCode;
+  ErrorCode::ErrorCodeType retCode;
   CameraManager *pm = vehicle->cameraManager;
 
   DSTATUS("Stop continuous optical zoom.");
   retCode = pm->stopContinuousOpticalZoomSync(index, 1);
   if (retCode != ErrorCode::SysCommonErr::Success) {
     DERROR("Stop continuous zoom fail. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
   }
   return retCode;
 }
 
-ErrorCode::ErrCodeType CameraManagerSyncSample::startShootSinglePhotoSyncSample(
+ErrorCode::ErrorCodeType
+CameraManagerSyncSample::startShootSinglePhotoSyncSample(
     PayloadIndexType index) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
     return ErrorCode::SysCommonErr::InstInitParamInvalid;
   }
-  ErrorCode::ErrCodeType retCode;
+  ErrorCode::ErrorCodeType retCode;
   CameraManager *pm = vehicle->cameraManager;
 
   /*!< set camera work mode as shoot photo */
@@ -357,7 +358,7 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::startShootSinglePhotoSyncSample(
   retCode = pm->setModeSync(index, CameraModule::WorkMode::SHOOT_PHOTO, 1);
   if (retCode != ErrorCode::SysCommonErr::Success) {
     DERROR("Camera take photo fail. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     return retCode;
   }
 
@@ -367,7 +368,7 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::startShootSinglePhotoSyncSample(
       pm->setShootPhotoModeSync(index, CameraModule::ShootPhotoMode::SINGLE, 1);
   if (retCode != ErrorCode::SysCommonErr::Success) {
     DERROR("Set shoot-photo mode as SINGLE fail. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     return retCode;
   }
 
@@ -380,20 +381,21 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::startShootSinglePhotoSyncSample(
       pm->startShootPhotoSync(index, CameraModule::ShootPhotoMode::SINGLE, 2);
   if (retCode != ErrorCode::SysCommonErr::Success) {
     DERROR("Take SINGLE photo fail. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     return retCode;
   }
 
   return retCode;
 }
 
-ErrorCode::ErrCodeType CameraManagerSyncSample::startShootBurstPhotoSyncSample(
+ErrorCode::ErrorCodeType
+CameraManagerSyncSample::startShootBurstPhotoSyncSample(
     PayloadIndexType index, CameraModule::PhotoBurstCount count) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
     return ErrorCode::SysCommonErr::InstInitParamInvalid;
   }
-  ErrorCode::ErrCodeType retCode;
+  ErrorCode::ErrorCodeType retCode;
   CameraManager *pm = vehicle->cameraManager;
 
   /*!< set camera work mode as SHOOT_PHOTO */
@@ -401,7 +403,7 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::startShootBurstPhotoSyncSample(
   retCode = pm->setModeSync(index, CameraModule::WorkMode::SHOOT_PHOTO, 1);
   if (retCode != ErrorCode::SysCommonErr::Success) {
     DERROR("Set camera as SHOOT_PHOTO fail. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     return retCode;
   }
 
@@ -411,7 +413,7 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::startShootBurstPhotoSyncSample(
       pm->setShootPhotoModeSync(index, CameraModule::ShootPhotoMode::BURST, 1);
   if (retCode != ErrorCode::SysCommonErr::Success) {
     DERROR("Set shoot-photo mode as BURST fail. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     return retCode;
   }
 
@@ -423,7 +425,7 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::startShootBurstPhotoSyncSample(
   retCode = pm->setPhotoBurstCountSync(index, count, 1);
   if (retCode != ErrorCode::SysCommonErr::Success) {
     DERROR("Set the parameter of BURST mode fail. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     return retCode;
   }
 
@@ -433,20 +435,20 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::startShootBurstPhotoSyncSample(
       pm->startShootPhotoSync(index, CameraModule::ShootPhotoMode::BURST, 2);
   if (retCode != ErrorCode::SysCommonErr::Success) {
     DERROR("Take BURST photo fail. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     return retCode;
   }
 
   return retCode;
 }
 
-ErrorCode::ErrCodeType CameraManagerSyncSample::startShootAEBPhotoSyncSample(
+ErrorCode::ErrorCodeType CameraManagerSyncSample::startShootAEBPhotoSyncSample(
     PayloadIndexType index, CameraModule::PhotoAEBCount photoNum) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
     return ErrorCode::SysCommonErr::InstInitParamInvalid;
   }
-  ErrorCode::ErrCodeType retCode;
+  ErrorCode::ErrorCodeType retCode;
   CameraManager *pm = vehicle->cameraManager;
 
   /*!< set camera work mode as SHOOT_PHOTO */
@@ -454,7 +456,7 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::startShootAEBPhotoSyncSample(
   retCode = pm->setModeSync(index, CameraModule::WorkMode::SHOOT_PHOTO, 1);
   if (retCode != ErrorCode::SysCommonErr::Success) {
     DERROR("Set camera as SHOOT_PHOTO fail. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     return retCode;
   }
 
@@ -464,7 +466,7 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::startShootAEBPhotoSyncSample(
       pm->setShootPhotoModeSync(index, CameraModule::ShootPhotoMode::AEB, 1);
   if (retCode != ErrorCode::SysCommonErr::Success) {
     DERROR("Set shoot-photo mode as AEB fail. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     return retCode;
   }
 
@@ -476,7 +478,7 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::startShootAEBPhotoSyncSample(
   retCode = pm->setPhotoAEBCountSync(index, photoNum, 1);
   if (retCode != ErrorCode::SysCommonErr::Success) {
     DERROR("Set the parameter of AEB mode fail. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     return retCode;
   }
 
@@ -486,20 +488,21 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::startShootAEBPhotoSyncSample(
       pm->startShootPhotoSync(index, CameraModule::ShootPhotoMode::AEB, 2);
   if (retCode != ErrorCode::SysCommonErr::Success) {
     DERROR("Take AEB photo fail. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     return retCode;
   }
 
   return retCode;
 }
 
-ErrorCode::ErrCodeType CameraManagerSyncSample::startShootIntervalPhotoSyncSample(
+ErrorCode::ErrorCodeType
+CameraManagerSyncSample::startShootIntervalPhotoSyncSample(
     PayloadIndexType index, CameraModule::PhotoIntervalData intervalData) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
     return ErrorCode::SysCommonErr::InstInitParamInvalid;
   }
-  ErrorCode::ErrCodeType retCode;
+  ErrorCode::ErrorCodeType retCode;
   CameraManager *pm = vehicle->cameraManager;
 
   /*!< set camera work mode as SHOOT_PHOTO */
@@ -507,7 +510,7 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::startShootIntervalPhotoSyncSampl
   retCode = pm->setModeSync(index, CameraModule::WorkMode::SHOOT_PHOTO, 2);
   if (retCode != ErrorCode::SysCommonErr::Success) {
     DERROR("Set camera as SHOOT_PHOTO fail. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     return retCode;
   }
 
@@ -516,8 +519,9 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::startShootIntervalPhotoSyncSampl
   retCode = pm->setShootPhotoModeSync(
       index, CameraModule::ShootPhotoMode::INTERVAL, 1);
   if (retCode != ErrorCode::SysCommonErr::Success) {
-    DERROR("Set shoot-photo mode as INTERVAL fail. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    DERROR("Set shoot-photo mode as INTERVAL fail. Error code : 0x%lX",
+           retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     return retCode;
   }
 
@@ -529,8 +533,9 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::startShootIntervalPhotoSyncSampl
           intervalData.photoNumConticap, intervalData.timeInterval);
   retCode = pm->setPhotoTimeIntervalSettingsSync(index, intervalData, 1);
   if (retCode != ErrorCode::SysCommonErr::Success) {
-    DERROR("Set the parameter of INTERVAL mode fail. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    DERROR("Set the parameter of INTERVAL mode fail. Error code : 0x%lX",
+           retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     return retCode;
   }
 
@@ -540,20 +545,20 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::startShootIntervalPhotoSyncSampl
       pm->startShootPhotoSync(index, CameraModule::ShootPhotoMode::INTERVAL, 2);
   if (retCode != ErrorCode::SysCommonErr::Success) {
     DERROR("Take INTERVAL photo fail. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     return retCode;
   }
 
   return retCode;
 }
 
-ErrorCode::ErrCodeType CameraManagerSyncSample::shootPhotoStopSyncSample(
+ErrorCode::ErrorCodeType CameraManagerSyncSample::shootPhotoStopSyncSample(
     PayloadIndexType index) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
     return ErrorCode::SysCommonErr::InstInitParamInvalid;
   }
-  ErrorCode::ErrCodeType retCode;
+  ErrorCode::ErrorCodeType retCode;
   CameraManager *pm = vehicle->cameraManager;
 
   /*!< stop camera shooting photo */
@@ -561,20 +566,20 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::shootPhotoStopSyncSample(
   retCode = pm->stopShootPhotoSync(index, 1);
   if (retCode != ErrorCode::SysCommonErr::Success) {
     DERROR("stop camera shooting photo fail. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     return retCode;
   }
 
   return retCode;
 }
 
-ErrorCode::ErrCodeType CameraManagerSyncSample::startRecordVideoSyncSample(
+ErrorCode::ErrorCodeType CameraManagerSyncSample::startRecordVideoSyncSample(
     PayloadIndexType index) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
     return ErrorCode::SysCommonErr::InstInitParamInvalid;
   }
-  ErrorCode::ErrCodeType retCode;
+  ErrorCode::ErrorCodeType retCode;
   CameraManager *pm = vehicle->cameraManager;
 
   /*!< set camera work mode as RECORD_VIDEO */
@@ -582,7 +587,7 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::startRecordVideoSyncSample(
   retCode = pm->setModeSync(index, CameraModule::WorkMode::RECORD_VIDEO, 2);
   if (retCode != ErrorCode::SysCommonErr::Success) {
     DERROR("Set camera as RECORD_VIDEO mode fail. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     return retCode;
   }
 
@@ -591,20 +596,20 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::startRecordVideoSyncSample(
   retCode = pm->startRecordVideoSync(index, 1);
   if (retCode != ErrorCode::SysCommonErr::Success) {
     DERROR("Start to record video fail. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     return retCode;
   }
 
   return retCode;
 }
 
-ErrorCode::ErrCodeType CameraManagerSyncSample::stopRecordVideoSyncSample(
+ErrorCode::ErrorCodeType CameraManagerSyncSample::stopRecordVideoSyncSample(
     PayloadIndexType index) {
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
     return ErrorCode::SysCommonErr::InstInitParamInvalid;
   }
-  ErrorCode::ErrCodeType retCode;
+  ErrorCode::ErrorCodeType retCode;
   CameraManager *pm = vehicle->cameraManager;
 
   /*!< stop to take video */
@@ -612,7 +617,7 @@ ErrorCode::ErrCodeType CameraManagerSyncSample::stopRecordVideoSyncSample(
   DSTATUS("Stop RECORD_VIDEO");
   if (retCode != ErrorCode::SysCommonErr::Success) {
     DERROR("Stop to record video fail. Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
     return retCode;
   }
 

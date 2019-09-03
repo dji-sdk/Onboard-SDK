@@ -300,6 +300,14 @@ OpenProtocol::sendInterface(void* cmd_container)
       cmdSession =
         allocSession(CMD_SESSION_1, calculateLength(cmdContainer->length,
                                                     cmdContainer->encrypt));
+      /*! @Detail If the sessions are full, clear the timeout session and try again
+       *  @TODO This whole layer will be improved in the future. */
+      if(!cmdSession) {
+        clearTimeoutSession();
+        cmdSession =
+            allocSession(CMD_SESSION_1, calculateLength(cmdContainer->length,
+                                                        cmdContainer->encrypt));
+      }
       if (cmdSession == (CMDSession*)NULL)
       {
         threadHandle->freeRecvContainer();
@@ -341,6 +349,14 @@ OpenProtocol::sendInterface(void* cmd_container)
       cmdSession =
         allocSession(CMD_SESSION_AUTO, calculateLength(cmdContainer->length,
                                                        cmdContainer->encrypt));
+      /*! @Detail If the sessions are full, clear the timeout session and try again
+       *  @TODO This whole layer will be improved in the future. */
+      if(!cmdSession) {
+        clearTimeoutSession();
+        cmdSession =
+            allocSession(CMD_SESSION_AUTO, calculateLength(cmdContainer->length,
+                                                        cmdContainer->encrypt));
+      }
       if (cmdSession == (CMDSession*)NULL)
       {
         threadHandle->freeRecvContainer();
@@ -465,6 +481,33 @@ OpenProtocol::sendPoll()
     }
   }
   //! @note Add auto resendpoll
+}
+
+/*! @note Clear all the total-timeout sessions in OpenProtocol. Fix the issue that
+ * timeout more than 32 times than cannot send any packet in 2~32 sessions.
+ * It will be called when the sessions are full, than all the timeout sessions will
+ * be checkout. Whole this layer will be refactored in the future */
+void
+OpenProtocol::clearTimeoutSession()
+{
+  uint8_t i;
+  time_ms curTimestamp;
+  DSTATUS("[%s]Now clearing the timeout sessions", __FUNCTION__);
+  for (i = 1; i < SESSION_TABLE_NUM; i++)
+  {
+    if (CMDSessionTab[i].usageFlag == 1)
+    {
+      curTimestamp = deviceDriver->getTimeStamp();
+      if ((curTimestamp - CMDSessionTab[i].preTimestamp) >
+          ((CMDSessionTab[i].retry - CMDSessionTab[i].sent) *
+              CMDSessionTab[i].timeout))
+      {
+        DSTATUS("[%s]Sending total time timeout, Free session %d",
+                __FUNCTION__, CMDSessionTab[i].sessionID);
+        freeSession(&CMDSessionTab[i]);
+      }
+    }
+  }
 }
 
 /******************** Receive Pipeline **********************/

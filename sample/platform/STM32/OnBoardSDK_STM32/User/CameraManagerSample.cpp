@@ -33,17 +33,17 @@
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
 
-void asyncSampleCallBack(ErrorCode::ErrCodeType retCode, UserData SampleLog) {
+void asyncSampleCallBack(ErrorCode::ErrorCodeType retCode, UserData SampleLog) {
   DSTATUS("retCode : 0x%lX", retCode);
   if (retCode == ErrorCode::SysCommonErr::Success) {
     DSTATUS("Pass : %s.", SampleLog);
   } else {
     DERROR("Error : %s. Error code : %d", SampleLog, retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
   }
 }
 
-void callbackToSetShutterSpeed(ErrorCode::ErrCodeType retCode,
+void callbackToSetShutterSpeed(ErrorCode::ErrorCodeType retCode,
                                UserData userData) {
   DSTATUS("retCode : 0x%lX", retCode);
   if (retCode == ErrorCode::SysCommonErr::Success) {
@@ -54,11 +54,11 @@ void callbackToSetShutterSpeed(ErrorCode::ErrCodeType retCode,
           asyncSampleCallBack, (UserData) "Set exposure mode");
   } else {
     DERROR("Set exposure mode failure, Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
   }
 }
 
-void callbackToSetAperture(ErrorCode::ErrCodeType retCode, UserData userData) {
+void callbackToSetAperture(ErrorCode::ErrorCodeType retCode, UserData userData) {
   DSTATUS("retCode : 0x%lX", retCode);
   if (retCode == ErrorCode::SysCommonErr::Success) {
     CameraManagerAsyncSample *p = (CameraManagerAsyncSample *)userData;
@@ -68,11 +68,11 @@ void callbackToSetAperture(ErrorCode::ErrCodeType retCode, UserData userData) {
                                 (UserData) "Set camera aperture");
   } else {
     DERROR("Set exposure mode failure, Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
   }
 }
 
-void callbackToSetISO(ErrorCode::ErrCodeType retCode, UserData userData) {
+void callbackToSetISO(ErrorCode::ErrorCodeType retCode, UserData userData) {
   DSTATUS("retCode : 0x%lX", retCode);
   if (retCode == ErrorCode::SysCommonErr::Success) {
     CameraManagerAsyncSample *p = (CameraManagerAsyncSample *)userData;
@@ -81,11 +81,11 @@ void callbackToSetISO(ErrorCode::ErrCodeType retCode, UserData userData) {
                            asyncSampleCallBack, (UserData) "Set camera ISO");
   } else {
     DERROR("Set exposure mode failure, Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
   }
 }
 
-void callbackToSetExposureCompensation(ErrorCode::ErrCodeType retCode,
+void callbackToSetExposureCompensation(ErrorCode::ErrorCodeType retCode,
                                        UserData userData) {
   DSTATUS("retCode : 0x%lX", retCode);
   if (retCode == ErrorCode::SysCommonErr::Success) {
@@ -96,7 +96,7 @@ void callbackToSetExposureCompensation(ErrorCode::ErrCodeType retCode,
                           (UserData) "Set camera EV(exposure compensation)");
   } else {
     DERROR("Set exposure mode failure, Error code : 0x%lX", retCode);
-    ErrorCode::printErrCodeMsg(retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
   }
 }
 
@@ -112,7 +112,7 @@ int cameraManagerTest(Vehicle *vehicle, CameraManagerTestCase testCase) {
     return -1;
   }
   if (!p) {
-    ErrorCode::ErrCodeType ret = vehicle->cameraManager->initCameraModule(
+    ErrorCode::ErrorCodeType ret = vehicle->cameraManager->initCameraModule(
         PAYLOAD_INDEX_0, "sample_camera_1");
     ret |= vehicle->cameraManager->initCameraModule(PAYLOAD_INDEX_1,
                                                     "sample_camera_2");
@@ -194,41 +194,41 @@ int cameraManagerTest(Vehicle *vehicle, CameraManagerTestCase testCase) {
                                    (UserData) "stop shooting interval photos");
       break;
 
-    case Z30_AT_PAYLOAD_0:
+    case Z30_AT_PAYLOAD_1:
       /*! take video test */
       DSTATUS("Test video function on Z30");
-      p->startRecordVideoAsyncSample(PAYLOAD_INDEX_0, asyncSampleCallBack,
+      p->startRecordVideoAsyncSample(PAYLOAD_INDEX_1, asyncSampleCallBack,
                                      (UserData) "start to record video");
       delay_nms(2000);
 
       /*! tap zoom test */
       DSTATUS("Test tap-zoom function on Z30");
-      p->setTapZoomPointAsyncSample(PAYLOAD_INDEX_0, 5, 0.3, 0.3,
+      p->setTapZoomPointAsyncSample(PAYLOAD_INDEX_1, 5, 0.3, 0.3,
                                     asyncSampleCallBack,
                                     (UserData) "set tap zoom point (0.3, 0.3)");
       delay_nms(5000);
-      p->setTapZoomPointAsyncSample(PAYLOAD_INDEX_0, 5, 0.8, 0.7,
+      p->setTapZoomPointAsyncSample(PAYLOAD_INDEX_1, 5, 0.8, 0.7,
                                     asyncSampleCallBack,
                                     (UserData) "set tap zoom point (0.8, 0.7)");
 
       /*! zoom test */
       DSTATUS("Test zoom function on Z30");
-      p->startZoomAsyncSample(PAYLOAD_INDEX_0, CameraModule::ZOOM_IN,
+      p->startZoomAsyncSample(PAYLOAD_INDEX_1, CameraModule::ZOOM_IN,
                               CameraModule::NORMAL, asyncSampleCallBack,
                               (UserData) "start continuous zoom");
       delay_nms(4000);
-      p->stopZoomAsyncSample(PAYLOAD_INDEX_0, asyncSampleCallBack,
+      p->stopZoomAsyncSample(PAYLOAD_INDEX_1, asyncSampleCallBack,
                              (UserData) "stop continuous zoom");
       delay_nms(2000);
-      p->startZoomAsyncSample(PAYLOAD_INDEX_0, CameraModule::ZOOM_OUT,
+      p->startZoomAsyncSample(PAYLOAD_INDEX_1, CameraModule::ZOOM_OUT,
                               CameraModule::FASTEST, asyncSampleCallBack,
                               (UserData) "start continuous zoom");
       delay_nms(8000);
-      p->stopZoomAsyncSample(PAYLOAD_INDEX_0, asyncSampleCallBack,
+      p->stopZoomAsyncSample(PAYLOAD_INDEX_1, asyncSampleCallBack,
                              (UserData) "stop continuous zoom");
 
       /*! take video finished */
-      p->stopRecordVideoAsyncSample(PAYLOAD_INDEX_0, asyncSampleCallBack,
+      p->stopRecordVideoAsyncSample(PAYLOAD_INDEX_1, asyncSampleCallBack,
                                     (UserData) "stop recording video");
       break;
 
