@@ -31,7 +31,7 @@
 
 #include <dji_linux_helpers.hpp>
 #include <dji_vehicle.hpp>
-#include "flight_controller_sample.hpp"
+#include "flight_sample.hpp"
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
 

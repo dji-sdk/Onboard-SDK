@@ -21,7 +21,7 @@
 # *
 
 cmake_minimum_required(VERSION 2.8)
-project(djiosdk-flight-controller)
+project(djiosdk-flight)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread -g -O0")
 
@@ -29,6 +29,7 @@ include_directories(${ONBOARDSDK_SOURCE}/api/inc)
 include_directories(${ONBOARDSDK_SOURCE}/utility/inc)
 include_directories(${ONBOARDSDK_SOURCE}/hal/inc)
 include_directories(${MODULES_HEADER_DIR})
+include_directories(${FLIGHT_MODULES_HEADER_DIR})
 include_directories(${ONBOARDSDK_SOURCE}/protocol/inc)
 include_directories(${ONBOARDSDK_SOURCE}/platform/linux/inc)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../common)
@@ -37,12 +38,15 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../common/inc)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../core/inc)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../flight-control)
 
+
 FILE(GLOB SOURCE_FILES *.hpp *.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/../../common/src/*.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_environment.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_helpers.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/../../../core/src/*.cpp
+
         ${CMAKE_CURRENT_SOURCE_DIR}/../flight-control/flight_control_sample.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/../flight/flight_sample.cpp
         )
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})

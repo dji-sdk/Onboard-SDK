@@ -1,9 +1,9 @@
 
-/** @file dji_control_link.hpp
+/** @file dji_flight_link.hpp
  *  @version 3.9
  *  @date August 2019
  *
- *  @brief Implementation of control link
+ *  @brief Implementation of flight link
  *
  *  @Copyright (c) 2019 DJI
  *
@@ -32,11 +32,11 @@
 
 namespace DJI {
 namespace OSDK {
-class ControlLink {
+class FlightLink {
  public:
-  ControlLink(Vehicle *vehicle);
+  FlightLink(Vehicle *vehicle);
 
-  ~ControlLink();
+  ~FlightLink();
 
   /*! @brief wrapper the sending interface and callback for control. It should
    * be paid attention that this is only a temporary glue class of sending

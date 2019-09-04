@@ -1,4 +1,4 @@
-/*! @file flight_controller_sample.cpp
+/*! @file flight_sample.cpp
  *  @version 3.9
  *  @date  August 05 2019
  *
@@ -29,7 +29,7 @@
  *
  */
 
-#include "flight_controller_sample.hpp"
+#include "flight_sample.hpp"
 
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
@@ -84,10 +84,11 @@ bool checkActionStarted(Vehicle* vehicle, uint8_t mode) {
   while (vehicle->subscribe->getValue<TOPIC_STATUS_DISPLAYMODE>() != mode &&
          actionNotStarted < timeoutCycles) {
     actionNotStarted++;
-    vehicle->subscribe->getValue<TOPIC_STATUS_DISPLAYMODE>();
     usleep(100000);
   }
   if (actionNotStarted == timeoutCycles) {
+    DERROR("Start actions mode %d failed, current DISPLAYMODE is: %d ...", mode,
+           vehicle->subscribe->getValue<TOPIC_STATUS_DISPLAYMODE>());
     return false;
   } else {
     DSTATUS("DISPLAYMODE: %d ...", mode);
@@ -139,7 +140,7 @@ bool getHomePoint(Vehicle* vehicle, HomePointStatus& homePointSetStatus,
 }
 
 ErrorCode::ErrorCodeType setGoHomeAltitude(
-    Vehicle* vehicle, FlightAssistant::GoHomeAltitude altitude, int timeout) {
+    Vehicle* vehicle, FlightModule::GoHomeAltitude altitude, int timeout) {
   ErrorCode::ErrorCodeType ret =
       vehicle->flightAssistant->setGoHomeAltitudeSync(altitude, timeout);
   if (ret != ErrorCode::SysCommonErr::Success) {
@@ -155,8 +156,8 @@ ErrorCode::ErrorCodeType setNewHomePoint(Vehicle* vehicle, int timeout) {
   HomePointData originHomePoint;
   ErrorCode::ErrorCodeType ret =
       ErrorCode::FlightControllerErr::SetHomePointErr::Fail;
-  FlightAssistant::SetHomepointData homepoint = {
-      FlightAssistant::HomePointType::DJI_HOMEPOINT_AIRCRAFT_LOACTON, 0, 0, 0};
+  FlightModule::SetHomepointData homepoint = {
+      FlightModule::HomePointType::DJI_HOMEPOINT_AIRCRAFT_LOACTON, 0, 0, 0};
   bool retCode =
       getHomePoint(vehicle, homePointSetStatus, originHomePoint, timeout);
   DSTATUS("retCode:%d , homePointSetStatus.status%d", retCode,
@@ -173,7 +174,7 @@ ErrorCode::ErrorCodeType setNewHomePoint(Vehicle* vehicle, int timeout) {
 }
 
 ErrorCode::ErrorCodeType openAvoidObstacle(Vehicle* vehicle, int timeout) {
-  FlightAssistant::AvoidObstacleData data = {0};
+  FlightModule::AvoidObstacleData data = {0};
   data.frontBrakeFLag = 1;
   ErrorCode::ErrorCodeType ret =
       vehicle->flightAssistant->setAvoidObstacleSwitchSync(data, timeout);
@@ -186,7 +187,7 @@ ErrorCode::ErrorCodeType openAvoidObstacle(Vehicle* vehicle, int timeout) {
 }
 
 ErrorCode::ErrorCodeType closeAvoidObstacle(Vehicle* vehicle, int timeout) {
-  FlightAssistant::AvoidObstacleData data = {0};
+  FlightModule::AvoidObstacleData data = {0};
   data.frontBrakeFLag = 0;
   ErrorCode::ErrorCodeType ret =
       vehicle->flightAssistant->setAvoidObstacleSwitchSync(data, timeout);
@@ -200,7 +201,7 @@ ErrorCode::ErrorCodeType closeAvoidObstacle(Vehicle* vehicle, int timeout) {
 
 ErrorCode::ErrorCodeType openRtkSwtich(Vehicle* vehicle, int timeout) {
   ErrorCode::ErrorCodeType ret = vehicle->flightAssistant->setRtkEnableSync(
-      FlightAssistant::RtkEnableData::RTK_ENABLE, timeout);
+      FlightModule::RtkEnableData::RTK_ENABLE, timeout);
   if (ret != ErrorCode::SysCommonErr::Success) {
     DSTATUS("Open rtk switch failed, ErrorCode is:%8x", ret);
   } else {
@@ -211,7 +212,7 @@ ErrorCode::ErrorCodeType openRtkSwtich(Vehicle* vehicle, int timeout) {
 
 ErrorCode::ErrorCodeType closeRtkSwtich(Vehicle* vehicle, int timeout) {
   ErrorCode::ErrorCodeType ret = vehicle->flightAssistant->setRtkEnableSync(
-      FlightAssistant::RtkEnableData::RTK_DISABLE, timeout);
+      FlightModule::RtkEnableData::RTK_DISABLE, timeout);
   if (ret != ErrorCode::SysCommonErr::Success) {
     DSTATUS("Close rtk switch failed, ErrorCode is:%8x", ret);
   } else {

@@ -30,6 +30,7 @@ include_directories(${ONBOARDSDK_SOURCE}/hal/inc)
 include_directories(${ONBOARDSDK_SOURCE}/protocol/inc)
 include_directories(${ONBOARDSDK_SOURCE}/platform/linux/inc)
 include_directories(${MODULES_HEADER_DIR})
+include_directories(${FLIGHT_MODULES_HEADER_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../common)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../core/inc)
 

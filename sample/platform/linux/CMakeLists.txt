@@ -32,6 +32,10 @@ if(NOT MODULES_HEADER_DIR)
     set(MODULES_HEADER_DIR "${ONBOARDSDK_SOURCE}/modules/inc/payload")
 endif()
 
+if(NOT FLIGHT_MODULES_HEADER_DIR)
+    set(FLIGHT_MODULES_HEADER_DIR "${ONBOARDSDK_SOURCE}/modules/inc/flight")
+endif()
+
 add_subdirectory(camera-gimbal)
 add_subdirectory(flight-control)
 add_subdirectory(mfio)
@@ -42,7 +46,7 @@ add_subdirectory(logging)
 add_subdirectory(time-sync)
 add_subdirectory(payload-3rd-party)
 add_subdirectory(payloads)
-add_subdirectory(flight-controller)
+add_subdirectory(flight)
 
 
 if(ADVANCED_SENSING)

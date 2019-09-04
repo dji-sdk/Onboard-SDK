@@ -1,8 +1,8 @@
-/** @file dji_control_link.cpp
+/** @file dji_flight_link.cpp
  *  @version 3.9
  *  @date July 2019
  *
- *  @brief Implementation of control link
+ *  @brief Implementation of flight link
  *
  *  @Copyright (c) 2019 DJI
  *
@@ -26,17 +26,17 @@
  *
  */
 
-#include "dji_control_link.hpp"
+#include "dji_flight_link.hpp"
 #include <dji_vehicle.hpp>
 
 using namespace DJI;
 using namespace DJI::OSDK;
 
-ControlLink::ControlLink(Vehicle *vehicle) : vehicle(vehicle) {}
+FlightLink::FlightLink(Vehicle *vehicle) : vehicle(vehicle) {}
 
-ControlLink::~ControlLink() {}
+FlightLink::~FlightLink() {}
 
-void ControlLink::sendAsync(const uint8_t cmd[], void *pdata, size_t len,
+void FlightLink::sendAsync(const uint8_t cmd[], void *pdata, size_t len,
                             void *callBack, UserData userData, int timeout,
                             int retryTime) {
   int cbIndex = setCallback(callBack, userData);
@@ -45,7 +45,7 @@ void ControlLink::sendAsync(const uint8_t cmd[], void *pdata, size_t len,
                                cbIndex);
 }
 
-void *ControlLink::sendSync(const uint8_t cmd[], void *pdata, size_t len,
+void *FlightLink::sendSync(const uint8_t cmd[], void *pdata, size_t len,
                             int timeout) {
   vehicle->protocolLayer->send(2, vehicle->getEncryption(), cmd,
                                (uint8_t *)pdata, len, 500, 2, false, 2);
@@ -56,7 +56,7 @@ void *ControlLink::sendSync(const uint8_t cmd[], void *pdata, size_t len,
  * the protocol layer. It will be improved in OSDK 4.0. So here is the
  * temporary way.
  */
-int ControlLink::setCallback(void *callBack, UserData userData) {
+int FlightLink::setCallback(void *callBack, UserData userData) {
   int cbIndex = vehicle->callbackIdIndex();
   vehicle->nbCallbackFunctions[cbIndex] = (void *)callBack;
   vehicle->nbUserData[cbIndex] = userData;

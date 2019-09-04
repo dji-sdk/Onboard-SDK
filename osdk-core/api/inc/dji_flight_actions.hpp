@@ -32,8 +32,7 @@
 
 namespace DJI {
 namespace OSDK {
-class ControlLink;
-
+class FlightModule;
 /*! @brief Flight control actions API: takeoff, landing, move etc.
  *
  */
@@ -41,29 +40,6 @@ class FlightActions {
  public:
   FlightActions(Vehicle *vehicle);
   ~FlightActions();
-
- public:
-  /*! @brief Basic flight control commands
-   */
-  enum FlightCommand : uint8_t {
-    TAKE_OFF = 1,                    /*!< vehicle takeoff*/
-    GO_HOME = 6,                     /*!< vehicle return home position*/
-    FORCE_LANDING_AVOID_GROUND = 30, /*!< force landing and avoid ground*/
-    FORCE_LANDING = 31,              /*!< force landing */
-  };
-
-  typedef struct CommonAck {
-    uint8_t retCode; /*!< original return code from vehicle */
-  } CommonAck;        // pack(1)
-
-  /*TODO: move this part code to an new class*/
-  typedef struct UCBRetCodeHandler {
-    void (*UserCallBack)(ErrorCode::ErrorCodeType errCode, UserData userData);
-    UserData userData;
-  } UCBRetCodeHandler;
-
-  static const int maxSize = 32;
-  UCBRetCodeHandler ucbHandler[maxSize];
 
   /*! @brief Wrapper function for aircraft take off, blocking calls
    *
@@ -128,8 +104,8 @@ class FlightActions {
    *  ,user must use RC to control it landing manually or force landing.
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode is the OSDK ErrorCode::ErrorCodeType error code
-   *  @arg @b userData the interface to transfer userData in when the callback is
-   *  called
+   *  @arg @b userData the interface to transfer userData in when the callback
+   * is called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
   void startForceLandingAvoidGroundAsync(
@@ -147,8 +123,8 @@ class FlightActions {
    *
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode is the OSDK ErrorCode::ErrorCodeType error code
-   *  @arg @b userData the interface to transfer userData in when the callback is
-   *  called
+   *  @arg @b userData the interface to transfer userData in when the callback
+   * is called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
   void startGoHomeAsync(void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
@@ -156,22 +132,7 @@ class FlightActions {
                         UserData userData);
 
  private:
-  ControlLink *controlLink;
-
-  static void commonAckDecoder(Vehicle *vehicle, RecvContainer recvFrame,
-                               UCBRetCodeHandler *ucb);
-  FlightActions::UCBRetCodeHandler *allocUCBHandler(void *callback,
-                                                    UserData userData);
-
-  template <typename ReqT>
-  ErrorCode::ErrorCodeType actionSync(ReqT req, int timeout);
-
-  template <typename ReqT>
-  void actionAsync(ReqT req, void (*ackDecoderCB)(Vehicle *vehicle,
-                                                  RecvContainer recvFrame,
-                                                  UCBRetCodeHandler *ucb),
-                   void (*userCB)(ErrorCode::ErrorCodeType, UserData userData),
-                   UserData userData, int timeout = 2000, int retryTime = 1);
+  FlightModule *flightModule;
 };
 }  // namespace OSDK
 }  // namespace DJI

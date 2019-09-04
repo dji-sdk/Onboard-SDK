@@ -1,4 +1,4 @@
-/*! @file flight_controller_sample.hpp
+/*! @file flight_sample.hpp
  *  @version 3.9
  *  @date August 05 2019
  *
@@ -29,8 +29,8 @@
  *
  */
 
-#ifndef DJIOSDK_FLIGHT_CONTROLLER_SAMPLE_HPP
-#define DJIOSDK_FLIGHT_CONTROLLER_SAMPLE_HPP
+#ifndef DJIOSDK_FLIGHT_SAMPLE_HPP
+#define DJIOSDK_FLIGHT_SAMPLE_HPP
 
 #include <dji_vehicle.hpp>
 
@@ -86,7 +86,7 @@ bool checkActionStarted(Vehicle* vehicle, uint8_t mode);
   *  @return result:true:success, false:fail
   */
 ErrorCode::ErrorCodeType setGoHomeAltitude(
-    Vehicle* vehicle, FlightAssistant::GoHomeAltitude altitude,
+    Vehicle* vehicle, FlightModule::GoHomeAltitude altitude,
     int timeout = 1);
 
 /*! @brief Sample to set current aircraft position as an new home point
@@ -137,4 +137,4 @@ ErrorCode::ErrorCodeType closeRtkSwtich(Vehicle* vehicle, int timeout = 1);
  */
 bool goHomeAndForceLanding(Vehicle* vehicle, int timeout = 1);
 
-#endif  // DJIOSDK_FLIGHT_CONTROLLER_SAMPLE_HPP
+#endif  // DJIOSDK_FLIGHT_SAMPLE_HPP
