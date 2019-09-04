@@ -136,7 +136,7 @@ class FlightAssistant {
 
   /*! @brief Set RTK enable or disable, blocking calls
    *
-   *  @param rtkEnable RtkEnableData  0: disable, 1: enable
+   *  @param rtkEnable RtkEnableData  RTK_DISABLE: disable, RTK_ENABLE: enable
    *  @param timeout blocking timeout in seconds
    *  @return OSDK ErrorCode::ErrorCodeType error code
    */
@@ -144,7 +144,7 @@ class FlightAssistant {
 
   /*! @brief Set RTK enable or disable, non-blocking calls
    *
-   *  @param rtkEnable rtkEnableData, 0: disable, 1: enable
+   *  @param rtkEnable rtkEnableData, RTK_DISABLE: disable, RTK_ENABLE: enable
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode  OSDK ErrorCode::ErrorCodeType error code
    *  @arg @b userData the interface to transfer userData in when the callback
@@ -159,7 +159,7 @@ class FlightAssistant {
 
   /*! @brief Get rtk enable or disable, blocking calls
    *
-   *  @param rtkEnable rtkEnableData, 0: disable, 1: enable
+   *  @param rtkEnable rtkEnableData, RTK_DISABLE: disable, RTK_ENABLE: enable
    *  @param timeout blocking timeout in seconds
    *  @return OSDK ErrorCode::ErrorCodeType error code
    */
@@ -170,7 +170,7 @@ class FlightAssistant {
    *
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode the OSDK ErrorCode::ErrorCodeType error code
-   *  @arg @b rtkEnable rtkEnableData, 0: disable, 1: enable
+   *  @arg @b rtkEnable rtkEnableData, RTK_DISABLE: disable, RTK_ENABLE: enable
    *  @arg @b userData the interface to trans userData in when the callback is
    *  called
    *  @param userData when UserCallBack is called, used in UserCallBack
@@ -313,7 +313,7 @@ class FlightAssistant {
       void (*ackDecoderCB)(Vehicle *vehicle, RecvContainer recvFrame,
                            UCBRetParamHandler<DataT> *ucb),
       void (*userCB)(ErrorCode::ErrorCodeType, DataT data, UserData userData),
-      UserData userData, int timeout = 500, int retry_time = 2);
+      UserData userData, int timeout = 500, int retryTime = 2);
 
   /*! @brief Write parameter table by parameter's hash value, blocking calls
    *
@@ -340,7 +340,7 @@ class FlightAssistant {
       void (*ackDecoderCB)(Vehicle *vehicle, RecvContainer recvFrame,
                            UCBRetCodeHandler *ucb),
       void (*userCB)(ErrorCode::ErrorCodeType, UserData userData),
-      UserData userData, int timeout = 500, int retry_time = 2);
+      UserData userData, int timeout = 500, int retryTime = 2);
   static void setHomePointAckDecoder(Vehicle *vehicle, RecvContainer recvFrame,
                                      UCBRetCodeHandler *ucb);
 

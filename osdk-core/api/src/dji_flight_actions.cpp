@@ -93,12 +93,12 @@ void FlightActions::actionAsync(
     ReqT req, void (*ackDecoderCB)(Vehicle *vehicle, RecvContainer recvFrame,
                                    UCBRetCodeHandler *ucb),
     void (*userCB)(ErrorCode::ErrorCodeType, UserData userData),
-    UserData userData, int timeout, int retry_time) {
+    UserData userData, int timeout, int retryTime) {
   if (controlLink) {
     controlLink->sendAsync(OpenProtocolCMD::CMDSet::Control::task, &req,
                            sizeof(req), (void *)ackDecoderCB,
                            allocUCBHandler((void *)userCB, userData), timeout,
-                           retry_time);
+                           retryTime);
   } else {
     if (userCB) userCB(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
   }

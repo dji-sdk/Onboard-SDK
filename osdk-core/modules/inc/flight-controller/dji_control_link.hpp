@@ -51,7 +51,7 @@ class ControlLink {
    *  @param userData userData which will called by callBack
    */
   void sendAsync(const uint8_t cmd[], void *pdata, size_t len, void *callBack,
-                 UserData userData, int timeout = 500, int retry_time = 2);
+                 UserData userData, int timeout = 500, int retryTime = 2);
   /*! @brief wrapper the sending interface ,blocking function
    *
    * @TODO In the future, it will be replaced by the improvement of the protocol

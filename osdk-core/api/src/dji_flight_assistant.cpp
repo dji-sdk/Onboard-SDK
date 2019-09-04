@@ -90,7 +90,7 @@ void FlightAssistant::writeParameterByHashAsync(
     void (*ackDecoderCB)(Vehicle* vehicle, RecvContainer recvFrame,
                          UCBRetCodeHandler* ucb),
     void (*userCB)(ErrorCode::ErrorCodeType retCode, UserData userData),
-    UserData userData, int timeout, int retry_time) {
+    UserData userData, int timeout, int retryTime) {
   if (controlLink) {
     ParameterData param = {0};
     param.hashValue = hashValue;
@@ -98,7 +98,7 @@ void FlightAssistant::writeParameterByHashAsync(
     controlLink->sendAsync(OpenProtocolCMD::CMDSet::Control::parameterWrite,
                            &param, sizeof(hashValue) + len, (void*)ackDecoderCB,
                            allocUCBHandler((void*)userCB, userData), timeout,
-                           retry_time);
+                           retryTime);
   } else {
     if (userCB) userCB(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
   }
@@ -111,12 +111,12 @@ void FlightAssistant::readParameterByHashAsync(
                          UCBRetParamHandler<DataT>* ucb),
     void (*userCB)(ErrorCode::ErrorCodeType retCode, DataT data,
                    UserData userData),
-    UserData userData, int timeout, int retry_time) {
+    UserData userData, int timeout, int retryTime) {
   if (controlLink) {
     controlLink->sendAsync(OpenProtocolCMD::CMDSet::Control::parameterRead,
                            &hashValue, sizeof(hashValue), (void*)ackDecoderCB,
                            allocUCBHandler((void*)userCB, userData), timeout,
-                           retry_time);
+                           retryTime);
   } else {
     DataT data;
     if (userCB)

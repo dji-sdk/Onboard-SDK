@@ -38,10 +38,10 @@ ControlLink::~ControlLink() {}
 
 void ControlLink::sendAsync(const uint8_t cmd[], void *pdata, size_t len,
                             void *callBack, UserData userData, int timeout,
-                            int retry_time) {
+                            int retryTime) {
   int cbIndex = setCallback(callBack, userData);
   vehicle->protocolLayer->send(2, vehicle->getEncryption(), cmd,
-                               (uint8_t *)pdata, len, timeout, retry_time, true,
+                               (uint8_t *)pdata, len, timeout, retryTime, true,
                                cbIndex);
 }
 

@@ -642,14 +642,14 @@ class ErrorCode {
 
     typedef struct ParamReadWrite
     {
-      static const uint8_t SUCCESS;
-      static const uint8_t FAIL;
+      static const RawRetCodeType SUCCESS;
+      static const RawRetCodeType FAIL;
     }ParamReadWrite;
 
     typedef struct SetHomePoint
     {
-      static const uint8_t SUCCESS;
-      static const uint8_t FAIL;
+      static const RawRetCodeType SUCCESS;
+      static const RawRetCodeType FAIL;
     }SetHomePoint;
 
   }; // Control class

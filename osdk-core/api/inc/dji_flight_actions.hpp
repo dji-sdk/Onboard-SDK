@@ -171,7 +171,7 @@ class FlightActions {
                                                   RecvContainer recvFrame,
                                                   UCBRetCodeHandler *ucb),
                    void (*userCB)(ErrorCode::ErrorCodeType, UserData userData),
-                   UserData userData, int timeout = 2000, int retry_time = 1);
+                   UserData userData, int timeout = 2000, int retryTime = 1);
 };
 }  // namespace OSDK
 }  // namespace DJI
