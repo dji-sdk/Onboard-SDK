@@ -1,8 +1,8 @@
-/** @file dji_flight_assistant.hpp
+/** @file dji_flight_controller.hpp
  *  @version 3.9
- *  @date July 2019
+ *  @date August 2019
  *
- *  @brief Implementation of flight assistant
+ *  @brief Implementation of flight controller
  *
  *  @Copyright (c) 2019 DJI
  *
@@ -26,21 +26,21 @@
  *
  */
 
-#ifndef DJI_FLIGHT_ASSISTANT_HPP
-#define DJI_FLIGHT_ASSISTANT_HPP
+#ifndef DJI_FLIGHT_CONTROLLER_HPP
+#define DJI_FLIGHT_CONTROLLER_HPP
 
-#include "dji_flight_module.hpp"
-
+#include "dji_flight_actions_module.hpp"
+#include "dji_flight_assistant_module.hpp"
 namespace DJI {
 namespace OSDK {
 
-/*! @brief Flight control assistant API: set or get parameter
+/*! @brief Flight controller API: set or get parameter, execute flight actions
  *
  */
-class FlightAssistant {
+class FlightController {
  public:
-  FlightAssistant(Vehicle *vehicle);
-  ~FlightAssistant();
+  FlightController(Vehicle *vehicle);
+  ~FlightController();
 
   /*! @brief Set RTK enable or disable, blocking calls
    *
@@ -49,7 +49,7 @@ class FlightAssistant {
    *  @return OSDK ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType setRtkEnableSync(
-      FlightModule::RtkEnableData rtkEnable, int timeout);
+      FlightAssistant::RtkEnableData rtkEnable, int timeout);
 
   /*! @brief Set RTK enable or disable, non-blocking calls
    *
@@ -61,7 +61,7 @@ class FlightAssistant {
    *  called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
-  void setRtkEnableAsync(FlightModule::RtkEnableData rtkEnable,
+  void setRtkEnableAsync(FlightAssistant::RtkEnableData rtkEnable,
                          void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
                                               UserData userData),
                          UserData userData);
@@ -73,7 +73,7 @@ class FlightAssistant {
    *  @return OSDK ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType getRtkEnableSync(
-      FlightModule::RtkEnableData &rtkEnable, int timeout);
+      FlightAssistant::RtkEnableData &rtkEnable, int timeout);
 
   /*! @brief get RTK enable or disable, non-blocking calls
    *
@@ -86,7 +86,7 @@ class FlightAssistant {
    */
   void getRtkEnableAsync(
       void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
-                           FlightModule::RtkEnableData rtkEnable,
+                           FlightAssistant::RtkEnableData rtkEnable,
                            UserData userData),
       UserData userData);
 
@@ -103,7 +103,7 @@ class FlightAssistant {
    *  @return OSDK ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType setGoHomeAltitudeSync(
-      FlightModule::GoHomeAltitude altitude, int timeout);
+      FlightAssistant::GoHomeAltitude altitude, int timeout);
 
   /*! @brief Set go home altitude, non-blocking calls
    *
@@ -120,7 +120,7 @@ class FlightAssistant {
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
   void setGoHomeAltitudeAsync(
-      FlightModule::GoHomeAltitude altitude,
+      FlightAssistant::GoHomeAltitude altitude,
       void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
       UserData userData);
 
@@ -131,7 +131,7 @@ class FlightAssistant {
    *  @return OSDK ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType getGoHomeAltitudeSync(
-      FlightModule::GoHomeAltitude &altitude, int timeout);
+      FlightAssistant::GoHomeAltitude &altitude, int timeout);
 
   /*! @brief Get go home altitude, non-blocking calls
    *
@@ -144,42 +144,44 @@ class FlightAssistant {
    */
   void getGoHomeAltitudeAsync(
       void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
-                           FlightModule::GoHomeAltitude altitude,
+                           FlightAssistant::GoHomeAltitude altitude,
                            UserData userData),
       UserData userData);
 
-  /*! @brief Set homepoint position, blocking calls
+  /*! @brief Set home location, blocking calls
    *
-   *  @note  Set homepoint failed reason may as follows:
+   *  @note  Set home location failed reason may as follows:
    *  1 Use the type DJI_HOMEPOINT_AIRCRAFT_LOACTON, but aircraft's gps level
-   *  can't reach the status of record homepoint.
-   *  2 The distance between new home point and init home point is larger than
+   *  can't reach the status of record home location.
+   *  2 The distance between new home location and init home location is larger
+   * than
    *  MAX_FLY_RADIUS(20km)
-   *  @param homePoint SetHomepointData include latitude and longitude
+   *  @param homeLocation SetHomeLocationData include latitude and longitude
    *  @param timeout blocking timeout in seconds
    *  @return  OSDK ErrorCode::ErrorCodeType error code
    */
-  ErrorCode::ErrorCodeType setHomePointSync(
-      FlightModule::SetHomepointData homePoint, int timeout);
+  ErrorCode::ErrorCodeType setHomeLocationSync(
+      FlightAssistant::SetHomeLocationData homeLocation, int timeout);
 
-  /*! @brief Set home point position, non-blocking calls
+  /*! @brief Set home location, non-blocking calls
    *
-   *  @note  Set home point failed reason may as follows:
+   *  @note  Set home location failed reason may as follows:
    *  1. Use the type DJI_HOMEPOINT_AIRCRAFT_LOACTON, but aircraft's gps level
-   *  can't reach the status of record homepoint.
-   *  2. The distance between new home point and init home point is larger than
+   *  can't reach the status of record home location.
+   *  2. The distance between new home location and init home location is larger
+   * than
    *  MAX_FLY_RADIUS(20km)
-   *  @param homePoint  SetHomepointData include latitude and longitude
+   *  @param homeLocation  SetHomeLocationData include latitude and longitude
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode the OSDK ErrorCode::ErrorCodeType error code
    *  @arg @b userData the interface to transfer userData in when the callback
    * is called
    *  @param when UserCallBack is called, used in UserCallBack
    */
-  void setHomePointAsync(FlightModule::SetHomepointData homePoint,
-                         void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
-                                              UserData userData),
-                         UserData userData);
+  void setHomeLocationAsync(
+      FlightAssistant::SetHomeLocationData homeLocation,
+      void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
+      UserData userData);
 
   /*! @brief Set avoid obstacle switch enable or disable, blocking calls
    *
@@ -188,7 +190,7 @@ class FlightAssistant {
    *  @return OSDK ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType setAvoidObstacleSwitchSync(
-      FlightModule::AvoidObstacleData avoidObstacle, int timeout);
+      FlightAssistant::AvoidObstacleData avoidObstacle, int timeout);
 
   /*! @brief Set set avoid obstacle switch enable or disable, non-blocking calls
    *
@@ -200,13 +202,107 @@ class FlightAssistant {
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
   void setAvoidObstacleSwitchAsync(
-      FlightModule::AvoidObstacleData avoidObstacle,
+      FlightAssistant::AvoidObstacleData avoidObstacle,
       void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
       UserData userData);
 
+  /*! @brief Wrapper function for aircraft take off, blocking calls
+   *
+   *  @param timeout blocking timeout in seconds
+   *  @return OSDK ErrorCode::ErrorCodeType error code
+   */
+  ErrorCode::ErrorCodeType startTakeoffSync(int timeout);
+
+  /*! @brief Wrapper function for aircraft take off, non-blocking calls
+   *
+   *  @param UserCallBack callback function defined by user
+   *  @arg @b retCode is the OSDK ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to transfer userData in when the callback
+   *  is called
+   *  @param userData when UserCallBack is called, used in UserCallBack
+   */
+  void startTakeoffAsync(void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
+                                              UserData userData),
+                         UserData userData);
+
+  /*! @brief Wrapper function for aircraft force landing, blocking calls
+   *
+   *  @note this api will ignore the smart landing function, when use this
+   * function api, it will landing directly (would not stop at 0.7m and wait
+   * user's  command),it may make the aircraft crash.
+   *  @param timeout blocking timeout in seconds
+   *  @return OSDK ErrorCode::ErrorCodeType error code
+   */
+  ErrorCode::ErrorCodeType startForceLandingSync(int timeout);
+
+  /*! @brief Wrapper function for aircraft force landing, non-blocking calls
+   *
+   *  @note This api will ignore the smart landing function, when use this
+   * api landing, it will landing directly (would not stop at 0.7m and wait
+   * user's  command),it may make the aircraft crash.
+   *  @param UserCallBack callback function defined by user
+   *  @arg @b retCode is the OSDK ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to transfer userData in when the callback
+   *  is called
+   *  @param userData when UserCallBack is called, used in UserCallBack
+   */
+  void startForceLandingAsync(
+      void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
+      UserData userData);
+
+  /*! @brief Wrapper function for  aircraft confirm landing and avoid ground,
+   * blocking calls
+   *
+   *  @note When the clearance between the aircraft and the ground is less than
+   * 0.7m, the aircraft will pause landing and wait for user's confirmation.This
+   * api use for confirm landing. If the ground is not suitable for landing
+   *  ,user must use RC to control it landing manually or force landing.
+   *  @param timeout blocking timeout in seconds
+   *  @return OSDK ErrorCode::ErrorCodeType error code
+   */
+  ErrorCode::ErrorCodeType startConfirmLandingSync(int timeout);
+
+  /*! @brief Wrapper function for  aircraft confirm landing and avoid ground,
+   * non-blocking calls
+   *
+   *
+   *  @note When the clearance between the aircraft and the ground is less than
+   * 0.7m, the aircraft will pause landing and wait for user's confirmation.This
+   * api use for confirm landing. If the ground is not suitable for landing
+   *  ,user must use RC to control it landing manually or force landing.
+   *  @param UserCallBack callback function defined by user
+   *  @arg @b retCode is the OSDK ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to transfer userData in when the callback
+   * is called
+   *  @param userData when UserCallBack is called, used in UserCallBack
+   */
+  void startConfirmLandingAsync(
+      void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
+      UserData userData);
+
+  /*! @brief Wrapper function for  go home action, blocking calls
+   *
+   *  @param timeout blocking timeout in seconds
+   *  @return OSDK ErrorCode::ErrorCodeType error code
+   */
+  ErrorCode::ErrorCodeType startGoHomeSync(int timeout);
+
+  /*! @brief Wrapper function for  go home action, non-blocking calls
+   *
+   *  @param UserCallBack callback function defined by user
+   *  @arg @b retCode is the OSDK ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to transfer userData in when the callback
+   * is called
+   *  @param userData when UserCallBack is called, used in UserCallBack
+   */
+  void startGoHomeAsync(void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
+                                             UserData userData),
+                        UserData userData);
+
  private:
-  FlightModule *controllerModule;
+  FlightAssistant *flightAssistant;
+  FlightActions *flightActions;
 };
 }  // namespace OSDK
 }  // namespace DJI
-#endif  // DJI_FLIGHT_ASSISTANT_HPP
+#endif  // DJI_FLIGHT_CONTROLLER_HPP

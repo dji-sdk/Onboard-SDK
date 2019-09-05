@@ -60,8 +60,7 @@ Vehicle::Vehicle(const char* device,
   , USBThreadReady(false)
   , payloadDevice(NULL)
   , cameraManager(NULL)
-  , flightActions(NULL)
-  , flightAssistant(NULL)
+  , flightController(NULL)
 {
   if (!device)
   {
@@ -93,8 +92,7 @@ Vehicle::Vehicle(bool threadSupport)
   , callbackThread(NULL)
   , payloadDevice(NULL)
   , cameraManager(NULL)
-  , flightActions(NULL)
-  , flightAssistant(NULL)
+  , flightController(NULL)
 {
   this->threadSupported = threadSupport;
   callbackId            = 0;
@@ -193,29 +191,11 @@ Vehicle::functionalSetUp()
 
   /*
    * @note Initialize Movement Control,
-   * @note it will be replaced by FlightActions and FlightAssistant in the future.
+   * @note it will be replaced by FlightActions and FlightController in the future.
    */
   if (!initControl())
   {
     DERROR("Failed to initialize Control!\n");
-    return 1;
-  }
-
-  /*
-   * Initialize Flight Actions
-   */
-  if(!initFlightActions())
-  {
-    DERROR("Failed to initialize FlightActions!\n");
-    return 1;
-  }
-
-  /*
-   *  Initialize Flight Assistant
-   */
-  if(!initFlightAssistant())
-  {
-    DERROR("Failed to initialize FlightAssistant!\n");
     return 1;
   }
 
@@ -280,6 +260,12 @@ Vehicle::functionalSetUp()
   if (!initVirtualRC())
   {
     DERROR("Failed to initiaze VirtualRC!\n");
+    return 1;
+  }
+
+  if(!initFlightController())
+  {
+    DERROR("Failed to initialize FlightController!\n");
     return 1;
   }
 
@@ -454,15 +440,10 @@ Vehicle::~Vehicle()
   {
     delete this->platformManager;
   }
-  if(this->flightActions)
+  if(this->flightController)
   {
-    delete this->flightActions;
+    delete this->flightController;
   }
-  if(this->flightAssistant)
-  {
-    delete this->flightAssistant;
-  }
-
 
   this->USBThreadReady = false;
 }
@@ -979,34 +960,17 @@ Vehicle::initGimbal()
 }
 
 bool
-Vehicle::initFlightActions()
+Vehicle::initFlightController()
 {
-  if(this->flightActions)
+  if(this->flightController)
   {
-    DDEBUG("flightActions already initalized!");
+    DDEBUG("flightController already initalized!");
     return true;
   }
-  this->flightActions = new (std::nothrow) FlightActions(this);
-  if (this->flightActions == 0)
+  this->flightController = new (std::nothrow) FlightController(this);
+  if (this->flightController == 0)
   {
-    DERROR("Failed to allocate memory for flightActions!\n");
-    return false;
-  }
-  return true;
-}
-
-bool
-Vehicle::initFlightAssistant()
-{
-  if(this->flightAssistant)
-  {
-    DDEBUG("flightAssistant already initalized!");
-    return true;
-  }
-  this->flightAssistant = new (std::nothrow) FlightAssistant(this);
-  if (this->flightAssistant == 0)
-  {
-    DERROR("Failed to allocate memory for flightAssistant!\n");
+    DERROR("Failed to allocate memory for flightController!\n");
     return false;
   }
   return true;

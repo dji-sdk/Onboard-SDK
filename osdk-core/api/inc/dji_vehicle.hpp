@@ -55,8 +55,7 @@
 #include "dji_virtual_rc.hpp"
 #include "dji_payload_device.hpp"
 #include "dji_camera_manager.hpp"
-#include "dji_flight_actions.hpp"
-#include "dji_flight_assistant.hpp"
+#include "dji_flight_controller.hpp"
 
 #ifdef ADVANCED_SENSING
 #include "dji_advanced_sensing.hpp"
@@ -128,8 +127,7 @@ public:
   VirtualRC* virtualRC;
   PayloadDevice*       payloadDevice;
   CameraManager*       cameraManager;
-  FlightActions*       flightActions;
-  FlightAssistant*     flightAssistant;
+  FlightController*     flightController;
 #ifdef ADVANCED_SENSING
   AdvancedSensing* advancedSensing;
 #endif
@@ -395,8 +393,7 @@ private:
   bool initVirtualRC();
   bool initPayloadDevice();
   bool initCameraManager();
-  bool initFlightActions();
-  bool initFlightAssistant();
+  bool initFlightController();
 #ifdef ADVANCED_SENSING
   bool initAdvancedSensing();
 #endif

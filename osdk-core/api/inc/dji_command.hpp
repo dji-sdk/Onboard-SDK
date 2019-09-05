@@ -77,7 +77,7 @@ public:
       // with firmware version < 3.3
       const static uint8_t setArm[MAX_CMD_ARRAY_SIZE];
       const static uint8_t killSwitch[MAX_CMD_ARRAY_SIZE];
-      const static uint8_t setHomePoint[MAX_CMD_ARRAY_SIZE];
+      const static uint8_t setHomeLocation[MAX_CMD_ARRAY_SIZE];
       const static uint8_t gimbalSpeed[MAX_CMD_ARRAY_SIZE];
       const static uint8_t gimbalAngle[MAX_CMD_ARRAY_SIZE];
       const static uint8_t cameraShot[MAX_CMD_ARRAY_SIZE];

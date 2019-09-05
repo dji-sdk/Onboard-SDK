@@ -98,7 +98,7 @@ class ErrorCode {
     FCSubscribe      = 1,
     FCMission        = 2,
     FCParameterTable = 4,
-    FCSetHomePoint   = 5,
+    FCSetHomeLocation= 5,
     FCAvoidObstacle  = 6,
   };
 
@@ -205,7 +205,7 @@ class ErrorCode {
       static const ErrorCodeType InvalidParameter;
     };
 
-    class SetHomePointErr
+    class SetHomeLocationErr
     {
     public:
       static const ErrorCodeType Fail;
@@ -646,11 +646,11 @@ class ErrorCode {
       static const RawRetCodeType FAIL;
     }ParamReadWrite;
 
-    typedef struct SetHomePoint
+    typedef struct SetHomeLocation
     {
       static const RawRetCodeType SUCCESS;
       static const RawRetCodeType FAIL;
-    }SetHomePoint;
+    }SetHomeLocation;
 
   }; // Control class
   

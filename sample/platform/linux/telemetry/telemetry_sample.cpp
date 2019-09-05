@@ -396,8 +396,8 @@ subscribeToDataForInteractivePrint(Vehicle* vehicle, int responseTimeout)
               << "6. flyAnomaly\n"
               << "7. local position vo\n"
               << "8. avoid obstacle data\n"
-              << "9. home point set status\n"
-              << "10. home point information\n"
+              << "9. home location set status\n"
+              << "10. home location information\n"
               << "0. exit\n";
 
 
@@ -418,7 +418,7 @@ subscribeToDataForInteractivePrint(Vehicle* vehicle, int responseTimeout)
     TypeMap<TOPIC_POSITION_VO>::type    localPos;
     TypeMap<TOPIC_AVOID_DATA>::type     avoidData;
     TypeMap<TOPIC_HOME_POINT_SET_STATUS>::type homePointSetStatus;
-    TypeMap<TOPIC_HOME_POINT_INFO>::type  homePointInfo;
+    TypeMap<TOPIC_HOME_POINT_INFO>::type  homeLocationInfo;
 
     // Counters
     int printFrequency          = 50; //Hz
@@ -520,11 +520,11 @@ subscribeToDataForInteractivePrint(Vehicle* vehicle, int responseTimeout)
           break;
         case 9:
           homePointSetStatus =  vehicle->subscribe->getValue<TOPIC_HOME_POINT_SET_STATUS>();
-          printf("home point statas is %d\n", homePointSetStatus.status);
+          printf("home location statas is %d\n", homePointSetStatus.status);
           break;
         case 10:
-          homePointInfo = vehicle->subscribe->getValue<TOPIC_HOME_POINT_INFO>();
-          printf("home point latitude is :%.15f, home point longitude is %.15f\n",homePointInfo.latitude, homePointInfo.longitude);
+          homeLocationInfo = vehicle->subscribe->getValue<TOPIC_HOME_POINT_INFO>();
+          printf("home location latitude is :%.15f, home location longitude is %.15f\n",homeLocationInfo.latitude, homeLocationInfo.longitude);
           break;
         case 0:
           break;

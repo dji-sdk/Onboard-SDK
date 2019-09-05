@@ -1,4 +1,4 @@
-/** @file dji_flight_module.cpp
+/** @file dji_flight_assistant_module.cpp
  *  @version 3.9
  *  @date July 2019
  *
@@ -26,20 +26,20 @@
  *
  */
 
-#include "dji_flight_module.hpp"
+#include "dji_flight_assistant_module.hpp"
 #include <dji_vehicle.hpp>
 #include "dji_flight_link.hpp"
 
 using namespace DJI;
 using namespace DJI::OSDK;
 
-FlightModule::FlightModule(Vehicle* vehicle) {
+FlightAssistant::FlightAssistant(Vehicle* vehicle) {
   flightLink = new FlightLink(vehicle);
 }
 
-FlightModule::~FlightModule() { delete this->flightLink; }
+FlightAssistant::~FlightAssistant() { delete this->flightLink; }
 
-ErrorCode::ErrorCodeType FlightModule::writeParameterByHashSync(
+ErrorCode::ErrorCodeType FlightAssistant::writeParameterByHashSync(
     uint32_t hashValue, void* data, uint8_t len, int timeout) {
   ParameterData param = {0};
   param.hashValue = hashValue;
@@ -66,7 +66,7 @@ ErrorCode::ErrorCodeType FlightModule::writeParameterByHashSync(
   }
 }
 
-void FlightModule::writeParameterByHashAsync(
+void FlightAssistant::writeParameterByHashAsync(
     uint32_t hashValue, void* data, uint8_t len,
     void (*ackDecoderCB)(Vehicle* vehicle, RecvContainer recvFrame,
                          UCBRetCodeHandler* ucb),
@@ -85,7 +85,7 @@ void FlightModule::writeParameterByHashAsync(
   }
 }
 
-ErrorCode::ErrorCodeType FlightModule::readParameterByHashSync(
+ErrorCode::ErrorCodeType FlightAssistant::readParameterByHashSync(
     ParamHashValue hashValue, void* param, int timeout) {
   ACK::ParamAck rsp = *(ACK::ParamAck*)flightLink->sendSync(
       OpenProtocolCMD::CMDSet::Control::parameterRead, &hashValue,
@@ -107,7 +107,7 @@ ErrorCode::ErrorCodeType FlightModule::readParameterByHashSync(
 }
 
 template <typename DataT>
-void FlightModule::readParameterByHashAsync(
+void FlightAssistant::readParameterByHashAsync(
     ParamHashValue hashValue,
     void (*ackDecoderCB)(Vehicle* vehicle, RecvContainer recvFrame,
                          UCBRetParamHandler<DataT>* ucb),
@@ -126,7 +126,7 @@ void FlightModule::readParameterByHashAsync(
   }
 }
 
-FlightModule::UCBRetCodeHandler* FlightModule::allocUCBHandler(
+FlightAssistant::UCBRetCodeHandler* FlightAssistant::allocUCBHandler(
     void* callback, UserData userData) {
   static int ucbHandlerIndex = 0;
   ucbHandlerIndex++;
@@ -140,7 +140,7 @@ FlightModule::UCBRetCodeHandler* FlightModule::allocUCBHandler(
 }
 
 template <typename AckT>
-ErrorCode::ErrorCodeType FlightModule::commonDataUnpacker(
+ErrorCode::ErrorCodeType FlightAssistant::commonDataUnpacker(
     RecvContainer recvFrame, AckT& ack) {
   if (recvFrame.recvInfo.len - OpenProtocol::PackageMin >= sizeof(AckT)) {
     ack = *(AckT*)(recvFrame.recvData.raw_ack_array);
@@ -152,29 +152,8 @@ ErrorCode::ErrorCodeType FlightModule::commonDataUnpacker(
   }
 }
 
-void FlightModule::commonAckDecoder(Vehicle* vehicle,
-                                        RecvContainer recvFrame,
-                                        UCBRetCodeHandler* ucb) {
-  if (ucb && ucb->UserCallBack) {
-    CommonAck ack = {0};
-    ErrorCode::ErrorCodeType ret = 0;
-    if (recvFrame.recvInfo.len - OpenProtocol::PackageMin >=
-        sizeof(CommonAck)) {
-      ack = *(CommonAck*)(recvFrame.recvData.raw_ack_array);
-      ret = ErrorCode::getErrorCode(ErrorCode::FCModule,
-                                    ErrorCode::FCControlTask, ack.retCode);
-    } else {
 
-      DERROR("ACK is exception, data len %d (expect >= %d)\n",
-             recvFrame.recvInfo.len - OpenProtocol::PackageMin,
-             sizeof(CommonAck));
-      ret = ErrorCode::SysCommonErr::UnpackDataMismatch;
-    }
-    ucb->UserCallBack(ret, ucb->userData);
-  }
-}
-
-void FlightModule::setParameterDecoder(Vehicle* vehicle,
+void FlightAssistant::setParameterDecoder(Vehicle* vehicle,
                                            RecvContainer recvFrame,
                                            UCBRetCodeHandler* ucb) {
   if (ucb && ucb->UserCallBack) {
@@ -195,7 +174,7 @@ void FlightModule::setParameterDecoder(Vehicle* vehicle,
   }
 }
 
-void FlightModule::getRtkEnableDecoder(
+void FlightAssistant::getRtkEnableDecoder(
     Vehicle* vehicle, RecvContainer recvFrame,
     UCBRetParamHandler<RtkEnableData>* ucb) {
   if (ucb && ucb->UserCallBack) {
@@ -206,7 +185,7 @@ void FlightModule::getRtkEnableDecoder(
   }
 }
 
-void FlightModule::getGoHomeAltitudeDecoder(
+void FlightAssistant::getGoHomeAltitudeDecoder(
     Vehicle* vehicle, RecvContainer recvFrame,
     UCBRetParamHandler<GoHomeAltitude>* ucb) {
   if (ucb && ucb->UserCallBack) {
@@ -217,7 +196,7 @@ void FlightModule::getGoHomeAltitudeDecoder(
   }
 }
 
-void FlightModule::setHomePointAckDecoder(Vehicle* vehicle,
+void FlightAssistant::setHomePointAckDecoder(Vehicle* vehicle,
                                               RecvContainer recvFrame,
                                               UCBRetCodeHandler* ucb) {
   if (ucb && ucb->UserCallBack) {
@@ -226,7 +205,7 @@ void FlightModule::setHomePointAckDecoder(Vehicle* vehicle,
     if (recvFrame.recvInfo.len - OpenProtocol::PackageMin <= sizeof(ack.data)) {
       ack.data = *(uint32_t*)(recvFrame.recvData.raw_ack_array);
       ret = ErrorCode::getErrorCode(ErrorCode::FCModule,
-                                    ErrorCode::FCSetHomePoint, ack.data);
+                                    ErrorCode::FCSetHomeLocation, ack.data);
     } else {
       DERROR("ACK is exception, data len %d (expect >= %d)\n",
              recvFrame.recvInfo.len - OpenProtocol::PackageMin,
@@ -237,7 +216,7 @@ void FlightModule::setHomePointAckDecoder(Vehicle* vehicle,
   }
 }
 
-void FlightModule::avoidObstacleAckDecoder(Vehicle* vehicle,
+void FlightAssistant::avoidObstacleAckDecoder(Vehicle* vehicle,
                                                RecvContainer recvFrame,
                                                UCBRetCodeHandler* ucb) {
   if (ucb && ucb->UserCallBack) {
@@ -259,46 +238,14 @@ void FlightModule::avoidObstacleAckDecoder(Vehicle* vehicle,
 }
 
 
-ErrorCode::ErrorCodeType FlightModule::actionSync(uint8_t req,
-                                                      int timeout) {
-  if (flightLink) {
-    ACK::ErrorCode* rsp = (ACK::ErrorCode*)flightLink->sendSync(
-        OpenProtocolCMD::CMDSet::Control::task, (void*)&req, sizeof(req),
-        timeout);
-    if (rsp->info.buf &&
-        (rsp->info.len - OpenProtocol::PackageMin >= sizeof(CommonAck))) {
-      return rsp->data;
-    } else {
-      return ErrorCode::SysCommonErr::UnpackDataMismatch;
-    }
-  } else
-    return ErrorCode::SysCommonErr::AllocMemoryFailed;
-}
-
-void FlightModule::actionAsync(
-    FlightCommand req,
-    void (*ackDecoderCB)(Vehicle* vehicle, RecvContainer recvFrame,
-                         UCBRetCodeHandler* ucb),
-    void (*userCB)(ErrorCode::ErrorCodeType, UserData userData),
-    UserData userData, int timeout, int retryTime) {
-  if (flightLink) {
-    flightLink->sendAsync(OpenProtocolCMD::CMDSet::Control::task, &req,
-                              sizeof(req), (void*)ackDecoderCB,
-                              allocUCBHandler((void*)userCB, userData), timeout,
-                              retryTime);
-  } else {
-    if (userCB) userCB(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
-  }
-}
-
-ErrorCode::ErrorCodeType FlightModule::setRtkEnableSync(
+ErrorCode::ErrorCodeType FlightAssistant::setRtkEnableSync(
     RtkEnableData rtkEnable, int timeout) {
   return writeParameterByHashSync(ParamHashValue::USE_RTK_DATA,
                                   (void*)&rtkEnable, sizeof(rtkEnable),
                                   timeout);
 }
 
-void FlightModule::setRtkEnableAsync(
+void FlightAssistant::setRtkEnableAsync(
     RtkEnableData rtkEnable,
     void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
@@ -307,7 +254,7 @@ void FlightModule::setRtkEnableAsync(
                             UserCallBack, userData);
 }
 
-ErrorCode::ErrorCodeType FlightModule::getRtkEnableSync(
+ErrorCode::ErrorCodeType FlightAssistant::getRtkEnableSync(
     RtkEnableData& rtkEnable, int timeout) {
   uint8_t param[MAX_PARAMETER_VALUE_LENGTH];
   ErrorCode::ErrorCodeType ret =
@@ -318,7 +265,7 @@ ErrorCode::ErrorCodeType FlightModule::getRtkEnableSync(
   return ret;
 }
 
-void FlightModule::getRtkEnableAsync(
+void FlightAssistant::getRtkEnableAsync(
     void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
                          RtkEnableData rtkEnable, UserData userData),
     UserData userData) {
@@ -327,7 +274,7 @@ void FlightModule::getRtkEnableAsync(
                                           userData);
 }
 
-ErrorCode::ErrorCodeType FlightModule::setGoHomeAltitudeSync(
+ErrorCode::ErrorCodeType FlightAssistant::setGoHomeAltitudeSync(
     GoHomeAltitude altitude, int timeout) {
   if (!goHomeAltitudeValidCheck(altitude)) {
     return ErrorCode::FlightControllerErr::ParamReadWirteErr::InvalidParameter;
@@ -338,7 +285,7 @@ ErrorCode::ErrorCodeType FlightModule::setGoHomeAltitudeSync(
   return ret;
 }
 
-void FlightModule::setGoHomeAltitudeAsync(
+void FlightAssistant::setGoHomeAltitudeAsync(
     GoHomeAltitude altitude,
     void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
@@ -352,7 +299,7 @@ void FlightModule::setGoHomeAltitudeAsync(
         userData);
 }
 
-ErrorCode::ErrorCodeType FlightModule::getGoHomeAltitudeSync(
+ErrorCode::ErrorCodeType FlightAssistant::getGoHomeAltitudeSync(
     GoHomeAltitude& altitude, int timeout) {
   uint8_t param[MAX_PARAMETER_VALUE_LENGTH];
   ErrorCode::ErrorCodeType ret =
@@ -363,7 +310,7 @@ ErrorCode::ErrorCodeType FlightModule::getGoHomeAltitudeSync(
   return ret;
 }
 
-void FlightModule::getGoHomeAltitudeAsync(
+void FlightAssistant::getGoHomeAltitudeAsync(
     void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
                          GoHomeAltitude altitude, UserData userData),
     UserData userData) {
@@ -372,7 +319,7 @@ void FlightModule::getGoHomeAltitudeAsync(
                                            UserCallBack, userData);
 }
 
-ErrorCode::ErrorCodeType FlightModule::setAvoidObstacleSwitchSync(
+ErrorCode::ErrorCodeType FlightAssistant::setAvoidObstacleSwitchSync(
     AvoidObstacleData avoidObstacle, int timeout) {
   if (flightLink) {
     ACK::ErrorCode ack = *(ACK::ErrorCode*)flightLink->sendSync(
@@ -395,7 +342,7 @@ ErrorCode::ErrorCodeType FlightModule::setAvoidObstacleSwitchSync(
   }
 }
 
-void FlightModule::setAvoidObstacleSwitchAsync(
+void FlightAssistant::setAvoidObstacleSwitchAsync(
     AvoidObstacleData avoidObstacle,
     void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
@@ -410,16 +357,16 @@ void FlightModule::setAvoidObstacleSwitchAsync(
   }
 }
 
-ErrorCode::ErrorCodeType FlightModule::setHomePointSync(
-    SetHomepointData homePoint, int timeout) {
+ErrorCode::ErrorCodeType FlightAssistant::setHomeLocationSync(
+  SetHomeLocationData homeLocation, int timeout) {
   if (flightLink) {
     ACK::ErrorCode rsp = *(ACK::ErrorCode*)flightLink->sendSync(
-        OpenProtocolCMD::CMDSet::Control::setHomePoint, &homePoint,
-        sizeof(homePoint), timeout);
+        OpenProtocolCMD::CMDSet::Control::setHomeLocation, &homeLocation,
+        sizeof(homeLocation), timeout);
     if ((rsp.info.len - OpenProtocol::PackageMin <=
          sizeof(ACK::ParamAckInternal))) {
       return ErrorCode::getErrorCode(ErrorCode::FCModule,
-                                     ErrorCode::FCSetHomePoint, rsp.data);
+                                     ErrorCode::FCSetHomeLocation, rsp.data);
     } else {
       return ErrorCode::SysCommonErr::UnpackDataMismatch;
     }
@@ -428,13 +375,13 @@ ErrorCode::ErrorCodeType FlightModule::setHomePointSync(
   }
 }
 
-void FlightModule::setHomePointAsync(
-    SetHomepointData homePoint,
-    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
-    UserData userData) {
+void FlightAssistant::setHomeLocationAsync(
+  SetHomeLocationData homeLocation,
+  void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
+  UserData userData) {
   if (flightLink) {
-    flightLink->sendAsync(OpenProtocolCMD::CMDSet::Control::setHomePoint,
-                              &homePoint, sizeof(homePoint),
+    flightLink->sendAsync(OpenProtocolCMD::CMDSet::Control::setHomeLocation,
+                              &homeLocation, sizeof(homeLocation),
                               (void*)setHomePointAckDecoder,
                               allocUCBHandler((void*)UserCallBack, userData));
   } else {
@@ -443,7 +390,7 @@ void FlightModule::setHomePointAsync(
   }
 }
 
-bool FlightModule::goHomeAltitudeValidCheck(GoHomeAltitude altitude) {
+bool FlightAssistant::goHomeAltitudeValidCheck(GoHomeAltitude altitude) {
   if (altitude < MIN_GO_HOME_HEIGHT || altitude > MAX_FLIGHT_HEIGHT) {
     DERROR(
       "Go home altitude is not in between MIN_GO_HOME_HEIGHT and  "

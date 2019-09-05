@@ -30,14 +30,14 @@
  *
  */
 
+/*TODO:flight_control_sample will by replace by flight_sample in the future*/
 #include "flight_control_sample.hpp"
+#include "flight_sample.hpp"
 
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
 
-/*! main
- *
- */
+
 int
 main(int argc, char** argv)
 {
@@ -66,6 +66,10 @@ main(int argc, char** argv)
   std::cout
     << "| [b] Monitored Takeoff + Position Control + Landing             |"
     << std::endl;
+  std::cout
+    << "| [c] Monitored Takeoff + Position Control + Force Landing Avoid Ground  |"
+    << std::endl;
+
   char inputChar;
   std::cin >> inputChar;
 
@@ -82,6 +86,29 @@ main(int argc, char** argv)
       moveByPositionOffset(vehicle, -6, -6, 0, 0);
       monitoredLanding(vehicle);
       break;
+
+      /*! @NOTE: case 'c' only support for m210 V2*/
+    case 'c':
+      /*! Open rtk switch */
+      openRtkSwtich(vehicle);
+      /*! Open avoid obstacle switch */
+      openAvoidObstacle(vehicle, 1);
+      /*!  Take off */
+      monitoredTakeoff(vehicle);
+      /*! Move to higher altitude */
+      moveByPositionOffset(vehicle, 0, 0, 30, 0);
+      /*! Move a short distance*/
+      moveByPositionOffset(vehicle, 10, 0, 0, -30);
+      /*! Set aircraft current position as new home location */
+      setNewHomeLocation(vehicle);
+      /*! Set new go home altitude */
+      setGoHomeAltitude(vehicle, 50);
+      /*! Move to another position */
+      moveByPositionOffset(vehicle, 40, 0, 0, 0);
+      /*! Close avoid obstacle switch */
+      closeAvoidObstacle(vehicle, 1);
+      /*! go home and force landing avoid ground */
+      goHomeAndForceLanding(vehicle, 1);
     default:
       break;
   }

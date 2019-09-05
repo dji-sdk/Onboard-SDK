@@ -330,16 +330,16 @@ typedef struct PositionData
   float64_t latitude;  /*!< deg */
   float32_t HFSL;      /*!< height above mean sea level (m) */
 } PositionData;        // pack(1)
-typedef struct HomePointData
+typedef struct HomeLocationData
 {
   float64_t latitude;  /*!< unit: rad */
   float64_t longitude; /*!< unit: rad */
-}HomePointData; // pack(1)
+}HomeLocationData; // pack(1)
 
-typedef struct HomePointStatus
+typedef struct HomeLocationSetStatus
 {
   uint8_t status;     /*!<0:fail, 1:success*/
-}HomePointStatus;// pack(1)
+}HomeLocationSetStatus;// pack(1)
 /*!
  * @brief struct for TOPIC_GPS_DETAILS and sub struct for GPSInfo of data
  * broadcast
@@ -810,8 +810,8 @@ template <> struct TypeMap<TOPIC_GIMBAL_CONTROL_MODE      > { typedef GimbalCont
 template <> struct TypeMap<TOPIC_FLIGHT_ANOMALY           > { typedef FlightAnomaly   type;};
 template <> struct TypeMap<TOPIC_POSITION_VO              > { typedef LocalPositionVO type;};
 template <> struct TypeMap<TOPIC_AVOID_DATA               > { typedef RelativePosition type;};
-template <> struct TypeMap<TOPIC_HOME_POINT_SET_STATUS    > { typedef HomePointStatus type;};
-template <> struct TypeMap<TOPIC_HOME_POINT_INFO          > { typedef HomePointData    type;};
+template <> struct TypeMap<TOPIC_HOME_POINT_SET_STATUS    > { typedef HomeLocationSetStatus type;};
+template <> struct TypeMap<TOPIC_HOME_POINT_INFO          > { typedef HomeLocationData    type;};
 // clang-format on
 }
 }

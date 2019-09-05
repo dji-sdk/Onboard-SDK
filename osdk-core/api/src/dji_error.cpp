@@ -215,8 +215,8 @@ const uint16_t DJI::OSDK::ErrorCode::ControlACK::SetArm::SUCCESS 		     = 0x0000
 const uint16_t DJI::OSDK::ErrorCode::ControlACK::KillSwitch::SUCCESS 		 = 0x00;
 const ErrorCode::RawRetCodeType DJI::OSDK::ErrorCode::ControlACK::ParamReadWrite::SUCCESS	 = 0x00;
 const ErrorCode::RawRetCodeType DJI::OSDK::ErrorCode::ControlACK::ParamReadWrite::FAIL		 = 0x01;
-const ErrorCode::RawRetCodeType DJI::OSDK::ErrorCode::ControlACK::SetHomePoint::SUCCESS	   = 0x00;
-const ErrorCode::RawRetCodeType DJI::OSDK::ErrorCode::ControlACK::SetHomePoint::FAIL		   = 0x01;
+const ErrorCode::RawRetCodeType DJI::OSDK::ErrorCode::ControlACK::SetHomeLocation::SUCCESS	   = 0x00;
+const ErrorCode::RawRetCodeType DJI::OSDK::ErrorCode::ControlACK::SetHomeLocation::FAIL		   = 0x01;
 const uint8_t DJI::OSDK::ErrorCode::SubscribeACK::SUCCESS                = 0x00;
 const uint8_t DJI::OSDK::ErrorCode::SubscribeACK::ILLEGAL_DATA_LENGTH    = 0x01;
 const uint8_t DJI::OSDK::ErrorCode::SubscribeACK::VERSION_DOES_NOT_MATCH = 0x02;
@@ -323,7 +323,7 @@ const uint8_t& DJI::OSDK::ErrorCode::MissionACK::WayPoint::TIMEOUT = DJI::OSDK::
 /*! flight controller parameter table read and write error code*/
 const ErrorCode::ErrorCodeType ErrorCode::FlightControllerErr::ParamReadWirteErr::Fail = ErrorCode::getErrorCode(FCModule,  FCParameterTable, ControlACK::ParamReadWrite::FAIL);
 const ErrorCode::ErrorCodeType ErrorCode::FlightControllerErr::ParamReadWirteErr::InvalidParameter = ErrorCode::getErrorCode(FCModule,  FCParameterTable, 0x02);
-const ErrorCode::ErrorCodeType ErrorCode::FlightControllerErr::SetHomePointErr::Fail   = ErrorCode::getErrorCode(FCModule,  FCSetHomePoint, ErrorCode::ControlACK::SetHomePoint::FAIL);
+const ErrorCode::ErrorCodeType ErrorCode::FlightControllerErr::SetHomeLocationErr::Fail   = ErrorCode::getErrorCode(FCModule,  FCSetHomeLocation, ErrorCode::ControlACK::SetHomeLocation::FAIL);
 
 const ErrorCode::ModuleDataType ErrorCode::module[ModuleMaxCnt] = {
     {"System",    SystemFunction},  /*!< SysModule */

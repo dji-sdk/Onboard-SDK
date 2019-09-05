@@ -85,7 +85,7 @@ const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Control::setArm[] = {
 const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Control::killSwitch[] = {
   OpenProtocolCMD::CMDSet::control, 0x06
 };
-const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Control::setHomePoint[] = {
+const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Control::setHomeLocation[] = {
   OpenProtocolCMD::CMDSet::control, 0x07
 };
 const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Control::cameraShot[] = {

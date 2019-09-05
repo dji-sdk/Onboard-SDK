@@ -1,9 +1,9 @@
 /*! @file flight_sample.hpp
  *  @version 3.9
- *  @date August 05 2019
+ *  @date August 2019
  *
  *  @brief
- *  Flight Control API usage in a Linux environment.
+ *  Flight sample us FlightController API  in a Linux environment.
  *  Provides a number of helpful additions to core API calls,
  *  especially for go home ,landing, set rtk and avoid obstacle switch.
  *
@@ -58,17 +58,17 @@ bool setUpSubscription(DJI::OSDK::Vehicle* vehicle, int pkgIndex, int freq,
 bool teardownSubscription(Vehicle* vehicle, const int pkgIndex,
                           int timeout = 1);
 
-/*! @brief Sample to get current home point and status
+/*! @brief Sample to get current home location and status
   *
   *  @param vehicle Vehicle pointer
-  *  @param homePointSetStatus see Telemetry::HomePointStatus
-  *  @param homePointInfo,see HomePointData struct define
+  *  @param homeLocationSetStatus see Telemetry::homeLocationSetStatus
+  *  @param homeLocationInfo,see homeLocationData struct define
   *  @param responseTimeout blocking timeout
   *  @return result true:success, false:fail
   */
-bool getHomePoint(Vehicle* vehicle,
-                  Telemetry::HomePointStatus& homePointSetStatus,
-                  Telemetry::HomePointData& homePointInfo, int responseTimeout);
+bool getHomeLocation(Vehicle *vehicle,
+                     Telemetry::HomeLocationSetStatus &homeLocationSetStatus,
+                     Telemetry::HomeLocationData &homeLocationInfo, int responseTimeout);
 
 /*! @brief Sample check flight action started or not
   *
@@ -86,16 +86,16 @@ bool checkActionStarted(Vehicle* vehicle, uint8_t mode);
   *  @return result:true:success, false:fail
   */
 ErrorCode::ErrorCodeType setGoHomeAltitude(
-    Vehicle* vehicle, FlightModule::GoHomeAltitude altitude,
+    Vehicle* vehicle, FlightAssistant::GoHomeAltitude altitude,
     int timeout = 1);
 
-/*! @brief Sample to set current aircraft position as an new home point
+/*! @brief Sample to set current aircraft position as an new home location
  *
  *  @param vehicle Vehicle pointer
  *  @param timeout timeout
  *  @return result:true:success, false:fail
  */
-ErrorCode::ErrorCodeType setNewHomePoint(Vehicle* vehicle, int timeout = 1);
+ErrorCode::ErrorCodeType setNewHomeLocation(Vehicle *vehicle, int timeout = 1);
 
 /*! @brief Sample to open avoid obstacle
  *

@@ -1,9 +1,8 @@
-
-/** @file dji_flight_module.hpp
+/** @file dji_flight_assistant_module.hpp
  *  @version 3.9
  *  @date August 2019
  *
- *  @brief Implementation of flight module
+ *  @brief Implementation of flight assistant module
  *
  *  @Copyright (c) 2019 DJI
  *
@@ -27,8 +26,8 @@
  *
  */
 
-#ifndef ONBOARDSDK_DJI_FLIGHT_MODULE_HPP
-#define ONBOARDSDK_DJI_FLIGHT_MODULE_HPP
+#ifndef DJI_FLIGHT_ASSISTANT_MODULE_HPP
+#define DJI_FLIGHT_ASSISTANT_MODULE_HPP
 
 #include "dji_vehicle_callback.hpp"
 
@@ -37,10 +36,10 @@ namespace OSDK {
 
 #define MAX_PARAMETER_VALUE_LENGTH 8
 class FlightLink;
-class FlightModule {
+class FlightAssistant {
  public:
-  FlightModule(Vehicle *vehicle);
-  ~FlightModule();
+  FlightAssistant(Vehicle *vehicle);
+  ~FlightAssistant();
 
  public:
   const static uint16_t MAX_FLIGHT_HEIGHT = 500;
@@ -57,22 +56,12 @@ class FlightModule {
     RTK_ENABLE = 1,  /*!< 1: enable  */
   };
 
-  /*! @brief Basic flight control commands
-   */
-  enum FlightCommand : uint8_t {
-    TAKE_OFF = 1,                    /*!< vehicle takeoff*/
-    GO_HOME = 6,                     /*!< vehicle return home position*/
-    FORCE_LANDING_AVOID_GROUND = 30, /*!< force landing and avoid ground*/
-    FORCE_LANDING = 31,              /*!< force landing */
-  };
-
-  enum HomePointType {
+  enum HomeLocationType {
     DJI_HOMEPOINT_AIRCRAFT_LOACTON =
-        0, /*!< Make aircraft current position as the home point*/
+        0, /*!< Make aircraft current position as the home location*/
     DJI_HOMEPOINT_SDK_SET_LOCAIION =
-        3, /*!< Make custom location as home point */
+        3, /*!< Make custom location as home location */
   };
-
   typedef uint16_t GoHomeAltitude;
 
 #pragma pack(1)
@@ -108,16 +97,13 @@ class FlightModule {
     uint8_t reserve : 3;         /*!< reserve*/
   } AvoidObstacleData;           // pack(1)
 
-  typedef struct SetHomepointData {
-    uint8_t type;      /*!< enum-type: HomePointType      */
+  typedef struct SetHomeLocationData {
+    uint8_t type;      /*!< enum-type: HomeLocationType      */
     double latitude;   /*!< unit:rad, range: -pi/2 ~ pi/2 */
     double longitude;  /*!< unit:rad, range: -pi ~ pi     */
     uint8_t healthy;   /*!< reverse data                  */
-  } SetHomepointData;  // pack(1)
+  } SetHomeLocationData;  // pack(1)
 
-  typedef struct CommonAck {
-    uint8_t retCode; /*!< original return code from vehicle */
-  } CommonAck;       // pack(1)
 #pragma pack()
 
   /*! @brief type of callback only deal the retCode for user
@@ -199,7 +185,7 @@ class FlightModule {
    *  @return OSDK ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType setRtkEnableSync(
-      FlightModule::RtkEnableData rtkEnable, int timeout);
+      FlightAssistant::RtkEnableData rtkEnable, int timeout);
 
   /*! @brief Set RTK enable or disable, non-blocking calls
    *
@@ -211,7 +197,7 @@ class FlightModule {
    *  called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
-  void setRtkEnableAsync(FlightModule::RtkEnableData rtkEnable,
+  void setRtkEnableAsync(FlightAssistant::RtkEnableData rtkEnable,
                          void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
                                               UserData userData),
                          UserData userData);
@@ -223,7 +209,7 @@ class FlightModule {
    *  @return OSDK ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType getRtkEnableSync(
-      FlightModule::RtkEnableData &rtkEnable, int timeout);
+      FlightAssistant::RtkEnableData &rtkEnable, int timeout);
 
   /*! @brief get RTK enable or disable, non-blocking calls
    *
@@ -236,7 +222,7 @@ class FlightModule {
    */
   void getRtkEnableAsync(
       void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
-                           FlightModule::RtkEnableData rtkEnable,
+                           FlightAssistant::RtkEnableData rtkEnable,
                            UserData userData),
       UserData userData);
 
@@ -253,7 +239,7 @@ class FlightModule {
    *  @return OSDK ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType setGoHomeAltitudeSync(
-      FlightModule::GoHomeAltitude altitude, int timeout);
+      FlightAssistant::GoHomeAltitude altitude, int timeout);
 
   /*! @brief Set go home altitude, non-blocking calls
    *
@@ -270,7 +256,7 @@ class FlightModule {
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
   void setGoHomeAltitudeAsync(
-      FlightModule::GoHomeAltitude altitude,
+      FlightAssistant::GoHomeAltitude altitude,
       void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
       UserData userData);
 
@@ -281,7 +267,7 @@ class FlightModule {
    *  @return OSDK ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType getGoHomeAltitudeSync(
-      FlightModule::GoHomeAltitude &altitude, int timeout);
+      FlightAssistant::GoHomeAltitude &altitude, int timeout);
 
   /*! @brief Get go home altitude, non-blocking calls
    *
@@ -294,42 +280,42 @@ class FlightModule {
    */
   void getGoHomeAltitudeAsync(
       void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
-                           FlightModule::GoHomeAltitude altitude,
+                           FlightAssistant::GoHomeAltitude altitude,
                            UserData userData),
       UserData userData);
 
-  /*! @brief Set homepoint position, blocking calls
+  /*! @brief Set home location, blocking calls
    *
-   *  @note  Set homepoint failed reason may as follows:
+   *  @note  Set home location failed reason may as follows:
    *  1 Use the type DJI_HOMEPOINT_AIRCRAFT_LOACTON, but aircraft's gps level
-   *  can't reach the status of record homepoint.
-   *  2 The distance between new home point and init home point is larger than
+   *  can't reach the status of record home location.
+   *  2 The distance between new home location and init home location is larger than
    *  MAX_FLY_RADIUS(20km)
-   *  @param homePoint SetHomepointData include latitude and longitude
+   *  @param homeLocation SetHomeLocationData include latitude and longitude
    *  @param timeout blocking timeout in seconds
    *  @return  OSDK ErrorCode::ErrorCodeType error code
    */
-  ErrorCode::ErrorCodeType setHomePointSync(
-      FlightModule::SetHomepointData homePoint, int timeout);
+  ErrorCode::ErrorCodeType setHomeLocationSync(
+    FlightAssistant::SetHomeLocationData homeLocation, int timeout);
 
-  /*! @brief Set home point position, non-blocking calls
+  /*! @brief Set home location, non-blocking calls
    *
-   *  @note  Set home point failed reason may as follows:
+   *  @note  Set home location failed reason may as follows:
    *  1. Use the type DJI_HOMEPOINT_AIRCRAFT_LOACTON, but aircraft's gps level
-   *  can't reach the status of record homepoint.
-   *  2. The distance between new home point and init home point is larger than
+   *  can't reach the status of record home location.
+   *  2. The distance between new home location and init home location is larger than
    *  MAX_FLY_RADIUS(20km)
-   *  @param homePoint  SetHomepointData include latitude and longitude
+   *  @param homeLocation  SetHomeLocationData include latitude and longitude
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode the OSDK ErrorCode::ErrorCodeType error code
    *  @arg @b userData the interface to transfer userData in when the callback
    * is called
    *  @param when UserCallBack is called, used in UserCallBack
    */
-  void setHomePointAsync(FlightModule::SetHomepointData homePoint,
-                         void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
-                                              UserData userData),
-                         UserData userData);
+  void setHomeLocationAsync(FlightAssistant::SetHomeLocationData homeLocation,
+                            void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
+                                                 UserData userData),
+                            UserData userData);
 
   /*! @brief Set avoid obstacle switch enable or disable, blocking calls
    *
@@ -338,7 +324,7 @@ class FlightModule {
    *  @return OSDK ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType setAvoidObstacleSwitchSync(
-      FlightModule::AvoidObstacleData avoidObstacle, int timeout);
+      FlightAssistant::AvoidObstacleData avoidObstacle, int timeout);
 
   /*! @brief Set set avoid obstacle switch enable or disable, non-blocking calls
    *
@@ -350,21 +336,9 @@ class FlightModule {
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
   void setAvoidObstacleSwitchAsync(
-      FlightModule::AvoidObstacleData avoidObstacle,
+      FlightAssistant::AvoidObstacleData avoidObstacle,
       void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
       UserData userData);
-
-  static void commonAckDecoder(Vehicle *vehicle, RecvContainer recvFrame,
-                               UCBRetCodeHandler *ucb);
-
-  ErrorCode::ErrorCodeType actionSync(uint8_t req, int timeout);
-
-  void actionAsync(FlightCommand req,
-                   void (*ackDecoderCB)(Vehicle *vehicle,
-                                        RecvContainer recvFrame,
-                                        UCBRetCodeHandler *ucb),
-                   void (*userCB)(ErrorCode::ErrorCodeType, UserData userData),
-                   UserData userData, int timeout = 2000, int retryTime = 1);
 
  private:
   FlightLink *flightLink;
@@ -387,9 +361,14 @@ class FlightModule {
   static void avoidObstacleAckDecoder(Vehicle *vehicle, RecvContainer recvFrame,
                                       UCBRetCodeHandler *ucb);
 
+  /*! @brief Check the altitude of go home setting is valid or not,
+   *
+   *  @param altitude go home altitude
+   *  @return false: invalid, true:valid
+   */
   static bool goHomeAltitudeValidCheck(uint16_t altitude);
 };
 }
 }
 
-#endif  //ONBOARDSDK_DJI_FLIGHT_MODULE_HPP
+#endif  // DJI_FLIGHT_ASSISTANT_MODULE_HPP
