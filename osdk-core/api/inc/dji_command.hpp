@@ -84,7 +84,6 @@ public:
       const static uint8_t cameraVideoStart[MAX_CMD_ARRAY_SIZE];
       const static uint8_t cameraVideoStop[MAX_CMD_ARRAY_SIZE];
       const static uint8_t extendedFunction[MAX_CMD_ARRAY_SIZE];
-      const static uint8_t cameraZoom[MAX_CMD_ARRAY_SIZE];
       const static uint8_t parameterRead[MAX_CMD_ARRAY_SIZE];
       const static uint8_t parameterWrite[MAX_CMD_ARRAY_SIZE];
     } Control;
@@ -173,7 +172,7 @@ public:
 
     typedef struct Intelligent
     {
-      const static uint8_t setAvoidObstacleEnable[MAX_CMD_ARRAY_SIZE];
+      const static uint8_t setAvoidObstacle[MAX_CMD_ARRAY_SIZE];
     }Intelligent;
     //! CMD SET definitions
     const static uint8_t activation   = 0x00;

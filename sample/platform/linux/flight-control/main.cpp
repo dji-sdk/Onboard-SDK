@@ -91,8 +91,8 @@ main(int argc, char** argv)
     case 'c':
       /*! Open rtk switch */
       openRtkSwtich(vehicle);
-      /*! Open avoid obstacle switch */
-      openAvoidObstacle(vehicle, 1);
+      /*! Open collision avoidance switch */
+      openCollisionAvoidance(vehicle, 1);
       /*!  Take off */
       monitoredTakeoff(vehicle);
       /*! Move to higher altitude */
@@ -105,8 +105,8 @@ main(int argc, char** argv)
       setGoHomeAltitude(vehicle, 50);
       /*! Move to another position */
       moveByPositionOffset(vehicle, 40, 0, 0, 0);
-      /*! Close avoid obstacle switch */
-      closeAvoidObstacle(vehicle, 1);
+      /*! Close collision avoidance switch */
+      closeCollisionAvoidance(vehicle, 1);
       /*! go home and force landing avoid ground */
       goHomeAndForceLanding(vehicle, 1);
     default:

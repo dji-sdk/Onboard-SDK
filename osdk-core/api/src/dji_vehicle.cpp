@@ -1764,7 +1764,7 @@ Vehicle::ACKHandler(void* eventData)
     mfioGetACK.ack.data = ackData->recvData.mfioGetACK.result;
     mfioGetACK.value    = ackData->recvData.mfioGetACK.value;
   }
-  else if (memcmp(cmd, OpenProtocolCMD::CMDSet::Intelligent::setAvoidObstacleEnable, sizeof(cmd)) == 0)
+  else if (memcmp(cmd, OpenProtocolCMD::CMDSet::Intelligent::setAvoidObstacle, sizeof(cmd)) == 0)
   {
     /*! data mean's the setting's data ref in AvoidObstacleData struct*/
     ackErrorCode.info = ackData->recvInfo;

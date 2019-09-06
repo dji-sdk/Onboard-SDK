@@ -257,6 +257,6 @@ const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Subscribe::pauseResume[] = {
 const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Subscribe::getConfig[] = {
   OpenProtocolCMD::CMDSet::subscribe, 0x06
 };
-const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Intelligent::setAvoidObstacleEnable[] = {
+const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Intelligent::setAvoidObstacle[] = {
   OpenProtocolCMD::CMDSet::intelligent, 0x01
 };

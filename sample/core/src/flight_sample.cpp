@@ -5,7 +5,7 @@
  *  @brief
  *  Flight sample us FlightController API  in a Linux environment..
  *  Provides a number of helpful additions to core API calls,
- *  especially for go home ,landing, set rtk and avoid obstacle switch.
+ *  especially for go home ,landing, set rtk and collision avoidance switch.
  *
  *  @Copyright (c) 2019 DJI
  *
@@ -36,35 +36,40 @@ using namespace DJI::OSDK::Telemetry;
 
 bool setUpSubscription(Vehicle* vehicle, int pkgIndex, int freq,
                        TopicName topicList[], uint8_t topicSize, int timeout) {
-  /*! Telemetry: Verify the subscription*/
-  ACK::ErrorCode subscribeStatus;
-  subscribeStatus = vehicle->subscribe->verify(timeout);
-  if (ACK::getError(subscribeStatus) != ACK::SUCCESS) {
-    ACK::getErrorCodeMessage(subscribeStatus, __func__);
-    return false;
-  }
-
-  bool enableTimestamp = false;
-  bool pkgStatus = vehicle->subscribe->initPackageFromTopicList(
-      pkgIndex, topicSize, topicList, enableTimestamp, freq);
-  if (!(pkgStatus)) {
-    return pkgStatus;
-  }
-
-  /*! Start listening to the telemetry data */
-  subscribeStatus = vehicle->subscribe->startPackage(pkgIndex, timeout);
-  if (ACK::getError(subscribeStatus) != ACK::SUCCESS) {
-    ACK::getErrorCodeMessage(subscribeStatus, __func__);
-    /*! Cleanup*/
-    ACK::ErrorCode ack = vehicle->subscribe->removePackage(pkgIndex, timeout);
-    if (ACK::getError(ack)) {
-      DERROR(
-          "Error unsubscription; please restart the drone/FC to get "
-          "back to a clean state");
+  if (vehicle) {
+    /*! Telemetry: Verify the subscription*/
+    ACK::ErrorCode subscribeStatus;
+    subscribeStatus = vehicle->subscribe->verify(timeout);
+    if (ACK::getError(subscribeStatus) != ACK::SUCCESS) {
+      ACK::getErrorCodeMessage(subscribeStatus, __func__);
+      return false;
     }
+
+    bool enableTimestamp = false;
+    bool pkgStatus = vehicle->subscribe->initPackageFromTopicList(
+        pkgIndex, topicSize, topicList, enableTimestamp, freq);
+    if (!(pkgStatus)) {
+      return pkgStatus;
+    }
+
+    /*! Start listening to the telemetry data */
+    subscribeStatus = vehicle->subscribe->startPackage(pkgIndex, timeout);
+    if (ACK::getError(subscribeStatus) != ACK::SUCCESS) {
+      ACK::getErrorCodeMessage(subscribeStatus, __func__);
+      /*! Cleanup*/
+      ACK::ErrorCode ack = vehicle->subscribe->removePackage(pkgIndex, timeout);
+      if (ACK::getError(ack)) {
+        DERROR(
+            "Error unsubscription; please restart the drone/FC to get "
+            "back to a clean state");
+      }
+      return false;
+    }
+    return true;
+  } else {
+    DERROR("vehicle haven't been initialized", __func__);
     return false;
   }
-  return true;
 }
 
 bool teardownSubscription(Vehicle* vehicle, const int pkgIndex, int timeout) {
@@ -141,7 +146,7 @@ bool getHomeLocation(Vehicle* vehicle,
 }
 
 ErrorCode::ErrorCodeType setGoHomeAltitude(
-    Vehicle* vehicle, FlightAssistant::GoHomeAltitude altitude, int timeout) {
+    Vehicle* vehicle, FlightController::GoHomeHeight altitude, int timeout) {
   ErrorCode::ErrorCodeType ret =
       vehicle->flightController->setGoHomeAltitudeSync(altitude, timeout);
   if (ret != ErrorCode::SysCommonErr::Success) {
@@ -157,15 +162,11 @@ ErrorCode::ErrorCodeType setNewHomeLocation(Vehicle* vehicle, int timeout) {
   HomeLocationData originHomeLocation;
   ErrorCode::ErrorCodeType ret =
       ErrorCode::FlightControllerErr::SetHomeLocationErr::Fail;
-  FlightAssistant::SetHomeLocationData homeLocation = {
-      FlightAssistant::HomeLocationType::DJI_HOMEPOINT_AIRCRAFT_LOACTON, 0, 0,
-      0};
   bool retCode = getHomeLocation(vehicle, homeLocationSetStatus,
                                  originHomeLocation, timeout);
-  DSTATUS("retCode:%d , homeLocationSetStatus.status%d", retCode,
-          homeLocationSetStatus.status);
   if (retCode && (homeLocationSetStatus.status == 1)) {
-    ret = vehicle->flightController->setHomeLocationSync(homeLocation, timeout);
+    ret = vehicle->flightController
+              ->setHomeLocationUseCurrentAircraftLocationSync(timeout);
     if (ret != ErrorCode::SysCommonErr::Success) {
       DSTATUS("Set new home location failed, ErrorCode is:%8x", ret);
     } else {
@@ -175,35 +176,36 @@ ErrorCode::ErrorCodeType setNewHomeLocation(Vehicle* vehicle, int timeout) {
   return ret;
 }
 
-ErrorCode::ErrorCodeType openAvoidObstacle(Vehicle* vehicle, int timeout) {
-  FlightAssistant::AvoidObstacleData data = {0};
-  data.frontBrakeFLag = 1;
+ErrorCode::ErrorCodeType openCollisionAvoidance(Vehicle* vehicle, int timeout) {
+  FlightController::CollisionAvoidanceSwitch openSwitch = true;
   ErrorCode::ErrorCodeType ret =
-      vehicle->flightController->setAvoidObstacleSwitchSync(data, timeout);
+      vehicle->flightController->setCollisionAvoidanceEnabledSync(openSwitch,
+                                                                  timeout);
   if (ret != ErrorCode::SysCommonErr::Success) {
-    DSTATUS("Open avoid obstacle switch failed, ErrorCode is:%8x", ret);
+    DSTATUS("Open collision avoidance switch failed, ErrorCode is:%8x", ret);
   } else {
-    DSTATUS("Open avoid obstacle switch successfully");
+    DSTATUS("Open collision avoidance switch successfully");
   }
   return ret;
 }
 
-ErrorCode::ErrorCodeType closeAvoidObstacle(Vehicle* vehicle, int timeout) {
-  FlightAssistant::AvoidObstacleData data = {0};
-  data.frontBrakeFLag = 0;
+ErrorCode::ErrorCodeType closeCollisionAvoidance(Vehicle* vehicle,
+                                                 int timeout) {
+  FlightController::CollisionAvoidanceSwitch openSwitch = false;
   ErrorCode::ErrorCodeType ret =
-      vehicle->flightController->setAvoidObstacleSwitchSync(data, timeout);
+      vehicle->flightController->setCollisionAvoidanceEnabledSync(openSwitch,
+                                                                  timeout);
   if (ret != ErrorCode::SysCommonErr::Success) {
-    DSTATUS("Close avoid obstacle switch failed, ErrorCode is:%8x", ret);
+    DSTATUS("Close collision avoidance switch failed, ErrorCode is:%8x", ret);
   } else {
-    DSTATUS("Close avoid obstacle switch successfully");
+    DSTATUS("Close collision avoidance switch successfully");
   }
   return ret;
 }
 
 ErrorCode::ErrorCodeType openRtkSwtich(Vehicle* vehicle, int timeout) {
   ErrorCode::ErrorCodeType ret = vehicle->flightController->setRtkEnableSync(
-      FlightAssistant::RtkEnableData::RTK_ENABLE, timeout);
+      FlightController::RtkEnabled::RTK_ENABLE, timeout);
   if (ret != ErrorCode::SysCommonErr::Success) {
     DSTATUS("Open rtk switch failed, ErrorCode is:%8x", ret);
   } else {
@@ -214,7 +216,7 @@ ErrorCode::ErrorCodeType openRtkSwtich(Vehicle* vehicle, int timeout) {
 
 ErrorCode::ErrorCodeType closeRtkSwtich(Vehicle* vehicle, int timeout) {
   ErrorCode::ErrorCodeType ret = vehicle->flightController->setRtkEnableSync(
-      FlightAssistant::RtkEnableData::RTK_DISABLE, timeout);
+      FlightController::RtkEnabled::RTK_DISABLE, timeout);
   if (ret != ErrorCode::SysCommonErr::Success) {
     DSTATUS("Close rtk switch failed, ErrorCode is:%8x", ret);
   } else {

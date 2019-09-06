@@ -323,7 +323,7 @@ ErrorCode::ErrorCodeType FlightAssistant::setAvoidObstacleSwitchSync(
     AvoidObstacleData avoidObstacle, int timeout) {
   if (flightLink) {
     ACK::ErrorCode ack = *(ACK::ErrorCode*)flightLink->sendSync(
-        OpenProtocolCMD::CMDSet::Intelligent::setAvoidObstacleEnable,
+        OpenProtocolCMD::CMDSet::Intelligent::setAvoidObstacle,
         &avoidObstacle, sizeof(avoidObstacle), timeout);
 
     uint8_t ackData = (uint8_t)ack.data;
@@ -348,7 +348,7 @@ void FlightAssistant::setAvoidObstacleSwitchAsync(
     UserData userData) {
   if (flightLink) {
     flightLink->sendAsync(
-        OpenProtocolCMD::CMDSet::Intelligent::setAvoidObstacleEnable,
+        OpenProtocolCMD::CMDSet::Intelligent::setAvoidObstacle,
         &avoidObstacle, sizeof(avoidObstacle), (void*)avoidObstacleAckDecoder,
         allocUCBHandler((void*)UserCallBack, userData));
   } else {

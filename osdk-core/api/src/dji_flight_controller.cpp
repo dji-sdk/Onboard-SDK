@@ -28,6 +28,7 @@
  */
 
 #include "dji_flight_controller.hpp"
+#include <dji_telemetry.hpp>
 using namespace DJI;
 using namespace DJI::OSDK;
 
@@ -41,7 +42,7 @@ FlightController::~FlightController() {
 }
 
 ErrorCode::ErrorCodeType FlightController::setRtkEnableSync(
-    FlightAssistant::RtkEnableData rtkEnable, int timeout) {
+    RtkEnabled rtkEnable, int timeout) {
   if (flightAssistant)
     return flightAssistant->setRtkEnableSync(rtkEnable, timeout);
   else
@@ -49,7 +50,7 @@ ErrorCode::ErrorCodeType FlightController::setRtkEnableSync(
 }
 
 void FlightController::setRtkEnableAsync(
-    FlightAssistant::RtkEnableData rtkEnable,
+    RtkEnabled rtkEnable,
     void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   if (flightAssistant) {
@@ -61,7 +62,7 @@ void FlightController::setRtkEnableAsync(
 }
 
 ErrorCode::ErrorCodeType FlightController::getRtkEnableSync(
-    FlightAssistant::RtkEnableData& rtkEnable, int timeout) {
+    RtkEnabled& rtkEnable, int timeout) {
   if (flightAssistant)
     return flightAssistant->getRtkEnableSync(rtkEnable, timeout);
   else
@@ -69,14 +70,13 @@ ErrorCode::ErrorCodeType FlightController::getRtkEnableSync(
 }
 
 void FlightController::getRtkEnableAsync(
-    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
-                         FlightAssistant::RtkEnableData rtkEnable,
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, RtkEnabled rtkEnable,
                          UserData userData),
     UserData userData) {
   if (flightAssistant) {
     flightAssistant->getRtkEnableAsync(UserCallBack, userData);
   } else {
-    FlightAssistant::RtkEnableData rtkEnable;
+    RtkEnabled rtkEnable;
     if (UserCallBack)
       UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, rtkEnable,
                    userData);
@@ -84,7 +84,7 @@ void FlightController::getRtkEnableAsync(
 }
 
 ErrorCode::ErrorCodeType FlightController::setGoHomeAltitudeSync(
-    FlightAssistant::GoHomeAltitude altitude, int timeout) {
+    GoHomeHeight altitude, int timeout) {
   if (flightAssistant)
     return flightAssistant->setGoHomeAltitudeSync(altitude, timeout);
   else
@@ -92,7 +92,7 @@ ErrorCode::ErrorCodeType FlightController::setGoHomeAltitudeSync(
 }
 
 void FlightController::setGoHomeAltitudeAsync(
-    FlightAssistant::GoHomeAltitude altitude,
+    GoHomeHeight altitude,
     void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   if (flightAssistant) {
@@ -104,7 +104,7 @@ void FlightController::setGoHomeAltitudeAsync(
 }
 
 ErrorCode::ErrorCodeType FlightController::getGoHomeAltitudeSync(
-    FlightAssistant::GoHomeAltitude& altitude, int timeout) {
+    GoHomeHeight& altitude, int timeout) {
   if (flightAssistant)
     return flightAssistant->getGoHomeAltitudeSync(altitude, timeout);
   else
@@ -113,52 +113,87 @@ ErrorCode::ErrorCodeType FlightController::getGoHomeAltitudeSync(
 
 void FlightController::getGoHomeAltitudeAsync(
     void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
-                         FlightAssistant::GoHomeAltitude altitude,
-                         UserData userData),
+                         GoHomeHeight altitude, UserData userData),
     UserData userData) {
   if (flightAssistant)
     flightAssistant->getGoHomeAltitudeAsync(UserCallBack, userData);
   else {
-    FlightAssistant::GoHomeAltitude altitude;
+    GoHomeHeight altitude;
     if (UserCallBack)
       UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, altitude,
                    userData);
   }
 }
 
-ErrorCode::ErrorCodeType FlightController::setAvoidObstacleSwitchSync(
-    FlightAssistant::AvoidObstacleData avoidObstacle, int timeout) {
-  if (flightAssistant)
+ErrorCode::ErrorCodeType FlightController::setCollisionAvoidanceEnabledSync(
+    CollisionAvoidanceSwitch collisionAvoidanceSwitch, int timeout) {
+  if (flightAssistant) {
+    FlightAssistant::AvoidObstacleData avoidObstacle = {0};
+    avoidObstacle.activeAvoidFlag = collisionAvoidanceSwitch;
     return flightAssistant->setAvoidObstacleSwitchSync(avoidObstacle, timeout);
-  else
+  } else
     return ErrorCode::SysCommonErr::AllocMemoryFailed;
 }
 
-void FlightController::setAvoidObstacleSwitchAsync(
-    FlightAssistant::AvoidObstacleData avoidObstacle,
+void FlightController::setCollisionAvoidanceEnabledAsync(
+    CollisionAvoidanceSwitch collisionAvoidanceSwitch,
     void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
-  if (flightAssistant)
+  if (flightAssistant) {
+    FlightAssistant::AvoidObstacleData avoidObstacle = {0};
+    avoidObstacle.activeAvoidFlag = collisionAvoidanceSwitch;
     flightAssistant->setAvoidObstacleSwitchAsync(avoidObstacle, UserCallBack,
                                                  userData);
-  else {
+  } else {
     if (UserCallBack)
       UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
   }
 }
 
 ErrorCode::ErrorCodeType FlightController::setHomeLocationSync(
-    FlightAssistant::SetHomeLocationData homeLocation, int timeout) {
+    HomeLocation homeLocation, int timeout) {
+  if (flightAssistant) {
+    FlightAssistant::SetHomeLocationData setHomeLocation = {
+        FlightAssistant::DJI_HOMEPOINT_SDK_SET_LOCAIION, homeLocation.latitude,
+        homeLocation.longitude, 0};
+    return flightAssistant->setHomeLocationSync(setHomeLocation, timeout);
+  } else
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
+}
+
+void FlightController::setHomeLocationAsync(
+    HomeLocation homeLocation,
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
+    UserData userData) {
+  if (flightAssistant) {
+    FlightAssistant::SetHomeLocationData setHomeLocation = {
+        FlightAssistant::DJI_HOMEPOINT_SDK_SET_LOCAIION, homeLocation.latitude,
+        homeLocation.longitude, 0};
+    flightAssistant->setHomeLocationAsync(setHomeLocation, UserCallBack,
+                                          userData);
+  }
+
+  else {
+    if (UserCallBack)
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
+  }
+}
+
+ErrorCode::ErrorCodeType
+FlightController::setHomeLocationUseCurrentAircraftLocationSync(int timeout) {
+  FlightAssistant::SetHomeLocationData homeLocation;
+  homeLocation.homeType = FlightAssistant::DJI_HOMEPOINT_AIRCRAFT_LOACTON;
   if (flightAssistant)
     return flightAssistant->setHomeLocationSync(homeLocation, timeout);
   else
     return ErrorCode::SysCommonErr::AllocMemoryFailed;
 }
 
-void FlightController::setHomeLocationAsync(
-    FlightAssistant::SetHomeLocationData homeLocation,
+void FlightController::setHomeLocationUseCurrentAircraftLocationSync(
     void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
+  FlightAssistant::SetHomeLocationData homeLocation;
+  homeLocation.homeType = FlightAssistant::DJI_HOMEPOINT_AIRCRAFT_LOACTON;
   if (flightAssistant)
     flightAssistant->setHomeLocationAsync(homeLocation, UserCallBack, userData);
   else {

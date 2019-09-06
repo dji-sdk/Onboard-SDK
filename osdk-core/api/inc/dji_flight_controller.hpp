@@ -31,6 +31,8 @@
 
 #include "dji_flight_actions_module.hpp"
 #include "dji_flight_assistant_module.hpp"
+#include "dji_telemetry.hpp"
+
 namespace DJI {
 namespace OSDK {
 
@@ -42,77 +44,92 @@ class FlightController {
   FlightController(Vehicle *vehicle);
   ~FlightController();
 
+  typedef struct Telemetry::HomeLocationData HomeLocation;
+  typedef bool CollisionAvoidanceSwitch; /*! true: enable collision avoidance,
+                                            false: disable collision avoidance*/
+  typedef FlightAssistant::RtkEnableData
+      RtkEnabled; /*!< 0: disable, 1: enable*/
+  typedef FlightAssistant::GoHomeAltitude
+      GoHomeHeight; /*!< unit:meter, range 20~500*/
+
   /*! @brief Set RTK enable or disable, blocking calls
    *
-   *  @param rtkEnable RtkEnableData  RTK_DISABLE: disable, RTK_ENABLE: enable
+   *  @param rtkEnable reference in RtkEnabled, RTK_DISABLE: disable,
+   * RTK_ENABLE: enable
    *  @param timeout blocking timeout in seconds
    *  @return OSDK ErrorCode::ErrorCodeType error code
    */
-  ErrorCode::ErrorCodeType setRtkEnableSync(
-      FlightAssistant::RtkEnableData rtkEnable, int timeout);
+  ErrorCode::ErrorCodeType setRtkEnableSync(RtkEnabled rtkEnable, int timeout);
 
   /*! @brief Set RTK enable or disable, non-blocking calls
    *
-   *  @param rtkEnable rtkEnableData, RTK_DISABLE: disable, RTK_ENABLE: enable
+   *  @param rtkEnable reference in RtkEnabled, RTK_DISABLE: disable,
+   * RTK_ENABLE: enable
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode  OSDK ErrorCode::ErrorCodeType error code
    *  @arg @b userData the interface to transfer userData in when the callback
-   * is
-   *  called
+   *  is called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
-  void setRtkEnableAsync(FlightAssistant::RtkEnableData rtkEnable,
+  void setRtkEnableAsync(RtkEnabled rtkEnable,
                          void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
                                               UserData userData),
                          UserData userData);
 
   /*! @brief Get rtk enable or disable, blocking calls
    *
-   *  @param rtkEnable rtkEnableData, RTK_DISABLE: disable, RTK_ENABLE: enable
+   *  @param rtkEnable reference in RtkEnabled, RTK_DISABLE: disable,
+   * RTK_ENABLE: enable
    *  @param timeout blocking timeout in seconds
    *  @return OSDK ErrorCode::ErrorCodeType error code
    */
-  ErrorCode::ErrorCodeType getRtkEnableSync(
-      FlightAssistant::RtkEnableData &rtkEnable, int timeout);
+  ErrorCode::ErrorCodeType getRtkEnableSync(RtkEnabled &rtkEnable, int timeout);
 
   /*! @brief get RTK enable or disable, non-blocking calls
    *
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode the OSDK ErrorCode::ErrorCodeType error code
-   *  @arg @b rtkEnable rtkEnableData, RTK_DISABLE: disable, RTK_ENABLE: enable
+   *  @arg @b rtkEnable reference in RtkEnabled, RTK_DISABLE: disable,
+   * RTK_ENABLE: enable
    *  @arg @b userData the interface to trans userData in when the callback is
    *  called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
-  void getRtkEnableAsync(
-      void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
-                           FlightAssistant::RtkEnableData rtkEnable,
-                           UserData userData),
-      UserData userData);
+  void getRtkEnableAsync(void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
+                                              RtkEnabled rtkEnable,
+                                              UserData userData),
+                         UserData userData);
 
   /*! @brief Set go home altitude, blocking calls
    *
-   *  @note If current altitude is higher than settings, aircraft will go home
-   *  by current altitude. the altitude setting is between 20m to 500m, if
-   *  setting exceed this range, for example setting is 10m or 510m, it will
-   * remind you
+   *  @note If aircraft's current altitude is higher than go home altitude
+   * settings, aircraft will go home by it's current altitude. Otherwise, it
+   * will climb to setting's of go home altitude ,and then execute go home
+   * action. The details could be find at
+   * https://developer.dji.com/cn/onboard-sdk/documentation/guides/component-guide-flight-control.html
+   * Go home altitude setting is between MIN_GO_HOME_HEIGHT to
+   * MAX_FLIGHT_HEIGHT, if setting exceeds this range, for example setting is
+   * 10m or 510m, it will remind you error code
    * ErrorCode::FlightControllerErr::ParamReadWirteErr::InvalidParameter.
-   *  @param altitude go home altitude settings must between MIN_GO_HOME_HEIGHT
-   * and MAX_FLIGHT_HEIGHT
+   * @param altitude go home altitude settings, unit: meter
    *  @param timeout blocking timeout in seconds
    *  @return OSDK ErrorCode::ErrorCodeType error code
    */
-  ErrorCode::ErrorCodeType setGoHomeAltitudeSync(
-      FlightAssistant::GoHomeAltitude altitude, int timeout);
+  ErrorCode::ErrorCodeType setGoHomeAltitudeSync(GoHomeHeight altitude,
+                                                 int timeout);
 
   /*! @brief Set go home altitude, non-blocking calls
    *
-   *  @note If current altitude is higher than settings, aircraft will go home
-   *  by current altitude. the altitude setting is between 20m to 500m, if
-   *  setting exceed this range, for example setting is 10m or 510m, it will
-   * remind you
+   *  @note If aircraft's current altitude is higher than go home altitude
+   * settings, aircraft will go home by it's current altitude. Otherwise, it
+   * will climb to setting's of go home altitude ,and then execute go home
+   * action. The details could be find at
+   * https://developer.dji.com/cn/onboard-sdk/documentation/guides/component-guide-flight-control.html
+   * Go home altitude setting is between MIN_GO_HOME_HEIGHT to
+   * MAX_FLIGHT_HEIGHT, if setting exceeds this range, for example setting is
+   * 10m or 510m, it will remind you error code
    * ErrorCode::FlightControllerErr::ParamReadWirteErr::InvalidParameter.
-   *  @param altitude go home altitude
+   * @param altitude go home altitude settings, unit: meter
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode the OSDK ErrorCode::ErrorCodeType error code
    *  @arg @b userData the interface to trans userData in when the callback is
@@ -120,7 +137,7 @@ class FlightController {
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
   void setGoHomeAltitudeAsync(
-      FlightAssistant::GoHomeAltitude altitude,
+      GoHomeHeight altitude,
       void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
       UserData userData);
 
@@ -130,8 +147,8 @@ class FlightController {
    *  @param timeout blocking timeout in seconds
    *  @return OSDK ErrorCode::ErrorCodeType error code
    */
-  ErrorCode::ErrorCodeType getGoHomeAltitudeSync(
-      FlightAssistant::GoHomeAltitude &altitude, int timeout);
+  ErrorCode::ErrorCodeType getGoHomeAltitudeSync(GoHomeHeight &altitude,
+                                                 int timeout);
 
   /*! @brief Get go home altitude, non-blocking calls
    *
@@ -144,34 +161,29 @@ class FlightController {
    */
   void getGoHomeAltitudeAsync(
       void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
-                           FlightAssistant::GoHomeAltitude altitude,
-                           UserData userData),
+                           GoHomeHeight altitude, UserData userData),
       UserData userData);
 
-  /*! @brief Set home location, blocking calls
+  /*! @brief Set customized home location, blocking calls
    *
-   *  @note  Set home location failed reason may as follows:
-   *  1 Use the type DJI_HOMEPOINT_AIRCRAFT_LOACTON, but aircraft's gps level
-   *  can't reach the status of record home location.
-   *  2 The distance between new home location and init home location is larger
-   * than
-   *  MAX_FLY_RADIUS(20km)
-   *  @param homeLocation SetHomeLocationData include latitude and longitude
+   *  @note  Set customized home location failed reason may as follows:
+   *  1 The distance between new home location and init home location is larger
+   * than MAX_FLY_RADIUS(20km).
+   *  2 Set init home location failed after start aircraft.
+   *  @param homeLocation HomeLocation include latitude and longitude
    *  @param timeout blocking timeout in seconds
    *  @return  OSDK ErrorCode::ErrorCodeType error code
    */
-  ErrorCode::ErrorCodeType setHomeLocationSync(
-      FlightAssistant::SetHomeLocationData homeLocation, int timeout);
+  ErrorCode::ErrorCodeType setHomeLocationSync(HomeLocation homeLocation,
+                                               int timeout);
 
-  /*! @brief Set home location, non-blocking calls
+  /*! @brief Set customized home location, non-blocking calls
    *
-   *  @note  Set home location failed reason may as follows:
-   *  1. Use the type DJI_HOMEPOINT_AIRCRAFT_LOACTON, but aircraft's gps level
-   *  can't reach the status of record home location.
-   *  2. The distance between new home location and init home location is larger
-   * than
-   *  MAX_FLY_RADIUS(20km)
-   *  @param homeLocation  SetHomeLocationData include latitude and longitude
+   *  @note  Set customized home location failed reasons may as follows:
+   *  1. The distance between new home location and init home location is larger
+   * than MAX_FLY_RADIUS(20km)
+   *  2 Set init home location failed after start aircraft.
+   *  @param homeLocation  HomeLocation include latitude and longitude
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode the OSDK ErrorCode::ErrorCodeType error code
    *  @arg @b userData the interface to transfer userData in when the callback
@@ -179,41 +191,70 @@ class FlightController {
    *  @param when UserCallBack is called, used in UserCallBack
    */
   void setHomeLocationAsync(
-      FlightAssistant::SetHomeLocationData homeLocation,
+      HomeLocation homeLocation,
       void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
       UserData userData);
 
-  /*! @brief Set avoid obstacle switch enable or disable, blocking calls
+  /*! @brief Set home location use current aircraft location, non-blocking calls
    *
-   *  @param avoidObstacle reference in FlightAssistant::AvoidObstacleData
+   *  @note  Set home location failed reasons may as follows:
+   *  1. Aircraft's gps level can't reach the status of record home location.
+   *  2. There's no home location being locked before you set.
+   *  @param UserCallBack callback function defined by user
+   *  @arg @b retCode the OSDK ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to transfer userData in when the callback
+   * is called
+   *  @param when UserCallBack is called, used in UserCallBack
+   */
+  ErrorCode::ErrorCodeType setHomeLocationUseCurrentAircraftLocationSync(
+      int timeout);
+
+  /*! @brief Set home location use current aircraft location, non-blocking calls
+   *
+   *  @note  Set home location failed reasons may as follows:
+   *  1. Aircraft's gps level can't reach the status of record home location.
+   *  2. There's no home location being locked before you set.
+   *  @param UserCallBack callback function defined by user
+   *  @arg @b retCode the OSDK ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to transfer userData in when the callback
+   * is called
+   *  @param when UserCallBack is called, used in UserCallBack
+   */
+  void setHomeLocationUseCurrentAircraftLocationSync(
+      void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
+      UserData userData);
+
+  /*! @brief Set collision avoidance enable or disable, blocking calls
+   *
+   *  @param collisionAvoidanceSwitch reference in CollisionAvoidanceSwitch
    *  @param timeout blocking timeout in seconds
    *  @return OSDK ErrorCode::ErrorCodeType error code
    */
-  ErrorCode::ErrorCodeType setAvoidObstacleSwitchSync(
-      FlightAssistant::AvoidObstacleData avoidObstacle, int timeout);
+  ErrorCode::ErrorCodeType setCollisionAvoidanceEnabledSync(
+      CollisionAvoidanceSwitch collisionAvoidanceSwitch, int timeout);
 
-  /*! @brief Set set avoid obstacle switch enable or disable, non-blocking calls
+  /*! @brief Set collision avoidance enable or disable, non-blocking calls
    *
-   *  @param avoidObstacle reference in FlightAssistant::AvoidObstacleData
+   *  @param collisionAvoidanceSwitch reference in CollisionAvoidanceSwitch
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode  OSDK ErrorCode::ErrorCodeType error code
    *  @arg @b userData the interface to trans userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
-  void setAvoidObstacleSwitchAsync(
-      FlightAssistant::AvoidObstacleData avoidObstacle,
+  void setCollisionAvoidanceEnabledAsync(
+      CollisionAvoidanceSwitch collisionAvoidanceSwitch,
       void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
       UserData userData);
 
-  /*! @brief Wrapper function for aircraft take off, blocking calls
+  /*! @brief Wrapper function for aircraft takeoff, blocking calls
    *
    *  @param timeout blocking timeout in seconds
    *  @return OSDK ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType startTakeoffSync(int timeout);
 
-  /*! @brief Wrapper function for aircraft take off, non-blocking calls
+  /*! @brief Wrapper function for aircraft takeoff, non-blocking calls
    *
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode is the OSDK ErrorCode::ErrorCodeType error code

@@ -5,7 +5,7 @@
  *  @brief
  *  Flight sample us FlightController API  in a Linux environment.
  *  Provides a number of helpful additions to core API calls,
- *  especially for go home ,landing, set rtk and avoid obstacle switch.
+ *  especially for go home ,landing, set rtk and collision avoidance switch.
  *
  *  @Copyright (c) 2019 DJI
  *
@@ -86,7 +86,7 @@ bool checkActionStarted(Vehicle* vehicle, uint8_t mode);
   *  @return result:true:success, false:fail
   */
 ErrorCode::ErrorCodeType setGoHomeAltitude(
-    Vehicle* vehicle, FlightAssistant::GoHomeAltitude altitude,
+    Vehicle* vehicle, FlightController::GoHomeHeight altitude,
     int timeout = 1);
 
 /*! @brief Sample to set current aircraft position as an new home location
@@ -97,21 +97,21 @@ ErrorCode::ErrorCodeType setGoHomeAltitude(
  */
 ErrorCode::ErrorCodeType setNewHomeLocation(Vehicle *vehicle, int timeout = 1);
 
-/*! @brief Sample to open avoid obstacle
+/*! @brief Sample to open collision avoidance
  *
  *  @param vehicle Vehicle pointer
  *  @param timeout timeout
  *  @return result:true:success, false:fail
  */
-ErrorCode::ErrorCodeType openAvoidObstacle(Vehicle* vehicle, int timeout = 1);
+ErrorCode::ErrorCodeType openCollisionAvoidance(Vehicle *vehicle, int timeout = 1);
 
-/*! @brief Sample to close avoid obstacle
+/*! @brief Sample to close collision avoidance
  *
  *  @param vehicle Vehicle pointer
  *  @param timeout timeout
  *  @return result:true:success, false:fail
  */
-ErrorCode::ErrorCodeType closeAvoidObstacle(Vehicle* vehicle, int timeout = 1);
+ErrorCode::ErrorCodeType closeCollisionAvoidance(Vehicle *vehicle, int timeout = 1);
 
 /*! @brief Sample to open RTK switch
  *
