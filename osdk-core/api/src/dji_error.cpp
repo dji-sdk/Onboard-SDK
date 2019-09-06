@@ -321,8 +321,8 @@ const uint8_t& DJI::OSDK::ErrorCode::MissionACK::WayPoint::TIMEOUT = DJI::OSDK::
 
 // clang-format off
 /*! flight controller parameter table read and write error code*/
-const ErrorCode::ErrorCodeType ErrorCode::FlightControllerErr::ParamReadWirteErr::Fail = ErrorCode::getErrorCode(FCModule,  FCParameterTable, ControlACK::ParamReadWrite::FAIL);
-const ErrorCode::ErrorCodeType ErrorCode::FlightControllerErr::ParamReadWirteErr::InvalidParameter = ErrorCode::getErrorCode(FCModule,  FCParameterTable, 0x02);
+const ErrorCode::ErrorCodeType ErrorCode::FlightControllerErr::ParamReadWriteErr::Fail = ErrorCode::getErrorCode(FCModule,  FCParameterTable, ControlACK::ParamReadWrite::FAIL);
+const ErrorCode::ErrorCodeType ErrorCode::FlightControllerErr::ParamReadWriteErr::InvalidParameter = ErrorCode::getErrorCode(FCModule,  FCParameterTable, 0x02);
 const ErrorCode::ErrorCodeType ErrorCode::FlightControllerErr::SetHomeLocationErr::Fail   = ErrorCode::getErrorCode(FCModule,  FCSetHomeLocation, ErrorCode::ControlACK::SetHomeLocation::FAIL);
 
 const ErrorCode::ModuleDataType ErrorCode::module[ModuleMaxCnt] = {

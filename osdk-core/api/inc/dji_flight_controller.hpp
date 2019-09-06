@@ -102,15 +102,12 @@ class FlightController {
 
   /*! @brief Set go home altitude, blocking calls
    *
-   *  @note If aircraft's current altitude is higher than go home altitude
-   * settings, aircraft will go home by it's current altitude. Otherwise, it
-   * will climb to setting's of go home altitude ,and then execute go home
-   * action. The details could be find at
-   * https://developer.dji.com/cn/onboard-sdk/documentation/guides/component-guide-flight-control.html
+   *  @note If aircraft's current altitude is higher than the setting value of
+   * go home altitude, aircraft will go home using current altitude. Otherwise,
+   * it will climb to setting of go home altitude ,and then execute go home
+   * action. The details could be find in the documentation.
    * Go home altitude setting is between MIN_GO_HOME_HEIGHT to
-   * MAX_FLIGHT_HEIGHT, if setting exceeds this range, for example setting is
-   * 10m or 510m, it will remind you error code
-   * ErrorCode::FlightControllerErr::ParamReadWirteErr::InvalidParameter.
+   * MAX_FLIGHT_HEIGHT.
    * @param altitude go home altitude settings, unit: meter
    *  @param timeout blocking timeout in seconds
    *  @return OSDK ErrorCode::ErrorCodeType error code
@@ -120,15 +117,12 @@ class FlightController {
 
   /*! @brief Set go home altitude, non-blocking calls
    *
-   *  @note If aircraft's current altitude is higher than go home altitude
-   * settings, aircraft will go home by it's current altitude. Otherwise, it
-   * will climb to setting's of go home altitude ,and then execute go home
-   * action. The details could be find at
-   * https://developer.dji.com/cn/onboard-sdk/documentation/guides/component-guide-flight-control.html
+   *  @note If aircraft's current altitude is higher than the setting value of
+   * go home altitude, aircraft will go home using current altitude. Otherwise,
+   * it will climb to setting of go home altitude ,and then execute go home
+   * action. The details could be find in the documentation.
    * Go home altitude setting is between MIN_GO_HOME_HEIGHT to
-   * MAX_FLIGHT_HEIGHT, if setting exceeds this range, for example setting is
-   * 10m or 510m, it will remind you error code
-   * ErrorCode::FlightControllerErr::ParamReadWirteErr::InvalidParameter.
+   * MAX_FLIGHT_HEIGHT.
    * @param altitude go home altitude settings, unit: meter
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode the OSDK ErrorCode::ErrorCodeType error code
@@ -167,7 +161,7 @@ class FlightController {
   /*! @brief Set customized home location, blocking calls
    *
    *  @note  Set customized home location failed reason may as follows:
-   *  1 The distance between new home location and init home location is larger
+   *  1 The distance between new home location and last home location is larger
    * than MAX_FLY_RADIUS(20km).
    *  2 Set init home location failed after start aircraft.
    *  @param homeLocation HomeLocation include latitude and longitude
@@ -180,7 +174,7 @@ class FlightController {
   /*! @brief Set customized home location, non-blocking calls
    *
    *  @note  Set customized home location failed reasons may as follows:
-   *  1. The distance between new home location and init home location is larger
+   *  1. The distance between new home location and last home location is larger
    * than MAX_FLY_RADIUS(20km)
    *  2 Set init home location failed after start aircraft.
    *  @param homeLocation  HomeLocation include latitude and longitude
@@ -195,32 +189,35 @@ class FlightController {
       void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
       UserData userData);
 
-  /*! @brief Set home location use current aircraft location, non-blocking calls
+  /*! @brief Set home location using current aircraft location, blocking calls
    *
    *  @note  Set home location failed reasons may as follows:
-   *  1. Aircraft's gps level can't reach the status of record home location.
-   *  2. There's no home location being locked before you set.
+   *  1. Aircraft's gps level can't reach the condition of recording home
+   * location.
+   *  2. There's no init home location before you set.
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode the OSDK ErrorCode::ErrorCodeType error code
    *  @arg @b userData the interface to transfer userData in when the callback
    * is called
    *  @param when UserCallBack is called, used in UserCallBack
    */
-  ErrorCode::ErrorCodeType setHomeLocationUseCurrentAircraftLocationSync(
+  ErrorCode::ErrorCodeType setHomeLocationUsingCurrentAircraftLocationSync(
       int timeout);
 
-  /*! @brief Set home location use current aircraft location, non-blocking calls
+  /*! @brief Set home location using current aircraft location, non-blocking
+   * calls
    *
    *  @note  Set home location failed reasons may as follows:
-   *  1. Aircraft's gps level can't reach the status of record home location.
-   *  2. There's no home location being locked before you set.
+   *  1. Aircraft's gps level can't reach the condition of recording home
+   * location.
+   *  2. There's no init home location before you set.
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode the OSDK ErrorCode::ErrorCodeType error code
    *  @arg @b userData the interface to transfer userData in when the callback
    * is called
    *  @param when UserCallBack is called, used in UserCallBack
    */
-  void setHomeLocationUseCurrentAircraftLocationSync(
+  void setHomeLocationUsingCurrentAircraftLocationAsync(
       void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
       UserData userData);
 

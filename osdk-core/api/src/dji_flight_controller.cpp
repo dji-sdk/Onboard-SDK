@@ -180,7 +180,7 @@ void FlightController::setHomeLocationAsync(
 }
 
 ErrorCode::ErrorCodeType
-FlightController::setHomeLocationUseCurrentAircraftLocationSync(int timeout) {
+FlightController::setHomeLocationUsingCurrentAircraftLocationSync(int timeout) {
   FlightAssistant::SetHomeLocationData homeLocation;
   homeLocation.homeType = FlightAssistant::DJI_HOMEPOINT_AIRCRAFT_LOACTON;
   if (flightAssistant)
@@ -189,9 +189,9 @@ FlightController::setHomeLocationUseCurrentAircraftLocationSync(int timeout) {
     return ErrorCode::SysCommonErr::AllocMemoryFailed;
 }
 
-void FlightController::setHomeLocationUseCurrentAircraftLocationSync(
-    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
-    UserData userData) {
+void FlightController::setHomeLocationUsingCurrentAircraftLocationAsync(
+  void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
+  UserData userData) {
   FlightAssistant::SetHomeLocationData homeLocation;
   homeLocation.homeType = FlightAssistant::DJI_HOMEPOINT_AIRCRAFT_LOACTON;
   if (flightAssistant)

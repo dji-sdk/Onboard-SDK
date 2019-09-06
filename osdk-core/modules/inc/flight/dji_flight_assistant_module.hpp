@@ -228,13 +228,12 @@ class FlightAssistant {
    *
    *  @note If aircraft's current altitude is higher than go home altitude
    * settings, aircraft will go home by it's current altitude. Otherwise, it
-   * will climb to setting's of go home altitude ,and then execute go home
-   * action. The details could be find at
-   * https://developer.dji.com/cn/onboard-sdk/documentation/guides/component-guide-flight-control.html
+   * will climb to setting of go home altitude ,and then execute go home
+   * action. The details could be find in documentation
    * Go home altitude setting is between MIN_GO_HOME_HEIGHT to
    * MAX_FLIGHT_HEIGHT, if setting exceeds this range, for example setting is
    * 10m or 510m, it will remind you error code
-   * ErrorCode::FlightControllerErr::ParamReadWirteErr::InvalidParameter.
+   * ErrorCode::FlightControllerErr::ParamReadWriteErr::InvalidParameter.
    * @param altitude go home altitude settings, unit: meter
    *  @param timeout blocking timeout in seconds
    *  @return OSDK ErrorCode::ErrorCodeType error code
@@ -246,13 +245,12 @@ class FlightAssistant {
    *
    *  @note If aircraft's current altitude is higher than go home altitude
    * settings, aircraft will go home by it's current altitude. Otherwise, it
-   * will climb to setting's of go home altitude ,and then execute go home
-   * action. The details could be find at
-   * https://developer.dji.com/cn/onboard-sdk/documentation/guides/component-guide-flight-control.html
+   * will climb to setting of go home altitude ,and then execute go home
+   * action. The details could be find find in documentation
    * Go home altitude setting is between MIN_GO_HOME_HEIGHT to
    * MAX_FLIGHT_HEIGHT, if setting exceeds this range, for example setting is
    * 10m or 510m, it will remind you error code
-   * ErrorCode::FlightControllerErr::ParamReadWirteErr::InvalidParameter.
+   * ErrorCode::FlightControllerErr::ParamReadWriteErr::InvalidParameter.
    * @param altitude go home altitude settings, unit: meter
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode the OSDK ErrorCode::ErrorCodeType error code

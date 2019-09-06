@@ -59,7 +59,7 @@ ErrorCode::ErrorCodeType FlightAssistant::writeParameterByHashSync(
       return ErrorCode::SysCommonErr::ReqTimeout;
     else if (hashValue != rsp.data.hashValue ||
              !memcmp((void*)rsp.data.paramValue, data, len))
-      return ErrorCode::FlightControllerErr::ParamReadWirteErr::
+      return ErrorCode::FlightControllerErr::ParamReadWriteErr::
           InvalidParameter;
     else
       return ErrorCode::SysCommonErr::UnpackDataMismatch;
@@ -99,7 +99,7 @@ ErrorCode::ErrorCodeType FlightAssistant::readParameterByHashSync(
     if (!rsp.updated)
       return ErrorCode::SysCommonErr::ReqTimeout;
     else if (hashValue != rsp.data.hashValue)
-      return ErrorCode::FlightControllerErr::ParamReadWirteErr::
+      return ErrorCode::FlightControllerErr::ParamReadWriteErr::
           InvalidParameter;
     else
       return ErrorCode::SysCommonErr::UnpackDataMismatch;
@@ -277,7 +277,7 @@ void FlightAssistant::getRtkEnableAsync(
 ErrorCode::ErrorCodeType FlightAssistant::setGoHomeAltitudeSync(
     GoHomeAltitude altitude, int timeout) {
   if (!goHomeAltitudeValidCheck(altitude)) {
-    return ErrorCode::FlightControllerErr::ParamReadWirteErr::InvalidParameter;
+    return ErrorCode::FlightControllerErr::ParamReadWriteErr::InvalidParameter;
   }
   ErrorCode::ErrorCodeType ret =
       writeParameterByHashSync(ParamHashValue::GO_HOME_ALTITUDE,
@@ -295,7 +295,7 @@ void FlightAssistant::setGoHomeAltitudeAsync(
                               setParameterDecoder, UserCallBack, userData);
   } else
     UserCallBack(
-        ErrorCode::FlightControllerErr::ParamReadWirteErr::InvalidParameter,
+        ErrorCode::FlightControllerErr::ParamReadWriteErr::InvalidParameter,
         userData);
 }
 

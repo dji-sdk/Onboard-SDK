@@ -198,7 +198,7 @@ class ErrorCode {
   class FlightControllerErr
   {
   public:
-    class ParamReadWirteErr
+    class ParamReadWriteErr
     {
     public:
       static const ErrorCodeType Fail;

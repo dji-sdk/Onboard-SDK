@@ -97,38 +97,6 @@ ErrorCode::ErrorCodeType setGoHomeAltitude(
  */
 ErrorCode::ErrorCodeType setNewHomeLocation(Vehicle *vehicle, int timeout = 1);
 
-/*! @brief Sample to open collision avoidance
- *
- *  @param vehicle Vehicle pointer
- *  @param timeout timeout
- *  @return result:true:success, false:fail
- */
-ErrorCode::ErrorCodeType openCollisionAvoidance(Vehicle *vehicle, int timeout = 1);
-
-/*! @brief Sample to close collision avoidance
- *
- *  @param vehicle Vehicle pointer
- *  @param timeout timeout
- *  @return result:true:success, false:fail
- */
-ErrorCode::ErrorCodeType closeCollisionAvoidance(Vehicle *vehicle, int timeout = 1);
-
-/*! @brief Sample to open RTK switch
- *
- *  @param vehicle Vehicle pointer
- *  @param timeout timeout
- *  @return result:true:success, false:fail
- */
-ErrorCode::ErrorCodeType openRtkSwtich(Vehicle* vehicle, int timeout = 1);
-
-/*! @brief Sample to close  RTK switch
- *
- *  @param vehicle Vehicle pointer
- *  @param timeout timeout
- *  @return result:true:success, false:fail
- */
-ErrorCode::ErrorCodeType closeRtkSwtich(Vehicle* vehicle, int timeout = 1);
-
 /*! @brief Sample to go home, landing and force landing avoid ground
  *
  *  @param vehicle Vehicle pointer

@@ -166,61 +166,12 @@ ErrorCode::ErrorCodeType setNewHomeLocation(Vehicle* vehicle, int timeout) {
                                  originHomeLocation, timeout);
   if (retCode && (homeLocationSetStatus.status == 1)) {
     ret = vehicle->flightController
-              ->setHomeLocationUseCurrentAircraftLocationSync(timeout);
+              ->setHomeLocationUsingCurrentAircraftLocationSync(timeout);
     if (ret != ErrorCode::SysCommonErr::Success) {
       DSTATUS("Set new home location failed, ErrorCode is:%8x", ret);
     } else {
       DSTATUS("Set new home location successfully");
     }
-  }
-  return ret;
-}
-
-ErrorCode::ErrorCodeType openCollisionAvoidance(Vehicle* vehicle, int timeout) {
-  FlightController::CollisionAvoidanceSwitch openSwitch = true;
-  ErrorCode::ErrorCodeType ret =
-      vehicle->flightController->setCollisionAvoidanceEnabledSync(openSwitch,
-                                                                  timeout);
-  if (ret != ErrorCode::SysCommonErr::Success) {
-    DSTATUS("Open collision avoidance switch failed, ErrorCode is:%8x", ret);
-  } else {
-    DSTATUS("Open collision avoidance switch successfully");
-  }
-  return ret;
-}
-
-ErrorCode::ErrorCodeType closeCollisionAvoidance(Vehicle* vehicle,
-                                                 int timeout) {
-  FlightController::CollisionAvoidanceSwitch openSwitch = false;
-  ErrorCode::ErrorCodeType ret =
-      vehicle->flightController->setCollisionAvoidanceEnabledSync(openSwitch,
-                                                                  timeout);
-  if (ret != ErrorCode::SysCommonErr::Success) {
-    DSTATUS("Close collision avoidance switch failed, ErrorCode is:%8x", ret);
-  } else {
-    DSTATUS("Close collision avoidance switch successfully");
-  }
-  return ret;
-}
-
-ErrorCode::ErrorCodeType openRtkSwtich(Vehicle* vehicle, int timeout) {
-  ErrorCode::ErrorCodeType ret = vehicle->flightController->setRtkEnableSync(
-      FlightController::RtkEnabled::RTK_ENABLE, timeout);
-  if (ret != ErrorCode::SysCommonErr::Success) {
-    DSTATUS("Open rtk switch failed, ErrorCode is:%8x", ret);
-  } else {
-    DSTATUS("Open rtk switch successfully");
-  }
-  return ret;
-}
-
-ErrorCode::ErrorCodeType closeRtkSwtich(Vehicle* vehicle, int timeout) {
-  ErrorCode::ErrorCodeType ret = vehicle->flightController->setRtkEnableSync(
-      FlightController::RtkEnabled::RTK_DISABLE, timeout);
-  if (ret != ErrorCode::SysCommonErr::Success) {
-    DSTATUS("Close rtk switch failed, ErrorCode is:%8x", ret);
-  } else {
-    DSTATUS("Close rtk switch successfully");
   }
   return ret;
 }
