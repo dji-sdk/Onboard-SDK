@@ -357,6 +357,8 @@ subscribeToDataForInteractivePrint(Vehicle* vehicle, int responseTimeout)
                                 ,TOPIC_FLIGHT_ANOMALY
                                 ,TOPIC_POSITION_VO
                                 ,TOPIC_AVOID_DATA
+                                ,TOPIC_HOME_POINT_SET_STATUS
+                                ,TOPIC_HOME_POINT_INFO
   };
 
   int       numTopic        = sizeof(topicList50Hz) / sizeof(topicList50Hz[0]);
@@ -394,6 +396,8 @@ subscribeToDataForInteractivePrint(Vehicle* vehicle, int responseTimeout)
               << "6. flyAnomaly\n"
               << "7. local position vo\n"
               << "8. avoid obstacle data\n"
+              << "9. home location set status\n"
+              << "10. home location information\n"
               << "0. exit\n";
 
 
@@ -413,6 +417,8 @@ subscribeToDataForInteractivePrint(Vehicle* vehicle, int responseTimeout)
     TypeMap<TOPIC_FLIGHT_ANOMALY>::type flyAnomaly;
     TypeMap<TOPIC_POSITION_VO>::type    localPos;
     TypeMap<TOPIC_AVOID_DATA>::type     avoidData;
+    TypeMap<TOPIC_HOME_POINT_SET_STATUS>::type homePointSetStatus;
+    TypeMap<TOPIC_HOME_POINT_INFO>::type  homeLocationInfo;
 
     // Counters
     int printFrequency          = 50; //Hz
@@ -511,6 +517,14 @@ subscribeToDataForInteractivePrint(Vehicle* vehicle, int responseTimeout)
                  avoidData.back , avoidData.backHealth ,
                  avoidData.left , avoidData.leftHealth ,
                  avoidData.up   , avoidData.upHealth);
+          break;
+        case 9:
+          homePointSetStatus =  vehicle->subscribe->getValue<TOPIC_HOME_POINT_SET_STATUS>();
+          printf("home location statas is %d\n", homePointSetStatus.status);
+          break;
+        case 10:
+          homeLocationInfo = vehicle->subscribe->getValue<TOPIC_HOME_POINT_INFO>();
+          printf("home location latitude is :%.15f, home location longitude is %.15f\n",homeLocationInfo.latitude, homeLocationInfo.longitude);
           break;
         case 0:
           break;

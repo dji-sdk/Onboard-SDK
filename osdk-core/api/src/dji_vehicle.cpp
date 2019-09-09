@@ -60,6 +60,7 @@ Vehicle::Vehicle(const char* device,
   , USBThreadReady(false)
   , payloadDevice(NULL)
   , cameraManager(NULL)
+  , flightController(NULL)
 {
   if (!device)
   {
@@ -91,6 +92,7 @@ Vehicle::Vehicle(bool threadSupport)
   , callbackThread(NULL)
   , payloadDevice(NULL)
   , cameraManager(NULL)
+  , flightController(NULL)
 {
   this->threadSupported = threadSupport;
   callbackId            = 0;
@@ -188,7 +190,8 @@ Vehicle::functionalSetUp()
   }
 
   /*
-   * @note Initialize Movement Control
+   * @note Initialize Movement Control,
+   * @note it will be replaced by FlightActions and FlightController in the future.
    */
   if (!initControl())
   {
@@ -257,6 +260,12 @@ Vehicle::functionalSetUp()
   if (!initVirtualRC())
   {
     DERROR("Failed to initiaze VirtualRC!\n");
+    return 1;
+  }
+
+  if(!initFlightController())
+  {
+    DERROR("Failed to initialize FlightController!\n");
     return 1;
   }
 
@@ -430,6 +439,10 @@ Vehicle::~Vehicle()
   if (this->platformManager)
   {
     delete this->platformManager;
+  }
+  if(this->flightController)
+  {
+    delete this->flightController;
   }
 
   this->USBThreadReady = false;
@@ -943,6 +956,23 @@ Vehicle::initGimbal()
     DSTATUS("Gimbal not mounted!\n");
   }
 
+  return true;
+}
+
+bool
+Vehicle::initFlightController()
+{
+  if(this->flightController)
+  {
+    DDEBUG("flightController already initalized!");
+    return true;
+  }
+  this->flightController = new (std::nothrow) FlightController(this);
+  if (this->flightController == 0)
+  {
+    DERROR("Failed to allocate memory for flightController!\n");
+    return false;
+  }
   return true;
 }
 
@@ -1631,10 +1661,8 @@ Vehicle::ACKHandler(void* eventData)
     DERROR("Invalid ACK event data received!\n");
     return;
   }
-
   RecvContainer* ackData = (RecvContainer*)eventData;
   const uint8_t cmd[] = { ackData->recvInfo.cmd_set, ackData->recvInfo.cmd_id };
-
   if (ackData->recvInfo.cmd_set == OpenProtocolCMD::CMDSet::mission)
   {
     if (memcmp(cmd, OpenProtocolCMD::CMDSet::Mission::waypointAddPoint,
@@ -1705,11 +1733,19 @@ Vehicle::ACKHandler(void* eventData)
   else if (ackData->recvInfo.cmd_set == OpenProtocolCMD::CMDSet::control)
   {
     if (memcmp(cmd, OpenProtocolCMD::CMDSet::Control::extendedFunction,
-                    sizeof(cmd)) == 0)
+                    sizeof(cmd)) == 0) {
+      extendedFunctionRspAck.info = ackData->recvInfo;
+      extendedFunctionRspAck.info.buf = ackData->recvData.raw_ack_array;
+      extendedFunctionRspAck.updated = true;
+    }
+    else if(memcmp(cmd, OpenProtocolCMD::CMDSet::Control::parameterRead, sizeof(cmd))==0 ||
+       memcmp(cmd, OpenProtocolCMD::CMDSet::Control::parameterWrite, sizeof(cmd))==0)
     {
-      extendedFunctionRspAck.info      = ackData->recvInfo;
-      extendedFunctionRspAck.info.buf  = ackData->recvData.raw_ack_array;
-      extendedFunctionRspAck.updated   = true;
+      paramAck.info            = ackData->recvInfo;
+      paramAck.data.retCode    = ackData->recvData.paramAckData.retCode;
+      paramAck.data.hashValue  = ackData->recvData.paramAckData.hashValue;
+      memcpy(paramAck.data.paramValue, ackData->recvData.paramAckData.paramValue, MAX_PARAMETER_VALUE_LENGTH);
+      paramAck.updated         = true;
     }
     else
     {
@@ -1727,6 +1763,12 @@ Vehicle::ACKHandler(void* eventData)
     mfioGetACK.ack.info = ackData->recvInfo;
     mfioGetACK.ack.data = ackData->recvData.mfioGetACK.result;
     mfioGetACK.value    = ackData->recvData.mfioGetACK.value;
+  }
+  else if (memcmp(cmd, OpenProtocolCMD::CMDSet::Intelligent::setAvoidObstacle, sizeof(cmd)) == 0)
+  {
+    /*! data mean's the setting's data ref in AvoidObstacleData struct*/
+    ackErrorCode.info = ackData->recvInfo;
+    ackErrorCode.data = ackData->recvData.commandACK;
   }
   else
   {
@@ -2050,6 +2092,11 @@ Vehicle::waitForACK(const uint8_t (&cmd)[OpenProtocolCMD::MAX_CMD_ARRAY_SIZE],
            && 0x40 <= cmd[1] && cmd[1] <= 0x53)
   {
     pACK = static_cast<void*>(&this->wayPoint2CommonRspACK);
+  }
+  else if (memcmp(cmd, OpenProtocolCMD::CMDSet::Control::parameterRead, sizeof(cmd)) == 0
+           || memcmp(cmd, OpenProtocolCMD::CMDSet::Control::parameterWrite, sizeof(cmd)) == 0)
+  {
+    pACK = static_cast<void*>(&this->paramAck);
   }
   else
   {

@@ -121,6 +121,13 @@ public:
     uint32_t value;
   } MFIOGetInternal; // pack(1)
 
+  typedef struct ParamAckInternal
+  {
+    uint8_t retCode;       /*!< return code */
+    uint32_t hashValue;    /*!< parameter hash value*/
+    uint8_t paramValue[8]; /*!< parameter value*/
+  } ParamAckInternal;      // pack(1)
+
   /*
    * ACK structures exposed to user
    */
@@ -136,6 +143,17 @@ public:
     Entry    info;
     uint32_t data;
   } ErrorCode; // pack(1)
+
+  /*! @brief This struct is returned from the
+   * DJI::OSDK::Control::writeParameterByHash
+   * blocking API
+   */
+  typedef struct ParamAck
+  {
+    Entry info;
+    ParamAckInternal data;
+    bool updated = false;
+  } ParamAck;  // pack(1)
 
   /*! @brief This struct is returned from the DJI::OSDK::MFIO::getValue
    * blocking API
@@ -323,6 +341,7 @@ public:
     WayPointIndexInternal    wpIndexACK;
     WayPointVelocityInternal wpVelocityACK;
     MFIOGetInternal          mfioGetACK;
+    ParamAckInternal         paramAckData;
 
     /*
      * Push Data in ground-station mode

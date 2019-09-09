@@ -316,6 +316,10 @@ const uint8_t& DJI::OSDK::ErrorCode::MissionACK::WayPoint::TIMEOUT = DJI::OSDK::
 
 
 // clang-format off
+/*! flight controller parameter table read and write error code*/
+const ErrorCode::ErrorCodeType ErrorCode::FlightControllerErr::ParamReadWriteErr::Fail = ErrorCode::getErrorCode(FCModule,  FCParameterTable, ControlACK::ParamReadWrite::PARAM_READ_WRITE_FAIL);
+const ErrorCode::ErrorCodeType ErrorCode::FlightControllerErr::ParamReadWriteErr::InvalidParameter = ErrorCode::getErrorCode(FCModule,  FCParameterTable, ControlACK::ParamReadWrite::PARAM_READ_WRITE_INVALID_PARAMETER);
+const ErrorCode::ErrorCodeType ErrorCode::FlightControllerErr::SetHomeLocationErr::Fail   = ErrorCode::getErrorCode(FCModule,  FCSetHomeLocation, ErrorCode::ControlACK::SetHomeLocation::SET_HOME_LOCATION_FAIL);
 
 const ErrorCode::ModuleDataType ErrorCode::module[ModuleMaxCnt] = {
     {"System",    SystemFunction},  /*!< SysModule */

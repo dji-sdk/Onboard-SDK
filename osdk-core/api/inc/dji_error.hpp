@@ -48,7 +48,8 @@ namespace OSDK {
 class ErrorCode {
  public:
   /*! @brief Module ID type used in OnboardSDK Unified error
-   */
+  */
+
   typedef uint8_t ModuleIDType;
 
   /*! @brief Function ID type used in OnboardSDK Unified error
@@ -93,9 +94,12 @@ class ErrorCode {
   /*! @brief Function ID used with FCModule in error codes
    */
   enum FCFunctionID {
-    FCControl = 0,
-    FCSubscribe = 1,
-    FCMission = 2,
+    FCControlTask    = 0,
+    FCSubscribe      = 1,
+    FCMission        = 2,
+    FCParameterTable = 4,
+    FCSetHomeLocation= 5,
+    FCAvoidObstacle  = 6,
   };
 
   /*! @brief Function ID used with CameraModule in error codes
@@ -191,6 +195,22 @@ class ErrorCode {
    */
   static void printErrorCodeMsg(int64_t errCode);
 
+  class FlightControllerErr
+  {
+  public:
+    class ParamReadWriteErr
+    {
+    public:
+      static const ErrorCodeType Fail;
+      static const ErrorCodeType InvalidParameter;
+    };
+
+    class SetHomeLocationErr
+    {
+    public:
+      static const ErrorCodeType Fail;
+    };
+  };
   /*! @brief camera api error code
    */
   class CameraCommonErr {
@@ -620,8 +640,21 @@ class ErrorCode {
       const static uint16_t SUCCESS;
     } KillSwitch;
 
-  };  // Control class
+    enum ParamReadWrite : RawRetCodeType
+    {
+      PARAM_READ_WRITE_SUCCESS = 0,
+      PARAM_READ_WRITE_FAIL = 1,
+      PARAM_READ_WRITE_INVALID_PARAMETER = 2,
+    };
 
+    enum SetHomeLocation : RawRetCodeType
+    {
+      SET_HOME_LOCATION_SUCCESS = 0,
+      SET_HOME_LOCATION_FAIL = 1,
+    };
+
+  }; // Control class
+  
   /*!
    * @note New in 3.3 release
    *
@@ -819,6 +852,53 @@ class ErrorCode {
 
   };  // Class MFIO
 
+
+  enum DJI_CMD_RETURN_CODE {
+    SUCCESS                          = 0x00, /*!< Execute successfully */
+    FILE_TRANSFER_BUSY               = 0xC0, /*!< Busy transfering file */
+    NAVIGATION_IS_FORBIDDEN          = 0xD0, /*!< RC mode is not F mode or FC disable navigation mode */
+    NAVIGATION_IS_OFF                = 0xD1, /*!< FC disable navigation mode */
+    INVALID_TASK_INFORMATION         = 0xD2, /*!< No valid task information */
+    TASK_UPLOAD_ERROR                = 0xD3, /*!< Task up load error */
+    INVALID_REQUEST_PARAMETER        = 0xD4, /*!< The request parameter is invalid */
+    MAY_CROSS_RESTRICTED_AREA        = 0xD5, /*!< The task may across the restricted area */
+    EXCEEDED_INPUT_TIME_LIMIT        = 0xD6, /*!< Task time may exceed input time limit */
+    EXECUTING_HIGHER_PRIORITY_TASK   = 0xD7, /*!< A task of higher priority is being excuting */
+    CANNOT_START_TASK_WEAK_GPS       = 0xD8, /*!< Weak GPS, cannot start the task*/
+    CANNOT_START_TASK_VLOTAGE_ALARM  = 0xD9, /*!< Level 1 volt warning, cannot start the task */
+    UNSUPPORTED_COMMAND              = 0xE0, /*!< Do not support this command */
+    TIMEOUT                          = 0xE1, /*!< Execution timeout */
+    RAM_ALLOCATION_FAILED            = 0xE2, /*!< Memory alloc failed */
+    INVALID_COMMAND_PARAMETER        = 0xE3, /*!< Invalid parameter for the command */
+    UNSUPPORTED_COMMAND_IN_CUR_STATE = 0xE4, /*!< Do not support this command in the current state */
+    CAMERA_TIME_NOT_SYNCHRONIZED     = 0xE5, /*!< Timestamp of camera is not synchronized */
+    PARAMETER_SET_FAILED             = 0xE6, /*!< Setting parameter failed */
+    PARAMETER_GET_FAILED             = 0xE7, /*!< Getting parameter failed */
+    SD_CARD_MISSING                  = 0xE8, /*!< SD card is not installed */
+    SD_CARD_FULL                     = 0xE9, /*!< SD card is full */
+    SD_CARD_ERROR                    = 0xEA, /*!< Error accessing the SD Card */
+    SENSOR_ERROR                     = 0xEB, /*!< Sensor go wrong */
+    SYSTEM_ERROR                     = 0xEC, /*!< System error */
+    PARAMETER_TOTAL_TOO_LONG         = 0xED, /*!< Length of the parameter is too long */
+    MODULE_INACTIVATED               = 0xEE, /*!< Module is too not activated yet */
+    USER_UNBOND                      = 0xEF, /*!< User is not bond yet */
+    FIRMWARE_DATA_NUM_DISCONTINUOUS  = 0xF0, /*!< Fireware data number is a discontinuous number */
+    FIRMWARE_DATA_OVERLOAD_FLASH     = 0xF1, /*!< Fireware data number overload flash */
+    FIRMWARE_VERIFICATION_ERROR      = 0xF2, /*!< Error verifying fireware */
+    FLASH_ERASE_ERROR                = 0xF3, /*!< Error erasing flash */
+    FLASH_WRITE_ERROR                = 0xF4, /*!< Error writing flash */
+    UPGRADE_STATUS_ERROR             = 0xF5, /*!< Error status of upgrading */
+    FIRMWARE_TYPE_MISMATCH           = 0xF6, /*!< Firmware type don't match */
+    WAITING_CLIENT_UPGRADE_STATUS    = 0xF7, /*!< Upgrade host need the upgrade status pushing from Client (CmdID = 0x41) */
+    REMOTE_CONTROL_UNCONNECTED       = 0xF8, /*!< Not connect remote control yet */
+    MOTOR_NOT_STOPPED                = 0xF9, /*!< Motor is not stopped yet */
+    HARDWARE_ERROR                   = 0xFA, /*!< Hardware fault */
+    INSUFFICIENT_ELECTRICITY         = 0xFB, /*!< Device is of insufficient electricity */
+    AIRCRAFT_UNCONNECTED             = 0xFC, /*!< Aircraft is not connected yet */
+    FLASH_IS_ERASING                 = 0xFD, /*!< Flash is erasing (Avoid APP waiting timeout) */
+    CANNOT_UPGRADE_IN_CUR_STATE      = 0xFE, /*!< Cannot upgrade in current status (Please reboot or contact with DJI support */
+    UNDEFINE_ERROR                   = 0xFF, /*!< Undefined error */
+  };
  private:
   static const uint8_t moduleIDLeftMove = 40;
   static const uint8_t functionIDLeftMove = 32;

@@ -77,12 +77,15 @@ public:
       // with firmware version < 3.3
       const static uint8_t setArm[MAX_CMD_ARRAY_SIZE];
       const static uint8_t killSwitch[MAX_CMD_ARRAY_SIZE];
+      const static uint8_t setHomeLocation[MAX_CMD_ARRAY_SIZE];
       const static uint8_t gimbalSpeed[MAX_CMD_ARRAY_SIZE];
       const static uint8_t gimbalAngle[MAX_CMD_ARRAY_SIZE];
       const static uint8_t cameraShot[MAX_CMD_ARRAY_SIZE];
       const static uint8_t cameraVideoStart[MAX_CMD_ARRAY_SIZE];
       const static uint8_t cameraVideoStop[MAX_CMD_ARRAY_SIZE];
       const static uint8_t extendedFunction[MAX_CMD_ARRAY_SIZE];
+      const static uint8_t parameterRead[MAX_CMD_ARRAY_SIZE];
+      const static uint8_t parameterWrite[MAX_CMD_ARRAY_SIZE];
     } Control;
 
     typedef struct Mission
@@ -154,7 +157,6 @@ public:
       const static uint8_t get[MAX_CMD_ARRAY_SIZE];
       const static uint8_t set[MAX_CMD_ARRAY_SIZE];
     } MFIO;
-
     typedef struct Subscribe
     {
       const static uint8_t versionMatch[MAX_CMD_ARRAY_SIZE];
@@ -168,6 +170,10 @@ public:
       const static uint8_t getConfig[MAX_CMD_ARRAY_SIZE];
     } Subscribe;
 
+    typedef struct Intelligent
+    {
+      const static uint8_t setAvoidObstacle[MAX_CMD_ARRAY_SIZE];
+    }Intelligent;
     //! CMD SET definitions
     const static uint8_t activation   = 0x00;
     const static uint8_t control      = 0x01;
@@ -177,6 +183,7 @@ public:
     const static uint8_t virtualRC    = 0x05;
     const static uint8_t mfio         = 0x09;
     const static uint8_t subscribe    = 0x0B;
+    const static uint8_t intelligent  = 0xFE;
   };
 };
 

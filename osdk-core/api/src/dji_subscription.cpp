@@ -32,7 +32,7 @@
 
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
-const uint8_t  ADD_PACKAEG_DATA_LENGTH = 200;
+const uint8_t  ADD_PACKAEG_DATA_LENGTH = 250;
 const uint32_t DBVersion               = 0x00000100;
 //
 // @note: make sure the order of entry is the same as in the enum TopicName
@@ -84,6 +84,8 @@ TopicInfo Telemetry::TopicDataBase[] =
   {TOPIC_FLIGHT_ANOMALY            , UID_FLIGHT_ANOMALY           , sizeof(TypeMap<TOPIC_FLIGHT_ANOMALY          >::type), 50 ,   0,  255,  0},
   {TOPIC_POSITION_VO               , UID_POSITION_VO              , sizeof(TypeMap<TOPIC_POSITION_VO             >::type), 200,   0,  255,  0},
   {TOPIC_AVOID_DATA                , UID_AVOID_DATA               , sizeof(TypeMap<TOPIC_AVOID_DATA              >::type), 100,   0,  255,  0},
+  {TOPIC_HOME_POINT_SET_STATUS     , UID_HOME_POINT_SET_STATUS    , sizeof(TypeMap<TOPIC_HOME_POINT_SET_STATUS   >::type), 50  ,  0,  255,  0},
+  {TOPIC_HOME_POINT_INFO           , UID_HOME_POINT_INFO          , sizeof(TypeMap<TOPIC_HOME_POINT_INFO         >::type), 50  ,  0,  255,  0},
 };
 // clang-format on
 
@@ -655,7 +657,7 @@ SubscriptionPackage::setTopicList(TopicName* topics, int numberOfTopics,
     totalSize += TopicDataBase[topics[i]].size;
     if (totalSize > ADD_PACKAEG_DATA_LENGTH)
     {
-      DDEBUG(
+      DERROR(
         "Too many topics, data payload of the first %d topic is already %d", i,
         totalSize);
       return false;

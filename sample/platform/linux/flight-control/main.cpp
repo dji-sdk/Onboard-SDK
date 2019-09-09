@@ -30,25 +30,21 @@
  *
  */
 
+/*TODO:flight_control_sample will by replace by flight_sample in the future*/
 #include "flight_control_sample.hpp"
+#include "flight_sample.hpp"
 
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
 
-/*! main
- *
- */
-int
-main(int argc, char** argv)
-{
+int main(int argc, char** argv) {
   // Initialize variables
   int functionTimeout = 1;
 
   // Setup OSDK.
   LinuxSetup linuxEnvironment(argc, argv);
-  Vehicle*   vehicle = linuxEnvironment.getVehicle();
-  if (vehicle == NULL)
-  {
+  Vehicle* vehicle = linuxEnvironment.getVehicle();
+  if (vehicle == NULL) {
     std::cout << "Vehicle not initialized, exiting.\n";
     return -1;
   }
@@ -58,19 +54,22 @@ main(int argc, char** argv)
 
   // Display interactive prompt
   std::cout
-    << "| Available commands:                                            |"
-    << std::endl;
+      << "| Available commands:                                            |"
+      << std::endl;
   std::cout
-    << "| [a] Monitored Takeoff + Landing                                |"
-    << std::endl;
+      << "| [a] Monitored Takeoff + Landing                                |"
+      << std::endl;
   std::cout
-    << "| [b] Monitored Takeoff + Position Control + Landing             |"
-    << std::endl;
+      << "| [b] Monitored Takeoff + Position Control + Landing             |"
+      << std::endl;
+  std::cout << "| [c] Monitored Takeoff + Position Control + Force Landing "
+               "Avoid Ground  |"
+            << std::endl;
+
   char inputChar;
   std::cin >> inputChar;
 
-  switch (inputChar)
-  {
+  switch (inputChar) {
     case 'a':
       monitoredTakeoff(vehicle);
       monitoredLanding(vehicle);
@@ -82,6 +81,61 @@ main(int argc, char** argv)
       moveByPositionOffset(vehicle, -6, -6, 0, 0);
       monitoredLanding(vehicle);
       break;
+
+    /*! @NOTE: case 'c' only support for m210 V2*/
+    case 'c':
+      /*! Turn on rtk switch */
+      ErrorCode::ErrorCodeType ret;
+      ret = vehicle->flightController->setRtkEnableSync(
+          FlightController::RtkEnabled::RTK_ENABLE, 1);
+      if (ret != ErrorCode::SysCommonErr::Success) {
+        DSTATUS("Turn on rtk switch failed, ErrorCode is:%8x", ret);
+      } else {
+        DSTATUS("Turn on rtk switch successfully");
+      }
+
+      /*! Turn on collision avoidance switch */
+      ret =
+          vehicle->flightController->setCollisionAvoidanceEnabledSync(true, 1);
+      if (ret != ErrorCode::SysCommonErr::Success) {
+        DSTATUS("Turn on collision avoidance switch failed, ErrorCode is:%8x",
+                ret);
+      } else {
+        DSTATUS("Turn on collision avoidance switch successfully");
+      }
+
+      /*!  Take off */
+      monitoredTakeoff(vehicle);
+
+      /*! Move to higher altitude */
+      moveByPositionOffset(vehicle, 0, 0, 30, 0);
+
+      /*! Move a short distance*/
+      moveByPositionOffset(vehicle, 10, 0, 0, -30);
+
+      /*! Set aircraft current position as new home location */
+      setNewHomeLocation(vehicle);
+
+      /*! Set new go home altitude */
+      setGoHomeAltitude(vehicle, 50);
+
+      /*! Move to another position */
+      moveByPositionOffset(vehicle, 40, 0, 0, 0);
+
+      /*! Turn off collision avoidance switch */
+      ret =
+          vehicle->flightController->setCollisionAvoidanceEnabledSync(false, 1);
+      if (ret != ErrorCode::SysCommonErr::Success) {
+        DSTATUS("Turn off collision avoidance switch failed, ErrorCode is:%8x",
+                ret);
+      } else {
+        DSTATUS("Turn off collision avoidance switch successfully");
+      }
+
+      /*! go home and force landing avoid ground */
+      goHomeAndForceLanding(vehicle, 1);
+      break;
+
     default:
       break;
   }

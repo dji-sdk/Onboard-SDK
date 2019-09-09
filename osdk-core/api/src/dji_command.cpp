@@ -85,6 +85,9 @@ const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Control::setArm[] = {
 const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Control::killSwitch[] = {
   OpenProtocolCMD::CMDSet::control, 0x06
 };
+const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Control::setHomeLocation[] = {
+  OpenProtocolCMD::CMDSet::control, 0x07
+};
 const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Control::cameraShot[] = {
   OpenProtocolCMD::CMDSet::control, 0x20
 };
@@ -101,6 +104,12 @@ const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Control::gimbalAngle[] = {
 };
 const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Control::extendedFunction[] = {
   OpenProtocolCMD::CMDSet::control, 0x30
+};
+const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Control::parameterRead[] = {
+  OpenProtocolCMD::CMDSet::control, 0x41
+};
+const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Control::parameterWrite[] = {
+  OpenProtocolCMD::CMDSet::control, 0x42
 };
 const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Mission::waypointInit[] = {
   OpenProtocolCMD::CMDSet::mission, 0x10 };
@@ -247,4 +256,7 @@ const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Subscribe::pauseResume[] = {
 };
 const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Subscribe::getConfig[] = {
   OpenProtocolCMD::CMDSet::subscribe, 0x06
+};
+const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Intelligent::setAvoidObstacle[] = {
+  OpenProtocolCMD::CMDSet::intelligent, 0x01
 };
