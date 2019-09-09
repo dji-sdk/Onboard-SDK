@@ -36,7 +36,7 @@
 namespace DJI {
 namespace OSDK {
 
-/*! @brief Flight controller API: set or get parameter, execute flight actions
+/*! @brief Flight controller API: set or get parameter, execute flight actions.
  *
  */
 class FlightController {
@@ -45,8 +45,8 @@ class FlightController {
   ~FlightController();
 
   typedef struct Telemetry::HomeLocationData HomeLocation;
-  typedef bool CollisionAvoidanceSwitch; /*! true: enable collision avoidance,
-                                            false: disable collision avoidance*/
+  typedef bool CollisionAvoidanceSwitch; /*!< true: enable collision avoidance,
+                                          * false: disable collision avoidance */
   typedef FlightAssistant::RtkEnableData
       RtkEnabled; /*!< 0: disable, 1: enable*/
   typedef FlightAssistant::GoHomeAltitude
@@ -57,16 +57,16 @@ class FlightController {
    *  @param rtkEnable reference in RtkEnabled, RTK_DISABLE: disable,
    * RTK_ENABLE: enable
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK ErrorCode::ErrorCodeType error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType setRtkEnableSync(RtkEnabled rtkEnable, int timeout);
 
-  /*! @brief Set RTK enable or disable, non-blocking calls
+  /*! @brief Set RTK enable or disable, non-blocking calls.
    *
    *  @param rtkEnable reference in RtkEnabled, RTK_DISABLE: disable,
    * RTK_ENABLE: enable
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode  OSDK ErrorCode::ErrorCodeType error code
+   *  @arg @b retCode  ErrorCode::ErrorCodeType error code
    *  @arg @b userData the interface to transfer userData in when the callback
    *  is called
    *  @param userData when UserCallBack is called, used in UserCallBack
@@ -76,22 +76,22 @@ class FlightController {
                                               UserData userData),
                          UserData userData);
 
-  /*! @brief Get rtk enable or disable, blocking calls
+  /*! @brief Get rtk enable or disable, blocking calls.
    *
    *  @param rtkEnable reference in RtkEnabled, RTK_DISABLE: disable,
    * RTK_ENABLE: enable
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK ErrorCode::ErrorCodeType error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType getRtkEnableSync(RtkEnabled &rtkEnable, int timeout);
 
-  /*! @brief get RTK enable or disable, non-blocking calls
+  /*! @brief Get RTK enable or disable, non-blocking calls.
    *
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode the OSDK ErrorCode::ErrorCodeType error code
+   *  @arg @b retCode ErrorCode::ErrorCodeType error code
    *  @arg @b rtkEnable reference in RtkEnabled, RTK_DISABLE: disable,
    * RTK_ENABLE: enable
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b userData the interface to transfer userData in when the callback is
    *  called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -100,7 +100,7 @@ class FlightController {
                                               UserData userData),
                          UserData userData);
 
-  /*! @brief Set go home altitude, blocking calls
+  /*! @brief Set go home altitude, blocking calls.
    *
    *  @note If aircraft's current altitude is higher than the setting value of
    * go home altitude, aircraft will go home using current altitude. Otherwise,
@@ -110,12 +110,12 @@ class FlightController {
    * MAX_FLIGHT_HEIGHT.
    * @param altitude go home altitude settings, unit: meter
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK ErrorCode::ErrorCodeType error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType setGoHomeAltitudeSync(GoHomeHeight altitude,
                                                  int timeout);
 
-  /*! @brief Set go home altitude, non-blocking calls
+  /*! @brief Set go home altitude, non-blocking calls.
    *
    *  @note If aircraft's current altitude is higher than the setting value of
    * go home altitude, aircraft will go home using current altitude. Otherwise,
@@ -125,8 +125,8 @@ class FlightController {
    * MAX_FLIGHT_HEIGHT.
    * @param altitude go home altitude settings, unit: meter
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode the OSDK ErrorCode::ErrorCodeType error code
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b retCode ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to transfer userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -135,21 +135,21 @@ class FlightController {
       void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
       UserData userData);
 
-  /*! @brief Get go home altitude, blocking calls
+  /*! @brief Get go home altitude, blocking calls.
    *
    *  @param altitude go home altitude
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK ErrorCode::ErrorCodeType error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType getGoHomeAltitudeSync(GoHomeHeight &altitude,
                                                  int timeout);
 
-  /*! @brief Get go home altitude, non-blocking calls
+  /*! @brief Get go home altitude, non-blocking calls.
    *
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode the OSDK ErrorCode::ErrorCodeType error code
+   *  @arg @b retCode ErrorCode::ErrorCodeType error code
    *  @arg @b altitude go home altitude
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b userData the interface to transfer userData in when the callback is
    *  called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -158,84 +158,80 @@ class FlightController {
                            GoHomeHeight altitude, UserData userData),
       UserData userData);
 
-  /*! @brief Set customized home location, blocking calls
+  /*! @brief Set customized home location, blocking calls.
    *
    *  @note  Set customized home location failed reason may as follows:
-   *  1 The distance between new home location and last home location is larger
+   *  1. The distance between new home location and last home location is larger
    * than MAX_FLY_RADIUS(20km).
-   *  2 Set init home location failed after start aircraft.
+   *  2. Set init home location failed after start aircraft.
    *  @param homeLocation HomeLocation include latitude and longitude
    *  @param timeout blocking timeout in seconds
-   *  @return  OSDK ErrorCode::ErrorCodeType error code
+   *  @return  ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType setHomeLocationSync(HomeLocation homeLocation,
                                                int timeout);
 
-  /*! @brief Set customized home location, non-blocking calls
+  /*! @brief Set customized home location, non-blocking calls.
    *
    *  @note  Set customized home location failed reasons may as follows:
    *  1. The distance between new home location and last home location is larger
    * than MAX_FLY_RADIUS(20km)
-   *  2 Set init home location failed after start aircraft.
+   *  2. Set init home location failed after start aircraft.
    *  @param homeLocation  HomeLocation include latitude and longitude
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode the OSDK ErrorCode::ErrorCodeType error code
+   *  @arg @b retCode ErrorCode::ErrorCodeType error code
    *  @arg @b userData the interface to transfer userData in when the callback
    * is called
-   *  @param when UserCallBack is called, used in UserCallBack
+   *  @param userData when UserCallBack is called, used in UserCallBack
    */
   void setHomeLocationAsync(
       HomeLocation homeLocation,
       void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
       UserData userData);
 
-  /*! @brief Set home location using current aircraft location, blocking calls
+  /*! @brief Set home location using current aircraft location, blocking calls.
    *
    *  @note  Set home location failed reasons may as follows:
    *  1. Aircraft's gps level can't reach the condition of recording home
    * location.
-   *  2. There's no init home location before you set.
-   *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode the OSDK ErrorCode::ErrorCodeType error code
-   *  @arg @b userData the interface to transfer userData in when the callback
-   * is called
-   *  @param when UserCallBack is called, used in UserCallBack
+   *  2. Set init home location failed after start aircraft.
+   *  @param timeout blocking timeout in seconds
    */
   ErrorCode::ErrorCodeType setHomeLocationUsingCurrentAircraftLocationSync(
       int timeout);
 
   /*! @brief Set home location using current aircraft location, non-blocking
-   * calls
+   * calls.
    *
    *  @note  Set home location failed reasons may as follows:
    *  1. Aircraft's gps level can't reach the condition of recording home
    * location.
    *  2. There's no init home location before you set.
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode the OSDK ErrorCode::ErrorCodeType error code
+   *  @arg @b retCode ErrorCode::ErrorCodeType error code
    *  @arg @b userData the interface to transfer userData in when the callback
    * is called
-   *  @param when UserCallBack is called, used in UserCallBack
+   *  @param userData when UserCallBack is called, used in UserCallBack
    */
   void setHomeLocationUsingCurrentAircraftLocationAsync(
       void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
       UserData userData);
 
-  /*! @brief Set collision avoidance enable or disable, blocking calls
+  /*! @brief Set collision avoidance enable or disable, blocking calls.
    *
    *  @param collisionAvoidanceSwitch reference in CollisionAvoidanceSwitch
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK ErrorCode::ErrorCodeType error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType setCollisionAvoidanceEnabledSync(
       CollisionAvoidanceSwitch collisionAvoidanceSwitch, int timeout);
 
-  /*! @brief Set collision avoidance enable or disable, non-blocking calls
+  /*! @brief Set collision avoidance enable or disable, non-blocking calls.
    *
    *  @param collisionAvoidanceSwitch reference in CollisionAvoidanceSwitch
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode  OSDK ErrorCode::ErrorCodeType error code
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b retCode  ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to transfer userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -244,17 +240,17 @@ class FlightController {
       void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
       UserData userData);
 
-  /*! @brief Wrapper function for aircraft takeoff, blocking calls
+  /*! @brief Wrapper function for aircraft takeoff, blocking calls.
    *
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK ErrorCode::ErrorCodeType error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType startTakeoffSync(int timeout);
 
-  /*! @brief Wrapper function for aircraft takeoff, non-blocking calls
+  /*! @brief Wrapper function for aircraft takeoff, non-blocking calls.
    *
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK ErrorCode::ErrorCodeType error code
+   *  @arg @b retCode ErrorCode::ErrorCodeType error code
    *  @arg @b userData the interface to transfer userData in when the callback
    *  is called
    *  @param userData when UserCallBack is called, used in UserCallBack
@@ -263,23 +259,23 @@ class FlightController {
                                               UserData userData),
                          UserData userData);
 
-  /*! @brief Wrapper function for aircraft force landing, blocking calls
+  /*! @brief Wrapper function for aircraft force landing, blocking calls.
    *
-   *  @note this api will ignore the smart landing function, when use this
-   * function api, it will landing directly (would not stop at 0.7m and wait
+   *  @note This api will ignore the smart landing function, when use this
+   *  api, it will landing directly (would not stop at 0.7m and wait
    * user's  command),it may make the aircraft crash.
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK ErrorCode::ErrorCodeType error code
+   *  @return  ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType startForceLandingSync(int timeout);
 
-  /*! @brief Wrapper function for aircraft force landing, non-blocking calls
+  /*! @brief Wrapper function for aircraft force landing, non-blocking calls.
    *
    *  @note This api will ignore the smart landing function, when use this
-   * api landing, it will landing directly (would not stop at 0.7m and wait
+   * api, it will landing directly (would not stop at 0.7m and wait
    * user's  command),it may make the aircraft crash.
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK ErrorCode::ErrorCodeType error code
+   *  @arg @b retCode ErrorCode::ErrorCodeType error code
    *  @arg @b userData the interface to transfer userData in when the callback
    *  is called
    *  @param userData when UserCallBack is called, used in UserCallBack
@@ -289,19 +285,19 @@ class FlightController {
       UserData userData);
 
   /*! @brief Wrapper function for  aircraft confirm landing and avoid ground,
-   * blocking calls
+   * blocking calls.
    *
    *  @note When the clearance between the aircraft and the ground is less than
    * 0.7m, the aircraft will pause landing and wait for user's confirmation.This
    * api use for confirm landing. If the ground is not suitable for landing
    *  ,user must use RC to control it landing manually or force landing.
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK ErrorCode::ErrorCodeType error code
+   *  @return  ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType startConfirmLandingSync(int timeout);
 
   /*! @brief Wrapper function for  aircraft confirm landing and avoid ground,
-   * non-blocking calls
+   * non-blocking calls.
    *
    *
    *  @note When the clearance between the aircraft and the ground is less than
@@ -309,7 +305,7 @@ class FlightController {
    * api use for confirm landing. If the ground is not suitable for landing
    *  ,user must use RC to control it landing manually or force landing.
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK ErrorCode::ErrorCodeType error code
+   *  @arg @b retCode ErrorCode::ErrorCodeType error code
    *  @arg @b userData the interface to transfer userData in when the callback
    * is called
    *  @param userData when UserCallBack is called, used in UserCallBack
@@ -318,17 +314,17 @@ class FlightController {
       void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
       UserData userData);
 
-  /*! @brief Wrapper function for  go home action, blocking calls
+  /*! @brief Wrapper function for  go home action, blocking calls.
    *
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK ErrorCode::ErrorCodeType error code
+   *  @return  ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType startGoHomeSync(int timeout);
 
-  /*! @brief Wrapper function for  go home action, non-blocking calls
+  /*! @brief Wrapper function for  go home action, non-blocking calls.
    *
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK ErrorCode::ErrorCodeType error code
+   *  @arg @b retCode ErrorCode::ErrorCodeType error code
    *  @arg @b userData the interface to transfer userData in when the callback
    * is called
    *  @param userData when UserCallBack is called, used in UserCallBack
