@@ -640,17 +640,18 @@ class ErrorCode {
       const static uint16_t SUCCESS;
     } KillSwitch;
 
-    typedef struct ParamReadWrite
+    enum ParamReadWrite : RawRetCodeType
     {
-      static const RawRetCodeType SUCCESS;
-      static const RawRetCodeType FAIL;
-    }ParamReadWrite;
+      PARAM_READ_WRITE_SUCCESS = 0,
+      PARAM_READ_WRITE_FAIL = 1,
+      PARAM_READ_WRITE_INVALID_PARAMETER = 2,
+    };
 
-    typedef struct SetHomeLocation
+    enum SetHomeLocation : RawRetCodeType
     {
-      static const RawRetCodeType SUCCESS;
-      static const RawRetCodeType FAIL;
-    }SetHomeLocation;
+      SET_HOME_LOCATION_SUCCESS = 0,
+      SET_HOME_LOCATION_FAIL = 1,
+    };
 
   }; // Control class
   
