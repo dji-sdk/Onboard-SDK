@@ -128,7 +128,9 @@ void FlightController::getGoHomeAltitudeAsync(
 ErrorCode::ErrorCodeType FlightController::setCollisionAvoidanceEnabledSync(
     CollisionAvoidanceSwitch collisionAvoidanceSwitch, int timeout) {
   if (flightAssistant) {
-    FlightAssistant::AvoidObstacleData avoidObstacle = {0};
+    uint8_t avoidObstacleData = 0xFF;
+    FlightAssistant::AvoidObstacleData avoidObstacle;
+    memcpy(&avoidObstacle,&avoidObstacleData,sizeof(uint8_t));
     avoidObstacle.activeAvoidFlag = collisionAvoidanceSwitch;
     return flightAssistant->setAvoidObstacleSwitchSync(avoidObstacle, timeout);
   } else
@@ -140,7 +142,9 @@ void FlightController::setCollisionAvoidanceEnabledAsync(
     void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
   if (flightAssistant) {
-    FlightAssistant::AvoidObstacleData avoidObstacle = {0};
+    uint8_t avoidObstacleData = 0xFF;
+    FlightAssistant::AvoidObstacleData avoidObstacle;
+    memcpy(&avoidObstacle,&avoidObstacleData,sizeof(uint8_t));
     avoidObstacle.activeAvoidFlag = collisionAvoidanceSwitch;
     flightAssistant->setAvoidObstacleSwitchAsync(avoidObstacle, UserCallBack,
                                                  userData);
