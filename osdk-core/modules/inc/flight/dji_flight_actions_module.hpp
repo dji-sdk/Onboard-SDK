@@ -41,13 +41,12 @@ class FlightActions {
   ~FlightActions();
 
  public:
-
   /*! @brief Basic flight control commands
    */
   enum FlightCommand : uint8_t {
-    TAKE_OFF = 1,                    /*!< vehicle takeoff*/
-    GO_HOME = 6,                     /*!< vehicle return home position*/
-    FORCE_LANDING_AVOID_GROUND = 30, /*!< force landing and avoid ground*/
+    TAKE_OFF = 1,                    /*!< vehicle takeoff */
+    GO_HOME = 6,                     /*!< vehicle return home position */
+    FORCE_LANDING_AVOID_GROUND = 30, /*!< confirm landing */
     FORCE_LANDING = 31,              /*!< force landing */
   };
 
@@ -87,4 +86,4 @@ class FlightActions {
 }
 }
 
-#endif  //DJI_FLIGHT_ACTIONS_MODULE_HPP
+#endif  // DJI_FLIGHT_ACTIONS_MODULE_HPP

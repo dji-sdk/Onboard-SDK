@@ -97,12 +97,12 @@ ErrorCode::ErrorCodeType setGoHomeAltitude(
  */
 ErrorCode::ErrorCodeType setNewHomeLocation(Vehicle *vehicle, int timeout = 1);
 
-/*! @brief Sample to go home, landing and force landing avoid ground
+/*! @brief Sample to go home, landing and confirm landing
  *
  *  @param vehicle Vehicle pointer
  *  @param timeout timeout
  *  @return result:true:success, false:fail
  */
-bool goHomeAndForceLanding(Vehicle* vehicle, int timeout = 1);
+bool goHomeAndConfirmLanding(Vehicle *vehicle, int timeout = 1);
 
 #endif  // DJIOSDK_FLIGHT_SAMPLE_HPP
