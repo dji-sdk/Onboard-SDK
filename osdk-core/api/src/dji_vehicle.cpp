@@ -1960,7 +1960,8 @@ Vehicle::PushDataHandler(void* eventData)
       for(int i = 0; i < PAYLOAD_INDEX_CNT; i++)
       {
         VehicleCallBackHandler
-            *handler = psdkManager->getSubscribeHandler((PayloadIndexType) i);
+            *handler =
+          psdkManager->getSubscribeWidgetValuesHandler((PayloadIndexType) i);
         if (handler && handler->callback) {
           if (threadSupported) {
             DDEBUG("Received value data from payload widget\n");
@@ -1975,7 +1976,6 @@ Vehicle::PushDataHandler(void* eventData)
         }
       }
     }
-
   }
   else if (memcmp(cmd, OpenProtocolCMD::CMDSet::Broadcast::fromPayload,
                   sizeof(cmd)) == 0)
@@ -1993,7 +1993,28 @@ Vehicle::PushDataHandler(void* eventData)
         }
       }
     }
-
+    /*! @TODO The decoding of psdk commonication data supports only one psdk device.
+     * So don't initialize two psdk device in the same time */
+    if (psdkManager) {
+      for(int i = 0; i < PAYLOAD_INDEX_CNT; i++)
+      {
+        VehicleCallBackHandler
+          *handler =
+          psdkManager->getCommunicationHandler((PayloadIndexType) i);
+        if (handler && handler->callback) {
+          if (threadSupported) {
+            DDEBUG("Received commonication data from PSDK\n");
+            protocolLayer->getThreadHandle()->lockNonBlockCBAck();
+            this->circularBuffer->cbPush(this->circularBuffer,
+                                         *handler, *pushDataEntry);
+            protocolLayer->getThreadHandle()->freeNonBlockCBAck();
+          } else {
+            handler->callback(this, *(pushDataEntry),
+                              handler->userData);
+          }
+        }
+      }
+    }
   }
   else if (memcmp(cmd, OpenProtocolCMD::CMDSet::Broadcast::mission,
                   sizeof(cmd)) == 0)

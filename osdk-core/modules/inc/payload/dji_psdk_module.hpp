@@ -43,6 +43,8 @@ class PSDKModule : public PayloadBase {
     FUNCTION_SET_PSDK_1_0_WIDGET_VALUE = 70,
   };
   const static uint8_t psdkWidgetMaxCount = 30;
+  const static uint16_t MAX_SIZE_OF_PACKAGE = 255;
+
   enum PayloadWidgetType {
     BUTTON = 1, /*!<  Button widget could return the widget value of 1 or 0,
                    normally it's widget value is 0, when the button is being
@@ -98,6 +100,15 @@ class PSDKModule : public PayloadBase {
     UserData userData;
   } PSDKWidgetValuesUserHandler;
 
+  typedef void (*PSDKCommunicationUserCallback)(uint8_t *dataBuf,
+                                                uint16_t dataLen,
+                                                UserData userData);
+
+  typedef struct PSDKCommonicationUserHandler {
+    PSDKCommunicationUserCallback callback;
+    UserData userData;
+  } PSDKCommonicationUserHandler;
+
  public:
   PSDKModule(PayloadLink *payloadLink, PayloadIndexType payloadIndex,
              std::string name, bool enable);
@@ -139,21 +150,53 @@ class PSDKModule : public PayloadBase {
    *  @param userData the userData to be called by cb
    *  @return OSDK unitified error code
    */
-  ErrorCode::ErrorCodeType subscribePSDKWidgetMsgs(
-      PSDKWidgetValuesUserCallback cb, void *userData);
+  ErrorCode::ErrorCodeType subscribePSDKWidgetValues(
+      PSDKWidgetValuesUserCallback cb, UserData userData);
 
   /*! @brief Sample to disable the callback for widget values, non-blocking
    *
    *  @return OSDK unitified error code
    */
-  ErrorCode::ErrorCodeType unsubscribeNMEAMsgs();
+  ErrorCode::ErrorCodeType unsubscribeWidgetValues();
 
   /*! @brief used in internal to do suhscribing task for PSDK widget
    *
    *  @return handler including callback and userdata to do psdk widget
    *  subscription related deocding.
    */
-  VehicleCallBackHandler *getSubscribeHandler();
+  VehicleCallBackHandler *getSubscribeWidgetValuesHandler();
+
+  /*! @brief Sample to set the callback for PSDK commonication data,
+   * non-blocking
+   *
+   *  @param cb the callback to catch the communication data from PSDK.
+   *  @param userData the userData to be called by cb
+   *  @return OSDK unitified error code
+   */
+  ErrorCode::ErrorCodeType subscribePSDKCommonication(
+      PSDKCommunicationUserCallback cb, UserData userData);
+
+  /*! @brief Sample to disable the callback for PSDK commonication data,
+   * non-blocking
+   *
+   *  @return OSDK unitified error code
+   */
+  ErrorCode::ErrorCodeType unsubscribePSDKCommonication();
+
+  /*! @brief used in internal to do suhscribing task for PSDK commonication data
+   *
+   *  @return handler including callback and userdata to do PSDK commonication
+   * data subscription related deocding.
+   */
+  VehicleCallBackHandler *getCommunicationHandler();
+
+  /*! @brief sending data from OSDK to PSDK
+   *
+   *  @param data sent data
+   *  @param len length of data
+   *  @return OSDK unitified error code
+   */
+  ErrorCode::ErrorCodeType sendDataToPSDK(uint8_t *data, uint16_t len);
 
  private:
   static const int maxSize = 32;
@@ -164,8 +207,14 @@ class PSDKModule : public PayloadBase {
    * package */
   VehicleCallBackHandler psdkWidgetValuesDecodeHandler;
 
+  /*! @brief handler to decoding the communication data from raw data package */
+  VehicleCallBackHandler psdkCommonicationDecodeHandler;
+
   /*! @brief handler to export widget values to user */
   PSDKWidgetValuesUserHandler psdkWidgetValuesUserHandler;
+
+  /*! @brief handler to export commonication data to user */
+  PSDKCommonicationUserHandler psdkCommonicationUserHandler;
 
   /*! @brief struct type used to temporarily stash the handler in the async
    * process */
@@ -187,6 +236,10 @@ class PSDKModule : public PayloadBase {
 
   static void PSDKSetWidgetDecoder(Vehicle *vehicle, RecvContainer recvFrame,
                                    UCBRetCodeHandler *ucb);
+
+  static void commonicationDataDecoder(Vehicle *vehicle,
+                                       RecvContainer recvFrame,
+                                       UserData userData);
 }; /* PSDKModule camera */
 }  // namespace OSDK
 }  // namespace DJI

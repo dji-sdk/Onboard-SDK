@@ -39,7 +39,8 @@ void PSDKModule::widgetValueDecoder(Vehicle *vehicle, RecvContainer recvFrame,
   PSDKWidgetValuesData *widgetsData =
       (PSDKWidgetValuesData *)recvFrame.recvData.raw_ack_array;
 
-  if ((rawDataLen >= 2) && (widgetsData->widgetLocalCount <= psdkWidgetMaxCount) &&
+  if ((rawDataLen >= 2) &&
+      (widgetsData->widgetLocalCount <= psdkWidgetMaxCount) &&
       ((rawDataLen - 2) >=
        widgetsData->widgetLocalCount * sizeof(PSDKWidgetInfo))) {
     DDEBUG("widget count: (%d/%d)", widgetsData->widgetLocalCount,
@@ -54,8 +55,29 @@ void PSDKModule::widgetValueDecoder(Vehicle *vehicle, RecvContainer recvFrame,
       if (module->psdkWidgetValuesUserHandler.callback)
         module->psdkWidgetValuesUserHandler.callback(
             widgets, module->psdkWidgetValuesUserHandler.userData);
+    } else {
+      DERROR("userData is not a valid value");
+      return;
     }
   } else {
+    DERROR("Received wrong data length.");
+    return;
+  }
+}
+
+void PSDKModule::commonicationDataDecoder(Vehicle *vehicle,
+                                          RecvContainer recvFrame,
+                                          UserData userData) {
+  uint16_t rawDataLen = recvFrame.recvInfo.len - OpenProtocol::PackageMin;
+  uint8_t *rawDataBuf = recvFrame.recvData.raw_ack_array;
+  if (userData) {
+    PSDKModule *module = (PSDKModule *)userData;
+    if (module->psdkCommonicationUserHandler.callback)
+      module->psdkCommonicationUserHandler.callback(
+          rawDataBuf, rawDataLen,
+          module->psdkCommonicationUserHandler.userData);
+  } else {
+    DERROR("userData is not a valid value");
     return;
   }
 }
@@ -65,6 +87,8 @@ PSDKModule::PSDKModule(PayloadLink *payloadLink, PayloadIndexType payloadIndex,
     : PayloadBase(payloadIndex, name, enable), payloadLink(payloadLink) {
   psdkWidgetValuesDecodeHandler.callback = widgetValueDecoder;
   psdkWidgetValuesDecodeHandler.userData = this;
+  psdkCommonicationDecodeHandler.callback = commonicationDataDecoder;
+  psdkCommonicationDecodeHandler.userData = this;
 }
 
 PSDKModule::~PSDKModule() {}
@@ -156,8 +180,8 @@ void PSDKModule::configureWidgetValueAsync(
   }
 }
 
-ErrorCode::ErrorCodeType PSDKModule::subscribePSDKWidgetMsgs(
-    PSDKWidgetValuesUserCallback cb, void *userData) {
+ErrorCode::ErrorCodeType PSDKModule::subscribePSDKWidgetValues(
+    PSDKWidgetValuesUserCallback cb, UserData userData) {
   if (!getEnable()) {
     DERROR(
         "PSDK module [%d] is not initialized, this function is not supported "
@@ -174,7 +198,7 @@ ErrorCode::ErrorCodeType PSDKModule::subscribePSDKWidgetMsgs(
   return ErrorCode::SysCommonErr::Success;
 }
 
-ErrorCode::ErrorCodeType PSDKModule::unsubscribeNMEAMsgs() {
+ErrorCode::ErrorCodeType PSDKModule::unsubscribeWidgetValues() {
   if (!getEnable()) {
     DERROR(
         "PSDK module [%d] is not initialized, this function is not supported "
@@ -187,6 +211,55 @@ ErrorCode::ErrorCodeType PSDKModule::unsubscribeNMEAMsgs() {
   return ErrorCode::SysCommonErr::Success;
 }
 
-VehicleCallBackHandler *PSDKModule::getSubscribeHandler() {
+VehicleCallBackHandler *PSDKModule::getSubscribeWidgetValuesHandler() {
   return &psdkWidgetValuesDecodeHandler;
+}
+
+ErrorCode::ErrorCodeType PSDKModule::subscribePSDKCommonication(
+    PSDKModule::PSDKCommunicationUserCallback cb, UserData userData) {
+  if (!getEnable()) {
+    DERROR(
+        "PSDK module [%d] is not initialized, this function is not supported "
+        "now.",
+        this->getIndex());
+    return ErrorCode::SysCommonErr::ReqNotSupported;
+  }
+  if (!cb) {
+    DERROR("The user callback is null value.");
+    return ErrorCode::SysCommonErr::UserCallbackInvalid;
+  }
+  psdkCommonicationUserHandler.callback = cb;
+  psdkCommonicationUserHandler.userData = userData;
+  return ErrorCode::SysCommonErr::Success;
+}
+
+ErrorCode::ErrorCodeType PSDKModule::unsubscribePSDKCommonication() {
+  if (!getEnable()) {
+    DERROR(
+        "PSDK module [%d] is not initialized, this function is not supported "
+        "now.",
+        this->getIndex());
+    return ErrorCode::SysCommonErr::ReqNotSupported;
+  }
+  psdkCommonicationUserHandler.callback = 0;
+  psdkCommonicationUserHandler.userData = 0;
+  return ErrorCode::SysCommonErr::Success;
+}
+
+VehicleCallBackHandler *PSDKModule::getCommunicationHandler() {
+  return &psdkCommonicationDecodeHandler;
+}
+
+ErrorCode::ErrorCodeType PSDKModule::sendDataToPSDK(uint8_t *data,
+                                                    uint16_t len) {
+  if (!getEnable()) {
+    DERROR(
+        "PSDK module [%d] is not initialized, this function is not supported "
+        "now.",
+        this->getIndex());
+    return ErrorCode::SysCommonErr::ReqNotSupported;
+  }
+  if (len > MAX_SIZE_OF_PACKAGE) len = MAX_SIZE_OF_PACKAGE;
+  this->payloadLink->sendToPSDK(data, len);
+  return ErrorCode::SysCommonErr::Success;
 }

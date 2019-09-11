@@ -35,6 +35,8 @@
 namespace DJI {
 namespace OSDK {
 /*! @brief The manager of psdk module
+ * @details This class support the transparent communication and widget values
+ * modifying between OSDK and PSDK.
  */
 class PSDKManager {
  public:
@@ -54,7 +56,7 @@ class PSDKManager {
    *  @return OSDK unitified error code
    */
   ErrorCode::ErrorCodeType initPSDKModule(PayloadIndexType index,
-                                            const char *name);
+                                          const char *name);
 
   /*! @brief deinit the psdk module
    *  In the deinit, the psdk module will set name to be
@@ -78,7 +80,7 @@ class PSDKManager {
    *  @return OSDK unitified error code
    */
   ErrorCode::ErrorCodeType getPSDKModuleName(PayloadIndexType index,
-                                               std::string &name);
+                                             std::string &name);
 
   /*! @brief get the index of psdk module, searched by name
    *
@@ -87,8 +89,7 @@ class PSDKManager {
    * get fail, this parameter will no do any Assignment
    *  @return OSDK unitified error code
    */
-  ErrorCode::ErrorCodeType getPSDKModuleIndex(const char *name,
-                                                uint8_t &index);
+  ErrorCode::ErrorCodeType getPSDKModuleIndex(const char *name, uint8_t &index);
 
   /*! @brief get the enable status of psdk module, searched by index
    *
@@ -99,7 +100,7 @@ class PSDKManager {
    *  @return OSDK unitified error code
    */
   ErrorCode::ErrorCodeType getPSDKModuleEnable(PayloadIndexType index,
-                                                 bool &enable);
+                                               bool &enable);
 
  public:
   /*! @brief Sample to configure the value, blocking
@@ -113,9 +114,9 @@ class PSDKManager {
    *  @param timeout timeout time in seconds to request
    *  @return OSDK unitified error code
    */
-  ErrorCode::ErrorCodeType configureWidgetValueSync(PayloadIndexType index, uint8_t widgetIndex,
-                                                    PSDKModule::PayloadWidgetType widgetType,
-                                                    int widgetValue, int timeout);
+  ErrorCode::ErrorCodeType configureWidgetValueSync(
+      PayloadIndexType index, uint8_t widgetIndex,
+      PSDKModule::PayloadWidgetType widgetType, int widgetValue, int timeout);
 
   /*! @brief Sample to configure the value, non-blocking
    *
@@ -129,7 +130,8 @@ class PSDKManager {
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
   void configureWidgetValueAsync(
-      PayloadIndexType index, uint8_t widgetIndex, PSDKModule::PayloadWidgetType widgetType, int widgetValue,
+      PayloadIndexType index, uint8_t widgetIndex,
+      PSDKModule::PayloadWidgetType widgetType, int widgetValue,
       void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
       UserData userData);
 
@@ -143,7 +145,9 @@ class PSDKManager {
    *  @param userData the userData to be called by cb
    *  @return OSDK unitified error code
    */
-  ErrorCode::ErrorCodeType subscribePSDKWidgetMsgs(PayloadIndexType index, PSDKModule::PSDKWidgetValuesUserCallback cb, void *userData);
+  ErrorCode::ErrorCodeType subscribePSDKWidgetValues(
+      PayloadIndexType index, PSDKModule::PSDKWidgetValuesUserCallback cb,
+      UserData userData);
 
   /*! @brief Sample to disable the callback for widget values, non-blocking
    *
@@ -151,7 +155,7 @@ class PSDKManager {
    * DJI::OSDK::PayloadIndexType
    *  @return OSDK unitified error code
    */
-  ErrorCode::ErrorCodeType unsubscribeNMEAMsgs(PayloadIndexType index);
+  ErrorCode::ErrorCodeType unsubscribeWidgetValues(PayloadIndexType index);
 
   /*! @brief used in internal to do suhscribing task for PSDK widget
    *  @param index payload node index, input limit see enum
@@ -159,7 +163,50 @@ class PSDKManager {
    *  @return handler including callback and userdata to do psdk widget
    *  subscription related deocding.
    */
-  VehicleCallBackHandler *getSubscribeHandler(PayloadIndexType index);
+  VehicleCallBackHandler *getSubscribeWidgetValuesHandler(
+      PayloadIndexType index);
+
+  /*! @brief Sample to set the callback for PSDK commonication data,
+   * non-blocking
+   *
+   *  @param index payload node index, input limit see enum
+   * DJI::OSDK::PayloadIndexType
+   *  @param cb the callback to catch the communication data from PSDK.
+   *  @param userData the userData to be called by cb
+   *  @return OSDK unitified error code
+   */
+  ErrorCode::ErrorCodeType subscribePSDKCommonication(
+      PayloadIndexType index, PSDKModule::PSDKCommunicationUserCallback cb,
+      UserData userData);
+
+  /*! @brief Sample to disable the callback for PSDK commonication data,
+   * non-blocking
+   *
+   *  @param index payload node index, input limit see enum
+   * DJI::OSDK::PayloadIndexType
+   *  @return OSDK unitified error code
+   */
+  ErrorCode::ErrorCodeType unsubscribePSDKCommonication(PayloadIndexType index);
+
+  /*! @brief used in internal to do suhscribing task for PSDK commonication data
+   *
+   *  @param index payload node index, input limit see enum
+   * DJI::OSDK::PayloadIndexType
+   *  @return handler including callback and userdata to do PSDK commonication
+   * data subscription related deocding.
+   */
+  VehicleCallBackHandler *getCommunicationHandler(PayloadIndexType index);
+
+  /*! @brief sending data from OSDK to PSDK
+   *
+   *  @param index payload node index, input limit see enum
+   * DJI::OSDK::PayloadIndexType
+   *  @param data sent data
+   *  @param len length of data
+   *  @return OSDK unitified error code
+   */
+  ErrorCode::ErrorCodeType sendDataToPSDK(PayloadIndexType index, uint8_t *data,
+                                          uint16_t len);
 
  private:
   PayloadLink *payloadLink;

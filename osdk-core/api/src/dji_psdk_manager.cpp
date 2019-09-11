@@ -34,8 +34,8 @@ using namespace DJI::OSDK;
 PSDKManager::PSDKManager(Vehicle *vehiclePtr) {
   payloadLink = new PayloadLink(vehiclePtr);
   for (int index = PAYLOAD_INDEX_0; index < PAYLOAD_INDEX_CNT; index++) {
-    PSDKModule *module = new PSDKModule(
-        payloadLink, (PayloadIndexType) index, defaultPSDKName, false);
+    PSDKModule *module = new PSDKModule(payloadLink, (PayloadIndexType)index,
+                                        defaultPSDKName, false);
     psdkModuleVector.push_back(module);
   }
 }
@@ -81,8 +81,7 @@ ErrorCode::ErrorCodeType PSDKManager::initPSDKModule(PayloadIndexType index,
   }
 }
 
-ErrorCode::ErrorCodeType PSDKManager::deinitPSDKModule(
-    PayloadIndexType index) {
+ErrorCode::ErrorCodeType PSDKManager::deinitPSDKModule(PayloadIndexType index) {
   /* @TODO lock protest psdkMgr */
   PSDKModule *psdkMgr = getPSDKModule(index);
   if (psdkMgr) {
@@ -101,8 +100,8 @@ void PSDKManager::deinitAllPSDKModule() {
   }
 }
 
-ErrorCode::ErrorCodeType PSDKManager::getPSDKModuleName(
-    PayloadIndexType index, std::string &name) {
+ErrorCode::ErrorCodeType PSDKManager::getPSDKModuleName(PayloadIndexType index,
+                                                        std::string &name) {
   PSDKModule *psdkMgr = getPSDKModule(index);
   if (psdkMgr) {
     name = psdkMgr->getName();
@@ -134,53 +133,102 @@ ErrorCode::ErrorCodeType PSDKManager::getPSDKModuleEnable(
   }
 }
 
-ErrorCode::ErrorCodeType PSDKManager::configureWidgetValueSync(PayloadIndexType index, uint8_t widgetIndex,
-                                                  PSDKModule::PayloadWidgetType widgetType,
-                                                  int widgetValue, int timeout) {
-  PSDKModule* psdkMgr = getPSDKModule(index);
+ErrorCode::ErrorCodeType PSDKManager::configureWidgetValueSync(
+    PayloadIndexType index, uint8_t widgetIndex,
+    PSDKModule::PayloadWidgetType widgetType, int widgetValue, int timeout) {
+  PSDKModule *psdkMgr = getPSDKModule(index);
   if (psdkMgr) {
-    return psdkMgr->configureWidgetValueSync(widgetIndex, widgetType, widgetValue, timeout);
+    return psdkMgr->configureWidgetValueSync(widgetIndex, widgetType,
+                                             widgetValue, timeout);
   } else {
     return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
 
 void PSDKManager::configureWidgetValueAsync(
-    PayloadIndexType index, uint8_t widgetIndex, PSDKModule::PayloadWidgetType widgetType, int widgetValue,
+    PayloadIndexType index, uint8_t widgetIndex,
+    PSDKModule::PayloadWidgetType widgetType, int widgetValue,
     void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
-  PSDKModule* psdkMgr = getPSDKModule(index);
+  PSDKModule *psdkMgr = getPSDKModule(index);
   if (psdkMgr) {
-    psdkMgr->configureWidgetValueAsync(widgetIndex, widgetType, widgetValue, UserCallBack, userData);
+    psdkMgr->configureWidgetValueAsync(widgetIndex, widgetType, widgetValue,
+                                       UserCallBack, userData);
   } else {
     if (UserCallBack)
       UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
   }
 }
 
-ErrorCode::ErrorCodeType PSDKManager::subscribePSDKWidgetMsgs(PayloadIndexType index,  PSDKModule::PSDKWidgetValuesUserCallback cb, void *userData) {
-  PSDKModule* psdkMgr = getPSDKModule(index);
+ErrorCode::ErrorCodeType PSDKManager::subscribePSDKWidgetValues(
+    PayloadIndexType index, PSDKModule::PSDKWidgetValuesUserCallback cb,
+    UserData userData) {
+  PSDKModule *psdkMgr = getPSDKModule(index);
   if (psdkMgr) {
-    return psdkMgr->subscribePSDKWidgetMsgs(cb, userData);
+    return psdkMgr->subscribePSDKWidgetValues(cb, userData);
   } else {
     return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
 
-ErrorCode::ErrorCodeType PSDKManager::unsubscribeNMEAMsgs(PayloadIndexType index) {
-  PSDKModule* psdkMgr = getPSDKModule(index);
+ErrorCode::ErrorCodeType PSDKManager::unsubscribeWidgetValues(
+    PayloadIndexType index) {
+  PSDKModule *psdkMgr = getPSDKModule(index);
   if (psdkMgr) {
-    return psdkMgr->unsubscribeNMEAMsgs();
+    return psdkMgr->unsubscribeWidgetValues();
   } else {
     return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
 
-VehicleCallBackHandler *PSDKManager::getSubscribeHandler(PayloadIndexType index) {
-  PSDKModule* psdkMgr = getPSDKModule(index);
+VehicleCallBackHandler *PSDKManager::getSubscribeWidgetValuesHandler(
+    PayloadIndexType index) {
+  PSDKModule *psdkMgr = getPSDKModule(index);
   if (psdkMgr) {
-    return psdkMgr->getSubscribeHandler();
+    return psdkMgr->getSubscribeWidgetValuesHandler();
   } else {
     return NULL;
+  }
+}
+
+ErrorCode::ErrorCodeType PSDKManager::subscribePSDKCommonication(
+    PayloadIndexType index, PSDKModule::PSDKCommunicationUserCallback cb,
+    UserData userData) {
+  PSDKModule *psdkMgr = getPSDKModule(index);
+  if (psdkMgr) {
+    return psdkMgr->subscribePSDKCommonication(cb, userData);
+  } else {
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
+  }
+}
+
+ErrorCode::ErrorCodeType PSDKManager::unsubscribePSDKCommonication(
+    PayloadIndexType index) {
+  PSDKModule *psdkMgr = getPSDKModule(index);
+  if (psdkMgr) {
+    return psdkMgr->unsubscribePSDKCommonication();
+  } else {
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
+  }
+}
+
+VehicleCallBackHandler *PSDKManager::getCommunicationHandler(
+    PayloadIndexType index) {
+  PSDKModule *psdkMgr = getPSDKModule(index);
+  if (psdkMgr) {
+    return psdkMgr->getCommunicationHandler();
+  } else {
+    return NULL;
+  }
+}
+
+ErrorCode::ErrorCodeType PSDKManager::sendDataToPSDK(PayloadIndexType index,
+                                                     uint8_t *data,
+                                                     uint16_t len) {
+  PSDKModule *psdkMgr = getPSDKModule(index);
+  if (psdkMgr) {
+    return psdkMgr->sendDataToPSDK(data, len);
+  } else {
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }

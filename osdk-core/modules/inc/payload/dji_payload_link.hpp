@@ -57,6 +57,8 @@ class PayloadLink {
   ACK::ExtendedFunctionRsp *sendSync(const uint8_t cmd[], void *pdata,
                                      size_t len, int timeout);
 
+  void sendToPSDK(uint8_t *data, uint16_t len);
+
  public:
   Vehicle *getVehicle() const;
 
