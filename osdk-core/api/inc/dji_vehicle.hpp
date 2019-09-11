@@ -56,7 +56,7 @@
 #include "dji_payload_device.hpp"
 #include "dji_camera_manager.hpp"
 #include "dji_flight_controller.hpp"
-
+#include "dji_psdk_manager.hpp"
 #ifdef ADVANCED_SENSING
 #include "dji_advanced_sensing.hpp"
 #endif
@@ -127,7 +127,8 @@ public:
   VirtualRC* virtualRC;
   PayloadDevice*       payloadDevice;
   CameraManager*       cameraManager;
-  FlightController*     flightController;
+  FlightController*    flightController;
+  PSDKManager*         psdkManager;
 #ifdef ADVANCED_SENSING
   AdvancedSensing* advancedSensing;
 #endif
@@ -394,6 +395,7 @@ private:
   bool initPayloadDevice();
   bool initCameraManager();
   bool initFlightController();
+  bool initPSDKManager();
 #ifdef ADVANCED_SENSING
   bool initAdvancedSensing();
 #endif

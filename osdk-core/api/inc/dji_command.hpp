@@ -64,6 +64,7 @@ public:
       const static uint8_t test[MAX_CMD_ARRAY_SIZE];
       const static uint8_t waypoint[MAX_CMD_ARRAY_SIZE];
       const static uint8_t fromPayload[MAX_CMD_ARRAY_SIZE];
+      const static uint8_t psdkWidgetValue[MAX_CMD_ARRAY_SIZE];
     } Broadcast;
 
     typedef struct Control

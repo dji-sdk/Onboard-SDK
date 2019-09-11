@@ -64,6 +64,9 @@ const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Broadcast::subscribe[] = {
 const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Broadcast::fromPayload[] = {
   OpenProtocolCMD::CMDSet::broadcast, 0x06
 };
+const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Broadcast::psdkWidgetValue[] = {
+    OpenProtocolCMD::CMDSet::broadcast, 0x07
+};
 const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Broadcast::test[] = {
   OpenProtocolCMD::CMDSet::broadcast, 0xEF
 };
