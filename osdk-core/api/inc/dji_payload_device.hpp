@@ -29,6 +29,8 @@ namespace DJI
  * available
  * in the Payload SDK to have full functionality on both directions of the
  * pipeline.
+ * @deprecated This class is deprecated and replaced by
+ * DJI::OSDK::PSDKManager.
  */
     class PayloadDevice
     {
@@ -43,13 +45,10 @@ namespace DJI
       Vehicle* getVehicle() const;
       void setVehicle(Vehicle* value);
     public:
-      const static uint16_t   MAX_SIZE_OF_PACKAGE = 255;
+      const static uint16_t MAX_SIZE_OF_PACKAGE = 255;
     private:
       Vehicle* vehicle;
 
-      /*
-       * Communication
-       */
     public:
       /*!
        * @brief sending data from OSDK to PSDK

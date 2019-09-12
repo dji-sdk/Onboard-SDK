@@ -55,6 +55,16 @@ ACK::ExtendedFunctionRsp *PayloadLink::sendSync(const uint8_t cmd[],
                                                           timeout));
 }
 
+void PayloadLink::sendToPSDK(uint8_t *data, uint16_t len) {
+  if (!vehicle->getActivationStatus()) {
+    DERROR("The drone has not been activated");
+    return;
+  }
+  vehicle->protocolLayer->send(0, vehicle->getEncryption(),
+                               OpenProtocolCMD::CMDSet::Activation::toPayload,
+                               data, len, 500, 1, NULL, 0);
+}
+
 int PayloadLink::setCallback(void *callBack, UserData userData) {
   /*! @TODO The callback and userdata recording work should be implemented in
    * the protocol layer. It will be improved in OSDK 4.0. So here is the

@@ -55,7 +55,7 @@ void PayloadDevice::getDataFromPSDKCallback(Vehicle *vehiclePtr,
 
   if (recvFrame.recvInfo.len - OpenProtocol::PackageMin <= 100)
   {
-    DSTATUS("The len of received payload device data: %d\n", recvFrame.recvInfo.len);
+    DDEBUG("The len of received payload device data: %d\n", recvFrame.recvInfo.len);
   }
 }
 void PayloadDevice::setFromPSDKCallback(VehicleCallBack callback, UserData userData)

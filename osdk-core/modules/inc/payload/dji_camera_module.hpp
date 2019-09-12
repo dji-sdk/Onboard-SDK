@@ -1958,10 +1958,6 @@ class CameraModule : public PayloadBase {
       ErrorCode::ErrorCodeType retCode, CaptureParamData captureParam,
       UserData userData);
 
-  /*
-   * @TODO more decoder functions will be implemented later
-   */
-
   static const int maxSize = 32;
 
   UCBRetCodeHandler ucbHandler[maxSize];

@@ -153,9 +153,7 @@ ErrorCode::ErrorCodeType CameraModule::actionInterfaceSync(ReqT req,
 /*! @TODO Here is only the temporary way to alloc memory for the asynchronous
  * interface to stash the user data. This method will be optimized in the
  * future.
- * @Note There are 32 memory units for this method. So if the API calling
- * this method too fast, the memory units of this API may overflow. So the
- * calling frequency of releated APIs should less than 10Hz */
+ */
 CameraModule::UCBRetCodeHandler* CameraModule::allocUCBHandler(
     void* callback, UserData userData) {
   static int ucbHandlerIndex = 0;
@@ -686,9 +684,7 @@ typedef struct TapZoomEnabledHandler {
 /*! @TODO Here is only the temporary way to alloc memory for the asynchronous
  * interface to stash the user data. This method will be optimized in the
  * future.
- * @Note There are 32 memory units for this method. So if the API calling
- * this method too fast, the memory units of this API may overflow. So the
- * calling frequency of releated APIs should less than 10Hz */
+ */
 TapZoomEnabledHandler* allocTapZoomEnabledHandlerMemory() {
   const uint8_t maxNum = 32;
   static TapZoomEnabledHandler handler[maxNum] = {0};
@@ -1426,9 +1422,7 @@ typedef struct shootPhotoParamHandler {
 /*! @TODO Here is only the temporary way to alloc memory for the asynchronous
  * interface to stash the user data. This method will be optimized in the
  * future.
- * @Note There are 32 memory units for this method. So if the API calling
- * this method too fast, the memory units of this API may overflow. So the
- * calling frequency of releated APIs should less than 10Hz */
+ */
 shootPhotoParamHandler* allocShootPhotoParamHandlerMemory() {
   const uint8_t maxNum = 32;
   static shootPhotoParamHandler handler[maxNum] = {0};

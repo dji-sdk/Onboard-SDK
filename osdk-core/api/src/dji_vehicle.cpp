@@ -61,6 +61,7 @@ Vehicle::Vehicle(const char* device,
   , payloadDevice(NULL)
   , cameraManager(NULL)
   , flightController(NULL)
+  , psdkManager(NULL)
 {
   if (!device)
   {
@@ -93,6 +94,7 @@ Vehicle::Vehicle(bool threadSupport)
   , payloadDevice(NULL)
   , cameraManager(NULL)
   , flightController(NULL)
+  , psdkManager(NULL)
 {
   this->threadSupported = threadSupport;
   callbackId            = 0;
@@ -243,9 +245,15 @@ Vehicle::functionalSetUp()
 
   if (!initCameraManager())
   {
-    DERROR("Failed to initialize PayloadManger!\n");
+    DERROR("Failed to initialize PayloadManager!\n");
   }
-    if (!initMissionManager())
+
+  if (!initPSDKManager())
+  {
+    DERROR("Failed to initialize PSDKManager!\n");
+  }
+
+  if (!initMissionManager())
   {
     DERROR("Failed to initialize Mission Manager!\n");
     return 1;
@@ -411,6 +419,10 @@ Vehicle::~Vehicle()
   if (this->cameraManager)
   {
     delete this->cameraManager;
+  }
+  if (this->psdkManager)
+  {
+    delete this->psdkManager;
   }
   if (this->broadcast)
   {
@@ -1085,6 +1097,22 @@ bool Vehicle::initCameraManager()
   }
   this->cameraManager = new (std::nothrow) CameraManager(this);
   if (this->cameraManager == 0)
+  {
+    DERROR("Failed to allocate memory for pm!\n");
+    return false;
+  }
+  return true;
+}
+
+bool Vehicle::initPSDKManager()
+{
+  if(this->psdkManager)
+  {
+    DDEBUG("psdkManager already initalized!");
+    return true;
+  }
+  this->psdkManager = new (std::nothrow) PSDKManager(this);
+  if (this->psdkManager == 0)
   {
     DERROR("Failed to allocate memory for pm!\n");
     return false;
@@ -1923,7 +1951,32 @@ Vehicle::PushDataHandler(void* eventData)
     }
 
   }
-
+  else if (memcmp(cmd, OpenProtocolCMD::CMDSet::Broadcast::psdkWidgetValue,
+                  sizeof(cmd)) == 0)
+  {
+    /*! @TODO The decoding of psdk widget values supports only one psdk device.
+     * So don't initialize two psdk device in the same time */
+    if (psdkManager) {
+      for(int i = 0; i < PAYLOAD_INDEX_CNT; i++)
+      {
+        VehicleCallBackHandler
+            *handler =
+          psdkManager->getSubscribeWidgetValuesHandler((PayloadIndexType) i);
+        if (handler && handler->callback) {
+          if (threadSupported) {
+            DDEBUG("Received value data from payload widget\n");
+            protocolLayer->getThreadHandle()->lockNonBlockCBAck();
+            this->circularBuffer->cbPush(this->circularBuffer,
+                                         *handler, *pushDataEntry);
+            protocolLayer->getThreadHandle()->freeNonBlockCBAck();
+          } else {
+            handler->callback(this, *(pushDataEntry),
+                              handler->userData);
+          }
+        }
+      }
+    }
+  }
   else if (memcmp(cmd, OpenProtocolCMD::CMDSet::Broadcast::fromPayload,
                   sizeof(cmd)) == 0)
   {
@@ -1940,7 +1993,28 @@ Vehicle::PushDataHandler(void* eventData)
         }
       }
     }
-
+    /*! @TODO The decoding of psdk commonication data supports only one psdk device.
+     * So don't initialize two psdk device in the same time */
+    if (psdkManager) {
+      for(int i = 0; i < PAYLOAD_INDEX_CNT; i++)
+      {
+        VehicleCallBackHandler
+          *handler =
+          psdkManager->getCommunicationHandler((PayloadIndexType) i);
+        if (handler && handler->callback) {
+          if (threadSupported) {
+            DDEBUG("Received commonication data from PSDK\n");
+            protocolLayer->getThreadHandle()->lockNonBlockCBAck();
+            this->circularBuffer->cbPush(this->circularBuffer,
+                                         *handler, *pushDataEntry);
+            protocolLayer->getThreadHandle()->freeNonBlockCBAck();
+          } else {
+            handler->callback(this, *(pushDataEntry),
+                              handler->userData);
+          }
+        }
+      }
+    }
   }
   else if (memcmp(cmd, OpenProtocolCMD::CMDSet::Broadcast::mission,
                   sizeof(cmd)) == 0)

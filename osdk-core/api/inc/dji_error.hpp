@@ -36,7 +36,6 @@
 #endif
 #include <dji_macros.hpp>
 #include <map>
-#include <string>
 
 namespace DJI {
 namespace OSDK {
@@ -108,6 +107,12 @@ class ErrorCode {
     CameraCommon = 0,
   };
 
+  /*! @brief Function ID used with PSDKModule in error codes
+   */
+  enum PSDKFunctionID {
+    PSDKCommon = 0,
+  };
+
   enum SYSTEM_ERROR_RAW_CODE {
     Success              = 0x00000000, /*!< Execute successfully */
     AllocMemoryFailed    = 0x00000001, /*!< Out of memory */
@@ -115,6 +120,7 @@ class ErrorCode {
     Timeout              = 0x00000003, /*!< Execute timeout */
     UnpackDataMismatch   = 0x00000004, /*!< Pack unpack failed */
     InstInitParamInvalid = 0x00000005, /*!< Instance init parameter invalid */
+    UserCallbackInvalid  = 0x00000006, /*!< User Callback is a invalid value */
   };
 
   /*! @brief Unified error type
@@ -124,12 +130,12 @@ class ErrorCode {
   /*! @brief Releated messages about error codes
    */
   typedef struct ErrorCodeMsg {
-    ErrorCodeMsg(std::string moduleMsg, std::string errorMsg,
-                 std::string solutionMsg)
+    ErrorCodeMsg(const char* moduleMsg, const char* errorMsg,
+                 const char* solutionMsg)
         : moduleMsg(moduleMsg), errorMsg(errorMsg), solutionMsg(solutionMsg){};
-    std::string moduleMsg;
-    std::string errorMsg;
-    std::string solutionMsg;
+    const char* moduleMsg;
+    const char* errorMsg;
+    const char* solutionMsg;
   } ErrorCodeMsg;
 
   /*! @brief Map container type of errCode ID and msg
@@ -138,13 +144,13 @@ class ErrorCode {
 
   typedef struct FunctionDataType
   {
-    std::string FunctionName;
-    const ErrorCodeMapType map;
+    const char* FunctionName;
+    const ErrorCodeMapType (*getMap)();
   } FunctionDataType;
 
   typedef struct ModuleDataType
   {
-    std::string ModuleName;
+    const char* ModuleName;
     const FunctionDataType *data;
   } ModuleDataType;
 
@@ -156,9 +162,17 @@ class ErrorCode {
    *  @param rawRetCode raw return code from the ack data
    *  @return Unified error type
    */
-  static const ErrorCodeType getErrorCode(ModuleIDType moduleID,
+  static constexpr ErrorCodeType getErrorCode(ModuleIDType moduleID,
                                           FunctionIDType functionID,
-                                          RawRetCodeType rawRetCode);
+                                          RawRetCodeType rawRetCode) {
+    return (!rawRetCode) ? (
+      ((ErrorCodeType) ErrorCode::SysModule << moduleIDLeftMove)
+        | ((ErrorCodeType) ErrorCode::SystemCommon << functionIDLeftMove) |
+        (ErrorCodeType) 0x00000000) :
+           (((ErrorCodeType) moduleID << moduleIDLeftMove) |
+             ((ErrorCodeType) functionID << functionIDLeftMove) |
+             (ErrorCodeType) rawRetCode);
+  }
 
   /*! @brief Get the module ID from errCode
    *  @param errCode Unified error type
@@ -170,7 +184,7 @@ class ErrorCode {
    *  @param errCode Unified error type
    *  @return Module name
    */
-  static std::string getModuleName(ErrorCodeType errCode);
+  static const char* getModuleName(ErrorCodeType errCode);
 
   /*! @brief Get the function name from errCode
    *  @param errCode Unified error type
@@ -241,6 +255,36 @@ class ErrorCode {
     static const ErrorCodeType UndefineError;
   };
 
+  /*! @brief camera api error code
+ */
+  class PSDKCommonErr {
+   public:
+    static const ErrorCodeType InvalidCMD;
+    static const ErrorCodeType Timeout;
+    static const ErrorCodeType OutOfMemory;
+    static const ErrorCodeType InvalidParam;
+    static const ErrorCodeType InvalidState;
+    static const ErrorCodeType TimeNotSync;
+    static const ErrorCodeType ParamSetFailed;
+    static const ErrorCodeType ParamGetFailed;
+    static const ErrorCodeType SDCardMISSING;
+    static const ErrorCodeType SDCardFull;
+    static const ErrorCodeType SDCardError;
+    static const ErrorCodeType SensorError;
+    static const ErrorCodeType SystemError;
+    static const ErrorCodeType ParamLenTooLong;
+    static const ErrorCodeType ModuleInactivated;
+    static const ErrorCodeType FWSeqNumNotInOrder;
+    static const ErrorCodeType FWCheckErr;
+    static const ErrorCodeType FlashWriteError;
+    static const ErrorCodeType FWInvalidType;
+    static const ErrorCodeType RCDisconnect;
+    static const ErrorCodeType HardwareErr;
+    static const ErrorCodeType UAVDisconnect;
+    static const ErrorCodeType UpgradeErrorNow;
+    static const ErrorCodeType UndefineError;
+  };
+
   /*! @brief system releated error code
    */
   class SysCommonErr {
@@ -251,6 +295,7 @@ class ErrorCode {
     static const ErrorCodeType ReqTimeout;
     static const ErrorCodeType UnpackDataMismatch;
     static const ErrorCodeType InstInitParamInvalid;
+    static const ErrorCodeType UserCallbackInvalid;
   };
 
   /*!
@@ -903,25 +948,37 @@ class ErrorCode {
   static const uint8_t moduleIDLeftMove = 40;
   static const uint8_t functionIDLeftMove = 32;
 
+  /*! @brief The err code message data of the PSDKCommonErr error code messages.
+   */
+  static const std::pair<const ErrorCode::ErrorCodeType, ErrorCode::ErrorCodeMsg> PSDKCommonErrData[];
+
+  /*! @brief Get the map container of the PSDKCommonErr error code messages.
+   */
+  static const ErrorCodeMapType getPSDKCommonErrorMap();
+
   /*! @brief The err code message data of the CameraCommonErr error code messages.
    */
   static const std::pair<const ErrorCode::ErrorCodeType, ErrorCode::ErrorCodeMsg> CameraCommonErrData[];
 
-  /*! @brief The map container of the CameraCommonErr error code messages.
+  /*! @brief Get the map container of the CameraCommonErr error code messages.
    */
-  static const ErrorCodeMapType CameraCommonErrorMap;
+  static const ErrorCodeMapType getCameraCommonErrorMap();
 
   /*! @brief The err code message data of the SystemCommonErr error code messages.
    */
   static const std::pair<const ErrorCode::ErrorCodeType, ErrorCode::ErrorCodeMsg> SystemCommonErrData[];
 
-  /*! @brief The map container of the SystemCommonErr error code messages.
+  /*! @brief Get the map container of the SystemCommonErr error code messages.
    */
-  static const ErrorCodeMapType SystemCommonErrorMap;
+  static const ErrorCodeMapType getSystemCommonErrorMap();
 
   /*! @brief The array to contain all the function maps of camera.
    */
   static const FunctionDataType CameraFunction[functionMaxCnt];
+
+  /*! @brief The array to contain all the function maps of psdk.
+   */
+  static const FunctionDataType PSDKFunction[functionMaxCnt];
 
   /*! @brief The array to contain all the function maps of System.
    */

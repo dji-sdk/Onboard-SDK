@@ -116,8 +116,7 @@ int cameraManagerTest(Vehicle *vehicle, CameraManagerTestCase testCase) {
         PAYLOAD_INDEX_0, "sample_camera_1");
     ret |= vehicle->cameraManager->initCameraModule(PAYLOAD_INDEX_1,
                                                     "sample_camera_2");
-    /*! @TODO 0 should be turned to a standrad error code */
-    if (ret != 0) {
+    if (ret != ErrorCode::SysCommonErr::Success) {
       DERROR("create payload node error\n");
       return -1;
     }
@@ -210,6 +209,7 @@ int cameraManagerTest(Vehicle *vehicle, CameraManagerTestCase testCase) {
       p->setTapZoomPointAsyncSample(PAYLOAD_INDEX_1, 5, 0.8, 0.7,
                                     asyncSampleCallBack,
                                     (UserData) "set tap zoom point (0.8, 0.7)");
+      delay_nms(5000);
 
       /*! zoom test */
       DSTATUS("Test zoom function on Z30");

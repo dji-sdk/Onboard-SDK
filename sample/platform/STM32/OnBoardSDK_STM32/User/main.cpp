@@ -234,12 +234,12 @@ int main() {
           delay_nms(10000);
           break;
         case 10:
-          printf("\n\nStarting executing payload manager sample 1:\r\n");
+          printf("\n\nStarting executing camera manager sample 1:\r\n");
           printf("Please make sure X5S camera is at the payload 0 site\r\n");
           cameraManagerTest(v, X5S_AT_PAYLOAD_0);
           break;
         case 11:
-          printf("\n\nStarting executing payload manager sample 1:\r\n");
+          printf("\n\nStarting executing camera manager sample 1:\r\n");
           printf("Please make sure Z30 camera is at the payload 0 site\r\n");
           cameraManagerTest(v, Z30_AT_PAYLOAD_1);
           break;

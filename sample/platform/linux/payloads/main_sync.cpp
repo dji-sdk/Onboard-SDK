@@ -47,12 +47,16 @@ int main(int argc, char **argv) {
   /*! init camera modules for cameraManager */
   ErrorCode::ErrorCodeType ret = vehicle->cameraManager->initCameraModule(
       PAYLOAD_INDEX_0, "Sample_camera_1");
-  ret |= vehicle->cameraManager->initCameraModule(PAYLOAD_INDEX_1,
-                                                  "Sample_camera_2");
-  /* @TODO 0 should be turned to a standrad error code */
-  if (ret != 0) {
-    DERROR("create camera module error\n");
-    return -1;
+  if (ret != ErrorCode::SysCommonErr::Success) {
+    DERROR("Init Camera module Sample_camera_1 failed.");
+    ErrorCode::printErrorCodeMsg(ret);
+  }
+
+  ret = vehicle->cameraManager->initCameraModule(PAYLOAD_INDEX_1,
+                                                 "Sample_camera_2");
+  if (ret != ErrorCode::SysCommonErr::Success) {
+    DERROR("Init Camera module Sample_camera_2 failed.");
+    ErrorCode::printErrorCodeMsg(ret);
   }
 
   CameraManagerSyncSample *p = new CameraManagerSyncSample(vehicle);
