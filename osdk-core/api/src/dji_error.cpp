@@ -454,8 +454,13 @@ const std::pair<const ErrorCode::ErrorCodeType, ErrorCode::ErrorCodeMsg> ErrorCo
                    ErrorCodeMsg(module[CameraModule].ModuleName, "Undefined error", "Please contact <dev@dji.com> for help.")),
 };
 
-const ErrorCode::ErrorCodeMapType ErrorCode::CameraCommonErrorMap(CameraCommonErrData,
-                                                                  CameraCommonErrData + sizeof CameraCommonErrData / sizeof CameraCommonErrData[0]);
+const ErrorCode::ErrorCodeMapType ErrorCode::getCameraCommonErrorMap() {
+  const ErrorCodeMapType CameraCommonErrorMap(CameraCommonErrData,
+                                              CameraCommonErrData
+                                                + sizeof CameraCommonErrData
+                                                  / sizeof CameraCommonErrData[0]);
+  return CameraCommonErrorMap;
+}
 
 const std::pair<const ErrorCode::ErrorCodeType, ErrorCode::ErrorCodeMsg> ErrorCode::PSDKCommonErrData[] = {
     std::make_pair(getRawRetCode(PSDKCommonErr::InvalidCMD),
@@ -507,9 +512,14 @@ const std::pair<const ErrorCode::ErrorCodeType, ErrorCode::ErrorCodeMsg> ErrorCo
     std::make_pair(getRawRetCode(PSDKCommonErr::UndefineError),
                    ErrorCodeMsg(module[PSDKModule].ModuleName, "Undefined error", "Please contact <dev@dji.com> for help.")),
 };
-const ErrorCode::ErrorCodeMapType ErrorCode::PSDKCommonErrorMap(PSDKCommonErrData,
-                                                                PSDKCommonErrData + sizeof PSDKCommonErrData / sizeof PSDKCommonErrData[0]);
 
+const ErrorCode::ErrorCodeMapType ErrorCode::getPSDKCommonErrorMap() {
+  const ErrorCodeMapType PSDKCommonErrorMap(PSDKCommonErrData,
+                                            PSDKCommonErrData
+                                              + sizeof PSDKCommonErrData
+                                                / sizeof PSDKCommonErrData[0]);
+  return PSDKCommonErrorMap;
+}
 
 const std::pair<const ErrorCode::ErrorCodeType, ErrorCode::ErrorCodeMsg> ErrorCode::SystemCommonErrData[] = {
     std::make_pair(getRawRetCode(SysCommonErr::Success),
@@ -528,19 +538,24 @@ const std::pair<const ErrorCode::ErrorCodeType, ErrorCode::ErrorCodeMsg> ErrorCo
                    ErrorCodeMsg(module[SysModule].ModuleName, "The callback set by user is a invalid", "Please make sure the validity of the callback you requesting.")),
 };
 
-const ErrorCode::ErrorCodeMapType ErrorCode::SystemCommonErrorMap(SystemCommonErrData,
-                                                                  SystemCommonErrData + sizeof SystemCommonErrData / sizeof SystemCommonErrData[0]);
+const ErrorCode::ErrorCodeMapType ErrorCode::getSystemCommonErrorMap() {
+  const ErrorCodeMapType SystemCommonErrorMap(SystemCommonErrData,
+                                              SystemCommonErrData
+                                                + sizeof SystemCommonErrData
+                                                  / sizeof SystemCommonErrData[0]);
+  return SystemCommonErrorMap;
+}
 
 const ErrorCode::FunctionDataType ErrorCode::SystemFunction[functionMaxCnt] = {
-    {"SystemCommon", SystemCommonErrorMap},   /*!< SystemCommon */
+    {"SystemCommon", getSystemCommonErrorMap},   /*!< SystemCommon */
 };
 
 const ErrorCode::FunctionDataType ErrorCode::CameraFunction[functionMaxCnt] = {
-    {"CameraCommon", CameraCommonErrorMap},   /*!< CameraCommon */
+    {"CameraCommon", getCameraCommonErrorMap},   /*!< CameraCommon */
 };
 
 const ErrorCode::FunctionDataType ErrorCode::PSDKFunction[functionMaxCnt] = {
-    {"PSDKCommon", PSDKCommonErrorMap},   /*!< PSDKCommon */
+    {"PSDKCommon", getPSDKCommonErrorMap},   /*!< PSDKCommon */
 };
 
 // clang-format on
@@ -557,8 +572,8 @@ ErrorCode::ErrorCodeMsg ErrorCode::getErrorCodeMsg(int64_t errCode) {
 
   if ((moduleID < ModuleMaxCnt) && (functionID < functionMaxCnt) &&
       (module[moduleID].data)) {
-    auto msg = module[moduleID].data[functionID].map.find(rawRetCode);
-    if (msg != module[moduleID].data[functionID].map.end()) {
+    auto msg = module[moduleID].data[functionID].getMap().find(rawRetCode);
+    if (msg != module[moduleID].data[functionID].getMap().end()) {
       retMsg = msg->second;
     }
   }
@@ -574,25 +589,6 @@ void ErrorCode::printErrorCodeMsg(int64_t errCode) {
     DERROR(">>>>Error message  : %s", errMsg.errorMsg);
     DERROR(">>>>Error solution : %s", errMsg.solutionMsg);
   }
-}
-
-const ErrorCode::ErrorCodeType ErrorCode::getErrorCode(
-    ErrorCode::ModuleIDType moduleID, ErrorCode::FunctionIDType functionID,
-    RawRetCodeType rawRetCode) {
-  ErrorCodeType retErrCode = 0;
-  /*! If the rawRetCode = 0, then the ErrorCode should be
-   * ErrorCode::SysCommonErr::Success */
-  if (!rawRetCode) {
-    retErrCode =
-        (((ErrorCodeType)ErrorCode::SysModule << moduleIDLeftMove) |
-         ((ErrorCodeType)ErrorCode::SystemCommon << functionIDLeftMove) |
-         (ErrorCodeType)0x00000000);
-  } else {
-    retErrCode = (((ErrorCodeType)moduleID << moduleIDLeftMove) |
-                  ((ErrorCodeType)functionID << functionIDLeftMove) |
-                  (ErrorCodeType)rawRetCode);
-  }
-  return retErrCode;
 }
 
 ErrorCode::ModuleIDType ErrorCode::getModuleID(ErrorCodeType errCode) {

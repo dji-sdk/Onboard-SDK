@@ -145,7 +145,7 @@ class ErrorCode {
   typedef struct FunctionDataType
   {
     const char* FunctionName;
-    const ErrorCodeMapType map;
+    const ErrorCodeMapType (*getMap)();
   } FunctionDataType;
 
   typedef struct ModuleDataType
@@ -162,9 +162,17 @@ class ErrorCode {
    *  @param rawRetCode raw return code from the ack data
    *  @return Unified error type
    */
-  static const ErrorCodeType getErrorCode(ModuleIDType moduleID,
+  static constexpr ErrorCodeType getErrorCode(ModuleIDType moduleID,
                                           FunctionIDType functionID,
-                                          RawRetCodeType rawRetCode);
+                                          RawRetCodeType rawRetCode) {
+    return (!rawRetCode) ? (
+      ((ErrorCodeType) ErrorCode::SysModule << moduleIDLeftMove)
+        | ((ErrorCodeType) ErrorCode::SystemCommon << functionIDLeftMove) |
+        (ErrorCodeType) 0x00000000) :
+           (((ErrorCodeType) moduleID << moduleIDLeftMove) |
+             ((ErrorCodeType) functionID << functionIDLeftMove) |
+             (ErrorCodeType) rawRetCode);
+  }
 
   /*! @brief Get the module ID from errCode
    *  @param errCode Unified error type
@@ -944,25 +952,25 @@ class ErrorCode {
    */
   static const std::pair<const ErrorCode::ErrorCodeType, ErrorCode::ErrorCodeMsg> PSDKCommonErrData[];
 
-  /*! @brief The map container of the PSDKCommonErr error code messages.
+  /*! @brief Get the map container of the PSDKCommonErr error code messages.
    */
-  static const ErrorCodeMapType PSDKCommonErrorMap;
+  static const ErrorCodeMapType getPSDKCommonErrorMap();
 
   /*! @brief The err code message data of the CameraCommonErr error code messages.
    */
   static const std::pair<const ErrorCode::ErrorCodeType, ErrorCode::ErrorCodeMsg> CameraCommonErrData[];
 
-  /*! @brief The map container of the CameraCommonErr error code messages.
+  /*! @brief Get the map container of the CameraCommonErr error code messages.
    */
-  static const ErrorCodeMapType CameraCommonErrorMap;
+  static const ErrorCodeMapType getCameraCommonErrorMap();
 
   /*! @brief The err code message data of the SystemCommonErr error code messages.
    */
   static const std::pair<const ErrorCode::ErrorCodeType, ErrorCode::ErrorCodeMsg> SystemCommonErrData[];
 
-  /*! @brief The map container of the SystemCommonErr error code messages.
+  /*! @brief Get the map container of the SystemCommonErr error code messages.
    */
-  static const ErrorCodeMapType SystemCommonErrorMap;
+  static const ErrorCodeMapType getSystemCommonErrorMap();
 
   /*! @brief The array to contain all the function maps of camera.
    */
