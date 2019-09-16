@@ -132,8 +132,8 @@ int main(int argc, char** argv) {
         DSTATUS("Turn off collision avoidance switch successfully");
       }
 
-      /*! go home and force landing avoid ground */
-      goHomeAndForceLanding(vehicle, 1);
+      /*! go home and  confirm landing */
+      goHomeAndConfirmLanding(vehicle, 1);
       break;
 
     default:

@@ -176,14 +176,14 @@ ErrorCode::ErrorCodeType setNewHomeLocation(Vehicle* vehicle, int timeout) {
   return ret;
 }
 
-bool goHomeAndForceLanding(Vehicle* vehicle, int timeout) {
+bool goHomeAndConfirmLanding(Vehicle *vehicle, int timeout) {
+
+  /*! Step 1: Verify and setup the subscription */
   const int pkgIndex = 0;
   int freq = 10;
   TopicName topicList[] = {TOPIC_STATUS_FLIGHT, TOPIC_STATUS_DISPLAYMODE,
                            TOPIC_AVOID_DATA, TOPIC_VELOCITY};
   int topicSize = sizeof(topicList) / sizeof(topicList[0]);
-
-  /*! Step 1: Verify and setup the subscription */
   setUpSubscription(vehicle, pkgIndex, freq, topicList, topicSize, timeout);
 
   /*! Step 2: Start go home */
@@ -191,7 +191,7 @@ bool goHomeAndForceLanding(Vehicle* vehicle, int timeout) {
   ErrorCode::ErrorCodeType goHomeAck =
       vehicle->flightController->startGoHomeSync(timeout);
   if (goHomeAck != ErrorCode::SysCommonErr::Success) {
-    DERROR("Fail to execute go home action! ");
+    DERROR("Fail to execute go home action!  Error code: %llx\n",goHomeAck);
     return false;
   }
   if (!checkActionStarted(vehicle,
@@ -211,7 +211,7 @@ bool goHomeAndForceLanding(Vehicle* vehicle, int timeout) {
   DSTATUS("Start landing action");
   if (!checkActionStarted(vehicle,
                           VehicleStatus::DisplayMode::MODE_AUTO_LANDING)) {
-    DERROR("Fail to execute Landing action! ");
+    DERROR("Fail to execute Landing action!");
     return false;
   } else {
     while (vehicle->subscribe->getValue<TOPIC_STATUS_DISPLAYMODE>() ==
@@ -229,12 +229,15 @@ bool goHomeAndForceLanding(Vehicle* vehicle, int timeout) {
   }
   DSTATUS("Finished landing action");
 
-  /*! Step 4: Force landing and avoid ground */
-  DSTATUS("Start force Landing and avoid ground action");
+  /*! Step 4: Confirm Landing */
+  DSTATUS("Start confirm Landing and avoid ground action");
   ErrorCode::ErrorCodeType forceLandingAvoidGroundAck =
       vehicle->flightController->startConfirmLandingSync(timeout);
   if (forceLandingAvoidGroundAck != ErrorCode::SysCommonErr::Success) {
-    DERROR("Fail to execute force landing avoid ground action! ");
+    DERROR(
+        "Fail to execute confirm landing avoid ground action! Error code: "
+        "%llx\n ",
+        forceLandingAvoidGroundAck);
     return false;
   }
   if (!checkActionStarted(vehicle,
