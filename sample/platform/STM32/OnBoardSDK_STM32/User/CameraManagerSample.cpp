@@ -169,7 +169,7 @@ int cameraManagerTest(Vehicle *vehicle, CameraManagerTestCase testCase) {
       p->startShootSinglePhotoAsyncSample(
           PAYLOAD_INDEX_0, asyncSampleCallBack,
           (UserData) "start to shoot single photo");
-      delay_nms(4000);
+      delay_nms(5000);
       DSTATUS("Start to shoot AEB photo");
       p->startShootAEBPhotoAsyncSample(
           PAYLOAD_INDEX_0, CameraModule::AEB_COUNT_5, asyncSampleCallBack,
