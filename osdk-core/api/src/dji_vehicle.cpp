@@ -335,8 +335,8 @@ Vehicle::initCMD_SetSupportMatrix()
 void
 Vehicle::callbackPoll()
 {
-  VehicleCallBackHandler cbVal;
-  RecvContainer          recvCont;
+  VehicleCallBackHandler cbVal = {};
+  RecvContainer          recvCont = {};
   //! If Head = Tail, there is no data in the buffer, do not call cbPop.
   protocolLayer->getThreadHandle()->lockNonBlockCBAck();
   if (this->circularBuffer->head != this->circularBuffer->tail)

@@ -76,7 +76,7 @@ void FlightController::getRtkEnableAsync(
   if (flightAssistant) {
     flightAssistant->getRtkEnableAsync(UserCallBack, userData);
   } else {
-    RtkEnabled rtkEnable;
+    RtkEnabled rtkEnable = FlightAssistant::RtkEnableData::RTK_DISABLE;
     if (UserCallBack)
       UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, rtkEnable,
                    userData);
@@ -118,7 +118,7 @@ void FlightController::getGoHomeAltitudeAsync(
   if (flightAssistant)
     flightAssistant->getGoHomeAltitudeAsync(UserCallBack, userData);
   else {
-    GoHomeHeight altitude;
+    GoHomeHeight altitude = 0;
     if (UserCallBack)
       UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, altitude,
                    userData);
@@ -185,7 +185,7 @@ void FlightController::setHomeLocationAsync(
 
 ErrorCode::ErrorCodeType
 FlightController::setHomeLocationUsingCurrentAircraftLocationSync(int timeout) {
-  FlightAssistant::SetHomeLocationData homeLocation;
+  FlightAssistant::SetHomeLocationData homeLocation = {};
   homeLocation.homeType = FlightAssistant::DJI_HOMEPOINT_AIRCRAFT_LOACTON;
   if (flightAssistant)
     return flightAssistant->setHomeLocationSync(homeLocation, timeout);
@@ -196,7 +196,7 @@ FlightController::setHomeLocationUsingCurrentAircraftLocationSync(int timeout) {
 void FlightController::setHomeLocationUsingCurrentAircraftLocationAsync(
   void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
   UserData userData) {
-  FlightAssistant::SetHomeLocationData homeLocation;
+  FlightAssistant::SetHomeLocationData homeLocation = {};
   homeLocation.homeType = FlightAssistant::DJI_HOMEPOINT_AIRCRAFT_LOACTON;
   if (flightAssistant)
     flightAssistant->setHomeLocationAsync(homeLocation, UserCallBack, userData);
