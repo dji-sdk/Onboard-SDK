@@ -466,6 +466,7 @@ Vehicle::initOpenProtocol()
   //Initialize platform manager before passing pointer to OpenProtocol constructor
   this->platformManager = new PlatformManager();
 
+
   this->protocolLayer = new (std::nothrow)
     OpenProtocol(this->platformManager, this->device, this->baudRate);
   if (this->protocolLayer == 0)
@@ -893,7 +894,8 @@ Vehicle::initGimbal()
   ACK::ErrorCode ack;
 
   // Gimbal information via subscription
-  Telemetry::TypeMap<Telemetry::TOPIC_GIMBAL_STATUS>::type subscriptionGimbal;
+  Telemetry::TypeMap<Telemetry::TOPIC_GIMBAL_STATUS>::type
+    subscriptionGimbal = {};
 
   if (isLegacyM600())
   {

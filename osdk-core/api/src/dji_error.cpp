@@ -572,9 +572,9 @@ ErrorCode::ErrorCodeMsg ErrorCode::getErrorCodeMsg(int64_t errCode) {
 
   if ((moduleID < ModuleMaxCnt) && (functionID < functionMaxCnt) &&
       (module[moduleID].data)) {
-    auto msg = module[moduleID].data[functionID].getMap().find(rawRetCode);
-    if (msg != module[moduleID].data[functionID].getMap().end()) {
-      retMsg = msg->second;
+    auto msg = module[moduleID].data[functionID].getMap();
+    if (msg.find(rawRetCode) != msg.end()) {
+      retMsg = msg.find(rawRetCode)->second;
     }
   }
   return retMsg;
