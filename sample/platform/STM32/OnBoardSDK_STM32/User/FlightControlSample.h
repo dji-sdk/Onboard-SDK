@@ -44,7 +44,7 @@ bool monitoredTakeOff();
 bool monitoredLanding();
 int moveByPositionOffset(float xOffsetDesired, float yOffsetDesired,
                          float zOffsetDesired, float yawDesired,
-                         float posThresholdInM   = 0.2,
+                         float posThresholdInM   = 0.5,
                          float yawThresholdInDeg = 1.0);
 
 //! Helper functions
