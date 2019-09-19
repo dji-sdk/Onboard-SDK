@@ -273,7 +273,7 @@ gimbalCameraControl(Vehicle* vehicle)
 void
 doSetGimbalAngle(Vehicle* vehicle, GimbalContainer* gimbal)
 {
-  DJI::OSDK::Gimbal::AngleData gimbalAngle;
+  DJI::OSDK::Gimbal::AngleData gimbalAngle = {};
   gimbalAngle.roll     = gimbal->roll;
   gimbalAngle.pitch    = gimbal->pitch;
   gimbalAngle.yaw      = gimbal->yaw;

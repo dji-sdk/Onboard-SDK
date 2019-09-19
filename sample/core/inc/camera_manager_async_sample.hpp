@@ -49,8 +49,8 @@ class CameraManagerAsyncSample {
    * DJI::OSDK::PayloadIndexType
    *  @param dataTarget the target exposure mode
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -66,8 +66,8 @@ class CameraManagerAsyncSample {
    * DJI::OSDK::PayloadIndexType
    *  @param dataTarget the target ISO value
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -83,8 +83,8 @@ class CameraManagerAsyncSample {
    * DJI::OSDK::PayloadIndexType
    *  @param dataTarget the target shutter speed
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -100,8 +100,8 @@ class CameraManagerAsyncSample {
    * DJI::OSDK::PayloadIndexType
    *  @param dataTarget the target aperture value
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -119,8 +119,8 @@ class CameraManagerAsyncSample {
    * DJI::OSDK::PayloadIndexType
    *  @param dataTarget the target exposure compensation value
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -139,8 +139,8 @@ class CameraManagerAsyncSample {
    *  @param x the x value of target focus point, 0~1
    *  @param y the y value of target focus point, 0~1
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -160,8 +160,8 @@ class CameraManagerAsyncSample {
    *  @param x the x value of target tap-zoom point, 0~1
    *  @param y the y value of target tap-zoom point, 0~1
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -181,8 +181,8 @@ class CameraManagerAsyncSample {
    *  @param direction the choice of zoom out or zoom in
    *  @param speed zooming speed
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -201,8 +201,8 @@ class CameraManagerAsyncSample {
    *  @param index payload node index, input limit see enum
    * DJI::OSDK::PayloadIndexType
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -218,8 +218,8 @@ class CameraManagerAsyncSample {
    *  @param index payload node index, input limit see enum
    * DJI::OSDK::PayloadIndexType
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -235,8 +235,8 @@ class CameraManagerAsyncSample {
    *  @param index payload node index, input limit see enum
    * DJI::OSDK::PayloadIndexType
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -252,8 +252,8 @@ class CameraManagerAsyncSample {
    *  @param index payload node index, input limit see enum
    * DJI::OSDK::PayloadIndexType
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -270,8 +270,8 @@ class CameraManagerAsyncSample {
    * DJI::OSDK::PayloadIndexType
    *  @param count The number of pictures in each burst shooting
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -288,8 +288,8 @@ class CameraManagerAsyncSample {
    * DJI::OSDK::PayloadIndexType
    *  @param photoNum The number of pictures in each AEB shooting
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -306,8 +306,8 @@ class CameraManagerAsyncSample {
    * DJI::OSDK::PayloadIndexType
    *  @param intervalData the parameter of interval shooting
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -322,8 +322,8 @@ class CameraManagerAsyncSample {
    *  @param index payload node index, input limit see enum
    * DJI::OSDK::PayloadIndexType
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -347,9 +347,9 @@ class CameraManagerAsyncSample {
   /*! @brief Callback of getExposureModeAsync, used in
    * setExposureModeAsyncSample
    *
-   *  @param retCode return code of the api, OSDK unitified error code
+   *  @param retCode return code of the api, ErrorCode::ErrorCodeType error code
    *  @param exposureModeGet exposure mode got from camera
-   *  @param userData the interface to trans userData in when the callback is
+   *  @param userData the interface to pass userData in when the callback is
    * called
    */
   static void getExposureModeCb(ErrorCode::ErrorCodeType retCode,
@@ -358,9 +358,9 @@ class CameraManagerAsyncSample {
 
   /*! @brief Callback of getISOAsync, used in setISOAsyncSample
    *
-   *  @param retCode return code of the api, OSDK unitified error code
+   *  @param retCode return code of the api, ErrorCode::ErrorCodeType error code
    *  @param isoGet ISO value got from camera
-   *  @param userData the interface to trans userData in when the callback is
+   *  @param userData the interface to pass userData in when the callback is
    * called
    */
   static void getISOCb(ErrorCode::ErrorCodeType retCode,
@@ -369,9 +369,9 @@ class CameraManagerAsyncSample {
   /*! @brief Callback of getShutterSpeedAsync, used in
    * setShutterSpeedAsyncSample
    *
-   *  @param retCode return code of the api, OSDK unitified error code
+   *  @param retCode return code of the api, ErrorCode::ErrorCodeType error code
    *  @param shutterSpeedGet shutter speed parameter value got from camera
-   *  @param userData the interface to trans userData in when the callback is
+   *  @param userData the interface to pass userData in when the callback is
    * called
    */
   static void getShutterSpeedCb(ErrorCode::ErrorCodeType retCode,
@@ -380,9 +380,9 @@ class CameraManagerAsyncSample {
 
   /*! @brief Callback of getApertureAsync, used in setApertureAsyncSample
    *
-   *  @param retCode return code of the api, OSDK unitified error code
+   *  @param retCode return code of the api, ErrorCode::ErrorCodeType error code
    *  @param apertureGet aperture parameter value got from camera
-   *  @param userData the interface to trans userData in when the callback is
+   *  @param userData the interface to pass userData in when the callback is
    * called
    */
   static void getApertureCb(ErrorCode::ErrorCodeType retCode,
@@ -391,9 +391,9 @@ class CameraManagerAsyncSample {
 
   /*! @brief Callback of getExposureCompensationAsync, used in setEVAsyncSample
    *
-   *  @param retCode return code of the api, OSDK unitified error code
+   *  @param retCode return code of the api, ErrorCode::ErrorCodeType error code
    *  @param evGet exposure compensation parameter value got from camera
-   *  @param userData the interface to trans userData in when the callback is
+   *  @param userData the interface to pass userData in when the callback is
    * called
    */
   static void getEVCb(ErrorCode::ErrorCodeType retCode,
@@ -402,8 +402,8 @@ class CameraManagerAsyncSample {
 
   /*! @brief Callback of setFocusModeAsync, used in setFocusPointAsyncSample
    *
-   *  @param retCode return code of the api, OSDK unitified error code
-   *  @param userData the interface to trans userData in when the callback is
+   *  @param retCode return code of the api, ErrorCode::ErrorCodeType error code
+   *  @param userData the interface to pass userData in when the callback is
    * called
    */
   static void setFocusModeCb(ErrorCode::ErrorCodeType retCode,
@@ -412,8 +412,8 @@ class CameraManagerAsyncSample {
   /*! @brief Callback of setTapZoomEnabledAsync, used in
    * setTapZoomPointAsyncSample
    *
-   *  @param retCode return code of the api, OSDK unitified error code
-   *  @param userData the interface to trans userData in when the callback is
+   *  @param retCode return code of the api, ErrorCode::ErrorCodeType error code
+   *  @param userData the interface to pass userData in when the callback is
    * called
    */
   static void setTapZoomEnableCb(ErrorCode::ErrorCodeType retCode,
@@ -422,8 +422,8 @@ class CameraManagerAsyncSample {
   /*! @brief Callback of setTapZoomMultiplierAsync, used in
    * setTapZoomPointAsyncSample
    *
-   *  @param retCode return code of the api, OSDK unitified error code
-   *  @param userData the interface to trans userData in when the callback is
+   *  @param retCode return code of the api, ErrorCode::ErrorCodeType error code
+   *  @param userData the interface to pass userData in when the callback is
    * called
    */
   static void setTapZoomMultiplierCb(ErrorCode::ErrorCodeType retCode,
@@ -432,8 +432,8 @@ class CameraManagerAsyncSample {
   /*! @brief Callback of setModeAsync, used in
    * startShootSinglePhotoAsyncSample
    *
-   *  @param retCode return code of the api, OSDK unitified error code
-   *  @param userData the interface to trans userData in when the callback is
+   *  @param retCode return code of the api, ErrorCode::ErrorCodeType error code
+   *  @param userData the interface to pass userData in when the callback is
    * called
    */
   static void setCameraModeForSingleShootCb(ErrorCode::ErrorCodeType retCode,
@@ -442,8 +442,8 @@ class CameraManagerAsyncSample {
   /*! @brief Callback of setShootPhotoModeAsync, used in
    * setCameraModeForSingleShootCb
    *
-   *  @param retCode return code of the api, OSDK unitified error code
-   *  @param userData the interface to trans userData in when the callback is
+   *  @param retCode return code of the api, ErrorCode::ErrorCodeType error code
+   *  @param userData the interface to pass userData in when the callback is
    * called
    */
   static void setShootPhotoModeForSingleShootCb(
@@ -452,8 +452,8 @@ class CameraManagerAsyncSample {
   /*! @brief Callback of setModeAsync, used in
    * startShootBurstPhotoAsyncSample
    *
-   *  @param retCode return code of the api, OSDK unitified error code
-   *  @param userData the interface to trans userData in when the callback is
+   *  @param retCode return code of the api, ErrorCode::ErrorCodeType error code
+   *  @param userData the interface to pass userData in when the callback is
    * called
    */
   static void setCameraModeForBurstShootCb(ErrorCode::ErrorCodeType retCode,
@@ -462,8 +462,8 @@ class CameraManagerAsyncSample {
   /*! @brief Callback of setShootPhotoModeAsync, used in
    * setCameraModeForBurstShootCb
    *
-   *  @param retCode return code of the api, OSDK unitified error code
-   *  @param userData the interface to trans userData in when the callback is
+   *  @param retCode return code of the api, ErrorCode::ErrorCodeType error code
+   *  @param userData the interface to pass userData in when the callback is
    * called
    */
   static void setShootPhotoModeForBurstShootCb(ErrorCode::ErrorCodeType retCode,
@@ -472,8 +472,8 @@ class CameraManagerAsyncSample {
   /*! @brief Callback of setPhotoBurstCountAsync, used in
    * setShootPhotoModeForBurstShootCb
    *
-   *  @param retCode return code of the api, OSDK unitified error code
-   *  @param userData the interface to trans userData in when the callback is
+   *  @param retCode return code of the api, ErrorCode::ErrorCodeType error code
+   *  @param userData the interface to pass userData in when the callback is
    * called
    */
   static void setPhotoBurstCountCb(ErrorCode::ErrorCodeType retCode,
@@ -482,8 +482,8 @@ class CameraManagerAsyncSample {
   /*! @brief Callback of setModeAsync, used in
    * startShootAEBPhotoAsyncSample
    *
-   *  @param retCode return code of the api, OSDK unitified error code
-   *  @param userData the interface to trans userData in when the callback is
+   *  @param retCode return code of the api, ErrorCode::ErrorCodeType error code
+   *  @param userData the interface to pass userData in when the callback is
    * called
    */
   static void setCameraModeForAEBShootCb(ErrorCode::ErrorCodeType retCode,
@@ -492,8 +492,8 @@ class CameraManagerAsyncSample {
   /*! @brief Callback of setShootPhotoModeAsync, used in
    * setCameraModeForAEBShootCb
    *
-   *  @param retCode return code of the api, OSDK unitified error code
-   *  @param userData the interface to trans userData in when the callback is
+   *  @param retCode return code of the api, ErrorCode::ErrorCodeType error code
+   *  @param userData the interface to pass userData in when the callback is
    * called
    */
   static void setShootPhotoModeForAEBShootCb(ErrorCode::ErrorCodeType retCode,
@@ -502,8 +502,8 @@ class CameraManagerAsyncSample {
   /*! @brief Callback of setPhotoAEBCountAsync, used in
    * setShootPhotoModeForAEBShootCb
    *
-   *  @param retCode return code of the api, OSDK unitified error code
-   *  @param userData the interface to trans userData in when the callback is
+   *  @param retCode return code of the api, ErrorCode::ErrorCodeType error code
+   *  @param userData the interface to pass userData in when the callback is
    * called
    */
   static void setPhotoAEBCountCb(ErrorCode::ErrorCodeType retCode,
@@ -512,8 +512,8 @@ class CameraManagerAsyncSample {
   /*! @brief Callback of setModeAsync, used in
    * startShootIntervalPhotoAsyncSample
    *
-   *  @param retCode return code of the api, OSDK unitified error code
-   *  @param userData the interface to trans userData in when the callback is
+   *  @param retCode return code of the api, ErrorCode::ErrorCodeType error code
+   *  @param userData the interface to pass userData in when the callback is
    * called
    */
   static void setCameraModeForIntervalShootCb(ErrorCode::ErrorCodeType retCode,
@@ -522,8 +522,8 @@ class CameraManagerAsyncSample {
   /*! @brief Callback of setShootPhotoModeAsync, used in
    * setCameraModeForIntervalShootCb
    *
-   *  @param retCode return code of the api, OSDK unitified error code
-   *  @param userData the interface to trans userData in when the callback is
+   *  @param retCode return code of the api, ErrorCode::ErrorCodeType error code
+   *  @param userData the interface to pass userData in when the callback is
    * called
    */
   static void setShootPhotoModeForIntervalShootCb(
@@ -532,8 +532,8 @@ class CameraManagerAsyncSample {
   /*! @brief Callback of setPhotoTimeIntervalSettingsAsync, used in
    * setShootPhotoModeForIntervalShootCb
    *
-   *  @param retCode return code of the api, OSDK unitified error code
-   *  @param userData the interface to trans userData in when the callback is
+   *  @param retCode return code of the api, ErrorCode::ErrorCodeType error code
+   *  @param userData the interface to pass userData in when the callback is
    * called
    */
   static void setPhotoIntervalCb(ErrorCode::ErrorCodeType retCode,
@@ -542,8 +542,8 @@ class CameraManagerAsyncSample {
   /*! @brief Callback of setModeAsync, used in
    * startRecordVideoAsyncSample
    *
-   *  @param retCode return code of the api, OSDK unitified error code
-   *  @param userData the interface to trans userData in when the callback is
+   *  @param retCode return code of the api, ErrorCode::ErrorCodeType error code
+   *  @param userData the interface to pass userData in when the callback is
    * called
    */
   static void setCameraModeForRecordVideoCb(ErrorCode::ErrorCodeType retCode,

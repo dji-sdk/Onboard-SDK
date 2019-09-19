@@ -335,8 +335,8 @@ Vehicle::initCMD_SetSupportMatrix()
 void
 Vehicle::callbackPoll()
 {
-  VehicleCallBackHandler cbVal;
-  RecvContainer          recvCont;
+  VehicleCallBackHandler cbVal = {};
+  RecvContainer          recvCont = {};
   //! If Head = Tail, there is no data in the buffer, do not call cbPop.
   protocolLayer->getThreadHandle()->lockNonBlockCBAck();
   if (this->circularBuffer->head != this->circularBuffer->tail)
@@ -465,6 +465,7 @@ Vehicle::initOpenProtocol()
 {
   //Initialize platform manager before passing pointer to OpenProtocol constructor
   this->platformManager = new PlatformManager();
+
 
   this->protocolLayer = new (std::nothrow)
     OpenProtocol(this->platformManager, this->device, this->baudRate);
@@ -893,7 +894,8 @@ Vehicle::initGimbal()
   ACK::ErrorCode ack;
 
   // Gimbal information via subscription
-  Telemetry::TypeMap<Telemetry::TOPIC_GIMBAL_STATUS>::type subscriptionGimbal;
+  Telemetry::TypeMap<Telemetry::TOPIC_GIMBAL_STATUS>::type
+    subscriptionGimbal = {};
 
   if (isLegacyM600())
   {

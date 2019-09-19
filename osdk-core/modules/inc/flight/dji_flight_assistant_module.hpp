@@ -214,7 +214,7 @@ class FlightAssistant {
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode the OSDK ErrorCode::ErrorCodeType error code
    *  @arg @b rtkEnable rtkEnableData, RTK_DISABLE: disable, RTK_ENABLE: enable
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b userData the interface to pass userData in when the callback is
    *  called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -249,7 +249,7 @@ class FlightAssistant {
    * @param altitude go home altitude settings, unit: meter
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode the OSDK ErrorCode::ErrorCodeType error code
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -272,7 +272,7 @@ class FlightAssistant {
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode the OSDK ErrorCode::ErrorCodeType error code
    *  @arg @b altitude go home altitude
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b userData the interface to pass userData in when the callback is
    *  called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -333,7 +333,7 @@ class FlightAssistant {
    *  @param avoidObstacle reference in AvoidObstacleData
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode  OSDK ErrorCode::ErrorCodeType error code
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */

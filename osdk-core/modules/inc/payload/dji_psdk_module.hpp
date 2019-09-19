@@ -122,7 +122,7 @@ class PSDKModule : public PayloadBase {
    * DJI::OSDK::PSDKModule::PayloadWidgetType
    *  @param widgetValue the value of target widget
    *  @param timeout timeout time in seconds to request
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType configureWidgetValueSync(
       uint8_t widgetIndex, PayloadWidgetType widgetType, int widgetValue,
@@ -148,14 +148,14 @@ class PSDKModule : public PayloadBase {
    *  the callback will be called and catch the widget values.
    *  @param cb the callback to catch the widget values pushging.
    *  @param userData the userData to be called by cb
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType subscribePSDKWidgetValues(
       PSDKWidgetValuesUserCallback cb, UserData userData);
 
   /*! @brief Sample to disable the callback for widget values, non-blocking
    *
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType unsubscribeWidgetValues();
 
@@ -171,7 +171,7 @@ class PSDKModule : public PayloadBase {
    *
    *  @param cb the callback to catch the communication data from PSDK.
    *  @param userData the userData to be called by cb
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType subscribePSDKCommonication(
       PSDKCommunicationUserCallback cb, UserData userData);
@@ -179,7 +179,7 @@ class PSDKModule : public PayloadBase {
   /*! @brief Sample to disable the callback for PSDK commonication data,
    * non-blocking
    *
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType unsubscribePSDKCommonication();
 
@@ -194,7 +194,7 @@ class PSDKModule : public PayloadBase {
    *
    *  @param data sent data
    *  @param len length of data
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType sendDataToPSDK(uint8_t *data, uint16_t len);
 

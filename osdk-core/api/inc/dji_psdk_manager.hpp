@@ -53,7 +53,7 @@ class PSDKManager {
    *  @param index psdk module index, input limit see enum
    * DJI::OSDK::PayloadIndexType
    *  @param name psdk module name used in initialization
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType initPSDKModule(PayloadIndexType index,
                                           const char *name);
@@ -63,7 +63,7 @@ class PSDKManager {
    *  defaultPSDKName and set enable to be false.
    *  @param index psdk module index, input limit see enum
    * DJI::OSDK::PayloadIndexType
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType deinitPSDKModule(PayloadIndexType index);
 
@@ -76,8 +76,8 @@ class PSDKManager {
    *  @param index psdk module index, input limit see enum
    * DJI::OSDK::PayloadIndexType
    *  @param name name of the psdk module, it's a output parameter. If get
-   * fail, this parameter will no do any Assignment
-   *  @return OSDK unitified error code
+   * fail, this parameter will not do any assignment
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType getPSDKModuleName(PayloadIndexType index,
                                              std::string &name);
@@ -86,8 +86,8 @@ class PSDKManager {
    *
    *  @param name name of psdk module
    *  @param index psdk module index, see enum DJI::OSDK::PayloadIndexType. If
-   * get fail, this parameter will no do any Assignment
-   *  @return OSDK unitified error code
+   * get fail, this parameter will not do any assignment
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType getPSDKModuleIndex(const char *name, uint8_t &index);
 
@@ -96,8 +96,8 @@ class PSDKManager {
    *  @param index psdk module index, input limit see enum
    * DJI::OSDK::PayloadIndexType
    *  @param enable get the enable status of PSDKModule. If get fail, this
-   * parameter will no do any Assignment
-   *  @return OSDK unitified error code
+   * parameter will not do any assignment
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType getPSDKModuleEnable(PayloadIndexType index,
                                                bool &enable);
@@ -112,7 +112,7 @@ class PSDKManager {
    * DJI::OSDK::PSDKModule::PayloadWidgetType
    *  @param widgetValue the value of target widget
    *  @param timeout timeout time in seconds to request
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType configureWidgetValueSync(
       PayloadIndexType index, uint8_t widgetIndex,
@@ -143,7 +143,7 @@ class PSDKManager {
    * DJI::OSDK::PayloadIndexType
    *  @param cb the callback to catch the widget values pushging.
    *  @param userData the userData to be called by cb
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType subscribePSDKWidgetValues(
       PayloadIndexType index, PSDKModule::PSDKWidgetValuesUserCallback cb,
@@ -153,7 +153,7 @@ class PSDKManager {
    *
    *  @param index payload node index, input limit see enum
    * DJI::OSDK::PayloadIndexType
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType unsubscribeWidgetValues(PayloadIndexType index);
 
@@ -173,7 +173,7 @@ class PSDKManager {
    * DJI::OSDK::PayloadIndexType
    *  @param cb the callback to catch the communication data from PSDK.
    *  @param userData the userData to be called by cb
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType subscribePSDKCommonication(
       PayloadIndexType index, PSDKModule::PSDKCommunicationUserCallback cb,
@@ -184,7 +184,7 @@ class PSDKManager {
    *
    *  @param index payload node index, input limit see enum
    * DJI::OSDK::PayloadIndexType
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType unsubscribePSDKCommonication(PayloadIndexType index);
 
@@ -203,7 +203,7 @@ class PSDKManager {
    * DJI::OSDK::PayloadIndexType
    *  @param data sent data
    *  @param len length of data
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType sendDataToPSDK(PayloadIndexType index, uint8_t *data,
                                           uint16_t len);

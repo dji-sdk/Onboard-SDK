@@ -929,8 +929,8 @@ class CameraModule : public PayloadBase {
    *  @param mode take photo mode, input limit see enum
    * DJI::OSDK::CameraModule::TakePhotoMode
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -944,7 +944,7 @@ class CameraModule : public PayloadBase {
    *  @param mode take photo mode, input limit see enum
    * DJI::OSDK::CameraModule::TakePhotoMode
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType startShootPhotoSync(ShootPhotoMode mode,
                                                int timeout);
@@ -952,8 +952,8 @@ class CameraModule : public PayloadBase {
   /*! @brief stop to shoot photo, non-blocking calls
    *
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
-   *  @arg @b userData the interface to trans userData in when the callback
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to pass userData in when the callback
    * is called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -964,7 +964,7 @@ class CameraModule : public PayloadBase {
   /*! @brief stop to shoot photo, blocking calls
    *
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType stopShootPhotoSync(int timeout);
 
@@ -973,8 +973,8 @@ class CameraModule : public PayloadBase {
    *  @param takePhotoMode take photo mode, input limit see enum
    * DJI::OSDK::CameraModule::ShootPhotoMode
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -988,7 +988,7 @@ class CameraModule : public PayloadBase {
    *  @param takePhotoMode take photo mode, input limit see enum
    * DJI::OSDK::CameraModule::ShootPhotoMode
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType setShootPhotoModeSync(ShootPhotoMode takePhotoMode,
                                                  int timeout);
@@ -996,10 +996,10 @@ class CameraModule : public PayloadBase {
   /*! @brief get the shoot photo mode, non-blocking calls
    *
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
    *  @arg @b takePhotoMode take photo mode, input limit see enum
    * DJI::OSDK::CameraModule::ShootPhotoMode
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -1013,7 +1013,7 @@ class CameraModule : public PayloadBase {
    *  @param takePhotoMode take photo mode, input limit see enum
    * DJI::OSDK::CameraModule::ShootPhotoMode
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType getShootPhotoModeSync(ShootPhotoMode& takePhotoMode,
                                                  int timeout);
@@ -1024,8 +1024,8 @@ class CameraModule : public PayloadBase {
    *  @param count burst photos count in the each burst photo taking
    * DJI::OSDK::CameraModule::PhotoBurstCount
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -1039,7 +1039,7 @@ class CameraModule : public PayloadBase {
    *  @param count burst photos count in the each burst photo taking
    * DJI::OSDK::CameraModule::PhotoBurstCount
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType setPhotoBurstCountSync(PhotoBurstCount count,
                                                   int timeout);
@@ -1047,10 +1047,10 @@ class CameraModule : public PayloadBase {
   /*! get the burst count in the Burst take-photo mode, non-blocking calls
    *
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
    *  @arg @b count burst photos count in the each burst photo taking
    * DJI::OSDK::CameraModule::PhotoBurstCount
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -1064,7 +1064,7 @@ class CameraModule : public PayloadBase {
    *  @param count burst photos count in the each burst photo taking
    * DJI::OSDK::CameraModule::PhotoBurstCount
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType getPhotoBurstCountSync(PhotoBurstCount& count,
                                                   int timeout);
@@ -1074,8 +1074,8 @@ class CameraModule : public PayloadBase {
    *  @param count burst photos count in the each AEB photo taking
    * DJI::OSDK::CameraModule::PhotoAEBCount
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -1089,7 +1089,7 @@ class CameraModule : public PayloadBase {
    *  @param count burst photos count in the each AEB photo taking
    * DJI::OSDK::CameraModule::PhotoAEBCount
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType setPhotoAEBCountSync(PhotoAEBCount count,
                                                 int timeout);
@@ -1097,10 +1097,10 @@ class CameraModule : public PayloadBase {
   /*! get the burst count in the AEB take-photo mode, non-blocking calls
    *
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
    *  @arg @b count burst photos count in the each AEB photo taking
    * DJI::OSDK::CameraModule::PhotoAEBCount
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -1114,7 +1114,7 @@ class CameraModule : public PayloadBase {
    *  @param count burst photos count in the each AEB photo taking
    * DJI::OSDK::CameraModule::PhotoAEBCount
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType getPhotoAEBCountSync(PhotoAEBCount& count,
                                                 int timeout);
@@ -1125,8 +1125,8 @@ class CameraModule : public PayloadBase {
    *  @param intervalSetting parameters in the INTERVAL take-photo mode,
    * including photo number and time interval
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -1140,7 +1140,7 @@ class CameraModule : public PayloadBase {
    *  @param intervalSetting parameters in the INTERVAL take-photo mode,
    * including photo number and time interval
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType setPhotoTimeIntervalSettingsSync(
       PhotoIntervalData intervalSetting, int timeout);
@@ -1149,10 +1149,10 @@ class CameraModule : public PayloadBase {
    * calls
    *
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
    *  @arg @b intervalSetting parameters in the INTERVAL take-photo mode,
    * including photo number and time interval
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -1167,7 +1167,7 @@ class CameraModule : public PayloadBase {
    *  @param intervalSetting parameters in the INTERVAL take-photo mode,
    * including photo number and time interval
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType getPhotoIntervalDatasSync(
       PhotoIntervalData& intervalSetting, int timeout);
@@ -1175,8 +1175,8 @@ class CameraModule : public PayloadBase {
   /*! @brief start to take video, non-blocking calls
    *
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
-   *  @arg @b userData the interface to trans userData in when the callback
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to pass userData in when the callback
    * is called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -1187,15 +1187,15 @@ class CameraModule : public PayloadBase {
   /*! @brief start to take video, blocking calls
    *
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType startRecordVideoSync(int timeout);
 
   /*! @brief stop to take video, non-blocking calls
    *
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -1206,7 +1206,7 @@ class CameraModule : public PayloadBase {
   /*! @brief stop to take video, blocking calls
    *
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType stopRecordVideoSync(int timeout);
 
@@ -1215,8 +1215,8 @@ class CameraModule : public PayloadBase {
    *  @param mode camera working mode, input limit see enum
    * DJI::OSDK::CameraModule::WorkMode
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -1230,16 +1230,16 @@ class CameraModule : public PayloadBase {
    *  @param mode camera working mode, input limit see enum
    * DJI::OSDK::CameraModule::WorkMode
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType setModeSync(WorkMode mode, int timeout);
 
   /*! @brief get camera working mode, non-blocking calls
    *
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
    *  @arg @b mode used as an input param, please see enum
-   * DJI::OSDK::CameraModule::WorkMode userData the interface to trans
+   * DJI::OSDK::CameraModule::WorkMode
    *  @arg @b userData in when the callback is called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -1253,7 +1253,7 @@ class CameraModule : public PayloadBase {
    *  @param workingMode used as an output param, camera working mode, input
    * limit see enum DJI::OSDK::CameraModule::WorkMode
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType getModeSync(WorkMode& workingMode, int timeout);
 
@@ -1262,8 +1262,8 @@ class CameraModule : public PayloadBase {
    *  @param mode camera focus mode, input limit see enum
    * DJI::OSDK::CameraModule::FocusMode
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -1277,16 +1277,16 @@ class CameraModule : public PayloadBase {
    *  @param mode camera focus mode, input limit see enum
    * DJI::OSDK::CameraModule::FocusMode
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType setFocusModeSync(FocusMode mode, int timeout);
 
   /*! @brief get camera focus mode, non-blocking calls
    *
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
    *  @arg @b mode used as an input param, please see enum
-   * DJI::OSDK::CameraModule::FocusMode userData the interface to trans userData
+   * DJI::OSDK::CameraModule::FocusMode userData the interface to pass userData
    * in when the callback is called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -1300,7 +1300,7 @@ class CameraModule : public PayloadBase {
    *  @param focusMode used as an output param, camera focus mode, input limit
    * see enum DJI::OSDK::CameraModule::FocusMode
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType getFocusModeSync(FocusMode& focusMode, int timeout);
 
@@ -1308,8 +1308,8 @@ class CameraModule : public PayloadBase {
    *
    *  @param tapFocusPos the param of tap focus, including x,y value
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -1322,7 +1322,7 @@ class CameraModule : public PayloadBase {
    *
    *  @param tapFocusPos the param of tap focus, including x,y value
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType setFocusTargetSync(TapFocusPosData tapFocusPos,
                                               int timeout);
@@ -1330,9 +1330,9 @@ class CameraModule : public PayloadBase {
   /*! @brief get camera tap focus target point, non-blocking calls
    *
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
    *  @arg @b tapFocusPos used as an input param, the param of tap focus,
-   * including x,y value userData the interface to trans userData in when the
+   * including x,y value userData the interface to pass userData in when the
    * callback is called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -1346,7 +1346,7 @@ class CameraModule : public PayloadBase {
    *  @param tapFocusPos used as an output param, the param of tap focus,
    * including x,y value
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType getFocusTargetSync(TapFocusPosData& tapFocusPos,
                                               int timeout);
@@ -1358,8 +1358,8 @@ class CameraModule : public PayloadBase {
    *  @param zoomSpeed optical zoom direction, ref to
    * DJI::OSDK::CameraModule::ZoomSpeed
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -1375,7 +1375,7 @@ class CameraModule : public PayloadBase {
    *  @param zoomSpeed optical zoom direction, ref to
    * DJI::OSDK::CameraModule::ZoomSpeed
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType startContinuousOpticalZoomSync(
       zoomDirectionData zoomDirection, zoomSpeedData zoomSpeed, int timeout);
@@ -1383,8 +1383,8 @@ class CameraModule : public PayloadBase {
   /*! @brief stop camera optical zooming, non-blocking calls
    *
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -1395,7 +1395,7 @@ class CameraModule : public PayloadBase {
   /*! @brief stop camera optical zooming, blocking calls
    *
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType stopContinuousOpticalZoomSync(int timeout);
 
@@ -1403,8 +1403,8 @@ class CameraModule : public PayloadBase {
    *
    *  @param param tap zoom enable data
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
-   *  @arg @b userData the interface to trans userData in when the callback
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to pass userData in when the callback
    * is called
    *  @param userData when UserCallBack is called, used in UserCallBack
    *  @details It should be paid attention that, tap zoom have not getter
@@ -1420,16 +1420,16 @@ class CameraModule : public PayloadBase {
    *  @param param tap zoom enable data
    *  @param timeout blocking timeout in seconds
    *  @details It should be paid attention that, tap zoom have not getter API
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType setTapZoomEnabledSync(bool param, int timeout);
 
   /*! @brief get camera tap zoom function parameters, non-blocking calls
    *
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
    *  @arg @b param used as an input param, tap zoom enable data
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -1442,7 +1442,7 @@ class CameraModule : public PayloadBase {
    *
    *  @param param used as an output param, tap zoom enable data
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType getTapZoomEnabledSync(bool& param, int timeout);
 
@@ -1450,8 +1450,8 @@ class CameraModule : public PayloadBase {
    *
    *  @param param tap zoom multiplier data
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    *  @details It should be paid attention that, tap zoom have not getter API
@@ -1466,7 +1466,7 @@ class CameraModule : public PayloadBase {
    *  @param param tap multiplier enable data
    *  @param timeout blocking timeout in seconds
    *  @details It should be paid attention that, tap zoom have not getter API
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType setTapZoomMultiplierSync(TapZoomMultiplierData param,
                                                     int timeout);
@@ -1474,9 +1474,9 @@ class CameraModule : public PayloadBase {
   /*! @brief get camera tap zoom function parameters, non-blocking calls
    *
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
    *  @arg @b param used as an input param, tap zoom multiplier data
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -1489,7 +1489,7 @@ class CameraModule : public PayloadBase {
    *
    *  @param param used as an output param, tap zoom multiplier data
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType getTapZoomMultiplierSync(
       TapZoomMultiplierData& param, int timeout);
@@ -1498,8 +1498,8 @@ class CameraModule : public PayloadBase {
    *
    *  @param tapZoomPos the param of tap zoom, including x,y value
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -1512,7 +1512,7 @@ class CameraModule : public PayloadBase {
    *
    *  @param tapZoomPos the param of tap zoom, including x,y value
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType tapZoomAtTargetSync(TapZoomPosData tapZoomPos,
                                                int timeout);
@@ -1534,8 +1534,8 @@ class CameraModule : public PayloadBase {
    *  @param mode exposure mode, input limit see enum
    * DJI::OSDK::CameraModule::ExposureMode
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -1549,7 +1549,7 @@ class CameraModule : public PayloadBase {
    *  @param mode exposure mode, input limit see enum
    * DJI::OSDK::CameraModule::ExposureMode
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType setExposureModeSync(ExposureMode mode, int timeout);
 
@@ -1568,7 +1568,7 @@ class CameraModule : public PayloadBase {
    * Aperture Priority: NA
    * Manual Mode: Shutter: Manual Aperture: Manual ISO: Manual
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
    *  @arg @b mode exposure mode, input limit see enum
    * DJI::OSDK::CameraModule::ExposureMode
    *  @arg @b userData in when the callback is called
@@ -1584,7 +1584,7 @@ class CameraModule : public PayloadBase {
    *  @param mode used as an output param,exposure mode, input limit see enum
    * DJI::OSDK::CameraModule::ExposureMode
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType getExposureModeSync(ExposureMode& mode, int timeout);
 
@@ -1593,8 +1593,8 @@ class CameraModule : public PayloadBase {
    *  @param iso camera iso, input limit see enum
    * DJI::OSDK::CameraModule::ISOParameter
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -1608,16 +1608,16 @@ class CameraModule : public PayloadBase {
    *  @param iso camera iso, input limit see enum
    * DJI::OSDK::CameraModule::ISOParameter
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType setISOSync(ISO iso, int timeout);
 
   /*! @brief get camera iso value, non-blocking calls
    *
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
    *  @arg @b iso used as an input param, camera iso, input limit see enum
-   *  DJI::OSDK::CameraModule::ISOParameter userData the interface to trans
+   *  DJI::OSDK::CameraModule::ISOParameter
    *  @arg @b userData in when the callback is called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -1630,7 +1630,7 @@ class CameraModule : public PayloadBase {
    *  @param iso used as an output param, camera iso, input limit see enum
    * DJI::OSDK::CameraModule::ISOParameter
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType getISOSync(ISO& iso, int timeout);
 
@@ -1639,8 +1639,8 @@ class CameraModule : public PayloadBase {
    *  @param size camera aperture size, input limit see enum
    * DJI::OSDK::CameraModule::ApertureSize
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -1654,17 +1654,17 @@ class CameraModule : public PayloadBase {
    *  @param size camera aperture size, input limit see enum
    * DJI::OSDK::CameraModule::ApertureSize
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType setApertureSync(Aperture size, int timeout);
 
   /*! @brief get camera aperture size value, non-blocking calls
    *
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
    *  @arg @b size used as an input param, camera aperture size, input limit see
    * enum DJI::OSDK::CameraModule::ApertureSize
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -1677,7 +1677,7 @@ class CameraModule : public PayloadBase {
    *  @param size used as an output param, camera aperture size, input limit see
    * enum DJI::OSDK::CameraModule::ApertureSize
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType getApertureSync(Aperture& size, int timeout);
 
@@ -1686,8 +1686,8 @@ class CameraModule : public PayloadBase {
    *  @param shutter the shutter mode and param of camera, input limit see enum
    *  DJI::OSDK::CameraModule::ShutterMode
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -1701,7 +1701,7 @@ class CameraModule : public PayloadBase {
    *  @param shutter the shutter mode and param of camera, input limit see enum
    *  DJI::OSDK::CameraModule::ShutterMode
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType setShutterSpeedSync(ShutterSpeed shutterSpeed,
                                                int timeout);
@@ -1709,10 +1709,10 @@ class CameraModule : public PayloadBase {
   /*! @brief get camera shutter value, non-blocking calls
    *
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
    *  @arg @b shutter used as an input param, the shutter mode and param of
    * camera, input limit see enum DJI::OSDK::CameraModule::ShutterMode userData
-   * the interface to trans userData in when the callback is called
+   * the interface to pass userData in when the callback is called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
   void getShutterSpeedAsync(
@@ -1725,7 +1725,7 @@ class CameraModule : public PayloadBase {
    *  @param shutter used as an output param, the shutter mode and param of
    * camera, input limit see enum DJI::OSDK::CameraModule::ShutterMode
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType getShutterSpeedSync(ShutterSpeed& shutterSpeed,
                                                int timeout);
@@ -1735,8 +1735,8 @@ class CameraModule : public PayloadBase {
    *  @param ev ev parameter value of camera, input limit see enum
    * DJI::OSDK::CameraModule::EVParameter
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
-   *  @arg @b userData the interface to trans userData in when the callback is
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to pass userData in when the callback is
    * called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
@@ -1750,7 +1750,7 @@ class CameraModule : public PayloadBase {
    *  @param ev ev parameter value of camera, input limit see enum
    * DJI::OSDK::CameraModule::EVParameter
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType setExposureCompensationSync(ExposureCompensation ev,
                                                        int timeout);
@@ -1758,10 +1758,10 @@ class CameraModule : public PayloadBase {
   /*! @brief get camera EV value, non-blocking calls
    *
    *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode is the OSDK unitified error code
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
    *  @arg @b ev used as an input param, ev parameter value of camera, input
    * limit see enum DJI::OSDK::CameraModule::EVParameter userData the interface
-   * to trans userData in when the callback is called
+   * to pass userData in when the callback is called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
   void getExposureCompensationAsync(
@@ -1774,7 +1774,7 @@ class CameraModule : public PayloadBase {
    *  @param ev used as an output param, ev parameter value of camera, input
    * limit see enum DJI::OSDK::CameraModule::EVParameter
    *  @param timeout blocking timeout in seconds
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType getExposureCompensationSync(ExposureCompensation& ev,
                                                        int timeout);

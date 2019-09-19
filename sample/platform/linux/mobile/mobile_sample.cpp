@@ -574,4 +574,5 @@ mobileSamplePoll(void* vehiclePtr)
     }
     usleep(500000);
   }
+  return NULL;
 }

@@ -71,4 +71,5 @@ dynamicLoggingControlExample()
           "CUSTOM_LOG", CUSTOM_LOG);
   DDEBUG(
     "That's it! Look into the source code to see what didn't get printed.\n");
+  return true;
 }

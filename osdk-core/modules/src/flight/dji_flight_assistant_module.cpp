@@ -120,7 +120,7 @@ void FlightAssistant::readParameterByHashAsync(
         sizeof(hashValue), (void*)ackDecoderCB,
         allocUCBHandler((void*)userCB, userData), timeout, retryTime);
   } else {
-    DataT data;
+    DataT data  = {};
     if (userCB)
       userCB(ErrorCode::SysCommonErr::AllocMemoryFailed, data, userData);
   }

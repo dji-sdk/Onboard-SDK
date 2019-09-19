@@ -309,8 +309,8 @@ private:
   //! Initialization data
   bool        threadSupported;
   bool        advancedSensingEnabled;
-  const char* device;
-  uint32_t    baudRate;
+  const char* device = "";
+  uint32_t    baudRate = 0;
   int callbackId;
 
   //! ACK management

@@ -50,7 +50,7 @@ class CameraManagerSyncSample {
    *  @param index payload node index, input limit see enum
    * DJI::OSDK::PayloadIndexType
    *  @param dataTarget the target exposure compensation value
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType setEVSyncSample(
       PayloadIndexType index, CameraModule::ExposureCompensation dataTarget);
@@ -61,7 +61,7 @@ class CameraManagerSyncSample {
    *  @param index payload node index, input limit see enum
    * DJI::OSDK::PayloadIndexType
    *  @param dataTarget the target exposure mode
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType setExposureModeSyncSample(
       PayloadIndexType index, CameraModule::ExposureMode dataTarget);
@@ -72,7 +72,7 @@ class CameraManagerSyncSample {
    *  @param index payload node index, input limit see enum
    * DJI::OSDK::PayloadIndexType
    *  @param dataTarget the target ISO value
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType setISOSyncSample(PayloadIndexType index,
                                             CameraModule::ISO dataTarget);
@@ -83,7 +83,7 @@ class CameraManagerSyncSample {
    *  @param index payload node index, input limit see enum
    * DJI::OSDK::PayloadIndexType
    *  @param dataTarget the target shutter speed
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType setShutterSpeedSyncSample(
       PayloadIndexType index, CameraModule::ShutterSpeed dataTarget);
@@ -94,7 +94,7 @@ class CameraManagerSyncSample {
    *  @param index payload node index, input limit see enum
    * DJI::OSDK::PayloadIndexType
    *  @param dataTarget the target aperture value
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType setApertureSyncSample(
       PayloadIndexType index, CameraModule::Aperture dataTarget);
@@ -107,7 +107,7 @@ class CameraManagerSyncSample {
    * DJI::OSDK::PayloadIndexType
    *  @param x the x value of target focus point, 0~1
    *  @param y the y value of target focus point, 0~1
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType setFocusPointSyncSample(PayloadIndexType index,
                                                    float x, float y);
@@ -122,7 +122,7 @@ class CameraManagerSyncSample {
    *  @param multiplier the zoom multiplier of each tap zoom
    *  @param x the x value of target tap-zoom point, 0~1
    *  @param y the y value of target tap-zoom point, 0~1
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType setTapZoomPointSyncSample(PayloadIndexType index,
                                                      uint8_t multiplier,
@@ -138,7 +138,7 @@ class CameraManagerSyncSample {
    * DJI::OSDK::PayloadIndexType
    *  @param direction the choice of zoom out or zoom in
    *  @param speed zooming speed
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType startZoomSyncSample(
       PayloadIndexType index, CameraModule::zoomDirectionData direction,
@@ -150,7 +150,7 @@ class CameraManagerSyncSample {
    * Olympus M.Zuiko ED 14-42mm f/3.5-5.6 EZ, Z3 camera, Z30 camera.
    *  @param index payload node index, input limit see enum
    * DJI::OSDK::PayloadIndexType
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType stopZoomSyncSample(PayloadIndexType index);
 
@@ -160,7 +160,7 @@ class CameraManagerSyncSample {
    * then start to shoot a single photo.
    *  @param index payload node index, input limit see enum
    * DJI::OSDK::PayloadIndexType
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType startShootSinglePhotoSyncSample(
       PayloadIndexType index);
@@ -172,7 +172,7 @@ class CameraManagerSyncSample {
    *  @param index payload node index, input limit see enum
    * DJI::OSDK::PayloadIndexType
    *  @param count The number of pictures in each burst shooting
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType startShootBurstPhotoSyncSample(
       PayloadIndexType index, CameraModule::PhotoBurstCount count);
@@ -184,7 +184,7 @@ class CameraManagerSyncSample {
    *  @param index payload node index, input limit see enum
    * DJI::OSDK::PayloadIndexType
    *  @param photoNum The number of pictures in each AEB shooting
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType startShootAEBPhotoSyncSample(
       PayloadIndexType index, CameraModule::PhotoAEBCount photoNum);
@@ -196,7 +196,7 @@ class CameraManagerSyncSample {
    *  @param index payload node index, input limit see enum
    * DJI::OSDK::PayloadIndexType
    *  @param intervalData the parameter of interval shooting
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType startShootIntervalPhotoSyncSample(
       PayloadIndexType index, CameraModule::PhotoIntervalData intervalData);
@@ -206,7 +206,7 @@ class CameraManagerSyncSample {
    *  @note In this interface, camera will stop all the shooting action
    *  @param index payload node index, input limit see enum
    * DJI::OSDK::PayloadIndexType
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType shootPhotoStopSyncSample(PayloadIndexType index);
 
@@ -216,7 +216,7 @@ class CameraManagerSyncSample {
    * then start to record video.
    *  @param index payload node index, input limit see enum
    * DJI::OSDK::PayloadIndexType
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType startRecordVideoSyncSample(PayloadIndexType index);
 
@@ -226,7 +226,7 @@ class CameraManagerSyncSample {
    * then stop recording video.
    *  @param index payload node index, input limit see enum
    * DJI::OSDK::PayloadIndexType
-   *  @return OSDK unitified error code
+   *  @return ErrorCode::ErrorCodeType error code
    */
   ErrorCode::ErrorCodeType stopRecordVideoSyncSample(PayloadIndexType index);
 
