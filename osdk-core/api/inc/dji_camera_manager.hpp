@@ -672,10 +672,14 @@ class CameraManager {
 
   /*! @brief set camera focus mode, non-blocking calls
    *
-   *  @note Sets the lens focus mode. Supported by the X5, X5R, Z3
-   * cameras (Z3 camera can only support AUTO), the Mavic Pro camera, Z30,
-   * Phantom 4 Pro camera, X4S, X5S, Mavic 2 Pro, Mavic 2 Zoom Camera and Mavic
-   * 2 Enterprise Camera.
+   *  @note Sets the lens focus mode. When the focus mode is auto, the target
+   *  point is the focal point. When the focus mode is manual, the target point
+   *  is the zoom out area if the focus assistant is enabled for the manual
+   *  mode. Supported only by the X5, X5R, Z3 cameras, Mavic Pro camera,
+   *  Phantom 4 Pro camera, Mavic 2 Pro, Mavic 2 Zoom Camera, Mavic 2 Enterprise
+   *  Camera, X5S. It's should be attention that X4S will keep focus point as
+   *  (0.5,0.5) all the time, the setting of focus point to X4S will quickly
+   *  replaced by (0.5, 0.5).
    *  @note All the APIs whose name ending with sync or async in this class
    * have a restriction on calling. All these API should not be called until
    * the previous request receives ack or timeout.
@@ -698,10 +702,14 @@ class CameraManager {
 
   /*! @brief get camera focus mode, blocking calls
    *
-   *  @note Sets the lens focus mode. Supported by the X5, X5R, Z3
-   * cameras (Z3 camera can only support AUTO), the Mavic Pro camera, Z30,
-   * Phantom 4 Pro camera, X4S, X5S, Mavic 2 Pro, Mavic 2 Zoom Camera and Mavic
-   * 2 Enterprise Camera.
+   *  @note Sets the lens focus mode. When the focus mode is auto, the target
+   *  point is the focal point. When the focus mode is manual, the target point
+   *  is the zoom out area if the focus assistant is enabled for the manual
+   *  mode. Supported only by the X5, X5R, Z3 cameras, Mavic Pro camera,
+   *  Phantom 4 Pro camera, Mavic 2 Pro, Mavic 2 Zoom Camera, Mavic 2 Enterprise
+   *  Camera, X5S. It's should be attention that X4S will keep focus point as
+   *  (0.5,0.5) all the time, the setting of focus point to X4S will quickly
+   *  replaced by (0.5, 0.5).
    *  @note All the APIs whose name ending with sync or async in this class
    * have a restriction on calling. All these API should not be called until
    * the previous request receives ack or timeout.

@@ -1306,6 +1306,14 @@ class CameraModule : public PayloadBase {
 
   /*! @brief set camera tap focus target point, non-blocking calls
    *
+   *  @note Sets the lens focus mode. When the focus mode is auto, the target
+   *  point is the focal point. When the focus mode is manual, the target point
+   *  is the zoom out area if the focus assistant is enabled for the manual
+   *  mode. Supported only by the X5, X5R, Z3 cameras, Mavic Pro camera,
+   *  Phantom 4 Pro camera, Mavic 2 Pro, Mavic 2 Zoom Camera, Mavic 2 Enterprise
+   *  Camera, X5S. It's should be attention that X4S will keep focus point as
+   *  (0.5,0.5) all the time, the setting of focus point to X4S will quickly
+   *  replaced by (0.5, 0.5).
    *  @param tapFocusPos the param of tap focus, including x,y value
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
@@ -1320,6 +1328,14 @@ class CameraModule : public PayloadBase {
 
   /*! @brief set camera focus point, blocking calls
    *
+   *  @note Sets the lens focus mode. When the focus mode is auto, the target
+   *  point is the focal point. When the focus mode is manual, the target point
+   *  is the zoom out area if the focus assistant is enabled for the manual
+   *  mode. Supported only by the X5, X5R, Z3 cameras, Mavic Pro camera,
+   *  Phantom 4 Pro camera, Mavic 2 Pro, Mavic 2 Zoom Camera, Mavic 2 Enterprise
+   *  Camera, X5S. It's should be attention that X4S will keep focus point as
+   *  (0.5,0.5) all the time, the setting of focus point to X4S will quickly
+   *  replaced by (0.5, 0.5).
    *  @param tapFocusPos the param of tap focus, including x,y value
    *  @param timeout blocking timeout in seconds
    *  @return ErrorCode::ErrorCodeType error code

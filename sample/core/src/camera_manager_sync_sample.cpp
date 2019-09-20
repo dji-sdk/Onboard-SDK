@@ -241,14 +241,27 @@ ErrorCode::ErrorCodeType CameraManagerSyncSample::setFocusPointSyncSample(
       DERROR("Set focus point error. Error code : 0x%lX", retCode);
       ErrorCode::printErrorCodeMsg(retCode);
       DERROR(
-          "Supported only by the X5, X5R, X4S and X5S. camera, X4S and X5S.");
+        "When the focus mode is auto, the target point is the focal point. "
+        "When the focus mode is manual, the target point is the zoom out area "
+        "if the focus assistant is enabled for the manual mode. Supported only "
+        "by the X5, X5R, Z3 cameras, Mavic Pro camera, Phantom 4 Pro camera, "
+        "Mavic 2 Pro, Mavic 2 Zoom Camera, Mavic 2 Enterprise Camera, X5S. "
+        "It's should be attention that X4S will keep focus point as (0.5,0.5) "
+        "all the time, the setting of focus point to X4S will quickly replaced "
+        "by (0.5, 0.5).");
     }
   } else {
     DERROR("Set focus mode parameter error. Error code : 0x%lX", retCode);
     ErrorCode::printErrorCodeMsg(retCode);
     DERROR(
-        "Supported only by the X5, X5R, Z3 cameras(only support AUTO mode), "
-        "X4S and X5S. camera, X4S and X5S.");
+        "When the focus mode is auto, the target point is the focal point. "
+        "When the focus mode is manual, the target point is the zoom out area "
+        "if the focus assistant is enabled for the manual mode. Supported only "
+        "by the X5, X5R, Z3 cameras, Mavic Pro camera, Phantom 4 Pro camera, "
+        "Mavic 2 Pro, Mavic 2 Zoom Camera, Mavic 2 Enterprise Camera, X5S. "
+        "It's should be attention that X4S will keep focus point as (0.5,0.5) "
+        "all the time, the setting of focus point to X4S will quickly replaced "
+        "by (0.5, 0.5).");
   }
 
   return retCode;

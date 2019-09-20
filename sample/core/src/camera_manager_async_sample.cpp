@@ -271,6 +271,10 @@ void CameraManagerAsyncSample::setISOAsyncSample(
     PayloadIndexType index, CameraModule::ISO dataTarget,
     void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
+  DSTATUS(
+      "For the X5, X5R, X4S and X5S, the ISO value can be set for all "
+      "modes. For the other cameras, the ISO value can only be set when "
+      "the camera exposure mode is in Manual mode.");
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
     if (UserCallBack)
@@ -294,6 +298,11 @@ void CameraManagerAsyncSample::setShutterSpeedAsyncSample(
     PayloadIndexType index, CameraModule::ShutterSpeed dataTarget,
     void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
+  DSTATUS(
+      "The shutter speed can be set only when the camera exposure mode "
+      "is Shutter mode or Manual mode. The shutter speed should not be "
+      "set slower than the video frame rate when the camera's mode is "
+      "RECORD_VIDEO.");
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
     if (UserCallBack)
@@ -317,6 +326,10 @@ void CameraManagerAsyncSample::setApertureAsyncSample(
     PayloadIndexType index, CameraModule::Aperture dataTarget,
     void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
+  DSTATUS(
+      "In order to use this function, the exposure mode ExposureMode "
+      "must be in MANUAL or APERTURE_PRIORITY. Supported only by the X5, "
+      "X5R, X4S, X5S camera.");
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
     if (UserCallBack)
@@ -340,6 +353,10 @@ void CameraManagerAsyncSample::setEVAsyncSample(
     PayloadIndexType index, CameraModule::ExposureCompensation dataTarget,
     void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
+  DSTATUS(
+      "In order to use this function, the camera exposure mode should be "
+      "set to be PROGRAM_AUTO, SHUTTER_PRIORITY or APERTURE_PRIORITY "
+      "first");
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
     if (UserCallBack)
@@ -393,6 +410,15 @@ void CameraManagerAsyncSample::setFocusPointAsyncSample(
     PayloadIndexType index, float x, float y,
     void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
+  DSTATUS(
+      "When the focus mode is auto, the target point is the focal point. "
+      "When the focus mode is manual, the target point is the zoom out area "
+      "if the focus assistant is enabled for the manual mode. Supported only "
+      "by the X5, X5R, Z3 cameras, Mavic Pro camera, Phantom 4 Pro camera, "
+      "Mavic 2 Pro, Mavic 2 Zoom Camera, Mavic 2 Enterprise Camera, X5S. "
+      "It's should be attention that X4S will keep focus point as (0.5,0.5) "
+      "all the time, the setting of focus point to X4S will quickly replaced "
+      "by (0.5, 0.5).");
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
     if (UserCallBack)
@@ -476,6 +502,7 @@ void CameraManagerAsyncSample::setTapZoomPointAsyncSample(
     PayloadIndexType index, uint8_t multiplier, float x, float y,
     void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
+  DSTATUS("It is only supported Z30 camera.");
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
     if (UserCallBack)
@@ -502,6 +529,9 @@ void CameraManagerAsyncSample::startZoomAsyncSample(
     CameraModule::zoomSpeedData speed,
     void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
+  DSTATUS(
+      "Attention : It is only supported by X5, X5R and X5S camera on Osmo with"
+      "lens Olympus M.Zuiko ED 14-42mm f/3.5-5.6 EZ, Z3 camera, Z30 camera.");
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
     if (UserCallBack)
