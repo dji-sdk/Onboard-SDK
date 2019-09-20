@@ -84,19 +84,6 @@ class FlightAssistant {
     GoHomeAltitude altitude;
   } GoHomeAltitudeAck;
 
-  typedef struct AvoidObstacleData {
-    uint8_t frontBrakeFLag : 1;  /*!< emergency brake flag for front direction,
-                              0:disable, 1:enable*/
-    uint8_t rightBrakeFlag : 1;  /*!< emergency brake flag for right direction,
-                              0:disable, 1:enable*/
-    uint8_t backBrakeFlag : 1;   /*!< emergency brake flag for back direction,
-                              0:disable, 1:enable*/
-    uint8_t leftBrakeFlag : 1;   /*!< emergency brake flag for left direction,
-                              0:disable, 1:enable*/
-    uint8_t activeAvoidFlag : 1; /*!< passive avoid flag, 0:disable, 1:enable*/
-    uint8_t reserve : 3;         /*!< reserve*/
-  } AvoidObstacleData;           // pack(1)
-
   typedef struct SetHomeLocationData {
     HomeLocationType homeType; /*!< enum-type: HomeLocationType   */
     double latitude;           /*!< unit:rad, range: -pi/2 ~ pi/2 */
@@ -319,29 +306,6 @@ class FlightAssistant {
       void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
       UserData userData);
 
-  /*! @brief Set avoid obstacle switch enable or disable, blocking calls
-   *
-   *  @param avoidObstacle reference in AvoidObstacleData
-   *  @param timeout blocking timeout in seconds
-   *  @return OSDK ErrorCode::ErrorCodeType error code
-   */
-  ErrorCode::ErrorCodeType setAvoidObstacleSwitchSync(
-      AvoidObstacleData avoidObstacle, int timeout);
-
-  /*! @brief Set set avoid obstacle switch enable or disable, non-blocking calls
-   *
-   *  @param avoidObstacle reference in AvoidObstacleData
-   *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode  OSDK ErrorCode::ErrorCodeType error code
-   *  @arg @b userData the interface to pass userData in when the callback is
-   * called
-   *  @param userData when UserCallBack is called, used in UserCallBack
-   */
-  void setAvoidObstacleSwitchAsync(
-      AvoidObstacleData avoidObstacle,
-      void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
-      UserData userData);
-
  private:
   FlightLink *flightLink;
 
@@ -359,10 +323,6 @@ class FlightAssistant {
                                        UCBRetParamHandler<GoHomeAltitude> *ucb);
   static void setHomePointAckDecoder(Vehicle *vehicle, RecvContainer recvFrame,
                                      UCBRetCodeHandler *ucb);
-
-  static void avoidObstacleAckDecoder(Vehicle *vehicle, RecvContainer recvFrame,
-                                      UCBRetCodeHandler *ucb);
-
   /*! @brief Check the altitude of go home setting is valid or not,
    *
    *  @param altitude go home altitude

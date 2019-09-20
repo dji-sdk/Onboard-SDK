@@ -125,35 +125,6 @@ void FlightController::getGoHomeAltitudeAsync(
   }
 }
 
-ErrorCode::ErrorCodeType FlightController::setCollisionAvoidanceEnabledSync(
-    CollisionAvoidanceSwitch collisionAvoidanceSwitch, int timeout) {
-  if (flightAssistant) {
-    uint8_t avoidObstacleData = 0xFF;
-    FlightAssistant::AvoidObstacleData avoidObstacle;
-    memcpy(&avoidObstacle,&avoidObstacleData,sizeof(uint8_t));
-    avoidObstacle.activeAvoidFlag = collisionAvoidanceSwitch;
-    return flightAssistant->setAvoidObstacleSwitchSync(avoidObstacle, timeout);
-  } else
-    return ErrorCode::SysCommonErr::AllocMemoryFailed;
-}
-
-void FlightController::setCollisionAvoidanceEnabledAsync(
-    CollisionAvoidanceSwitch collisionAvoidanceSwitch,
-    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
-    UserData userData) {
-  if (flightAssistant) {
-    uint8_t avoidObstacleData = 0xFF;
-    FlightAssistant::AvoidObstacleData avoidObstacle;
-    memcpy(&avoidObstacle,&avoidObstacleData,sizeof(uint8_t));
-    avoidObstacle.activeAvoidFlag = collisionAvoidanceSwitch;
-    flightAssistant->setAvoidObstacleSwitchAsync(avoidObstacle, UserCallBack,
-                                                 userData);
-  } else {
-    if (UserCallBack)
-      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
-  }
-}
-
 ErrorCode::ErrorCodeType FlightController::setHomeLocationSync(
     HomeLocation homeLocation, int timeout) {
   if (flightAssistant) {

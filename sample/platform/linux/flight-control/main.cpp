@@ -94,16 +94,6 @@ int main(int argc, char** argv) {
         DSTATUS("Turn on rtk switch successfully");
       }
 
-      /*! Turn on collision avoidance switch */
-      ret =
-          vehicle->flightController->setCollisionAvoidanceEnabledSync(true, 1);
-      if (ret != ErrorCode::SysCommonErr::Success) {
-        DSTATUS("Turn on collision avoidance switch failed, ErrorCode is:%8x",
-                ret);
-      } else {
-        DSTATUS("Turn on collision avoidance switch successfully");
-      }
-
       /*!  Take off */
       monitoredTakeoff(vehicle);
 
@@ -121,16 +111,6 @@ int main(int argc, char** argv) {
 
       /*! Move to another position */
       moveByPositionOffset(vehicle, 40, 0, 0, 0);
-
-      /*! Turn off collision avoidance switch */
-      ret =
-          vehicle->flightController->setCollisionAvoidanceEnabledSync(false, 1);
-      if (ret != ErrorCode::SysCommonErr::Success) {
-        DSTATUS("Turn off collision avoidance switch failed, ErrorCode is:%8x",
-                ret);
-      } else {
-        DSTATUS("Turn off collision avoidance switch successfully");
-      }
 
       /*! go home and  confirm landing */
       goHomeAndConfirmLanding(vehicle, 1);

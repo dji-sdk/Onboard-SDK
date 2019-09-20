@@ -216,28 +216,6 @@ void FlightAssistant::setHomePointAckDecoder(Vehicle* vehicle,
   }
 }
 
-void FlightAssistant::avoidObstacleAckDecoder(Vehicle* vehicle,
-                                               RecvContainer recvFrame,
-                                               UCBRetCodeHandler* ucb) {
-  if (ucb && ucb->UserCallBack) {
-    ACK::ErrorCode ack = {0};
-    ErrorCode::ErrorCodeType ret = 0;
-    ack.data = *(uint32_t*)(recvFrame.recvData.raw_ack_array);
-    if (recvFrame.recvInfo.len - OpenProtocol::PackageMin <= sizeof(ack.data)) {
-      /*! NOTE:There is no ret code for this function , so ack mean's successful
-       */
-      ret == ErrorCode::SysCommonErr::Success;
-    } else {
-      DERROR("ACK is exception, data len %d (expect >= %d)\n",
-             recvFrame.recvInfo.len - OpenProtocol::PackageMin,
-             sizeof(ack.data));
-      ret = ErrorCode::SysCommonErr::UnpackDataMismatch;
-    }
-    ucb->UserCallBack(ret, ucb->userData);
-  }
-}
-
-
 ErrorCode::ErrorCodeType FlightAssistant::setRtkEnableSync(
     RtkEnableData rtkEnable, int timeout) {
   return writeParameterByHashSync(ParamHashValue::USE_RTK_DATA,
@@ -317,44 +295,6 @@ void FlightAssistant::getGoHomeAltitudeAsync(
   readParameterByHashAsync<GoHomeAltitude>(ParamHashValue::GO_HOME_ALTITUDE,
                                            getGoHomeAltitudeDecoder,
                                            UserCallBack, userData);
-}
-
-ErrorCode::ErrorCodeType FlightAssistant::setAvoidObstacleSwitchSync(
-    AvoidObstacleData avoidObstacle, int timeout) {
-  if (flightLink) {
-    ACK::ErrorCode ack = *(ACK::ErrorCode*)flightLink->sendSync(
-        OpenProtocolCMD::CMDSet::Intelligent::setAvoidObstacle,
-        &avoidObstacle, sizeof(avoidObstacle), timeout);
-
-    uint8_t ackData = (uint8_t)ack.data;
-    if ((ack.info.len - OpenProtocol::PackageMin <= sizeof(ack.data)) &&
-        ((ackData & 0x01) == avoidObstacle.frontBrakeFLag) &&
-        (((ackData & 0x02) >> 1) == avoidObstacle.rightBrakeFlag) &&
-        (((ackData & 0x04) >> 2) == avoidObstacle.backBrakeFlag) &&
-        (((ackData & 0x08) >> 3) == avoidObstacle.leftBrakeFlag) &&
-        (((ackData & 0x10) >> 4) == avoidObstacle.activeAvoidFlag)) {
-      return ErrorCode::SysCommonErr::Success;
-    } else {
-      return ErrorCode::SysCommonErr::UnpackDataMismatch;
-    }
-  } else {
-    return ErrorCode::SysCommonErr::AllocMemoryFailed;
-  }
-}
-
-void FlightAssistant::setAvoidObstacleSwitchAsync(
-    AvoidObstacleData avoidObstacle,
-    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
-    UserData userData) {
-  if (flightLink) {
-    flightLink->sendAsync(
-        OpenProtocolCMD::CMDSet::Intelligent::setAvoidObstacle,
-        &avoidObstacle, sizeof(avoidObstacle), (void*)avoidObstacleAckDecoder,
-        allocUCBHandler((void*)UserCallBack, userData));
-  } else {
-    if (UserCallBack)
-      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
-  }
 }
 
 ErrorCode::ErrorCodeType FlightAssistant::setHomeLocationSync(
