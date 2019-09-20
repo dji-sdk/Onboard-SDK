@@ -613,15 +613,6 @@ moveByPositionOffset(float xOffsetDesired, float yOffsetDesired,
   int   brakeCounter        = 0;
   int   speedFactor         = 2;
   float xCmd, yCmd, zCmd;
-  // There is a deadband in position control
-  // the z cmd is absolute height
-  // while x and y are in relative
-  float zDeadband = 0.12;
-
-  if(v->getFwVersion() == Version::M100_31)
-  {
-    zDeadband = 0.12 * 10;
-  }
 
   /*! Calculate the inputs to send the position controller. We implement basic
    *  receding setpoint position control and the setpoint is always 1 m away
@@ -706,7 +697,7 @@ moveByPositionOffset(float xOffsetDesired, float yOffsetDesired,
     }
     else if(std::abs(xOffsetRemaining) < posThresholdInM &&
 	   std::abs(yOffsetRemaining) < posThresholdInM &&
-	   std::abs(zOffsetRemaining) < zDeadband &&
+	   std::abs(zOffsetRemaining) < posThresholdInM &&
 	   std::abs(yawInRad - yawDesiredRad) < yawThresholdInRad)
     {
       //! 1. We are within bounds; start incrementing our in-bound counter

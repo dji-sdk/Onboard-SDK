@@ -84,14 +84,14 @@ int main(int argc, char** argv) {
 
     /*! @NOTE: case 'c' only support for m210 V2*/
     case 'c':
-      /*! Turn on rtk switch */
+      /*! Turn off rtk switch */
       ErrorCode::ErrorCodeType ret;
       ret = vehicle->flightController->setRtkEnableSync(
-          FlightController::RtkEnabled::RTK_ENABLE, 1);
+          FlightController::RtkEnabled::RTK_DISABLE, 1);
       if (ret != ErrorCode::SysCommonErr::Success) {
-        DSTATUS("Turn on rtk switch failed, ErrorCode is:%8x", ret);
+        DSTATUS("Turn off rtk switch failed, ErrorCode is:%8x", ret);
       } else {
-        DSTATUS("Turn on rtk switch successfully");
+        DSTATUS("Turn off rtk switch successfully");
       }
 
       /*! Turn on collision avoidance switch */
