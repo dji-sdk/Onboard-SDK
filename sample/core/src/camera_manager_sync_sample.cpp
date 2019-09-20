@@ -362,15 +362,20 @@ CameraManagerSyncSample::startShootSinglePhotoSyncSample(
     return retCode;
   }
 
-  /*!< set shoot-photo mode */
+  /*! @TODO XT* and Z30 don't support set shoot-photo mode. To fix it in the
+   * future */
+  /*!< set shoot-photo mode
   DSTATUS("set shoot-photo mode as SINGLE");
   retCode =
       pm->setShootPhotoModeSync(index, CameraModule::ShootPhotoMode::SINGLE, 1);
   if (retCode != ErrorCode::SysCommonErr::Success) {
     DERROR("Set shoot-photo mode as SINGLE fail. Error code : 0x%lX", retCode);
     ErrorCode::printErrorCodeMsg(retCode);
+    DERROR("If the camera is XT, XT2, or XTS, set shoot-photo mode interface is"
+           "temporarily not supported.");
     return retCode;
   }
+  */
 
   /*! wait the APP change the shoot-photo mode display */
   vehicle->getPlatformManager()->millisecSleep(500);
