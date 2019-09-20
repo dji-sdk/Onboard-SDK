@@ -5,7 +5,7 @@
  *  @brief
  *  Flight sample us FlightController API  in a Linux environment..
  *  Provides a number of helpful additions to core API calls,
- *  especially for go home ,landing, set rtk and collision avoidance switch.
+ *  especially for go home ,landing, set rtk switch.
  *
  *  @Copyright (c) 2019 DJI
  *

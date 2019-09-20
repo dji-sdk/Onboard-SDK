@@ -45,8 +45,6 @@ class FlightController {
   ~FlightController();
 
   typedef struct Telemetry::HomeLocationData HomeLocation;
-  typedef bool CollisionAvoidanceSwitch; /*!< true: enable collision avoidance,
-                                          * false: disable collision avoidance */
   typedef FlightAssistant::RtkEnableData
       RtkEnabled; /*!< 0: disable, 1: enable*/
   typedef FlightAssistant::GoHomeAltitude
@@ -214,29 +212,6 @@ class FlightController {
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
   void setHomeLocationUsingCurrentAircraftLocationAsync(
-      void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
-      UserData userData);
-
-  /*! @brief Set collision avoidance enable or disable, blocking calls.
-   *
-   *  @param collisionAvoidanceSwitch reference in CollisionAvoidanceSwitch
-   *  @param timeout blocking timeout in seconds
-   *  @return ErrorCode::ErrorCodeType error code
-   */
-  ErrorCode::ErrorCodeType setCollisionAvoidanceEnabledSync(
-      CollisionAvoidanceSwitch collisionAvoidanceSwitch, int timeout);
-
-  /*! @brief Set collision avoidance enable or disable, non-blocking calls.
-   *
-   *  @param collisionAvoidanceSwitch reference in CollisionAvoidanceSwitch
-   *  @param UserCallBack callback function defined by user
-   *  @arg @b retCode  ErrorCode::ErrorCodeType error code
-   *  @arg @b userData the interface to transfer userData in when the callback is
-   * called
-   *  @param userData when UserCallBack is called, used in UserCallBack
-   */
-  void setCollisionAvoidanceEnabledAsync(
-      CollisionAvoidanceSwitch collisionAvoidanceSwitch,
       void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
       UserData userData);
 
