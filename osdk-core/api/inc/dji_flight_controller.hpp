@@ -158,7 +158,7 @@ class FlightController {
                            GoHomeHeight altitude, UserData userData),
       UserData userData);
 
-  /*! @brief Set customized home location, blocking calls.
+  /*! @brief Set customized GPS(not RTK) home location, blocking calls.
    *
    *  @note  Set customized home location failed reason may as follows:
    *  1. The distance between new home location and last home location is larger
@@ -171,7 +171,7 @@ class FlightController {
   ErrorCode::ErrorCodeType setHomeLocationSync(HomeLocation homeLocation,
                                                int timeout);
 
-  /*! @brief Set customized home location, non-blocking calls.
+  /*! @brief Set customized GPS(not RTK) home location, non-blocking calls.
    *
    *  @note  Set customized home location failed reasons may as follows:
    *  1. The distance between new home location and last home location is larger
@@ -189,7 +189,8 @@ class FlightController {
       void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
       UserData userData);
 
-  /*! @brief Set home location using current aircraft location, blocking calls.
+  /*! @brief Set home location using current aircraft GPS(not RTK) location,
+   * blocking calls.
    *
    *  @note  Set home location failed reasons may as follows:
    *  1. Aircraft's gps level can't reach the condition of recording home
@@ -200,8 +201,8 @@ class FlightController {
   ErrorCode::ErrorCodeType setHomeLocationUsingCurrentAircraftLocationSync(
       int timeout);
 
-  /*! @brief Set home location using current aircraft location, non-blocking
-   * calls.
+  /*! @brief Set home location using current aircraft GPS(not RTK) location,
+   * non-blocking calls.
    *
    *  @note  Set home location failed reasons may as follows:
    *  1. Aircraft's gps level can't reach the condition of recording home
