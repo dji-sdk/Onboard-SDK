@@ -34,7 +34,6 @@
 #else
 #include <cstdint>
 #endif
-#include <dji_macros.hpp>
 #include <map>
 
 namespace DJI {
