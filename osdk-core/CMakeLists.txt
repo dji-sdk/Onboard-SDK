@@ -268,7 +268,8 @@ install(FILES
 
 FILE(GLOB OSDK_LIB_HEADERS
         api/inc/*.h*
-        modules/inc/*.h*
+        modules/inc/payload/*.h*
+        modules/inc/flight/*.h*
         protocol/inc/*.h*
         hal/inc/*.h*
         utility/inc/*.h*
