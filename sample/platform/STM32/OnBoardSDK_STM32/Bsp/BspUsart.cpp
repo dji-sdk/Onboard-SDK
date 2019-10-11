@@ -133,7 +133,7 @@ USART3_Config(void)
   USART_InitTypeDef USART_InitStructure;
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3, ENABLE);
 
-  USART_InitStructure.USART_BaudRate   = 230400;
+  USART_InitStructure.USART_BaudRate   = 921600;
   USART_InitStructure.USART_WordLength = USART_WordLength_8b;
   USART_InitStructure.USART_StopBits   = USART_StopBits_1;
   USART_InitStructure.USART_Parity     = USART_Parity_No;
@@ -152,18 +152,16 @@ USART3_Config(void)
 void
 USARTxNVIC_Config()
 {
-  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
+  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
 
   NVIC_InitTypeDef NVIC_InitStructure_USART3;
-  NVIC_InitStructure_USART3.NVIC_IRQChannelPreemptionPriority = 0x04;
-  NVIC_InitStructure_USART3.NVIC_IRQChannelSubPriority        = 0x03;
+  NVIC_InitStructure_USART3.NVIC_IRQChannelPreemptionPriority = 0x06;
   NVIC_InitStructure_USART3.NVIC_IRQChannel                   = USART3_IRQn;
   NVIC_InitStructure_USART3.NVIC_IRQChannelCmd                = ENABLE;
   NVIC_Init(&NVIC_InitStructure_USART3);
 
   NVIC_InitTypeDef NVIC_InitStructure_USART2;
-  NVIC_InitStructure_USART2.NVIC_IRQChannelPreemptionPriority = 0x03;
-  NVIC_InitStructure_USART2.NVIC_IRQChannelSubPriority        = 0x02;
+  NVIC_InitStructure_USART2.NVIC_IRQChannelPreemptionPriority = 0x05;
   NVIC_InitStructure_USART2.NVIC_IRQChannel                   = USART2_IRQn;
   NVIC_InitStructure_USART2.NVIC_IRQChannelCmd                = ENABLE;
   NVIC_Init(&NVIC_InitStructure_USART2);

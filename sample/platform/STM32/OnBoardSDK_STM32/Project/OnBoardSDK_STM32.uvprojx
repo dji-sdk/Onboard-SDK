@@ -930,6 +930,11 @@
               <FileType>1</FileType>
               <FilePath>..\OS\FreeRTOS\timers.c</FilePath>
             </File>
+            <File>
+              <FileName>stream_buffer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\OS\FreeRTOS\stream_buffer.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

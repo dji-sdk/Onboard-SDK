@@ -30,6 +30,8 @@
 #include "stm32f4xx.h"
 #include "timer.h"
 #include "main.h"
+#include "FreeRTOS.h"
+#include "task.h"
 
 uint32_t tick = 0; // tick is the time stamp,which record how many ms since u
                    // initialize the system.
@@ -61,7 +63,6 @@ Timer1Config()
 
   NVIC_InitStructure.NVIC_IRQChannel                   = TIM1_UP_TIM10_IRQn;
   NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 3;
-  NVIC_InitStructure.NVIC_IRQChannelSubPriority        = 3;
   NVIC_InitStructure.NVIC_IRQChannelCmd                = ENABLE;
   NVIC_Init(&NVIC_InitStructure);
 
@@ -110,6 +111,8 @@ SystickConfig()
 void
 delay_nms(uint16_t time)
 {
+	vTaskDelay(time / portTICK_RATE_MS);
+	/*
   uint32_t startTick = tick;
   if ((startTick + time) < 4233600000ll)
   {
@@ -123,7 +126,7 @@ delay_nms(uint16_t time)
       if ((tick < startTick) && (tick >= (startTick + time - 4233600000ll)))
         break;
     }
-  }
+  }*/
 }
 
 #ifdef __cplusplus

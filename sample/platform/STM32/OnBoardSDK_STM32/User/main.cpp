@@ -42,6 +42,8 @@
 
 #include "main.h"
 #include "stm32f4xx.h"
+#include "FreeRTOS.h"
+#include "task.h"
 
 #define sample_flag 0;
 #ifdef FLIGHT_CONTROL_SAMPLE
@@ -79,18 +81,14 @@ RecvContainer receivedFrame;
 RecvContainer* rFrame = &receivedFrame;
 Vehicle vehicle = Vehicle(threadSupport);
 Vehicle* v = &vehicle;
+TaskHandle_t mainLoopHandler;
 
 extern TerminalCommand myTerminal;
 
-int main() {
-  BSPinit();
 
-  delay_nms(30);
-  printf("STM32F4Discovery Board initialization finished!\r\n");
-
-  char func[50];
+void mainLoop(void *p){
+	  char func[50];
   uint32_t runOnce = 1;
-
   while (1) {
     // One time automatic activation
     if (runOnce) {
@@ -100,7 +98,7 @@ int main() {
       if (!v->protocolLayer->getDriver()->getDeviceStatus()) {
         printf("USART communication is not working.\r\n");
         delete (v);
-        return -1;
+        return;
       }
 
       printf("Sample App for STM32F4Discovery Board:\r\n");
@@ -123,7 +121,7 @@ int main() {
           v->getFwVersion() != Version::M100_31) {
         printf("Upgrade firmware using Assistant software!\n");
         delete (v);
-        return -1;
+        return;
       }
 
       userActivate();
@@ -145,7 +143,7 @@ int main() {
       delay_nms(1000);
 
       switch (sampleToRun) {
-        case 1:
+        case 1: {
           printf("\n\nStarting executing position control sample:\r\n");
           delay_nms(1000);
           // Run monitor takeoff
@@ -164,6 +162,7 @@ int main() {
           // Run monitored landing sample
           monitoredLanding();
           break;
+				}
         case 2:
           printf("\n\nStarting executing Hotpoint mission sample:\r\n");
           delay_nms(1000);
@@ -258,4 +257,11 @@ int main() {
       }
     }
   }
+}
+
+int main() {
+  BSPinit();
+  printf("STM32F4Discovery Board initialization finished!\r\n");
+  xTaskCreate(mainLoop, "mainLoop", 1024, NULL, 1, &mainLoopHandler);
+	vTaskStartScheduler();
 }
