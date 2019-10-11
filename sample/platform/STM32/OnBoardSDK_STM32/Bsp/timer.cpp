@@ -130,8 +130,9 @@ delay_nms(uint16_t time)
 extern "C" {
 #endif //__cplusplus
 
-void
-SysTick_Handler(void)
+//void
+//SysTick_Handler(void)
+void vApplicationTickHook(void)
 {
   if (tick > 4233600000ll) // 49 days non-reset would cost a tick reset.
   {
