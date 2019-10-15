@@ -701,6 +701,12 @@ extern "C" {
 #endif
 
 #if ( configGENERATE_RUN_TIME_STATS == 1 )
+	extern void Timer1Config();
+	extern uint64_t timer1Tick;
+	#ifndef portCONFIGURE_TIMER_FOR_RUN_TIME_STATS
+		#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() Timer1Config()
+	#endif
+	#define portGET_RUN_TIME_COUNTER_VALUE() timer1Tick
 
 	#ifndef portCONFIGURE_TIMER_FOR_RUN_TIME_STATS
 		#error If configGENERATE_RUN_TIME_STATS is defined then portCONFIGURE_TIMER_FOR_RUN_TIME_STATS must also be defined.  portCONFIGURE_TIMER_FOR_RUN_TIME_STATS should call a port layer function to setup a peripheral timer/counter that can then be used as the run time counter time base.
@@ -783,7 +789,7 @@ extern "C" {
 #endif
 
 #ifndef configUSE_STATS_FORMATTING_FUNCTIONS
-	#define configUSE_STATS_FORMATTING_FUNCTIONS 0
+	#define configUSE_STATS_FORMATTING_FUNCTIONS 1
 #endif
 
 #ifndef portASSERT_IF_INTERRUPT_PRIORITY_INVALID

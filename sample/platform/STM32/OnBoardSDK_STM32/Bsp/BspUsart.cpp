@@ -31,6 +31,8 @@
 #include "BspUsart.h"
 #include "timer.h"
 
+#define USART_3_BUFFER_SIZE 1024
+
 extern int Rx_Handle_Flag;
 
 using namespace DJI::OSDK;
@@ -44,6 +46,8 @@ bool                  isACKProcessed    = false;
 bool                  ackReceivedByUser = false;
 extern RecvContainer  receivedFramie;
 extern RecvContainer* rFrame;
+
+QueueHandle_t osdkDataQueue;
 
 // extern CoreAPI defaultAPI;
 // extern CoreAPI *coreApi;
@@ -128,6 +132,7 @@ USART2_Config(void)
 void
 USART3_Config(void)
 {
+  osdkDataQueue = xQueueCreate(USART_3_BUFFER_SIZE, sizeof(uint8_t));
   USART3_Gpio_Config();
 
   USART_InitTypeDef USART_InitStructure;
@@ -241,19 +246,9 @@ USART3_IRQHandler(void)
 {
   if (USART_GetFlagStatus(USART3, USART_FLAG_RXNE) == SET)
   {
-    isACKProcessed = false;
-    isFrame = v->protocolLayer->byteHandler(USART_ReceiveData(USART3));
-    if (isFrame == true)
-    {
-			rFrame = v->protocolLayer->getReceivedFrame();
-			
-      //! Trigger default or user defined callback
-      v->processReceivedData(rFrame);
-
-      //! Reset
-      isFrame        = false;
-      isACKProcessed = true;
-    }
+    BaseType_t xHigherPriorityTaskWoken = false;
+    uint8_t data = USART_ReceiveData(USART3);
+    xQueueSendFromISR(osdkDataQueue, &data, &xHigherPriorityTaskWoken);
   }
 }
 

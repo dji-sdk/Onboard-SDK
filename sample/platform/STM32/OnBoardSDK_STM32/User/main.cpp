@@ -40,10 +40,11 @@
  *******************************************************************************
  * */
 
-#include "main.h"
-#include "stm32f4xx.h"
 #include "FreeRTOS.h"
 #include "task.h"
+#include "queue.h"
+#include "main.h"
+#include "stm32f4xx.h"
 
 #define sample_flag 0;
 #ifdef FLIGHT_CONTROL_SAMPLE
@@ -70,7 +71,7 @@
 #define sample_flag 11
 #endif
 
-const int sampleToRun = sample_flag;
+const int sampleToRun = 1;//sample_flag;
 
 /*-----------------------DJI_LIB VARIABLE-----------------------------*/
 using namespace DJI::OSDK;
@@ -82,13 +83,91 @@ RecvContainer* rFrame = &receivedFrame;
 Vehicle vehicle = Vehicle(threadSupport);
 Vehicle* v = &vehicle;
 TaskHandle_t mainLoopHandler;
+TaskHandle_t sendPollHandler;
+TaskHandle_t readPollHandler;
+TaskHandle_t debugHandler;
 
 extern TerminalCommand myTerminal;
 
+void readPollTask(void *p){
+  Vehicle* v = NULL;
+  if(p) {
+    v = (Vehicle*)p;
+  } else {
+    DERROR("Wrong parameter.");
+    return;
+  }
+  uint8_t data = 0;
+  bool isACKProcessed = false;
 
-void mainLoop(void *p){
-	  char func[50];
+  while (true) {
+  xQueueReceive(osdkDataQueue, &data, portMAX_DELAY);
+  isFrame = v->protocolLayer->byteHandler(data);
+  if (isFrame == true)
+  {
+    rFrame = v->protocolLayer->getReceivedFrame();
+
+    //! Trigger default or user defined callback
+    v->processReceivedData(rFrame);
+
+    //! Reset
+    isFrame        = false;
+    isACKProcessed = true;
+  }
+  }
+}
+
+void sendPollTask(void *p){
+  Vehicle* v = NULL;
+  if(p) {
+    v = (Vehicle*)p;
+  } else {
+    DERROR("Wrong parameter.");
+    return;
+  }
+
+  /*! send poll loop */
+  while (true) {
+    v->protocolLayer->sendPoll();
+    delay_nms(10);
+  }
+}
+
+extern uint64_t timer1Tick;
+void debugTask(void *p){
+  Vehicle* v = NULL;
+  if(p) {
+    v = (Vehicle*)p;
+  } else {
+    DERROR("Wrong parameter.");
+    return;
+  }
+
+  char pcWriteBuffer[300] = {0};
+  while (true) {
+    delay_nms(3000);
+    printf("xPortGetFreeHeapSize=%d\r\n", xPortGetFreeHeapSize());
+    vTaskList(pcWriteBuffer);
+    printf("strlen(pcWriteBuffer)=%d\r\n%s\r\n", strlen(pcWriteBuffer), pcWriteBuffer);
+
+    memset(pcWriteBuffer, 0, sizeof(pcWriteBuffer));
+    vTaskGetRunTimeStats((char *)pcWriteBuffer);
+    printf("strlen(pcWriteBuffer)=%d\r\nTask    times        CPU_percent\r\n", strlen(pcWriteBuffer));
+    printf("%s\r\n", pcWriteBuffer);
+  }
+}
+
+void mainLoopTask(void *p){
+  char func[50];
   uint32_t runOnce = 1;
+  Vehicle* v = NULL;
+  if(p) {
+    v = (Vehicle*)p;
+  } else {
+    DERROR("Wrong parameter.");
+    return;
+  }
+
   while (1) {
     // One time automatic activation
     if (runOnce) {
@@ -162,7 +241,7 @@ void mainLoop(void *p){
           // Run monitored landing sample
           monitoredLanding();
           break;
-				}
+        }
         case 2:
           printf("\n\nStarting executing Hotpoint mission sample:\r\n");
           delay_nms(1000);
@@ -262,6 +341,9 @@ void mainLoop(void *p){
 int main() {
   BSPinit();
   printf("STM32F4Discovery Board initialization finished!\r\n");
-  xTaskCreate(mainLoop, "mainLoop", 1024, NULL, 1, &mainLoopHandler);
-	vTaskStartScheduler();
+  xTaskCreate(mainLoopTask, "mainLoop", 1024, v, 1, &mainLoopHandler);
+  xTaskCreate(readPollTask, "readPoll", 1024, v, 2, &readPollHandler);
+  xTaskCreate(sendPollTask, "sendPoll", 1024, v, 3, &sendPollHandler);
+  //xTaskCreate(debugTask,    "debug",    1024, v, 1, &debugHandler);
+  vTaskStartScheduler();
 }

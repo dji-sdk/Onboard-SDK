@@ -31,6 +31,8 @@
 #define _BSPUSART_H
 #include "dji_vehicle.hpp"
 #include "stdio.h"
+#include "queue.h"
+
 void                      USART2_Config(void);
 void                      USART3_Config(void);
 void                      USARTxNVIC_Config(void);
@@ -38,4 +40,5 @@ void                      UsartConfig(void);
 void                      NVIC_Config(void);
 void                      Rx_buff_Handler();
 DJI::OSDK::ACK::ErrorCode waitForACK();
+extern QueueHandle_t osdkDataQueue;
 #endif //_USART_H

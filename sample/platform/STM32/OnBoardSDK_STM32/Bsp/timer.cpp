@@ -26,12 +26,10 @@
  * SOFTWARE.
  *
  */
- 
+
 #include "stm32f4xx.h"
 #include "timer.h"
 #include "main.h"
-#include "FreeRTOS.h"
-#include "task.h"
 
 uint32_t tick = 0; // tick is the time stamp,which record how many ms since u
                    // initialize the system.
@@ -42,6 +40,7 @@ extern Flight flight;
 */
 extern uint8_t         Rx_buff[];
 extern TerminalCommand myTerminal;
+uint64_t timer1Tick;
 
 void
 Timer1Config()
@@ -54,9 +53,9 @@ Timer1Config()
   TIM_TimeBaseInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
   TIM_TimeBaseInitStructure.TIM_CounterMode   = TIM_CounterMode_Up;
   TIM_TimeBaseInitStructure.TIM_Period =
-    (200 - 1); // t is the time between each Timer irq.
+    (100 - 1); // t is the time between each Timer irq.
   TIM_TimeBaseInitStructure.TIM_Prescaler =
-    (8400 - 1); // t = (1+TIM_Prescaler/SystemCoreClock)*(1+TIM_Period)
+    (168 - 1); // t = (1+TIM_Prescaler/SystemCoreClock)*(1+TIM_Period)
   TIM_TimeBaseInitStructure.TIM_RepetitionCounter =
     0x00; // here configure TIM1 in 50Hz
   TIM_TimeBaseInit(TIM1, &TIM_TimeBaseInitStructure);
@@ -66,9 +65,11 @@ Timer1Config()
   NVIC_InitStructure.NVIC_IRQChannelCmd                = ENABLE;
   NVIC_Init(&NVIC_InitStructure);
 
+  timer1Tick = 0;
   TIM_ClearFlag(TIM1, TIM_FLAG_Update);
   TIM_ITConfig(TIM1, TIM_IT_Update, ENABLE);
-  TIM_Cmd(TIM1, DISABLE);
+  //TIM_Cmd(TIM1, DISABLE);
+  TIM_Cmd(TIM1, ENABLE);
 }
 void
 Timer2Config()
@@ -111,7 +112,7 @@ SystickConfig()
 void
 delay_nms(uint16_t time)
 {
-	vTaskDelay(time / portTICK_RATE_MS);
+  vTaskDelay(time * portTICK_RATE_MS);
 	/*
   uint32_t startTick = tick;
   if ((startTick + time) < 4233600000ll)
@@ -149,6 +150,7 @@ TIM1_UP_TIM10_IRQHandler(void)
   if (TIM_GetITStatus(TIM1, TIM_IT_Update) == SET)
   {
     //    virtualrc.sendData(myVRCdata);
+    timer1Tick++;
   }
   TIM_ClearFlag(TIM1, TIM_FLAG_Update);
 }
