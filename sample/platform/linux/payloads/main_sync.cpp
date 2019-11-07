@@ -29,6 +29,7 @@
  */
 
 #include <dji_linux_helpers.hpp>
+#include <sys/time.h>
 #include "camera_manager_sync_sample.hpp"
 
 using namespace DJI::OSDK;
@@ -122,10 +123,22 @@ int main(int argc, char **argv) {
         sleep(2);
         break;
       case 'b':
+        uint32_t before, after;
+        struct timeval time;
+        gettimeofday(&time, NULL);
+        before = (time.tv_sec * 1000 + time.tv_usec / 1000);
         p->setExposureModeSyncSample(
             PAYLOAD_INDEX_0, CameraModule::ExposureMode::APERTURE_PRIORITY);
+        gettimeofday(&time, NULL);
+        after = (time.tv_sec * 1000 + time.tv_usec / 1000);
+        printf("sync func time deal: %u\n", after - before);
+        gettimeofday(&time, NULL);
+        before = (time.tv_sec * 1000 + time.tv_usec / 1000);
         p->setApertureSyncSample(PAYLOAD_INDEX_0,
                                  CameraModule::Aperture::F_3_DOT_5);
+        gettimeofday(&time, NULL);
+        after = (time.tv_sec * 1000 + time.tv_usec / 1000);
+        printf("sync func time deal: %u\n", after - before);
         sleep(2);
         break;
       case 'c':

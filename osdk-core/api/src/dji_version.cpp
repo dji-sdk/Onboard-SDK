@@ -32,7 +32,6 @@
  */
 
 #include "dji_version.hpp"
-#include "dji_open_protocol.hpp"
 
 using namespace DJI;
 using namespace DJI::OSDK;
