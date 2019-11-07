@@ -106,14 +106,6 @@ const Version::FirmWare extendedVersionBase = (Version::FW(3, 2, 36, 6));
  */
 const Version::FirmWare versionBase33 = (Version::FW(3,3,0,0));
 
-/*!
- * @brief Define CMD_SET support matrix
- */
-typedef struct CMD_SETSupportMatrix
-{
-  uint8_t           cmdSet;
-  Version::FirmWare fwVersion;
-} CMD_SETSupportMatrix;
 } // namespace DJI
 } // namespace OSDK
 
