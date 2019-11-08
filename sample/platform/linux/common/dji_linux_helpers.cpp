@@ -237,17 +237,12 @@ LinuxSetup::initVehicle()
   activateData.encKey = app_key;
   strcpy(activateData.encKey, environment->getEnc_key().c_str());
   activateData.version = vehicle->getFwVersion();
-  if(!vehicle->activate(&activateData))
+  if(!vehicle->activate(&activateData, functionTimeout))
   {
     std::cout << "activate fail. Exiting." << std::endl;
     goto err;
   }
-  vehicle->activateSemWait();
-  if(!vehicle->getActivationStatus())
-  {
-    std::cout << "activate fail. Exiting." << std::endl;
-    goto err;
-  }
+
   return;
 
 err:

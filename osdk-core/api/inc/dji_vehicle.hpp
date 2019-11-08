@@ -112,27 +112,6 @@ public:
    */
   ACK::DroneVersion getDroneVersion(int timeout);
 
-  ////////// Callback calls //////////
-
-  /**
-   * @brief
-   * Send activation request to your flight controller
-   * to check if: \n a) your application registered in your developer
-   * account \n b) API Control enabled in the Assistant software\n\n
-   * Proceed to programming if activation successful.
-   */
-  bool activate(ActivateData* data, VehicleCallBack callback = 0,
-                UserData userData = 0);
-
-  //@{
-  /**
-   * Get aircraft version.
-   *
-   * @note
-   * You can query your flight controller prior to activation.
-   */
-  void getDroneVersion(VehicleCallBack callback = 0, UserData userData = 0);
-
   //////////// Getters/Setters //////////
 
   /**
@@ -161,8 +140,6 @@ private:
   Version::VersionData versionData;
   ActivateData         accountData;
   Platform*            platform = NULL;
-  T_OsdkSemHandle      getVersionSem;
-  T_OsdkSemHandle      activateSem;
 
 private:
   bool is_activated = false;
@@ -185,33 +162,9 @@ public:
 public:
   bool init();
 
-  bool activateSemPost();
- 
-  bool activateSemWait();
- 
-  bool getVersionSemPost();
-
-  bool getVersionSemWait();
-
   uint8_t* getRawVersionAck();
 
   bool initVersion();
-
-  /*! @brief A callback function for activate non-blocking calls
-   *  @param receivedFrame: RecvContainer populated by the protocolLayer
-   *  @return NULL
-   */
-  static void activateCallback(const T_CmdInfo *cmdInfo,
-                                const uint8_t *cmdData,
-                                void *userData, uint8_t cbType);
-  /*! @brief A callback function for get drone version non-blocking calls
-   *  @param receivedFrame: RecvContainer populated by the protocolLayer
-   *  @return NULL
-   */
-  static void getDroneVersionCallback(const T_CmdInfo *cmdInfo,
-                                      const uint8_t *cmdData,
-                                      void *userData, uint8_t cbType);
-
 
 public:
   static bool parseDroneVersionInfo(Version::VersionData& versionData,

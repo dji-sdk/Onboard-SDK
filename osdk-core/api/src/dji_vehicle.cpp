@@ -63,17 +63,6 @@ Vehicle::init()
     return false;
   }
 
-  if(!platform->semaphoreCreate(&getVersionSem, 0))
-  {
-    DERROR("Failed to create get version semaphore!\n");
-    return false;
-  }
-
-  if(!platform->semaphoreCreate(&activateSem, 0))
-  {
-    DERROR("Failed to create get version semaphore!\n");
-    return false;
-  }
   /*
    * @note Initialize communication layer
    */
@@ -120,12 +109,11 @@ Vehicle::initVersion()
     return true;
   }
 #else
-  getDroneVersion(NULL, NULL);
-  if(versionData.fwVersion != 0) 
+  ACK::DroneVersion rc = getDroneVersion(wait_timeout);
+  if (!ACK::getError(rc.ack))
   {
     return true;
   }
-
 #endif
   return false;
 }
@@ -323,45 +311,6 @@ Vehicle::parseDroneVersionInfo(Version::VersionData& versionData,
 }
 
 bool
-Vehicle::activate(ActivateData* data, VehicleCallBack callback,
-                  UserData userData)
-{
-  T_CmdInfo cmdInfo = {0};
-
-  if(this->functionalSetUp() != 0)
-  {
-    DERROR("Unable to initialize some vehicle components!");
-    return false;
-  }
-
-  data->version        = this->versionData.fwVersion;
-  accountData          = *data;
-  accountData.reserved = 2;
-
-  for (int i = 0; i < 32; ++i)
-  {
-    accountData.iosID[i] = '0'; //! @note for ios verification
-  }
-  DSTATUS("version 0x%X\n", versionData.fwVersion);
-  DDEBUG("%.32s", accountData.iosID);
-
-  cmdInfo.cmdSet = OpenProtocolCMD::CMDSet::Activation::activate[0];
-  cmdInfo.cmdId  = OpenProtocolCMD::CMDSet::Activation::activate[1];
-  cmdInfo.dataLen = sizeof(accountData) - sizeof(char*);
-  cmdInfo.needAck = OSDK_COMMAND_NEED_ACK_FINISH_ACK;
-  cmdInfo.packetType = OSDK_COMMAND_PACKET_TYPE_REQUEST;
-  cmdInfo.addr = GEN_ADDR(0, ADDR_SDK_COMMAND_INDEX);
-  cmdInfo.channelId = 0;
-
-  if(callback) {
-    linker->sendAsync(&cmdInfo,(uint8_t *)&accountData, callback, userData, 1000, 3);
-  }else {
-    linker->sendAsync(&cmdInfo,(uint8_t *)&accountData, activateCallback, this, 1000, 3);
-  }
-  return true;
-}
-
-bool
 Vehicle::activate(ActivateData* data, int timeout)
 {
   T_CmdInfo cmdInfo = {0};
@@ -430,33 +379,6 @@ Vehicle::activate(ActivateData* data, int timeout)
   return true;
 }
 
-void
-Vehicle::getDroneVersion(VehicleCallBack callback, UserData userData)
-{
-  T_CmdInfo cmdInfo = {0};
-  uint8_t  cmd_data = 0;
-
-  versionData.version_ack =
-    OpenProtocolCMD::ErrorCode::CommonACK::NO_RESPONSE_ERROR;
-  versionData.version_crc     = 0x0;
-  versionData.version_name[0] = 0;
-  versionData.fwVersion       = 0;
-
-  cmdInfo.cmdSet = OpenProtocolCMD::CMDSet::Activation::getVersion[0];
-  cmdInfo.cmdId  = OpenProtocolCMD::CMDSet::Activation::getVersion[1];
-  cmdInfo.dataLen = 1;
-  cmdInfo.needAck = OSDK_COMMAND_NEED_ACK_FINISH_ACK;
-  cmdInfo.packetType = OSDK_COMMAND_PACKET_TYPE_REQUEST;
-  cmdInfo.addr = GEN_ADDR(0, ADDR_SDK_COMMAND_INDEX);
-  cmdInfo.channelId = 0;
-  if(callback) {
-  	linker->sendAsync(&cmdInfo, &cmd_data, callback, userData, 100, 3);
-  }else {
-  	linker->sendAsync(&cmdInfo, &cmd_data, getDroneVersionCallback, this, 100, 3);
-  }
-  getVersionSemWait();
-}
-
 ACK::DroneVersion
 Vehicle::getDroneVersion(int timeout)
 {
@@ -476,7 +398,6 @@ Vehicle::getDroneVersion(int timeout)
   cmdInfo.needAck = OSDK_COMMAND_NEED_ACK_FINISH_ACK;
   cmdInfo.packetType = OSDK_COMMAND_PACKET_TYPE_REQUEST;
   cmdInfo.addr = GEN_ADDR(0, ADDR_SDK_COMMAND_INDEX);
-  cmdInfo.channelId = 0;
 
   linker->sendSync(&cmdInfo, &cmd_data, &ackInfo, data, timeout, 3);
 
@@ -541,127 +462,6 @@ Vehicle::setAccountData(const ActivateData& value)
 {
   accountData = value;
 }
-
-void
-Vehicle::activateCallback(const T_CmdInfo *cmdInfo,
-                          const uint8_t *cmdData,
-                          void *userData, uint8_t cbType)
-{
-  Vehicle *vehiclePtr = (Vehicle *)userData;
-  if(cbType != OSDK_COMMAND_SENDASYNC_SUCCESS) {
-    DERROR("timeout! callback deal error\n");
-    vehiclePtr->activateSemPost();
-    return;
-  }
-
-  uint16_t *activateData;
-
-  activateData = (uint16_t *)cmdData;
-
-  if (*activateData == OpenProtocolCMD::ErrorCode::ActivationACK::SUCCESS &&
-      vehiclePtr->accountData.encKey)
-  {
-    vehiclePtr->linker->setKey(vehiclePtr->accountData.encKey);
-    vehiclePtr->setActivationStatus(true);
-  }
-  else
-  {
-    DERROR("Failed to activate please retry SET 0x%X ID 0x%X\n",
-           cmdInfo->cmdSet, cmdInfo->cmdId);
-
-    if(*activateData == ErrorCode::ActivationACK::NEW_DEVICE_ERROR )
-    {
-      DERROR("Solutions for NEW_DEVICE_ERROR:\n"
-               "\t* Double-check your app_id and app_key in UserConfig.txt. "
-               "Does it match with your DJI developer account?\n"
-               "\t* If this is a new device, you need to activate it through the App or DJI Assistant 2 with Internet\n"
-               "\tFor different aircraft, the App and the version of DJI Assistant 2 might be different\n"
-               "\tFor A3, N3, M600/Pro and M100, please use DJI GO App\n"
-               "\tFor M210 V1, please use DJI GO 4 App or DJI Pilot App\n"
-               "\tFor M210 V2, please use DJI Pilot App\n"
-               "\tFor DJI Assistant 2, it's available on the 'Download' tab of the product page\n"
-               "\t* If this device is previously activated with another app_id and app_key, "
-               "you will need to re-activate it again.\n"
-               "\t* A new device needs to be activated twice to fix the NEW_DEVICE_ERROR, "
-               "so please try it twice.\n");
-    }
-  }
-  vehiclePtr->activateSemPost();
-}
-
-void
-Vehicle::getDroneVersionCallback(const T_CmdInfo *cmdInfo,
-                                 const uint8_t *cmdData,
-                                 void *userData, uint8_t cbType)
-{
-
-  Vehicle *vehiclePtr = (Vehicle *)userData;
-  if(cbType != OSDK_COMMAND_SENDASYNC_SUCCESS) {
-    DERROR("timeout! callback deal error\n");
-    vehiclePtr->getVersionSemPost();
-    return;
-  }
-  
-  uint8_t data[1024];
-  memcpy(data, cmdData, cmdInfo->dataLen);
-  if (!parseDroneVersionInfo(vehiclePtr->versionData, data))
-  {
-    DERROR("Drone version not obtained! Please do not proceed.\n"
-             "Possible reasons:\n"
-             "\tSerial port connection:\n"
-             "\t\t* SDK is not enabled, please check DJI Assistant2 -> SDK -> [v] Enable API Control.\n"
-             "\t\t* Baudrate is not correct, please double-check from DJI Assistant2 -> SDK -> baudrate.\n"
-             "\t\t* TX and RX pins are inverted.\n"
-             "\t\t* Serial port is occupied by another program.\n"
-             "\t\t* Permission required. Please do 'sudo usermod -a -G dialout $USER' "
-             "(you do not need to replace $USER with your username). Then logout and login again\n");
-
-    //! Set fwVersion to 0 so we can catch the error.
-    vehiclePtr->versionData.fwVersion = 0;
-  }
-  else
-  {
-    //! Finally, we print stuff out.
-    if (vehiclePtr->versionData.fwVersion > Version::FW(3, 1, 0, 0))
-    {
-      DSTATUS("Device Serial No. = %.16s\n",
-              vehiclePtr->versionData.hw_serial_num);
-    }
-    DSTATUS("Hardware = %.12s\n", vehiclePtr->versionData.hwVersion);
-    DSTATUS("Firmware = %X\n", vehiclePtr->versionData.fwVersion);
-    if (vehiclePtr->versionData.fwVersion < Version::FW(3, 2, 0, 0))
-    {
-      DSTATUS("Version CRC = 0x%X\n", vehiclePtr->versionData.version_crc);
-    }
-  }
-  vehiclePtr->getVersionSemPost();
-}
-
-bool 
-Vehicle::activateSemPost()
-{
-  return platform->semaphorePost(activateSem);
-}
- 
-bool
-Vehicle::activateSemWait()
-{
-  return platform->semaphoreWait(activateSem);
-}
- 
-bool
-Vehicle::getVersionSemPost()
-{
-  return platform->semaphorePost(getVersionSem);
-}
-
-bool
-Vehicle::getVersionSemWait()
-{
-  return platform->semaphoreWait(getVersionSem);
-}
-
-
 
 /*****************************Set State Data**************************************/
 
