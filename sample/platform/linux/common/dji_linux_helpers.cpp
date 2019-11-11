@@ -90,10 +90,6 @@ LinuxSetup::~LinuxSetup()
     delete (vehicle);
     vehicle = nullptr;
   }
-  if (platform){
-    delete (platform);
-    platform = nullptr;
-  }
   if (environment){
     delete (environment);
     environment = nullptr;
@@ -104,17 +100,15 @@ void
 LinuxSetup::setupEnvironment(int argc, char** argv)
 {
 
-  this->platform = new Platform();
-
-  if(platform->registerLoggerConsole(&printConsole) != true) {
+  if(DJI_REG_LOGGER_CONSOLE(&printConsole) != true) {
     throw std::runtime_error("logger console register fail");
   };
 
-  if(platform->registerHalUartHandler(&halUartHandler) != true) {
+  if(DJI_REG_UART_HANDLER(&halUartHandler) != true) {
     throw std::runtime_error("Uart handler register fail");
   };
 
-  if(platform->registerOsalHandler(&osalHandler) != true) {
+  if(DJI_REG_OSAL_HANDLER(&osalHandler) != true) {
     throw std::runtime_error("Osal handler register fail");
   };
 
@@ -216,8 +210,7 @@ LinuxSetup::initVehicle()
 {
 
   this->vehicle      = new Vehicle(environment->getDevice().c_str(),
-                                   environment->getBaudrate(),
-                                   getPlatform());
+                                   environment->getBaudrate());
 
   if(!vehicle->init())
   {
@@ -246,7 +239,6 @@ LinuxSetup::initVehicle()
   return;
 
 err:
-  delete (platform);
   delete (vehicle);
   delete (environment);
   this->platform    = nullptr;

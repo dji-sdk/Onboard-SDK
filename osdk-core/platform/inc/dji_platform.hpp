@@ -31,14 +31,87 @@
 #define OSDK_DJI_PLATFORM_H_
 
 #include "osdk_platform.h"
+#include "dji_singleton.hpp"
 #include "osdk_logger.h"
+
+#define DJI_REG_UART_HANDLER(handlerPtr)                            \
+  DJI::OSDK::Platform::instance()                                   \
+  .registerHalUartHandler(handlerPtr)
+
+#define DJI_REG_UDP_HANDLER(handlerPtr)                             \
+  DJI::OSDK::Platform::instance()                                   \
+  .registerHalUdpHandler(handlerPtr)
+
+#define DJI_REG_OSAL_HANDLER(handlerPtr)                            \
+  DJI::OSDK::Platform::instance()                                   \
+  .registerOsalHandler(handlerPtr)
+
+#define DJI_REG_LOGGER_CONSOLE(consolePtr)                          \
+  DJI::OSDK::Platform::instance()                                   \
+  .registerLoggerConsole(consolePtr)
+
+#define DJI_TASK_CREATE(taskPtr, taskFunc, stackSize, arg)          \
+  DJI::OSDK::Platform::instance()                                   \
+  .taskCreate(taskPtr, taskFunc, stackSize, arg)
+
+#define DJI_TASK_DESTROY(task)                                      \
+  DJI::OSDK::Platform::instance()                                   \
+  .taskDestroy(task)
+
+#define DJI_TASK_SLEEP_MS(timeMs)                                   \
+  DJI::OSDK::Platform::instance()                                   \
+  .taskSleepMs(timeMs)
+
+#define DJI_MUTEX_CREATE(mutexPtr)                                  \
+  DJI::OSDK::Platform::instance()                                   \
+  .mutexCreate(mutexPtr)
+
+#define DJI_MUTEX_DESTROY(mutex)                                    \
+  DJI::OSDK::Platform::instance()                                   \
+  .mutexDestroy(mutex)
+
+#define DJI_MUTEX_LOCK(mutex)                                       \
+  DJI::OSDK::Platform::instance()                                   \
+  .mutexLock(mutex)
+
+#define DJI_MUTEX_UNLOCK(mutex)                                     \
+  DJI::OSDK::Platform::instance()                                   \
+  .mutexUnlock(mutex)
+
+#define DJI_SEM_CREATE(semPtr, initValue)                           \
+  DJI::OSDK::Platform::instance()                                   \
+  .semaphoreCreate(mutexPtr, initValue)
+
+#define DJI_SEM_DESTROY(sem)                                        \
+  DJI::OSDK::Platform::instance()                                   \
+  .semaphoreDestroy(sem)
+
+#define DJI_SEM_POST(sem)                                           \
+  DJI::OSDK::Platform::instance()                                   \
+  .semaphorePost(sem)
+
+#define DJI_SEM_WAIT(sem)                                           \
+  DJI::OSDK::Platform::instance()                                   \
+  .semaphoreWait(sem)
+
+#define DJI_SEM_TIMED_WAIT(sem, waitTime)                           \
+  DJI::OSDK::Platform::instance()                                   \
+  .semaphoreTimedWait(sem, waitTime)
+
+#define DJI_MEM_MALLOC(size)                                        \
+  DJI::OSDK::Platform::instance()                                   \
+  .malloc(size)
+
+#define DJI_MEM_FREE(ptr)                                           \
+  DJI::OSDK::Platform::instance()                                   \
+  .free(ptr)
 
 namespace DJI
 {
 namespace OSDK
 {
 
-class Platform
+class Platform : public Singleton<Platform>
 {
 public:
   Platform();
@@ -104,6 +177,7 @@ private:
 }
 }
 
+//temporary implement for dji_log
 class Mutex
 {
 public:

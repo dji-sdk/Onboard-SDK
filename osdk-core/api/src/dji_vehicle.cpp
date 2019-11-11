@@ -34,8 +34,7 @@ using namespace DJI;
 using namespace DJI::OSDK;
 
 Vehicle::Vehicle(const char* device,
-		 uint32_t baudRate,
-                 Platform* platform)
+		 uint32_t baudRate)
   : linker()
 {
   if (!device )
@@ -43,14 +42,8 @@ Vehicle::Vehicle(const char* device,
     DERROR("Illegal serial device handle!\n");
   }
 
-  if(!platform)
-  {
-    DERROR("Illegal platform handle!\n");
-  }
-
   this->device          = device;
   this->baudRate        = baudRate;
-  this->platform        = platform;
 
   ackErrorCode.data = OpenProtocolCMD::ErrorCode::CommonACK::NO_RESPONSE_ERROR;
 }
@@ -58,11 +51,6 @@ Vehicle::Vehicle(const char* device,
 bool
 Vehicle::init()
 {
-  if(!platform) 
-  {
-    return false;
-  }
-
   /*
    * @note Initialize communication layer
    */
@@ -103,7 +91,7 @@ Vehicle::initVersion()
 #if STM32
   //! Non blocking call for STM32 as it does not support multi-thread
   getDroneVersion();
-  this->platform->taskSleepMs(2000);
+  DJI_TASK_SLEEP_MS(2000);
   if(this->getFwVersion() > 0)
   {
     return true;

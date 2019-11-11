@@ -73,8 +73,7 @@ public:
 
 public:
   Vehicle(const char* device,
-	  uint32_t baudRate,
-          Platform* platform);
+	  uint32_t baudRate);
   ~Vehicle();
 
   Linker*              linker;
@@ -139,7 +138,6 @@ public:
 private:
   Version::VersionData versionData;
   ActivateData         accountData;
-  Platform*            platform = NULL;
 
 private:
   bool is_activated = false;
@@ -173,9 +171,6 @@ public:
 private:
   const int            wait_timeout   = 50;
 
-  /*
-   * Platform management
-   */
 public:
   void setEncryption(bool encryptSetting);
   bool getEncryption();
