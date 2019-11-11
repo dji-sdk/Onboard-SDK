@@ -39,7 +39,7 @@
 #define SDK_COMMAND_CRCDATA_LEN (sizeof(uint32_t))
 #define SDK_COMMAND_CRCHEAD_LEN (sizeof(uint16_t))
 #define SDK_COMMAND_SOF 0xAA
-#define SDK_COMMAND_SET_LEN 2
+#define SDK_COMMAND_CMDSET_LEN 2
 #define SDK_COMMAND_MIN_HEADER_LEN (sizeof(T_SdkProtocolHeader))
 #define SDK_COMMAND_VERSION 0
 #define SDK_ACK_SIZE 10
@@ -51,8 +51,10 @@
 #define SDK_SESSION_ID_IS_USE 1
 #define SDK_SESSION_ID_IS_IDLE 0
 
-#define SDK_COMMAND_GET_FRAME_DATAPTR(frame) \
+#define SDK_COMMAND_GET_ACK_FRAME_DATAPTR(frame) \
   ((uint8_t *)frame + sizeof(T_SdkProtocolHeader))
+#define SDK_COMMAND_GET_REQ_FRAME_DATAPTR(frame) \
+  ((uint8_t *)frame + sizeof(T_SdkProtocolHeader)) + SDK_COMMAND_CMDSET_LEN
 #define SDK_COMMAND_GET_FRAME_CRC32(frame)                     \
   ((uint8_t *)frame + ((T_SdkProtocolHeader *)frame)->length - \
    SDK_COMMAND_CRCDATA_LEN)
@@ -202,10 +204,10 @@ E_OsdkStat OsdkProtocol_sdkPack(void *protocolExtData, uint8_t *pFrame,
     if (frameDataLen) {
       frameLen += SDK_COMMAND_CRCDATA_LEN;
     }
-    memcpy(&pAll->cmdSet, cmdData, pInfo->dataLen);
+    memcpy((pFrame + sizeof(T_SdkProtocolHeader)), cmdData, pInfo->dataLen);
   } else {
-    frameLen += SDK_COMMAND_SET_LEN;
-    if (pInfo->dataLen) {
+    frameLen += SDK_COMMAND_CMDSET_LEN;
+    if (frameDataLen) {
       frameLen += SDK_COMMAND_CRCDATA_LEN;
     }
 
@@ -358,14 +360,16 @@ E_OsdkStat OsdkProtocol_sdkUnpack(void *protocolExtData, uint8_t *pFrame,
                     "Unpack error:unknown ack session id");
       return OSDK_STAT_ERR;
     }
+    if (frameDataLen != 0) {
+      memcpy(cmdData, SDK_COMMAND_GET_ACK_FRAME_DATAPTR(pFrame), frameDataLen);
+    }
   } else {
     T_SdkProtocolAll *pAll = (T_SdkProtocolAll *)pFrame;
     pInfo->cmdSet = pAll->cmdSet;
     pInfo->cmdId = pAll->cmdId;
-  }
-
-  if (frameDataLen != 0) {
-    memcpy(cmdData, SDK_COMMAND_GET_FRAME_DATAPTR(pFrame), frameDataLen);
+    if (frameDataLen != 0) {
+      memcpy(cmdData, SDK_COMMAND_GET_REQ_FRAME_DATAPTR(pFrame), frameDataLen);
+    }
   }
 
   OSDK_LOG_DEBUG(
