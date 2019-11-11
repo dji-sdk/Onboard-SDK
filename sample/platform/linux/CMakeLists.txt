@@ -29,5 +29,5 @@ if(NOT ONBOARDSDK_SOURCE)
 endif()
 
 add_subdirectory(logging)
-add_subdirectory(activate)
+add_subdirectory(register_cmd_handler)
 
