@@ -299,7 +299,7 @@ Vehicle::parseDroneVersionInfo(Version::VersionData& versionData,
 }
 
 bool
-Vehicle::activate(ActivateData* data, int timeout)
+Vehicle::activate(ActivateData* data, uint32_t timeoutMs)
 {
   T_CmdInfo cmdInfo = {0};
   T_CmdInfo ackInfo = {0};
@@ -329,7 +329,12 @@ Vehicle::activate(ActivateData* data, int timeout)
   cmdInfo.addr = GEN_ADDR(0, ADDR_SDK_COMMAND_INDEX);
   cmdInfo.channelId = 0;
 
-  linker->sendSync(&cmdInfo,(uint8_t *)&accountData, &ackInfo, cbData, 1000, 3);
+  if(timeoutMs < 3)
+  {
+    timeoutMs = 3;
+  }
+
+  linker->sendSync(&cmdInfo,(uint8_t *)&accountData, &ackInfo, cbData, timeoutMs/3, 3);
   activateData = (uint16_t *)cbData;
 
   if (*activateData == OpenProtocolCMD::ErrorCode::ActivationACK::SUCCESS &&
@@ -368,7 +373,7 @@ Vehicle::activate(ActivateData* data, int timeout)
 }
 
 ACK::DroneVersion
-Vehicle::getDroneVersion(int timeout)
+Vehicle::getDroneVersion(uint32_t timeoutMs)
 {
   T_CmdInfo cmdInfo = {0};
   T_CmdInfo ackInfo = {0};
@@ -387,7 +392,12 @@ Vehicle::getDroneVersion(int timeout)
   cmdInfo.packetType = OSDK_COMMAND_PACKET_TYPE_REQUEST;
   cmdInfo.addr = GEN_ADDR(0, ADDR_SDK_COMMAND_INDEX);
 
-  linker->sendSync(&cmdInfo, &cmd_data, &ackInfo, data, timeout, 3);
+  if(timeoutMs < 3)
+  {
+    timeoutMs = 3;
+  }
+
+  linker->sendSync(&cmdInfo, &cmd_data, &ackInfo, data, timeoutMs/3, 3);
 
   // Parse received data
   if (!parseDroneVersionInfo(this->versionData, data))

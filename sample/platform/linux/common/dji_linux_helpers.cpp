@@ -74,7 +74,7 @@ using namespace DJI::OSDK;
 
 LinuxSetup::LinuxSetup(int argc, char** argv, bool enableAdvancedSensing)
 {
-  this->functionTimeout     = 1; // second
+  this->functionTimeout     = 200; // ms
   this->vehicle             = nullptr;
   this->platform            = nullptr;
   this->environment         = nullptr;

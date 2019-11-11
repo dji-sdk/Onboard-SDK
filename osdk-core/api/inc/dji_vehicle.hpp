@@ -96,7 +96,7 @@ public:
   * @todo
   * Implement high resolution timer to catch ACK timeout
   */
-  bool activate(ActivateData* data, int timeout);
+  bool activate(ActivateData* data, uint32_t timeoutMs);
   /**
    * @brief
    * Send get version control to the vehicle.
@@ -109,7 +109,7 @@ public:
    * VersionData:  CRC
    * VersionData:  version name
    */
-  ACK::DroneVersion getDroneVersion(int timeout);
+  ACK::DroneVersion getDroneVersion(uint32_t timeoutMs);
 
   //////////// Getters/Setters //////////
 
@@ -169,7 +169,7 @@ public:
                                     uint8_t*              ackPtr);
 
 private:
-  const int            wait_timeout   = 50;
+  const int            wait_timeout   = 150;
 
 public:
   void setEncryption(bool encryptSetting);
