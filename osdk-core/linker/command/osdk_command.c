@@ -45,7 +45,7 @@ static void *OsdkCommand_SendPollTask(void *arg);
 static void *OsdkCommand_RecvTask(void *arg);
 static void OsdkCommand_SendSyncCallback(const T_CmdInfo *cmdInfo,
                                                const uint8_t *cmdData,
-                                               void *userdata, uint8_t cb_type);
+                                               void *userdata, E_OsdkStat cb_type);
 static E_OsdkStat OsdkCommand_GetPackageFromMsgq(T_msgQueue *msgq,
                                                  T_CmdInfo *pInfo,
                                                  uint8_t *dataBuf);
@@ -172,9 +172,9 @@ E_OsdkStat OsdkCommand_Resend(T_CmdInfo *cmdInfo, const uint8_t *cmdData) {
  * @param userData: pointer to user data;
  * @param timeOut: send timeout variable.
  * @param retryTimes: send retry times.
- * @return error code.
+ * @return void.
  */
-E_OsdkStat OsdkCommand_SendAsync(T_CmdHandle *cmdHandle, T_CmdInfo *cmdInfo,
+void OsdkCommand_SendAsync(T_CmdHandle *cmdHandle, T_CmdInfo *cmdInfo,
                                  const uint8_t *cmdData,
                                  Command_SendCallback func, void *userData,
                                  uint32_t timeOut, uint16_t retryTimes) {
@@ -183,24 +183,27 @@ E_OsdkStat OsdkCommand_SendAsync(T_CmdHandle *cmdHandle, T_CmdInfo *cmdInfo,
 
   if(!cmdHandle || !cmdInfo) {
     OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "OsdkCommand_SendAsync param check failed");
-    return OSDK_STAT_ERR_PARAM;
+    result = OSDK_STAT_ERR_PARAM;
+    goto err;
   }
 
   if (cmdInfo->packetType != OSDK_COMMAND_PACKET_TYPE_REQUEST ||
-      cmdInfo->needAck == OSDK_COMMAND_NEED_ACK_NO_NEED || timeOut == 0 ||
-      func == NULL) {
-    OSDK_LOG_WARN(MODULE_NAME_COMMAND, "sendSync param error and normal send");
-    return OsdkCommand_Send(cmdInfo, cmdData);
+      cmdInfo->needAck == OSDK_COMMAND_NEED_ACK_NO_NEED || timeOut == 0) {
+    OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "OsdkCommand_SendAsync param error");
+    result = OSDK_STAT_ERR_PARAM;
+    goto err;
   }
 
   if (OsdkCommand_Send(cmdInfo, cmdData) != OSDK_STAT_OK) {
     OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "OsdkCommand_Send error");
-    return OSDK_STAT_ERR;
+    result = OSDK_STAT_ERR;
+    goto err;
   }
 
   if (OsdkOsal_MutexLock(cmdHandle->waitAckItemMutex) != OSDK_STAT_OK) {
     OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "mutex lock error");
-    return OSDK_STAT_ERR;
+    result = OSDK_STAT_ERR;
+    goto err;
   }
 
   for (index = 0; index < PROT_MAX_WAIT_ACK_LIST; index++) {
@@ -209,6 +212,7 @@ E_OsdkStat OsdkCommand_SendAsync(T_CmdHandle *cmdHandle, T_CmdInfo *cmdInfo,
           OSDK_STAT_OK) {
         OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "get system time error");
         result = OSDK_STAT_SYS_ERR;
+        goto err;
       }
       cmdHandle->waitAckItem[index].timeOut = timeOut;
       cmdHandle->waitAckItem[index].retryTimes = retryTimes;
@@ -227,16 +231,23 @@ E_OsdkStat OsdkCommand_SendAsync(T_CmdHandle *cmdHandle, T_CmdInfo *cmdInfo,
 
   if (OsdkOsal_MutexUnlock(cmdHandle->waitAckItemMutex) != OSDK_STAT_OK) {
     OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "mutex unlock error");
-    return OSDK_STAT_ERR;
+    result = OSDK_STAT_ERR;
+    goto err;
   }
 
   if (index == PROT_MAX_WAIT_ACK_LIST) {
     OSDK_LOG_ERROR(MODULE_NAME_COMMAND,
                    "not have enough resource for async list");
-    return OSDK_STAT_SYS_ERR;
+    result = OSDK_STAT_SYS_ERR;
+    goto err;
   }
+  
+  return;
 
-  return result;
+err:
+  if(func) {
+    func(cmdInfo, cmdData, userData, result);
+  }
 }
 
 /**
@@ -264,8 +275,8 @@ E_OsdkStat OsdkCommand_SendSync(T_CmdHandle *cmdHandle, T_CmdInfo *cmdInfo,
 
   if (cmdInfo->packetType != OSDK_COMMAND_PACKET_TYPE_REQUEST ||
       cmdInfo->needAck == OSDK_COMMAND_NEED_ACK_NO_NEED || timeOut == 0) {
-    OSDK_LOG_WARN(MODULE_NAME_COMMAND, "sendSync param error and normal send");
-    return OsdkCommand_Send(cmdInfo, cmdData);
+    OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "OsdkCommand_SendSync param error!");
+    return OSDK_STAT_ERR_PARAM;
   }
 
   if (OsdkOsal_SemaphoreCreate(&syncInfo.waitAckSemaphore, 0) != OSDK_STAT_OK) {
@@ -273,13 +284,9 @@ E_OsdkStat OsdkCommand_SendSync(T_CmdHandle *cmdHandle, T_CmdInfo *cmdInfo,
     return OSDK_STAT_ERR;
   }
 
-  if (OsdkCommand_SendAsync(cmdHandle, cmdInfo, cmdData,
-                            OsdkCommand_SendSyncCallback, &syncInfo, timeOut,
-                            retryTimes) != OSDK_STAT_OK) {
-    OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "sendAsync send cmd error");
-    osdkStat = OSDK_STAT_ERR;
-    goto out;
-  }
+  OsdkCommand_SendAsync(cmdHandle, cmdInfo, cmdData,
+                        OsdkCommand_SendSyncCallback, &syncInfo, timeOut,
+                        retryTimes);
 
   if (OsdkOsal_SemaphoreWait(syncInfo.waitAckSemaphore) != OSDK_STAT_OK) {
     OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "sendSync wait semaphore failed");
@@ -287,11 +294,11 @@ E_OsdkStat OsdkCommand_SendSync(T_CmdHandle *cmdHandle, T_CmdInfo *cmdInfo,
     goto out;
   }
 
-  if (syncInfo.ackCbType == OSDK_COMMAND_SENDASYNC_TIMEOUT) {
+  if (syncInfo.ackCbType == OSDK_STAT_ERR_TIMEOUT) {
     OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "sendSync callback timeout");
     osdkStat = OSDK_STAT_ERR_TIMEOUT;
 
-  } else if (syncInfo.ackCbType == OSDK_COMMAND_SENDASYNC_SUCCESS) {
+  } else if (syncInfo.ackCbType == OSDK_STAT_OK) {
     OSDK_LOG_DEBUG(MODULE_NAME_COMMAND, "sendSync callback success");
     osdkStat = OSDK_STAT_OK;
 
@@ -449,7 +456,7 @@ static E_OsdkStat OsdkCommand_DealCmd(T_CmdHandle *cmdHandle,
 #endif
           cmdHandle->waitAckItem[k].callback(cmdInfo, cmdData,
                                              cmdHandle->waitAckItem[k].userData,
-                                             OSDK_COMMAND_SENDASYNC_SUCCESS);
+                                             OSDK_STAT_OK);
 #ifdef OS_DEBUG
           if (OsdkOsal_GetTimeUs(&timeFuncAfter) != OSDK_STAT_OK) {
             OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "get system time error");
@@ -474,18 +481,19 @@ static E_OsdkStat OsdkCommand_DealCmd(T_CmdHandle *cmdHandle,
           if ((*cmdInfo).cmdId ==
                   cmdHandle->recvCmdHandleList[i].cmdList[j].cmdId &&
               (*cmdInfo).cmdSet ==
-                  cmdHandle->recvCmdHandleList[i].cmdList[j].cmdSet &&
-              cmdHandle->recvCmdHandleList[i].cmdList[j].pFunc != NULL) {
+                  cmdHandle->recvCmdHandleList[i].cmdList[j].cmdSet) {
             findHandleFlag = true;
-
-            if (cmdHandle->recvCmdHandleList[i].cmdList[j].pFunc(
-                    cmdHandle, cmdInfo, cmdData) != OSDK_STAT_OK) {
-              OSDK_LOG_ERROR(
-                  MODULE_NAME_COMMAND,
-                  "cmd handle failure, cmdset = 0x%02x, cmdid = 0x%02x",
-                  (*cmdInfo).cmdSet, (*cmdInfo).cmdId);
+            if(cmdHandle->recvCmdHandleList[i].cmdList[j].pFunc != NULL) {
+		          if (cmdHandle->recvCmdHandleList[i].cmdList[j].pFunc(
+		                  cmdHandle, cmdInfo, cmdData, 
+		              cmdHandle->recvCmdHandleList[i].cmdList[j].userData)
+		            != OSDK_STAT_OK) {
+		            OSDK_LOG_ERROR(
+		                MODULE_NAME_COMMAND,
+		                "cmd handle failure, cmdset = 0x%02x, cmdid = 0x%02x",
+		                (*cmdInfo).cmdSet, (*cmdInfo).cmdId);
+		          }
             }
-
             break;
           }
         }
@@ -493,20 +501,11 @@ static E_OsdkStat OsdkCommand_DealCmd(T_CmdHandle *cmdHandle,
     }
 
     if (findHandleFlag == true) {
-//      OSDK_LOG_INFO(MODULE_NAME_COMMAND,
-//                    "found cmd handle list - table:%d list:%d", i, j);
+      OSDK_LOG_DEBUG(MODULE_NAME_COMMAND,
+                    "found cmd handle list - table:%d list:%d", i, j);
     }
 
-    //    if (findHandleFlag == false) {
-    //      uint8_t ackCode[1] = {OSDK_CMD_ACK_CODE_UNSUPPORT};
-    //
-    //      OSDK_LOG_DEBUG(MODULE_NAME_COMMAND, "received unsupport cmd");
-    //      if (OsdkCommand_SendAckData(cmdInfo, ackCode, sizeof(ackCode)) !=
-    //          OSDK_STAT_OK) {
-    //        OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "send unsupport ack error");
-    //        return OSDK_STAT_ERR_NOT_FOUND;
-    //      }
-    //    }
+    //@TODO answer unsupport ack
   }
 
   return OSDK_STAT_OK;
@@ -602,7 +601,7 @@ static void OsdkCommand_SendPoll(T_CmdHandle *cmdHandle) {
 #endif
           cmdHandle->waitAckItem[index].callback(
               NULL, NULL, cmdHandle->waitAckItem[index].userData,
-              OSDK_COMMAND_SENDASYNC_TIMEOUT);
+              OSDK_STAT_ERR_TIMEOUT);
 
 #ifdef OS_DEBUG
           if (OsdkOsal_GetTimeUs(&timeFuncAfter) != OSDK_STAT_OK) {
@@ -636,10 +635,10 @@ static void OsdkCommand_SendPoll(T_CmdHandle *cmdHandle) {
 static void OsdkCommand_SendSyncCallback(const T_CmdInfo *cmdInfo,
                                                const uint8_t *cmdData,
                                                void *userdata,
-                                               uint8_t cb_type) {
+                                               E_OsdkStat cb_type) {
   T_CmdSyncInfo *syncInfo = (T_CmdSyncInfo *)userdata;
 
-  if (cb_type == OSDK_COMMAND_SENDASYNC_SUCCESS) {
+  if (cb_type == OSDK_STAT_OK) {
     OSDK_LOG_DEBUG(MODULE_NAME_COMMAND, "OsdkCommand_SendSyncCallback success");
     memcpy(&syncInfo->ackInfo, cmdInfo, sizeof(T_CmdInfo));
     memcpy(&syncInfo->ackData, cmdData, cmdInfo->dataLen);

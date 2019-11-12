@@ -362,7 +362,10 @@ typedef struct SDKInfo
   uint8_t reserved : 3;
 } SDKInfo; // pack(1)
 
-E_OsdkStat unpackData(struct _CommandHandle *cmdHandle, const T_CmdInfo *cmdInfo, const uint8_t *cmdData);
+E_OsdkStat unpackData(struct _CommandHandle *cmdHandle, 
+                      const T_CmdInfo *cmdInfo, 
+                      const uint8_t *cmdData,
+                      void *userData);
 
 
 #endif // DJI_MAIN_ASYNC_HPP

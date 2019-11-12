@@ -48,10 +48,10 @@ extern "C" {
 #define PROT_MAX_SUPPORT_CMD_SET 32
 #define PROT_MAX_WAIT_ACK_LIST 32
 
-#define PROT_CMD_ITEM(hostId, deviceId, set, id, maskId, func)      \
-  {                                                                 \
-    .host = hostId, .device = deviceId, .cmdSet = set, .cmdId = id, \
-    .mask = maskId, .pFunc = func                                   \
+#define PROT_CMD_ITEM(hostId, deviceId, set, id, maskId, data, func)      \
+  {                                                                       \
+    .host = hostId, .device = deviceId, .cmdSet = set, .cmdId = id,       \
+    .mask = maskId, .userData = data,   .pFunc = func                     \
   }
 
 /* Exported types ------------------------------------------------------------*/
@@ -71,8 +71,10 @@ typedef struct _ProtCmdItem {
   uint8_t cmdSet;
   uint8_t cmdId;
   E_RecvCmdHandleListMask mask;
+  void    *userData;
   E_OsdkStat (*pFunc)(struct _CommandHandle *cmdHandle,
-                      const T_CmdInfo *cmdInfo, const uint8_t *cmdData);
+                      const T_CmdInfo *cmdInfo,
+                      const uint8_t *cmdData, void *userData);
 } T_RecvCmdItem;
 
 typedef struct {
@@ -83,7 +85,7 @@ typedef struct {
 
 typedef void (*Command_SendCallback)(const T_CmdInfo *cmdInfo,
                                            const uint8_t *cmdData,
-                                           void *userData, uint8_t cb_type);
+                                           void *userData, E_OsdkStat cb_type);
 
 typedef struct {
   bool isValid;
@@ -98,7 +100,7 @@ typedef struct {
 
 typedef struct {
   T_OsdkSemHandle waitAckSemaphore;
-  uint8_t ackCbType;
+  E_OsdkStat ackCbType;
   T_CmdInfo ackInfo;
   uint8_t ackData[OSDK_PACKAGE_MAX_LEN];
 } T_CmdSyncInfo;
@@ -124,7 +126,7 @@ E_OsdkStat OsdkCommand_SendAckData(T_CmdInfo *cmdInfo, const uint8_t *ackData,
 E_OsdkStat OsdkCommand_RegRecvCmdHandler(T_CmdHandle *cmdHandle,
                                          T_RecvCmdHandle *recvCmdHandle);
 E_OsdkStat OsdkCommand_GetSeqNum(T_CmdHandle *cmdHandle, uint16_t *seq);
-E_OsdkStat OsdkCommand_SendAsync(T_CmdHandle *cmdHandle, T_CmdInfo *cmdInfo,
+void OsdkCommand_SendAsync(T_CmdHandle *cmdHandle, T_CmdInfo *cmdInfo,
                                  const uint8_t *cmdData,
                                  Command_SendCallback func, void *userData,
                                  uint32_t timeOut, uint16_t retryTimes);

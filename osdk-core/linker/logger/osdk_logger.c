@@ -27,7 +27,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "osdk_logger.h"
 #include "osdk_logger_internal.h"
-#include "osdk_timesync.h"
 
 /* Private constants ---------------------------------------------------------*/
 #define LOGGER_BUF_MAX_SIZE 512
@@ -81,7 +80,7 @@ void OsdkLogger_Log(const char *moduleName, uint8_t level, const char *fmt,
   char *formatBuf;
   uint32_t timeMs;
 
-  OsdkTimeSync_GetSyncTimeMs(&timeMs);
+  OsdkOsal_GetTimeMs(&timeMs);
   logBuf = OsdkOsal_Malloc(LOGGER_BUF_MAX_SIZE);
   if (logBuf == NULL) {
     return;

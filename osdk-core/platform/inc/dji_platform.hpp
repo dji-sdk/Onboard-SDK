@@ -106,6 +106,20 @@
   DJI::OSDK::Platform::instance()                                   \
   .free(ptr)
 
+#define DJI_GET_TIME_MS(msPtr)                                      \
+  DJI::OSDK::Platform::instance()                                   \
+  .getTimeMs(msPtr)
+
+#define DJI_GET_TIME_MS(msPtr)                                      \
+  DJI::OSDK::Platform::instance()                                   \
+  .getTimeMs(msPtr)
+
+#ifdef OS_DEBUG
+#define DJI_GET_TIME_US(usPtr)                                      \
+  DJI::OSDK::Platform::instance()                                   \
+  .getTimeUs(usPtr)
+#endif
+
 namespace DJI
 {
 namespace OSDK
@@ -159,9 +173,9 @@ public:
 
   bool getTimeMs(uint32_t *ms);
 
-  #ifdef OS_DEBUG
+#ifdef OS_DEBUG
   bool getTimeUs(uint64_t *us);
-  #endif
+#endif
 
   void* malloc(uint32_t size);
 

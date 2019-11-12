@@ -82,15 +82,13 @@ Linker::addUdpChannel(const char *addr, uint16_t port)
   return (errCode == OSDK_STAT_OK) ? true : false;
 }
 
-bool
+void
 Linker::sendAsync(T_CmdInfo *cmdInfo, const uint8_t *cmdData,
                   Command_SendCallback func, void *userData,
                   uint32_t timeOut, uint16_t retryTimes)
 {
-  E_OsdkStat errCode;
-  errCode = OsdkCommand_SendAsync(OsdkCommand_GetInstance(), cmdInfo, cmdData,
+  return OsdkCommand_SendAsync(OsdkCommand_GetInstance(), cmdInfo, cmdData,
                                func, userData, timeOut, retryTimes);
-  return (errCode == OSDK_STAT_OK) ? true : false;
 }
 
 bool

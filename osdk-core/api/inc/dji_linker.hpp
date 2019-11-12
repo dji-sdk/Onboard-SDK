@@ -55,7 +55,7 @@ bool addUdpChannel(const char *addr, uint16_t port);
 
 void setKey(const char *key);
 
-bool sendAsync(T_CmdInfo *cmdInfo, const uint8_t *cmdData,
+void sendAsync(T_CmdInfo *cmdInfo, const uint8_t *cmdData,
                   Command_SendCallback func, void *userData,
                   uint32_t timeOut, uint16_t retryTimes);
 

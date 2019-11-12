@@ -59,7 +59,8 @@ void unpackOne(uint16_t passFlag, FLAG flag, void* data, uint8_t*& buf, size_t s
 }
 
 E_OsdkStat unpackData(struct _CommandHandle *cmdHandle,
-                      const T_CmdInfo *cmdInfo, const uint8_t *cmdData) {
+                      const T_CmdInfo *cmdInfo, 
+                      const uint8_t *cmdData, void *userData) {
   uint8_t* pdata = (uint8_t *)cmdData;
   uint16_t passFlag;
   passFlag = *(uint16_t*)pdata;
@@ -89,7 +90,7 @@ E_OsdkStat unpackData(struct _CommandHandle *cmdHandle,
 
 T_RecvCmdItem s_broadcastCmdList[] = {
     PROT_CMD_ITEM(0, 0, 0x02, 0x00, MASK_HOST_DEVICE_SET_ID,
-                  unpackData),
+                  NULL, unpackData),
 };
 
 int main(int argc, char **argv) {
@@ -110,7 +111,7 @@ int main(int argc, char **argv) {
     return -1;
   }
 
-  sleep(5);//wait for cmd handler working
+  sleep(2);//wait for cmd handler working
 
   std::cout << "program exiting. \n";
   return 0;
