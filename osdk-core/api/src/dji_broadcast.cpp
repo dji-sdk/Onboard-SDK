@@ -74,7 +74,7 @@ DataBroadcast::DataBroadcast(Vehicle* vehiclePtr)
     vehicle->legacyLinker->registerCMDCallback(
         OpenProtocolCMD::CMDSet::Broadcast::broadcast[0],
         OpenProtocolCMD::CMDSet::Broadcast::broadcast[1],
-        unpackCallback, NULL);
+        unpackHandler.callback, unpackHandler.userData);
   }
 }
 

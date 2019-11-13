@@ -97,7 +97,7 @@ getBroadcastData(DJI::OSDK::Vehicle* vehicle, int responseTimeout)
               << avoidData.left  << ", "<< avoidData.up    << "\n";
     std::cout << "-------\n\n";
 
-    usleep(5000);
+    usleep(300*1000);
     elapsedTimeInMs += 5;
   }
 

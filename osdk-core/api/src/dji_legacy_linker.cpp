@@ -150,8 +150,8 @@ E_OsdkStat LegacyLinker::legacyAdaptingRegisterCB(
     struct _CommandHandle *cmdHandle,
     const T_CmdInfo *cmdInfo,
     const uint8_t *cmdData, void *userData) {
-  if (cmdInfo && userData && ((legacyAdaptingData *) (userData))->cb
-      && ((legacyAdaptingData *) (userData))->vehicle) {
+  legacyAdaptingData *legacyData = (legacyAdaptingData *)userData;
+  if (cmdInfo && legacyData && legacyData->cb && legacyData->vehicle) {
     legacyAdaptingData para = *(legacyAdaptingData *) userData;
     RecvContainer recvFrame = {0};
 
