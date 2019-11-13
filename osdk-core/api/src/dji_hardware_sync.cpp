@@ -43,6 +43,7 @@ HardwareSync::HardwareSync(Vehicle* vehiclePtr)
   ppsUTCFCTimeHandler.userData = 0;
   ppsUTCTimeHandler.callback = 0;
   ppsUTCTimeHandler.userData = 0;
+  subscribeNMEAMsgs(pollNemaDatacallback, nullptr);
 }
 
 void
@@ -190,32 +191,13 @@ HardwareSync::writeNMEA(const std::string &nmea)
   std::string head = nmea.substr(0,6);
   if(head == "$GPGSA")
   {
-    GPGSAData.sentence = nmea;
-    ++GPGSAData.seq;
-    recordRecvTimeMsg(GPGSAData.timestamp);
-    setDataFlag(GPGSAFlag, true);
+      GPGSAData.sentence = nmea;
+      ++GPGSAData.seq;
+      recordRecvTimeMsg(GPGSAData.timestamp);
+      setDataFlag(GPGSAFlag, true);
+
   }
-  else if(head == "$GLGSA")
-  {
-    GLGSAData.sentence = nmea;
-    ++GLGSAData.seq;
-    recordRecvTimeMsg(GLGSAData.timestamp);
-    setDataFlag(GLGSAFlag, true);
-  }
-  else if(head == "$GAGSA")
-  {
-    GAGSAData.sentence = nmea;
-    ++GAGSAData.seq;
-    recordRecvTimeMsg(GAGSAData.timestamp);
-    setDataFlag(GAGSAFlag, true);
-  }
-  else if(head == "$BDGSA")
-  {
-    BDGSAData.sentence = nmea;
-    ++BDGSAData.seq;
-    recordRecvTimeMsg(BDGSAData.timestamp);
-    setDataFlag(BDGSAFlag, true);
-  }
+
   else if(head == "$GPRMC")
   {
     GPRMCData.sentence = nmea;
@@ -223,6 +205,28 @@ HardwareSync::writeNMEA(const std::string &nmea)
     recordRecvTimeMsg(GPRMCData.timestamp);
     setDataFlag(GPRMCFlag, true);
   }
+
+  else if(head == "$GNGSA")
+  {
+    static int count = 0;
+      GNGSAData[count].sentence = nmea;
+      ++GNGSAData[count].seq;
+      recordRecvTimeMsg(GNGSAData[count].timestamp);
+      count ++;
+      if(count == SatelliteSystemNum )
+      {
+        count = 0;
+        setDataFlag(GNGSAFlag, true);
+      }
+  }
+  else if(head == "$GNRMC")
+  {
+    GNRMCData.sentence = nmea;
+    ++GNRMCData.seq;
+    recordRecvTimeMsg(GNRMCData.timestamp);
+    setDataFlag(GNRMCFlag, true);
+  }
+
   else if(head.substr(0,3) == "UTC")
   {
     UTCData.sentence = nmea;
@@ -232,6 +236,7 @@ HardwareSync::writeNMEA(const std::string &nmea)
   }
   else
   {
+    // std::cout << "HEAD: "<< head  << std::endl;
     DERROR("Cannot recognize the NMEA msg received\n");
   }
 }
@@ -247,6 +252,7 @@ HardwareSync::writeData(const uint8_t cmdID, const RecvContainer *recvContainer)
     memcpy(rawBuf, recvContainer->recvData.raw_ack_array, length);
     writeNMEA(std::string((char*)rawBuf, length));
     free(rawBuf);
+
   }
   else if (cmdID == OpenProtocolCMD::CMDSet::HardwareSync::ppsUTCFCTimeRef[1])
   {
@@ -283,37 +289,29 @@ HardwareSync::getPPSSource(PPSSource &source)
 }
 
 bool
-HardwareSync::getNMEAMsg(NMEAType type, NMEAData &nmea)
+HardwareSync::getGNRMCMsg(NMEAData &nmea)
 {
-  bool result = false;
-  switch(type)
-  {
-    case GPGSA:{
-      result = writeDataHelper<NMEAData>(GPGSAFlag, GPGSAData, nmea);
-    }
-      break;
-    case GLGSA:{
-      result = writeDataHelper<NMEAData>(GLGSAFlag, GLGSAData, nmea);
-    }
-      break;
-    case GAGSA:{
-      result = writeDataHelper<NMEAData>(GAGSAFlag, GAGSAData, nmea);
-    }
-      break;
-    case BDGSA:{
-      result = writeDataHelper<NMEAData>(BDGSAFlag, BDGSAData, nmea);
-    }
-      break;
-    case GPRMC:{
-      result = writeDataHelper<NMEAData>(GPRMCFlag, GPRMCData, nmea);
-    }
-      break;
-    default:
-      break;
-  }
-  return result;
+  return writeDataHelper<NMEAData>(GNRMCFlag, GNRMCData, nmea);
 }
 
+bool
+HardwareSync::getGNGSAMsgArray(NMEAData nmea[])
+{
+  if (GNGSAFlag == true)
+  {
+    memcpy((void *)nmea, (void *)GNGSAData, sizeof(GNGSAData));
+    setDataFlag(GNGSAFlag, false);
+    return true;
+  }
+  else
+    return false;
+}
+
+void HardwareSync::pollNemaDatacallback(Vehicle *vehicle, RecvContainer recvFrame, UserData userData)
+{
+  uint8_t cmdID = recvFrame.recvInfo.cmd_id;
+  vehicle->hardSync->writeData(cmdID, &recvFrame);
+}
 #if STM32
 void
 HardwareSync::setDataFlag(HWSyncDataFlag &flag, bool val)
