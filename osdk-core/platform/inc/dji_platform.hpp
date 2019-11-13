@@ -110,10 +110,6 @@
   DJI::OSDK::Platform::instance()                                   \
   .getTimeMs(msPtr)
 
-#define DJI_GET_TIME_MS(msPtr)                                      \
-  DJI::OSDK::Platform::instance()                                   \
-  .getTimeMs(msPtr)
-
 #ifdef OS_DEBUG
 #define DJI_GET_TIME_US(usPtr)                                      \
   DJI::OSDK::Platform::instance()                                   \
