@@ -35,7 +35,12 @@ using namespace DJI::OSDK;
 
 Vehicle::Vehicle(const char* device,
 		 uint32_t baudRate)
-  : linker()
+  : linker(NULL)
+  , legacyLinker(NULL)
+  , camera(NULL)
+  , gimbal(NULL)
+  , control(NULL)
+  , broadcast(NULL)
 {
   if (!device )
   {
@@ -54,10 +59,51 @@ Vehicle::init()
   /*
    * @note Initialize communication layer
    */
-  if (!linker->init())
+  if (!initLinker())
   {
-    DERROR("Failed to initialize Protocol Layer!\n");
-    return false;
+    DERROR("Failed to initialize Linker!\n");
+    return 1;
+  }
+
+  if (!initLegacyLinker())
+  {
+    DERROR("Failed to initialize LegacyLinker!\n");
+    return 1;
+  }
+
+  /*
+   * Initialize broadcast if supported
+   */
+  if (!initBroadcast())
+  {
+    DERROR("Failed to initialize Broadcast!\n");
+    return 1;
+  }
+
+  /*
+   * @note Initialize Movement Control,
+   * @note it will be replaced by FlightActions and FlightController in the future.
+   */
+  if (!initControl())
+  {
+    DERROR("Failed to initialize Control!\n");
+    return 1;
+  }
+
+  /*
+   * @note Initialize external components
+   * like Camera and MFIO
+   */
+  if (!initCamera())
+  {
+    DERROR("Failed to initialize Camera!\n");
+    return 1;
+  }
+
+  if(!initGimbal())
+  {
+    DERROR("Failed to initialize Gimbal!\n");
+    return 1;
   }
 
   return true;
@@ -76,6 +122,7 @@ Vehicle::functionalSetUp()
     DERROR("Upgrade firmware using Assistant software!\n");
     return true;
   }
+
   return false;
 }
 
@@ -104,6 +151,139 @@ Vehicle::initVersion()
   }
 #endif
   return false;
+}
+
+bool
+Vehicle::initLinker() {
+  if(this->linker)
+  {
+    DDEBUG("vehicle-linker already initalized!");
+    return true;
+  }
+
+  this->linker = new (std::nothrow) Linker();
+  if (this->linker == 0)
+  {
+    DERROR("Failed to allocate memory for LegacyLinker!\n");
+    return false;
+  }
+
+  if (!linker->init())
+  {
+    DERROR("Failed to initialize Protocol Layer!\n");
+    return false;
+  }
+
+  return true;
+}
+
+bool
+Vehicle::initLegacyLinker(){
+  if(this->legacyLinker)
+  {
+    DDEBUG("vehicle->legacyLinker already initalized!");
+    return true;
+  }
+
+  this->legacyLinker = new (std::nothrow) LegacyLinker(this);
+  if (this->legacyLinker == 0)
+  {
+    DERROR("Failed to allocate memory for LegacyLinker!\n");
+    return false;
+  }
+
+  return true;
+}
+
+bool
+Vehicle::initControl()
+{
+  if(this->control)
+  {
+    DDEBUG("vehicle->control already initalized!");
+    return true;
+  }
+
+  if (isCmdSetSupported(OpenProtocolCMD::CMDSet::control))
+  {
+    this->control = new (std::nothrow) Control(this);
+    if (this->control == 0)
+    {
+      DERROR("Failed to allocate memory for Control!\n");
+      return false;
+    }
+  }
+  else
+  {
+    DSTATUS("Control functionalities are not supported on this platform!\n");
+  }
+
+  return true;
+}
+
+bool
+Vehicle::initBroadcast()
+{
+  if(this->broadcast)
+  {
+    DDEBUG("vehicle->broadcast already initalized!");
+    return true;
+  }
+
+  if (isCmdSetSupported(OpenProtocolCMD::CMDSet::broadcast))
+  {
+    this->broadcast = new (std::nothrow) DataBroadcast(this);
+    if (this->broadcast == 0)
+    {
+      DERROR("Failed to allocate memory for Broadcast!\n");
+      return false;
+    }
+  }
+  else
+  {
+    DSTATUS("Telemetry broadcast is not supported on this platform!\n");
+  }
+
+  return true;
+}
+
+bool
+Vehicle::initCamera()
+{
+  if(this->camera)
+  {
+    DDEBUG("vehicle->camera already initalized!");
+    return true;
+  }
+
+  this->camera = new (std::nothrow) Camera(this);
+
+  if (this->camera == 0)
+  {
+    DERROR("Failed to allocate memory for Camera!\n");
+    return false;
+  }
+  return true;
+}
+
+bool
+Vehicle::initGimbal()
+{
+  if(this->gimbal)
+  {
+    DDEBUG("vehicle->gimbal already initalized!");
+    return true;
+  }
+
+  this->gimbal = new (std::nothrow) Gimbal(this);
+
+  if (this->gimbal == 0)
+  {
+    DERROR("Failed to allocate memory for Gimbal!\n");
+    return false;
+  }
+
+  return true;
 }
 
 bool
@@ -558,4 +738,71 @@ Vehicle::isM210V2()
     return true;
   }
   return false;
+}
+
+
+void
+Vehicle::initCMD_SetSupportMatrix()
+{
+  cmd_setSupportMatrix[0].cmdSet    = OpenProtocolCMD::CMDSet::activation;
+  cmd_setSupportMatrix[0].fwVersion = mandatoryVersionBase;
+
+  cmd_setSupportMatrix[1].cmdSet    = OpenProtocolCMD::CMDSet::control;
+  cmd_setSupportMatrix[1].fwVersion = mandatoryVersionBase;
+
+  cmd_setSupportMatrix[2].cmdSet    = OpenProtocolCMD::CMDSet::broadcast;
+  cmd_setSupportMatrix[2].fwVersion = mandatoryVersionBase;
+
+  cmd_setSupportMatrix[3].cmdSet    = OpenProtocolCMD::CMDSet::mission;
+  cmd_setSupportMatrix[3].fwVersion = mandatoryVersionBase;
+
+  cmd_setSupportMatrix[4].cmdSet    = OpenProtocolCMD::CMDSet::hardwareSync;
+  cmd_setSupportMatrix[4].fwVersion = extendedVersionBase;
+
+  // Not supported in extendedVersionBase
+  cmd_setSupportMatrix[5].cmdSet    = OpenProtocolCMD::CMDSet::virtualRC;
+  cmd_setSupportMatrix[5].fwVersion = mandatoryVersionBase;
+
+  cmd_setSupportMatrix[7].cmdSet    = OpenProtocolCMD::CMDSet::mfio;
+  cmd_setSupportMatrix[7].fwVersion = extendedVersionBase;
+
+  cmd_setSupportMatrix[8].cmdSet    = OpenProtocolCMD::CMDSet::subscribe;
+  cmd_setSupportMatrix[8].fwVersion = extendedVersionBase;
+}
+
+bool
+Vehicle::isCmdSetSupported(const uint8_t cmdSet)
+{
+  for (int i = 0; i < NUM_CMD_SET; i++)
+  {
+    if (cmd_setSupportMatrix[i].cmdSet == cmdSet)
+    {
+      if (cmdSet == OpenProtocolCMD::CMDSet::virtualRC &&
+          versionData.fwVersion != Version::M100_31)
+      {
+        return false;
+      }
+      else if (versionData.fwVersion == Version::M100_31)
+      {
+        // CMDs not supported in Matrice 100
+        if (cmdSet == OpenProtocolCMD::CMDSet::hardwareSync ||
+            cmdSet == OpenProtocolCMD::CMDSet::mfio ||
+            cmdSet == OpenProtocolCMD::CMDSet::subscribe)
+        {
+          return false;
+        }
+      }
+      else if (isLegacyM600())
+      {
+        // CMDs not supported in Matrice 600 old firmware
+        if (cmdSet == OpenProtocolCMD::CMDSet::hardwareSync ||
+            cmdSet == OpenProtocolCMD::CMDSet::mfio ||
+            cmdSet == OpenProtocolCMD::CMDSet::subscribe)
+        {
+          return false;
+        }
+      }
+    }
+  }
+  return true;
 }

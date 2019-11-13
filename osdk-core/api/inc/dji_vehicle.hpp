@@ -37,10 +37,12 @@
 #include "dji_vehicle_callback.hpp"
 #include "dji_version.hpp"
 #include "dji_linker.hpp"
+#include "dji_legacy_linker.hpp"
 #include "dji_log.hpp"
-
-
-
+#include "dji_broadcast.hpp"
+#include "dji_gimbal.hpp"
+#include "dji_camera.hpp"
+#include "dji_control.hpp"
 
 namespace DJI
 {
@@ -77,6 +79,11 @@ public:
   ~Vehicle();
 
   Linker*              linker;
+  LegacyLinker*        legacyLinker;
+  DataBroadcast*       broadcast;
+  Camera*              camera;
+  Gimbal*              gimbal;
+  Control*             control;
 
   int functionalSetUp();
   ////////// Blocking calls ///////////
@@ -169,15 +176,26 @@ public:
                                     uint8_t*              ackPtr);
 
 private:
-  const int            wait_timeout   = 150;
+  const int            wait_timeout   = 1000;
+  const int            GIMBAL_MOUNTED = 1;
+  static const uint8_t NUM_CMD_SET    = 9;
+  CMD_SETSupportMatrix cmd_setSupportMatrix[NUM_CMD_SET];
 
 public:
   void setEncryption(bool encryptSetting);
   bool getEncryption();
   bool getActivationStatus();
+  bool initLinker();
+  bool initLegacyLinker();
+  bool initBroadcast();
+  bool initControl();
+  bool initCamera();
+  bool initGimbal();
 
 private:
   void setActivationStatus(bool is_activated);
+  void initCMD_SetSupportMatrix();
+  bool isCmdSetSupported(const uint8_t cmdSet);
 };
 }
 }

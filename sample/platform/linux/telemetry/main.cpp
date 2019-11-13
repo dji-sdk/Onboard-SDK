@@ -1,10 +1,10 @@
-/*! @file logging/main.cpp
- *  @version 3.4
- *  @date Sep 15 2017
+/*! @file telemetry/main.cpp
+ *  @version 3.3
+ *  @date Jun 05 2017
  *
  *  @brief
- *  Logging API usage in a Linux environment.
- *  Shows example usage of various logging APIs and controls.
+ *  main for Telemetry API usage in a Linux environment.
+ *  Shows example usage of the new data subscription API.
  *
  *  @Copyright (c) 2017 DJI
  *
@@ -28,54 +28,58 @@
  *
  */
 
-#include "logging_sample.hpp"
-#include "dji_linux_helpers.hpp"
+#include "telemetry_sample.hpp"
 
 using namespace DJI::OSDK;
+using namespace DJI::OSDK::Telemetry;
 
 int
 main(int argc, char** argv)
 {
-    LinuxSetup linuxEnvironment(argc, argv);
-    Vehicle *vehicle = linuxEnvironment.getVehicle();
-    if (vehicle == NULL) {
-        std::cout << "Vehicle not initialized, exiting. \n";
-        return -1;
-    }
+  // Setup OSDK.
+  LinuxSetup linuxEnvironment(argc, argv);
+  Vehicle*   vehicle = linuxEnvironment.getVehicle();
+  if (vehicle == NULL)
+  {
+    std::cout << "Vehicle not initialized, exiting.\n";
+    return -1;
+  }
 
-  DSTATUS("Logging is completely independent of DJI::OSDK::Vehicle.");
-  DSTATUS("In this example, we don't instantiate a Vehicle at all.\n");
   // Display interactive prompt
   std::cout
     << "| Available commands:                                            |"
     << std::endl;
   std::cout
-    << "| [a] Logging Example                                            |"
+    << "| [a] Get telemetry data and print                               |\n"
+    << "| [b] Select some subscription topics to print                   |\n"
+    << "| [c] Get telemetry data and save to file                        |"
     << std::endl;
   char inputChar;
   std::cin >> inputChar;
+
   switch (inputChar)
   {
-    case 'a': {
-      // Waypoint call
-      //dynamicLoggingControlExample();
-      vehicle->camera->shootPhoto();
-      sleep(5);
-      vehicle->camera->videoStart();
-      sleep(2);
-      DJI::OSDK::Gimbal::AngleData gimbalAngle = {};
-      gimbalAngle.roll = 100;
-      gimbalAngle.pitch = 300;
-      gimbalAngle.yaw = 900;
-      gimbalAngle.duration = 20;
-      vehicle->gimbal->setAngle(&gimbalAngle);
-      sleep(3);
-      vehicle->camera->videoStop();
-      sleep(2);
-    }
+    case 'a':
+      if (1)// (vehicle->getFwVersion() == Version::M100_31)
+      {
+        getBroadcastData(vehicle);
+      }
+      else
+      {
+//        subscribeToData(vehicle);
+      }
       break;
+#if 0
+    case 'b':
+      subscribeToDataForInteractivePrint(vehicle);
+      break;
+    case 'c':
+      subscribeToDataAndSaveLogToFile(vehicle);
+      break;
+#endif
     default:
       break;
   }
+
   return 0;
 }

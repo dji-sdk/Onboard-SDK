@@ -1,11 +1,11 @@
-/** @file dji_linker.hpp
+/** @file dji_camera.cpp
  *  @version 3.3
  *  @date April 2017
  *
  *  @brief
- *  Vehicle API for DJI onboardSDK library
+ *  Camera/Gimbal API for DJI onboardSDK library
  *
- *  @Copyright (c) 2017 DJI
+ *  @Copyright (c) 2016-2017 DJI
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,50 +27,41 @@
  *
  */
 
-#ifndef OSDK_DJI_CORE_INC_LINKER_H_
-#define OSDK_DJI_CORE_INC_LINKER_H_
+#include "dji_camera.hpp"
+#include "dji_vehicle.hpp"
 
-#include <stdint.h>
-#include "osdk_command_instance.h"
-#include "osdk_channel_instance.h"
-#include "dji_log.hpp"
-#include "osdk_root_task.h"
+using namespace DJI;
+using namespace DJI::OSDK;
 
-namespace DJI
+Camera::Camera(Vehicle* vehicle)
+  : vehicle(vehicle)
 {
-namespace OSDK
-{
-
-class Linker
-{
-public:
-  Linker();
-  ~Linker();
-
-bool init();
-
-bool addUartChannel(const char *device, uint32_t baudrate);
-
-bool addUdpChannel(const char *addr, uint16_t port);
-
-void setKey(const char *key);
-
-void sendAsync(T_CmdInfo *cmdInfo, const uint8_t *cmdData,
-                  Command_SendCallback func, void *userData,
-                  uint32_t timeOut, uint16_t retryTimes);
-
-E_OsdkStat sendSync(T_CmdInfo *cmdInfo, const uint8_t *cmdData,
-                 T_CmdInfo *ackInfo, uint8_t *ackData,
-                 uint32_t timeOut, uint16_t retryTimes);
-
-bool send(T_CmdInfo *cmdInfo, const uint8_t *cmdData);
-
-bool registerCmdHandler(T_RecvCmdHandle *recvCmdHandle);
-
-};
-}
 }
 
+Camera::~Camera()
+{
+}
 
+void
+Camera::shootPhoto()
+{
+  action(OpenProtocolCMD::CMDSet::Control::cameraShot);
+}
 
-#endif
+void
+Camera::videoStart()
+{
+  action(OpenProtocolCMD::CMDSet::Control::cameraVideoStart);
+}
+
+void
+Camera::videoStop()
+{
+  action(OpenProtocolCMD::CMDSet::Control::cameraVideoStop);
+}
+
+void
+Camera::action(const uint8_t cmd[]) {
+  uint8_t sendData = 0;
+  vehicle->legacyLinker->send(cmd, &sendData, 1);
+}

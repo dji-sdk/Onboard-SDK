@@ -91,15 +91,13 @@ Linker::sendAsync(T_CmdInfo *cmdInfo, const uint8_t *cmdData,
                                func, userData, timeOut, retryTimes);
 }
 
-bool
+E_OsdkStat
 Linker::sendSync(T_CmdInfo *cmdInfo, const uint8_t *cmdData,
                  T_CmdInfo *ackInfo, uint8_t *ackData,
                  uint32_t timeOut, uint16_t retryTimes)
 {
-  E_OsdkStat errCode;
-  errCode = OsdkCommand_SendSync(OsdkCommand_GetInstance(), cmdInfo, cmdData, 
+  return OsdkCommand_SendSync(OsdkCommand_GetInstance(), cmdInfo, cmdData,
                               ackInfo, ackData, timeOut, retryTimes);
-  return (errCode == OSDK_STAT_OK) ? true : false;
 }
 
 void

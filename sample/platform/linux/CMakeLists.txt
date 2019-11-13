@@ -28,6 +28,15 @@ if(NOT ONBOARDSDK_SOURCE)
     set(ONBOARDSDK_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/../../../osdk-core")
 endif()
 
+if(NOT MODULES_HEADER_DIR)
+    set(MODULES_HEADER_DIR "${ONBOARDSDK_SOURCE}/modules/inc/payload")
+endif()
+
+if(NOT FLIGHT_MODULES_HEADER_DIR)
+    set(FLIGHT_MODULES_HEADER_DIR "${ONBOARDSDK_SOURCE}/modules/inc/flight")
+endif()
+
 add_subdirectory(logging)
 add_subdirectory(register_cmd_handler)
+add_subdirectory(telemetry)
 

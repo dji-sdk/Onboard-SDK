@@ -29,14 +29,38 @@
 #ifndef DJI_VEHICLECALLBACK_H
 #define DJI_VEHICLECALLBACK_H
 
-#include "dji_vehicle.hpp"
-#include "dji_linker.hpp"
+#include "dji_ack.hpp"
 
 namespace DJI
 {
 namespace OSDK
 {
 class Vehicle;
+
+
+/*! @brief Dispatch info
+ *  @details This struct has booleans that get populated in the protocol layer
+ *           and help the dispatcher in the Vehicle layer decide what to do
+ *           with the received packet.
+ */
+typedef struct DispatchInfo
+{
+  bool    isAck;
+  bool    isCallback;
+  uint8_t callbackID;
+} DispatchInfo;
+
+/*! @brief Received info
+ *  @details This struct contains the ack or data struct return from
+ *           the vehicle with sending info
+ */
+typedef struct RecvContainer
+{
+  DJI::OSDK::ACK::Entry     recvInfo;
+  DJI::OSDK::ACK::TypeUnion recvData;
+  DJI::OSDK::DispatchInfo   dispatchInfo;
+} RecvContainer;
+
 
 //! @todo move definition below to class Vehicle
 //! so that we could remove this file
@@ -47,9 +71,8 @@ class Vehicle;
  * it matches this prototype.
  *
  */
-typedef void (*VehicleCallBack)(const T_CmdInfo *cmdInfo,
-                                const uint8_t *cmdData,
-                                void *userData, uint8_t cbType);
+typedef void (*VehicleCallBack)(Vehicle* vehicle, RecvContainer recvFrame,
+                                UserData userData);
 
 /*! @brief The CallBackHandler struct allows users to encapsulate callbacks and
  * data in one struct

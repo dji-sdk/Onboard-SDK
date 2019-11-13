@@ -583,8 +583,10 @@ static void OsdkCommand_SendPoll(T_CmdHandle *cmdHandle) {
         }
 
         if (cmdHandle->waitAckItem[index].retryTimes > 0) {
-          OSDK_LOG_INFO(MODULE_NAME_COMMAND, "Command async send retry:%d %d",
-                        index, cmdHandle->waitAckItem[index].retryTimes);
+          OSDK_LOG_INFO(MODULE_NAME_COMMAND, "Command async send retry:%d %d (0x%02X, 0x%02X)",
+                        index, cmdHandle->waitAckItem[index].retryTimes,
+                        cmdHandle->waitAckItem->sendInfo.cmdSet,
+                        cmdHandle->waitAckItem->sendInfo.cmdId);
 
           OsdkCommand_Resend(&cmdHandle->waitAckItem[index].sendInfo,
                              cmdHandle->waitAckItem[index].sendData);

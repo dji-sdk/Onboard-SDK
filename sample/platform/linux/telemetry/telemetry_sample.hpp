@@ -1,9 +1,10 @@
-/** @file dji_linker.hpp
+/*! @file telemetry_sample.hpp
  *  @version 3.3
- *  @date April 2017
+ *  @date Jun 05 2017
  *
  *  @brief
- *  Vehicle API for DJI onboardSDK library
+ *  Telemetry API usage in a Linux environment.
+ *  Shows example usage of the new data subscription API.
  *
  *  @Copyright (c) 2017 DJI
  *
@@ -27,50 +28,24 @@
  *
  */
 
-#ifndef OSDK_DJI_CORE_INC_LINKER_H_
-#define OSDK_DJI_CORE_INC_LINKER_H_
+#ifndef DJIOSDK_TELEMETRYSAMPLE_HPP
+#define DJIOSDK_TELEMETRYSAMPLE_HPP
 
-#include <stdint.h>
-#include "osdk_command_instance.h"
-#include "osdk_channel_instance.h"
-#include "dji_log.hpp"
-#include "osdk_root_task.h"
+// System Includes
+#include <iostream>
 
-namespace DJI
-{
-namespace OSDK
-{
+// DJI OSDK includes
+#include <dji_vehicle.hpp>
 
-class Linker
-{
-public:
-  Linker();
-  ~Linker();
+// Helpers
+#include <dji_linux_helpers.hpp>
 
-bool init();
-
-bool addUartChannel(const char *device, uint32_t baudrate);
-
-bool addUdpChannel(const char *addr, uint16_t port);
-
-void setKey(const char *key);
-
-void sendAsync(T_CmdInfo *cmdInfo, const uint8_t *cmdData,
-                  Command_SendCallback func, void *userData,
-                  uint32_t timeOut, uint16_t retryTimes);
-
-E_OsdkStat sendSync(T_CmdInfo *cmdInfo, const uint8_t *cmdData,
-                 T_CmdInfo *ackInfo, uint8_t *ackData,
-                 uint32_t timeOut, uint16_t retryTimes);
-
-bool send(T_CmdInfo *cmdInfo, const uint8_t *cmdData);
-
-bool registerCmdHandler(T_RecvCmdHandle *recvCmdHandle);
-
-};
-}
-}
-
-
-
+#if 0
+bool subscribeToData(DJI::OSDK::Vehicle* vehiclePtr, int responseTimeout = 1);
+bool subscribeToDataForInteractivePrint(DJI::OSDK::Vehicle* vehiclePtr, int responseTimeout = 1);
+bool subscribeToDataAndSaveLogToFile(DJI::OSDK::Vehicle* vehiclePtr, int responseTimeout = 1);
 #endif
+
+// Broadcast data implementation for Matrice 100
+bool getBroadcastData(DJI::OSDK::Vehicle* vehicle, int responseTimeout = 1);
+#endif // DJIOSDK_TELEMETRYSAMPLE_HPP

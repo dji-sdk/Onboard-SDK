@@ -97,6 +97,33 @@ const size_t MAX_ACK_SIZE           = 107;
 static const uint8_t CAMERA_PAIR_NUM = 5;
 static const uint8_t IMAGE_TYPE_NUM  = 10;
 
+//! The Header struct is meant to handle the open protocol header.
+typedef struct OpenHeader {
+  uint32_t sof : 8;
+  uint32_t length : 10;
+  uint32_t version : 6;
+  uint32_t sessionID : 5;
+  uint32_t isAck : 1;
+  uint32_t reserved0 : 2; // always 0
+  uint32_t padding : 5;
+  uint32_t enc : 3;
+  uint32_t reserved1 : 24;
+  uint32_t sequenceNumber : 16;
+  uint32_t crc : 16;
+} OpenHeader;
+
+typedef struct Command {
+  uint16_t sessionMode : 2;
+  uint16_t encrypt : 1;
+  uint16_t retry : 13;
+  uint16_t timeout; // unit is ms
+  size_t   length;
+  uint8_t *buf;
+  uint8_t cmd_set;
+  uint8_t cmd_id;
+  bool    isCallback;
+  int     callbackID;
+} Command;
 
 } // namespace OSDK
 } // namespace DJI
