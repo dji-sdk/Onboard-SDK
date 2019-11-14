@@ -32,9 +32,12 @@ if(NOT MODULES_HEADER_DIR)
     set(MODULES_HEADER_DIR "${ONBOARDSDK_SOURCE}/modules/inc/payload")
 endif()
 
+include_directories(${ONBOARDSDK_SOURCE}/linker)
+include_directories(${ONBOARDSDK_SOURCE}/linker/core)
+include_directories(${ONBOARDSDK_SOURCE}/linker/core/platform)
 include_directories(${ONBOARDSDK_SOURCE}/linker/core/command)
 include_directories(${ONBOARDSDK_SOURCE}/linker/core/channel)
-include_directories(${ONBOARDSDK_SOURCE}/linker)
+include_directories(${ONBOARDSDK_SOURCE}/linker/core/utils/inc)
 include_directories(${ONBOARDSDK_SOURCE}/utils/inc)
 include_directories(${ONBOARDSDK_SOURCE}/linker/core/logger)
 include_directories(${ONBOARDSDK_SOURCE}/linker/core/protocol)
@@ -46,7 +49,8 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/hal)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/osal)
 
 if(NOT LINKER_HEADER_SRC)
-    set(LINKER_HEADER_SRC "${ONBOARDSDK_SOURCE}/linker/core/root_task/*.c \
+    set(LINKER_HEADER_SRC "${ONBOARDSDK_SOURCE}/linker/core/platform/*.c \
+                            ${ONBOARDSDK_SOURCE}/linker/core/root_task/*.c \
                             ${ONBOARDSDK_SOURCE}/linker/core/logger/*.c \
                             ${ONBOARDSDK_SOURCE}/linker/core/protocol/*.c \
                             ${ONBOARDSDK_SOURCE}/utils/src/*.c* \
