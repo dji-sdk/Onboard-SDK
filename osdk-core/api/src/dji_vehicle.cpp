@@ -69,19 +69,19 @@ Vehicle::init()
   if (!initLinker())
   {
     DERROR("Failed to initialize Linker!\n");
-    return 1;
+    return false;
   }
 
   if (!linker->addUartChannel(this->device, this->baudRate))
   {
     DERROR("Failed to initialize Linker channel!\n");
-    return 1;
+    return false;
   }
 
   if (!initLegacyLinker())
   {
     DERROR("Failed to initialize LegacyLinker!\n");
-    return 1;
+    return false;
   }
 
   /*
@@ -90,7 +90,7 @@ Vehicle::init()
   if (!initSubscriber())
   {
     DERROR("Failed to initialize subscriber!\n");
-    return 1;
+    return false;
   }
 
   /*
@@ -99,7 +99,7 @@ Vehicle::init()
   if (!initBroadcast())
   {
     DERROR("Failed to initialize Broadcast!\n");
-    return 1;
+    return false;
   }
 
   /*
@@ -109,7 +109,7 @@ Vehicle::init()
   if (!initControl())
   {
     DERROR("Failed to initialize Control!\n");
-    return 1;
+    return false;
   }
 
   /*
@@ -119,7 +119,7 @@ Vehicle::init()
   if (!initCamera())
   {
     DERROR("Failed to initialize Camera!\n");
-    return 1;
+    return false;
   }
 
   /*
@@ -128,13 +128,13 @@ Vehicle::init()
   if (!initMFIO())
   {
     DERROR("Failed to initialize MFIO!\n");
-    return 1;
+    return false;
   }
 
   if(!initGimbal())
   {
     DERROR("Failed to initialize Gimbal!\n");
-    return 1;
+    return false;
   }
 
   /*
@@ -143,7 +143,7 @@ Vehicle::init()
   if (!initMOC())
   {
     DERROR("Failed to initialize MobileCommunication!\n");
-    return 1;
+    return false;
   }
 
   /*
@@ -159,17 +159,40 @@ Vehicle::init()
     DERROR("Failed to initialize Payload Device!\n");
   }
 
+  if (!initCameraManager())
+  {
+    DERROR("Failed to initialize PayloadManager!\n");
+  }
+
+  if (!initPSDKManager())
+  {
+    DERROR("Failed to initialize PSDKManager!\n");
+  }
+
+  if (!initMissionManager())
+  {
+    DERROR("Failed to initialize Mission Manager!\n");
+    return false;
+  }
+
   if (!initHardSync())
   {
     DERROR("Failed to initialize HardSync!\n");
-    return 1;
+    return false;
   }
 
   if (!initVirtualRC())
   {
     DERROR("Failed to initiaze VirtualRC!\n");
-    return 1;
+    return false;
   }
+
+  if(!initFlightController())
+  {
+    DERROR("Failed to initialize FlightController!\n");
+    return false;
+  }
+
   return true;
 }
 
@@ -401,6 +424,25 @@ Vehicle::initGimbal()
   return true;
 }
 
+
+bool
+Vehicle::initFlightController()
+{
+  if(this->flightController)
+  {
+    DDEBUG("flightController already initalized!");
+    return true;
+  }
+  this->flightController = new (std::nothrow) FlightController(this);
+  if (this->flightController == 0)
+  {
+    DERROR("Failed to allocate memory for flightController!\n");
+    return false;
+  }
+  return true;
+}
+
+
 bool
 Vehicle::initMFIO()
 {
@@ -495,6 +537,57 @@ bool Vehicle::initPayloadDevice()
   if (!ret) DERROR("Register broadcast callback fail.");
   return true;
 
+}
+
+
+bool Vehicle::initCameraManager()
+{
+  if(this->cameraManager)
+  {
+    DDEBUG("cameraManager already initalized!");
+    return true;
+  }
+  this->cameraManager = new (std::nothrow) CameraManager(this);
+  if (this->cameraManager == 0)
+  {
+    DERROR("Failed to allocate memory for pm!\n");
+    return false;
+  }
+  return true;
+}
+
+bool Vehicle::initPSDKManager()
+{
+  if(this->psdkManager)
+  {
+    DDEBUG("psdkManager already initalized!");
+    return true;
+  }
+  this->psdkManager = new (std::nothrow) PSDKManager(this);
+  if (this->psdkManager == 0)
+  {
+    DERROR("Failed to allocate memory for pm!\n");
+    return false;
+  }
+  return true;
+}
+
+bool
+Vehicle::initMissionManager()
+{
+  if(this->missionManager)
+  {
+    DDEBUG("vehicle->missionManager already initalized!");
+    return true;
+  }
+
+  this->missionManager = new (std::nothrow) MissionManager(this);
+  if (this->missionManager == 0)
+  {
+    return false;
+  }
+
+  return true;
 }
 
 bool
@@ -848,6 +941,154 @@ Vehicle::activate(ActivateData* data, uint32_t timeoutMs)
   }
 
   return true;
+}
+
+
+void
+Vehicle::activate(ActivateData* data, VehicleCallBack callback,
+                  UserData userData)
+{
+  if(this->functionalSetUp() != 0)
+  {
+    DERROR("Unable to initialize some vehicle components!");
+    return;
+  }
+
+  data->version        = this->versionData.fwVersion;
+  accountData          = *data;
+  accountData.reserved = 2;
+
+  for (int i = 0; i < 32; ++i)
+  {
+    accountData.iosID[i] = '0'; //! @note for ios verification
+  }
+  DSTATUS("version 0x%X\n", versionData.fwVersion);
+  DDEBUG("%.32s", accountData.iosID);
+  //! Using function prototype II of send
+  VehicleCallBack cb = NULL;
+  UserData udata = NULL;
+  if (callback)
+  {
+    cb = callback;
+    udata = userData;
+  }
+  else
+  {
+    cb = activateCallback;
+    udata = NULL;
+  }
+  legacyLinker->sendAsync(OpenProtocolCMD::CMDSet::Activation::activate,
+                          (uint8_t *) &accountData,
+                          sizeof(accountData) - sizeof(char *), 1000, 3, cb,
+                          udata);
+}
+
+
+void
+Vehicle::activateCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
+                          UserData userData)
+{
+
+  uint16_t ack_data;
+  if (recvFrame.recvInfo.len - OpenProtocol::PackageMin <= 2)
+  {
+    ack_data = recvFrame.recvData.ack;
+
+    vehiclePtr->ackErrorCode.data = ack_data;
+    vehiclePtr->ackErrorCode.info = recvFrame.recvInfo;
+
+    if (ACK::getError(vehiclePtr->ackErrorCode) &&
+        ack_data ==
+            OpenProtocolCMD::ErrorCode::ActivationACK::OSDK_VERSION_ERROR)
+    {
+      DERROR("SDK version did not match\n");
+      vehiclePtr->getDroneVersion();
+    }
+
+    //! Let user know about other errors if any
+    ACK::getErrorCodeMessage(vehiclePtr->ackErrorCode, __func__);
+  }
+  else
+  {
+    DERROR("ACK is exception, sequence %d\n", recvFrame.recvInfo.seqNumber);
+    return;
+  }
+
+  if (ack_data == OpenProtocolCMD::ErrorCode::ActivationACK::SUCCESS &&
+      vehiclePtr->accountData.encKey)
+  {
+    vehiclePtr->linker->setKey(vehiclePtr->accountData.encKey);
+    vehiclePtr->setActivationStatus(true);
+  }
+}
+
+void
+Vehicle::getDroneVersionCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
+                                 UserData userData)
+{
+
+  if (!parseDroneVersionInfo(vehiclePtr->versionData,
+                             recvFrame.recvData.versionACK))
+  {
+    DERROR("Drone version not obtained! Please do not proceed.\n"
+           "Possible reasons:\n"
+           "\tSerial port connection:\n"
+           "\t\t* SDK is not enabled, please check DJI Assistant2 -> SDK -> [v] Enable API Control.\n"
+           "\t\t* Baudrate is not correct, please double-check from DJI Assistant2 -> SDK -> baudrate.\n"
+           "\t\t* TX and RX pins are inverted.\n"
+           "\t\t* Serial port is occupied by another program.\n"
+           "\t\t* Permission required. Please do 'sudo usermod -a -G dialout $USER' "
+           "(you do not need to replace $USER with your username). Then logout and login again\n");
+
+    //! Set fwVersion to 0 so we can catch the error.
+    vehiclePtr->versionData.fwVersion = 0;
+  }
+  else
+  {
+    //! Finally, we print stuff out.
+    if (vehiclePtr->versionData.fwVersion > Version::FW(3, 1, 0, 0))
+    {
+      DSTATUS("Device Serial No. = %.16s\n",
+              vehiclePtr->versionData.hw_serial_num);
+    }
+    DSTATUS("Hardware = %.12s\n", vehiclePtr->versionData.hwVersion);
+    DSTATUS("Firmware = %X\n", vehiclePtr->versionData.fwVersion);
+    if (vehiclePtr->versionData.fwVersion < Version::FW(3, 2, 0, 0))
+    {
+      DSTATUS("Version CRC = 0x%X\n", vehiclePtr->versionData.version_crc);
+    }
+  }
+}
+
+void
+Vehicle::getDroneVersion(VehicleCallBack callback, UserData userData)
+{
+  versionData.version_ack =
+      OpenProtocolCMD::ErrorCode::CommonACK::NO_RESPONSE_ERROR;
+  versionData.version_crc     = 0x0;
+  versionData.version_name[0] = 0;
+  versionData.fwVersion       = 0;
+
+  uint32_t cmd_timeout = 100; // unit is ms
+  uint32_t retry_time  = 3;
+  uint8_t  cmd_data    = 0;
+  VehicleCallBack cb = NULL;
+  UserData udata = NULL;
+  if (callback)
+  {
+    cb = callback;
+    udata = userData;
+  }
+  else
+  {
+    cb = getDroneVersionCallback;
+    udata = NULL;
+  }
+
+  // When UserData is implemented, pass the Vehicle as userData.
+  legacyLinker->sendAsync(OpenProtocolCMD::CMDSet::Activation::getVersion,
+                          (uint8_t *) &cmd_data, 1, cmd_timeout, retry_time, cb,
+                          udata);
 }
 
 ACK::DroneVersion

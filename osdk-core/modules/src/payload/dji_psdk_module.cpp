@@ -27,6 +27,7 @@
  */
 
 #include "dji_psdk_module.hpp"
+#include "dji_legacy_linker.hpp"
 
 #include <vector>
 using namespace DJI;

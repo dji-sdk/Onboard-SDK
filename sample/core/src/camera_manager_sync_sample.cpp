@@ -391,7 +391,7 @@ CameraManagerSyncSample::startShootSinglePhotoSyncSample(
   */
 
   /*! wait the APP change the shoot-photo mode display */
-  vehicle->getPlatformManager()->millisecSleep(500);
+  Platform::instance().taskSleepMs(500);
 
   /*!< start to shoot single photo */
   DSTATUS("start to shoot SINGLE photo");
@@ -436,7 +436,7 @@ CameraManagerSyncSample::startShootBurstPhotoSyncSample(
   }
 
   /*! wait the APP change the shoot-photo mode display */
-  vehicle->getPlatformManager()->millisecSleep(500);
+  Platform::instance().taskSleepMs(500);
 
   /*!< set shoot-photo mode parameter */
   DSTATUS("set count = %d", count);
@@ -489,7 +489,7 @@ ErrorCode::ErrorCodeType CameraManagerSyncSample::startShootAEBPhotoSyncSample(
   }
 
   /*! wait the APP change the shoot-photo mode display */
-  vehicle->getPlatformManager()->millisecSleep(500);
+  Platform::instance().taskSleepMs(500);
 
   /*!< set shoot-photo mode parameter */
   DSTATUS("set AEB photo number = %d", photoNum);
@@ -544,7 +544,7 @@ CameraManagerSyncSample::startShootIntervalPhotoSyncSample(
   }
 
   /*! wait the APP change the shoot-photo mode display */
-  vehicle->getPlatformManager()->millisecSleep(500);
+  Platform::instance().taskSleepMs(500);
 
   /*!< set shoot-photo mode parameter */
   DSTATUS("set intervalData : photoNumConticap = %d ,timeInterval = %d",

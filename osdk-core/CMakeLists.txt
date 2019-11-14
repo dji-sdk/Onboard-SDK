@@ -49,6 +49,8 @@ include (${CMAKE_CURRENT_SOURCE_DIR}/../contrib/DJIConfig.cmake)
 
 include_directories(
         api/inc
+        modules/inc/payload
+        modules/inc/flight
         platform/inc
         logger/inc
         utility/inc
@@ -65,6 +67,8 @@ include_directories(
 ## Source code for OSDK CORE
 FILE(GLOB OSDK_LIB_SRCS
         api/src/*.cpp
+        modules/src/payload/*.cpp
+        modules/src/flight/*.cpp
         platform/src/*.c*
         logger/src/*.cpp
         utility/src/*.cpp
@@ -148,6 +152,8 @@ install(FILES
 
 FILE(GLOB OSDK_LIB_HEADERS
         api/inc/*.h*
+        modules/inc/payload/*.h*
+        modules/inc/flight/*.h*
         platform/inc/*.h*
         logger/inc/*.h*
         utility/inc/*.h*

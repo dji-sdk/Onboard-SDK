@@ -28,6 +28,7 @@
 
 #include "dji_camera_module.hpp"
 #include "dji_vehicle_callback.hpp"
+#include "dji_legacy_linker.hpp"
 
 using namespace DJI;
 using namespace DJI::OSDK;

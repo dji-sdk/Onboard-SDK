@@ -39,26 +39,13 @@ FlightLink::~FlightLink() {}
 void FlightLink::sendAsync(const uint8_t cmd[], void *pdata, size_t len,
                             void *callBack, UserData userData, int timeout,
                             int retryTime) {
-  int cbIndex = setCallback(callBack, userData);
-  vehicle->protocolLayer->send(2, vehicle->getEncryption(), cmd,
-                               (uint8_t *)pdata, len, timeout, retryTime, true,
-                               cbIndex);
+  vehicle->legacyLinker->sendAsync(cmd, (uint8_t *) pdata, len, timeout,
+                                   retryTime, (VehicleCallBack) callBack,
+                                   userData);
 }
 
 void *FlightLink::sendSync(const uint8_t cmd[], void *pdata, size_t len,
                             int timeout) {
-  vehicle->protocolLayer->send(2, vehicle->getEncryption(), cmd,
-                               (uint8_t *)pdata, len, 500, 2, false, 2);
-  return vehicle->waitForACK({cmd[0],cmd[1]}, timeout);
-}
-
-/*! @TODO The callback and userdata recording work should be implemented in
- * the protocol layer. It will be improved in OSDK 4.0. So here is the
- * temporary way.
- */
-int FlightLink::setCallback(void *callBack, UserData userData) {
-  int cbIndex = vehicle->callbackIdIndex();
-  vehicle->nbCallbackFunctions[cbIndex] = (void *)callBack;
-  vehicle->nbUserData[cbIndex] = userData;
-  return cbIndex;
+  return vehicle->legacyLinker->sendSync(cmd, (uint8_t *) pdata, len,
+                                         timeout * 1000 / 2, 2);
 }

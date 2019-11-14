@@ -19,38 +19,40 @@
 # * SOFTWARE.
 # *
 # *
-cmake_minimum_required(VERSION 2.8)
-project(djiosdk-regcmdhandler-sample)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread -g -O0 -Wall -Werror")
+cmake_minimum_required(VERSION 2.8)
+project(djiosdk-mission-sample)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread -g -O0")
 
 include_directories(${ONBOARDSDK_SOURCE}/api/inc)
 include_directories(${ONBOARDSDK_SOURCE}/utility/inc)
-include_directories(${ONBOARDSDK_SOURCE}/logger/inc)
-include_directories(${ONBOARDSDK_SOURCE}/platform/inc)
-include_directories(${ONBOARDSDK_SOURCE}/linker/command)
-include_directories(${ONBOARDSDK_SOURCE}/linker/channel)
-include_directories(${ONBOARDSDK_SOURCE}/linker)
-include_directories(${ONBOARDSDK_SOURCE}/utils/inc)
-include_directories(${ONBOARDSDK_SOURCE}/linker/logger)
-include_directories(${ONBOARDSDK_SOURCE}/linker/protocol)
-include_directories(${ONBOARDSDK_SOURCE}/linker/root_task)
+include_directories(${ONBOARDSDK_SOURCE}/hal/inc)
+include_directories(${ONBOARDSDK_SOURCE}/protocol/inc)
+include_directories(${ONBOARDSDK_SOURCE}/platform/linux/inc)
 include_directories(${MODULES_HEADER_DIR})
+include_directories(${FLIGHT_MODULES_HEADER_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../common)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../hal)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../osal)
-
 FILE(GLOB SOURCE_FILES
-        ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_environment.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_helpers.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/../hal/*.c
-        ${CMAKE_CURRENT_SOURCE_DIR}/../osal/*.c
-        ${ONBOARDSDK_SOURCE}/utility/src/*.c*
-        ${ONBOARDSDK_SOURCE}/api/src/*.c*
-        )
+    ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_environment.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_helpers.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../hal/*.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../osal/*.c
+    )
 
-add_executable(djiosdk-regcmdhandler-sample
-        main_test.cpp
-        ${SOURCE_FILES})
-target_link_libraries(djiosdk-regcmdhandler-sample djiosdk-core)
+add_executable(${PROJECT_NAME}
+    ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_environment.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_helpers.cpp
+    ${SOURCE_FILES}
+    main.cpp
+    mission_sample.cpp)
+target_link_libraries(${PROJECT_NAME} djiosdk-core)
+
+if(WAYPT2_CORE)
+  add_executable(djiosdk-waypoint-v2-sample
+      ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_environment.cpp
+      ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_helpers.cpp
+      waypoint_v2_main.cpp
+      waypoint_v2_sample.cpp)
+  target_link_libraries(djiosdk-waypoint-v2-sample djiosdk-core)
+endif()

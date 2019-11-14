@@ -39,6 +39,7 @@ FILE(GLOB SOURCE_FILES *.hpp *.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_helpers.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/../hal/*.c
         ${CMAKE_CURRENT_SOURCE_DIR}/../osal/*.c
+        ${LINKER_HEADER_SRC}
         )
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})

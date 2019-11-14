@@ -72,7 +72,6 @@ class FlightLink {
  private:
   Vehicle *vehicle;
 
-  int setCallback(void *callBack, UserData userData);
 };
 }  // namespace OSDK
 }  // namespace DJI

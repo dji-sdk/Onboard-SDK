@@ -89,7 +89,7 @@ bool checkActionStarted(Vehicle* vehicle, uint8_t mode) {
   while (vehicle->subscribe->getValue<TOPIC_STATUS_DISPLAYMODE>() != mode &&
          actionNotStarted < timeoutCycles) {
     actionNotStarted++;
-    usleep(100000);
+    Platform::instance().taskSleepMs(100);
   }
   if (actionNotStarted == timeoutCycles) {
     DERROR("Start actions mode %d failed, current DISPLAYMODE is: %d ...", mode,
@@ -131,7 +131,7 @@ bool getHomeLocation(Vehicle* vehicle,
     return false;
   }
   /*! Wait for the data to start coming in.*/
-  sleep(2);
+  Platform::instance().taskSleepMs(2000);
   homeLocationSetStatus =
       vehicle->subscribe->getValue<TOPIC_HOME_POINT_SET_STATUS>();
   homeLocationInfo = vehicle->subscribe->getValue<TOPIC_HOME_POINT_INFO>();
@@ -202,7 +202,7 @@ bool goHomeAndConfirmLanding(Vehicle *vehicle, int timeout) {
                VehicleStatus::DisplayMode::MODE_NAVI_GO_HOME &&
            vehicle->subscribe->getValue<TOPIC_STATUS_FLIGHT>() ==
                VehicleStatus::FlightStatus::IN_AIR) {
-      sleep(1);  // waiting for this action finished
+      Platform::instance().taskSleepMs(1000);  // waiting for this action finished
     }
   }
   DSTATUS("Finished go home action");
@@ -220,7 +220,7 @@ bool goHomeAndConfirmLanding(Vehicle *vehicle, int timeout) {
                VehicleStatus::FlightStatus::IN_AIR) {
       Telemetry::TypeMap<TOPIC_AVOID_DATA>::type avoidData =
           vehicle->subscribe->getValue<TOPIC_AVOID_DATA>();
-      sleep(1);
+      Platform::instance().taskSleepMs(1000);
       if ((0.65 < avoidData.down && avoidData.down < 0.75) &&
           (avoidData.downHealth == 1)) {
         break;
@@ -248,7 +248,7 @@ bool goHomeAndConfirmLanding(Vehicle *vehicle, int timeout) {
                VehicleStatus::DisplayMode::MODE_AUTO_LANDING &&
            vehicle->subscribe->getValue<TOPIC_STATUS_FLIGHT>() ==
                VehicleStatus::FlightStatus::IN_AIR) {
-      sleep(1);
+      Platform::instance().taskSleepMs(1000);
     }
   }
   DSTATUS("Finished force Landing and avoid ground action");

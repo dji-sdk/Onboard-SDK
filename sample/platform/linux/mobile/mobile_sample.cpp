@@ -228,9 +228,6 @@ controlAuthorityMobileCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
   ACK::ErrorCode ack;
   ack.data = OpenProtocolCMD::ErrorCode::CommonACK::NO_RESPONSE_ERROR;
 
-  unsigned char data    = 0x1;
-  int           cbIndex = vehiclePtr->callbackIdIndex();
-
   if (recvFrame.recvInfo.len - OpenProtocol::PackageMin <= sizeof(uint16_t))
   {
     ack.data = recvFrame.recvData.ack;
@@ -462,7 +459,7 @@ activateMobileCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
   if (ack_data == OpenProtocolCMD::ErrorCode::ActivationACK::SUCCESS &&
       vehiclePtr->getAccountData().encKey)
   {
-    vehiclePtr->protocolLayer->setKey(vehiclePtr->getAccountData().encKey);
+    vehiclePtr->linker->setKey(vehiclePtr->getAccountData().encKey);
   }
 
   // Now, we have to send the ACK back to mobile
