@@ -312,11 +312,13 @@ E_OsdkStat LegacyLinker::legacyAdaptingRegisterCB(
     const T_CmdInfo *cmdInfo,
     const uint8_t *cmdData, void *userData) {
   legacyAdaptingData *legacyData = (legacyAdaptingData *)userData;
-  if (cmdInfo && legacyData && legacyData->cb && legacyData->vehicle) {
-    legacyAdaptingData para = *(legacyAdaptingData *) userData;
+  if (cmdInfo && legacyData && legacyData->vehicle) {
+    if (legacyData->cb) {
+      legacyAdaptingData para = *(legacyAdaptingData *) userData;
 
-    RecvContainer recvFrame = recvFrameAdapting(cmdInfo, cmdData);
-    para.cb(para.vehicle, recvFrame, para.udata);
+      RecvContainer recvFrame = recvFrameAdapting(cmdInfo, cmdData);
+      para.cb(para.vehicle, recvFrame, para.udata);
+    }
     return OSDK_STAT_OK;
   } else {
     DERROR("Parameter invalid.");

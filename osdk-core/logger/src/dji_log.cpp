@@ -31,6 +31,7 @@
 
 #include <stdarg.h>
 #include <stdio.h>
+#include <cstring>
 
 using namespace DJI::OSDK;
 
@@ -59,8 +60,7 @@ Log::title(int level, const char* prefix, const char* func, int line)
   {
     vaild = true;
 
-    const char str[] = "\n%s/%d @ %s, L%d: ";
-    print(str, prefix, level, func, line);
+    printf("%s/%d @ %s, L%d: ", prefix, level, func, line);
   }
   else
   {
@@ -77,8 +77,7 @@ Log::title(int level, const char* prefix)
   {
     vaild = true;
 
-    const char str[] = "\n%s/%d ";
-    print(str, prefix, level);
+    printf("%s/%d" , prefix, level);
   }
   else
   {
@@ -96,6 +95,8 @@ Log::print()
 Log&
 Log::print(const char* fmt, ...)
 {
+  char log[300] = {0};
+
   if(!initFlag)
   {
     mutex = new Mutex();
@@ -106,9 +107,14 @@ Log::print(const char* fmt, ...)
     va_list args;
     va_start(args, fmt);
     mutex->lock();
-    vprintf(fmt, args);
+    vsnprintf(log, sizeof(log) - 1, fmt, args);
     mutex->unlock();
     va_end(args);
+    if(log[strlen(log)] != '\n') {
+      printf("%s\n", log);
+    } else {
+      printf("%s", log);
+    };
 #if defined(__linux__)
     fflush(stdout);
 #endif
