@@ -259,6 +259,13 @@ void *LegacyLinker::decodeAck(E_OsdkStat ret, T_CmdInfo &ackInfo,
     }
     droneVersionACK.ack.info = recvFrame.recvInfo;
   }
+  else if (memcmp(cmd, OpenProtocolCMD::CMDSet::Activation::heatBeatCmd,
+                  sizeof(cmd)) == 0)
+  {
+      heartBeatAck.info = recvFrame.recvInfo;
+      heartBeatAck.data = recvFrame.recvData.heartbeatpack;
+      pACK = static_cast<void*>(&this->heartBeatAck);
+  }
   else if (recvFrame.recvInfo.cmd_set == OpenProtocolCMD::CMDSet::subscribe)
   {
     ackErrorCode.info = recvFrame.recvInfo;

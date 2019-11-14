@@ -53,6 +53,7 @@ public:
       const static uint8_t frequency[MAX_CMD_ARRAY_SIZE];
       const static uint8_t toMobile[MAX_CMD_ARRAY_SIZE];
       const static uint8_t toPayload[MAX_CMD_ARRAY_SIZE];
+      const static uint8_t heatBeatCmd[MAX_CMD_ARRAY_SIZE];
     } Activation;
 
     typedef struct Broadcast

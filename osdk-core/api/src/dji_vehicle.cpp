@@ -57,6 +57,12 @@ using namespace DJI::OSDK;
 #define DJIOSDK_OPERATOR_TYPE 0
 #endif
 
+const  uint8_t       Vehicle::kOSDKSendId                    = 129;
+const  uint32_t      Vehicle::kHeartBeatPackSendTimeInterval = 1000;
+static uint8_t       osdkConnectFCFlag                       = 0;
+       HeartBeatPack Vehicle::heartBeatPack                  = { kOSDKSendId,PROTOCOL_SDK,0, { 0 }};
+       uint8_t       Vehicle::fcLostConnectCount             = 0;
+
 Vehicle::Vehicle(Linker* linker)
   : linker(linker)
   , legacyLinker(NULL)
@@ -83,6 +89,12 @@ Vehicle::Vehicle(Linker* linker)
 bool
 Vehicle::init()
 {
+  if (!initOSDKHeartBeatThread())
+  {
+    DERROR("Failed to initialize OSDKHeartBeatThread!\n");
+    return false;
+  }
+
   if (!initLegacyLinker())
   {
     DERROR("Failed to initialize LegacyLinker!\n");
@@ -315,6 +327,7 @@ Vehicle::~Vehicle()
   {
     delete this->flightController;
   }
+  OsdkOsal_TaskDestroy(sendHeartbeatToFCHandle);
 }
 
 
@@ -715,6 +728,20 @@ Vehicle::initVirtualRC()
 }
 
 bool
+Vehicle::initOSDKHeartBeatThread() {
+    /*! create task for OSDK heart beat */
+    E_OsdkStat osdkStat = OsdkOsal_TaskCreate(&sendHeartbeatToFCHandle,
+                                              (void *(*)( void *)) (sendHeartbeatToFCTask),
+                                              OSDK_TASK_STACK_SIZE_DEFAULT, this->linker);
+    if (osdkStat != OSDK_STAT_OK) {
+        DERROR("osdk heart beat task create error:%d", osdkStat);
+        return false;
+    }
+
+    return true;
+}
+
+bool
 Vehicle::parseDroneVersionInfo(Version::VersionData& versionData,
                                uint8_t*              ackPtr)
 {
@@ -1072,6 +1099,72 @@ Vehicle::activateCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
 }
 
 void
+Vehicle::fcLostConnectCallBack(void)
+{
+    DSTATUS("OSDK lost connection with Drone!");
+}
+
+uint8_t
+Vehicle::sendHeartbeatToFCFunc(Linker *linker)
+{
+    if (linker) {
+        uint8_t ackData[1024];
+        uint8_t *data = (uint8_t *) &heartBeatPack;
+        T_CmdInfo heatBeatCmdInfo    = {0};
+        T_CmdInfo heatBeatAckCmdInfo = {0};
+        heatBeatCmdInfo.cmdSet     = OpenProtocolCMD::CMDSet::Activation::heatBeatCmd[0];
+        heatBeatCmdInfo.cmdId      = OpenProtocolCMD::CMDSet::Activation::heatBeatCmd[1];
+        heatBeatCmdInfo.dataLen    = sizeof(HeartBeatPack);
+        heatBeatCmdInfo.needAck    = OSDK_COMMAND_NEED_ACK_FINISH_ACK;
+        heatBeatCmdInfo.packetType = OSDK_COMMAND_PACKET_TYPE_REQUEST;
+        heatBeatCmdInfo.protoType  = PROTOCOL_SDK;
+        heatBeatCmdInfo.addr       = GEN_ADDR(0, ADDR_SDK_COMMAND_INDEX);
+        heatBeatCmdInfo.channelId  = 0;
+
+        linker->sendSync(&heatBeatCmdInfo, data,
+                         &heatBeatAckCmdInfo, ackData, 500, 2);
+        HeartBeatPack *ack = (HeartBeatPack *)ackData;
+        if (ack->seqNumber == heartBeatPack.seqNumber) {
+            fcLostConnectCount = 0;
+            osdkConnectFCFlag = 1;
+        } else {
+            fcLostConnectCount++;
+        }
+        if (fcLostConnectCount > kMaxFCLostConnectCount) {
+            osdkConnectFCFlag = 0;
+            DJI::OSDK::Vehicle::fcLostConnectCallBack();
+        }
+        heartBeatPack.seqNumber++;
+
+        return true;
+    } else {
+        return false;
+    }
+}
+
+void *
+Vehicle::sendHeartbeatToFCTask(void *arg) {
+    DSTATUS("OSDK send heart beat to fc task created.");
+    if(arg) {
+      Linker *linker = (Linker *) arg;
+      static uint32_t preHeartBeatTimeStamp = 0;
+      static uint32_t curHeartBeatTimeStamp = 0;
+      for (;;)
+      {
+          OsdkOsal_GetTimeMs(&curHeartBeatTimeStamp);
+          if (curHeartBeatTimeStamp - preHeartBeatTimeStamp >=  kHeartBeatPackSendTimeInterval)
+          {
+              DJI::OSDK::Vehicle::sendHeartbeatToFCFunc(linker);
+              preHeartBeatTimeStamp = curHeartBeatTimeStamp;
+          }
+      }
+    } else {
+      DERROR("Osdk send heart beat to fc task run failed because of the invalid linker "
+             "ptr. Please recheck this task params.");
+    }
+}
+
+void
 Vehicle::getDroneVersionCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
                                  UserData userData)
 {
@@ -1395,18 +1488,14 @@ Vehicle::sendBuriedDataPkgToFC(void)
     char sdk_version[MAX_OSDK_VERSION_SIZE];
     sprintf(sdk_version,"OSDK%d.%d.%d",DJIOSDK_MAJOR_VERSION, DJIOSDK_MINOR_VERSION, DJIOSDK_PATCH_VERSION);
     DataBuryPack data = {" ", DJIOSDK_IS_DEBUG, DJIOSDK_HARDWARE_TYPE, DJIOSDK_OPERATOR_TYPE};
-    VehicleCallBack cb = NULL;
-    UserData     udata = NULL;
     memcpy(data.sdk_version , sdk_version, sizeof(data.sdk_version) / sizeof(char));
     if (this->stm32Flag == IS_STM32)
     {
         data.hardware_type = STM32_HARDWARE_TYPE;
         data.operator_type = RTOS_OPERATOR_TYPE;
     }
-    legacyLinker->sendAsync(OpenProtocolCMD::CMDSet::Activation::dataBury,
-                            (uint8_t *) &data,
-                            sizeof(DataBuryPack), 500, 2, cb,
-                            udata);
+    legacyLinker->sendSync(OpenProtocolCMD::CMDSet::Activation::dataBury,
+                           (uint8_t *) &data, sizeof(DataBuryPack), 500, 2);
 }
 
 void

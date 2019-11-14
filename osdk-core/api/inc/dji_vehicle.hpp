@@ -191,6 +191,14 @@ public:
    */
   void setVersion(const Version::FirmWare& value);
 
+private:
+  static HeartBeatPack  heartBeatPack;
+  static uint8_t        fcLostConnectCount;
+  const static uint8_t  kMaxFCLostConnectCount = 5;
+  const static uint8_t  kOSDKSendId;
+  const static uint32_t kHeartBeatPackSendTimeInterval;
+
+public:
   Version::FirmWare getFwVersion() const;
   char*             getHwVersion() const;
   char*             getHwSerialNum() const;
@@ -211,7 +219,7 @@ public:
   // User space ACK types
   ACK::ErrorCode     ackErrorCode;
   ACK::DroneVersion  droneVersionACK;
- 
+
 public:
   bool init();
 
@@ -253,12 +261,19 @@ public:
   bool initFlightController();
   bool initPSDKManager();
   bool initGimbalManager();
+  bool initOSDKHeartBeatThread();
 private:
   void setActivationStatus(bool is_activated);
   void initCMD_SetSupportMatrix();
   bool isCmdSetSupported(const uint8_t cmdSet);
+
   void sendBuriedDataPkgToFC(void);
   uint8_t stm32Flag = NOT_STM32;
+
+  static void fcLostConnectCallBack(void);
+  static uint8_t sendHeartbeatToFCFunc(Linker * linker);
+  T_OsdkTaskHandle sendHeartbeatToFCHandle;
+  static void *sendHeartbeatToFCTask(void *arg);
 public:
   void setStm32Flag(uint8_t & flag);
 };

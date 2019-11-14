@@ -272,6 +272,12 @@ public:
     uint32_t utc_hhmmss;
   } FCTimeInUTC; // pack(1)
 
+  typedef struct HeartBeatAck
+  {
+      Entry             info;
+      HeartBeatPack     data;
+  } HeartBeatAck;  //pack(1)
+
   typedef union TypeUnion {
     uint8_t  raw_ack_array[MAX_INCOMING_DATA_SIZE];
     uint8_t  versionACK[MAX_ACK_SIZE];
@@ -311,6 +317,10 @@ public:
      */
     FCTimeInUTC             fcTimeInUTC;
     uint8_t                 ppsSourceType;
+   /*
+    * Heart Beat Pack between FC and OSDK
+    */
+    HeartBeatPack           heartbeatpack;
   } TypeUnion; // pack(1)
 
 #pragma pack()

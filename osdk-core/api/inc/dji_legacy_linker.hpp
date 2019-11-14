@@ -171,6 +171,8 @@ public:
   ACK::MFIOGet          mfioGetACK;
   ACK::ExtendedFunctionRsp extendedFunctionRspAck;
   ACK::ParamAck         paramAck;
+  /*! Heart Beat Ack*/
+  ACK::HeartBeatAck     heartBeatAck;
 
 
   typedef struct CmdListData {
