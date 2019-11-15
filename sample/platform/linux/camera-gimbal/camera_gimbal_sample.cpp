@@ -44,7 +44,7 @@ gimbalCameraControl(Vehicle* vehicle)
     return false;
   }
 
-  int responseTimeout = 0;
+  int responseTimeout = 1;
 
   GimbalContainer              gimbal;
   RotationAngle                initialAngle;

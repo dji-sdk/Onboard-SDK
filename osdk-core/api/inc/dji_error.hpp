@@ -308,6 +308,7 @@ class ErrorCode {
     const static uint16_t KEY_ERROR;
     const static uint16_t NO_AUTHORIZATION_ERROR;
     const static uint16_t NO_RIGHTS_ERROR;
+    const static uint16_t SYSTEM_ERROR;
     const static uint16_t NO_RESPONSE_ERROR;
 
     // These error codes would return either from

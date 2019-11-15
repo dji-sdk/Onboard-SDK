@@ -139,9 +139,9 @@ public:
                                              const T_CmdInfo *cmdInfo,
                                              const uint8_t *cmdData,
                                              void *userData);
-  static RecvContainer recvFrameAdapting(const T_CmdInfo *cmdInfo,
+  static RecvContainer recvFrameAdapting(const T_CmdInfo &cmdInfo,
                                          const uint8_t *cmdData);
-  void* decodeAck(E_OsdkStat ret, T_CmdInfo *ackInfo, uint8_t *ackData);
+  void* decodeAck(E_OsdkStat ret, T_CmdInfo &ackInfo, uint8_t *ackData);
 
  private:
   uint8_t rawVersionACK[MAX_ACK_SIZE];
@@ -161,7 +161,7 @@ public:
   /*!WayPoint add point command ACK*/
   ACK::WayPointAddPoint waypointAddPointACK;
   ACK::MFIOGet          mfioGetACK;
-  //ACK::ExtendedFunctionRsp extendedFunctionRspAck;
+  ACK::ExtendedFunctionRsp extendedFunctionRspAck;
   ACK::ParamAck         paramAck;
 }; // class LegacyLinker
 

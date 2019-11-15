@@ -42,6 +42,7 @@ const uint16_t DJI::OSDK::ErrorCode::CommonACK::SUCCESS                = 0x0000;
 const uint16_t DJI::OSDK::ErrorCode::CommonACK::KEY_ERROR              = 0xFF00;
 const uint16_t DJI::OSDK::ErrorCode::CommonACK::NO_AUTHORIZATION_ERROR = 0xFF01;
 const uint16_t DJI::OSDK::ErrorCode::CommonACK::NO_RIGHTS_ERROR        = 0xFF02;
+const uint16_t DJI::OSDK::ErrorCode::CommonACK::SYSTEM_ERROR           = 0xFF03;
 const uint16_t DJI::OSDK::ErrorCode::CommonACK::NO_RESPONSE_ERROR      = 0xFFFF;
 const uint8_t  DJI::OSDK::ErrorCode::CommonACK::MOTOR_FAIL_NONE        = 0;
 const uint8_t  DJI::OSDK::ErrorCode::CommonACK::MOTOR_FAIL_COMPASS_ABNORMAL = 1;

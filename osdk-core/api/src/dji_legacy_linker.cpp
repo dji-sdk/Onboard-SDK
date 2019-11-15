@@ -74,7 +74,7 @@ void LegacyLinker::legacyAdaptingAsyncCB(const T_CmdInfo *cmdInfo,
         && (!((legacyAdaptingData *) (userData))->vehicle)) {
       legacyAdaptingData para = *(legacyAdaptingData *) userData;
 
-      RecvContainer recvFrame = recvFrameAdapting(cmdInfo, cmdData);
+      RecvContainer recvFrame = recvFrameAdapting(*cmdInfo, cmdData);
       para.cb(para.vehicle, recvFrame, para.udata);
     } else {
       DERROR("Parameter invalid.");
@@ -109,23 +109,29 @@ void LegacyLinker::sendAsync(const uint8_t cmd[], void *pdata, size_t len,
                              udata, timeout, retry_time);
 }
 
-void *LegacyLinker::decodeAck(E_OsdkStat ret, T_CmdInfo *ackInfo,
+void *LegacyLinker::decodeAck(E_OsdkStat ret, T_CmdInfo &ackInfo,
                               uint8_t *ackData)
 {
 
   void* pACK;
-  /*  if (ret != OSDK_STAT_OK){
-    ackErrorCode.info = recvFrame.recvInfo;
-    ackErrorCode.data = recvFrame.recvData.ack;
-    pACK = static_cast<void*>(&this->ackErrorCode);
-  }
-  if (!ackInfo) {
 
-  }
-*/
-
-  uint cmd[2] = {ackInfo->cmdSet, ackInfo->cmdId};
+  uint8_t cmd[2] = {ackInfo.cmdSet, ackInfo.cmdId};
   RecvContainer recvFrame = recvFrameAdapting(ackInfo, ackData);
+
+  if (ret == OSDK_STAT_OK) {
+  }
+  else if (ret == OSDK_STAT_ERR_TIMEOUT) {
+    ackErrorCode.info = recvFrame.recvInfo;
+    ackErrorCode.data = ErrorCode::CommonACK::NO_RESPONSE_ERROR;
+    pACK = static_cast<void *>(&this->ackErrorCode);
+    return pACK;
+  } else {
+    ackErrorCode.info = recvFrame.recvInfo;
+    ackErrorCode.data = ErrorCode::CommonACK::SYSTEM_ERROR;
+    pACK = static_cast<void *>(&this->ackErrorCode);
+    return pACK;
+  }
+
   if (recvFrame.recvInfo.cmd_set == OpenProtocolCMD::CMDSet::mission)
   {
     if (memcmp(cmd, OpenProtocolCMD::CMDSet::Mission::waypointAddPoint,
@@ -209,13 +215,10 @@ void *LegacyLinker::decodeAck(E_OsdkStat ret, T_CmdInfo *ackInfo,
   {
     if (memcmp(cmd, OpenProtocolCMD::CMDSet::Control::extendedFunction,
                sizeof(cmd)) == 0) {
-      /*
       extendedFunctionRspAck.info = recvFrame.recvInfo;
       extendedFunctionRspAck.info.buf = recvFrame.recvData.raw_ack_array;
       extendedFunctionRspAck.updated = true;
       pACK = static_cast<void*>(&this->extendedFunctionRspAck);
-      */
-      DERROR("TODO : to be implemented.");
     }
     else if(memcmp(cmd, OpenProtocolCMD::CMDSet::Control::parameterRead, sizeof(cmd))==0 ||
         memcmp(cmd, OpenProtocolCMD::CMDSet::Control::parameterWrite, sizeof(cmd))==0)
@@ -281,29 +284,34 @@ void* LegacyLinker::sendSync(const uint8_t cmd[], void *pdata,
   cmdInfo.channelId = 0;
 
   /*! default ack info value */
-  ackInfo.cmdSet = cmdInfo.cmdSet;
-  ackInfo.cmdId = cmdInfo.cmdId;
+  ackInfo.cmdSet = 0xFF;
+  ackInfo.cmdId = 0xFF;
 
   E_OsdkStat ret =
       vehicle->linker->sendSync(&cmdInfo, (uint8_t *) pdata, &ackInfo, ackData,
                                 timeout, retry_time);
 
-  return decodeAck(ret, &ackInfo, ackData);
+  return decodeAck(ret, ackInfo, ackData);
 }
 
-RecvContainer LegacyLinker::recvFrameAdapting(const T_CmdInfo *cmdInfo, const uint8_t *cmdData)
+RecvContainer LegacyLinker::recvFrameAdapting(const T_CmdInfo &cmdInfo, const uint8_t *cmdData)
 {
   RecvContainer recvFrame = {0};
 
   recvFrame.dispatchInfo.isAck = true;
-  recvFrame.recvInfo.cmd_set = cmdInfo->cmdSet;
-  recvFrame.recvInfo.cmd_id = cmdInfo->cmdId;
-  memcpy(recvFrame.recvData.raw_ack_array, cmdData, cmdInfo->dataLen);
+  recvFrame.recvInfo.cmd_set = cmdInfo.cmdSet;
+  recvFrame.recvInfo.cmd_id = cmdInfo.cmdId;
+  if(cmdData) {
+    memcpy(recvFrame.recvData.raw_ack_array, cmdData, cmdInfo.dataLen);
+    recvFrame.recvInfo.len = cmdInfo.dataLen + OpenProtocol::PackageMin;
+  } else {
+    recvFrame.recvInfo.len = OpenProtocol::PackageMin;
+  }
   recvFrame.dispatchInfo.isCallback = true;
   recvFrame.dispatchInfo.callbackID = 0; //only valid in before OSDK 4.0
   recvFrame.recvInfo.buf = (uint8_t *) cmdData;
-  recvFrame.recvInfo.seqNumber = cmdInfo->seqNum;
-  recvFrame.recvInfo.len = cmdInfo->dataLen + OpenProtocol::PackageMin;
+  recvFrame.recvInfo.seqNumber = cmdInfo.seqNum;
+
   return recvFrame;
 }
 
@@ -316,7 +324,7 @@ E_OsdkStat LegacyLinker::legacyAdaptingRegisterCB(
     if (legacyData->cb) {
       legacyAdaptingData para = *(legacyAdaptingData *) userData;
 
-      RecvContainer recvFrame = recvFrameAdapting(cmdInfo, cmdData);
+      RecvContainer recvFrame = recvFrameAdapting(*cmdInfo, cmdData);
       para.cb(para.vehicle, recvFrame, para.udata);
     }
     return OSDK_STAT_OK;
