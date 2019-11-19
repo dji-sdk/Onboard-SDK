@@ -343,30 +343,56 @@ const ErrorCode::ModuleDataType ErrorCode::module[ModuleMaxCnt] = {
 };
 
 /*! camera api error code */
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::InvalidCMD         = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::UNSUPPORTED_COMMAND);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::Timeout            = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::TIMEOUT);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::OutOfMemory        = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::RAM_ALLOCATION_FAILED);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::InvalidParam       = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::INVALID_COMMAND_PARAMETER);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::InvalidState       = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::UNSUPPORTED_COMMAND_IN_CUR_STATE);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::TimeNotSync        = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::CAMERA_TIME_NOT_SYNCHRONIZED);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::ParamSetFailed     = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::PARAMETER_SET_FAILED);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::ParamGetFailed     = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::PARAMETER_GET_FAILED);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::SDCardMISSING      = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::SD_CARD_MISSING);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::SDCardFull         = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::SD_CARD_FULL);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::SDCardError        = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::SD_CARD_ERROR);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::SensorError        = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::SENSOR_ERROR);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::SystemError        = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::SYSTEM_ERROR);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::ParamLenTooLong    = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::PARAMETER_TOTAL_TOO_LONG);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::ModuleInactivated  = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::MODULE_INACTIVATED);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::FWSeqNumNotInOrder = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::FIRMWARE_DATA_NUM_DISCONTINUOUS);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::FWCheckErr         = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::FIRMWARE_VERIFICATION_ERROR);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::FlashWriteError    = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::FLASH_WRITE_ERROR);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::FWInvalidType      = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::FIRMWARE_TYPE_MISMATCH);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::RCDisconnect       = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::REMOTE_CONTROL_UNCONNECTED);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::HardwareErr        = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::HARDWARE_ERROR);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::UAVDisconnect      = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::AIRCRAFT_UNCONNECTED);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::UpgradeErrorNow    = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::CANNOT_UPGRADE_IN_CUR_STATE);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::UndefineError      = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::UNDEFINE_ERROR);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::InvalidCMD         = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::UNSUPPORTED_COMMAND);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::Timeout            = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::TIMEOUT);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::OutOfMemory        = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::RAM_ALLOCATION_FAILED);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::InvalidParam       = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::INVALID_COMMAND_PARAMETER);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::InvalidState       = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::UNSUPPORTED_COMMAND_IN_CUR_STATE);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::TimeNotSync        = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::CAMERA_TIME_NOT_SYNCHRONIZED);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::ParamSetFailed     = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::PARAMETER_SET_FAILED);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::ParamGetFailed     = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::PARAMETER_GET_FAILED);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::SDCardMISSING      = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::SD_CARD_MISSING);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::SDCardFull         = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::SD_CARD_FULL);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::SDCardError        = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::SD_CARD_ERROR);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::SensorError        = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::SENSOR_ERROR);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::SystemError        = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::SYSTEM_ERROR);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::ParamLenTooLong    = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::PARAMETER_TOTAL_TOO_LONG);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::ModuleInactivated  = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::MODULE_INACTIVATED);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::FWSeqNumNotInOrder = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::FIRMWARE_DATA_NUM_DISCONTINUOUS);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::FWCheckErr         = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::FIRMWARE_VERIFICATION_ERROR);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::FlashWriteError    = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::FLASH_WRITE_ERROR);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::FWInvalidType      = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::FIRMWARE_TYPE_MISMATCH);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::RCDisconnect       = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::REMOTE_CONTROL_UNCONNECTED);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::HardwareErr        = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::HARDWARE_ERROR);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::UAVDisconnect      = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::AIRCRAFT_UNCONNECTED);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::UpgradeErrorNow    = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::CANNOT_UPGRADE_IN_CUR_STATE);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::UndefineError      = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::UNDEFINE_ERROR);
+
+/*! gimbal api error code */
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::InvalidCMD         = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::UNSUPPORTED_COMMAND);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::Timeout            = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::TIMEOUT);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::OutOfMemory        = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::RAM_ALLOCATION_FAILED);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::InvalidParam       = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::INVALID_COMMAND_PARAMETER);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::InvalidState       = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::UNSUPPORTED_COMMAND_IN_CUR_STATE);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::TimeNotSync        = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::CAMERA_TIME_NOT_SYNCHRONIZED);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::ParamSetFailed     = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::PARAMETER_SET_FAILED);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::ParamGetFailed     = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::PARAMETER_GET_FAILED);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::SDCardMISSING      = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::SD_CARD_MISSING);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::SDCardFull         = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::SD_CARD_FULL);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::SDCardError        = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::SD_CARD_ERROR);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::SensorError        = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::SENSOR_ERROR);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::SystemError        = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::SYSTEM_ERROR);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::ParamLenTooLong    = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::PARAMETER_TOTAL_TOO_LONG);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::ModuleInactivated  = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::MODULE_INACTIVATED);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::FWSeqNumNotInOrder = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::FIRMWARE_DATA_NUM_DISCONTINUOUS);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::FWCheckErr         = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::FIRMWARE_VERIFICATION_ERROR);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::FlashWriteError    = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::FLASH_WRITE_ERROR);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::FWInvalidType      = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::FIRMWARE_TYPE_MISMATCH);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::RCDisconnect       = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::REMOTE_CONTROL_UNCONNECTED);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::HardwareErr        = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::HARDWARE_ERROR);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::UAVDisconnect      = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::AIRCRAFT_UNCONNECTED);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::UpgradeErrorNow    = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::CANNOT_UPGRADE_IN_CUR_STATE);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::UndefineError      = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::UNDEFINE_ERROR);
 
 /*! PSDK api error code */
 const ErrorCode::ErrorCodeType ErrorCode::PSDKCommonErr::InvalidCMD         = ErrorCode::getErrorCode(PSDKModule, PSDKCommon, DJI_CMD_RETURN_CODE::UNSUPPORTED_COMMAND);
@@ -403,6 +429,7 @@ const ErrorCode::ErrorCodeType ErrorCode::SysCommonErr::ReqTimeout           = E
 const ErrorCode::ErrorCodeType ErrorCode::SysCommonErr::UnpackDataMismatch   = ErrorCode::getErrorCode(SysModule, SystemCommon, SYSTEM_ERROR_RAW_CODE::UnpackDataMismatch);
 const ErrorCode::ErrorCodeType ErrorCode::SysCommonErr::InstInitParamInvalid = ErrorCode::getErrorCode(SysModule, SystemCommon, SYSTEM_ERROR_RAW_CODE::InstInitParamInvalid);
 const ErrorCode::ErrorCodeType ErrorCode::SysCommonErr::UserCallbackInvalid  = ErrorCode::getErrorCode(SysModule, SystemCommon, SYSTEM_ERROR_RAW_CODE::UserCallbackInvalid);
+const ErrorCode::ErrorCodeType ErrorCode::SysCommonErr::UndefinedError       = ErrorCode::getErrorCode(SysModule, SystemCommon, SYSTEM_ERROR_RAW_CODE::UndefinedError);
 
 const std::pair<const ErrorCode::ErrorCodeType, ErrorCode::ErrorCodeMsg> ErrorCode::CameraCommonErrData[] = {
     std::make_pair(getRawRetCode(CameraCommonErr::InvalidCMD),
@@ -461,6 +488,66 @@ const ErrorCode::ErrorCodeMapType ErrorCode::getCameraCommonErrorMap() {
                                                 + sizeof CameraCommonErrData
                                                   / sizeof CameraCommonErrData[0]);
   return CameraCommonErrorMap;
+}
+
+
+const std::pair<const ErrorCode::ErrorCodeType, ErrorCode::ErrorCodeMsg> ErrorCode::GimbalCommonErrData[] = {
+    std::make_pair(getRawRetCode(GimbalCommonErr::InvalidCMD),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "Command not supported", "Check the firmware or command validity")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::Timeout),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "Gimbal's execution of this action has timed out", "Try again or check the firmware or command")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::OutOfMemory),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "Gimbal's execution of this action is out of memory", "Please contact <dev@dji.com> for help.")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::InvalidParam),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "Gimbal received invalid parameters", "Check the validity of the parameter")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::InvalidState),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "Gimbal is busy or the command is not supported in the Gimbal's current state", "Check current Gimbal state is if appropriate fot the CMD")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::TimeNotSync),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "The time stamp of the Gimbal is not sync", "Please contact <dev@dji.com> for help.")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::ParamSetFailed),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "Gimbal failed to set the parameters it received", "Please check the parameter to set is if supported in your devices.")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::ParamGetFailed),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "Gimbal param get failed", "Please check the parameter to get is if supported in your devices.")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::SDCardMISSING),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "Gimbal has no SD Card", "Please install SD card.")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::SDCardFull),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "The Gimbal's SD Card is full", "Please make sure the SD card has enough space.")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::SDCardError),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "Error accessing the SD Card", "Please check the validity of the SD card.")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::SensorError),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "Gimbal sensor error", "Please contact <dev@dji.com> for help.")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::SystemError),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "Gimbal system error", "Please recheck all the running conditions or contact <dev@dji.com> for help.")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::ParamLenTooLong),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "Gimbal param get failed", "Please check the validity of the parameter length")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::ModuleInactivated),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "Gimbal module is not activated", "Please activate the module first.")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::FWSeqNumNotInOrder),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "The seq number of Firmware data is invalid", "Please contact <dev@dji.com> for help.")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::FWCheckErr),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "Firmware check error", "Please contact <dev@dji.com> for help.")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::FlashWriteError),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "Gimbal flash write error", "Please contact <dev@dji.com> for help.")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::FWInvalidType),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "Firmware type is invalid", "Please contact <dev@dji.com> for help.")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::RCDisconnect),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "Remote Control is disconnected now", "Please check the connection with remote control is if OK.")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::HardwareErr),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "Gimbal hardware error", "Please contact <dev@dji.com> for help.")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::UAVDisconnect),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "Disconnect with aircraft", "Please check the connection with aircraft is if OK.")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::UpgradeErrorNow),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "Gimbal cannot not upgrade in current status", "Please contact <dev@dji.com> for help.")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::UndefineError),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "Undefined error", "Please contact <dev@dji.com> for help.")),
+};
+
+const ErrorCode::ErrorCodeMapType ErrorCode::getGimbalCommonErrorMap() {
+  const ErrorCodeMapType GimbalCommonErrorMap(GimbalCommonErrData,
+                                              GimbalCommonErrData
+                                                  + sizeof GimbalCommonErrData
+                                                      / sizeof GimbalCommonErrData[0]);
+  return GimbalCommonErrorMap;
 }
 
 const std::pair<const ErrorCode::ErrorCodeType, ErrorCode::ErrorCodeMsg> ErrorCode::PSDKCommonErrData[] = {
@@ -537,6 +624,8 @@ const std::pair<const ErrorCode::ErrorCodeType, ErrorCode::ErrorCodeMsg> ErrorCo
                    ErrorCodeMsg(module[SysModule].ModuleName, "Instance init parameter invalid", "Please make sure the parameter used in instance initializing is valid.")),
     std::make_pair(getRawRetCode(SysCommonErr::UserCallbackInvalid),
                    ErrorCodeMsg(module[SysModule].ModuleName, "The callback set by user is a invalid", "Please make sure the validity of the callback you requesting.")),
+    std::make_pair(getRawRetCode(SysCommonErr::UndefinedError),
+                   ErrorCodeMsg(module[SysModule].ModuleName, "Undefined error", "Unknown error code : 0X%lX, please contact <dev@dji.com> for help.")),
 };
 
 const ErrorCode::ErrorCodeMapType ErrorCode::getSystemCommonErrorMap() {
