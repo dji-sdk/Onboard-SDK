@@ -51,7 +51,7 @@ main(int argc, char** argv)
   }
 
   // Obtain Control Authority
-  vehicle->obtainCtrlAuthority(functionTimeout);
+  vehicle->control->obtainCtrlAuthority(functionTimeout);
 
   // Setup variables for use
   uint8_t wayptPolygonSides;

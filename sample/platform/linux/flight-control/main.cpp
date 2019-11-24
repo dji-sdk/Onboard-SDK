@@ -50,7 +50,7 @@ int main(int argc, char** argv) {
   }
 
   // Obtain Control Authority
-  vehicle->obtainCtrlAuthority(functionTimeout);
+  vehicle->control->obtainCtrlAuthority(functionTimeout);
 
   // Display interactive prompt
   std::cout

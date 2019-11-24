@@ -539,3 +539,126 @@ Control::AdvancedCtrlData::AdvancedCtrlData(uint8_t in_flag, float32_t in_x,
   , advFlag(0x01)
 {
 }
+
+
+void
+Control::obtainCtrlAuthority(VehicleCallBack callback, UserData userData)
+{
+  uint8_t data    = 1;
+  VehicleCallBack cb = NULL;
+  UserData udata = NULL;
+
+  if (callback)
+  {
+    cb = callback;
+    udata = userData;
+  }
+  else
+  {
+    cb = controlAuthorityCallback;
+    udata = NULL;
+  }
+
+  vehicle->legacyLinker->sendAsync(OpenProtocolCMD::CMDSet::Control::setControl, &data,
+                          1, 500, 2, cb, udata);
+}
+
+ACK::ErrorCode
+Control::obtainCtrlAuthority(int timeout)
+{
+  ACK::ErrorCode ack;
+  uint8_t        data = 1;
+
+  ack = *(ACK::ErrorCode *) vehicle->legacyLinker->sendSync(
+      OpenProtocolCMD::CMDSet::Control::setControl, &data, 1,
+      timeout * 1000 / 2, 2);
+
+  if (ack.data == OpenProtocolCMD::ErrorCode::ControlACK::SetControl::
+  OBTAIN_CONTROL_IN_PROGRESS)
+  {
+    ack = this->obtainCtrlAuthority(timeout);
+  }
+
+  return ack;
+}
+
+void
+Control::releaseCtrlAuthority(VehicleCallBack callback, UserData userData)
+{
+  uint8_t data    = 0;
+  VehicleCallBack cb = NULL;
+  UserData udata = NULL;
+
+  if (callback)
+  {
+    cb = callback;
+    udata = userData;
+  }
+  else
+  {
+    // nbCallbackFunctions[cbIndex] = (void*)ReleaseCtrlCallback;
+    userData = NULL;
+  }
+
+  vehicle->legacyLinker->sendAsync(OpenProtocolCMD::CMDSet::Control::setControl, &data,
+                          1, 500, 2, cb, userData);
+}
+
+ACK::ErrorCode
+Control::releaseCtrlAuthority(int timeout)
+{
+  ACK::ErrorCode ack;
+  uint8_t        data = 0;
+
+  ack = *(ACK::ErrorCode *) vehicle->legacyLinker->sendSync(
+      OpenProtocolCMD::CMDSet::Control::setControl, &data, 1,
+      timeout * 1000 / 2, 2);
+  if (ack.data == OpenProtocolCMD::ErrorCode::ControlACK::SetControl::
+  RELEASE_CONTROL_IN_PROGRESS)
+  {
+    ack = this->releaseCtrlAuthority(timeout);
+  }
+
+  return ack;
+}
+
+void
+Control::controlAuthorityCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
+                                  UserData userData)
+{
+  ACK::ErrorCode ack;
+  ack.data = OpenProtocolCMD::ErrorCode::CommonACK::NO_RESPONSE_ERROR;
+
+  uint8_t data = 0x1;
+  VehicleCallBack cb = NULL;
+  UserData udata = NULL;
+
+  if (recvFrame.recvInfo.len - OpenProtocol::PackageMin <= sizeof(uint16_t))
+  {
+    ack.data = recvFrame.recvData.ack;
+    ack.info = recvFrame.recvInfo;
+  }
+  else
+  {
+    DERROR("ACK is exception, sequence %d\n", recvFrame.recvInfo.seqNumber);
+    return;
+  }
+
+  if (ack.data == OpenProtocolCMD::ErrorCode::ControlACK::SetControl::
+  OBTAIN_CONTROL_IN_PROGRESS)
+  {
+    ACK::getErrorCodeMessage(ack, __func__);
+    vehiclePtr->control->obtainCtrlAuthority(controlAuthorityCallback);
+  }
+  else if (ack.data == OpenProtocolCMD::ErrorCode::ControlACK::SetControl::
+  RELEASE_CONTROL_IN_PROGRESS)
+  {
+    ACK::getErrorCodeMessage(ack, __func__);
+    vehiclePtr->control->releaseCtrlAuthority(controlAuthorityCallback);
+  }
+  else
+  {
+    ACK::getErrorCodeMessage(ack, __func__);
+  }
+}
+

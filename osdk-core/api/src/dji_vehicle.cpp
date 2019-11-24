@@ -175,11 +175,30 @@ Vehicle::init()
 int
 Vehicle::functionalSetUp()
 {
-  if (!initVersion())
-  {
-    return true;
+  uint16_t tryTimes = 10;
+  bool shakeHandRet = false;
+
+  for (uint16_t i = 0; i < tryTimes; i++) {
+    shakeHandRet = initVersion();
+    if (shakeHandRet == true) {
+      DSTATUS("Shake hand with drone successfully by getting drone version.");
+      break;
+    } else {
+      DSTATUS("Shake hand with drone Fail ! Cannot get drone version. (%d/%d)",
+              i + 1, tryTimes);
+      DSTATUS("Try again after 1 second ......");
+    }
+    Platform::instance().taskSleepMs(1000);
   }
-  else if (this->getFwVersion() < extendedVersionBase &&
+
+  if (shakeHandRet == false) {
+    DERROR("Cannot connect with drone, block at here ...");
+    while (true) {
+      Platform::instance().taskSleepMs(1000);
+    }
+  }
+
+  if (this->getFwVersion() < extendedVersionBase &&
            this->getFwVersion() != Version::M100_31 && !(this->isLegacyM600()))
   {
     DERROR("Upgrade firmware using Assistant software!\n");
@@ -1290,127 +1309,5 @@ Vehicle::isCmdSetSupported(const uint8_t cmdSet)
     }
   }
   return true;
-}
-
-
-void
-Vehicle::obtainCtrlAuthority(VehicleCallBack callback, UserData userData)
-{
-  uint8_t data    = 1;
-  VehicleCallBack cb = NULL;
-  UserData udata = NULL;
-
-  if (callback)
-  {
-    cb = callback;
-    udata = userData;
-  }
-  else
-  {
-    cb = controlAuthorityCallback;
-    udata = NULL;
-  }
-
-  legacyLinker->sendAsync(OpenProtocolCMD::CMDSet::Control::setControl, &data,
-                          1, 500, 2, cb, udata);
-}
-
-ACK::ErrorCode
-Vehicle::obtainCtrlAuthority(int timeout)
-{
-  ACK::ErrorCode ack;
-  uint8_t        data = 1;
-
-  ack = *(ACK::ErrorCode *) legacyLinker->sendSync(
-      OpenProtocolCMD::CMDSet::Control::setControl, &data, 1,
-      timeout * 1000 / 2, 2);
-
-  if (ack.data == OpenProtocolCMD::ErrorCode::ControlACK::SetControl::
-  OBTAIN_CONTROL_IN_PROGRESS)
-  {
-    ack = this->obtainCtrlAuthority(timeout);
-  }
-
-  return ack;
-}
-
-void
-Vehicle::releaseCtrlAuthority(VehicleCallBack callback, UserData userData)
-{
-  uint8_t data    = 0;
-  VehicleCallBack cb = NULL;
-  UserData udata = NULL;
-
-  if (callback)
-  {
-    cb = callback;
-    udata = userData;
-  }
-  else
-  {
-    // nbCallbackFunctions[cbIndex] = (void*)ReleaseCtrlCallback;
-    userData = NULL;
-  }
-
-  legacyLinker->sendAsync(OpenProtocolCMD::CMDSet::Control::setControl, &data,
-                          1, 500, 2, cb, userData);
-}
-
-ACK::ErrorCode
-Vehicle::releaseCtrlAuthority(int timeout)
-{
-  ACK::ErrorCode ack;
-  uint8_t        data = 0;
-
-  ack = *(ACK::ErrorCode *) legacyLinker->sendSync(
-      OpenProtocolCMD::CMDSet::Control::setControl, &data, 1,
-      timeout * 1000 / 2, 2);
-  if (ack.data == OpenProtocolCMD::ErrorCode::ControlACK::SetControl::
-  RELEASE_CONTROL_IN_PROGRESS)
-  {
-    ack = this->releaseCtrlAuthority(timeout);
-  }
-
-  return ack;
-}
-
-void
-Vehicle::controlAuthorityCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
-                                  UserData userData)
-{
-  ACK::ErrorCode ack;
-  ack.data = OpenProtocolCMD::ErrorCode::CommonACK::NO_RESPONSE_ERROR;
-
-  uint8_t data = 0x1;
-  VehicleCallBack cb = NULL;
-  UserData udata = NULL;
-
-  if (recvFrame.recvInfo.len - OpenProtocol::PackageMin <= sizeof(uint16_t))
-  {
-    ack.data = recvFrame.recvData.ack;
-    ack.info = recvFrame.recvInfo;
-  }
-  else
-  {
-    DERROR("ACK is exception, sequence %d\n", recvFrame.recvInfo.seqNumber);
-    return;
-  }
-
-  if (ack.data == OpenProtocolCMD::ErrorCode::ControlACK::SetControl::
-  OBTAIN_CONTROL_IN_PROGRESS)
-  {
-    ACK::getErrorCodeMessage(ack, __func__);
-    vehiclePtr->obtainCtrlAuthority(controlAuthorityCallback);
-  }
-  else if (ack.data == OpenProtocolCMD::ErrorCode::ControlACK::SetControl::
-  RELEASE_CONTROL_IN_PROGRESS)
-  {
-    ACK::getErrorCodeMessage(ack, __func__);
-    vehiclePtr->releaseCtrlAuthority(controlAuthorityCallback);
-  }
-  else
-  {
-    ACK::getErrorCodeMessage(ack, __func__);
-  }
 }
 

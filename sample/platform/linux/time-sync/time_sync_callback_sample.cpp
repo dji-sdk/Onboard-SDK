@@ -92,7 +92,7 @@ main(int argc, char** argv)
   }
 
   // Obtain Control Authority
-  vehicle->obtainCtrlAuthority(functionTimeout);
+  vehicle->control->obtainCtrlAuthority(functionTimeout);
 
 
   // Note that these CBs share the same thread with serial reading
