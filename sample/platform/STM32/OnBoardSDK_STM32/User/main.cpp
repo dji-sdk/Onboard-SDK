@@ -45,6 +45,7 @@
 #include "queue.h"
 #include "main.h"
 #include "stm32f4xx.h"
+#include "dji_stm32_helpers.hpp"
 
 #define sample_flag 0;
 #ifdef FLIGHT_CONTROL_SAMPLE
@@ -71,7 +72,7 @@
 #define sample_flag 11
 #endif
 
-const int sampleToRun = 1;//sample_flag;
+const int sampleToRun = 6;//sample_flag;
 
 /*-----------------------DJI_LIB VARIABLE-----------------------------*/
 using namespace DJI::OSDK;
@@ -80,58 +81,13 @@ bool threadSupport = false;
 bool isFrame = false;
 RecvContainer receivedFrame;
 RecvContainer* rFrame = &receivedFrame;
-Vehicle vehicle = Vehicle(threadSupport);
+Vehicle vehicle = Vehicle(NULL);
 Vehicle* v = &vehicle;
 TaskHandle_t mainLoopHandler;
-TaskHandle_t sendPollHandler;
-TaskHandle_t readPollHandler;
 TaskHandle_t debugHandler;
 
 extern TerminalCommand myTerminal;
 
-void readPollTask(void *p){
-  Vehicle* v = NULL;
-  if(p) {
-    v = (Vehicle*)p;
-  } else {
-    DERROR("Wrong parameter.");
-    return;
-  }
-  uint8_t data = 0;
-  bool isACKProcessed = false;
-
-  while (true) {
-  xQueueReceive(osdkDataQueue, &data, portMAX_DELAY);
-  isFrame = v->protocolLayer->byteHandler(data);
-  if (isFrame == true)
-  {
-    rFrame = v->protocolLayer->getReceivedFrame();
-
-    //! Trigger default or user defined callback
-    v->processReceivedData(rFrame);
-
-    //! Reset
-    isFrame        = false;
-    isACKProcessed = true;
-  }
-  }
-}
-
-void sendPollTask(void *p){
-  Vehicle* v = NULL;
-  if(p) {
-    v = (Vehicle*)p;
-  } else {
-    DERROR("Wrong parameter.");
-    return;
-  }
-
-  /*! send poll loop */
-  while (true) {
-    v->protocolLayer->sendPoll();
-    delay_nms(10);
-  }
-}
 
 extern uint64_t timer1Tick;
 void debugTask(void *p){
@@ -173,13 +129,6 @@ void mainLoopTask(void *p){
     if (runOnce) {
       runOnce = 0;
 
-      // Check USART communication
-      if (!v->protocolLayer->getDriver()->getDeviceStatus()) {
-        printf("USART communication is not working.\r\n");
-        delete (v);
-        return;
-      }
-
       printf("Sample App for STM32F4Discovery Board:\r\n");
       delay_nms(30);
 
@@ -192,6 +141,7 @@ void mainLoopTask(void *p){
 
       //! Initialize functional Vehicle components like
       //! Subscription, Broabcast, Control, Camera, etc
+      v->init();
       v->functionalSetUp();
       delay_nms(500);
 
@@ -218,7 +168,7 @@ void mainLoopTask(void *p){
       }
 
       // Obtain Control Authority
-      v->obtainCtrlAuthority();
+      v->control->obtainCtrlAuthority();
       delay_nms(1000);
 
       switch (sampleToRun) {
@@ -335,15 +285,15 @@ void mainLoopTask(void *p){
           break;
       }
     }
+    delay_nms(10);
   }
 }
 
 int main() {
   BSPinit();
   printf("STM32F4Discovery Board initialization finished!\r\n");
+  setupEnvironment();
   xTaskCreate(mainLoopTask, "mainLoop", 1024, v, 1, &mainLoopHandler);
-  xTaskCreate(readPollTask, "readPoll", 1024, v, 2, &readPollHandler);
-  xTaskCreate(sendPollTask, "sendPoll", 1024, v, 3, &sendPollHandler);
   //xTaskCreate(debugTask,    "debug",    1024, v, 1, &debugHandler);
   vTaskStartScheduler();
 }

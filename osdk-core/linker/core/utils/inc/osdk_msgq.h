@@ -71,7 +71,7 @@ typedef struct {
 /* Exported functions --------------------------------------------------------*/
 E_OsdkStat OsdkMsgq_Create(T_msgqAttrib *attrib, T_msgQueue **msgq);
 E_OsdkStat OsdkMsgq_Destroy(T_msgQueue *msgq);
-E_OsdkStat OsdkMsgq_Recv(T_msgQueue *msgq, void *buffer, uint32_t *size,
+E_OsdkStat OsdkMsgq_Recv(T_msgQueue *msgq, uint8_t *buffer, uint32_t *size,
                          uint32_t timeout);
 E_OsdkStat OsdkMsgq_Send(T_msgQueue *msgq, void *message, uint32_t size,
                          uint32_t timeout);

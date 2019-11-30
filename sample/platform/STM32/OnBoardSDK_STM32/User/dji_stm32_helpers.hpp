@@ -1,9 +1,10 @@
-/*! @file BspUsart.h
- *  @version 3.1.8
- *  @date Aug 05 2016
+/*! @file dji_linux_helpers.hpp
+ *  @version 3.3
+ *  @date Jun 05 2017
  *
  *  @brief
- *  Usart helper functions and ISR for board STM32F4Discovery
+ *  Helper functions to handle user configuration parsing, version query and
+ * activation.
  *
  *  @Copyright (c) 2017 DJI
  *
@@ -27,16 +28,14 @@
  *
  */
 
-#ifndef _BSPUSART_H
-#define _BSPUSART_H
-#include "dji_vehicle.hpp"
-#include "stdio.h"
+#ifndef STM32_HELPERS_HPP
+#define STM32_HELPERS_HPP
 
-void                      USART2_Config(void);
-void                      USART3_Config(void);
-void                      USARTxNVIC_Config(void);
-void                      UsartConfig(void);
-void                      NVIC_Config(void);
-void                      Rx_buff_Handler();
-DJI::OSDK::ACK::ErrorCode waitForACK();
-#endif //_USART_H
+#include <fstream>
+#include <dji_vehicle.hpp>
+#include <dji_platform.hpp>
+
+void
+setupEnvironment();
+
+#endif // STM32_HELPERS_HPP

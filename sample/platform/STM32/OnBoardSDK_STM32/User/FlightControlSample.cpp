@@ -106,7 +106,8 @@ monitoredTakeOff()
   bool     isInAirState   = false;
   bool     isHoverState   = false;
 
-  timeoutTick = v->protocolLayer->getDriver()->getTimeStamp() + CONTROL_TIMEOUT;
+  Platform::instance().getTimeMs(&timeoutTick);
+  timeoutTick += CONTROL_TIMEOUT;
   do
   {
     //! Two seconds delay
@@ -136,7 +137,8 @@ monitoredTakeOff()
       }
 		}
 
-    nextRetryTick = v->protocolLayer->getDriver()->getTimeStamp() + RETRY_TICK;
+    Platform::instance().getTimeMs(&nextRetryTick);
+    nextRetryTick += RETRY_TICK;
   } while (nextRetryTick < timeoutTick);
 
   if (!isTakeOffState)
@@ -162,7 +164,8 @@ monitoredTakeOff()
     printf("\nSuccessful takeoff!\n");
   }
 
-  timeoutTick = v->protocolLayer->getDriver()->getTimeStamp() + CONTROL_TIMEOUT;
+  Platform::instance().getTimeMs(&timeoutTick);
+  timeoutTick += CONTROL_TIMEOUT;
   do
   {
     //! Two seconds delay
@@ -191,7 +194,8 @@ monitoredTakeOff()
       }
     }
 
-    nextRetryTick = v->protocolLayer->getDriver()->getTimeStamp() + RETRY_TICK;
+    Platform::instance().getTimeMs(&nextRetryTick);
+    nextRetryTick += RETRY_TICK;
   } while (nextRetryTick < timeoutTick);
 
   if (!isInAirState)
@@ -218,7 +222,8 @@ monitoredTakeOff()
     printf("Vehicle ascending...\n");
   }
 
-  timeoutTick = v->protocolLayer->getDriver()->getTimeStamp() + CONTROL_TIMEOUT;
+  Platform::instance().getTimeMs(&timeoutTick);
+  timeoutTick += CONTROL_TIMEOUT;
 
   if (v->getFwVersion() != Version::M100_31)
   {
@@ -236,7 +241,8 @@ monitoredTakeOff()
 				break;
 			}
 
-      nextRetryTick = v->protocolLayer->getDriver()->getTimeStamp() + RETRY_TICK;
+      Platform::instance().getTimeMs(&nextRetryTick);
+      nextRetryTick += RETRY_TICK;
     } while (nextRetryTick < timeoutTick);
 	}
 
@@ -361,8 +367,8 @@ monitoredLanding()
 
   // First check: Landing started
 
-  timeoutTick =
-    v->protocolLayer->getDriver()->getTimeStamp() + SUBSCRIBE_TIMOUT;
+  Platform::instance().getTimeMs(&timeoutTick);
+  timeoutTick += SUBSCRIBE_TIMOUT;
   do
   {
     //! Two seconds delay
@@ -386,7 +392,8 @@ monitoredLanding()
         break;
       }
     }
-    nextRetryTick = v->protocolLayer->getDriver()->getTimeStamp() + RETRY_TICK;
+    Platform::instance().getTimeMs(&nextRetryTick);
+    nextRetryTick += RETRY_TICK;
   } while (nextRetryTick < timeoutTick);
 
   if (!isLandingState)
@@ -407,8 +414,8 @@ monitoredLanding()
 
   // Second check: Finished landing
 
-  timeoutTick =
-    v->protocolLayer->getDriver()->getTimeStamp() + SUBSCRIBE_TIMOUT;
+  Platform::instance().getTimeMs(&timeoutTick);
+  timeoutTick += SUBSCRIBE_TIMOUT;
   do
   {
     //! Two seconds delay
@@ -453,8 +460,8 @@ monitoredLanding()
 	}
       }
     }
-
-    nextRetryTick = v->protocolLayer->getDriver()->getTimeStamp() + RETRY_TICK;
+    Platform::instance().getTimeMs(&nextRetryTick);
+    nextRetryTick += RETRY_TICK;
   } while (nextRetryTick < timeoutTick);
 
   if (isFinishedLandingState)

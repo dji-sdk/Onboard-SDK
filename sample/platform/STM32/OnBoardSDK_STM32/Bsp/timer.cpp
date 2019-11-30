@@ -30,6 +30,8 @@
 #include "stm32f4xx.h"
 #include "timer.h"
 #include "main.h"
+#include "FreeRTOS.h"
+#include "task.h"
 
 uint32_t tick = 0; // tick is the time stamp,which record how many ms since u
                    // initialize the system.

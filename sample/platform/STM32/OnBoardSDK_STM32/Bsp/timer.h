@@ -35,8 +35,8 @@
 
 using namespace DJI::OSDK;
 
+extern "C" void Timer1Config();
 void SystickConfig();
-void Timer1Config();
 void Timer2Config();
 void delay_nms(uint16_t time);
 

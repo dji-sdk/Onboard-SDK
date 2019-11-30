@@ -36,7 +36,9 @@ using namespace DJI::OSDK;
 Platform::Platform()
 {
   osalRegFlag = false;
+#ifdef __linux__
   halUdpRegFlag = false;
+#endif
   halUartRegFlag = false;
   loggerConsoleRegFlag = false;
 }
@@ -59,6 +61,7 @@ Platform::registerHalUartHandler(const T_OsdkHalUartHandler *halUartHandler)
   }
 }
 
+#ifdef __linux__
 bool
 Platform::registerHalUdpHandler(const T_OsdkHalUdpHandler *halUdpHandler)
 {
@@ -73,6 +76,7 @@ Platform::registerHalUdpHandler(const T_OsdkHalUdpHandler *halUdpHandler)
     return false;
   }
 }
+#endif
 
 bool
 Platform::registerOsalHandler(const T_OsdkOsalHandler *osalHandler)
@@ -116,11 +120,13 @@ Platform::isHalUartReady()
   return halUartRegFlag;
 }
 
+#ifdef __linux__
 bool
 Platform::isHalUdpReady()
 {
   return halUdpRegFlag;
 }
+#endif
 
 bool
 Platform::isLoggerReady()

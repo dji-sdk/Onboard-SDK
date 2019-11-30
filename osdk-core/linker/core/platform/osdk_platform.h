@@ -29,16 +29,18 @@
 #define OSDK_PLATFORM_H
 
 /* Includes ------------------------------------------------------------------*/
+#ifdef __linux__
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#endif
 #include "osdk_typedef.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define OS_DEBUG
+//#define OS_DEBUG
 
 /* Exported constants --------------------------------------------------------*/
 /**
@@ -62,16 +64,20 @@ typedef struct {
     int fd;
 }T_UsbObj;
 
+#ifdef __linux__
 typedef struct {
     int fd;
     struct sockaddr_in socketAddr;
 }T_UdpObj;
+#endif
 
 typedef struct {
     union {
         T_UartObj uartObject;
         T_UsbObj  usbObject;
+#ifdef __linux__
         T_UdpObj  udpObject;
+#endif
     };
 }T_HalObj;
 
@@ -93,6 +99,7 @@ typedef struct {
     E_OsdkStat (*UartReadData)(const T_HalObj *obj, uint8_t *pBuf, uint16_t *bufLen);
 } T_OsdkHalUartHandler;
 
+#ifdef __linux__
 typedef struct {
     /*! Specifies payload uart init interface that need register by this format. Users need to implement the initialization
      * interface of their serial device and register it. For the related parameter settings of the serial port, please
@@ -109,6 +116,7 @@ typedef struct {
      * registering.*/
     E_OsdkStat (*UdpReadData)(const T_HalObj *obj, uint8_t *pBuf, uint16_t *bufLen);
 } T_OsdkHalUdpHandler;
+#endif
 
 typedef struct {
     /*! Specifies payload create task interface that need register by this format. This interface is mainly used to create
@@ -219,6 +227,7 @@ typedef struct {
  */
 E_OsdkStat OsdkPlatform_RegHalUartHandler(const T_OsdkHalUartHandler *halUartHandler);
 
+#ifdef __linux__
 /**
  * @brief Register the handler for hal udp interfaces by your platform.
  * @note It should be noted that the interface in hal is written and tested well. Users need to implement all the
@@ -230,6 +239,7 @@ E_OsdkStat OsdkPlatform_RegHalUartHandler(const T_OsdkHalUartHandler *halUartHan
  * @return The return code represents the status of the interface execution. For details, please refer to the osdk_typedef.h.
  */
 E_OsdkStat OsdkPlatform_RegHalUdpHandler(const T_OsdkHalUdpHandler *halUdpHandler);
+#endif
 
 /**
  * @brief Register the handler for osal interfaces by your platform.

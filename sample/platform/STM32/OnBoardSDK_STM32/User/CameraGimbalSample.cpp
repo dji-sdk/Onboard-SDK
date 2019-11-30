@@ -44,11 +44,7 @@ gimbalCameraControl()
   // Telemetry: Subscribe to gimbal status and gimbal angle at freq 10 Hz
   int pkgIndex = 0;
   int freq     = 10;
-  if(!v->GimbalSetUp())
-  {
-    DERROR("Gimbal object does not exist.\n");
-    return false;
-  }
+
   if (v->getFwVersion() != Version::M100_31)
   {
     Telemetry::TopicName topicList10Hz[] = { Telemetry::TOPIC_GIMBAL_ANGLES,

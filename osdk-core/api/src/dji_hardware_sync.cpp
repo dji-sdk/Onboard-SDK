@@ -275,7 +275,11 @@ HardwareSync::getDataFlag(HWSyncDataFlag &flag)
 void
 HardwareSync::recordRecvTimeMsg(RecvTimeMsg &recvTime)
 {
-  recvTime = vehicle->protocolLayer->getDriver()->getTimeStamp();
+  uint32_t msTimeStamp = 0;
+  if (OsdkOsal_GetTimeMs(&msTimeStamp) != OSDK_STAT_OK) {
+    DERROR("get system time error");
+  }
+  recvTime = msTimeStamp;
 }
 #elif defined(__linux__)
 void
