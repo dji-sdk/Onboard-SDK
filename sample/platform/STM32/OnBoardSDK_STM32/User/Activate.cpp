@@ -44,5 +44,6 @@ userActivate()
 
   user_act_data.encKey = key_buf;
 
+  setStm32Flag(IS_STM32);
   v->activate(&user_act_data);
 }

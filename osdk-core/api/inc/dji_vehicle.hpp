@@ -257,6 +257,10 @@ private:
   void setActivationStatus(bool is_activated);
   void initCMD_SetSupportMatrix();
   bool isCmdSetSupported(const uint8_t cmdSet);
+  void sendBuriedDataPkgToFC(void);
+  uint8_t stm32Flag = NOT_STM32;
+public:
+  void setStm32Flag(uint8_t & flag);
 };
 }
 }

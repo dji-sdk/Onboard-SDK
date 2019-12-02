@@ -34,6 +34,9 @@ const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Activation::getVersion[] = {
 const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Activation::activate[] = {
   OpenProtocolCMD::CMDSet::activation, 0x01
 };
+const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Activation::dataBury[] = {
+  OpenProtocolCMD::CMDSet::activation, 0x03
+};
 const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Activation::frequency[] = {
   OpenProtocolCMD::CMDSet::activation, 0x10
 };
