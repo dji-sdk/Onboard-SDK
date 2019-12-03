@@ -37,6 +37,5 @@ if(NOT FLIGHT_MODULES_HEADER_DIR)
 endif()
 
 add_subdirectory(logging)
-add_subdirectory(register_cmd_handler)
 add_subdirectory(telemetry)
 
