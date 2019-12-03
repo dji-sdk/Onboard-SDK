@@ -37,11 +37,6 @@ extern "C" {
 
 /* Exported constants --------------------------------------------------------*/
 
-#define UART_CHANNEL 0x1
-#define USB_CHANNEL 0x2
-#define UDP_CHANNEL 0x3
-#define INVALID_CHANNEL 0xFF
-
 #define ADDR_SDK_COMMAND_INDEX 0x0
 #define ADDR_V1_COMMAND_INDEX 0x1
 #define ADDR_V1_BIGDATA_INDEX 0x2
@@ -50,8 +45,6 @@ extern "C" {
   (((receiver << 16) & 0x00FF0000) | ((index << 8) & 0x0000FF00))
 #define GEN_ADDR_RECEIVER_ONLY(receiver) ((receiver << 16) & 0x00FF0000)
 #define GEN_ADDR_INDEX_ONLY(index) ((index << 8) & 0x0000FF00)
-#define CHANNEL_ID(channel_type, id) \
-  (((channel_type << 16) & 0x00FF0000) | ((id << 8) & 0x0000FF00))
 #define ADDR_INDEX_ONLY_MASK (0x0000FF00)
 
 /* Exported types ------------------------------------------------------------*/

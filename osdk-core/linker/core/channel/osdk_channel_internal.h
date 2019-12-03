@@ -43,11 +43,6 @@
 extern "C" {
 #endif
 
-/* Exported constants --------------------------------------------------------*/
-#define CHANNEL_MAX_SUPPORT_NUM 8
-#define UART_CHANNEL_USB0_INDEX 1
-#define UART_CHANNEL_ACM0_INDEX 2
-
 /* Exported types ------------------------------------------------------------*/
 struct _ChannelItem;
 

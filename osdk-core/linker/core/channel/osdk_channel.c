@@ -39,8 +39,8 @@
 /* Private variables ---------------------------------------------------------*/
 static T_ChannelListItem s_chnListItem;
 const static T_ProtocolMapKey protoMapTable[] = {
-    {CHANNEL_ID(UART_CHANNEL, UART_CHANNEL_USB0_INDEX), PROTOCOL_SDK},
-    {CHANNEL_ID(UART_CHANNEL, UART_CHANNEL_ACM0_INDEX), PROTOCOL_V1}};
+    {FC_UART_CHANNEL_ID, PROTOCOL_SDK},
+    {USB_ACM_CHANNEL_ID, PROTOCOL_V1}};
 
 static T_msgQueue *s_msgQueuePointer;
 static T_OsdkWorkNode s_osdkChannelWorkNode = {0};
@@ -182,7 +182,8 @@ E_OsdkStat OsdkChannel_GetChannelItemByChnId(T_ChannelListItem *chnListCtx,
  * @return error code.
  */
 E_OsdkStat OsdkChannel_InitUartChannel(const char *port,
-                                       const uint32_t baudRate) {
+                                       const uint32_t baudRate,
+                                       E_ChannelIDType id) {
   T_ChannelItem *channelItem = NULL;
 
   if(!port) {
@@ -196,15 +197,8 @@ E_OsdkStat OsdkChannel_InitUartChannel(const char *port,
     return OSDK_STAT_ERR_ALLOC;
   }
 
-  if (strcmp(port, "UART0") == 0) {
-    channelItem->channelId = CHANNEL_ID(UART_CHANNEL, UART_CHANNEL_USB0_INDEX);
-  } else if (strcmp(port, "UART1") == 0) {
-    channelItem->channelId = CHANNEL_ID(UART_CHANNEL, UART_CHANNEL_ACM0_INDEX);
-  } else {
-    goto err;
-  }
-
   channelItem->channelName = "UART";
+  channelItem->channelId = id;
   channelItem->seqNum = 0;
   channelItem->recvParse.parseIndex = 0;
   memset(channelItem->recvParse.parseBuff, 0, OSDK_PACKAGE_MAX_LEN);
@@ -263,7 +257,8 @@ err:
  * @param port: udp port.
  * @return error code.
  */
-E_OsdkStat OsdkChannel_InitUDPChannel(const char *addr, uint16_t port) {
+E_OsdkStat OsdkChannel_InitUDPChannel(const char *addr, uint16_t port,
+                                      E_ChannelIDType id) {
   T_ChannelItem *channelItem = NULL;
   E_OsdkStat osdkStat = OSDK_STAT_OK;
 
@@ -278,7 +273,7 @@ E_OsdkStat OsdkChannel_InitUDPChannel(const char *addr, uint16_t port) {
     return OSDK_STAT_ERR_ALLOC;
   }
   channelItem->channelName = "UDP";
-  channelItem->channelId = CHANNEL_ID(UDP_CHANNEL, 0);
+  channelItem->channelId = id;
   channelItem->seqNum = 0;
   channelItem->Send = OsdkChannel_CommonSend;
   channelItem->Recv = OsdkChannel_CommonRecv;

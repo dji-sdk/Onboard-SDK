@@ -49,9 +49,10 @@ public:
 
 bool init();
 
-bool addUartChannel(const char *device, uint32_t baudrate);
+bool addUartChannel(const char *device, uint32_t baudrate,
+                    E_ChannelIDType id);
 
-bool addUdpChannel(const char *addr, uint16_t port);
+bool addUdpChannel(const char *addr, uint16_t port, E_ChannelIDType id);
 
 void setKey(const char *key);
 

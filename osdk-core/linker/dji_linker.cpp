@@ -67,18 +67,19 @@ Linker::init()
 }
 
 bool
-Linker::addUartChannel(const char *device, uint32_t baudrate)
+Linker::addUartChannel(const char *device, uint32_t baudrate,
+                       E_ChannelIDType id)
 {
   E_OsdkStat errCode;
-  errCode = OsdkChannel_InitUartChannel(device, baudrate);
+  errCode = OsdkChannel_InitUartChannel(device, baudrate, id);
   return (errCode == OSDK_STAT_OK) ? true : false;
 }
 
 bool
-Linker::addUdpChannel(const char *addr, uint16_t port)
+Linker::addUdpChannel(const char *addr, uint16_t port, E_ChannelIDType id)
 {
   E_OsdkStat errCode;
-  errCode = OsdkChannel_InitUartChannel(addr, port);
+  errCode = OsdkChannel_InitUDPChannel(addr, port, id);
   return (errCode == OSDK_STAT_OK) ? true : false;
 }
 
