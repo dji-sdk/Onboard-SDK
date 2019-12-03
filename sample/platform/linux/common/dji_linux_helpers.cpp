@@ -208,9 +208,44 @@ LinuxSetup::setupEnvironment(int argc, char** argv)
 void
 LinuxSetup::initVehicle()
 {
+  /*! Linker initialization */
+  Linker *linker = new (std::nothrow) Linker();
+  if (linker == 0)
+  {
+    std::cout << "Failed to allocate memory for Linker!" << std::endl;
+    goto err;
+  }
 
-  this->vehicle      = new Vehicle(environment->getDevice().c_str(),
-                                   environment->getBaudrate());
+  if (!linker->init())
+  {
+    std::cout << "Failed to initialize Linker!" << std::endl;
+    goto err;
+  }
+
+  /*! Linker add uart channel */
+  if (!linker->addUartChannel(environment->getDevice().c_str(),
+                              environment->getBaudrate(),
+                              FC_UART_CHANNEL_ID))
+  {
+    std::cout << "Failed to initialize Linker channel" << std::endl;
+    goto err;
+  }
+
+  /*! Linker add USB acm channel */
+  if (!linker->addUartChannel(environment->getDeviceAcm().c_str(),
+                              environment->getACMDefaultBaudrate(),
+                              USB_ACM_CHANNEL_ID))
+  {
+    std::cout << "Failed to initialize ACM Linker channel!" << std::endl;
+  }
+
+  /*! Vehicle initialization */
+  this->vehicle = new Vehicle(linker);
+  if (this->vehicle == 0)
+  {
+    std::cout << "Failed to allocate memory for Linker!" << std::endl;
+    goto err;
+  }
 
   if(!vehicle->init())
   {
@@ -235,6 +270,7 @@ LinuxSetup::initVehicle()
 err:
   delete (vehicle);
   delete (environment);
+  delete (linker);
   this->platform    = nullptr;
   this->environment = nullptr;
   this->vehicle     = nullptr;

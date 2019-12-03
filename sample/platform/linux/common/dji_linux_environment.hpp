@@ -47,6 +47,7 @@ public:
   const std::string& getEnc_key() const;
   const std::string& getDevice() const;
   unsigned int       getBaudrate() const;
+  unsigned int       getACMDefaultBaudrate() const;
   bool               getConfigResult() const;
   bool parse(std::string config_file_path);
   const std::string& getDeviceAcm() const;
@@ -62,6 +63,8 @@ private:
   bool         config_read_result;
   std::string  device_acm;
   std::string  sample_case;
+
+  const static unsigned int default_acm_baudrate = 921600;
 };
 
 #endif // ONBOARDSDK_DJI_ENVIRONMENT_H

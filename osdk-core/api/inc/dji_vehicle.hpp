@@ -85,8 +85,7 @@ public:
 #pragma pack()
 
 public:
-  Vehicle(const char* device,
-	  uint32_t baudRate);
+  Vehicle(Linker* linker);
   ~Vehicle();
 
   Linker*              linker;
@@ -241,14 +240,6 @@ private:
   bool encrypt = false;
 
 public:
-  //! Initialization data
-  const char* device = "";
-  uint32_t    baudRate = 0;
-
-
-  //! ACK management
-  // Internal space
-  uint8_t rawVersionACK[MAX_ACK_SIZE];
 
   // User space ACK types
   ACK::ErrorCode     ackErrorCode;
@@ -256,8 +247,6 @@ public:
  
 public:
   bool init();
-
-  uint8_t* getRawVersionAck();
 
   bool initVersion();
 
@@ -284,7 +273,6 @@ public:
    * @brief Initialize main read thread to support UART communication
    * @return fasle if error, true if success
    */
-  bool initLinker();
   bool initLegacyLinker();
   bool initSubscriber();
   bool initBroadcast();
