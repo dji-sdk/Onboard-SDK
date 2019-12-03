@@ -72,12 +72,12 @@ void LegacyLinker::legacyAdaptingAsyncCB(const T_CmdInfo *cmdInfo,
   if (cb_type == OSDK_STAT_OK) {
     if ((!cmdInfo) && (!userData) && (!((legacyAdaptingData *) (userData))->cb)
         && (!((legacyAdaptingData *) (userData))->vehicle)) {
+      DERROR("Parameter invalid.");
+    } else {
       legacyAdaptingData para = *(legacyAdaptingData *) userData;
 
       RecvContainer recvFrame = recvFrameAdapting(*cmdInfo, cmdData);
       para.cb(para.vehicle, recvFrame, para.udata);
-    } else {
-      DERROR("Parameter invalid.");
     }
   } else if (cb_type == OSDK_STAT_ERR_TIMEOUT) {
     DERROR("wait for callback time out.");
