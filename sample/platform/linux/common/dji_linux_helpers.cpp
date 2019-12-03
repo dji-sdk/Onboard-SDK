@@ -217,12 +217,6 @@ LinuxSetup::initVehicle()
     std::cout << "vehicle init fail. Exiting." << std::endl;
     goto err;
   }
-  
-  if(!vehicle->linker->addUartChannel(vehicle->device, vehicle->baudRate))
-  {
-    std::cout << "Uart init fail. Exiting." << std::endl;
-    goto err;
-  }
 
   // Activate
   activateData.ID = environment->getApp_id();

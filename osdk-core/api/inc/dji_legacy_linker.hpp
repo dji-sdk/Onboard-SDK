@@ -30,10 +30,6 @@
 #ifndef LEGACY_LINKER_H_
 #define LEGACY_LINKER_H_
 
-#include "dji_ack.hpp"
-#include "dji_log.hpp"
-#include "dji_type.hpp"
-#include "dji_linker.hpp"
 #include "dji_vehicle_callback.hpp"
 
 /*! Platform includes:
@@ -127,11 +123,11 @@ public:
   void sendAsync(const uint8_t cmd[], void *pdata, size_t len, int timeout,
                  int retry_time, VehicleCallBack callback, UserData userData);
 
-  ACK::ErrorCode sendSync(const uint8_t cmd[], void *pdata, size_t len,
+  void* sendSync(const uint8_t cmd[], void *pdata, size_t len,
                           int timeout, int retry_time);
 
   bool registerCMDCallback(uint8_t cmdSet, uint8_t cmdID,
-                           VehicleCallBack callback, UserData userData);
+                           VehicleCallBack &callback, UserData &userData);
 
  private:
   Vehicle* vehicle;
@@ -143,6 +139,30 @@ public:
                                              const T_CmdInfo *cmdInfo,
                                              const uint8_t *cmdData,
                                              void *userData);
+  static RecvContainer recvFrameAdapting(const T_CmdInfo *cmdInfo,
+                                         const uint8_t *cmdData);
+  void* decodeAck(E_OsdkStat ret, T_CmdInfo *ackInfo, uint8_t *ackData);
+
+ private:
+  uint8_t rawVersionACK[MAX_ACK_SIZE];
+
+  // User space ACK types
+  ACK::ErrorCode     ackErrorCode;
+  ACK::DroneVersion  droneVersionACK;
+  ACK::HotPointStart hotpointStartACK;
+  ACK::HotPointRead  hotpointReadACK;
+  /*!WayPoint download command
+   * @note Download mission setting*/
+  ACK::WayPointInit waypointInitACK;
+  /*!WayPoint index download command ACK
+   * @note Download index settings*/
+  ACK::WayPointIndex      waypointIndexACK;
+  //ACK::WayPoint2CommonRsp wayPoint2CommonRspACK;
+  /*!WayPoint add point command ACK*/
+  ACK::WayPointAddPoint waypointAddPointACK;
+  ACK::MFIOGet          mfioGetACK;
+  //ACK::ExtendedFunctionRsp extendedFunctionRspAck;
+  ACK::ParamAck         paramAck;
 }; // class LegacyLinker
 
 } // namespace OSDK

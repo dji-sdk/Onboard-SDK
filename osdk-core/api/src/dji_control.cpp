@@ -89,22 +89,25 @@ Control::action(const int cmd, int timeout) {
     legacyCMDData.cmd = cmd;
     legacyCMDData.sequence++;
     return
-        vehicle->legacyLinker->sendSync(OpenProtocolCMD::CMDSet::Control::task,
-                                        (uint8_t *) &legacyCMDData,
-                                        sizeof(legacyCMDData), 500, 2);
+        *(ACK::ErrorCode *) vehicle->legacyLinker->sendSync(
+            OpenProtocolCMD::CMDSet::Control::task,
+            (uint8_t *) &legacyCMDData,
+            sizeof(legacyCMDData), 500, 2);
   } else if (vehicle->isM100()) {
     legacyCMDData.cmd = cmd;
     legacyCMDData.sequence++;
     return
-        vehicle->legacyLinker->sendSync(OpenProtocolCMD::CMDSet::Control::task,
-                                        (uint8_t *) &legacyCMDData,
-                                        sizeof(legacyCMDData), 100, 3);
+        *(ACK::ErrorCode *) vehicle->legacyLinker->sendSync(
+            OpenProtocolCMD::CMDSet::Control::task,
+            (uint8_t *) &legacyCMDData,
+            sizeof(legacyCMDData), 100, 3);
   } else {
     uint8_t data = cmd;
     return
-        vehicle->legacyLinker->sendSync(OpenProtocolCMD::CMDSet::Control::task,
-                                        (uint8_t *) &data, sizeof(data), 500,
-                                        2);
+        *(ACK::ErrorCode *) vehicle->legacyLinker->sendSync(
+            OpenProtocolCMD::CMDSet::Control::task,
+            (uint8_t *) &data, sizeof(data), 500,
+            2);
   }
 }
 
@@ -137,7 +140,7 @@ Control::setArm(bool armSetting, int timeout)
   ACK::ErrorCode ack;
   uint8_t        data = armSetting ? 1 : 0;
 
-  return vehicle->legacyLinker->sendSync(
+  return *(ACK::ErrorCode *) vehicle->legacyLinker->sendSync(
       OpenProtocolCMD::CMDSet::Control::setArm,
       &data, sizeof(data), timeout * 1000 / 10, 10);
 }
@@ -441,7 +444,7 @@ Control::killSwitch(KillSwitch cmd, int wait_timeout, char debugMsg[10])
     data.cmd = cmd;
     data.reserved = 0;
 
-    return vehicle->legacyLinker->sendSync(
+    return *(ACK::ErrorCode*)vehicle->legacyLinker->sendSync(
         OpenProtocolCMD::CMDSet::Control::killSwitch, &data, sizeof(data),
         wait_timeout * 1000 / 2, 2);
   }

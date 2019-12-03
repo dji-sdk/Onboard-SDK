@@ -43,6 +43,13 @@
 #include "dji_gimbal.hpp"
 #include "dji_camera.hpp"
 #include "dji_control.hpp"
+#include "dji_subscription.hpp"
+#include "dji_mobile_communication.hpp"
+#include "dji_mobile_device.hpp"
+#include "dji_payload_device.hpp"
+#include "dji_virtual_rc.hpp"
+#include "dji_hardware_sync.hpp"
+#include "dji_mfio.hpp"
 
 namespace DJI
 {
@@ -80,10 +87,53 @@ public:
 
   Linker*              linker;
   LegacyLinker*        legacyLinker;
+  DataSubscription*    subscribe;
   DataBroadcast*       broadcast;
+  Control*             control;
   Camera*              camera;
   Gimbal*              gimbal;
-  Control*             control;
+  MFIO*                mfio;
+  MobileCommunication* moc;
+  MobileDevice*        mobileDevice;
+  HardwareSync*        hardSync;
+  // Supported only on Matrice 100
+  VirtualRC*           virtualRC;
+  PayloadDevice*       payloadDevice;
+
+  ////// Control authorities //////
+
+  /*! @brief
+  *
+  *  Obtain the control authority of the api (non-blocking call)
+  *
+  *  @param callback callback function
+  *  @param userData user data (void ptr)
+  */
+  void obtainCtrlAuthority(VehicleCallBack callback = 0, UserData userData = 0);
+  /*! @brief
+  *
+  *  Obtain the control authority of the api (blocking call)
+  *
+  *  @param timeout time to wait for ACK
+  */
+  ACK::ErrorCode obtainCtrlAuthority(int timeout);
+  /*! @brief
+  *
+  *  Release the control authority of the api (non-blocking call)
+  *
+  *  @param callback callback function
+  *  @param userData user data (void ptr)
+  */
+  void releaseCtrlAuthority(VehicleCallBack callback = 0,
+                            UserData        userData = 0);
+  /*! @brief
+  *
+  *  Release the control authority of the api (blocking call)
+  *
+  *  @param timeout time to wait for ACK
+  */
+  ACK::ErrorCode releaseCtrlAuthority(int timeout);
+
 
   int functionalSetUp();
   ////////// Blocking calls ///////////
@@ -171,6 +221,10 @@ public:
 
   bool initVersion();
 
+  static void controlAuthorityCallback(Vehicle*      vehiclePtr,
+                                       RecvContainer recvFrame,
+                                       UserData      userData);
+
 public:
   static bool parseDroneVersionInfo(Version::VersionData& versionData,
                                     uint8_t*              ackPtr);
@@ -187,11 +241,17 @@ public:
   bool getActivationStatus();
   bool initLinker();
   bool initLegacyLinker();
+  bool initSubscriber();
   bool initBroadcast();
   bool initControl();
   bool initCamera();
   bool initGimbal();
-
+  bool initMFIO();
+  bool initMOC();
+  bool initMobileDevice();
+  bool initPayloadDevice();
+  bool initHardSync();
+  bool initVirtualRC();
 private:
   void setActivationStatus(bool is_activated);
   void initCMD_SetSupportMatrix();

@@ -36,6 +36,7 @@ using namespace DJI::OSDK::Telemetry;
 int
 main(int argc, char** argv)
 {
+
   // Setup OSDK.
   LinuxSetup linuxEnvironment(argc, argv);
   Vehicle*   vehicle = linuxEnvironment.getVehicle();
@@ -60,23 +61,21 @@ main(int argc, char** argv)
   switch (inputChar)
   {
     case 'a':
-      if (1)// (vehicle->getFwVersion() == Version::M100_31)
+      if (vehicle->getFwVersion() == Version::M100_31)
       {
         getBroadcastData(vehicle);
       }
       else
       {
-//        subscribeToData(vehicle);
+        subscribeToData(vehicle);
       }
       break;
-#if 0
     case 'b':
       subscribeToDataForInteractivePrint(vehicle);
       break;
     case 'c':
       subscribeToDataAndSaveLogToFile(vehicle);
       break;
-#endif
     default:
       break;
   }

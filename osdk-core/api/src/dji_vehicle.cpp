@@ -41,6 +41,13 @@ Vehicle::Vehicle(const char* device,
   , gimbal(NULL)
   , control(NULL)
   , broadcast(NULL)
+  , subscribe(NULL)
+  , mfio(NULL)
+  , moc(NULL)
+  , mobileDevice(NULL)
+  , hardSync(NULL)
+  , virtualRC(NULL)
+  , payloadDevice(NULL)
 {
   if (!device )
   {
@@ -65,9 +72,24 @@ Vehicle::init()
     return 1;
   }
 
+  if (!linker->addUartChannel(this->device, this->baudRate))
+  {
+    DERROR("Failed to initialize Linker channel!\n");
+    return 1;
+  }
+
   if (!initLegacyLinker())
   {
     DERROR("Failed to initialize LegacyLinker!\n");
+    return 1;
+  }
+
+  /*
+   * Initialize subscriber if supported
+   */
+  if (!initSubscriber())
+  {
+    DERROR("Failed to initialize subscriber!\n");
     return 1;
   }
 
@@ -100,12 +122,54 @@ Vehicle::init()
     return 1;
   }
 
+  /*
+   * Initialize MFIO if supported
+   */
+  if (!initMFIO())
+  {
+    DERROR("Failed to initialize MFIO!\n");
+    return 1;
+  }
+
   if(!initGimbal())
   {
     DERROR("Failed to initialize Gimbal!\n");
     return 1;
   }
 
+  /*
+   * Initialize Mobile-Onboard Communication (MobileCommunication)
+   */
+  if (!initMOC())
+  {
+    DERROR("Failed to initialize MobileCommunication!\n");
+    return 1;
+  }
+
+  /*
+   * Initialize Mobile Device Abstraction
+   */
+  if (!initMobileDevice())
+  {
+    DERROR("Failed to initialize Mobile Device!\n");
+  }
+
+  if (!initPayloadDevice())
+  {
+    DERROR("Failed to initialize Payload Device!\n");
+  }
+
+  if (!initHardSync())
+  {
+    DERROR("Failed to initialize HardSync!\n");
+    return 1;
+  }
+
+  if (!initVirtualRC())
+  {
+    DERROR("Failed to initiaze VirtualRC!\n");
+    return 1;
+  }
   return true;
 }
 
@@ -221,6 +285,50 @@ Vehicle::initControl()
   return true;
 }
 
+
+bool
+Vehicle::initSubscriber()
+{
+  if(this->subscribe)
+  {
+    DDEBUG("vehicle->subscribe already initalized!");
+    return true;
+  }
+
+  if (isCmdSetSupported(OpenProtocolCMD::CMDSet::subscribe))
+  {
+    this->subscribe = new DataSubscription(this);
+    if (this->subscribe == 0)
+    {
+      DERROR("Failed to allocate memory for Subscriber!\n");
+      return false;
+    }
+
+    bool ret = this->legacyLinker->registerCMDCallback(
+        OpenProtocolCMD::CMDSet::Broadcast::subscribe[0],
+        OpenProtocolCMD::CMDSet::Broadcast::subscribe[1],
+        this->subscribe->subscriptionDataDecodeHandler.callback,
+        this->subscribe->subscriptionDataDecodeHandler.userData);
+    /*
+     * Wait for 1.2 seconds, so we can detect all leftover
+     * packages from unclean quit, and remove them properly
+     */
+    if (!ret) {
+      DERROR("Register broadcast callback fail.");
+      return ret;
+    }
+    Platform::instance().taskSleepMs(1200);
+    this->subscribe->removeLeftOverPackages();
+  }
+  else
+  {
+    DSTATUS("Telemetry subscription mechanism is not supported on this platform!\n");
+  }
+
+  return true;
+}
+
+
 bool
 Vehicle::initBroadcast()
 {
@@ -238,6 +346,13 @@ Vehicle::initBroadcast()
       DERROR("Failed to allocate memory for Broadcast!\n");
       return false;
     }
+    bool ret = this->legacyLinker->registerCMDCallback(
+        OpenProtocolCMD::CMDSet::Broadcast::broadcast[0],
+        OpenProtocolCMD::CMDSet::Broadcast::broadcast[1],
+        this->broadcast->unpackHandler.callback,
+        this->broadcast->unpackHandler.userData);
+    if (!ret) DERROR("Register broadcast callback fail.");
+    return ret;
   }
   else
   {
@@ -281,6 +396,189 @@ Vehicle::initGimbal()
   {
     DERROR("Failed to allocate memory for Gimbal!\n");
     return false;
+  }
+
+  return true;
+}
+
+bool
+Vehicle::initMFIO()
+{
+  if(this->mfio)
+  {
+    DDEBUG("vehicle->mfio already initalized!");
+    return true;
+  }
+
+  if (isCmdSetSupported(OpenProtocolCMD::CMDSet::mfio))
+  {
+    mfio = new (std::nothrow) MFIO(this);
+    if (this->mfio == 0)
+    {
+      DERROR("Failed to allocate memory for MFIO!\n");
+      return false;
+    }
+  }
+  else
+  {
+    DSTATUS("MFIO is not supported on this platform!\n");
+  }
+
+  return true;
+}
+
+
+bool
+Vehicle::initMOC()
+{
+  if(this->moc)
+  {
+    DDEBUG("vehicle->moc already initalized!");
+    return true;
+  }
+
+  moc = new (std::nothrow) MobileCommunication(this);
+  if (this->moc == 0)
+  {
+    DERROR("Failed to allocate memory for MobileCommunication!\n");
+    return false;
+  }
+  bool ret = this->legacyLinker->registerCMDCallback(
+      OpenProtocolCMD::CMDSet::Broadcast::fromMobile[0],
+      OpenProtocolCMD::CMDSet::Broadcast::fromMobile[1],
+      this->moc->fromMSDKHandler.callback,
+      this->moc->fromMSDKHandler.userData);
+  if (!ret) DERROR("Register broadcast callback fail.");
+  return true;
+}
+
+bool
+Vehicle::initMobileDevice()
+{
+  if(this->mobileDevice)
+  {
+    DDEBUG("Mobile Device already initalized!");
+    return true;
+  }
+  this->mobileDevice = new (std::nothrow) MobileDevice(this);
+  if (this->mobileDevice == 0)
+  {
+    DERROR("Failed to allocate memory for MobileDevice!\n");
+    return false;
+  }
+  bool ret = this->legacyLinker->registerCMDCallback(
+      OpenProtocolCMD::CMDSet::Broadcast::fromMobile[0],
+      OpenProtocolCMD::CMDSet::Broadcast::fromMobile[1],
+      this->mobileDevice->fromMSDKHandler.callback,
+      this->mobileDevice->fromMSDKHandler.userData);
+  if (!ret) DERROR("Register broadcast callback fail.");
+  return true;
+}
+bool Vehicle::initPayloadDevice()
+{
+  if(this->payloadDevice)
+  {
+    DDEBUG("Payload Device already initalized!");
+    return true;
+  }
+  this->payloadDevice = new (std::nothrow) PayloadDevice(this);
+  if (this->payloadDevice == 0)
+  {
+    DERROR("Failed to allocate memory for payload Device!\n");
+    return false;
+  }
+  bool ret = this->legacyLinker->registerCMDCallback(
+      OpenProtocolCMD::CMDSet::Broadcast::fromPayload[0],
+      OpenProtocolCMD::CMDSet::Broadcast::fromPayload[1],
+      this->payloadDevice->fromPSDKHandler.callback,
+      this->payloadDevice->fromPSDKHandler.userData);
+  if (!ret) DERROR("Register broadcast callback fail.");
+  return true;
+
+}
+
+bool
+Vehicle::initHardSync()
+{
+  if(this->hardSync)
+  {
+    DDEBUG("vehicle->hardSync already initalized!");
+    return true;
+  }
+
+  if (isCmdSetSupported(OpenProtocolCMD::CMDSet::hardwareSync))
+  {
+    hardSync = new (std::nothrow) HardwareSync(this);
+    if (this->hardSync == 0)
+    {
+      return false;
+    }
+    bool ret = this->legacyLinker->registerCMDCallback(
+        OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEAGPSGSA[0],
+        OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEAGPSGSA[1],
+        this->hardSync->ppsNMEAHandler.callback,
+        this->hardSync->ppsNMEAHandler.userData);
+    ret &= this->legacyLinker->registerCMDCallback(
+        OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEAGPSRMC[0],
+        OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEAGPSRMC[1],
+        this->hardSync->ppsNMEAHandler.callback,
+        this->hardSync->ppsNMEAHandler.userData);
+    ret &= this->legacyLinker->registerCMDCallback(
+        OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEARTKGSA[0],
+        OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEARTKGSA[1],
+        this->hardSync->ppsNMEAHandler.callback,
+        this->hardSync->ppsNMEAHandler.userData);
+    ret &= this->legacyLinker->registerCMDCallback(
+        OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEARTKRMC[0],
+        OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEARTKRMC[1],
+        this->hardSync->ppsNMEAHandler.callback,
+        this->hardSync->ppsNMEAHandler.userData);
+    ret &= this->legacyLinker->registerCMDCallback(
+        OpenProtocolCMD::CMDSet::HardwareSync::ppsUTCTime[0],
+        OpenProtocolCMD::CMDSet::HardwareSync::ppsUTCTime[1],
+        this->hardSync->ppsUTCTimeHandler.callback,
+        this->hardSync->ppsUTCTimeHandler.userData);
+    ret &= this->legacyLinker->registerCMDCallback(
+        OpenProtocolCMD::CMDSet::HardwareSync::ppsUTCFCTimeRef[0],
+        OpenProtocolCMD::CMDSet::HardwareSync::ppsUTCFCTimeRef[1],
+        this->hardSync->ppsUTCFCTimeHandler.callback,
+        this->hardSync->ppsUTCFCTimeHandler.userData);
+    ret &= this->legacyLinker->registerCMDCallback(
+        OpenProtocolCMD::CMDSet::HardwareSync::ppsSource[0],
+        OpenProtocolCMD::CMDSet::HardwareSync::ppsSource[1],
+        this->hardSync->ppsSourceHandler.callback,
+        this->hardSync->ppsSourceHandler.userData);
+    if (!ret) DERROR("Register hardSync callback fail.");
+  }
+  else
+  {
+    DSTATUS("Hardware Sync is not supported on this platform!\n");
+  }
+
+  return true;
+}
+
+bool
+Vehicle::initVirtualRC()
+{
+  if(this->virtualRC)
+  {
+    DDEBUG("vehicle->virtualRC already initalized!");
+    return true;
+  }
+
+  if (isCmdSetSupported(OpenProtocolCMD::CMDSet::virtualRC))
+  {
+    virtualRC = new (std::nothrow) VirtualRC(this);
+    if (this->virtualRC == 0)
+    {
+      DERROR("Error creating Virtual RC!");
+      return false;
+    }
+  }
+  else
+  {
+    DERROR("Virtual RC is not supported on this platform!\n");
   }
 
   return true;
@@ -806,3 +1104,126 @@ Vehicle::isCmdSetSupported(const uint8_t cmdSet)
   }
   return true;
 }
+
+
+void
+Vehicle::obtainCtrlAuthority(VehicleCallBack callback, UserData userData)
+{
+  uint8_t data    = 1;
+  VehicleCallBack cb = NULL;
+  UserData udata = NULL;
+
+  if (callback)
+  {
+    cb = callback;
+    udata = userData;
+  }
+  else
+  {
+    cb = controlAuthorityCallback;
+    udata = NULL;
+  }
+
+  legacyLinker->sendAsync(OpenProtocolCMD::CMDSet::Control::setControl, &data,
+                          1, 500, 2, cb, udata);
+}
+
+ACK::ErrorCode
+Vehicle::obtainCtrlAuthority(int timeout)
+{
+  ACK::ErrorCode ack;
+  uint8_t        data = 1;
+
+  ack = *(ACK::ErrorCode *) legacyLinker->sendSync(
+      OpenProtocolCMD::CMDSet::Control::setControl, &data, 1,
+      timeout * 1000 / 2, 2);
+
+  if (ack.data == OpenProtocolCMD::ErrorCode::ControlACK::SetControl::
+  OBTAIN_CONTROL_IN_PROGRESS)
+  {
+    ack = this->obtainCtrlAuthority(timeout);
+  }
+
+  return ack;
+}
+
+void
+Vehicle::releaseCtrlAuthority(VehicleCallBack callback, UserData userData)
+{
+  uint8_t data    = 0;
+  VehicleCallBack cb = NULL;
+  UserData udata = NULL;
+
+  if (callback)
+  {
+    cb = callback;
+    udata = userData;
+  }
+  else
+  {
+    // nbCallbackFunctions[cbIndex] = (void*)ReleaseCtrlCallback;
+    userData = NULL;
+  }
+
+  legacyLinker->sendAsync(OpenProtocolCMD::CMDSet::Control::setControl, &data,
+                          1, 500, 2, cb, userData);
+}
+
+ACK::ErrorCode
+Vehicle::releaseCtrlAuthority(int timeout)
+{
+  ACK::ErrorCode ack;
+  uint8_t        data = 0;
+
+  ack = *(ACK::ErrorCode *) legacyLinker->sendSync(
+      OpenProtocolCMD::CMDSet::Control::setControl, &data, 1,
+      timeout * 1000 / 2, 2);
+  if (ack.data == OpenProtocolCMD::ErrorCode::ControlACK::SetControl::
+  RELEASE_CONTROL_IN_PROGRESS)
+  {
+    ack = this->releaseCtrlAuthority(timeout);
+  }
+
+  return ack;
+}
+
+void
+Vehicle::controlAuthorityCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
+                                  UserData userData)
+{
+  ACK::ErrorCode ack;
+  ack.data = OpenProtocolCMD::ErrorCode::CommonACK::NO_RESPONSE_ERROR;
+
+  uint8_t data = 0x1;
+  VehicleCallBack cb = NULL;
+  UserData udata = NULL;
+
+  if (recvFrame.recvInfo.len - OpenProtocol::PackageMin <= sizeof(uint16_t))
+  {
+    ack.data = recvFrame.recvData.ack;
+    ack.info = recvFrame.recvInfo;
+  }
+  else
+  {
+    DERROR("ACK is exception, sequence %d\n", recvFrame.recvInfo.seqNumber);
+    return;
+  }
+
+  if (ack.data == OpenProtocolCMD::ErrorCode::ControlACK::SetControl::
+  OBTAIN_CONTROL_IN_PROGRESS)
+  {
+    ACK::getErrorCodeMessage(ack, __func__);
+    vehiclePtr->obtainCtrlAuthority(controlAuthorityCallback);
+  }
+  else if (ack.data == OpenProtocolCMD::ErrorCode::ControlACK::SetControl::
+  RELEASE_CONTROL_IN_PROGRESS)
+  {
+    ACK::getErrorCodeMessage(ack, __func__);
+    vehiclePtr->releaseCtrlAuthority(controlAuthorityCallback);
+  }
+  else
+  {
+    ACK::getErrorCodeMessage(ack, __func__);
+  }
+}
+

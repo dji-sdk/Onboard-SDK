@@ -97,14 +97,14 @@ getBroadcastData(DJI::OSDK::Vehicle* vehicle, int responseTimeout)
               << avoidData.left  << ", "<< avoidData.up    << "\n";
     std::cout << "-------\n\n";
 
-    usleep(300*1000);
+    usleep(5000);
     elapsedTimeInMs += 5;
   }
 
   std::cout << "Done printing!\n";
   return true;
 }
-#if 0
+
 bool
 subscribeToData(Vehicle* vehicle, int responseTimeout)
 {
@@ -743,4 +743,3 @@ void  INThandler(int sig)
 {
     keepRunning = false;
 }
-#endif

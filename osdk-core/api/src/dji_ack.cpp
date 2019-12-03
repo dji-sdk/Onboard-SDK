@@ -749,6 +749,14 @@ void
 ACK::getErrorCodeMessage(ACK::ErrorCode ack, const char* func)
 {
   DSTATUS("%s", func);
+  /*
+  if (ack.data == 0xFFFFFFFF)
+  {
+    printf();
+
+    return;
+  }
+*/
   switch (ack.info.cmd_set)
   {
     case OpenProtocolCMD::CMDSet::activation:

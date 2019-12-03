@@ -71,10 +71,6 @@ DataBroadcast::DataBroadcast(Vehicle* vehiclePtr)
   if (vehiclePtr)
   {
     setVehicle(vehiclePtr);
-    vehicle->legacyLinker->registerCMDCallback(
-        OpenProtocolCMD::CMDSet::Broadcast::broadcast[0],
-        OpenProtocolCMD::CMDSet::Broadcast::broadcast[1],
-        unpackHandler.callback, unpackHandler.userData);
   }
 }
 
@@ -411,7 +407,7 @@ DataBroadcast::setBroadcastFreq(uint8_t* dataLenIs16, int timeout)
     dataLenIs16[i] = (dataLenIs16[i] > 7 ? 5 : dataLenIs16[i]);
   }
 
-  return vehicle->legacyLinker->sendSync(
+  return *(ACK::ErrorCode*)vehicle->legacyLinker->sendSync(
       OpenProtocolCMD::CMDSet::Activation::frequency, dataLenIs16, 16, 100, 1);
 }
 
