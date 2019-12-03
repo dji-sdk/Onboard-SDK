@@ -32,7 +32,6 @@
 #define DJI_ACK_HPP
 
 #include "dji_command.hpp"
-#include "dji_mission_type.hpp"
 #include "dji_type.hpp"
 #include "dji_version.hpp"
 #include <map>
@@ -61,65 +60,6 @@ public:
     Version::FirmWare version;
   } Entry; // pack(1)
 
-  /*
-   * ACK structures not exposed to user
-   */
-
-  typedef struct HotPointStartInternal
-  {
-    uint8_t   ack;
-    float32_t maxRadius;
-  } HotPointStartInternal; // pack(1)
-
-  typedef struct HotPointReadInternal
-  {
-    uint8_t          ack;
-    HotPointSettings data;
-
-    // TODO fix/remove once verified with FC team
-    uint8_t extraByte;
-  } HotPointReadInternal; // pack(1)
-
-  typedef struct WayPointAddPointInternal
-  {
-    uint8_t ack;
-    uint8_t index;
-  } WayPointAddPointInternal; // pack(1)
-
-  typedef struct WayPointIndexInternal
-  {
-    uint8_t          ack;
-    WayPointSettings data;
-  } WayPointIndexInternal; // pack(1)
-
-  typedef struct WayPoint2CommonRsp
-  {
-    Entry   info;
-    bool    updated = false;
-  } WayPoint2CommonRsp;
-
-  typedef struct ExtendedFunctionRsp{
-    Entry   info;
-    bool    updated = false;
-  } ExtendedFunctionRsp;
-
-  typedef struct WayPointVelocityInternal
-  {
-    uint8_t   ack;
-    float32_t idleVelocity;
-  } WayPointVelocityInternal; // pack(1)
-
-  typedef struct WayPointInitInternal
-  {
-    uint8_t              ack;
-    WayPointInitSettings data;
-  } WayPointInitInternal; // pack(1)
-
-  typedef struct MFIOGetInternal
-  {
-    uint8_t  result;
-    uint32_t value;
-  } MFIOGetInternal; // pack(1)
 
   typedef struct ParamAckInternal
   {
@@ -143,89 +83,7 @@ public:
     Entry    info;
     uint32_t data;
   } ErrorCode; // pack(1)
-
-  /*! @brief This struct is returned from the
-   * DJI::OSDK::Control::writeParameterByHash
-   * blocking API
-   */
-  typedef struct ParamAck
-  {
-    Entry info;
-    ParamAckInternal data;
-    bool updated = false;
-  } ParamAck;  // pack(1)
-
-  /*! @brief This struct is returned from the DJI::OSDK::MFIO::getValue
-   * blocking API
-   *
-   */
-  typedef struct MFIOGet
-  {
-    ErrorCode ack;
-    uint32_t  value;
-  } MFIOGet; // pack(1)
-
-  /*! @brief This struct is returned from the DJI::OSDK::HotpointMission::start
-   * blocking API
-   *
-   */
-  typedef struct HotPointStart
-  {
-    ErrorCode ack;
-    float32_t maxRadius;
-  } HotPointStart; // pack(1)
-
-  /*! @brief This struct is returned from the DJI::OSDK::HotpointMission::readData
-   * blocking API
-   *
-   */
-  typedef struct HotPointRead
-  {
-    ErrorCode        ack;
-    HotPointSettings data;
-
-    // TODO fix/remove once verified with FC team
-    uint8_t extraByte;
-  } HotPointRead; // pack(1)
-
-  /*! @brief This struct is returned from the
-   * DJI::OSDK::WaypointMission::waypointIndexDownload blocking API
-   *
-   */
-  typedef struct WayPointIndex
-  {
-    ErrorCode        ack;
-    WayPointSettings data;
-  } WayPointIndex; // pack(1)
-
-  /*! @brief This struct is returned from the
-   * DJI::OSDK::WaypointMission::uploadIndexData blocking API
-   *
-   */
-  typedef struct WayPointAddPoint
-  {
-    ErrorCode ack;
-    uint8_t   index;
-  } WayPointAddPoint; // pack(1)
-
-  /*! @brief This struct is returned from the
-   * DJI::OSDK::WaypointMission::updateIdleVelocity blocking API
-   *
-   */
-  typedef struct WayPointVelocity
-  {
-    ErrorCode ack;
-    float32_t idleVelocity;
-  } WayPointVelocity; // pack(1)
-
-  /*! @brief This struct is used in the readInitData non-blocking API callback
-   *
-   */
-  typedef struct WayPointInit
-  {
-    ErrorCode            ack;
-    WayPointInitSettings data;
-  } WayPointInit; // pack(1)
+ 
 
   /*! @brief This struct is returned from the
    * DJI::OSDK::Vehicle::getDroneVersion blocking API
@@ -237,80 +95,8 @@ public:
     Version::VersionData data;
   } DroneVersion; // pack(1)
 
-  /*!
-   * @brief This struct captures PushData while ground-station is enabled on
-   * Assistant's SDK Page, CMD: 0x02, 0x04
-   */
-  typedef struct WayPointReachedData
-  {
-    uint8_t incident_type;  /*! see WayPointIncidentType */
-    uint8_t waypoint_index; /*! the index of current waypt mission */
-    uint8_t current_status; /*! 4: pre-action, 6: post-action */
-    uint8_t reserved_1;
-    uint8_t reserved_2;
-  } WayPointReachedData; // pack(1)
 
-  /*!
-   * @brief This struct captures PushData while ground-station is enabled on
-   * Assistant's SDK Page, CMD: 0x02, 0x03
-   */
-  typedef struct WayPointStatusPushData{
-    uint8_t mission_type;      /*! see WayPointPushDataIncidentType */
-    uint8_t waypoint_index;    /*! the index of current waypt mission */
-    uint8_t current_status;    /*! 0: pre-mission, 1: in-action, 5: first waypt , 6: reached */
-    uint8_t error_notification;
-    uint16_t reserved_1;
-  } WayPointStatusPushData;
-  /*!
-   * @brief This constant variable defines number of pixels for QVGA images
-   */
-  static const int IMG_240P_SIZE = 240 * 320;
-  typedef uint8_t  Image[IMG_240P_SIZE];
-  /*!
-   * @brief sub-struct for stereo image with raw data and camera name
-   */
-  typedef struct ImageMeta
-  {
-    Image image;
-    char  name[12];
-  } ImageMeta; // pack(1)
-  /*!
-   * @brief This struct captures PushData when subscribe to QVGA images
-   */
-  typedef struct StereoImgData
-  {
-    uint32_t frame_index;
-    uint32_t time_stamp;
-    uint8_t  num_imgs;
-    /*
-     * There could be 50 different kinds of images coming from the drone,
-     * 5 camera pairs and 10 images types.
-     * Here we use an uint64_t to describe which image is coming
-     * from the USB line, each bit represents if there's data or not
-     * Please use AdvancedSensing::ReceivedImgDesc to match them
-     * For M210, we support up to 4 images at the same time
-     */
-    uint64_t img_desc;
-    // @note for M210, at most 4 imgs come at the same time.
-    ImageMeta img_vec[4];
-  } StereoImgData; // pack(1)
-  /*!
-   * @brief This constant variable defines number of pixels for VGA images
-   */
-  static const int IMG_VGA_SIZE = 640 * 480;
-  typedef uint8_t  VGAImage[IMG_VGA_SIZE];
-  /*!
-   * @brief This struct captures PushData when subscribe to VGA images
-   */
-  typedef struct StereoVGAImgData
-  {
-    uint32_t frame_index;
-    uint32_t time_stamp;
-    uint8_t  num_imgs;
-    uint8_t  direction;
-    // @note VGA imgs always come in pair
-    VGAImage img_vec[2];
-  } StereoVGAImgData; // pack(1)
+
 
   /*!
    * @brief This struct captures PushData when subscribe to UTC & FC time in hardware sync
@@ -330,35 +116,6 @@ public:
     uint8_t  missionACK;
     uint8_t  subscribeACK;
     uint8_t  mfioACK;
-
-    /*
-     * ACK(s) containing ACK data plus extra payload
-     */
-    HotPointStartInternal    hpStartACK;
-    HotPointReadInternal     hpReadACK;
-    WayPointInitInternal     wpInitACK;
-    WayPointAddPointInternal wpAddPointACK;
-    WayPointIndexInternal    wpIndexACK;
-    WayPointVelocityInternal wpVelocityACK;
-    MFIOGetInternal          mfioGetACK;
-    ParamAckInternal         paramAckData;
-
-    /*
-     * Push Data in ground-station mode
-     */
-    WayPointReachedData wayPointReachedData;
-    WayPointStatusPushData wayPointStatusPushData;
-
-    /*
-     * Push Data from AdvancedSensing protocol
-     */
-    StereoImgData           *stereoImgData;
-    StereoVGAImgData        *stereoVGAImgData;
-    /*
-     * Push Data from GPS or RTK
-     */
-    FCTimeInUTC             fcTimeInUTC;
-    uint8_t                 ppsSourceType;
 
   } TypeUnion; // pack(1)
 

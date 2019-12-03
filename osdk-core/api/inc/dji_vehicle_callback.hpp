@@ -29,7 +29,8 @@
 #ifndef DJI_VEHICLECALLBACK_H
 #define DJI_VEHICLECALLBACK_H
 
-#include "dji_open_protocol.hpp"
+#include "dji_vehicle.hpp"
+#include "dji_linker.hpp"
 
 namespace DJI
 {
@@ -46,8 +47,9 @@ class Vehicle;
  * it matches this prototype.
  *
  */
-typedef void (*VehicleCallBack)(Vehicle* vehicle, RecvContainer recvFrame,
-                                UserData userData);
+typedef void (*VehicleCallBack)(const T_CmdInfo *cmdInfo,
+                                const uint8_t *cmdData,
+                                void *userData, uint8_t cbType);
 
 /*! @brief The CallBackHandler struct allows users to encapsulate callbacks and
  * data in one struct

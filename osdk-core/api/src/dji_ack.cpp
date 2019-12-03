@@ -30,7 +30,6 @@
 
 #include "dji_ack.hpp"
 #include "dji_log.hpp"
-#include "dji_control.hpp"
 #include <string.h>
 
 const bool DJI::OSDK::ACK::SUCCESS = 0;
@@ -910,39 +909,7 @@ ACK::getCMDIDControlMSG(ACK::ErrorCode ack)
 void
 ACK::getCMDIDTaskMSG(ACK::ErrorCode ack)
 {
-  std::map<const uint32_t, const char*> taskErrorCodeMap;
-
-  if (ack.info.version == Version::FW(3,2,15,62))
-  {
-    taskErrorCodeMap = static_cast<std::map<const uint32_t, const char*>>(ACK::createLegacyTaskErrorCodeMap());
-  }
-  else if (ack.info.version == Version::M100_31)
-  {
-    taskErrorCodeMap = static_cast<std::map<const uint32_t, const char*>>(ACK::createLegacyTaskErrorCodeMap());
-  }
-  else
-  {
-    taskErrorCodeMap = static_cast<std::map<const uint32_t, const char*>>(ACK::createTaskErrorCodeMap());
-  }
-
-  auto msg = taskErrorCodeMap.find(ack.data);
-
-  if (ack.info.buf != nullptr)
-  {
-    uint8_t taskCmd = *ack.info.buf;
-    if ((taskCmd != (uint8_t)Control::FlightCommand::takeOff) && msg != taskErrorCodeMap.end())
-    {
-      DSTATUS(msg->second);
-    }
-    else
-    {
-      getCommonErrorCodeMessage(ack);
-    }
-  }
-  else
-  {
-    DERROR("ACK INFO BUF IS NULL\n");
-  }
+  
 }
 
 /*
@@ -951,18 +918,6 @@ ACK::getCMDIDTaskMSG(ACK::ErrorCode ack)
 void
 ACK::getCMDIDSetArmMSG(ACK::ErrorCode ack)
 {
-  const std::map<const uint32_t, const char*> setArmErrorCodeMap =
-    ACK::createSetArmErrorCodeMap();
-  auto msg = setArmErrorCodeMap.find(ack.data);
-
-  if (msg != setArmErrorCodeMap.end())
-  {
-    DSTATUS(msg->second);
-  }
-  else
-  {
-    getCommonErrorCodeMessage(ack);
-  }
 }
 
 void

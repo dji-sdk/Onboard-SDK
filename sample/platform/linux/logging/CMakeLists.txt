@@ -27,15 +27,36 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread -g -O0")
 
 include_directories(${ONBOARDSDK_SOURCE}/api/inc)
 include_directories(${ONBOARDSDK_SOURCE}/utility/inc)
-include_directories(${ONBOARDSDK_SOURCE}/hal/inc)
-include_directories(${ONBOARDSDK_SOURCE}/protocol/inc)
-include_directories(${ONBOARDSDK_SOURCE}/platform/linux/inc)
+include_directories(${ONBOARDSDK_SOURCE}/logger/inc)
+include_directories(${ONBOARDSDK_SOURCE}/platform/inc)
+include_directories(${ONBOARDSDK_SOURCE}/linker/command)
+include_directories(${ONBOARDSDK_SOURCE}/linker/channel)
+include_directories(${ONBOARDSDK_SOURCE}/linker)
+include_directories(${ONBOARDSDK_SOURCE}/utils/inc)
+include_directories(${ONBOARDSDK_SOURCE}/linker/logger)
+include_directories(${ONBOARDSDK_SOURCE}/linker/protocol)
+include_directories(${ONBOARDSDK_SOURCE}/linker/root_task)
 include_directories(${MODULES_HEADER_DIR})
-include_directories(${FLIGHT_MODULES_HEADER_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../common)
-FILE(GLOB SOURCE_FILES *.hpp *.cpp
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../hal)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../osal)
+
+FILE(GLOB SOURCE_FILES
+        ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_environment.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_helpers.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/../hal/*.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/../osal/*.c
+        ${ONBOARDSDK_SOURCE}/linker/root_task/*.c
+        ${ONBOARDSDK_SOURCE}/linker/logger/*.c
+        ${ONBOARDSDK_SOURCE}/linker/protocol/*.c
+        ${ONBOARDSDK_SOURCE}/utils/src/*.c*
+        ${ONBOARDSDK_SOURCE}/linker/channel/*.c
+        ${ONBOARDSDK_SOURCE}/linker/command/*.c
+        ${ONBOARDSDK_SOURCE}/platform/src/*.c*
+        ${ONBOARDSDK_SOURCE}/logger/src/*.c*
+        ${ONBOARDSDK_SOURCE}/utility/src/*.c*
+        ${ONBOARDSDK_SOURCE}/api/src/*.c*
         )
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})

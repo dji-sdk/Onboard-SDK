@@ -29,12 +29,20 @@
  */
 
 #include "logging_sample.hpp"
+#include "dji_linux_helpers.hpp"
 
 using namespace DJI::OSDK;
 
 int
 main(int argc, char** argv)
 {
+    LinuxSetup linuxEnvironment(argc, argv);
+    Vehicle *vehicle = linuxEnvironment.getVehicle();
+    if (vehicle == NULL) {
+        std::cout << "Vehicle not initialized, exiting. \n";
+        return -1;
+    }
+
   DSTATUS("Logging is completely independent of DJI::OSDK::Vehicle.");
   DSTATUS("In this example, we don't instantiate a Vehicle at all.\n");
   // Display interactive prompt

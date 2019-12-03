@@ -34,6 +34,7 @@
 #include <fstream>
 #include <dji_linux_environment.hpp>
 #include <dji_vehicle.hpp>
+#include <dji_platform.hpp>
 
 class LinuxSetup
 {
@@ -44,10 +45,8 @@ public:
 public:
   void setupEnvironment(int argc, char** argv);
   void initVehicle();
-  bool validateSerialPort();
 
 public:
-  void setTestSerialDevice(DJI::OSDK::LinuxSerialDevice* serialDevice);
   DJI_Environment* getEnvironment()
   {
     return this->environment;
@@ -56,14 +55,18 @@ public:
   {
     return this->vehicle;
   }
+  DJI::OSDK::Platform* getPlatform()
+  {
+    return this->platform;
+  }
   DJI::OSDK::Vehicle::ActivateData* getActivateData()
   {
     return &activateData;
   }
 
 private:
+  DJI::OSDK::Platform*             platform;
   DJI::OSDK::Vehicle*              vehicle;
-  DJI::OSDK::LinuxSerialDevice*    testSerialDevice;
   DJI_Environment*                 environment;
   DJI::OSDK::Vehicle::ActivateData activateData;
   int                              functionTimeout; // seconds

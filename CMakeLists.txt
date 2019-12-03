@@ -34,14 +34,6 @@ set(DJIOSDK_VERSION
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/libs)
 
-if (ADVANCED_SENSING)
-  add_definitions(-DADVANCED_SENSING)
-endif()
-
-if(WAYPT2_CORE)
-  add_definitions(-DWAYPT2_CORE)
-endif()
-
 add_subdirectory(osdk-core)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES Linux)
