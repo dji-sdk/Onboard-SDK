@@ -77,10 +77,10 @@ parseFromMobileCallback(Vehicle* vehicle, RecvContainer recvFrame,
       sendDroneVersionFromCache(vehicle);
       break;
     case 2:
-      vehicle->obtainCtrlAuthority(controlAuthorityMobileCallback);
+      vehicle->control->obtainCtrlAuthority(controlAuthorityMobileCallback);
       break;
     case 3:
-      vehicle->releaseCtrlAuthority(controlAuthorityMobileCallback);
+      vehicle->control->releaseCtrlAuthority(controlAuthorityMobileCallback);
       break;
     case 4:
       vehicle->activate(linuxEnvironment->getActivateData(),
@@ -244,13 +244,13 @@ controlAuthorityMobileCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
         OpenProtocolCMD::ControlACK::SetControl::OBTAIN_CONTROL_IN_PROGRESS)
     {
       ACK::getErrorCodeMessage(ack, __func__);
-      vehiclePtr->obtainCtrlAuthority(controlAuthorityMobileCallback);
+      vehiclePtr->control->obtainCtrlAuthority(controlAuthorityMobileCallback);
     }
     else if (ack.data == OpenProtocolCMD::ControlACK::SetControl::
                            RELEASE_CONTROL_IN_PROGRESS)
     {
       ACK::getErrorCodeMessage(ack, __func__);
-      vehiclePtr->releaseCtrlAuthority(controlAuthorityMobileCallback);
+      vehiclePtr->control->releaseCtrlAuthority(controlAuthorityMobileCallback);
     }
     else
     {

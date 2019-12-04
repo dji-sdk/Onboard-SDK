@@ -107,41 +107,6 @@ public:
   FlightController*    flightController;
   PSDKManager*         psdkManager;
 
-  ////// Control authorities //////
-
-  /*! @brief
-  *
-  *  Obtain the control authority of the api (non-blocking call)
-  *
-  *  @param callback callback function
-  *  @param userData user data (void ptr)
-  */
-  void obtainCtrlAuthority(VehicleCallBack callback = 0, UserData userData = 0);
-  /*! @brief
-  *
-  *  Obtain the control authority of the api (blocking call)
-  *
-  *  @param timeout time to wait for ACK
-  */
-  ACK::ErrorCode obtainCtrlAuthority(int timeout);
-  /*! @brief
-  *
-  *  Release the control authority of the api (non-blocking call)
-  *
-  *  @param callback callback function
-  *  @param userData user data (void ptr)
-  */
-  void releaseCtrlAuthority(VehicleCallBack callback = 0,
-                            UserData        userData = 0);
-  /*! @brief
-  *
-  *  Release the control authority of the api (blocking call)
-  *
-  *  @param timeout time to wait for ACK
-  */
-  ACK::ErrorCode releaseCtrlAuthority(int timeout);
-
-
   int functionalSetUp();
   ////////// Blocking calls ///////////
 
@@ -249,10 +214,6 @@ public:
   bool init();
 
   bool initVersion();
-
-  static void controlAuthorityCallback(Vehicle*      vehiclePtr,
-                                       RecvContainer recvFrame,
-                                       UserData      userData);
 
 public:
   static bool parseDroneVersionInfo(Version::VersionData& versionData,

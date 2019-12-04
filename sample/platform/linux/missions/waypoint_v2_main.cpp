@@ -52,7 +52,7 @@ main(int argc, char** argv)
   int     responseTimeout = 1;
 
   // Obtain Control Authority
-  vehicle->obtainCtrlAuthority(functionTimeout);
+  vehicle->control->obtainCtrlAuthority(functionTimeout);
 
 
   // Set up telemetry subscription

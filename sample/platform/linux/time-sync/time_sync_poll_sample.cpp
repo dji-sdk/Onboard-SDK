@@ -51,7 +51,7 @@ main(int argc, char** argv)
   }
 
   // Obtain Control Authority
-  vehicle->obtainCtrlAuthority(functionTimeout);
+  vehicle->control->obtainCtrlAuthority(functionTimeout);
 
   const int waitTimeMs = 100;
   int timeSoFar = 0;
