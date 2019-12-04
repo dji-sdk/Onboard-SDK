@@ -56,9 +56,23 @@ main(int argc, char** argv)
   std::cin >> inputChar;
   switch (inputChar)
   {
-    case 'a':
+    case 'a': {
       // Waypoint call
-      dynamicLoggingControlExample();
+      //dynamicLoggingControlExample();
+      vehicle->camera->shootPhoto();
+      sleep(5);
+      vehicle->camera->videoStart();
+      sleep(2);
+      DJI::OSDK::Gimbal::AngleData gimbalAngle = {};
+      gimbalAngle.roll = 100;
+      gimbalAngle.pitch = 300;
+      gimbalAngle.yaw = 900;
+      gimbalAngle.duration = 20;
+      vehicle->gimbal->setAngle(&gimbalAngle);
+      sleep(3);
+      vehicle->camera->videoStop();
+      sleep(2);
+    }
       break;
     default:
       break;

@@ -33,11 +33,15 @@ include_directories(${MODULES_HEADER_DIR})
 include_directories(${FLIGHT_MODULES_HEADER_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../common)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../core/inc)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../hal)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../osal)
 
 FILE(GLOB SOURCE_FILES
         ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_environment.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_helpers.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/../../../core/src/*.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/../hal/*.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/../osal/*.c
         )
 
 add_executable(camera_manager_sync_sample

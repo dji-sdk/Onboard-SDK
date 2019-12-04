@@ -49,29 +49,37 @@ include (${CMAKE_CURRENT_SOURCE_DIR}/../contrib/DJIConfig.cmake)
 
 include_directories(
         api/inc
+        modules/inc/payload
+        modules/inc/flight
         platform/inc
         logger/inc
         utility/inc
-        utils/inc
         linker
-        linker/channel
-        linker/command
-        linker/logger
-        linker/protocol
-        linker/root_task)
+        linker/core
+        linker/core/utils/inc
+        linker/core/channel
+        linker/core/command
+        linker/core/logger
+        linker/core/platform
+        linker/core/protocol
+        linker/core/root_task)
 
 ## Source code for OSDK CORE
 FILE(GLOB OSDK_LIB_SRCS
         api/src/*.cpp
+        modules/src/payload/*.cpp
+        modules/src/flight/*.cpp
         platform/src/*.c*
         logger/src/*.cpp
-        utils/src/*.c*
         utility/src/*.cpp
-        linker/channel/*.c
-        linker/command/*.c
-        linker/logger/*.c
-        linker/protocol/*.c
-        linker/root_task/*.c)
+        linker/*.cpp
+        linker/core/channel/*.c
+        linker/core/command/*.c
+        linker/core/logger/*.c
+        linker/core/protocol/*.c
+        linker/core/platform/*.c
+        linker/core/utils/src/*.c
+        linker/core/root_task/*.c)
 
 add_library(${PROJECT_NAME}
         STATIC
@@ -144,16 +152,20 @@ install(FILES
 
 FILE(GLOB OSDK_LIB_HEADERS
         api/inc/*.h*
+        modules/inc/payload/*.h*
+        modules/inc/flight/*.h*
         platform/inc/*.h*
         logger/inc/*.h*
         utility/inc/*.h*
-        utils/inc/*.h*
-        linker/*.h*
-        linker/channel/*.h*
-        linker/command/*.h*
-        linker/logger/*.h*
-        linker/protocol/*.h*
-        linker/root_task/*.h*)
+        linker/*.hpp
+        linker/core/*.h
+        linker/core/channel/*.h
+        linker/core/command/*.h
+        linker/core/logger/*.h
+        linker/core/protocol/*.h
+        linker/core/platform/*.h
+        linker/core/utils/inc/*.h
+        linker/core/root_task/*.h)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
         PUBLIC_HEADER "${OSDK_LIB_HEADERS}")

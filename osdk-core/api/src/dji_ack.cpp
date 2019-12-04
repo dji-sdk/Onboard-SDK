@@ -39,8 +39,12 @@ namespace DJI
 {
 namespace OSDK
 {
-
 const std::pair<const uint32_t, const char*> commonData[] = {
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::KEY_ERROR, (const char*)"KEY_ERROR\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::NO_AUTHORIZATION_ERROR, (const char*)"NO_AUTHORIZATION_ERROR\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::NO_RIGHTS_ERROR, (const char*)"NO_RIGHTS_ERROR\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::SYSTEM_ERROR, (const char*)"SYSTEM_ERROR\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::NO_RESPONSE_ERROR, (const char*)"NO_RESPONSE_ERROR\n"),
   std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_NONE, (const char*)"MOTOR_FAIL_NONE\n"),
   std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_COMPASS_ABNORMAL, (const char*)"MOTOR_FAIL_COMPASS_ABNORMAL\n"),
   std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_ASSISTANT_PROTECTED, (const char*)"MOTOR_FAIL_ASSISTANT_PROTECTED\n"),
@@ -749,6 +753,7 @@ void
 ACK::getErrorCodeMessage(ACK::ErrorCode ack, const char* func)
 {
   DSTATUS("%s", func);
+
   switch (ack.info.cmd_set)
   {
     case OpenProtocolCMD::CMDSet::activation:

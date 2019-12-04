@@ -37,10 +37,23 @@
 #include "dji_vehicle_callback.hpp"
 #include "dji_version.hpp"
 #include "dji_linker.hpp"
+#include "dji_legacy_linker.hpp"
 #include "dji_log.hpp"
-
-
-
+#include "dji_broadcast.hpp"
+#include "dji_gimbal.hpp"
+#include "dji_camera.hpp"
+#include "dji_control.hpp"
+#include "dji_subscription.hpp"
+#include "dji_mobile_communication.hpp"
+#include "dji_mobile_device.hpp"
+#include "dji_payload_device.hpp"
+#include "dji_virtual_rc.hpp"
+#include "dji_hardware_sync.hpp"
+#include "dji_mfio.hpp"
+#include "dji_mission_manager.hpp"
+#include "dji_camera_manager.hpp"
+#include "dji_flight_controller.hpp"
+#include "dji_psdk_manager.hpp"
 
 namespace DJI
 {
@@ -77,9 +90,71 @@ public:
   ~Vehicle();
 
   Linker*              linker;
+  LegacyLinker*        legacyLinker;
+  DataSubscription*    subscribe;
+  DataBroadcast*       broadcast;
+  Control*             control;
+  Camera*              camera;
+  Gimbal*              gimbal;
+  MFIO*                mfio;
+  MobileCommunication* moc;
+  MobileDevice*        mobileDevice;
+  MissionManager*      missionManager;
+  HardwareSync*        hardSync;
+  // Supported only on Matrice 100
+  VirtualRC*           virtualRC;
+  PayloadDevice*       payloadDevice;
+  CameraManager*       cameraManager;
+  FlightController*    flightController;
+  PSDKManager*         psdkManager;
+
+  ////// Control authorities //////
+
+  /*! @brief
+  *
+  *  Obtain the control authority of the api (non-blocking call)
+  *
+  *  @param callback callback function
+  *  @param userData user data (void ptr)
+  */
+  void obtainCtrlAuthority(VehicleCallBack callback = 0, UserData userData = 0);
+  /*! @brief
+  *
+  *  Obtain the control authority of the api (blocking call)
+  *
+  *  @param timeout time to wait for ACK
+  */
+  ACK::ErrorCode obtainCtrlAuthority(int timeout);
+  /*! @brief
+  *
+  *  Release the control authority of the api (non-blocking call)
+  *
+  *  @param callback callback function
+  *  @param userData user data (void ptr)
+  */
+  void releaseCtrlAuthority(VehicleCallBack callback = 0,
+                            UserData        userData = 0);
+  /*! @brief
+  *
+  *  Release the control authority of the api (blocking call)
+  *
+  *  @param timeout time to wait for ACK
+  */
+  ACK::ErrorCode releaseCtrlAuthority(int timeout);
+
 
   int functionalSetUp();
   ////////// Blocking calls ///////////
+
+  /**
+   * @brief
+   * Send activation request to your flight controller
+   * to check if: \n a) your application registered in your developer
+   * account \n b) API Control enabled in the Assistant software\n\n
+   * Proceed to programming if activation successful.
+   */
+  void activate(ActivateData* data, VehicleCallBack callback = 0,
+                UserData userData = 0);
 
   /**
   * @remark
@@ -97,6 +172,20 @@ public:
   * Implement high resolution timer to catch ACK timeout
   */
   bool activate(ActivateData* data, uint32_t timeoutMs);
+
+  /*! @brief A callback function for activate non-blocking calls
+   *  @param receivedFrame: RecvContainer populated by the protocolLayer
+   *  @return NULL
+   */
+  static void activateCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
+                               UserData userData = 0);
+  /*! @brief A callback function for get drone version non-blocking calls
+   *  @param receivedFrame: RecvContainer populated by the protocolLayer
+   *  @return NULL
+   */
+  static void getDroneVersionCallback(Vehicle*      vehiclePtr,
+                                      RecvContainer recvFrame,
+                                      UserData      userData = 0);
   /**
    * @brief
    * Send get version control to the vehicle.
@@ -110,6 +199,14 @@ public:
    * VersionData:  version name
    */
   ACK::DroneVersion getDroneVersion(uint32_t timeoutMs);
+  //@{
+  /**
+   * Get aircraft version.
+   *
+   * @note
+   * You can query your flight controller prior to activation.
+   */
+  void getDroneVersion(VehicleCallBack callback = 0, UserData userData = 0);
 
   //////////// Getters/Setters //////////
 
@@ -164,20 +261,50 @@ public:
 
   bool initVersion();
 
+  static void controlAuthorityCallback(Vehicle*      vehiclePtr,
+                                       RecvContainer recvFrame,
+                                       UserData      userData);
+
 public:
   static bool parseDroneVersionInfo(Version::VersionData& versionData,
                                     uint8_t*              ackPtr);
 
 private:
-  const int            wait_timeout   = 150;
+  const int            wait_timeout   = 1000;
+  const int            GIMBAL_MOUNTED = 1;
+  static const uint8_t NUM_CMD_SET    = 9;
+  CMD_SETSupportMatrix cmd_setSupportMatrix[NUM_CMD_SET];
 
 public:
   void setEncryption(bool encryptSetting);
   bool getEncryption();
   bool getActivationStatus();
 
+  /*!
+   * @brief Initialize main read thread to support UART communication
+   * @return fasle if error, true if success
+   */
+  bool initLinker();
+  bool initLegacyLinker();
+  bool initSubscriber();
+  bool initBroadcast();
+  bool initControl();
+  bool initCamera();
+  bool initGimbal();
+  bool initMFIO();
+  bool initMOC();
+  bool initMobileDevice();
+  bool initPayloadDevice();
+  bool initMissionManager();
+  bool initHardSync();
+  bool initVirtualRC();
+  bool initCameraManager();
+  bool initFlightController();
+  bool initPSDKManager();
 private:
   void setActivationStatus(bool is_activated);
+  void initCMD_SetSupportMatrix();
+  bool isCmdSetSupported(const uint8_t cmdSet);
 };
 }
 }
