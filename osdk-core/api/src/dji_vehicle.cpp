@@ -33,8 +33,7 @@
 using namespace DJI;
 using namespace DJI::OSDK;
 
-Vehicle::Vehicle(const char* device,
-		 uint32_t baudRate)
+Vehicle::Vehicle(Linker* linker)
   : linker(NULL)
   , legacyLinker(NULL)
   , camera(NULL)
@@ -49,35 +48,12 @@ Vehicle::Vehicle(const char* device,
   , virtualRC(NULL)
   , payloadDevice(NULL)
 {
-  if (!device )
-  {
-    DERROR("Illegal serial device handle!\n");
-  }
-
-  this->device          = device;
-  this->baudRate        = baudRate;
-
   ackErrorCode.data = OpenProtocolCMD::ErrorCode::CommonACK::NO_RESPONSE_ERROR;
 }
 
 bool
 Vehicle::init()
 {
-  /*
-   * @note Initialize communication layer
-   */
-  if (!initLinker())
-  {
-    DERROR("Failed to initialize Linker!\n");
-    return false;
-  }
-
-  if (!linker->addUartChannel(this->device, this->baudRate))
-  {
-    DERROR("Failed to initialize Linker channel!\n");
-    return false;
-  }
-
   if (!initLegacyLinker())
   {
     DERROR("Failed to initialize LegacyLinker!\n");
@@ -238,30 +214,6 @@ Vehicle::initVersion()
   }
 #endif
   return false;
-}
-
-bool
-Vehicle::initLinker() {
-  if(this->linker)
-  {
-    DDEBUG("vehicle-linker already initalized!");
-    return true;
-  }
-
-  this->linker = new (std::nothrow) Linker();
-  if (this->linker == 0)
-  {
-    DERROR("Failed to allocate memory for LegacyLinker!\n");
-    return false;
-  }
-
-  if (!linker->init())
-  {
-    DERROR("Failed to initialize Protocol Layer!\n");
-    return false;
-  }
-
-  return true;
 }
 
 bool
@@ -1203,12 +1155,6 @@ char*
 Vehicle::getHwSerialNum() const
 {
   return (char*)versionData.hw_serial_num;
-}
-
-uint8_t*
-Vehicle::getRawVersionAck()
-{
-  return this->rawVersionACK;
 }
 
 void

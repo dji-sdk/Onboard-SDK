@@ -51,7 +51,7 @@ void OsdkLogger_Log(const char *moduleName, uint8_t level, const char *fmt,
 void OsdkLogger_PrintfHex(const uint8_t *data, uint16_t dataLen);
 /* Exported constants --------------------------------------------------------*/
 // debug config
-#define OSDK_USE_LOG true
+#define OSDK_USE_LOG 1
 
 /* Exported types ------------------------------------------------------------*/
 

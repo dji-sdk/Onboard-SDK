@@ -30,6 +30,7 @@
 #include "osdk_root_task.h"
 #include "osdk_util.h"
 #include "osdk_channel_internal.h"
+#include "osdk_channel.h"
 #include "osdk_logger_internal.h"
 #include "osdk_msgq.h"
 #include "osdk_osal.h"
@@ -75,9 +76,9 @@ static E_OsdkStat OsdkCommand_GetChannelItemByAddr(uint32_t userAddr,
 /* Private variables ---------------------------------------------------------*/
 const static T_RouteKey routeTable[] = {
     {GEN_ADDR_INDEX_ONLY(ADDR_SDK_COMMAND_INDEX), ADDR_INDEX_ONLY_MASK,
-     CHANNEL_ID(UART_CHANNEL, UART_CHANNEL_USB0_INDEX)},
+     FC_UART_CHANNEL_ID},
     {GEN_ADDR_INDEX_ONLY(ADDR_V1_COMMAND_INDEX), ADDR_INDEX_ONLY_MASK,
-     CHANNEL_ID(UART_CHANNEL, UART_CHANNEL_ACM0_INDEX)}};
+     USB_ACM_CHANNEL_ID}};
 
 /* Exported functions definition ---------------------------------------------*/
 

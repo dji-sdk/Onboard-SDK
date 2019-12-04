@@ -128,20 +128,15 @@ E_OsdkStat OsdkLinux_UartInit(const char *port, const int baudrate,
 
   struct termios options;
   E_OsdkStat OsdkStat = OSDK_STAT_OK;
-  char *path = NULL;
   int i = 0;
 
-  if (strcmp(port, "UART0") == 0) {
-    path = "/dev/ttyUSB0";
-  } else if (strcmp(port, "UART1") == 0) {
-    path = "/dev/ttyACM0";
-  } else {
+  if (!port) {
     return OSDK_STAT_ERR_PARAM;
   }
 
-  obj->uartObject.fd = open(path, O_RDWR | O_NOCTTY | O_NDELAY);
+  obj->uartObject.fd = open(port, O_RDWR | O_NOCTTY | O_NDELAY);
   if (obj->uartObject.fd == -1) {
-    OSDK_LOG_ERROR(MODULE_NAME_PLATFORM, "uart device open error");
+    OSDK_LOG_ERROR(MODULE_NAME_PLATFORM, "uart device %s open error", port);
     OsdkStat = OSDK_STAT_ERR;
     goto out;
   }

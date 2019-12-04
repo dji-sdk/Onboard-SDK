@@ -38,6 +38,22 @@ extern "C" {
 #endif
 
 /* Exported constants --------------------------------------------------------*/
+#define CHANNEL_TYPE_UART 0x1
+#define CHANNEL_TYPE_USB 0x2
+#define CHANNEL_TYPE_UDP 0x3
+#define CHANNEL_TYPE_INVALID 0xFF
+
+#define CHANNEL_MAX_SUPPORT_NUM 8
+
+#define CHANNEL_ID(channel_type, id) \
+  (uint32_t)(((channel_type << 16) & 0x00FF0000) | ((id << 8) & 0x0000FF00))
+
+
+typedef enum {
+  FC_UART_CHANNEL_ID = CHANNEL_ID(CHANNEL_TYPE_UART, 1),
+  USB_ACM_CHANNEL_ID = CHANNEL_ID(CHANNEL_TYPE_UART, 2),
+  RNDIS_UDP_CHANNEL_ID = CHANNEL_ID(CHANNEL_TYPE_UDP, 0),
+} E_ChannelIDType;
 
 /* Exported types ------------------------------------------------------------*/
 
@@ -45,8 +61,10 @@ extern "C" {
 E_OsdkStat OsdkChannel_InitInstance(void);
 
 E_OsdkStat OsdkChannel_InitUartChannel(const char *port,
-                                       const uint32_t baudRate);
-E_OsdkStat OsdkChannel_InitUDPChannel(const char *addr, uint16_t port);
+                                       const uint32_t baudRate,
+                                       E_ChannelIDType id);
+E_OsdkStat OsdkChannel_InitUDPChannel(const char *addr, uint16_t port,
+                                      E_ChannelIDType id);
 
 #ifdef __cplusplus
 }
