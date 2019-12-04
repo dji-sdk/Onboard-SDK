@@ -63,8 +63,10 @@ E_OsdkStat OsdkChannel_InitInstance(void);
 E_OsdkStat OsdkChannel_InitUartChannel(const char *port,
                                        const uint32_t baudRate,
                                        E_ChannelIDType id);
+#ifdef __linux__
 E_OsdkStat OsdkChannel_InitUDPChannel(const char *addr, uint16_t port,
                                       E_ChannelIDType id);
+#endif
 
 #ifdef __cplusplus
 }

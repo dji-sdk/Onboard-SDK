@@ -52,7 +52,9 @@ bool init();
 bool addUartChannel(const char *device, uint32_t baudrate,
                     E_ChannelIDType id);
 
+#ifdef __linux__
 bool addUdpChannel(const char *addr, uint16_t port, E_ChannelIDType id);
+#endif
 
 void setKey(const char *key);
 

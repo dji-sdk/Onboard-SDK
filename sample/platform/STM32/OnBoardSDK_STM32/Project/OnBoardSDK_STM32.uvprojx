@@ -335,9 +335,9 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls>--exceptions --cpp11</MiscControls>
-              <Define>USE_STDPERIPH_DRIVER,STM32F40_41xxx,USE_STM324xG_EVAL,STM32,STM32F40x,ARM_MATH_CM4,__FPU_PRESENT</Define>
+              <Define>USE_STDPERIPH_DRIVER,STM32F40_41xxx,USE_STM324xG_EVAL,STM32,STM32F40x,ARM_MATH_CM4,__FPU_PRESENT,USE_USB_OTG_FS</Define>
               <Undefine></Undefine>
-              <IncludePath>..\Lib\CMSIS\inc;..\Lib\STM32F4xx_StdPeriph_Driver\inc;..\User;..\Bsp;..\..\..\..\..\osdk-core\api\inc;..\..\..\..\..\osdk-core\hal\inc;..\..\..\..\..\osdk-core\protocol\inc;..\..\..\..\..\osdk-core\platform\STM32\inc;..\..\..\..\..\osdk-core\utility\inc;..\..\..\..\..\osdk-core\platform\default\inc;..\..\..\..\core\inc;..\..\..\..\..\osdk-core\modules\inc;..\..\..\..\..\osdk-core\modules\inc\payload;..\..\..\..\..\osdk-core\modules\inc\flight;..\..\..\..\..\osdk-core\linker\core\channel;..\..\..\..\..\osdk-core\linker\core\command;..\..\..\..\..\osdk-core\linker\core\logger;..\..\..\..\..\osdk-core\linker\core\platform;..\..\..\..\..\osdk-core\linker\core\protocol;..\..\..\..\..\osdk-core\linker\core\root_task;..\..\..\..\..\osdk-core\linker\core\utils\inc;..\..\..\..\..\osdk-core\platform\inc;..\..\..\..\..\osdk-core\logger\inc;..\..\..\..\..\osdk-core\linker\core;..\..\..\..\..\osdk-core\linker;..\OS\FreeRTOS\include;..\OS\FreeRTOS\portable\RVDS\ARM_CM4F;..\Linker\hal;..\Linker\osal</IncludePath>
+              <IncludePath>..\Lib\CMSIS\inc;..\Lib\STM32F4xx_StdPeriph_Driver\inc;..\User;..\Bsp;..\..\..\..\..\osdk-core\api\inc;..\..\..\..\..\osdk-core\hal\inc;..\..\..\..\..\osdk-core\protocol\inc;..\..\..\..\..\osdk-core\platform\STM32\inc;..\..\..\..\..\osdk-core\utility\inc;..\..\..\..\..\osdk-core\platform\default\inc;..\..\..\..\core\inc;..\..\..\..\..\osdk-core\modules\inc;..\..\..\..\..\osdk-core\modules\inc\payload;..\..\..\..\..\osdk-core\modules\inc\flight;..\..\..\..\..\osdk-core\linker\core\channel;..\..\..\..\..\osdk-core\linker\core\command;..\..\..\..\..\osdk-core\linker\core\logger;..\..\..\..\..\osdk-core\linker\core\platform;..\..\..\..\..\osdk-core\linker\core\protocol;..\..\..\..\..\osdk-core\linker\core\root_task;..\..\..\..\..\osdk-core\linker\core\utils\inc;..\..\..\..\..\osdk-core\platform\inc;..\..\..\..\..\osdk-core\logger\inc;..\..\..\..\..\osdk-core\linker\core;..\..\..\..\..\osdk-core\linker;..\OS\FreeRTOS\include;..\OS\FreeRTOS\portable\RVDS\ARM_CM4F;..\Linker\hal;..\Linker\osal;..\Lib\USB_Lib\STM32_USB_HOST_Library\Class\CDC\inc;..\Lib\USB_Lib\STM32_USB_HOST_Library\Core\inc;..\Lib\USB_Lib\STM32_USB_OTG_Driver\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -520,6 +520,11 @@
               <FileType>8</FileType>
               <FilePath>..\User\dji_stm32_helpers.cpp</FilePath>
             </File>
+            <File>
+              <FileName>usbh_usr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Bsp\usbh_usr.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -539,6 +544,11 @@
               <FileName>bsp.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\Bsp\bsp.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>usb_bsp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Bsp\usb_bsp.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1039,6 +1049,56 @@
               <FileName>osdkhal_stm32.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Linker\hal\osdkhal_stm32.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>USBLib</GroupName>
+          <Files>
+            <File>
+              <FileName>usbh_core.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Lib\USB_Lib\STM32_USB_HOST_Library\Core\src\usbh_core.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbh_hcs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Lib\USB_Lib\STM32_USB_HOST_Library\Core\src\usbh_hcs.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbh_ioreq.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Lib\USB_Lib\STM32_USB_HOST_Library\Core\src\usbh_ioreq.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbh_stdreq.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Lib\USB_Lib\STM32_USB_HOST_Library\Core\src\usbh_stdreq.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbh_cdc_core.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Lib\USB_Lib\STM32_USB_HOST_Library\Class\CDC\src\usbh_cdc_core.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbh_cdc_funct.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Lib\USB_Lib\STM32_USB_HOST_Library\Class\CDC\src\usbh_cdc_funct.c</FilePath>
+            </File>
+            <File>
+              <FileName>usb_core.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Lib\USB_Lib\STM32_USB_OTG_Driver\src\usb_core.c</FilePath>
+            </File>
+            <File>
+              <FileName>usb_hcd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Lib\USB_Lib\STM32_USB_OTG_Driver\src\usb_hcd.c</FilePath>
+            </File>
+            <File>
+              <FileName>usb_hcd_int.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Lib\USB_Lib\STM32_USB_OTG_Driver\src\usb_hcd_int.c</FilePath>
             </File>
           </Files>
         </Group>

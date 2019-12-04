@@ -47,6 +47,17 @@
 #include "stm32f4xx.h"
 #include "dji_stm32_helpers.hpp"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+#include "usb_bsp.h"
+#include "usbh_usr.h"
+#include "usbh_core.h"
+#ifdef __cplusplus
+}
+#endif
+
+
 #define sample_flag 0;
 #ifdef FLIGHT_CONTROL_SAMPLE
 #define sample_flag 1
@@ -85,6 +96,7 @@ Vehicle vehicle = Vehicle(NULL);
 Vehicle* v = &vehicle;
 TaskHandle_t mainLoopHandler;
 TaskHandle_t debugHandler;
+TaskHandle_t USBProcessHandler;
 
 extern TerminalCommand myTerminal;
 
@@ -113,6 +125,13 @@ void debugTask(void *p){
   }
 }
 
+void USBProcessTask(void *p){
+  DSTATUS("USB processing ...");
+  while(1) {
+    USBH_Process(&USB_OTG_Core, &USB_Host);
+    delay_nms(1);
+  }
+}
 void mainLoopTask(void *p){
   char func[50];
   uint32_t runOnce = 1;
@@ -291,9 +310,19 @@ void mainLoopTask(void *p){
 
 int main() {
   BSPinit();
+    /* Init Host Library */
+  USBH_Init(&USB_OTG_Core,
+#ifdef USE_USB_OTG_FS
+  USB_OTG_FS_CORE_ID,
+#else
+  USB_OTG_HS_CORE_ID,
+#endif
+  &USB_Host, &CDC_cb, &USR_Callbacks);
+
   printf("STM32F4Discovery Board initialization finished!\r\n");
   setupEnvironment();
   xTaskCreate(mainLoopTask, "mainLoop", 1024, v, 1, &mainLoopHandler);
-  //xTaskCreate(debugTask,    "debug",    1024, v, 1, &debugHandler);
+  xTaskCreate(debugTask,    "debug",    1024, v, 1, &debugHandler);
+  xTaskCreate(USBProcessTask, "USBTask",  1024, v, 2, &USBProcessHandler);
   vTaskStartScheduler();
 }

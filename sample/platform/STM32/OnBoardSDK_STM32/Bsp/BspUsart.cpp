@@ -49,7 +49,7 @@ bool                  ackReceivedByUser = false;
 extern RecvContainer  receivedFramie;
 extern RecvContainer* rFrame;
 
-QueueHandle_t osdkDataQueue;
+QueueHandle_t UartDataRecvQueue;
 
 // extern CoreAPI defaultAPI;
 // extern CoreAPI *coreApi;
@@ -134,7 +134,7 @@ USART2_Config(void)
 void
 USART3_Config(void)
 {
-  osdkDataQueue = xQueueCreate(USART_3_BUFFER_SIZE, sizeof(uint8_t));
+  UartDataRecvQueue = xQueueCreate(USART_3_BUFFER_SIZE, sizeof(uint8_t));
   USART3_Gpio_Config();
 
   USART_InitTypeDef USART_InitStructure;
@@ -197,7 +197,7 @@ USART3_IRQHandler(void)
     BaseType_t xHigherPriorityTaskWoken = false;
     uint8_t data = USART_ReceiveData(USART3);
     u3IrqCnt++;
-    xQueueSendFromISR(osdkDataQueue, &data, &xHigherPriorityTaskWoken);
+    xQueueSendFromISR(UartDataRecvQueue, &data, &xHigherPriorityTaskWoken);
   }
 }
 
