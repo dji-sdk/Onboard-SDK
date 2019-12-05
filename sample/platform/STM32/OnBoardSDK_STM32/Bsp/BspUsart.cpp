@@ -35,32 +35,9 @@
 
 #define USART_3_BUFFER_SIZE 1024
 
-extern int Rx_Handle_Flag;
-
 using namespace DJI::OSDK;
 
-extern Vehicle  vehicle;
-extern Vehicle* v;
-extern Control  control;
-
-extern bool           isFrame;
-bool                  isACKProcessed    = false;
-bool                  ackReceivedByUser = false;
-extern RecvContainer  receivedFramie;
-extern RecvContainer* rFrame;
-
 QueueHandle_t UartDataRecvQueue;
-
-// extern CoreAPI defaultAPI;
-// extern CoreAPI *coreApi;
-// extern Flight flight;
-// extern FlightData flightData;
-
-extern uint8_t come_data;
-extern uint8_t Rx_length;
-extern int     Rx_adr;
-extern int     Rx_Handle_Flag;
-extern uint8_t Rx_buff[];
 
 void
 USART2_Gpio_Config(void)

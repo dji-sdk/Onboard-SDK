@@ -35,7 +35,4 @@ void
 BSPinit()
 {
   UsartConfig();
-  //SystickConfig();
-  //Timer1Config();
-  //Timer2Config();
 }

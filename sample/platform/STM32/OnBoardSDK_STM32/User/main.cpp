@@ -46,6 +46,7 @@
 #include "main.h"
 #include "stm32f4xx.h"
 #include "dji_stm32_helpers.hpp"
+#include "osdk_platform.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -57,7 +58,7 @@ extern "C" {
 }
 #endif
 
-
+#define CPU_RATE_DEBUG 1
 #define sample_flag 0;
 #ifdef FLIGHT_CONTROL_SAMPLE
 #define sample_flag 1
@@ -89,44 +90,32 @@ const int sampleToRun = 6;//sample_flag;
 using namespace DJI::OSDK;
 
 bool threadSupport = false;
-bool isFrame = false;
-RecvContainer receivedFrame;
-RecvContainer* rFrame = &receivedFrame;
-Vehicle vehicle = Vehicle(NULL);
-Vehicle* v = &vehicle;
+STM32Setup *env = new STM32Setup();
+Vehicle* v = NULL;
 TaskHandle_t mainLoopHandler;
-TaskHandle_t debugHandler;
 TaskHandle_t USBProcessHandler;
-
-extern TerminalCommand myTerminal;
-
+#if CPU_RATE_DEBUG
+TaskHandle_t debugHandler;
+#endif
 
 extern uint64_t timer1Tick;
 void debugTask(void *p){
-  Vehicle* v = NULL;
-  if(p) {
-    v = (Vehicle*)p;
-  } else {
-    DERROR("Wrong parameter.");
-    return;
-  }
-
   char pcWriteBuffer[300] = {0};
   while (true) {
     delay_nms(3000);
-    printf("xPortGetFreeHeapSize=%d\r\n", xPortGetFreeHeapSize());
+    DSTATUS("xPortGetFreeHeapSize=%d\r\n", xPortGetFreeHeapSize());
     vTaskList(pcWriteBuffer);
-    printf("strlen(pcWriteBuffer)=%d\r\n%s\r\n", strlen(pcWriteBuffer), pcWriteBuffer);
+    DSTATUS("strlen(pcWriteBuffer)=%d\r\n%s\r\n", strlen(pcWriteBuffer), pcWriteBuffer);
 
     memset(pcWriteBuffer, 0, sizeof(pcWriteBuffer));
     vTaskGetRunTimeStats((char *)pcWriteBuffer);
-    printf("strlen(pcWriteBuffer)=%d\r\nTask    times        CPU_percent\r\n", strlen(pcWriteBuffer));
-    printf("%s\r\n", pcWriteBuffer);
+    DSTATUS("strlen(pcWriteBuffer)=%d\r\nTask      times        CPU_percent\r\n%s\r\n",
+    strlen(pcWriteBuffer), pcWriteBuffer);
   }
 }
 
 void USBProcessTask(void *p){
-  DSTATUS("USB processing ...");
+  DSTATUS("Start USB processing ...");
   while(1) {
     USBH_Process(&USB_OTG_Core, &USB_Host);
     delay_nms(1);
@@ -135,50 +124,38 @@ void USBProcessTask(void *p){
 void mainLoopTask(void *p){
   char func[50];
   uint32_t runOnce = 1;
-  Vehicle* v = NULL;
-  if(p) {
-    v = (Vehicle*)p;
-  } else {
-    DERROR("Wrong parameter.");
-    return;
-  }
+
+  /*! init the vehicle */
+  env->initVehicle();
+  v = env->getVehicle();
 
   while (1) {
     // One time automatic activation
     if (runOnce) {
       runOnce = 0;
 
-      printf("Sample App for STM32F4Discovery Board:\r\n");
+      DSTATUS("Sample App for STM3241G-EVAL Board");
       delay_nms(30);
 
-      printf("\nPrerequisites:\r\n");
-      printf("1. Vehicle connected to the Assistant and simulation is ON\r\n");
-      printf("2. Battery fully chanrged\r\n");
-      printf("3. DJIGO App connected (for the first time run)\r\n");
-      printf("4. Gimbal mounted if needed\r\n");
+      DSTATUS("Prerequisites:");
+      DSTATUS("1. Vehicle connected to the Assistant and simulation is ON");
+      DSTATUS("2. Battery fully chanrged");
+      DSTATUS("3. DJIGO App connected (for the first time run)");
+      DSTATUS("4. Gimbal mounted if needed");
       delay_nms(30);
 
       //! Initialize functional Vehicle components like
       //! Subscription, Broabcast, Control, Camera, etc
-      v->init();
-      v->functionalSetUp();
-      delay_nms(500);
-
-      // Check if the firmware version is compatible with this OSDK version
-      if (v->getFwVersion() > 0 && v->getFwVersion() < extendedVersionBase &&
-          v->getFwVersion() != Version::M100_31) {
-        printf("Upgrade firmware using Assistant software!\n");
-        delete (v);
-        return;
+      if(v->functionalSetUp()!= 0) {
+        DERROR("Unable to initialize some vehicle components! Blocking here !!!");
+        while(1) {
+          delay_nms(1000);
+        }
       }
+      delay_nms(500);
 
       userActivate();
       delay_nms(500);
-      /*ACK::ErrorCode ack = waitForACK();
-      if(ACK::getError(ack))
-      {
-        ACK::getErrorCodeMessage(ack, func);
-      }*/
 
       // Verify subscription
       if (v->getFwVersion() != Version::M100_31) {
@@ -192,7 +169,7 @@ void mainLoopTask(void *p){
 
       switch (sampleToRun) {
         case 1: {
-          printf("\n\nStarting executing position control sample:\r\n");
+          DSTATUS("Starting executing position control sample:\r\n");
           delay_nms(1000);
           // Run monitor takeoff
           monitoredTakeOff();
@@ -212,39 +189,39 @@ void mainLoopTask(void *p){
           break;
         }
         case 2:
-          printf("\n\nStarting executing Hotpoint mission sample:\r\n");
+          DSTATUS("Starting executing Hotpoint mission sample:\r\n");
           delay_nms(1000);
 
           // Run Hotpoint mission sample
           runHotpointMission();
           break;
         case 3:
-          printf("\n\nStarting executing Waypoint mission sample:\r\n");
+          DSTATUS("Starting executing Waypoint mission sample:\r\n");
           delay_nms(1000);
 
           // Run Waypoint mission sample
           runWaypointMission();
           break;
         case 4:
-          printf("\n\nStarting executing camera gimbal sample:\r\n");
+          DSTATUS("Starting executing camera gimbal sample:\r\n");
           delay_nms(1000);
 
           // Run Camera Gimbal sample
           gimbalCameraControl();
           break;
         case 5:
-          printf("\n\nStarting executing mobile communication sample:\r\n");
+          DSTATUS("Starting executing mobile communication sample:\r\n");
           delay_nms(1000);
 
           // Run Mobile Communication sample
           v->moc->setFromMSDKCallback(parseFromMobileCallback);
-          printf(
-              "\n\nMobile callback registered. Trigger command mobile "
+          DSTATUS(
+              "Mobile callback registered. Trigger command mobile "
               "App.\r\n");
           delay_nms(10000);
           break;
         case 6:
-          printf("\n\nStarting executing telemetry sample:\r\n");
+          DSTATUS("Starting executing telemetry sample:\r\n");
           delay_nms(1000);
 
           // Run Telemetry sample
@@ -257,50 +234,50 @@ void mainLoopTask(void *p){
           delay_nms(10000);
           break;
         case 7:
-          printf("\n\nStarting executing time sync callback sample:\r\n");
+          DSTATUS("Starting executing time sync callback sample:\r\n");
           delay_nms(1000);
           time_sync_callback_test();
           delay_nms(1000);
-          printf("\n\ntest end\r\n");
+          DSTATUS("test end\r\n");
           break;
         case 8:
-          printf("\n\nStarting executing time sync poll sample:\r\n");
+          DSTATUS("Starting executing time sync poll sample:\r\n");
           delay_nms(1000);
           time_sync_poll_test();
           delay_nms(1000);
-          printf("\n\ntest end\r\n");
+          DSTATUS("test end\r\n");
           break;
         case 9:
-          printf("\n\nStarting executing payload communication sample:\r\n");
+          DSTATUS("Starting executing payload communication sample:\r\n");
           delay_nms(1000);
 
           // Run Payload Communication sample
           v->payloadDevice->setFromPSDKCallback(parseFromPayloadCallback);
-          printf("\n\nPayload callback registered.\r\n");
+          DSTATUS("Payload callback registered.\r\n");
           PayloadSendingTest(30);
           delay_nms(10000);
           break;
         case 10:
-          printf("\n\nStarting executing camera manager sample 1:\r\n");
-          printf("Please make sure X5S camera is at the payload 0 site\r\n");
+          DSTATUS("Starting executing camera manager sample 1:\r\n");
+          DSTATUS("Please make sure X5S camera is at the payload 0 site\r\n");
           cameraManagerTest(v, X5S_AT_PAYLOAD_0);
           break;
         case 11:
-          printf("\n\nStarting executing camera manager sample 1:\r\n");
-          printf("Please make sure Z30 camera is at the payload 0 site\r\n");
+          DSTATUS("Starting executing camera manager sample 1:\r\n");
+          DSTATUS("Please make sure Z30 camera is at the payload 0 site\r\n");
           cameraManagerTest(v, Z30_AT_PAYLOAD_1);
           break;
         default:
-          printf("\n\nPass as preprocessor flag to run desired sample:\r\n");
-          printf("FLIGHT_CONTROL_SAMPLE\r\n");
-          printf("HOTPOINT_MISSION_SAMPLE\r\n");
-          printf("WAYPOINT_MISSION_SAMPLE\r\n");
-          printf("CAMERA_GIMBAL_SAMPLE\r\n");
-          printf("MOBILE_SAMPLE\r\n");
-          printf("TELEMETRY_SAMPLE\r\n");
-          printf("TIME_SYNC\r\n");
-          printf("PAYLOAD_SAMPLE\r\n");
-          printf("CAMERA_MANAGER_SAMPLE\r\n");
+          DSTATUS("Pass as preprocessor flag to run desired sample:\r\n");
+          DSTATUS("FLIGHT_CONTROL_SAMPLE\r\n");
+          DSTATUS("HOTPOINT_MISSION_SAMPLE\r\n");
+          DSTATUS("WAYPOINT_MISSION_SAMPLE\r\n");
+          DSTATUS("CAMERA_GIMBAL_SAMPLE\r\n");
+          DSTATUS("MOBILE_SAMPLE\r\n");
+          DSTATUS("TELEMETRY_SAMPLE\r\n");
+          DSTATUS("TIME_SYNC\r\n");
+          DSTATUS("PAYLOAD_SAMPLE\r\n");
+          DSTATUS("CAMERA_MANAGER_SAMPLE\r\n");
           break;
       }
     }
@@ -319,10 +296,11 @@ int main() {
 #endif
   &USB_Host, &CDC_cb, &USR_Callbacks);
 
-  printf("STM32F4Discovery Board initialization finished!\r\n");
-  setupEnvironment();
-  xTaskCreate(mainLoopTask, "mainLoop", 1024, v, 1, &mainLoopHandler);
-  xTaskCreate(debugTask,    "debug",    1024, v, 1, &debugHandler);
-  xTaskCreate(USBProcessTask, "USBTask",  1024, v, 2, &USBProcessHandler);
+  /*! create tasks */
+  xTaskCreate(mainLoopTask, "mainLoop", 1024, NULL, 1, &mainLoopHandler);
+  xTaskCreate(USBProcessTask, "USBTask",  1024, NULL, 2, &USBProcessHandler);
+#if CPU_RATE_DEBUG
+  xTaskCreate(debugTask,    "debug",    1024, NULL, 1, &debugHandler);
+#endif
   vTaskStartScheduler();
 }

@@ -35,13 +35,6 @@
 
 uint32_t tick = 0; // tick is the time stamp,which record how many ms since u
                    // initialize the system.
-/*extern VirtualRC virtualrc;
-extern VirtualRCData myVRCdata;
-extern FlightData flightData;
-extern Flight flight;
-*/
-extern uint8_t         Rx_buff[];
-extern TerminalCommand myTerminal;
 uint64_t timer1Tick;
 
 void
@@ -162,14 +155,7 @@ TIM2_IRQHandler()
 {
   if (TIM_GetITStatus(TIM2, TIM_IT_Update) == SET)
   {
-    if ((myTerminal.cmdIn[2] == 0x04) && (myTerminal.cmdIn[3] == 0x01))
-    {
-      //      flight.setFlight(&flightData);
-    }
-    else
-    {
-      TIM_Cmd(TIM2, DISABLE);
-    }
+    TIM_Cmd(TIM2, DISABLE);
   }
   TIM_ClearFlag(TIM2, TIM_FLAG_Update);
 }

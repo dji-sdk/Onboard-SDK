@@ -31,15 +31,70 @@
 #include "osdkhal_stm32.h"
 #include "osdkosal_stm32.h"
 
-static E_OsdkStat OsdkUser_Console(const uint8_t *data, uint16_t dataLen) 
+STM32Setup::UartChannelInitParams STM32Setup::uartChnParams[] = {
+  {UART_PORT, 921600, FC_UART_CHANNEL_ID},
+  {ACM_PORT,  921600, USB_ACM_CHANNEL_ID},
+};
+
+STM32Setup::STM32Setup() {
+  this->vehicle = NULL;
+  setupEnvironment();
+}
+
+STM32Setup::~STM32Setup()
 {
+  if (vehicle){
+    delete (vehicle);
+    vehicle = NULL;
+  }
+}
+
+static E_OsdkStat OsdkUser_Console(const uint8_t *data, uint16_t dataLen) {
   printf("%s", data);
 
   return OSDK_STAT_OK;
 }
 
+void STM32Setup::initVehicle() {
+  /*! Linker initialization */
+  Linker *linker = new (std::nothrow) Linker();
+  if (!linker) {
+    DERROR("Failed to allocate memory for Linker!");
+    this->vehicle = NULL;
+    return;
+  }
+
+  if (!linker->init()) {
+    DERROR("Failed to initialize Linker!");
+    delete linker;
+    this->vehicle = NULL;
+    return;
+  }
+
+  for (int i = 0; i < (sizeof(uartChnParams) / sizeof(UartChannelInitParams)); i++) {
+    if (!linker->addUartChannel(uartChnParams[i].device,
+                                uartChnParams[i].baudrate,
+                                uartChnParams[i].id)) {
+      DERROR("Failed to initialize Linker uart channel :");
+      DERROR("device : %s, baudrate : %d, channel id : 0x%08X", uartChnParams[i].device,
+             uartChnParams[i].baudrate, uartChnParams[i].id);
+    } else {
+      DSTATUS("Success to initialize Linker uart channel :");
+      DSTATUS("device : %s, baudrate : %d, channel id : 0x%08X", uartChnParams[i].device,
+              uartChnParams[i].baudrate, uartChnParams[i].id);
+    }
+  }
+
+  /*! Vehicle initialization */
+  this->vehicle = new Vehicle(linker);
+  if (!this->vehicle) {
+    DERROR("Failed to allocate memory for Vehicle!");
+    return;
+  }
+}
+
 void
-setupEnvironment()
+STM32Setup::setupEnvironment()
 {
   static T_OsdkLoggerConsole printConsole;
   printConsole.consoleLevel = OSDK_LOGGER_CONSOLE_LOG_LEVEL_INFO;
@@ -81,6 +136,5 @@ setupEnvironment()
   if(DJI_REG_OSAL_HANDLER(&osalHandler) != true) {
     DERROR("Osal handler register fail");
   };
-
 }
 

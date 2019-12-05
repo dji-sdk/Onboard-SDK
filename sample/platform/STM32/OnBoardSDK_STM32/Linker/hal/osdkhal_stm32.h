@@ -36,6 +36,9 @@
 #include "osdk_typedef.h"
 #include "osdk_logger_internal.h"
 
+#define UART_PORT "UART"
+#define ACM_PORT  "ACM"
+
 #ifdef __cplusplus
 extern "C" {
 #endif

@@ -43,8 +43,13 @@ extern "C" {
 #endif
 
 /* Exported constants --------------------------------------------------------*/
+#ifdef STM32
+#define PROT_MAX_SUPPORT_CMD_SET 16
+#define PROT_MAX_WAIT_ACK_LIST 16
+#else
 #define PROT_MAX_SUPPORT_CMD_SET 32
 #define PROT_MAX_WAIT_ACK_LIST 32
+#endif
 
 #define PROT_CMD_ITEM(hostId, deviceId, set, id, maskId, data, func)      \
   {                                                                       \

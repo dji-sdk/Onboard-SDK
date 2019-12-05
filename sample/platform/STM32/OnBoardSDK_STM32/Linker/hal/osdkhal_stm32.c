@@ -103,12 +103,12 @@ E_OsdkStat OsdkSTM32_UdpReadData(const T_HalObj *obj, uint8_t *pBuf, uint16_t *b
 /* Private functions definition-----------------------------------------------*/
 E_OsdkStat OsdkSTM32_UartInit(const char *port, const int baudrate,
                             T_HalObj *obj) {
-  if (strcmp(port, "UART0") == 0) {
-    obj->uartObject.fd = 0 ;
-  } else if (strcmp(port, "UART1") == 0) {
-    obj->uartObject.fd = 1 ;
+  if (strcmp(port, UART_PORT) == 0) {
+    obj->uartObject.fd = UART_FD;
+  } else if (strcmp(port, ACM_PORT) == 0) {
+    obj->uartObject.fd = ACM_FD;
   } else {
-    obj->uartObject.fd = -1 ;
+    obj->uartObject.fd = INVALID_FD;
   }
   
   return OSDK_STAT_OK;

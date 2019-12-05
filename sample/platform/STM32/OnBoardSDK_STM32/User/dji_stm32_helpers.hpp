@@ -1,4 +1,4 @@
-/*! @file dji_linux_helpers.hpp
+/*! @file dji_STM32_helpers.hpp
  *  @version 3.3
  *  @date Jun 05 2017
  *
@@ -35,7 +35,32 @@
 #include <dji_vehicle.hpp>
 #include <dji_platform.hpp>
 
-void
-setupEnvironment();
+class STM32Setup
+{
+public:
+  STM32Setup();
+  ~STM32Setup();
+
+public:
+  void setupEnvironment();
+  void initVehicle();
+
+public:
+  DJI::OSDK::Vehicle* getVehicle()
+  {
+    return this->vehicle;
+  }
+
+private:
+  DJI::OSDK::Vehicle* vehicle;
+
+  typedef struct UartChannelInitParams {
+    const char *device;
+    uint32_t baudrate;
+    E_ChannelIDType id;
+  } UartChannelInitParams;
+
+  static UartChannelInitParams uartChnParams[];
+};
 
 #endif // STM32_HELPERS_HPP
