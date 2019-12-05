@@ -27,8 +27,17 @@
 /* Includes ------------------------------------------------------------------*/
 #include "osdk_command_instance.h"
 
+
 /* Private constants ---------------------------------------------------------*/
+#ifdef STM32
+#include "stm32f4xx.h"
+/*! STM32F4 family includes a 64-Kbyte of CCM (core coupled memory) data RAM.
+ *  Start Address : CCMDATARAM_BASE(0x10000000)
+ *  Should be paid attention that only STM32F4XX support this defination */
+static T_CmdHandle s_commandHandle __attribute__((at(CCMDATARAM_BASE)));
+#else
 static T_CmdHandle s_commandHandle;
+#endif
 /* Private types -------------------------------------------------------------*/
 
 /* Private functions declaration ---------------------------------------------*/
@@ -36,7 +45,7 @@ static T_CmdHandle s_commandHandle;
 /* Exported functions definition ---------------------------------------------*/
 E_OsdkStat OsdkCommand_InitInstance(void) {
   T_CmdInitConf conf = {0};
-
+  memset(&s_commandHandle, 0, sizeof(s_commandHandle));
   return OsdkCommand_Init(&s_commandHandle, &conf);
 }
 
