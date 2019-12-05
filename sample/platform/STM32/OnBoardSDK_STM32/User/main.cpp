@@ -58,7 +58,7 @@ extern "C" {
 }
 #endif
 
-#define CPU_RATE_DEBUG 1
+#define CPU_RATE_DEBUG 0
 #define sample_flag 0;
 #ifdef FLIGHT_CONTROL_SAMPLE
 #define sample_flag 1
@@ -84,7 +84,7 @@ extern "C" {
 #define sample_flag 11
 #endif
 
-const int sampleToRun = 6;//sample_flag;
+const int sampleToRun = sample_flag;
 
 /*-----------------------DJI_LIB VARIABLE-----------------------------*/
 using namespace DJI::OSDK;
