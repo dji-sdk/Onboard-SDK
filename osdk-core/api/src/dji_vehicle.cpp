@@ -145,6 +145,11 @@ Vehicle::init()
     DERROR("Failed to initialize PSDKManager!\n");
   }
 
+  if (!initGimbalManager())
+  {
+    DERROR("Failed to initialize GimbalManager!\n");
+  }
+
   if (!initMissionManager())
   {
     DERROR("Failed to initialize Mission Manager!\n");
@@ -537,7 +542,23 @@ bool Vehicle::initPSDKManager()
   this->psdkManager = new (std::nothrow) PSDKManager(this);
   if (this->psdkManager == 0)
   {
-    DERROR("Failed to allocate memory for pm!\n");
+    DERROR("Failed to allocate memory for PSDKManager!\n");
+    return false;
+  }
+  return true;
+}
+
+bool Vehicle::initGimbalManager()
+{
+  if(this->gimbalManager)
+  {
+    DDEBUG("gimbalManager already initalized!");
+    return true;
+  }
+  this->gimbalManager = new (std::nothrow) GimbalManager(this);
+  if (this->gimbalManager == 0)
+  {
+    DERROR("Failed to allocate memory for gimbalManager!\n");
     return false;
   }
   return true;

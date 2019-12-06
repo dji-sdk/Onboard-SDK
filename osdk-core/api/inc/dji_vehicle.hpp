@@ -52,6 +52,7 @@
 #include "dji_mfio.hpp"
 #include "dji_mission_manager.hpp"
 #include "dji_camera_manager.hpp"
+#include "dji_gimbal_manager.hpp"
 #include "dji_flight_controller.hpp"
 #include "dji_psdk_manager.hpp"
 
@@ -106,6 +107,7 @@ public:
   CameraManager*       cameraManager;
   FlightController*    flightController;
   PSDKManager*         psdkManager;
+  GimbalManager*       gimbalManager;
 
   int functionalSetUp();
   ////////// Blocking calls ///////////
@@ -250,6 +252,7 @@ public:
   bool initCameraManager();
   bool initFlightController();
   bool initPSDKManager();
+  bool initGimbalManager();
 private:
   void setActivationStatus(bool is_activated);
   void initCMD_SetSupportMatrix();

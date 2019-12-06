@@ -188,6 +188,41 @@ public:
   };
 };
 
+
+class V1ProtocolCMD : public ErrorCode
+{
+ public:
+  const static int MAX_CMD_ARRAY_SIZE = 2;
+
+  typedef struct Gimbal
+  {
+    const static uint8_t resetAngle[MAX_CMD_ARRAY_SIZE];
+    const static uint8_t rotateAngle[MAX_CMD_ARRAY_SIZE];
+  } Gimbal;
+
+  class CMDSet
+  {
+   public:
+    //! CMD SET definitions
+    const static uint8_t common       = 0;
+    const static uint8_t special      = 1;
+    const static uint8_t camera       = 2;
+    const static uint8_t fc           = 3;
+    const static uint8_t gimbal       = 4;
+    const static uint8_t center       = 5;
+    const static uint8_t rc           = 6;
+    const static uint8_t wifi         = 7;
+    const static uint8_t dm368        = 8;
+    const static uint8_t ofdm         = 9;
+    const static uint8_t moBinocular  = 10;
+    const static uint8_t battery      = 13;
+    const static uint8_t rtk          = 15;
+    const static uint8_t enterprise   = 25;
+    const static uint8_t psdk         = 60;
+    const static uint8_t vb           = 72;
+  };
+};
+
 } // namespace
 } // namespace
 

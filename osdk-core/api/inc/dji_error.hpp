@@ -106,6 +106,12 @@ class ErrorCode {
     CameraCommon = 0,
   };
 
+  /*! @brief Function ID used with GimbalModule in error codes
+   */
+  enum GimbalFunctionID {
+    GimbalCommon = 0,
+  };
+
   /*! @brief Function ID used with PSDKModule in error codes
    */
   enum PSDKFunctionID {
@@ -120,6 +126,7 @@ class ErrorCode {
     UnpackDataMismatch   = 0x00000004, /*!< Pack unpack failed */
     InstInitParamInvalid = 0x00000005, /*!< Instance init parameter invalid */
     UserCallbackInvalid  = 0x00000006, /*!< User Callback is a invalid value */
+    UndefinedError       = 0xFFFFFFFF, /*!< Undefined error */
   };
 
   /*! @brief Unified error type
@@ -254,6 +261,36 @@ class ErrorCode {
     static const ErrorCodeType UndefineError;
   };
 
+  /*! @brief gimbal api error code
+   */
+  class GimbalCommonErr {
+   public:
+    static const ErrorCodeType InvalidCMD;
+    static const ErrorCodeType Timeout;
+    static const ErrorCodeType OutOfMemory;
+    static const ErrorCodeType InvalidParam;
+    static const ErrorCodeType InvalidState;
+    static const ErrorCodeType TimeNotSync;
+    static const ErrorCodeType ParamSetFailed;
+    static const ErrorCodeType ParamGetFailed;
+    static const ErrorCodeType SDCardMISSING;
+    static const ErrorCodeType SDCardFull;
+    static const ErrorCodeType SDCardError;
+    static const ErrorCodeType SensorError;
+    static const ErrorCodeType SystemError;
+    static const ErrorCodeType ParamLenTooLong;
+    static const ErrorCodeType ModuleInactivated;
+    static const ErrorCodeType FWSeqNumNotInOrder;
+    static const ErrorCodeType FWCheckErr;
+    static const ErrorCodeType FlashWriteError;
+    static const ErrorCodeType FWInvalidType;
+    static const ErrorCodeType RCDisconnect;
+    static const ErrorCodeType HardwareErr;
+    static const ErrorCodeType UAVDisconnect;
+    static const ErrorCodeType UpgradeErrorNow;
+    static const ErrorCodeType UndefineError;
+  };
+
   /*! @brief camera api error code
  */
   class PSDKCommonErr {
@@ -295,6 +332,7 @@ class ErrorCode {
     static const ErrorCodeType UnpackDataMismatch;
     static const ErrorCodeType InstInitParamInvalid;
     static const ErrorCodeType UserCallbackInvalid;
+    static const ErrorCodeType UndefinedError;
   };
 
   /*!
@@ -963,6 +1001,14 @@ class ErrorCode {
   /*! @brief Get the map container of the CameraCommonErr error code messages.
    */
   static const ErrorCodeMapType getCameraCommonErrorMap();
+
+  /*! @brief The err code message data of the GimbalCommonErr error code messages.
+   */
+  static const std::pair<const ErrorCode::ErrorCodeType, ErrorCode::ErrorCodeMsg> GimbalCommonErrData[];
+
+  /*! @brief Get the map container of the GimbalCommonErr error code messages.
+   */
+  static const ErrorCodeMapType getGimbalCommonErrorMap();
 
   /*! @brief The err code message data of the SystemCommonErr error code messages.
    */
