@@ -60,9 +60,11 @@ typedef struct {
 E_OsdkStat OsdkHal_UartInit(const char *port, const int baudrate, T_HalObj *obj);
 E_OsdkStat OsdkHal_UartSendData(const T_HalObj *obj, const uint8_t *pBuf, uint16_t bufLen);
 E_OsdkStat OsdkHal_UartReadData(const T_HalObj *obj, uint8_t *pBuf, uint16_t *bufLen);
+#ifdef __linux__
 E_OsdkStat OsdkHal_UdpInit(const char *addr, const uint16_t port, T_HalObj *obj);
 E_OsdkStat OsdkHal_UdpSendData(const T_HalObj *obj, const uint8_t *pBuf, uint16_t bufLen);
 E_OsdkStat OsdkHal_UdpReadData(const T_HalObj *obj, uint8_t *pBuf, uint16_t *bufLen);
+#endif
 E_OsdkStat OsdkHal_GetHalOps(const char *interface, T_HalOps *ops);
 
 #ifdef __cplusplus

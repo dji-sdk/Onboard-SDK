@@ -75,6 +75,7 @@ Linker::addUartChannel(const char *device, uint32_t baudrate,
   return (errCode == OSDK_STAT_OK) ? true : false;
 }
 
+#ifdef __linux__
 bool
 Linker::addUdpChannel(const char *addr, uint16_t port, E_ChannelIDType id)
 {
@@ -82,6 +83,7 @@ Linker::addUdpChannel(const char *addr, uint16_t port, E_ChannelIDType id)
   errCode = OsdkChannel_InitUDPChannel(addr, port, id);
   return (errCode == OSDK_STAT_OK) ? true : false;
 }
+#endif
 
 void
 Linker::sendAsync(T_CmdInfo *cmdInfo, const uint8_t *cmdData,

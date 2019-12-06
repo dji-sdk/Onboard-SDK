@@ -33,11 +33,16 @@
 
 /* Private types -------------------------------------------------------------*/
 static T_OsdkHalUartHandler s_osdkHalUart;
+#ifdef __linux__
 static T_OsdkHalUdpHandler s_osdkHalUdp;
+#endif
 
 static T_HalOps halOps[INTERFACE_MAX_NUM] = {
     {"UART",  OsdkHal_UartSendData, OsdkHal_UartReadData},
-    {"UDP",  OsdkHal_UdpSendData, OsdkHal_UdpReadData}};
+#ifdef __linux__
+    {"UDP",  OsdkHal_UdpSendData, OsdkHal_UdpReadData},
+#endif
+};
 /* Private functions declaration ---------------------------------------------*/
 
 /* Exported functions definition ---------------------------------------------*/
@@ -120,6 +125,7 @@ E_OsdkStat OsdkHal_UartReadData(const T_HalObj *obj, uint8_t *pBuf, uint16_t *bu
     return osdkStat;
 }
 
+#ifdef __linux__
 E_OsdkStat OsdkPlatform_RegHalUdpHandler(const T_OsdkHalUdpHandler *halUdpHandler)
 {
     if (halUdpHandler->UdpInit == NULL) {
@@ -199,7 +205,7 @@ E_OsdkStat OsdkHal_UdpReadData(const T_HalObj *obj, uint8_t *pBuf, uint16_t *buf
 
     return osdkStat;
 }
-
+#endif
 /**
  * @brief Function used to get hal operations.
  * @param interface: hal interface name.

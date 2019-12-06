@@ -31,7 +31,7 @@
 
 #include <stdarg.h>
 #include <stdio.h>
-#include <cstring>
+#include <string.h>
 
 using namespace DJI::OSDK;
 

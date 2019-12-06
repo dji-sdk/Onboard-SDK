@@ -180,8 +180,13 @@ Vehicle::init()
 int
 Vehicle::functionalSetUp()
 {
-  uint16_t tryTimes = 10;
+  uint16_t tryTimes = 20;
   bool shakeHandRet = false;
+
+  if(!this->init()) {
+    DERROR("vehicle init fail. Exiting.");
+    return false;
+  }
 
   for (uint16_t i = 0; i < tryTimes; i++) {
     shakeHandRet = initVersion();

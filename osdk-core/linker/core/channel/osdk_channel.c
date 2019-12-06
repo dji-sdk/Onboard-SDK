@@ -251,6 +251,7 @@ err:
   return OSDK_STAT_ERR;
 }
 
+#ifdef __linux__
 /**
  * @brief Init UDP channel item.
  * @param addr: udp address.
@@ -322,6 +323,7 @@ err:
   OsdkOsal_Free(channelItem);
   return OSDK_STAT_ERR;
 }
+#endif
 
 /**
  * @brief Get protocol oprations.

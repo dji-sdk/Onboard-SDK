@@ -103,7 +103,7 @@ E_OsdkStat OsdkMsgq_Destroy(T_msgQueue *msgq) {
   return OSDK_STAT_OK;
 }
 
-E_OsdkStat OsdkMsgq_Recv(T_msgQueue *msgq, void *buffer, uint32_t *size,
+E_OsdkStat OsdkMsgq_Recv(T_msgQueue *msgq, uint8_t *buffer, uint32_t *size,
                          uint32_t timeout) {
   if (msgq == NULL || buffer == NULL || size == NULL) {
     OSDK_LOG_ERROR(MODULE_NAME_UTIL, "msg recv param error");
