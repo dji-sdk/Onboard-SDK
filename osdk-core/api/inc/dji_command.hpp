@@ -74,6 +74,7 @@ public:
       // CMD_ID_STATUS Not used at all
       const static uint8_t status[MAX_CMD_ARRAY_SIZE];
       const static uint8_t control[MAX_CMD_ARRAY_SIZE];
+      const static uint8_t emergencyBrake[MAX_CMD_ARRAY_SIZE];
       // CMD_ID_SETARM Supported on Matrice 100, A3, N3
       // with firmware version < 3.3
       const static uint8_t setArm[MAX_CMD_ARRAY_SIZE];

@@ -304,9 +304,9 @@ subscribeToData(Vehicle* vehicle, int responseTimeout)
               << quaternion.q3 << "\n";
     if(rtkAvailable) {
       std::cout << "RTK if available   (lat/long/alt/velocity_x/velocity_y/velocity_z/yaw/yaw_info/pos_info) ="
-                << rtk.latitude << "," << rtk.longitude << "," << rtk.HFSL << "," << rtk_velocity.x << ","
-                << rtk_velocity.y
-                << "," << rtk_velocity.z << "," << rtk_yaw << "," << rtk_yaw_info << rtk_pos_info << "\n";
+                << rtk.latitude << "," << rtk.longitude << "," << rtk.HFSL << ","
+                << rtk_velocity.x << ","<< rtk_velocity.y<< "," << rtk_velocity.z
+                << "," << rtk_yaw << "," << (uint16_t)rtk_yaw_info <<","<< (uint16_t)rtk_pos_info<< "\n";
     }
     std::cout << "-------\n\n";
     usleep(5000);

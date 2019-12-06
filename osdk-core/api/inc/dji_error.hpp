@@ -95,6 +95,7 @@ class ErrorCode {
     FCControlTask    = 0,
     FCSubscribe      = 1,
     FCMission        = 2,
+    FCEmergencyBrake = 3,
     FCParameterTable = 4,
     FCSetHomeLocation= 5,
     FCAvoidObstacle  = 6,

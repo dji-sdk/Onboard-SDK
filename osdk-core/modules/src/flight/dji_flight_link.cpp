@@ -46,6 +46,11 @@ void FlightLink::sendAsync(const uint8_t cmd[], void *pdata, size_t len,
 
 void *FlightLink::sendSync(const uint8_t cmd[], void *pdata, size_t len,
                             int timeout) {
-  return vehicle->legacyLinker->sendSync(cmd, (uint8_t *) pdata, len,
+  return vehicle->legacyLinker->sendSync(cmd, (void *) pdata, len,
                                          timeout * 1000 / 2, 2);
+}
+
+void FlightLink::sendDirectly(const uint8_t cmd[], void *pdata, size_t len){
+   vehicle->legacyLinker->send(cmd,pdata, len);
+
 }

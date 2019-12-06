@@ -50,7 +50,9 @@ int main(int argc, char** argv) {
   }
 
   // Obtain Control Authority
+  // TODO: move this to flight controlller
   vehicle->control->obtainCtrlAuthority(functionTimeout);
+  FlightSample* flightSample = new FlightSample(vehicle);
 
   // Display interactive prompt
   std::cout
@@ -84,41 +86,34 @@ int main(int argc, char** argv) {
 
     /*! @NOTE: case 'c' only support for m210 V2*/
     case 'c':
-      /*! Turn off rtk switch */
-      ErrorCode::ErrorCodeType ret;
-      ret = vehicle->flightController->setRtkEnableSync(
-          FlightController::RtkEnabled::RTK_DISABLE, 1);
-      if (ret != ErrorCode::SysCommonErr::Success) {
-        DSTATUS("Turn off rtk switch failed, ErrorCode is:%8x", ret);
-      } else {
-        DSTATUS("Turn off rtk switch successfully");
-      }
-
       /*!  Take off */
-      monitoredTakeoff(vehicle);
+
+      flightSample->monitoredTakeoff();
+      vehicle->flightController->setCollisionAvoidanceEnabledSync(
+          FlightController::AvoidEnable::AVOID_DISABLE, 1);
 
       /*! Move to higher altitude */
-      moveByPositionOffset(vehicle, 0, 0, 30, 0);
+      flightSample->moveByPositionOffset((FlightSample::Vector3f){0, 0, 30}, 0);
 
       /*! Move a short distance*/
-      moveByPositionOffset(vehicle, 10, 0, 0, -30);
+      flightSample->moveByPositionOffset((FlightSample::Vector3f){10, 0, 0}, 0);
 
       /*! Set aircraft current position as new home location */
-      setNewHomeLocation(vehicle);
+      flightSample->setNewHomeLocation();
 
       /*! Set new go home altitude */
-      setGoHomeAltitude(vehicle, 50);
+      flightSample->setGoHomeAltitude(50);
 
       /*! Move to another position */
-      moveByPositionOffset(vehicle, 40, 0, 0, 0);
+      flightSample->moveByPositionOffset((FlightSample::Vector3f){40, 0, 0}, 0);
 
-      /*! go home and  confirm landing */
-      goHomeAndConfirmLanding(vehicle, 1);
+      vehicle->flightController->setCollisionAvoidanceEnabledSync(
+        FlightController::AvoidEnable::AVOID_ENABLE, 1);
+      /*! go home and confirm landing */
+      flightSample->goHomeAndConfirmLanding();
       break;
-
     default:
       break;
   }
-
   return 0;
 }

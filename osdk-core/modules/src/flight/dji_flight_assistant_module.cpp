@@ -76,10 +76,10 @@ void FlightAssistant::writeParameterByHashAsync(
     ParameterData param = {0};
     param.hashValue = hashValue;
     memcpy(param.paramValue, data, len);
-    flightLink->sendAsync(
-        OpenProtocolCMD::CMDSet::Control::parameterWrite, &param,
-        sizeof(hashValue) + len, (void*)ackDecoderCB,
-        allocUCBHandler((void*)userCB, userData), timeout, retryTime);
+    flightLink->sendAsync(OpenProtocolCMD::CMDSet::Control::parameterWrite,
+                          &param, sizeof(hashValue) + len, (void*)ackDecoderCB,
+                          allocUCBHandler((void*)userCB, userData), timeout,
+                          retryTime);
   } else {
     if (userCB) userCB(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
   }
@@ -115,12 +115,12 @@ void FlightAssistant::readParameterByHashAsync(
                    UserData userData),
     UserData userData, int timeout, int retryTime) {
   if (flightLink) {
-    flightLink->sendAsync(
-        OpenProtocolCMD::CMDSet::Control::parameterRead, &hashValue,
-        sizeof(hashValue), (void*)ackDecoderCB,
-        allocUCBHandler((void*)userCB, userData), timeout, retryTime);
+    flightLink->sendAsync(OpenProtocolCMD::CMDSet::Control::parameterRead,
+                          &hashValue, sizeof(hashValue), (void*)ackDecoderCB,
+                          allocUCBHandler((void*)userCB, userData), timeout,
+                          retryTime);
   } else {
-    DataT data  = {};
+    DataT data = {};
     if (userCB)
       userCB(ErrorCode::SysCommonErr::AllocMemoryFailed, data, userData);
   }
@@ -152,10 +152,9 @@ ErrorCode::ErrorCodeType FlightAssistant::commonDataUnpacker(
   }
 }
 
-
 void FlightAssistant::setParameterDecoder(Vehicle* vehicle,
-                                           RecvContainer recvFrame,
-                                           UCBRetCodeHandler* ucb) {
+                                          RecvContainer recvFrame,
+                                          UCBRetCodeHandler* ucb) {
   if (ucb && ucb->UserCallBack) {
     ACK::ParamAckInternal ack = {0};
     ErrorCode::ErrorCodeType ret = 0;
@@ -185,6 +184,17 @@ void FlightAssistant::getRtkEnableDecoder(
   }
 }
 
+void FlightAssistant::getAvoidEnableDecoder(
+    Vehicle* vehicle, RecvContainer recvFrame,
+    UCBRetParamHandler<AvoidEnable>* ucb) {
+  if (ucb && ucb->UserCallBack) {
+    AvoidEnableAck ack = {0};
+    ErrorCode::ErrorCodeType retCode =
+        commonDataUnpacker<AvoidEnableAck>(recvFrame, ack);
+    ucb->UserCallBack(retCode, (AvoidEnable)ack.avoidEnable, ucb->userData);
+  }
+}
+
 void FlightAssistant::getGoHomeAltitudeDecoder(
     Vehicle* vehicle, RecvContainer recvFrame,
     UCBRetParamHandler<GoHomeAltitude>* ucb) {
@@ -197,8 +207,8 @@ void FlightAssistant::getGoHomeAltitudeDecoder(
 }
 
 void FlightAssistant::setHomePointAckDecoder(Vehicle* vehicle,
-                                              RecvContainer recvFrame,
-                                              UCBRetCodeHandler* ucb) {
+                                             RecvContainer recvFrame,
+                                             UCBRetCodeHandler* ucb) {
   if (ucb && ucb->UserCallBack) {
     ACK::ErrorCode ack = {0};
     ErrorCode::ErrorCodeType ret = 0;
@@ -297,8 +307,44 @@ void FlightAssistant::getGoHomeAltitudeAsync(
                                            UserCallBack, userData);
 }
 
+ErrorCode::ErrorCodeType FlightAssistant::setCollisionAvoidanceEnabledSync(
+    AvoidEnable avoidEnable, int timeout) {
+  return writeParameterByHashSync(ParamHashValue::USER_AVOID_ENABLE,
+                                  (void*)&avoidEnable, sizeof(avoidEnable),
+                                  timeout);
+}
+
+void FlightAssistant::setCollisionAvoidanceEnabledAsync(
+  FlightAssistant::AvoidEnable avoidEnable,
+  void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
+  UserData userData) {
+  writeParameterByHashAsync(ParamHashValue::USER_AVOID_ENABLE,
+                            (void*)&avoidEnable, sizeof(avoidEnable),
+                            setParameterDecoder, UserCallBack, userData);
+}
+
+ErrorCode::ErrorCodeType FlightAssistant::getCollisionAvoidanceEnabledSync(
+    AvoidEnable& avoidEnable, int timeout) {
+  uint8_t param[MAX_PARAMETER_VALUE_LENGTH];
+  ErrorCode::ErrorCodeType ret = readParameterByHashSync(
+      ParamHashValue::USER_AVOID_ENABLE, param, timeout);
+  if (ret == ErrorCode::SysCommonErr::Success) {
+    avoidEnable = *(AvoidEnable*)param;
+  }
+  return ret;
+}
+
+void FlightAssistant::getCollisionAvoidanceEnabledAsync(
+  void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
+                       AvoidEnable avoidEnable, UserData userData),
+  UserData userData) {
+  readParameterByHashAsync<AvoidEnable>(ParamHashValue::USER_AVOID_ENABLE,
+                                        getAvoidEnableDecoder, UserCallBack,
+                                        userData);
+}
+
 ErrorCode::ErrorCodeType FlightAssistant::setHomeLocationSync(
-  SetHomeLocationData homeLocation, int timeout) {
+    SetHomeLocationData homeLocation, int timeout) {
   if (flightLink) {
     ACK::ErrorCode rsp = *(ACK::ErrorCode*)flightLink->sendSync(
         OpenProtocolCMD::CMDSet::Control::setHomeLocation, &homeLocation,
@@ -316,14 +362,14 @@ ErrorCode::ErrorCodeType FlightAssistant::setHomeLocationSync(
 }
 
 void FlightAssistant::setHomeLocationAsync(
-  SetHomeLocationData homeLocation,
-  void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
-  UserData userData) {
+    SetHomeLocationData homeLocation,
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
+    UserData userData) {
   if (flightLink) {
     flightLink->sendAsync(OpenProtocolCMD::CMDSet::Control::setHomeLocation,
-                              &homeLocation, sizeof(homeLocation),
-                              (void*)setHomePointAckDecoder,
-                              allocUCBHandler((void*)UserCallBack, userData));
+                          &homeLocation, sizeof(homeLocation),
+                          (void*)setHomePointAckDecoder,
+                          allocUCBHandler((void*)UserCallBack, userData));
   } else {
     if (UserCallBack)
       UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
@@ -333,9 +379,9 @@ void FlightAssistant::setHomeLocationAsync(
 bool FlightAssistant::goHomeAltitudeValidCheck(GoHomeAltitude altitude) {
   if (altitude < MIN_GO_HOME_HEIGHT || altitude > MAX_FLIGHT_HEIGHT) {
     DERROR(
-      "Go home altitude is not in between MIN_GO_HOME_HEIGHT and  "
-      "MAX_FLIGHT_HEIGHT:%d\n",
-      altitude);
+        "Go home altitude is not in between MIN_GO_HOME_HEIGHT and  "
+        "MAX_FLIGHT_HEIGHT:%d\n",
+        altitude);
     return false;
   } else
     return true;

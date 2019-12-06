@@ -49,11 +49,16 @@ class FlightAssistant {
   enum ParamHashValue : uint32_t {
     USE_RTK_DATA = 1288992843,    /*! Set rtk switch on or off*/
     GO_HOME_ALTITUDE = 952919004, /*! Set return home altitude*/
+    USER_AVOID_ENABLE = 3001460201,
   };
 
   enum RtkEnableData : uint8_t {
     RTK_DISABLE = 0, /*!< 0: disable */
     RTK_ENABLE = 1,  /*!< 1: enable  */
+  };
+  enum AvoidEnable : uint8_t {
+    AVOID_DISABLE = 0,
+    AVOID_ENABLE = 1,
   };
 
   enum HomeLocationType : uint8_t {
@@ -76,6 +81,13 @@ class FlightAssistant {
     uint32_t hashValue;
     uint8_t rtkEnable;
   } RtkEnableAck;
+
+  /*! set parameter and get parameter's return data is same*/
+  typedef struct AvoidEnableAck {
+    uint8_t retCode;
+    uint32_t hashValue;
+    uint8_t avoidEnable;
+  } AvoidEnableAck;
 
   /*! set parameter and get parameter's return data is same*/
   typedef struct GoHomeAltitudeAck {
@@ -268,6 +280,52 @@ class FlightAssistant {
                            GoHomeAltitude altitude, UserData userData),
       UserData userData);
 
+  /*! @brief Set collision avoidance enable or disable, blocking calls
+   *
+   *  @param avoidEnable AvoidEnable, AVOID_DISABLE: disable, AVOID_ENABLE: enable
+   *  @param timeout blocking timeout in seconds
+   *  @return ErrorCode::ErrorCodeType error code
+   */
+  ErrorCode::ErrorCodeType setCollisionAvoidanceEnabledSync(
+      AvoidEnable avoidEnable, int timeout);
+
+  /*! @brief Set collision avoidance enable or disable, non-blocking calls
+   *
+   *  @param avoidEnable AvoidEnable, AVOID_DISABLE: disable, AVOID_ENABLE: enable
+   *  @param UserCallBack callback function defined by user
+   *  @arg @b retCode  OSDK ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to transfer userData in when the callback
+   *  is called
+   *  @param userData when UserCallBack is called, used in UserCallBack
+   */
+  void setCollisionAvoidanceEnabledAsync(
+    AvoidEnable avoidEnable,
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
+    UserData userData);
+
+  /*! @brief Get collision avoidance enable or disable, blocking calls
+   *
+   *  @param avoidEnable AvoidEnable, AVOID_DISABLE: disable, AVOID_ENABLE: enable
+   *  @param timeout blocking timeout in seconds
+   *  @return OSDK ErrorCode::ErrorCodeType error code
+   */
+  ErrorCode::ErrorCodeType getCollisionAvoidanceEnabledSync(
+      AvoidEnable &avoidEnable, int timeout);
+
+  /*! @brief Get collision avoidance enable or disable, non-blocking calls
+   *
+   *  @param UserCallBack callback function defined by user
+   *  @arg @b retCode the OSDK ErrorCode::ErrorCodeType error code
+   *  @arg @b avoidEnable AvoidEnable, AVOID_DISABLE: disable, AVOID_ENABLE: enable
+   *  @arg @b userData the interface to pass userData in when the callback is
+   *  called
+   *  @param userData when UserCallBack is called, used in UserCallBack
+   */
+  void getCollisionAvoidanceEnabledAsync(
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
+                         AvoidEnable avoidEnable, UserData userData),
+    UserData userData);
+
   /*! @brief Set home location, blocking calls
    *
    *  @note  Set home location failed reason may as follows:
@@ -317,6 +375,9 @@ class FlightAssistant {
 
   static void getRtkEnableDecoder(Vehicle *vehicle, RecvContainer recvFrame,
                                   UCBRetParamHandler<RtkEnableData> *ucb);
+
+  static void getAvoidEnableDecoder(Vehicle *vehicle, RecvContainer recvFrame,
+                                    UCBRetParamHandler<AvoidEnable > *ucb);
 
   static void getGoHomeAltitudeDecoder(Vehicle *vehicle,
                                        RecvContainer recvFrame,
