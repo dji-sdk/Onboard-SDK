@@ -194,15 +194,15 @@ class V1ProtocolCMD : public ErrorCode
  public:
   const static int MAX_CMD_ARRAY_SIZE = 2;
 
+  typedef struct Gimbal
+  {
+    const static uint8_t resetAngle[MAX_CMD_ARRAY_SIZE];
+    const static uint8_t rotateAngle[MAX_CMD_ARRAY_SIZE];
+  } Gimbal;
+
   class CMDSet
   {
    public:
-    typedef struct Gimbal
-    {
-      const static uint8_t resetAngle[MAX_CMD_ARRAY_SIZE];
-      const static uint8_t rotateAngle[MAX_CMD_ARRAY_SIZE];
-    } Gimbal;
-
     //! CMD SET definitions
     const static uint8_t common       = 0;
     const static uint8_t special      = 1;

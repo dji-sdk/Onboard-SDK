@@ -265,9 +265,9 @@ const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Intelligent::setAvoidObstacle[
 };
 
 /*! v1 commands */
-const uint8_t DJI::OSDK::V1ProtocolCMD::CMDSet::Gimbal::resetAngle[] = {
+const uint8_t DJI::OSDK::V1ProtocolCMD::Gimbal::resetAngle[] = {
     V1ProtocolCMD::CMDSet::gimbal, 0x4C
 };
-const uint8_t DJI::OSDK::V1ProtocolCMD::CMDSet::Gimbal::rotateAngle[] = {
+const uint8_t DJI::OSDK::V1ProtocolCMD::Gimbal::rotateAngle[] = {
     V1ProtocolCMD::CMDSet::gimbal, 0x0A
 };

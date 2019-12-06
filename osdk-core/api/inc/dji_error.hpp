@@ -107,7 +107,7 @@ class ErrorCode {
   };
 
   /*! @brief Function ID used with GimbalModule in error codes
- */
+   */
   enum GimbalFunctionID {
     GimbalCommon = 0,
   };

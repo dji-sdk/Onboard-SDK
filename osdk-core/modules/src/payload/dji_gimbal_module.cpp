@@ -96,8 +96,8 @@ void GimbalModule::resetAsync(
       setting.returnCenterCmd = PITCH_AND_YAW;
       T_CmdInfo cmdInfo = {0};
 
-      cmdInfo.cmdSet = V1ProtocolCMD::CMDSet::Gimbal::resetAngle[0];
-      cmdInfo.cmdId = V1ProtocolCMD::CMDSet::Gimbal::resetAngle[1];
+      cmdInfo.cmdSet = V1ProtocolCMD::Gimbal::resetAngle[0];
+      cmdInfo.cmdId = V1ProtocolCMD::Gimbal::resetAngle[1];
       cmdInfo.dataLen = sizeof(setting);
       cmdInfo.needAck = OSDK_COMMAND_NEED_ACK_FINISH_ACK;
       cmdInfo.packetType = OSDK_COMMAND_PACKET_TYPE_REQUEST;
@@ -129,8 +129,8 @@ ErrorCode::ErrorCodeType GimbalModule::resetSync(int timeout) {
   T_CmdInfo ackInfo = {0};
   uint8_t ackData[1024];
 
-  cmdInfo.cmdSet = V1ProtocolCMD::CMDSet::Gimbal::resetAngle[0];
-  cmdInfo.cmdId = V1ProtocolCMD::CMDSet::Gimbal::resetAngle[1];
+  cmdInfo.cmdSet = V1ProtocolCMD::Gimbal::resetAngle[0];
+  cmdInfo.cmdId = V1ProtocolCMD::Gimbal::resetAngle[1];
   cmdInfo.dataLen = sizeof(setting);
   cmdInfo.needAck = OSDK_COMMAND_NEED_ACK_FINISH_ACK;
   cmdInfo.packetType = OSDK_COMMAND_PACKET_TYPE_REQUEST;
@@ -170,8 +170,8 @@ void GimbalModule::rotateAsync(Rotation rotation,
     setting.time_for_action = rotation.time;
 
     T_CmdInfo cmdInfo = {0};
-    cmdInfo.cmdSet = V1ProtocolCMD::CMDSet::Gimbal::rotateAngle[0];
-    cmdInfo.cmdId = V1ProtocolCMD::CMDSet::Gimbal::rotateAngle[1];
+    cmdInfo.cmdSet = V1ProtocolCMD::Gimbal::rotateAngle[0];
+    cmdInfo.cmdId = V1ProtocolCMD::Gimbal::rotateAngle[1];
     cmdInfo.dataLen = sizeof(setting);
     cmdInfo.needAck = OSDK_COMMAND_NEED_ACK_FINISH_ACK;
     cmdInfo.packetType = OSDK_COMMAND_PACKET_TYPE_REQUEST;
@@ -212,8 +212,8 @@ ErrorCode::ErrorCodeType GimbalModule::rotateSync(Rotation rotation,
   T_CmdInfo ackInfo = {0};
   uint8_t ackData[1024];
 
-  cmdInfo.cmdSet = V1ProtocolCMD::CMDSet::Gimbal::rotateAngle[0];
-  cmdInfo.cmdId = V1ProtocolCMD::CMDSet::Gimbal::rotateAngle[1];
+  cmdInfo.cmdSet = V1ProtocolCMD::Gimbal::rotateAngle[0];
+  cmdInfo.cmdId = V1ProtocolCMD::Gimbal::rotateAngle[1];
   cmdInfo.dataLen = sizeof(setting);
   cmdInfo.needAck = OSDK_COMMAND_NEED_ACK_FINISH_ACK;
   cmdInfo.packetType = OSDK_COMMAND_PACKET_TYPE_REQUEST;

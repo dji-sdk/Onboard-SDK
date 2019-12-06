@@ -672,9 +672,11 @@ typedef struct GimbalFullSingle
   uint8_t mode;
 } GimbalFullSingle;
 
+#define SDK_M210_GIMBAL_MAX_NUM 2
+
 typedef struct GimbalFull
 {
-  GimbalFullSingle gbData[2];
+  GimbalFullSingle gbData[SDK_M210_GIMBAL_MAX_NUM];
 } GimbalFull;
 
 /*!
