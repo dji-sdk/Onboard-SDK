@@ -170,8 +170,12 @@ public:
   ACK::ExtendedFunctionRsp extendedFunctionRspAck;
   ACK::ParamAck         paramAck;
 
-  T_RecvCmdHandle recvCmdHandle;
-  static T_RecvCmdItem cmdItemList[];
+
+  typedef struct CmdListData {
+    T_RecvCmdHandle recvCmdHandle;
+    T_RecvCmdItem cmdItemList;
+  } CmdListData;
+  static CmdListData cmdListData[];
 }; // class LegacyLinker
 
 } // namespace OSDK

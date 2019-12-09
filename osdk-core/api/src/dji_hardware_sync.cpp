@@ -71,6 +71,18 @@ HardwareSync::subscribeNMEAMsgs(VehicleCallBack cb, void *userData)
         OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEAGPSGSA[0],
         OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEAGPSGSA[1],
         ppsNMEAHandler.callback, ppsNMEAHandler.userData);
+    vehicle->legacyLinker->registerCMDCallback(
+        OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEAGPSRMC[0],
+        OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEAGPSRMC[1],
+        ppsNMEAHandler.callback, ppsNMEAHandler.userData);
+    vehicle->legacyLinker->registerCMDCallback(
+        OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEARTKGSA[0],
+        OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEARTKGSA[1],
+        ppsNMEAHandler.callback, ppsNMEAHandler.userData);
+    vehicle->legacyLinker->registerCMDCallback(
+        OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEARTKRMC[0],
+        OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEARTKRMC[1],
+        ppsNMEAHandler.callback, ppsNMEAHandler.userData);
   }
 }
 
@@ -82,6 +94,18 @@ HardwareSync::unsubscribeNMEAMsgs()
   vehicle->legacyLinker->registerCMDCallback(
       OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEAGPSGSA[0],
       OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEAGPSGSA[1],
+      ppsNMEAHandler.callback, ppsNMEAHandler.userData);
+  vehicle->legacyLinker->registerCMDCallback(
+      OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEAGPSRMC[0],
+      OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEAGPSRMC[1],
+      ppsNMEAHandler.callback, ppsNMEAHandler.userData);
+  vehicle->legacyLinker->registerCMDCallback(
+      OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEARTKGSA[0],
+      OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEARTKGSA[1],
+      ppsNMEAHandler.callback, ppsNMEAHandler.userData);
+  vehicle->legacyLinker->registerCMDCallback(
+      OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEARTKRMC[0],
+      OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEARTKRMC[1],
       ppsNMEAHandler.callback, ppsNMEAHandler.userData);
 }
 
