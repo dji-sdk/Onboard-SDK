@@ -220,7 +220,76 @@ Vehicle::functionalSetUp()
 
 Vehicle::~Vehicle()
 {
-  delete this->linker;
+  if (this->subscribe)
+  {
+    subscribe->reset(1);
+  }
+  if(this->camera)
+  {
+    delete this->camera;
+  }
+
+  if(this->gimbal)
+  {
+    delete this->gimbal;
+  }
+
+  if(this->control)
+  {
+    delete this->control;
+  }
+
+  if (this->mfio)
+  {
+    delete this->mfio;
+  }
+
+  if (this->moc)
+  {
+    delete this->moc;
+  }
+
+  if (this->mobileDevice)
+  {
+    delete this->mobileDevice;
+  }
+
+  if (this->payloadDevice)
+  {
+    delete this->payloadDevice;
+  }
+  if (this->cameraManager)
+  {
+    delete this->cameraManager;
+  }
+  if (this->psdkManager)
+  {
+    delete this->psdkManager;
+  }
+  if (this->broadcast)
+  {
+    delete this->broadcast;
+  }
+  if (this->subscribe)
+  {
+    delete this->subscribe;
+  }
+  if (this->hardSync)
+  {
+    delete this->hardSync;
+  }
+  if (this->missionManager)
+  {
+    delete this->missionManager;
+  }
+  if(this->flightController)
+  {
+    delete this->flightController;
+  }
+  if (this->linker)
+  {
+    delete this->linker;
+  }
 }
 
 

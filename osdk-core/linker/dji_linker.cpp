@@ -39,6 +39,7 @@ Linker::Linker()
 
 Linker::~Linker()
 {
+  deinit();
 }
 
 bool
@@ -63,6 +64,14 @@ Linker::init()
       DERROR("Command Task Init Error!", errCode);
       return false;
   }
+  return true;
+}
+
+bool
+Linker::deinit()
+{
+  OsdkCommand_DeInit();
+
   return true;
 }
 
