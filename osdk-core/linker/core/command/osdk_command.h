@@ -104,6 +104,7 @@ typedef struct _CommandHandle {
   T_RecvCmdHandle recvCmdHandleList[PROT_MAX_SUPPORT_CMD_SET];
   uint16_t recvCmdHandleListCount;
   T_OsdkMutexHandle waitAckItemMutex;
+  T_OsdkMutexHandle recvCmdHandleListMutex;
   T_CmdWaitAckItem waitAckItem[PROT_MAX_WAIT_ACK_LIST];
 } T_CmdHandle;
 

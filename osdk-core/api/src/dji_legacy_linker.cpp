@@ -39,8 +39,31 @@
 using namespace DJI;
 using namespace DJI::OSDK;
 
+//@clang-format: off
+T_RecvCmdItem LegacyLinker::cmdItemList[] = {
+    {0, 0, OpenProtocolCMD::CMDSet::Broadcast::subscribe[0],          OpenProtocolCMD::CMDSet::Broadcast::subscribe[1],           MASK_HOST_XXXXXX_SET_ID, malloc(sizeof(legacyAdaptingData)), NULL},
+    {0, 0, OpenProtocolCMD::CMDSet::Broadcast::broadcast[0],          OpenProtocolCMD::CMDSet::Broadcast::broadcast[1],           MASK_HOST_XXXXXX_SET_ID, malloc(sizeof(legacyAdaptingData)), NULL},
+    {0, 0, OpenProtocolCMD::CMDSet::Broadcast::fromMobile[0],         OpenProtocolCMD::CMDSet::Broadcast::fromMobile[1],          MASK_HOST_XXXXXX_SET_ID, malloc(sizeof(legacyAdaptingData)), NULL},
+    {0, 0, OpenProtocolCMD::CMDSet::Broadcast::fromPayload[0],        OpenProtocolCMD::CMDSet::Broadcast::fromPayload[1],         MASK_HOST_XXXXXX_SET_ID, malloc(sizeof(legacyAdaptingData)), NULL},
+    {0, 0, OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEAGPSGSA[0],   OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEAGPSGSA[1],    MASK_HOST_XXXXXX_SET_ID, malloc(sizeof(legacyAdaptingData)), NULL},
+    {0, 0, OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEAGPSRMC[0],   OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEAGPSRMC[1],    MASK_HOST_XXXXXX_SET_ID, malloc(sizeof(legacyAdaptingData)), NULL},
+    {0, 0, OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEARTKGSA[0],   OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEARTKGSA[1],    MASK_HOST_XXXXXX_SET_ID, malloc(sizeof(legacyAdaptingData)), NULL},
+    {0, 0, OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEARTKRMC[0],   OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEARTKRMC[1],    MASK_HOST_XXXXXX_SET_ID, malloc(sizeof(legacyAdaptingData)), NULL},
+    {0, 0, OpenProtocolCMD::CMDSet::HardwareSync::ppsUTCTime[0],      OpenProtocolCMD::CMDSet::HardwareSync::ppsUTCTime[1],       MASK_HOST_XXXXXX_SET_ID, malloc(sizeof(legacyAdaptingData)), NULL},
+    {0, 0, OpenProtocolCMD::CMDSet::HardwareSync::ppsUTCFCTimeRef[0], OpenProtocolCMD::CMDSet::HardwareSync::ppsUTCFCTimeRef[1],  MASK_HOST_XXXXXX_SET_ID, malloc(sizeof(legacyAdaptingData)), NULL},
+    {0, 0, OpenProtocolCMD::CMDSet::HardwareSync::ppsSource[0],       OpenProtocolCMD::CMDSet::HardwareSync::ppsSource[1],        MASK_HOST_XXXXXX_SET_ID, malloc(sizeof(legacyAdaptingData)), NULL},
+};
+//@clang-format: on
+
 LegacyLinker::LegacyLinker(Vehicle *vehicle)
     : vehicle(vehicle) {
+  memset(&recvCmdHandle, 0, sizeof(recvCmdHandle));
+  recvCmdHandle.cmdCount = sizeof(cmdItemList) / sizeof(T_RecvCmdItem);
+  for (int i = 0; i < recvCmdHandle.cmdCount; i++) {
+    memset(cmdItemList[i].userData, 0, sizeof(legacyAdaptingData));
+  }
+  recvCmdHandle.protoType = PROTOCOL_SDK;
+  recvCmdHandle.cmdList = cmdItemList;
 }
 
 LegacyLinker::~LegacyLinker() {
@@ -59,12 +82,6 @@ void LegacyLinker::send(const uint8_t cmd[], void *pdata, size_t len) {
   cmdInfo.channelId = 0;
   vehicle->linker->send(&cmdInfo, (uint8_t *) pdata);
 }
-
-typedef struct legacyAdaptingData {
-  VehicleCallBack cb;
-  UserData udata;
-  Vehicle *vehicle;
-} legacyAdaptingData;
 
 void LegacyLinker::legacyAdaptingAsyncCB(const T_CmdInfo *cmdInfo,
                                          const uint8_t *cmdData,
@@ -322,10 +339,8 @@ E_OsdkStat LegacyLinker::legacyAdaptingRegisterCB(
   legacyAdaptingData *legacyData = (legacyAdaptingData *)userData;
   if (cmdInfo && legacyData && legacyData->vehicle) {
     if (legacyData->cb) {
-      legacyAdaptingData para = *(legacyAdaptingData *) userData;
-
       RecvContainer recvFrame = recvFrameAdapting(*cmdInfo, cmdData);
-      para.cb(para.vehicle, recvFrame, para.udata);
+      legacyData->cb(legacyData->vehicle, recvFrame, legacyData->udata);
     }
     return OSDK_STAT_OK;
   } else {
@@ -337,30 +352,20 @@ E_OsdkStat LegacyLinker::legacyAdaptingRegisterCB(
 bool LegacyLinker::registerCMDCallback(uint8_t cmdSet, uint8_t cmdID,
                                        VehicleCallBack &callback,
                                        UserData &userData) {
-  T_RecvCmdHandle
-      *recvCmdHandle = (T_RecvCmdHandle *) malloc(sizeof(T_RecvCmdHandle));
-  T_RecvCmdItem *item = (T_RecvCmdItem *) malloc(sizeof(T_RecvCmdItem));
-  legacyAdaptingData
-      *cbParam = (legacyAdaptingData *) malloc(sizeof(legacyAdaptingData));
-  *cbParam = {callback, userData, vehicle};
-
-  item->cmdSet = cmdSet;
-  item->cmdId = cmdID;
-  item->pFunc = legacyAdaptingRegisterCB;
-  item->userData = cbParam;
-  item->mask = MASK_HOST_XXXXXX_SET_ID;
-
-  recvCmdHandle->cmdCount = 1;
-  recvCmdHandle->protoType = PROTOCOL_SDK;
-  recvCmdHandle->cmdList = item;
-  if (vehicle->linker->registerCmdHandler(recvCmdHandle)) {
-
-    return true;
-  } else {
-    free(recvCmdHandle->cmdList->userData);
-    free(recvCmdHandle->cmdList);
-    free(recvCmdHandle);
-
-    return false;
+  if (recvCmdHandle.cmdCount != 0) {
+    for (int i = 0; i < recvCmdHandle.cmdCount; i++) {
+      if ((recvCmdHandle.cmdList[i].cmdSet == cmdSet)
+          && (recvCmdHandle.cmdList[i].cmdId == cmdID)) {
+        legacyAdaptingData *handler = (legacyAdaptingData *)(recvCmdHandle.cmdList[i].userData);
+        handler->cb = callback;
+        handler->udata = userData;
+        handler->vehicle = vehicle;
+        recvCmdHandle.cmdList[i].pFunc = legacyAdaptingRegisterCB;
+        recvCmdHandle.cmdList[i].userData = handler;
+        return vehicle->linker->registerCmdHandler(&recvCmdHandle);
+      }
+    }
   }
+
+  return false;
 }

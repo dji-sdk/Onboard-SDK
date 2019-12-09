@@ -64,10 +64,13 @@ HardwareSync::startSync(SyncSettings& data)
 void
 HardwareSync::subscribeNMEAMsgs(VehicleCallBack cb, void *userData)
 {
-  if(cb)
-  {
+  if (cb) {
     this->ppsNMEAHandler.callback = cb;
     this->ppsNMEAHandler.userData = userData;
+    vehicle->legacyLinker->registerCMDCallback(
+        OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEAGPSGSA[0],
+        OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEAGPSGSA[1],
+        ppsNMEAHandler.callback, ppsNMEAHandler.userData);
   }
 }
 
@@ -76,6 +79,10 @@ HardwareSync::unsubscribeNMEAMsgs()
 {
   this->ppsNMEAHandler.callback = 0;
   this->ppsNMEAHandler.userData = 0;
+  vehicle->legacyLinker->registerCMDCallback(
+      OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEAGPSGSA[0],
+      OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEAGPSGSA[1],
+      ppsNMEAHandler.callback, ppsNMEAHandler.userData);
 }
 
 void
@@ -85,6 +92,10 @@ HardwareSync::subscribeUTCTime(VehicleCallBack cb, void *userData)
   {
     this->ppsUTCTimeHandler.callback = cb;
     this->ppsUTCTimeHandler.userData = userData;
+    vehicle->legacyLinker->registerCMDCallback(
+        OpenProtocolCMD::CMDSet::HardwareSync::ppsUTCTime[0],
+        OpenProtocolCMD::CMDSet::HardwareSync::ppsUTCTime[1],
+        ppsUTCTimeHandler.callback, ppsUTCTimeHandler.userData);
   }
 }
 
@@ -93,6 +104,10 @@ HardwareSync::unsubscribeUTCTime()
 {
   this->ppsUTCTimeHandler.callback = 0;
   this->ppsUTCTimeHandler.userData = 0;
+  vehicle->legacyLinker->registerCMDCallback(
+      OpenProtocolCMD::CMDSet::HardwareSync::ppsUTCTime[0],
+      OpenProtocolCMD::CMDSet::HardwareSync::ppsUTCTime[1],
+      ppsUTCTimeHandler.callback, ppsUTCTimeHandler.userData);
 }
 
 void
@@ -102,6 +117,10 @@ HardwareSync::subscribeFCTimeInUTCRef(VehicleCallBack cb, void *userData)
   {
     this->ppsUTCFCTimeHandler.callback = cb;
     this->ppsUTCFCTimeHandler.userData = userData;
+    vehicle->legacyLinker->registerCMDCallback(
+        OpenProtocolCMD::CMDSet::HardwareSync::ppsUTCFCTimeRef[0],
+        OpenProtocolCMD::CMDSet::HardwareSync::ppsUTCFCTimeRef[1],
+        ppsUTCFCTimeHandler.callback, ppsUTCFCTimeHandler.userData);
   }
 }
 
@@ -110,6 +129,10 @@ HardwareSync::unsubscribeFCTimeInUTCRef()
 {
   this->ppsUTCFCTimeHandler.callback = 0;
   this->ppsUTCFCTimeHandler.userData = 0;
+  vehicle->legacyLinker->registerCMDCallback(
+      OpenProtocolCMD::CMDSet::HardwareSync::ppsUTCFCTimeRef[0],
+      OpenProtocolCMD::CMDSet::HardwareSync::ppsUTCFCTimeRef[1],
+      ppsUTCFCTimeHandler.callback, ppsUTCFCTimeHandler.userData);
 }
 
 void
@@ -119,6 +142,10 @@ HardwareSync::subscribePPSSource(VehicleCallBack cb, void *userData)
   {
     this->ppsSourceHandler.callback = cb;
     this->ppsSourceHandler.userData = userData;
+    vehicle->legacyLinker->registerCMDCallback(
+        OpenProtocolCMD::CMDSet::HardwareSync::ppsSource[0],
+        OpenProtocolCMD::CMDSet::HardwareSync::ppsSource[1],
+        ppsSourceHandler.callback, ppsSourceHandler.userData);
   }
 }
 
@@ -127,6 +154,10 @@ HardwareSync::unsubscribePPSSource()
 {
   this->ppsSourceHandler.callback = 0;
   this->ppsSourceHandler.userData = 0;
+  vehicle->legacyLinker->registerCMDCallback(
+      OpenProtocolCMD::CMDSet::HardwareSync::ppsSource[0],
+      OpenProtocolCMD::CMDSet::HardwareSync::ppsSource[1],
+      ppsSourceHandler.callback, ppsSourceHandler.userData);
 }
 
 void
