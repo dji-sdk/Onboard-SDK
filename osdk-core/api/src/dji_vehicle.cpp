@@ -286,10 +286,6 @@ Vehicle::~Vehicle()
   {
     delete this->flightController;
   }
-  if (this->linker)
-  {
-    delete this->linker;
-  }
 }
 
 
