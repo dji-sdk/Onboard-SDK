@@ -74,7 +74,7 @@ using namespace DJI::OSDK;
 
 LinuxSetup::LinuxSetup(int argc, char** argv, bool enableAdvancedSensing)
 {
-  this->functionTimeout     = 200; // ms
+  this->functionTimeout     = 1; // s
   this->vehicle             = nullptr;
   this->platform            = nullptr;
   this->environment         = nullptr;
@@ -208,6 +208,8 @@ LinuxSetup::setupEnvironment(int argc, char** argv)
 void
 LinuxSetup::initVehicle()
 {
+  ACK::ErrorCode ack;
+
   /*! Linker initialization */
   Linker *linker = new (std::nothrow) Linker();
   if (linker == 0)
@@ -259,9 +261,11 @@ LinuxSetup::initVehicle()
   activateData.encKey = app_key;
   strcpy(activateData.encKey, environment->getEnc_key().c_str());
   activateData.version = vehicle->getFwVersion();
-  if(!vehicle->activate(&activateData, functionTimeout))
+
+  ack = vehicle->activate(&activateData, functionTimeout);
+  if (ACK::getError(ack))
   {
-    std::cout << "activate fail. Exiting." << std::endl;
+    ACK::getErrorCodeMessage(ack, __func__);
     goto err;
   }
 

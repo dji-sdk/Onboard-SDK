@@ -137,7 +137,7 @@ public:
   * @todo
   * Implement high resolution timer to catch ACK timeout
   */
-  bool activate(ActivateData* data, uint32_t timeoutMs);
+  ACK::ErrorCode activate(ActivateData* data, uint32_t timeoutMs);
 
   /*! @brief A callback function for activate non-blocking calls
    *  @param receivedFrame: RecvContainer populated by the protocolLayer
