@@ -30,6 +30,7 @@
 
 #include <dji_linux_helpers.hpp>
 #include "camera_manager_sync_sample.hpp"
+#include "gimbal_manager_sync_sample.hpp"
 
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
@@ -51,7 +52,6 @@ int main(int argc, char **argv) {
     DERROR("Init Camera module Sample_camera_1 failed.");
     ErrorCode::printErrorCodeMsg(ret);
   }
-
   ret = vehicle->cameraManager->initCameraModule(PAYLOAD_INDEX_1,
                                                  "Sample_camera_2");
   if (ret != ErrorCode::SysCommonErr::Success) {
@@ -59,7 +59,23 @@ int main(int argc, char **argv) {
     ErrorCode::printErrorCodeMsg(ret);
   }
 
+  /*! init gimbal modules for gimbalManager */
+  ret = vehicle->gimbalManager->initGimbalModule(
+      PAYLOAD_INDEX_0, "Sample_gimbal_1");
+  if (ret != ErrorCode::SysCommonErr::Success) {
+    DERROR("Init Camera module Sample_gimbal_1 failed.");
+    ErrorCode::printErrorCodeMsg(ret);
+  }
+  ret = vehicle->gimbalManager->initGimbalModule(PAYLOAD_INDEX_1,
+                                                 "Sample_gimbal_2");
+  if (ret != ErrorCode::SysCommonErr::Success) {
+    DERROR("Init Camera module Sample_gimbal_2 failed.");
+    ErrorCode::printErrorCodeMsg(ret);
+  }
+
   CameraManagerSyncSample *p = new CameraManagerSyncSample(vehicle);
+  GimbalManagerSyncSample *g = new GimbalManagerSyncSample(vehicle);
+
   bool sampleCaseValidFlag = false;
   char inputChar = 0;
   if (sampleCase.size() == 1) {
@@ -101,6 +117,10 @@ int main(int argc, char **argv) {
         << "| [k] Shoot Interval photo Sample                                |"
         << std::endl
         << "| [l] Record video Sample                                        |"
+        << std::endl
+        << "| [m] Rotate gimbal sample                                       |"
+        << std::endl
+        << "| [n] Reset gimbal sample                                        |"
         << std::endl
         << "| [q] Quit                                                       |"
         << std::endl;
@@ -187,6 +207,18 @@ int main(int argc, char **argv) {
         p->startRecordVideoSyncSample(PAYLOAD_INDEX_0);
         sleep(10);
         p->stopRecordVideoSyncSample(PAYLOAD_INDEX_0);
+        break;
+      case 'm':
+        GimbalModule::Rotation rotation;
+        rotation.roll = 10.0f;
+        rotation.pitch = 25.0f;
+        rotation.yaw = 90.0f;
+        rotation.rotationMode = 0;
+        rotation.time = 0.5;
+        g->rotateSyncSample(PAYLOAD_INDEX_0, rotation);
+        break;
+      case 'n':
+        g->resetSyncSample(PAYLOAD_INDEX_0);
         break;
       case 'q':
         DSTATUS("Quit now ...");

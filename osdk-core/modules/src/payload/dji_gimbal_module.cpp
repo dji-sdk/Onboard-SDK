@@ -206,7 +206,7 @@ ErrorCode::ErrorCodeType GimbalModule::rotateSync(Rotation rotation,
   setting.coordinate = rotation.rotationMode;
   setting.is_control = 1; /*!< take control */
   setting.timeout = 0; /*!< default 2s timeout */
-  setting.time_for_action = rotation.time;
+  setting.time_for_action = rotation.time * 100;
 
   T_CmdInfo cmdInfo = {0};
   T_CmdInfo ackInfo = {0};
