@@ -34,7 +34,7 @@ using namespace DJI;
 using namespace DJI::OSDK;
 
 Vehicle::Vehicle(Linker* linker)
-  : linker(NULL)
+  : linker(linker)
   , legacyLinker(NULL)
   , camera(NULL)
   , gimbal(NULL)
