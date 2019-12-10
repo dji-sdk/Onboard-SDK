@@ -226,6 +226,11 @@ void OsdkCommand_SendAsync(T_CmdHandle *cmdHandle, T_CmdInfo *cmdInfo,
     goto err;
   }
 
+  if (!func) {
+    OSDK_LOG_DEBUG(MODULE_NAME_COMMAND, "Send a none callback async request");
+    return;
+  }
+
   if (OsdkOsal_MutexLock(cmdHandle->waitAckItemMutex) != OSDK_STAT_OK) {
     OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "mutex lock error");
     result = OSDK_STAT_ERR;
