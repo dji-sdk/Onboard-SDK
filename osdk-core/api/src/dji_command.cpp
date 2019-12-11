@@ -271,3 +271,6 @@ const uint8_t DJI::OSDK::V1ProtocolCMD::Gimbal::resetAngle[] = {
 const uint8_t DJI::OSDK::V1ProtocolCMD::Gimbal::rotateAngle[] = {
     V1ProtocolCMD::CMDSet::gimbal, 0x0A
 };
+const uint8_t DJI::OSDK::V1ProtocolCMD::Common::getVersion[] = {
+    V1ProtocolCMD::CMDSet::common, 0x01
+};

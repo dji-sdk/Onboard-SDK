@@ -149,6 +149,8 @@ public:
                                          const uint8_t *cmdData);
   void* decodeAck(E_OsdkStat ret, T_CmdInfo &ackInfo, uint8_t *ackData);
 
+  void initX5SEnableThread();
+
  private:
   uint8_t rawVersionACK[MAX_ACK_SIZE];
 
@@ -176,6 +178,8 @@ public:
     T_RecvCmdItem cmdItemList;
   } CmdListData;
   static CmdListData cmdListData[];
+  T_OsdkTaskHandle legacyX5SEnableHandle;
+  static void *legacyX5SEnableTask(void *arg);
 }; // class LegacyLinker
 
 } // namespace OSDK

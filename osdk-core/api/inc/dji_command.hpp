@@ -200,6 +200,11 @@ class V1ProtocolCMD : public ErrorCode
     const static uint8_t rotateAngle[MAX_CMD_ARRAY_SIZE];
   } Gimbal;
 
+  typedef struct Common
+  {
+    const static uint8_t getVersion[MAX_CMD_ARRAY_SIZE];
+  } Common;
+
   class CMDSet
   {
    public:
