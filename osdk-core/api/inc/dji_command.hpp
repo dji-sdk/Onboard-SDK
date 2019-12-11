@@ -205,6 +205,11 @@ class V1ProtocolCMD : public ErrorCode
     const static uint8_t getVersion[MAX_CMD_ARRAY_SIZE];
   } Common;
 
+  typedef struct fc
+  {
+    const static uint8_t usbFlightMode[MAX_CMD_ARRAY_SIZE];
+  } fc;
+
   class CMDSet
   {
    public:

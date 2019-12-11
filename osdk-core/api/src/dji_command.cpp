@@ -274,3 +274,6 @@ const uint8_t DJI::OSDK::V1ProtocolCMD::Gimbal::rotateAngle[] = {
 const uint8_t DJI::OSDK::V1ProtocolCMD::Common::getVersion[] = {
     V1ProtocolCMD::CMDSet::common, 0x01
 };
+const uint8_t DJI::OSDK::V1ProtocolCMD::fc::usbFlightMode[] = {
+    V1ProtocolCMD::CMDSet::fc, 0x1B
+};

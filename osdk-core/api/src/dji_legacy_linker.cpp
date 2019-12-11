@@ -59,7 +59,6 @@ void *LegacyLinker::legacyX5SEnableTask(void *arg) {
     for(;;) {
       OsdkOsal_TaskSleepMs(500);
       linker->send(&cmdInfo, (uint8_t *) &data);
-      DSTATUS("Heart beat");
     }
   } else {
     DERROR("Legacy X5S Enable task run failed because of the invalid linker "
