@@ -49,6 +49,8 @@ public:
 
 bool init();
 
+bool deinit();
+
 bool addUartChannel(const char *device, uint32_t baudrate,
                     E_ChannelIDType id);
 

@@ -103,6 +103,11 @@ E_OsdkStat OsdkCommand_Init(T_CmdHandle *cmdHandle, const T_CmdInitConf *conf) {
     return OSDK_STAT_ERR;
   }
 
+  if (OsdkOsal_MutexCreate(&cmdHandle->recvCmdHandleListMutex) != OSDK_STAT_OK) {
+    OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "mutex create error");
+    return OSDK_STAT_ERR;
+  }
+
   osdkStat = OsdkOsal_TaskCreate(&s_osdkRecvThread, OsdkCommand_RecvTask,
                                  OSDK_TASK_STACK_SIZE_DEFAULT, cmdHandle);
   if (osdkStat != OSDK_STAT_OK) {
@@ -388,11 +393,42 @@ E_OsdkStat OsdkCommand_RegRecvCmdHandler(T_CmdHandle *cmdHandle,
       OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "Not have enough resource");
       return OSDK_STAT_ERR;
     } else {
+
+      /*! lock recvCmdHandleList */
+      if (OsdkOsal_MutexLock(cmdHandle->recvCmdHandleListMutex)
+          != OSDK_STAT_OK) {
+        OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "mutex lock error");
+        return OSDK_STAT_ERR;
+      }
+
+      /*! add new cmd handle in recvCmdHandleList */
       cmdHandle->recvCmdHandleList[i] = *recvCmdHandle;
       cmdHandle->recvCmdHandleListCount++;
+
+      /*! unlock recvCmdHandleList */
+      if (OsdkOsal_MutexUnlock(cmdHandle->recvCmdHandleListMutex)
+          != OSDK_STAT_OK) {
+        OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "mutex unlock error");
+        return OSDK_STAT_ERR;
+      }
     }
   } else {
+
+    /*! lock recvCmdHandleList */
+    if (OsdkOsal_MutexLock(cmdHandle->recvCmdHandleListMutex) != OSDK_STAT_OK) {
+      OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "mutex lock error");
+      return OSDK_STAT_ERR;
+    }
+
+    /*! replace cmd handle in recvCmdHandleList */
     cmdHandle->recvCmdHandleList[i] = *recvCmdHandle;
+
+    /*! unlock recvCmdHandleList */
+    if (OsdkOsal_MutexUnlock(cmdHandle->recvCmdHandleListMutex)
+        != OSDK_STAT_OK) {
+      OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "mutex unlock error");
+      return OSDK_STAT_ERR;
+    }
   }
 
   return OSDK_STAT_OK;
@@ -496,6 +532,14 @@ static E_OsdkStat OsdkCommand_DealCmd(T_CmdHandle *cmdHandle,
     }
   } else if (cmdInfo->packetType == OSDK_COMMAND_PACKET_TYPE_REQUEST) {
     findHandleFlag = false;
+
+    /*! lock recvCmdHandleList */
+    if (OsdkOsal_MutexLock(cmdHandle->recvCmdHandleListMutex) != OSDK_STAT_OK) {
+      OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "mutex lock error");
+      return OSDK_STAT_ERR;
+    }
+
+    /*! deal the recvCmdHandleList callback */
     for (i = 0; i < cmdHandle->recvCmdHandleListCount; i++) {
       if (cmdHandle->recvCmdHandleList[i].protoType == cmdInfo->protoType) {
         for (j = 0; j < cmdHandle->recvCmdHandleList[i].cmdCount; j++) {
@@ -519,6 +563,13 @@ static E_OsdkStat OsdkCommand_DealCmd(T_CmdHandle *cmdHandle,
           }
         }
       }
+    }
+
+    /*! unlock recvCmdHandleList */
+    if (OsdkOsal_MutexUnlock(cmdHandle->recvCmdHandleListMutex)
+        != OSDK_STAT_OK) {
+      OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "mutex unlock error");
+      return OSDK_STAT_ERR;
     }
 
     if (findHandleFlag == true) {

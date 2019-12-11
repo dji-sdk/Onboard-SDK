@@ -34,7 +34,7 @@ using namespace DJI;
 using namespace DJI::OSDK;
 
 Vehicle::Vehicle(Linker* linker)
-  : linker(NULL)
+  : linker(linker)
   , legacyLinker(NULL)
   , camera(NULL)
   , gimbal(NULL)
@@ -220,7 +220,72 @@ Vehicle::functionalSetUp()
 
 Vehicle::~Vehicle()
 {
-  delete this->linker;
+  if (this->subscribe)
+  {
+    subscribe->reset(1);
+  }
+  if(this->camera)
+  {
+    delete this->camera;
+  }
+
+  if(this->gimbal)
+  {
+    delete this->gimbal;
+  }
+
+  if(this->control)
+  {
+    delete this->control;
+  }
+
+  if (this->mfio)
+  {
+    delete this->mfio;
+  }
+
+  if (this->moc)
+  {
+    delete this->moc;
+  }
+
+  if (this->mobileDevice)
+  {
+    delete this->mobileDevice;
+  }
+
+  if (this->payloadDevice)
+  {
+    delete this->payloadDevice;
+  }
+  if (this->cameraManager)
+  {
+    delete this->cameraManager;
+  }
+  if (this->psdkManager)
+  {
+    delete this->psdkManager;
+  }
+  if (this->broadcast)
+  {
+    delete this->broadcast;
+  }
+  if (this->subscribe)
+  {
+    delete this->subscribe;
+  }
+  if (this->hardSync)
+  {
+    delete this->hardSync;
+  }
+  if (this->missionManager)
+  {
+    delete this->missionManager;
+  }
+  if(this->flightController)
+  {
+    delete this->flightController;
+  }
 }
 
 
@@ -466,12 +531,6 @@ Vehicle::initMOC()
     DERROR("Failed to allocate memory for MobileCommunication!\n");
     return false;
   }
-  bool ret = this->legacyLinker->registerCMDCallback(
-      OpenProtocolCMD::CMDSet::Broadcast::fromMobile[0],
-      OpenProtocolCMD::CMDSet::Broadcast::fromMobile[1],
-      this->moc->fromMSDKHandler.callback,
-      this->moc->fromMSDKHandler.userData);
-  if (!ret) DERROR("Register broadcast callback fail.");
   return true;
 }
 
@@ -489,12 +548,6 @@ Vehicle::initMobileDevice()
     DERROR("Failed to allocate memory for MobileDevice!\n");
     return false;
   }
-  bool ret = this->legacyLinker->registerCMDCallback(
-      OpenProtocolCMD::CMDSet::Broadcast::fromMobile[0],
-      OpenProtocolCMD::CMDSet::Broadcast::fromMobile[1],
-      this->mobileDevice->fromMSDKHandler.callback,
-      this->mobileDevice->fromMSDKHandler.userData);
-  if (!ret) DERROR("Register broadcast callback fail.");
   return true;
 }
 bool Vehicle::initPayloadDevice()
@@ -510,12 +563,6 @@ bool Vehicle::initPayloadDevice()
     DERROR("Failed to allocate memory for payload Device!\n");
     return false;
   }
-  bool ret = this->legacyLinker->registerCMDCallback(
-      OpenProtocolCMD::CMDSet::Broadcast::fromPayload[0],
-      OpenProtocolCMD::CMDSet::Broadcast::fromPayload[1],
-      this->payloadDevice->fromPSDKHandler.callback,
-      this->payloadDevice->fromPSDKHandler.userData);
-  if (!ret) DERROR("Register broadcast callback fail.");
   return true;
 
 }
@@ -603,42 +650,6 @@ Vehicle::initHardSync()
     {
       return false;
     }
-    bool ret = this->legacyLinker->registerCMDCallback(
-        OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEAGPSGSA[0],
-        OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEAGPSGSA[1],
-        this->hardSync->ppsNMEAHandler.callback,
-        this->hardSync->ppsNMEAHandler.userData);
-    ret &= this->legacyLinker->registerCMDCallback(
-        OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEAGPSRMC[0],
-        OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEAGPSRMC[1],
-        this->hardSync->ppsNMEAHandler.callback,
-        this->hardSync->ppsNMEAHandler.userData);
-    ret &= this->legacyLinker->registerCMDCallback(
-        OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEARTKGSA[0],
-        OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEARTKGSA[1],
-        this->hardSync->ppsNMEAHandler.callback,
-        this->hardSync->ppsNMEAHandler.userData);
-    ret &= this->legacyLinker->registerCMDCallback(
-        OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEARTKRMC[0],
-        OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEARTKRMC[1],
-        this->hardSync->ppsNMEAHandler.callback,
-        this->hardSync->ppsNMEAHandler.userData);
-    ret &= this->legacyLinker->registerCMDCallback(
-        OpenProtocolCMD::CMDSet::HardwareSync::ppsUTCTime[0],
-        OpenProtocolCMD::CMDSet::HardwareSync::ppsUTCTime[1],
-        this->hardSync->ppsUTCTimeHandler.callback,
-        this->hardSync->ppsUTCTimeHandler.userData);
-    ret &= this->legacyLinker->registerCMDCallback(
-        OpenProtocolCMD::CMDSet::HardwareSync::ppsUTCFCTimeRef[0],
-        OpenProtocolCMD::CMDSet::HardwareSync::ppsUTCFCTimeRef[1],
-        this->hardSync->ppsUTCFCTimeHandler.callback,
-        this->hardSync->ppsUTCFCTimeHandler.userData);
-    ret &= this->legacyLinker->registerCMDCallback(
-        OpenProtocolCMD::CMDSet::HardwareSync::ppsSource[0],
-        OpenProtocolCMD::CMDSet::HardwareSync::ppsSource[1],
-        this->hardSync->ppsSourceHandler.callback,
-        this->hardSync->ppsSourceHandler.userData);
-    if (!ret) DERROR("Register hardSync callback fail.");
   }
   else
   {

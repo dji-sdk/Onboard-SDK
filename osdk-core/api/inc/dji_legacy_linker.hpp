@@ -112,6 +112,12 @@ public:
   //! Destructor
   ~LegacyLinker();
 
+  typedef struct legacyAdaptingData {
+    VehicleCallBack cb;
+    UserData udata;
+    Vehicle *vehicle;
+  } legacyAdaptingData;
+
   /************************** Init ******************************************/
 public:
   void init();
@@ -163,6 +169,13 @@ public:
   ACK::MFIOGet          mfioGetACK;
   ACK::ExtendedFunctionRsp extendedFunctionRspAck;
   ACK::ParamAck         paramAck;
+
+
+  typedef struct CmdListData {
+    T_RecvCmdHandle recvCmdHandle;
+    T_RecvCmdItem cmdItemList;
+  } CmdListData;
+  static CmdListData cmdListData[];
 }; // class LegacyLinker
 
 } // namespace OSDK
