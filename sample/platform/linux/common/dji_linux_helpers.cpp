@@ -102,15 +102,15 @@ LinuxSetup::setupEnvironment(int argc, char** argv)
 
   if(DJI_REG_LOGGER_CONSOLE(&printConsole) != true) {
     throw std::runtime_error("logger console register fail");
-  };
+  }
 
   if(DJI_REG_UART_HANDLER(&halUartHandler) != true) {
     throw std::runtime_error("Uart handler register fail");
-  };
+  }
 
   if(DJI_REG_OSAL_HANDLER(&osalHandler) != true) {
     throw std::runtime_error("Osal handler register fail");
-  };
+  }
 
   // Config file loading
   const char* acm_dev_prefix = "/dev/ttyACM";

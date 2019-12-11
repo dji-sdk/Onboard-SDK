@@ -47,6 +47,11 @@ Vehicle::Vehicle(Linker* linker)
   , hardSync(NULL)
   , virtualRC(NULL)
   , payloadDevice(NULL)
+  , cameraManager(NULL)
+  , gimbalManager(NULL)
+  , psdkManager(NULL)
+  , flightController(NULL)
+  , missionManager(NULL)
 {
   ackErrorCode.data = OpenProtocolCMD::ErrorCode::CommonACK::NO_RESPONSE_ERROR;
 }

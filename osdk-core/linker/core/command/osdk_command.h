@@ -110,7 +110,7 @@ typedef struct _CommandHandle {
 
 /* Exported functions --------------------------------------------------------*/
 E_OsdkStat OsdkCommand_Init(T_CmdHandle *cmdHandle, const T_CmdInitConf *conf);
-E_OsdkStat OsdkCommand_DeInit(void);
+E_OsdkStat OsdkCommand_DeInit(T_CmdHandle *cmdHandle);
 E_OsdkStat OsdkCommand_Send(T_CmdInfo *cmdInfo, const uint8_t *cmdData);
 
 E_OsdkStat OsdkCommand_RegRecvCmdHandler(T_CmdHandle *cmdHandle,

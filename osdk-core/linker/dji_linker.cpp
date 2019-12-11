@@ -70,7 +70,8 @@ Linker::init()
 bool
 Linker::deinit()
 {
-  OsdkCommand_DeInit();
+  auto ret = OsdkCore_RootTaskDeInit();
+  OsdkCommand_DeInit(OsdkCommand_GetInstance());
 
   return true;
 }
