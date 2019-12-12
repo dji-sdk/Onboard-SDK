@@ -82,6 +82,17 @@ class FlightActions {
 
  private:
   FlightLink *flightLink;
+
+ private:
+#pragma pack(1)
+  typedef struct USBCtrlData
+  {
+    uint16_t version;
+    uint8_t  cmd;
+  } USBCtrlData;
+#pragma pack()
+
+  bool setUSBFlightOn(Vehicle *v, bool en);
 };
 }
 }

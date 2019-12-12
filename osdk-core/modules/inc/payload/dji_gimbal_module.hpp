@@ -42,7 +42,7 @@ class GimbalModule : public PayloadBase {
 
   /*! @brief the work mode of gimbal
    */
-  enum GimbalWorkMode {
+  enum GimbalWorkMode : uint8_t {
     WORK_MODE_FREE = 0, /*!< Free mode */
     WORK_MODE_FPV = 1,  /*!< FPV mode */
     WORK_MODE_TAW_FOLLOW = 2, /*!< Follow mode */
@@ -51,7 +51,7 @@ class GimbalModule : public PayloadBase {
 
   /*! @brief the work mode of gimbal
    */
-  enum ReturnCenterCMD {
+  enum ReturnCenterCMD : uint8_t {
     CENTER = 1,  /*!< yaw return center for drone, pry return center for osmo */
     SELFIE = 2,  /*!< pry return toward user */
     PITCH_AND_YAW = 3, /*!< pitch and yaw return center */
@@ -68,7 +68,7 @@ class GimbalModule : public PayloadBase {
     float pitch;
     float roll;
     float yaw;
-    uint8_t time;
+    double time;
   } Rotation;
 
   typedef struct gimbalAngleSetting

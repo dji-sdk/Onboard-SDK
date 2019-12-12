@@ -404,6 +404,9 @@ E_OsdkStat OsdkChannel_CommonSend(T_ChannelItem *channelItem,
                                     channelItem->sendFrameBuff, &length,
                                     cmdInfo, cmdData) != OSDK_STAT_OK) {
     OSDK_LOG_ERROR(MODULE_NAME_CHANNEL, "protocol pack error");
+    if (OsdkOsal_MutexUnlock(channelItem->sendMutex) != OSDK_STAT_OK) {
+      OSDK_LOG_ERROR(MODULE_NAME_CHANNEL, "mutex unlock error");
+    }
     return OSDK_STAT_ERR;
   }
 
@@ -411,6 +414,9 @@ E_OsdkStat OsdkChannel_CommonSend(T_ChannelItem *channelItem,
                                channelItem->sendFrameBuff,
                                length) != OSDK_STAT_OK) {
     OSDK_LOG_ERROR(MODULE_NAME_CHANNEL, "hal send error");
+    if (OsdkOsal_MutexUnlock(channelItem->sendMutex) != OSDK_STAT_OK) {
+      OSDK_LOG_ERROR(MODULE_NAME_CHANNEL, "mutex unlock error");
+    }
     return OSDK_STAT_ERR;
   }
 

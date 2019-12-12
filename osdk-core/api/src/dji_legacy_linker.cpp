@@ -29,6 +29,7 @@
 
 #include "dji_legacy_linker.hpp"
 #include "dji_vehicle.hpp"
+#include "osdk_device_id.h"
 
 #define MAX_PARAMETER_VALUE_LENGTH 8
 
@@ -38,6 +39,43 @@
 
 using namespace DJI;
 using namespace DJI::OSDK;
+
+
+void *LegacyLinker::legacyX5SEnableTask(void *arg) {
+  DSTATUS("Legacy X5S Enable task created.");
+  if (arg) {
+    Linker *linker = (Linker *) arg;
+    T_CmdInfo cmdInfo = {0};
+    uint8_t data = 2;
+
+    cmdInfo.cmdSet = V1ProtocolCMD::Common::getVersion[0];
+    cmdInfo.cmdId = V1ProtocolCMD::Common::getVersion[1];
+    cmdInfo.dataLen = sizeof(data);
+    cmdInfo.needAck = OSDK_COMMAND_NEED_ACK_FINISH_ACK;
+    cmdInfo.packetType = OSDK_COMMAND_PACKET_TYPE_REQUEST;
+    cmdInfo.addr = GEN_ADDR(0, ADDR_V1_COMMAND_INDEX);
+    cmdInfo.receiver = 0x00;
+    cmdInfo.sender = OSDK_COMMAND_PC_DEVICE_ID;
+    for(;;) {
+      OsdkOsal_TaskSleepMs(500);
+      linker->send(&cmdInfo, (uint8_t *) &data);
+    }
+  } else {
+    DERROR("Legacy X5S Enable task run failed because of the invalid linker "
+           "ptr. Please recheck this task params, or X5S/X7 will not output "
+           "vedio stream.");
+  }
+}
+
+void LegacyLinker::initX5SEnableThread() {
+  /*! create task for X5S enable pinging */
+  E_OsdkStat osdkStat = OsdkOsal_TaskCreate(&legacyX5SEnableHandle,
+      (void *(*)( void *)) (DJI::OSDK::LegacyLinker::legacyX5SEnableTask),
+      OSDK_TASK_STACK_SIZE_DEFAULT, vehicle->linker);
+  if (osdkStat != OSDK_STAT_OK) {
+    DERROR("legacyX5SEnableTask create error:%d", osdkStat);
+  }
+}
 
 //@clang-format: off
 LegacyLinker::CmdListData LegacyLinker::cmdListData[] = {
@@ -60,9 +98,12 @@ LegacyLinker::LegacyLinker(Vehicle *vehicle)
   for (int i = 0; i < sizeof(cmdListData) / sizeof(CmdListData); i++) {
     memset(cmdListData[i].cmdItemList.userData, 0, sizeof(legacyAdaptingData));
   }
+
+  initX5SEnableThread();
 }
 
 LegacyLinker::~LegacyLinker() {
+  OsdkOsal_TaskDestroy(legacyX5SEnableHandle);
 }
 
 void LegacyLinker::send(const uint8_t cmd[], void *pdata, size_t len) {

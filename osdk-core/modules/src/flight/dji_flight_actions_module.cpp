@@ -28,6 +28,7 @@
 
 #include "dji_flight_actions_module.hpp"
 #include <dji_vehicle.hpp>
+#include "osdk_device_id.h"
 #include "dji_flight_link.hpp"
 
 using namespace DJI;
@@ -35,9 +36,48 @@ using namespace DJI::OSDK;
 
 FlightActions::FlightActions(Vehicle* vehicle) {
   flightLink = new FlightLink(vehicle);
+  setUSBFlightOn(vehicle, true);
 }
 
 FlightActions::~FlightActions() { delete this->flightLink; }
+
+bool FlightActions::setUSBFlightOn(Vehicle *v, bool en) {
+  uint16_t l = 1;
+  uint16_t h = 1;
+  uint16_t c = (h << 8) | (l & 0xff);
+  uint8_t lBit = c & 1;
+  uint8_t hBit = (uint16_t)c >> 15;
+  c |= 1 << 8;
+  c |= 1 << 15;
+
+  USBCtrlData data;
+  memset(&data, 0, sizeof(data));
+  data.version = c;
+  data.cmd = (en) ? 1 : 0;
+
+  T_CmdInfo cmdInfo = {0};
+  T_CmdInfo ackInfo = {0};
+  uint8_t cbData[1024] = {0};
+
+  cmdInfo.cmdSet = V1ProtocolCMD::fc::usbFlightMode[0];
+  cmdInfo.cmdId = V1ProtocolCMD::fc::usbFlightMode[1];
+  cmdInfo.dataLen = sizeof(data);
+  cmdInfo.needAck = OSDK_COMMAND_NEED_ACK_FINISH_ACK;
+  cmdInfo.packetType = OSDK_COMMAND_PACKET_TYPE_REQUEST;
+  cmdInfo.addr = GEN_ADDR(0, ADDR_V1_COMMAND_INDEX);
+  cmdInfo.receiver = OSDK_COMMAND_FC_DEVICE_ID;
+  cmdInfo.sender = OSDK_COMMAND_PC_DEVICE_ID;
+  E_OsdkStat ret =
+      v->linker->sendSync(&cmdInfo, (uint8_t *) &data, &ackInfo, cbData, 500,
+                          3);
+  if ((ret != OSDK_STAT_OK) && (cbData[0] == 0x00)) {
+    DERROR("Configure usb-connected-flight on failed! Cannot take off !");
+    return false;
+  } else {
+    DSTATUS("Configure usb-connected-flight on successfully.");
+    return true;
+  }
+}
 
 FlightActions::UCBRetCodeHandler* FlightActions::allocUCBHandler(
     void* callback, UserData userData) {

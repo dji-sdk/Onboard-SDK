@@ -47,6 +47,11 @@ Vehicle::Vehicle(Linker* linker)
   , hardSync(NULL)
   , virtualRC(NULL)
   , payloadDevice(NULL)
+  , cameraManager(NULL)
+  , gimbalManager(NULL)
+  , psdkManager(NULL)
+  , flightController(NULL)
+  , missionManager(NULL)
 {
   ackErrorCode.data = OpenProtocolCMD::ErrorCode::CommonACK::NO_RESPONSE_ERROR;
 }
@@ -877,18 +882,19 @@ Vehicle::parseDroneVersionInfo(Version::VersionData& versionData,
   return true;
 }
 
-bool
+ACK::ErrorCode
 Vehicle::activate(ActivateData* data, uint32_t timeoutMs)
 {
   T_CmdInfo cmdInfo = {0};
   T_CmdInfo ackInfo = {0};
   uint8_t cbData[1024];
-  uint16_t *activateData;
+  ACK::ErrorCode ack;
 
   if(this->functionalSetUp() != 0)
   {
     DERROR("Unable to initialize some vehicle components!");
-    return false;
+    ack.data = OpenProtocolCMD::ErrorCode::CommonACK::NO_RESPONSE_ERROR;
+    return ack;
   }
 
   data->version        = versionData.fwVersion;
@@ -908,47 +914,50 @@ Vehicle::activate(ActivateData* data, uint32_t timeoutMs)
   cmdInfo.addr = GEN_ADDR(0, ADDR_SDK_COMMAND_INDEX);
   cmdInfo.channelId = 0;
 
-  if(timeoutMs < 3)
+  if(timeoutMs > 3)
   {
     timeoutMs = 3;
   }
 
-  linker->sendSync(&cmdInfo,(uint8_t *)&accountData, &ackInfo, cbData, timeoutMs/3, 3);
-  activateData = (uint16_t *)cbData;
+  ack = *(ACK::ErrorCode *) legacyLinker->sendSync(
+      OpenProtocolCMD::CMDSet::Activation::activate, (uint8_t *) &accountData,
+      sizeof(accountData) - sizeof(char *), timeoutMs * 1000 / 3, 3);
 
-  if (*activateData == OpenProtocolCMD::ErrorCode::ActivationACK::SUCCESS &&
+  if (ack.data == OpenProtocolCMD::ErrorCode::ActivationACK::SUCCESS &&
       accountData.encKey)
   {
     DSTATUS("Activation successful\n");
     linker->setKey(accountData.encKey);
     setActivationStatus(true);
-
   }
   else
   {
-    DERROR("Failed to activate please retry SET 0x%X ID 0x%X\n",
-           cmdInfo.cmdSet, cmdInfo.cmdId);
+    //! Let user know about other errors if any
+    ACK::getErrorCodeMessage(ack, __func__);
+    DERROR("Failed to activate please retry SET 0x%X ID 0x%X code 0x%X\n",
+           ack.info.cmd_set, ack.info.cmd_id, ack.data);
 
-    if(*activateData == ErrorCode::ActivationACK::NEW_DEVICE_ERROR )
+    if(ack.info.cmd_set == OpenProtocolCMD::CMDSet::activation
+        && ack.info.cmd_id == 1
+        && ack.data == ErrorCode::ActivationACK::NEW_DEVICE_ERROR )
     {
       DERROR("Solutions for NEW_DEVICE_ERROR:\n"
-               "\t* Double-check your app_id and app_key in UserConfig.txt. "
-               "Does it match with your DJI developer account?\n"
-               "\t* If this is a new device, you need to activate it through the App or DJI Assistant 2 with Internet\n"
-               "\tFor different aircraft, the App and the version of DJI Assistant 2 might be different\n"
-               "\tFor A3, N3, M600/Pro and M100, please use DJI GO App\n"
-               "\tFor M210 V1, please use DJI GO 4 App or DJI Pilot App\n"
-               "\tFor M210 V2, please use DJI Pilot App\n"
-               "\tFor DJI Assistant 2, it's available on the 'Download' tab of the product page\n"
-               "\t* If this device is previously activated with another app_id and app_key, "
-               "you will need to re-activate it again.\n"
-               "\t* A new device needs to be activated twice to fix the NEW_DEVICE_ERROR, "
-               "so please try it twice.\n");
+             "\t* Double-check your app_id and app_key in UserConfig.txt. "
+             "Does it match with your DJI developer account?\n"
+             "\t* If this is a new device, you need to activate it through the App or DJI Assistant 2 with Internet\n"
+             "\tFor different aircraft, the App and the version of DJI Assistant 2 might be different\n"
+             "\tFor A3, N3, M600/Pro and M100, please use DJI GO App\n"
+             "\tFor M210 V1, please use DJI GO 4 App or DJI Pilot App\n"
+             "\tFor M210 V2, please use DJI Pilot App\n"
+             "\tFor DJI Assistant 2, it's available on the 'Download' tab of the product page\n"
+             "\t* If this device is previously activated with another app_id and app_key, "
+             "you will need to re-activate it again.\n"
+             "\t* A new device needs to be activated twice to fix the NEW_DEVICE_ERROR, "
+             "so please try it twice.\n");
     }
-    return false;
   }
 
-  return true;
+  return ack;
 }
 
 

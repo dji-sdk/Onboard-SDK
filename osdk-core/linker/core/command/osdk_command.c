@@ -126,7 +126,9 @@ E_OsdkStat OsdkCommand_Init(T_CmdHandle *cmdHandle, const T_CmdInitConf *conf) {
 }
 
 /* @TODO To be completed */
-E_OsdkStat OsdkCommand_DeInit() {
+E_OsdkStat OsdkCommand_DeInit(T_CmdHandle *cmdHandle) {
+  OsdkOsal_MutexDestroy(cmdHandle->waitAckItemMutex);
+  OsdkOsal_MutexDestroy(cmdHandle->recvCmdHandleListMutex);
   OsdkOsal_TaskDestroy(s_osdkRecvThread);
   OsdkOsal_TaskDestroy(s_osdkSendPollThread);
   return OSDK_STAT_OK;
@@ -224,6 +226,11 @@ void OsdkCommand_SendAsync(T_CmdHandle *cmdHandle, T_CmdInfo *cmdInfo,
     OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "OsdkCommand_Send error");
     result = OSDK_STAT_ERR;
     goto err;
+  }
+
+  if (!func) {
+    OSDK_LOG_DEBUG(MODULE_NAME_COMMAND, "Send a none callback async request");
+    return;
   }
 
   if (OsdkOsal_MutexLock(cmdHandle->waitAckItemMutex) != OSDK_STAT_OK) {

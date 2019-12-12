@@ -44,12 +44,12 @@ FILE(GLOB SOURCE_FILES
         ${CMAKE_CURRENT_SOURCE_DIR}/../osal/*.c
         )
 
-add_executable(camera_manager_sync_sample
+add_executable(payloads_sync_sample
         main_sync.cpp
         ${SOURCE_FILES})
-target_link_libraries(camera_manager_sync_sample djiosdk-core)
+target_link_libraries(payloads_sync_sample djiosdk-core)
 
-add_executable(camera_manager_async_sample
+add_executable(payloads_async_sample
         main_async.cpp
         ${SOURCE_FILES})
-target_link_libraries(camera_manager_async_sample djiosdk-core)
+target_link_libraries(payloads_async_sample djiosdk-core)
