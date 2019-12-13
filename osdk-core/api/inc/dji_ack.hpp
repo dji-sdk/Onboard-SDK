@@ -56,7 +56,7 @@ public:
     uint8_t           cmd_set;
     uint8_t           cmd_id;
     uint16_t          len;
-    uint8_t*          buf;
+    uint8_t*          buf; // ugly design before, now means the recv package data buf
     uint8_t           seqNumber;
     Version::FirmWare version;
   } Entry; // pack(1)
