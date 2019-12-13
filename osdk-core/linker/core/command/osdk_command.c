@@ -381,13 +381,15 @@ E_OsdkStat OsdkCommand_RegRecvCmdHandler(T_CmdHandle *cmdHandle,
     }
   }
 
+  /*! TODO: here recvCmdHandle->cmdCount now set always = 1, each cmdList only
+   * include one (cmdset, cmdid), to be improved in the future. */
   for (i = 0; i < cmdHandle->recvCmdHandleListCount; i++) {
     if (cmdHandle->recvCmdHandleList[i].protoType == recvCmdHandle->protoType) {
       for (j = 0; j < cmdHandle->recvCmdHandleList[i].cmdCount; j++) {
         for (k = 0; k < recvCmdHandle->cmdCount; k++) {
-          if (cmdHandle->recvCmdHandleList[i].cmdList[j].cmdSet ==
-                  recvCmdHandle->cmdList[k].cmdSet &&
-              cmdHandle->recvCmdHandleList[i].cmdList[j].cmdSet != 0) {
+          if ((cmdHandle->recvCmdHandleList[i].cmdList[j].cmdSet == recvCmdHandle->cmdList[k].cmdSet) &&
+              (cmdHandle->recvCmdHandleList[i].cmdList[j].cmdId == recvCmdHandle->cmdList[k].cmdId) &&
+              (cmdHandle->recvCmdHandleList[i].cmdList[j].cmdSet != 0)) {
             goto foundCmdFinish;
           }
         }
