@@ -388,13 +388,14 @@ E_OsdkStat OsdkCommand_RegRecvCmdHandler(T_CmdHandle *cmdHandle,
           if (cmdHandle->recvCmdHandleList[i].cmdList[j].cmdSet ==
                   recvCmdHandle->cmdList[k].cmdSet &&
               cmdHandle->recvCmdHandleList[i].cmdList[j].cmdSet != 0) {
-            break;
+            goto foundCmdFinish;
           }
         }
       }
     }
   }
 
+foundCmdFinish:
   if (i == cmdHandle->recvCmdHandleListCount) {
     if (cmdHandle->recvCmdHandleListCount == PROT_MAX_SUPPORT_CMD_SET) {
       OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "Not have enough resource");

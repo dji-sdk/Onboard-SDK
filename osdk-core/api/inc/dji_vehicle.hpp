@@ -44,7 +44,6 @@
 #include "dji_camera.hpp"
 #include "dji_control.hpp"
 #include "dji_subscription.hpp"
-#include "dji_mobile_communication.hpp"
 #include "dji_mobile_device.hpp"
 #include "dji_payload_device.hpp"
 #include "dji_virtual_rc.hpp"
@@ -97,7 +96,6 @@ public:
   Camera*              camera;
   Gimbal*              gimbal;
   MFIO*                mfio;
-  MobileCommunication* moc;
   MobileDevice*        mobileDevice;
   MissionManager*      missionManager;
   HardwareSync*        hardSync;
@@ -243,7 +241,6 @@ public:
   bool initCamera();
   bool initGimbal();
   bool initMFIO();
-  bool initMOC();
   bool initMobileDevice();
   bool initPayloadDevice();
   bool initMissionManager();

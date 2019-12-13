@@ -100,6 +100,4 @@ void sendAckToMobile(DJI::OSDK::Vehicle* vehicle, uint16_t cmdID,
 pthread_t setupSamplePollingThread(DJI::OSDK::Vehicle* vehicle);
 void* mobileSamplePoll(void* vehiclePtr);
 
-void setTestSuite(int testSuiteNumber);
-
 #endif // DJIOSDK_MOBILESAMPLE_HPP

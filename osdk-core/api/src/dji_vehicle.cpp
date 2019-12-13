@@ -42,7 +42,6 @@ Vehicle::Vehicle(Linker* linker)
   , broadcast(NULL)
   , subscribe(NULL)
   , mfio(NULL)
-  , moc(NULL)
   , mobileDevice(NULL)
   , hardSync(NULL)
   , virtualRC(NULL)
@@ -115,15 +114,6 @@ Vehicle::init()
   if(!initGimbal())
   {
     DERROR("Failed to initialize Gimbal!\n");
-    return false;
-  }
-
-  /*
-   * Initialize Mobile-Onboard Communication (MobileCommunication)
-   */
-  if (!initMOC())
-  {
-    DERROR("Failed to initialize MobileCommunication!\n");
     return false;
   }
 
@@ -247,11 +237,6 @@ Vehicle::~Vehicle()
   if (this->mfio)
   {
     delete this->mfio;
-  }
-
-  if (this->moc)
-  {
-    delete this->moc;
   }
 
   if (this->mobileDevice)
@@ -517,25 +502,6 @@ Vehicle::initMFIO()
     DSTATUS("MFIO is not supported on this platform!\n");
   }
 
-  return true;
-}
-
-
-bool
-Vehicle::initMOC()
-{
-  if(this->moc)
-  {
-    DDEBUG("vehicle->moc already initalized!");
-    return true;
-  }
-
-  moc = new (std::nothrow) MobileCommunication(this);
-  if (this->moc == 0)
-  {
-    DERROR("Failed to allocate memory for MobileCommunication!\n");
-    return false;
-  }
   return true;
 }
 

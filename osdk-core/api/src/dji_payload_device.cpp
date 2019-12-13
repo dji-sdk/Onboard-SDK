@@ -14,14 +14,11 @@
 PayloadDevice::PayloadDevice(Vehicle *vehicle)
     : vehicle(vehicle)
 {
-
-  this->fromPSDKHandler.callback = getDataFromPSDKCallback;
-  this->fromPSDKHandler.userData = 0;
+  setFromPSDKCallback(getDataFromPSDKCallback, NULL);
 }
 PayloadDevice::~PayloadDevice()
 {
-  this->fromPSDKHandler.callback = 0;
-  this->fromPSDKHandler.userData = 0;
+  setFromPSDKCallback(NULL, NULL);
 }
 Vehicle* PayloadDevice::getVehicle() const
 {
@@ -61,5 +58,9 @@ void PayloadDevice::setFromPSDKCallback(VehicleCallBack callback, UserData userD
 {
   this->fromPSDKHandler.callback = callback;
   this->fromPSDKHandler.userData =  userData;
+  vehicle->legacyLinker->registerCMDCallback(
+      OpenProtocolCMD::CMDSet::Broadcast::fromPayload[0],
+      OpenProtocolCMD::CMDSet::Broadcast::fromPayload[1],
+      fromPSDKHandler.callback, fromPSDKHandler.userData);
 }
 
