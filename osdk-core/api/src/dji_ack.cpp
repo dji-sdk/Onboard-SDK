@@ -629,22 +629,11 @@ ACK::getError(ACK::ErrorCode ack)
   else if (memcmp(cmd, OpenProtocolCMD::CMDSet::Control::setControl,
                   sizeof(cmd)) == 0)
   {
-    if (ack.info.buf[2] == ACK::RELEASE_CONTROL)
-    { //! Data is set at buf + SET_CMD_SIZE which is buf + 2;
-      // Release control was called
-      return (ack.data == OpenProtocolCMD::ErrorCode::ControlACK::SetControl::
-                            RELEASE_CONTROL_SUCCESS)
-               ? ACK::SUCCESS
-               : ACK::FAIL;
-    }
-    else if (ack.info.buf[2] == ACK::OBTAIN_CONTROL)
-    {
-      // Obtain control was called
-      return (ack.data == OpenProtocolCMD::ErrorCode::ControlACK::SetControl::
-                            OBTAIN_CONTROL_SUCCESS)
-               ? ACK::SUCCESS
-               : ACK::FAIL;
-    }
+      return ((ack.data
+          == OpenProtocolCMD::ErrorCode::ControlACK::SetControl::RELEASE_CONTROL_SUCCESS)
+          || (OpenProtocolCMD::ErrorCode::ControlACK::SetControl::OBTAIN_CONTROL_SUCCESS))
+             ? ACK::SUCCESS
+             : ACK::FAIL;
   }
   else if (memcmp(cmd, OpenProtocolCMD::CMDSet::Control::setArm, sizeof(cmd)) ==
            0)
