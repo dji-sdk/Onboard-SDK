@@ -865,6 +865,16 @@
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\osdk-core\api\src\dji_legacy_linker.cpp</FilePath>
             </File>
+            <File>
+              <FileName>dji_gimbal_manager.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\osdk-core\api\src\dji_gimbal_manager.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>dji_gimbal_module.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\osdk-core\modules\src\payload\dji_gimbal_module.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
