@@ -189,7 +189,14 @@ enum OSDK_OPERATOR_TYPE{
     ROS_OPERATOR_TYPE     = 3,
 };
 
-
+#pragma pack(1)
+typedef struct HeartBeatPack {
+    uint8_t  deviceID;
+    uint8_t  linkID;
+    uint32_t seqNumber;
+    uint8_t  data[8];
+} HeartBeatPack;
+#pragma pack()
 /*!
  * @brief Virtual RC Settings (supported only on Matrice 100)
  */

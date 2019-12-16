@@ -43,6 +43,9 @@ const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Activation::frequency[] = {
 const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Activation::toPayload[] = {
   OpenProtocolCMD::CMDSet::activation, 0xFB
 };
+const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Activation::heatBeatCmd[] = {
+        OpenProtocolCMD::CMDSet::activation, 0xFC
+};
 const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Activation::toMobile[] = {
   OpenProtocolCMD::CMDSet::activation, 0xFE
 };
