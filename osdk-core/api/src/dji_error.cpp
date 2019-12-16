@@ -335,7 +335,7 @@ const ErrorCode::ModuleDataType ErrorCode::module[ModuleMaxCnt] = {
     {"Reserve_9",  NULL},           /*!< RESERVE_9 */
     {"Reserve_10", NULL},           /*!< RESERVE_10 */
     {"FC",         NULL},           /*!< FCModule */
-    {"Gimbal",     NULL},           /*!< GimbalModule */
+    {"Gimbal",     GimbalFunction}, /*!< GimbalModule */
     {"Camera",     CameraFunction}, /*!< CameraModule */
     {"PSDK",       PSDKFunction},   /*!< PSDKModule */
     {"RC",         NULL},           /*!< RCModule */
@@ -343,56 +343,56 @@ const ErrorCode::ModuleDataType ErrorCode::module[ModuleMaxCnt] = {
 };
 
 /*! camera api error code */
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::InvalidCMD         = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::UNSUPPORTED_COMMAND);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::Timeout            = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::TIMEOUT);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::OutOfMemory        = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::RAM_ALLOCATION_FAILED);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::InvalidParam       = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::INVALID_COMMAND_PARAMETER);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::InvalidState       = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::UNSUPPORTED_COMMAND_IN_CUR_STATE);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::TimeNotSync        = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::CAMERA_TIME_NOT_SYNCHRONIZED);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::ParamSetFailed     = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::PARAMETER_SET_FAILED);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::ParamGetFailed     = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::PARAMETER_GET_FAILED);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::SDCardMISSING      = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::SD_CARD_MISSING);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::SDCardFull         = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::SD_CARD_FULL);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::SDCardError        = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::SD_CARD_ERROR);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::SensorError        = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::SENSOR_ERROR);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::SystemError        = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::SYSTEM_ERROR);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::ParamLenTooLong    = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::PARAMETER_TOTAL_TOO_LONG);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::ModuleInactivated  = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::MODULE_INACTIVATED);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::FWSeqNumNotInOrder = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::FIRMWARE_DATA_NUM_DISCONTINUOUS);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::FWCheckErr         = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::FIRMWARE_VERIFICATION_ERROR);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::FlashWriteError    = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::FLASH_WRITE_ERROR);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::FWInvalidType      = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::FIRMWARE_TYPE_MISMATCH);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::RCDisconnect       = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::REMOTE_CONTROL_UNCONNECTED);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::HardwareErr        = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::HARDWARE_ERROR);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::UAVDisconnect      = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::AIRCRAFT_UNCONNECTED);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::UpgradeErrorNow    = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::CANNOT_UPGRADE_IN_CUR_STATE);
-const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::UndefineError      = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::UNDEFINE_ERROR);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::InvalidCMD         = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::UNSUPPORTED_COMMAND);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::Timeout            = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::TIMEOUT);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::OutOfMemory        = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::RAM_ALLOCATION_FAILED);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::InvalidParam       = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::INVALID_COMMAND_PARAMETER);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::InvalidState       = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::UNSUPPORTED_COMMAND_IN_CUR_STATE);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::TimeNotSync        = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::CAMERA_TIME_NOT_SYNCHRONIZED);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::ParamSetFailed     = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::PARAMETER_SET_FAILED);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::ParamGetFailed     = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::PARAMETER_GET_FAILED);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::SDCardMISSING      = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::SD_CARD_MISSING);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::SDCardFull         = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::SD_CARD_FULL);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::SDCardError        = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::SD_CARD_ERROR);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::SensorError        = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::SENSOR_ERROR);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::SystemError        = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::SYSTEM_ERROR);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::ParamLenTooLong    = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::PARAMETER_TOTAL_TOO_LONG);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::ModuleInactivated  = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::MODULE_INACTIVATED);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::FWSeqNumNotInOrder = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::FIRMWARE_DATA_NUM_DISCONTINUOUS);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::FWCheckErr         = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::FIRMWARE_VERIFICATION_ERROR);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::FlashWriteError    = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::FLASH_WRITE_ERROR);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::FWInvalidType      = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::FIRMWARE_TYPE_MISMATCH);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::RCDisconnect       = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::REMOTE_CONTROL_UNCONNECTED);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::HardwareErr        = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::HARDWARE_ERROR);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::UAVDisconnect      = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::AIRCRAFT_UNCONNECTED);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::UpgradeErrorNow    = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::CANNOT_UPGRADE_IN_CUR_STATE);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::UndefineError      = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::UNDEFINE_ERROR);
 
 /*! gimbal api error code */
-const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::InvalidCMD         = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::UNSUPPORTED_COMMAND);
-const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::Timeout            = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::TIMEOUT);
-const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::OutOfMemory        = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::RAM_ALLOCATION_FAILED);
-const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::InvalidParam       = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::INVALID_COMMAND_PARAMETER);
-const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::InvalidState       = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::UNSUPPORTED_COMMAND_IN_CUR_STATE);
-const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::TimeNotSync        = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::CAMERA_TIME_NOT_SYNCHRONIZED);
-const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::ParamSetFailed     = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::PARAMETER_SET_FAILED);
-const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::ParamGetFailed     = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::PARAMETER_GET_FAILED);
-const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::SDCardMISSING      = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::SD_CARD_MISSING);
-const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::SDCardFull         = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::SD_CARD_FULL);
-const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::SDCardError        = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::SD_CARD_ERROR);
-const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::SensorError        = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::SENSOR_ERROR);
-const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::SystemError        = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::SYSTEM_ERROR);
-const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::ParamLenTooLong    = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::PARAMETER_TOTAL_TOO_LONG);
-const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::ModuleInactivated  = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::MODULE_INACTIVATED);
-const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::FWSeqNumNotInOrder = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::FIRMWARE_DATA_NUM_DISCONTINUOUS);
-const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::FWCheckErr         = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::FIRMWARE_VERIFICATION_ERROR);
-const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::FlashWriteError    = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::FLASH_WRITE_ERROR);
-const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::FWInvalidType      = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::FIRMWARE_TYPE_MISMATCH);
-const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::RCDisconnect       = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::REMOTE_CONTROL_UNCONNECTED);
-const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::HardwareErr        = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::HARDWARE_ERROR);
-const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::UAVDisconnect      = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::AIRCRAFT_UNCONNECTED);
-const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::UpgradeErrorNow    = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::CANNOT_UPGRADE_IN_CUR_STATE);
-const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::UndefineError      = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::UNDEFINE_ERROR);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::InvalidCMD         = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::UNSUPPORTED_COMMAND);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::Timeout            = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::TIMEOUT);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::OutOfMemory        = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::RAM_ALLOCATION_FAILED);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::InvalidParam       = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::INVALID_COMMAND_PARAMETER);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::InvalidState       = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::UNSUPPORTED_COMMAND_IN_CUR_STATE);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::TimeNotSync        = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::CAMERA_TIME_NOT_SYNCHRONIZED);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::ParamSetFailed     = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::PARAMETER_SET_FAILED);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::ParamGetFailed     = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::PARAMETER_GET_FAILED);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::SDCardMISSING      = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::SD_CARD_MISSING);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::SDCardFull         = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::SD_CARD_FULL);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::SDCardError        = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::SD_CARD_ERROR);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::SensorError        = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::SENSOR_ERROR);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::SystemError        = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::SYSTEM_ERROR);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::ParamLenTooLong    = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::PARAMETER_TOTAL_TOO_LONG);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::ModuleInactivated  = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::MODULE_INACTIVATED);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::FWSeqNumNotInOrder = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::FIRMWARE_DATA_NUM_DISCONTINUOUS);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::FWCheckErr         = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::FIRMWARE_VERIFICATION_ERROR);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::FlashWriteError    = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::FLASH_WRITE_ERROR);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::FWInvalidType      = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::FIRMWARE_TYPE_MISMATCH);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::RCDisconnect       = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::REMOTE_CONTROL_UNCONNECTED);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::HardwareErr        = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::HARDWARE_ERROR);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::UAVDisconnect      = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::AIRCRAFT_UNCONNECTED);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::UpgradeErrorNow    = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::CANNOT_UPGRADE_IN_CUR_STATE);
+const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::UndefineError      = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::UNDEFINE_ERROR);
 
 /*! PSDK api error code */
 const ErrorCode::ErrorCodeType ErrorCode::PSDKCommonErr::InvalidCMD         = ErrorCode::getErrorCode(PSDKModule, PSDKCommon, DJI_CMD_RETURN_CODE::UNSUPPORTED_COMMAND);
@@ -639,6 +639,11 @@ const ErrorCode::ErrorCodeMapType ErrorCode::getSystemCommonErrorMap() {
 const ErrorCode::FunctionDataType ErrorCode::SystemFunction[functionMaxCnt] = {
     {"SystemCommon", getSystemCommonErrorMap},   /*!< SystemCommon */
 };
+
+const ErrorCode::FunctionDataType ErrorCode::GimbalFunction[functionMaxCnt] = {
+    {"GimbalCommon", getGimbalCommonErrorMap},   /*!< GimbalCommon */
+};
+
 
 const ErrorCode::FunctionDataType ErrorCode::CameraFunction[functionMaxCnt] = {
     {"CameraCommon", getCameraCommonErrorMap},   /*!< CameraCommon */

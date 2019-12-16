@@ -515,15 +515,26 @@ static E_OsdkStat OsdkCommand_DealCmd(T_CmdHandle *cmdHandle,
             return OSDK_STAT_ERR;
           }
 
+          /*! get the callback and userData*/
+          Command_SendCallback cb = cmdHandle->waitAckItem[k].callback;
+          void *udata = cmdHandle->waitAckItem[k].userData;
           cmdHandle->waitAckItem[k].isValid = false;
+          if (OsdkOsal_MutexUnlock(cmdHandle->waitAckItemMutex) !=
+              OSDK_STAT_OK) {
+            OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "mutex unlock error");
+            return OSDK_STAT_ERR;
+          }
+
 #ifdef OS_DEBUG
           if (OsdkOsal_GetTimeUs(&timeFuncBefore) != OSDK_STAT_OK) {
             OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "get system time error");
           }
 #endif
-          cmdHandle->waitAckItem[k].callback(cmdInfo, cmdData,
-                                             cmdHandle->waitAckItem[k].userData,
-                                             OSDK_STAT_OK);
+          if (cb) {
+            cb(cmdInfo, cmdData, udata, OSDK_STAT_OK);
+          } else {
+            OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "callback is a null ptr.");
+          }
 #ifdef OS_DEBUG
           if (OsdkOsal_GetTimeUs(&timeFuncAfter) != OSDK_STAT_OK) {
             OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "get system time error");
@@ -532,11 +543,6 @@ static E_OsdkStat OsdkCommand_DealCmd(T_CmdHandle *cmdHandle,
           OSDK_LOG_DEBUG(MODULE_NAME_COMMAND, "Func deal about: %d us",
                         (timeFuncAfter - timeFuncBefore));
 #endif
-          if (OsdkOsal_MutexUnlock(cmdHandle->waitAckItemMutex) !=
-              OSDK_STAT_OK) {
-            OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "mutex unlock error");
-            return OSDK_STAT_ERR;
-          }
         }
       }
     }

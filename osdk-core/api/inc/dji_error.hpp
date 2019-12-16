@@ -1018,6 +1018,10 @@ class ErrorCode {
    */
   static const ErrorCodeMapType getSystemCommonErrorMap();
 
+  /*! @brief The array to contain all the function maps of gimbal.
+   */
+  static const FunctionDataType GimbalFunction[functionMaxCnt];
+
   /*! @brief The array to contain all the function maps of camera.
    */
   static const FunctionDataType CameraFunction[functionMaxCnt];
