@@ -412,5 +412,7 @@ bool LegacyLinker::registerCMDCallback(uint8_t cmdSet, uint8_t cmdID,
     }
   }
 
+  DERROR("This callback is not support in the legacy linker, please use the"
+         " new linker API.");
   return false;
 }

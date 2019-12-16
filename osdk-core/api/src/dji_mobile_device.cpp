@@ -14,15 +14,12 @@
 MobileDevice::MobileDevice(Vehicle* vehicle)
   : vehicle(vehicle)
 {
-
-  this->fromMSDKHandler.callback = getDataFromMSDKCallback;
-  this->fromMSDKHandler.userData = 0;
+  setFromMSDKCallback(getDataFromMSDKCallback, NULL);
 }
 
 MobileDevice::~MobileDevice()
 {
-  this->fromMSDKHandler.callback = 0;
-  this->fromMSDKHandler.userData = 0;
+  setFromMSDKCallback(NULL, NULL);
 }
 
 Vehicle*
@@ -70,4 +67,8 @@ MobileDevice::setFromMSDKCallback(VehicleCallBack callback, UserData userData)
 {
   this->fromMSDKHandler.callback = callback;
   this->fromMSDKHandler.userData = userData;
+  vehicle->legacyLinker->registerCMDCallback(
+      OpenProtocolCMD::CMDSet::Broadcast::fromMobile[0],
+      OpenProtocolCMD::CMDSet::Broadcast::fromMobile[1],
+      fromMSDKHandler.callback, fromMSDKHandler.userData);
 }
