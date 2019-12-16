@@ -49,6 +49,7 @@ public:
     {
       const static uint8_t getVersion[MAX_CMD_ARRAY_SIZE];
       const static uint8_t activate[MAX_CMD_ARRAY_SIZE];
+      const static uint8_t dataBury[MAX_CMD_ARRAY_SIZE];
       const static uint8_t frequency[MAX_CMD_ARRAY_SIZE];
       const static uint8_t toMobile[MAX_CMD_ARRAY_SIZE];
       const static uint8_t toPayload[MAX_CMD_ARRAY_SIZE];

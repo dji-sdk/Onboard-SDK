@@ -33,6 +33,30 @@
 using namespace DJI;
 using namespace DJI::OSDK;
 
+#ifndef DJIOSDK_MAJOR_VERSION
+#define DJIOSDK_MAJOR_VERSION 0
+#endif
+
+#ifndef DJIOSDK_MINOR_VERSION
+#define DJIOSDK_MINOR_VERSION 0
+#endif
+
+#ifndef DJIOSDK_PATCH_VERSION
+#define DJIOSDK_PATCH_VERSION 0
+#endif
+
+#ifndef DJIOSDK_IS_DEBUG
+#define DJIOSDK_IS_DEBUG 1
+#endif
+
+#ifndef DJIOSDK_HARDWARE_TYPE
+#define DJIOSDK_HARDWARE_TYPE 0
+#endif
+
+#ifndef DJIOSDK_OPERATOR_TYPE
+#define DJIOSDK_OPERATOR_TYPE 0
+#endif
+
 Vehicle::Vehicle(Linker* linker)
   : linker(linker)
   , legacyLinker(NULL)
@@ -927,6 +951,10 @@ Vehicle::activate(ActivateData* data, uint32_t timeoutMs)
       accountData.encKey)
   {
     DSTATUS("Activation successful\n");
+    for (uint8_t i = 0; i < MAX_SEND_DATA_BURY_PKG_COUNT; i++)
+    {
+        sendBuriedDataPkgToFC();
+    }
     linker->setKey(accountData.encKey);
     setActivationStatus(true);
   }
@@ -998,6 +1026,10 @@ Vehicle::activate(ActivateData* data, VehicleCallBack callback,
                           (uint8_t *) &accountData,
                           sizeof(accountData) - sizeof(char *), 1000, 3, cb,
                           udata);
+  for (uint8_t i = 0; i < MAX_SEND_DATA_BURY_PKG_COUNT; i++)
+  {
+      sendBuriedDataPkgToFC();
+  }
 }
 
 
@@ -1357,3 +1389,28 @@ Vehicle::isCmdSetSupported(const uint8_t cmdSet)
   return true;
 }
 
+void
+Vehicle::sendBuriedDataPkgToFC(void)
+{
+    char sdk_version[MAX_OSDK_VERSION_SIZE];
+    sprintf(sdk_version,"OSDK%d.%d.%d",DJIOSDK_MAJOR_VERSION, DJIOSDK_MINOR_VERSION, DJIOSDK_PATCH_VERSION);
+    DataBuryPack data = {" ", DJIOSDK_IS_DEBUG, DJIOSDK_HARDWARE_TYPE, DJIOSDK_OPERATOR_TYPE};
+    VehicleCallBack cb = NULL;
+    UserData     udata = NULL;
+    memcpy(data.sdk_version , sdk_version, sizeof(data.sdk_version) / sizeof(char));
+    if (this->stm32Flag == IS_STM32)
+    {
+        data.hardware_type = STM32_HARDWARE_TYPE;
+        data.operator_type = RTOS_OPERATOR_TYPE;
+    }
+    legacyLinker->sendAsync(OpenProtocolCMD::CMDSet::Activation::dataBury,
+                            (uint8_t *) &data,
+                            sizeof(DataBuryPack), 500, 2, cb,
+                            udata);
+}
+
+void
+Vehicle::setStm32Flag(uint8_t & flag)
+{
+    this->stm32Flag = flag;
+}

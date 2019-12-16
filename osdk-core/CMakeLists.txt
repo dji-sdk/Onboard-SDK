@@ -20,6 +20,9 @@ endif (MSVC)
 
 if (CMAKE_SYSTEM_NAME MATCHES Linux)
   set(COMMON_CXX_FLAGS "-std=c++11 -pthread -fPIC")
+  add_definitions(-DDJIOSDK_OPERATOR_TYPE=1)
+  else()
+  add_definitions(-DDJIOSDK_OPERATOR_TYPE=0)
 endif ()
 
 if (CMAKE_SYSTEM_NAME MATCHES Darwin)
