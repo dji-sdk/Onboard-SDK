@@ -64,6 +64,7 @@ class FlightLink {
    */
   void *sendSync(const uint8_t cmd[], void *pdata, size_t len, int timeout);
 
+  void sendDirectly(const uint8_t cmd[], void *pdata, size_t len);
  public:
   Vehicle *getVehicle() const;
 

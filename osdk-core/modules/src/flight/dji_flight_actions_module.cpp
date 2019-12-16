@@ -28,8 +28,8 @@
 
 #include "dji_flight_actions_module.hpp"
 #include <dji_vehicle.hpp>
-#include "osdk_device_id.h"
 #include "dji_flight_link.hpp"
+#include "osdk_device_id.h"
 
 using namespace DJI;
 using namespace DJI::OSDK;
@@ -41,7 +41,7 @@ FlightActions::FlightActions(Vehicle* vehicle) {
 
 FlightActions::~FlightActions() { delete this->flightLink; }
 
-bool FlightActions::setUSBFlightOn(Vehicle *v, bool en) {
+bool FlightActions::setUSBFlightOn(Vehicle* v, bool en) {
   uint16_t l = 1;
   uint16_t h = 1;
   uint16_t c = (h << 8) | (l & 0xff);
@@ -68,8 +68,7 @@ bool FlightActions::setUSBFlightOn(Vehicle *v, bool en) {
   cmdInfo.receiver = OSDK_COMMAND_FC_DEVICE_ID;
   cmdInfo.sender = OSDK_COMMAND_PC_DEVICE_ID;
   E_OsdkStat ret =
-      v->linker->sendSync(&cmdInfo, (uint8_t *) &data, &ackInfo, cbData, 500,
-                          3);
+      v->linker->sendSync(&cmdInfo, (uint8_t*)&data, &ackInfo, cbData, 500, 3);
   if ((ret != OSDK_STAT_OK) && (cbData[0] == 0x00)) {
     DERROR("Configure usb-connected-flight on failed! Cannot take off !");
     return false;
@@ -143,5 +142,50 @@ void FlightActions::actionAsync(FlightCommand req,
                           retryTime);
   } else {
     if (userCB) userCB(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
+  }
+}
+
+ErrorCode::ErrorCodeType FlightActions::EmergencyBrakeActionSync(uint8_t req,
+                                                                 int timeout) {
+  if (flightLink) {
+    ACK::ErrorCode* rsp = (ACK::ErrorCode*)flightLink->sendSync(
+        OpenProtocolCMD::CMDSet::Control::emergencyBrake, (void*)&req,
+        sizeof(req), timeout);
+    if (rsp->info.buf &&
+        (rsp->info.len - OpenProtocol::PackageMin >= sizeof(CommonAck))) {
+      return ErrorCode::getErrorCode(ErrorCode::FCModule,
+                                     ErrorCode::FCEmergencyBrake, rsp->data);
+
+    } else {
+      return ErrorCode::SysCommonErr::UnpackDataMismatch;
+    }
+  } else
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
+}
+
+ErrorCode::ErrorCodeType FlightActions::killSwitch(KillSwitch cmd,
+                                                   int wait_timeout,
+                                                   char debugMsg[10]) {
+  if (flightLink) {
+    ACK::ErrorCode ack;
+    KillSwitchData data;
+    data.high_version = 0x01;
+    data.low_version = 0x01;
+    memcpy(data.debug_description, debugMsg, 10);
+    data.cmd = cmd;
+    data.reserved = 0;
+    ACK::ErrorCode* rsp = (ACK::ErrorCode*)flightLink->sendSync(
+        OpenProtocolCMD::CMDSet::Control::killSwitch, (void*)&data,
+        sizeof(data), wait_timeout);
+
+    if (rsp->info.buf &&
+        (rsp->info.len - OpenProtocol::PackageMin >= sizeof(CommonAck))) {
+      return ErrorCode::getErrorCode(ErrorCode::FCModule,
+                                     ErrorCode::FCEmergencyBrake, rsp->data);
+    } else {
+      return ErrorCode::SysCommonErr::UnpackDataMismatch;
+    }
+  } else {
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }

@@ -88,6 +88,9 @@ const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Control::status[] = {
 const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Control::control[] = {
   OpenProtocolCMD::CMDSet::control, 0x03
 };
+const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Control::emergencyBrake[] = {
+  OpenProtocolCMD::CMDSet::control, 0x04
+};
 const uint8_t DJI::OSDK::OpenProtocolCMD::CMDSet::Control::setArm[] = {
   OpenProtocolCMD::CMDSet::control, 0x05
 };

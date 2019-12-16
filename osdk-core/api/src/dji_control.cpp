@@ -353,6 +353,7 @@ Control::positionAndYawCtrl(float32_t x, float32_t y, float32_t z,
                        HORIZONTAL_GROUND | STABLE_ENABLE);
   CtrlData data(ctrl_flag, x, y, z, yaw);
 
+
   this->flightCtrl(data);
 }
 

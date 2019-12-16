@@ -35,10 +35,12 @@ using namespace DJI::OSDK;
 FlightController::FlightController(Vehicle* vehicle) {
   flightAssistant = new FlightAssistant(vehicle);
   flightActions = new FlightActions(vehicle);
+  flightJoystick = new FlightJoystick(vehicle);
 }
 FlightController::~FlightController() {
   delete this->flightAssistant;
   delete this->flightActions;
+  delete this->flightJoystick;
 }
 
 ErrorCode::ErrorCodeType FlightController::setRtkEnableSync(
@@ -125,6 +127,51 @@ void FlightController::getGoHomeAltitudeAsync(
   }
 }
 
+ErrorCode::ErrorCodeType FlightController::setCollisionAvoidanceEnabledSync(
+    AvoidEnable avoidEnable, int timeout) {
+  if (flightAssistant)
+    return flightAssistant->setCollisionAvoidanceEnabledSync(avoidEnable,
+                                                             timeout);
+  else
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
+}
+
+void FlightController::setCollisionAvoidanceEnabledAsync(
+  AvoidEnable avoidEnable,
+  void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
+  UserData userData) {
+  if (flightAssistant) {
+    flightAssistant->setCollisionAvoidanceEnabledAsync(avoidEnable,
+                                                       UserCallBack, userData);
+  } else {
+    if (UserCallBack)
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
+  }
+}
+
+ErrorCode::ErrorCodeType FlightController::getCollisionAvoidanceEnabledSync(
+    AvoidEnable& avoidEnable, int timeout) {
+  if (flightAssistant)
+    return flightAssistant->getCollisionAvoidanceEnabledSync(avoidEnable,
+                                                             timeout);
+  else
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
+}
+
+void FlightController::getCollisionAvoidanceEnabledAsync(
+  void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
+                       AvoidEnable rtkEnable, UserData userData),
+  UserData userData) {
+  if (flightAssistant) {
+    flightAssistant->getCollisionAvoidanceEnabledAsync(UserCallBack, userData);
+  } else {
+    AvoidEnable avoidEnable = AvoidEnable::AVOID_DISABLE;
+    if (UserCallBack)
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, avoidEnable,
+                   userData);
+  }
+}
+
 ErrorCode::ErrorCodeType FlightController::setHomeLocationSync(
     HomeLocation homeLocation, int timeout) {
   if (flightAssistant) {
@@ -165,12 +212,54 @@ FlightController::setHomeLocationUsingCurrentAircraftLocationSync(int timeout) {
 }
 
 void FlightController::setHomeLocationUsingCurrentAircraftLocationAsync(
-  void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
-  UserData userData) {
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
+    UserData userData) {
   FlightAssistant::SetHomeLocationData homeLocation = {};
   homeLocation.homeType = FlightAssistant::DJI_HOMEPOINT_AIRCRAFT_LOACTON;
   if (flightAssistant)
     flightAssistant->setHomeLocationAsync(homeLocation, UserCallBack, userData);
+  else {
+    if (UserCallBack)
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
+  }
+}
+
+ErrorCode::ErrorCodeType FlightController::turnOnMotorsSync(int timeout) {
+  if (flightActions)
+    return flightActions->actionSync(FlightActions::FlightCommand::START_MOTOR,
+                                     timeout);
+  else
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
+}
+
+void FlightController::turnOnMotorsAsync(
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
+    UserData userData) {
+  if (flightActions)
+    flightActions->actionAsync(FlightActions::FlightCommand::START_MOTOR,
+                               FlightActions::commonAckDecoder, UserCallBack,
+                               userData);
+  else {
+    if (UserCallBack)
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
+  }
+}
+
+ErrorCode::ErrorCodeType FlightController::turnOffMotorsSync(int timeout) {
+  if (flightActions)
+    return flightActions->actionSync(FlightActions::FlightCommand::STOP_MOTOR,
+                                     timeout);
+  else
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
+}
+
+void FlightController::turnOffMotorsAsync(
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
+    UserData userData) {
+  if (flightActions)
+    flightActions->actionAsync(FlightActions::FlightCommand::STOP_MOTOR,
+                               FlightActions::commonAckDecoder, UserCallBack,
+                               userData);
   else {
     if (UserCallBack)
       UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
@@ -188,8 +277,50 @@ ErrorCode::ErrorCodeType FlightController::startTakeoffSync(int timeout) {
 void FlightController::startTakeoffAsync(
     void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
-  if (flightAssistant)
+  if (flightActions)
     flightActions->actionAsync(FlightActions::FlightCommand::TAKE_OFF,
+                               FlightActions::commonAckDecoder, UserCallBack,
+                               userData);
+  else {
+    if (UserCallBack)
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
+  }
+}
+
+ErrorCode::ErrorCodeType FlightController::startLandingSync(int timeout) {
+  if (flightActions)
+    return flightActions->actionSync(FlightActions::FlightCommand::LANDING,
+                                     timeout);
+  else
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
+}
+
+void FlightController::startLandingAsync(
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
+    UserData userData) {
+  if (flightActions)
+    flightActions->actionAsync(FlightActions::FlightCommand::LANDING,
+                               FlightActions::commonAckDecoder, UserCallBack,
+                               userData);
+  else {
+    if (UserCallBack)
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
+  }
+}
+
+ErrorCode::ErrorCodeType FlightController::cancelLandingSync(int timeout) {
+  if (flightActions)
+    return flightActions->actionSync(FlightActions::FlightCommand::EXIT_LANDING,
+                                     timeout);
+  else
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
+}
+
+void FlightController::cancelLandingAsync(
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
+    UserData userData) {
+  if (flightActions)
+    flightActions->actionAsync(FlightActions::FlightCommand::EXIT_LANDING,
                                FlightActions::commonAckDecoder, UserCallBack,
                                userData);
   else {
@@ -209,7 +340,7 @@ ErrorCode::ErrorCodeType FlightController::startForceLandingSync(int timeout) {
 void FlightController::startForceLandingAsync(
     void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
-  if (flightAssistant)
+  if (flightActions)
     flightActions->actionAsync(FlightActions::FlightCommand::FORCE_LANDING,
                                FlightActions::commonAckDecoder, UserCallBack,
                                userData);
@@ -231,7 +362,7 @@ ErrorCode::ErrorCodeType FlightController::startConfirmLandingSync(
 void FlightController::startConfirmLandingAsync(
     void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
-  if (flightAssistant)
+  if (flightActions)
     flightActions->actionAsync(
         FlightActions::FlightCommand::FORCE_LANDING_AVOID_GROUND,
         FlightActions::commonAckDecoder, UserCallBack, userData);
@@ -252,7 +383,7 @@ ErrorCode::ErrorCodeType FlightController::startGoHomeSync(int timeout) {
 void FlightController::startGoHomeAsync(
     void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
-  if (flightAssistant)
+  if (flightActions)
     flightActions->actionAsync(FlightActions::FlightCommand::GO_HOME,
                                FlightActions::commonAckDecoder, UserCallBack,
                                userData);
@@ -260,4 +391,83 @@ void FlightController::startGoHomeAsync(
     if (UserCallBack)
       UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
   }
+}
+
+ErrorCode::ErrorCodeType FlightController::cancelGoHomeSync(int timeout) {
+  if (flightActions)
+    return flightActions->actionSync(FlightActions::FlightCommand::EXIT_GOHOME,
+                                     timeout);
+  else
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
+}
+
+void FlightController::cancelGoHomeAsync(
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
+    UserData userData) {
+  if (flightActions)
+    flightActions->actionAsync(FlightActions::FlightCommand::EXIT_GOHOME,
+                               FlightActions::commonAckDecoder, UserCallBack,
+                               userData);
+  else {
+    if (UserCallBack)
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
+  }
+}
+void FlightController::setJoystickMode(const JoystickMode& joystickMode) {
+  if (flightJoystick) {
+    this->flightJoystick->setHorizontalLogic(joystickMode.horizontalLogic);
+    this->flightJoystick->setVerticalLogic(joystickMode.verticalLogic);
+    this->flightJoystick->setYawLogic(joystickMode.yawLogic);
+    this->flightJoystick->setHorizontalCoordinate(
+        joystickMode.horizontalCoordinate);
+    this->flightJoystick->setStableMode(joystickMode.stableMode);
+  } else {
+    DSTATUS("Set joystick mode fail, Alloc memory failed");
+  }
+}
+
+void FlightController::setJoystickCommand(
+    const JoystickCommand& joystickCommand) {
+  if (flightJoystick) {
+    this->flightJoystick->setControlCommand(joystickCommand);
+  } else {
+    DSTATUS("Set joystick command fail, Alloc memory failed");
+  }
+}
+
+void FlightController::joystickAction() {
+  if (flightJoystick) {
+    this->flightJoystick->joystickAction();
+  } else {
+    DSTATUS("Joystick action fail, Alloc memory failed");
+  }
+}
+
+void FlightController::getJoystickCommand(JoystickCommand& joystickCommand) {
+  if (flightJoystick) {
+    flightJoystick->getControlCommand(joystickCommand);
+  } else {
+    DSTATUS("Get joystick command fail, Alloc memory failed");
+  }
+}
+
+void FlightController::getJoystickMode(
+    FlightJoystick::ControlMode& joystickMode) {
+  if (flightJoystick) {
+    flightJoystick->getControlMode(joystickMode);
+  } else {
+    DSTATUS("Get joystick mode fail, Alloc memory failed");
+  }
+}
+
+
+ErrorCode::ErrorCodeType FlightController::killSwitch(KillSwitch cmd,
+                                                   int wait_timeout,
+                                                   char debugMsg[10])
+{  if (flightActions) {
+    return flightActions->killSwitch(cmd,wait_timeout,debugMsg);
+  } else {
+    DSTATUS("Kill switch fail, Alloc memory failed");
+  }
+
 }

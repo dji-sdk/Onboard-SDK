@@ -684,19 +684,19 @@ typedef struct GimbalFull
  */
 typedef struct FlightAnomaly
 {
-  uint32_t impactInAir               : 1;  /*!< Impact happens in Air */
-  uint32_t randomFly                 : 1;  /*!< Randomly fly in GPS mode without stick input*/
-  uint32_t heightCtrlFail            : 1;  /*!< Height control failed */
-  uint32_t rollPitchCtrlFail         : 1;  /*!< Tilt control failed */
-  uint32_t yawCtrlFail               : 1;  /*!< Yaw control failed */
-  uint32_t aircraftIsFalling         : 1;  /*!< Aircraft is falling */
-  uint32_t strongWindLevel1          : 1;  /*!< There is wind that FC views as strong level 1*/
-  uint32_t strongWindLevel2          : 1;  /*!< There is wind that FC views as strong level 2*/
-  uint32_t compassInstallationError  : 1;  /*!< Compass installation error */
-  uint32_t imuInstallationError      : 1;  /*!< IMU installation error */
-  uint32_t escTemperatureHigh        : 1;  /*!< ESC temperature is high */
-  uint32_t atLeastOneEscDisconnected : 1;  /*!< At least one ESC is disconnected */
-  uint32_t gpsYawError               : 1;  /*!< GPS yaw error */
+  uint32_t impactInAir               : 1;  /*!< 0: No impact,                      1: Impact happens in Air */
+  uint32_t randomFly                 : 1;  /*!< 0: Normal,                         1: Randomly fly in GPS mode without stick input*/
+  uint32_t heightCtrlFail            : 1;  /*!< 0: Height control normal,          1: Height control failed */
+  uint32_t rollPitchCtrlFail         : 1;  /*!< 0: Tilt control normal,            1: Tilt control failed */
+  uint32_t yawCtrlFail               : 1;  /*!< 0: Yaw control normal,             1: Yaw control failed */
+  uint32_t aircraftIsFalling         : 1;  /*!< 0: Aircraft is not falling,        1: Aircraft is falling */
+  uint32_t strongWindLevel1          : 1;  /*!< 0: Wind is under big wind level 1, 1: wind is stronger than  big wind level 1*/
+  uint32_t strongWindLevel2          : 1;  /*!< 0: Wind is under big wind level 2, 1: wind is stronger than  big wind level 2*/
+  uint32_t compassInstallationError  : 1;  /*!< 0: Compass install right,          1: Compass install error */
+  uint32_t imuInstallationError      : 1;  /*!< 0: IMU install right,              1: IMU install error */
+  uint32_t escTemperatureHigh        : 1;  /*!< 0: ESC temperature is normal,      1: ESC temperature is high */
+  uint32_t atLeastOneEscDisconnected : 1;  /*!< 0: No ESC disconnected,            1: At least one ESC is disconnected */
+  uint32_t gpsYawError               : 1;  /*!< 0: No GPS yaw error,               1: GPS yaw error */
   uint32_t reserved                  : 19;
 } FlightAnomaly;
 
