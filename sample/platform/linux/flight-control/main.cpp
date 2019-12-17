@@ -90,7 +90,7 @@ int main(int argc, char** argv) {
 
       flightSample->monitoredTakeoff();
       vehicle->flightController->setCollisionAvoidanceEnabledSync(
-          FlightController::AvoidEnable::AVOID_DISABLE, 1);
+          FlightController::AvoidEnable::AVOID_ENABLE, 1);
 
       /*! Move to higher altitude */
       flightSample->moveByPositionOffset((FlightSample::Vector3f){0, 0, 30}, 0);
@@ -108,7 +108,7 @@ int main(int argc, char** argv) {
       flightSample->moveByPositionOffset((FlightSample::Vector3f){40, 0, 0}, 0);
 
       vehicle->flightController->setCollisionAvoidanceEnabledSync(
-        FlightController::AvoidEnable::AVOID_ENABLE, 1);
+        FlightController::AvoidEnable::AVOID_DISABLE, 1);
       /*! go home and confirm landing */
       flightSample->goHomeAndConfirmLanding();
       break;
