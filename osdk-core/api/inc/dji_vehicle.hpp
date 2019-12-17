@@ -54,6 +54,9 @@
 #include "dji_gimbal_manager.hpp"
 #include "dji_flight_controller.hpp"
 #include "dji_psdk_manager.hpp"
+#ifdef ADVANCED_SENSING
+#include "dji_advanced_sensing.hpp"
+#endif
 
 namespace DJI
 {
@@ -106,6 +109,9 @@ public:
   FlightController*    flightController;
   PSDKManager*         psdkManager;
   GimbalManager*       gimbalManager;
+#ifdef ADVANCED_SENSING
+  AdvancedSensing* advancedSensing;
+#endif
 
   int functionalSetUp();
   ////////// Blocking calls ///////////
@@ -259,6 +265,20 @@ public:
   bool initPSDKManager();
   bool initGimbalManager();
   bool initOSDKHeartBeatThread();
+#ifdef ADVANCED_SENSING
+  bool initAdvancedSensing();
+#endif
+
+#ifdef ADVANCED_SENSING
+  /*! @brief This function takes a frame and calls the right handlers/functions
+   *         based on the nature of the frame (ack, blocking, etc.)
+   * @param receivedFrame: RecvContainer populated by the AdvancedSensing Protocol
+   * @return NULL
+   */
+  void processAdvancedSensingImgs(RecvContainer* receivedFrame);
+
+  bool advSensingErrorPrintOnce;
+#endif
 private:
   void setActivationStatus(bool is_activated);
   void initCMD_SetSupportMatrix();

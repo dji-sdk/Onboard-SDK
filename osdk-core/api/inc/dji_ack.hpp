@@ -263,6 +263,57 @@ public:
   } WayPointStatusPushData;
 
   /*!
+   * @brief This constant variable defines number of pixels for QVGA images
+   */
+  static const int IMG_240P_SIZE = 240 * 320;
+  typedef uint8_t  Image[IMG_240P_SIZE];
+  /*!
+   * @brief sub-struct for stereo image with raw data and camera name
+   */
+  typedef struct ImageMeta
+  {
+      Image image;
+      char  name[12];
+  } ImageMeta; // pack(1)
+  /*!
+   * @brief This struct captures PushData when subscribe to QVGA images
+   */
+  typedef struct StereoImgData
+  {
+      uint32_t frame_index;
+      uint32_t time_stamp;
+      uint8_t  num_imgs;
+      /*
+       * There could be 50 different kinds of images coming from the drone,
+       * 5 camera pairs and 10 images types.
+       * Here we use an uint64_t to describe which image is coming
+       * from the USB line, each bit represents if there's data or not
+       * Please use AdvancedSensing::ReceivedImgDesc to match them
+       * For M210, we support up to 4 images at the same time
+       */
+      uint64_t img_desc;
+      // @note for M210, at most 4 imgs come at the same time.
+      ImageMeta img_vec[4];
+  } StereoImgData; // pack(1)
+  /*!
+   * @brief This constant variable defines number of pixels for VGA images
+   */
+  static const int IMG_VGA_SIZE = 640 * 480;
+  typedef uint8_t  VGAImage[IMG_VGA_SIZE];
+  /*!
+   * @brief This struct captures PushData when subscribe to VGA images
+   */
+  typedef struct StereoVGAImgData
+  {
+      uint32_t frame_index;
+      uint32_t time_stamp;
+      uint8_t  num_imgs;
+      uint8_t  direction;
+      // @note VGA imgs always come in pair
+      VGAImage img_vec[2];
+  } StereoVGAImgData; // pack(1)
+
+  /*!
    * @brief This struct captures PushData when subscribe to UTC & FC time in hardware sync
    */
   typedef struct FCTimeInUTC
@@ -307,10 +358,9 @@ public:
 
     /*
      * Push Data from AdvancedSensing protocol
-
+     */
     StereoImgData           *stereoImgData;
     StereoVGAImgData        *stereoVGAImgData;
-     */
 
     /*
      * Push Data from GPS or RTK
