@@ -1034,6 +1034,7 @@ Vehicle::activate(ActivateData* data, uint32_t timeoutMs)
     for (uint8_t i = 0; i < MAX_SEND_DATA_BURY_PKG_COUNT; i++)
     {
         sendBuriedDataPkgToFC();
+        OsdkOsal_TaskSleepMs(200);
     }
     linker->setKey(accountData.encKey);
     setActivationStatus(true);
@@ -1109,6 +1110,7 @@ Vehicle::activate(ActivateData* data, VehicleCallBack callback,
   for (uint8_t i = 0; i < MAX_SEND_DATA_BURY_PKG_COUNT; i++)
   {
       sendBuriedDataPkgToFC();
+      OsdkOsal_TaskSleepMs(200);
   }
 }
 
@@ -1547,8 +1549,7 @@ Vehicle::sendBuriedDataPkgToFC(void)
         data.hardware_type = STM32_HARDWARE_TYPE;
         data.operator_type = RTOS_OPERATOR_TYPE;
     }
-    legacyLinker->sendSync(OpenProtocolCMD::CMDSet::Activation::dataBury,
-                           (uint8_t *) &data, sizeof(DataBuryPack), 500, 2);
+    legacyLinker->send(OpenProtocolCMD::CMDSet::Activation::dataBury, (uint8_t *) &data, sizeof(DataBuryPack));
 }
 
 void
