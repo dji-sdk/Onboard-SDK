@@ -97,6 +97,46 @@ SET(OSDK_INTERFACE_LIBS pthread) # pthread is assumed available on linux
 SET(MODULE_BUILD_INTERFACE "")
 SET(MODULE_INSTALL_INTERFACE "")
 
+## Advanced Sensing
+if(ADVANCED_SENSING)
+  # Add a cmake file to find libusb
+  set(CMAKE_MODULE_PATH ${CURRENT_CMAKE_MODULE_PATH})
+
+  find_package(LibUSB REQUIRED)
+  find_package(AdvancedSensing QUIET)
+  if(NOT ADVANCED_SENSING_FOUND)
+    include(${CURRENT_CMAKE_MODULE_PATH}/External_AdvancedSensing.cmake)
+    add_dependencies(${PROJECT_NAME} advanced-sensing)
+  endif()
+
+  find_package(FFMPEG REQUIRED)
+
+  if(FFMPEG_FOUND)
+      message( STATUS "Found FFmpeg ${FFMPEG_VERSION} installed in the system.")
+      message( STATUS " - Includes: ${FFMPEG_INCLUDE_DIRS}")
+      message( STATUS " - Libraries: ${FFMPEG_LIBRARIES}")
+  else()
+    message("Cannot Find FFMPEG")
+  endif(FFMPEG_FOUND)
+
+  target_include_directories(${PROJECT_NAME} PUBLIC
+                             $<BUILD_INTERFACE:${ADVANCED_SENSING_INCLUDE_DIRS}>)
+  target_link_libraries(${PROJECT_NAME} PRIVATE ${ADVANCED_SENSING_LIBRARY})
+
+
+  target_include_directories(${PROJECT_NAME} PUBLIC ${LIBUSB_1_INCLUDE_DIRS})
+  target_link_libraries(${PROJECT_NAME} PUBLIC ${LIBUSB_1_LIBRARIES})
+
+  target_include_directories(${PROJECT_NAME} PUBLIC ${FFMPEG_INCLUDE_DIR})
+  target_link_libraries(${PROJECT_NAME} PUBLIC ${FFMPEG_LIBRARIES})
+
+  set(OSDK_INTERFACE_LIBS ${OSDK_INTERFACE_LIBS} ${LIBUSB_1_LIBRARIES} ${FFMPEG_LIBRARIES})
+  set(MODULE_BUILD_INTERFACE ${MODULE_BUILD_INTERFACE} ${ADVANCED_SENSING_LIBRARY})
+  set(MODULE_INSTALL_INTERFACE ${MODULE_INSTALL_INTERFACE} $<INSTALL_PREFIX>/lib/libadvanced-sensing.a)
+
+  target_compile_definitions(${PROJECT_NAME} PUBLIC -DADVANCED_SENSING)
+
+endif()
 ## Once all the modules are done, set the interface_link_libraries property
 set_property(TARGET ${PROJECT_NAME}
         PROPERTY INTERFACE_LINK_LIBRARIES
@@ -169,6 +209,21 @@ FILE(GLOB OSDK_LIB_HEADERS
         linker/core/platform/*.h
         linker/core/utils/inc/*.h
         linker/core/root_task/*.h)
+
+# Append advanced sensing headers
+if(ADVANCED_SENSING)
+  install(FILES ${ADVANCED_SENSING_LIBRARY}
+        DESTINATION "${INSTALL_LIB_DIR}" COMPONENT shlib)
+
+  set(OSDK_LIB_HEADERS
+      ${OSDK_LIB_HEADERS}
+      ${ADVANCED_SENSING_INCLUDE_DIRS}/dji_advanced_sensing.hpp
+      ${ADVANCED_SENSING_INCLUDE_DIRS}/dji_advanced_sensing_protocol.hpp
+      ${ADVANCED_SENSING_INCLUDE_DIRS}/linux_usb_device.hpp
+      ${ADVANCED_SENSING_INCLUDE_DIRS}/dji_camera_image.hpp
+      ${ADVANCED_SENSING_INCLUDE_DIRS}/dji_camera_stream.hpp
+      )
+endif()
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
         PUBLIC_HEADER "${OSDK_LIB_HEADERS}")

@@ -81,6 +81,10 @@ Vehicle::Vehicle(Linker* linker)
   , psdkManager(NULL)
   , flightController(NULL)
   , missionManager(NULL)
+#ifdef ADVANCED_SENSING
+  , advancedSensing(NULL)
+  , advSensingErrorPrintOnce(false)
+#endif
 {
   ackErrorCode.data = OpenProtocolCMD::ErrorCode::CommonACK::NO_RESPONSE_ERROR;
 }
@@ -205,6 +209,14 @@ Vehicle::init()
     return false;
   }
 
+#ifdef ADVANCED_SENSING
+  if (!initAdvancedSensing())
+  {
+    DERROR("Failed to initialize AdvancedSensing!\n");
+    return false;
+  }
+#endif
+
   return true;
 }
 
@@ -312,6 +324,12 @@ Vehicle::~Vehicle()
   {
     delete this->flightController;
   }
+
+#ifdef ADVANCED_SENSING
+  if (this->advancedSensing)
+    delete this->advancedSensing;
+#endif
+
   OsdkOsal_TaskDestroy(sendHeartbeatToFCHandle);
 }
 
@@ -692,6 +710,75 @@ Vehicle::initVirtualRC()
 
   return true;
 }
+
+#ifdef ADVANCED_SENSING
+bool
+Vehicle::initAdvancedSensing()
+{
+  if(this->advancedSensing)
+  {
+    DDEBUG("vehicle->advancedSensing already initalized!");
+    return true;
+  }
+
+  this->advancedSensing = new (std::nothrow) AdvancedSensing(this);
+  if (this->advancedSensing == 0)
+  {
+    DERROR("Failed to allocate memory for AdvancedSensing!\n");
+    return false;
+  }
+  this->advancedSensing->init();
+
+  return true;
+}
+#endif
+
+
+#ifdef ADVANCED_SENSING
+void
+Vehicle::processAdvancedSensingImgs(RecvContainer* receivedFrame)
+{
+  if (receivedFrame->recvInfo.cmd_id == AdvancedSensingProtocol::PROCESS_IMG_CMD_ID)
+  {
+    if (this->advancedSensing->stereoHandler.callback)
+    {
+      this->advancedSensing->stereoHandler.callback(
+          this, *receivedFrame, this->advancedSensing->stereoHandler.userData);
+    }
+    else
+    {
+      this->advancedSensing->unsubscribeStereoImages();
+      if(!advSensingErrorPrintOnce){
+        DERROR("No callback registered for 240p stereo images.\n"
+               "This usually happens when user subscribed to images and restart "
+               "the program without unsubscribing them.\n"
+               "Vehicle unsubscribed 240p stereo images automatically.\n");
+        advSensingErrorPrintOnce = true;
+      }
+    }
+  }
+  else if (receivedFrame->recvInfo.cmd_id ==
+           AdvancedSensingProtocol::PROCESS_VGA_CMD_ID)
+  {
+    if (this->advancedSensing->vgaHandler.callback)
+    {
+      this->advancedSensing->vgaHandler.callback(this, *receivedFrame,
+                                                 this->advancedSensing->vgaHandler.userData);
+    }
+    else
+    {
+      this->advancedSensing->unsubscribeVGAImages();
+      if(!advSensingErrorPrintOnce){
+        DERROR("No callback registered for VGA stereo images.\n"
+               "This usually happens when user subscribed to images and restart "
+               "the program without unsubscribing them.\n"
+               "Vehicle unsubscribed VGA stereo images automatically.\n");
+        advSensingErrorPrintOnce = true;
+      }
+    }
+  }
+}
+#endif
 
 bool
 Vehicle::initOSDKHeartBeatThread() {
