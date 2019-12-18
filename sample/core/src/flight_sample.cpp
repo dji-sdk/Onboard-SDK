@@ -180,10 +180,10 @@ bool FlightSample::moveByPositionOffset(const Vector3f& offsetDesired,
   if (elapsedTimeInMs >= timeoutInMilSec) {
     std::cout << "Task timeout!\n";
     teardownSubscription(pkgIndex);
-    return ACK::FAIL;
+    return false;
   }
   teardownSubscription(pkgIndex);
-  return ACK::SUCCESS;
+  return true;
 }
 
 bool FlightSample::goHomeAndConfirmLanding(int timeout) {

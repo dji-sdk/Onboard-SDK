@@ -58,6 +58,13 @@ class HardwareSync
 {
 
 public:
+  typedef enum SatelliteIndex {
+    GPS,
+    GLONASS,
+    GALILEO,
+    BEIDOU,
+    MAX_INDEX_CNT,
+  } SatelliteIndex;
 #pragma pack(1)
 
   typedef struct SyncSettings
@@ -70,11 +77,8 @@ public:
 
   typedef enum NMEAType
   {
-    GPGSA,
-    GLGSA,
-    GAGSA,
-    BDGSA,
-    GPRMC,
+    GNGSA,
+    GNRMC,
     TYPENUM
   }NMEAType;
 
@@ -98,6 +102,10 @@ public:
     RecvTimeMsg timestamp; // this is OSDK recv time
   }NMEAData;
 
+  typedef struct GNGSAPackage
+  {
+    NMEAData Satellite[MAX_INDEX_CNT];
+  }GNGSAPackage;
 public:
   HardwareSync(Vehicle* vehiclePtr = 0);
 
@@ -138,7 +146,10 @@ public:
    *  @param which NMEA message to poll
    *  @param data struct to fill
    */
-  bool getNMEAMsg(NMEAType type, NMEAData &nmea);
+  bool getGNRMCMsg(NMEAData &nmea);
+
+  bool getGNGSAMsg(GNGSAPackage &GNGSA);
+
   /*! @brief Subscribe to UTC Time tag with a callback function
    *
    *  @param callback callback function
@@ -197,10 +208,10 @@ private:
   //pthread_cond_t  condVarHardSync;
 
   NMEAData GPGSAData;
-  NMEAData GLGSAData;
-  NMEAData GAGSAData;
-  NMEAData BDGSAData;
   NMEAData GPRMCData;
+  GNGSAPackage GNGSAData;
+  NMEAData GNRMCData;
+
   NMEAData UTCData;
   ACK::FCTimeInUTC fcTimeInUTC;
   PPSSource  ppsSourceType;
@@ -235,10 +246,9 @@ private:
   void recordRecvTimeMsg(RecvTimeMsg &recvTime);
 
   HWSyncDataFlag GPGSAFlag;
-  HWSyncDataFlag GLGSAFlag;
-  HWSyncDataFlag GAGSAFlag;
-  HWSyncDataFlag BDGSAFlag;
   HWSyncDataFlag GPRMCFlag;
+  HWSyncDataFlag GNGSAFlag;
+  HWSyncDataFlag GNRMCFlag;
   HWSyncDataFlag UTCFlag;
   HWSyncDataFlag fcTimeFlag;
   HWSyncDataFlag ppsSourceFlag;
@@ -256,6 +266,9 @@ private:
     }
     return false;
   }
+
+  static void pollNemaDatacallback(Vehicle *vehicle, RecvContainer recvFrame, UserData userData);
+
 };
 } // OSDK
 } // DJI

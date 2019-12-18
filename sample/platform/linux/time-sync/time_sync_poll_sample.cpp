@@ -29,49 +29,47 @@
  */
 
 #include <dji_vehicle.hpp>
-// Helpers
 #include <dji_linux_helpers.hpp>
 
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
 
-int
-main(int argc, char** argv)
-{
+int main(int argc, char** argv) {
   // Initialize variables
   int functionTimeout = 1;
 
   // Setup OSDK.
   LinuxSetup linuxEnvironment(argc, argv);
-  Vehicle*   vehicle = linuxEnvironment.getVehicle();
-  if (vehicle == NULL)
-  {
+  Vehicle* vehicle = linuxEnvironment.getVehicle();
+  if (vehicle == NULL) {
     std::cout << "Vehicle not initialized, exiting.\n";
     return -1;
   }
 
   // Obtain Control Authority
   vehicle->control->obtainCtrlAuthority(functionTimeout);
-
-  const int waitTimeMs = 100;
+  const int waitTimeMs = 200;
   int timeSoFar = 0;
-  int totalTimeMs = 30*1000; // 30 secs
-  while(timeSoFar < totalTimeMs)
-  {
-    for (int i = 0; i < HardwareSync::NMEAType::TYPENUM; ++i) {
-      DJI::OSDK::HardwareSync::NMEAData nmea;
-      if(vehicle->hardSync->getNMEAMsg((HardwareSync::NMEAType) i, nmea))
-      {
-        DSTATUS("%s\n", nmea.sentence.c_str());
-      }
-      else
-      {
-        DSTATUS("Did not get msg\n");
-      }
-      usleep(waitTimeMs*1000);
-      timeSoFar += waitTimeMs;
-    }
-  }
+  int totalTimeMs = 30 * 1000;  // 30 secs
 
+  DJI::OSDK::HardwareSync::GNGSAPackage GNGSA;
+  DJI::OSDK::HardwareSync::NMEAData GPRMC;
+
+  while (timeSoFar < totalTimeMs) {
+    if (vehicle->hardSync->getGNGSAMsg(GNGSA)) {
+      for (int j = 0; j < HardwareSync::SatelliteIndex::MAX_INDEX_CNT; j++) {
+        DSTATUS("%s\n", GNGSA.Satellite[j].sentence.c_str());
+      }
+    } else {
+      DSTATUS("Did not get GNGSA msg\n");
+    }
+    if (vehicle->hardSync->getGNRMCMsg(GPRMC)) {
+      DSTATUS("%s\n", GPRMC.sentence.c_str());
+    } else {
+      DSTATUS("Did not get GNRMC msg\n");
+    }
+    usleep(waitTimeMs * 1000);
+    timeSoFar += waitTimeMs;
+  }
   return 0;
 }
