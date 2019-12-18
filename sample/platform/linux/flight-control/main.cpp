@@ -111,6 +111,9 @@ int main(int argc, char** argv) {
         FlightController::AvoidEnable::AVOID_DISABLE, 1);
       /*! go home and confirm landing */
       flightSample->goHomeAndConfirmLanding();
+
+      vehicle->flightController->setCollisionAvoidanceEnabledSync(
+        FlightController::AvoidEnable::AVOID_ENABLE, 1);
       break;
     default:
       break;
