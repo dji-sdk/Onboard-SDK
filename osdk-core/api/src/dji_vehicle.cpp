@@ -1210,6 +1210,9 @@ Vehicle::sendHeartbeatToFCTask(void *arg) {
               DJI::OSDK::Vehicle::sendHeartbeatToFCFunc(linker);
               preHeartBeatTimeStamp = curHeartBeatTimeStamp;
           }
+
+          /*! TODO: with out sleep 100ms, the time will get the same as last time. */
+          OsdkOsal_TaskSleepMs(100);
       }
     } else {
       DERROR("Osdk send heart beat to fc task run failed because of the invalid linker "
