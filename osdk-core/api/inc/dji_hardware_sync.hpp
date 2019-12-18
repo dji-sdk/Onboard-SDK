@@ -58,7 +58,13 @@ class HardwareSync
 {
 
 public:
-  const static uint8_t SatelliteSystemNum = 4;
+  typedef enum SatelliteIndex {
+    GPS,
+    GLONASS,
+    GALILEO,
+    BEIDOU,
+    MAX_INDEX_CNT,
+  } SatelliteIndex;
 #pragma pack(1)
 
   typedef struct SyncSettings
@@ -96,6 +102,10 @@ public:
     RecvTimeMsg timestamp; // this is OSDK recv time
   }NMEAData;
 
+  typedef struct GNGSAPackage
+  {
+    NMEAData Satellite[MAX_INDEX_CNT];
+  }GNGSAPackage;
 public:
   HardwareSync(Vehicle* vehiclePtr = 0);
 
@@ -138,7 +148,7 @@ public:
    */
   bool getGNRMCMsg(NMEAData &nmea);
 
-  bool getGNGSAMsgArray(NMEAData nmea[]);
+  bool getGNGSAMsg(GNGSAPackage &GNGSA);
 
   /*! @brief Subscribe to UTC Time tag with a callback function
    *
@@ -199,7 +209,7 @@ private:
 
   NMEAData GPGSAData;
   NMEAData GPRMCData;
-  NMEAData GNGSAData[SatelliteSystemNum];
+  GNGSAPackage GNGSAData;
   NMEAData GNRMCData;
 
   NMEAData UTCData;

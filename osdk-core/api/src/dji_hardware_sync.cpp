@@ -206,18 +206,18 @@ HardwareSync::writeNMEA(const std::string &nmea)
     setDataFlag(GPRMCFlag, true);
   }
 
-  else if(head == "$GNGSA")
-  {
-    static int count = 0;
-      GNGSAData[count].sentence = nmea;
-      ++GNGSAData[count].seq;
-      recordRecvTimeMsg(GNGSAData[count].timestamp);
-      count ++;
-      if(count == SatelliteSystemNum )
-      {
-        count = 0;
-        setDataFlag(GNGSAFlag, true);
-      }
+  else if(head == "$GNGSA") {
+    /*! Transform alphanumeric to num*/
+    SatelliteIndex satellite_index = (SatelliteIndex)((nmea[nmea.size() - 4] - '0') - 1);
+    if (satellite_index  < MAX_INDEX_CNT) {
+      GNGSAData.Satellite[satellite_index].sentence = nmea;
+      ++GNGSAData.Satellite[satellite_index].seq;
+      recordRecvTimeMsg(GNGSAData.Satellite[satellite_index].timestamp);
+    }
+    if (satellite_index == MAX_INDEX_CNT-1)
+    {
+      setDataFlag(GNGSAFlag, true);
+    }
   }
   else if(head == "$GNRMC")
   {
@@ -236,7 +236,6 @@ HardwareSync::writeNMEA(const std::string &nmea)
   }
   else
   {
-    // std::cout << "HEAD: "<< head  << std::endl;
     DERROR("Cannot recognize the NMEA msg received\n");
   }
 }
@@ -295,11 +294,11 @@ HardwareSync::getGNRMCMsg(NMEAData &nmea)
 }
 
 bool
-HardwareSync::getGNGSAMsgArray(NMEAData nmea[])
+HardwareSync::getGNGSAMsg(GNGSAPackage &GNGSA)
 {
   if (GNGSAFlag == true)
   {
-    memcpy((void *)nmea, (void *)GNGSAData, sizeof(GNGSAData));
+    GNGSA = GNGSAData;
     setDataFlag(GNGSAFlag, false);
     return true;
   }

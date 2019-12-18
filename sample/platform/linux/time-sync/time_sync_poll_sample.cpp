@@ -52,21 +52,21 @@ int main(int argc, char** argv) {
   int timeSoFar = 0;
   int totalTimeMs = 30 * 1000;  // 30 secs
 
-  DJI::OSDK::HardwareSync::NMEAData GNGSA[HardwareSync::SatelliteSystemNum];
+  DJI::OSDK::HardwareSync::GNGSAPackage GNGSA;
   DJI::OSDK::HardwareSync::NMEAData GPRMC;
 
   while (timeSoFar < totalTimeMs) {
-    if (vehicle->hardSync->getGNGSAMsgArray(GNGSA)) {
-      for (int j = 0; j < HardwareSync::SatelliteSystemNum; j++) {
-        DSTATUS("%s\n", GNGSA[j].sentence.c_str());
+    if (vehicle->hardSync->getGNGSAMsg(GNGSA)) {
+      for (int j = 0; j < HardwareSync::SatelliteIndex::MAX_INDEX_CNT; j++) {
+        DSTATUS("%s\n", GNGSA.Satellite[j].sentence.c_str());
       }
     } else {
-      DSTATUS("Did not get msg\n");
+      DSTATUS("Did not get GNGSA msg\n");
     }
     if (vehicle->hardSync->getGNRMCMsg(GPRMC)) {
       DSTATUS("%s\n", GPRMC.sentence.c_str());
     } else {
-      DSTATUS("Did not get msg\n");
+      DSTATUS("Did not get GNRMC msg\n");
     }
     usleep(waitTimeMs * 1000);
     timeSoFar += waitTimeMs;
