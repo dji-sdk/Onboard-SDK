@@ -761,11 +761,6 @@
               <FilePath>..\..\..\..\..\osdk-core\api\src\dji_mission_manager.cpp</FilePath>
             </File>
             <File>
-              <FileName>dji_mobile_communication.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\..\..\..\osdk-core\api\src\dji_mobile_communication.cpp</FilePath>
-            </File>
-            <File>
               <FileName>dji_mobile_device.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\osdk-core\api\src\dji_mobile_device.cpp</FilePath>
@@ -874,6 +869,11 @@
               <FileName>dji_gimbal_module.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\osdk-core\modules\src\payload\dji_gimbal_module.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>dji_flight_joystick_module.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\osdk-core\modules\src\flight\dji_flight_joystick_module.cpp</FilePath>
             </File>
           </Files>
         </Group>

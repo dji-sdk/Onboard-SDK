@@ -1544,16 +1544,10 @@ Vehicle::sendBuriedDataPkgToFC(void)
     sprintf(sdk_version,"OSDK%d.%d.%d",DJIOSDK_MAJOR_VERSION, DJIOSDK_MINOR_VERSION, DJIOSDK_PATCH_VERSION);
     DataBuryPack data = {" ", DJIOSDK_IS_DEBUG, DJIOSDK_HARDWARE_TYPE, DJIOSDK_OPERATOR_TYPE};
     memcpy(data.sdk_version , sdk_version, sizeof(data.sdk_version) / sizeof(char));
-    if (this->stm32Flag == IS_STM32)
-    {
-        data.hardware_type = STM32_HARDWARE_TYPE;
-        data.operator_type = RTOS_OPERATOR_TYPE;
-    }
+#ifdef STM32
+    data.hardware_type = STM32_HARDWARE_TYPE;
+    data.operator_type = RTOS_OPERATOR_TYPE;
+#endif
     legacyLinker->send(OpenProtocolCMD::CMDSet::Activation::dataBury, (uint8_t *) &data, sizeof(DataBuryPack));
 }
 
-void
-Vehicle::setStm32Flag(uint8_t & flag)
-{
-    this->stm32Flag = flag;
-}
