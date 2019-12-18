@@ -29,14 +29,20 @@
 
 #include "gimbal_manager_sync_sample.hpp"
 
-#define GIMBA_SUB_PACKAGE_INDEX 3
+#define GIMBA_SUB_PACKAGE_INDEX 0
 
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
 
 GimbalManagerSyncSample::GimbalManagerSyncSample(Vehicle *vehiclePtr)
     : vehicle(vehiclePtr) {
-  /*! Package 3: Subscribe to flight status at freq 50 Hz */
+  /*! verify the subscribe function */
+  ACK::ErrorCode ack = vehiclePtr->subscribe->verify(1);
+  if (ACK::getError(ack) != ACK::SUCCESS) {
+    ACK::getErrorCodeMessage(ack, __func__);
+  }
+
+  /*! Package 0: Subscribe to TOPIC_GIMBAL_FULL_DATA at freq 50 Hz */
   ACK::ErrorCode subscribeStatus;
   int       pkgIndex        = GIMBA_SUB_PACKAGE_INDEX;
   int       freq            = 50;
