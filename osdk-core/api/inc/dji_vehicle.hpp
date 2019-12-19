@@ -30,6 +30,7 @@
 #ifndef OSDK_CORE_INC_DJI_VEHICLE_H_
 #define OSDK_CORE_INC_DJI_VEHICLE_H_
 
+#include <stdio.h>
 #include <cstdint>
 #include "dji_status.hpp"
 #include "dji_ack.hpp"
@@ -285,14 +286,11 @@ private:
   bool isCmdSetSupported(const uint8_t cmdSet);
 
   void sendBuriedDataPkgToFC(void);
-  uint8_t stm32Flag = NOT_STM32;
 
   static void fcLostConnectCallBack(void);
   static uint8_t sendHeartbeatToFCFunc(Linker * linker);
   T_OsdkTaskHandle sendHeartbeatToFCHandle;
   static void *sendHeartbeatToFCTask(void *arg);
-public:
-  void setStm32Flag(uint8_t & flag);
 };
 }
 }

@@ -124,7 +124,7 @@ controlAuthorityMobileCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
       mobileAck.cmdID = 0x03;
     }
     mobileAck.ack = static_cast<uint16_t>(ack.data);
-    vehiclePtr->moc->sendDataToMSDK(reinterpret_cast<uint8_t*>(&mobileAck),
+    vehiclePtr->mobileDevice->sendDataToMSDK(reinterpret_cast<uint8_t*>(&mobileAck),
                                     sizeof(mobileAck));
   }
 }
@@ -160,7 +160,7 @@ actionMobileCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
     {
       mobileAck.cmdID = 0x05;
       mobileAck.ack   = static_cast<uint16_t>(ack.data);
-      vehiclePtr->moc->sendDataToMSDK(reinterpret_cast<uint8_t*>(&mobileAck),
+      vehiclePtr->mobileDevice->sendDataToMSDK(reinterpret_cast<uint8_t*>(&mobileAck),
                                       sizeof(mobileAck));
     }
     else if (recvFrame.recvInfo.buf[2] == Control::FlightCommand::stopMotor ||
@@ -169,7 +169,7 @@ actionMobileCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
     {
 			mobileAck.cmdID = 0x06;
       mobileAck.ack   = static_cast<uint16_t>(ack.data);
-      vehiclePtr->moc->sendDataToMSDK(reinterpret_cast<uint8_t*>(&mobileAck),
+      vehiclePtr->mobileDevice->sendDataToMSDK(reinterpret_cast<uint8_t*>(&mobileAck),
                                       sizeof(mobileAck));
     }
   }

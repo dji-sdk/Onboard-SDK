@@ -214,7 +214,7 @@ void mainLoopTask(void *p){
           delay_nms(1000);
 
           // Run Mobile Communication sample
-          v->moc->setFromMSDKCallback(parseFromMobileCallback);
+          v->mobileDevice->setFromMSDKCallback(parseFromMobileCallback);
           DSTATUS(
               "Mobile callback registered. Trigger command mobile "
               "App.\r\n");

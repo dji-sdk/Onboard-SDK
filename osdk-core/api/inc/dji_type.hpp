@@ -169,11 +169,6 @@ typedef struct DataBuryPack {
 } DataBuryPack;
 #pragma pack()
 
-enum Is_Stm32_Flag{
-  NOT_STM32  = 0,
-  IS_STM32   = 1,
-};
-
 enum OSDK_HARDWARE_TYPE{
     UNKNOWN_HARDWARE_TYPE = 0,
     ARMV7_HARDWARE_TYPE   = 1,
