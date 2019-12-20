@@ -65,6 +65,7 @@ E_OsdkStat OsdkLinux_TaskCreate(T_OsdkTaskHandle *task, void *(*taskFunc)(void *
  */
 E_OsdkStat OsdkLinux_TaskDestroy(T_OsdkTaskHandle task) {
   pthread_cancel(*(pthread_t *)task);
+  pthread_join(*(pthread_t *)task, NULL);
 
   return OSDK_STAT_OK;
 }

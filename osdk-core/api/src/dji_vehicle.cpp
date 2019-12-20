@@ -87,6 +87,7 @@ Vehicle::Vehicle(Linker* linker)
 #endif
 {
   ackErrorCode.data = OpenProtocolCMD::ErrorCode::CommonACK::NO_RESPONSE_ERROR;
+  sendHeartbeatToFCHandle = NULL;
 }
 
 bool
@@ -263,6 +264,8 @@ Vehicle::functionalSetUp()
 
 Vehicle::~Vehicle()
 {
+  OsdkOsal_TaskDestroy(sendHeartbeatToFCHandle);
+
   if (this->subscribe)
   {
     subscribe->reset(1);
@@ -324,13 +327,15 @@ Vehicle::~Vehicle()
   {
     delete this->flightController;
   }
-
+  if(this->legacyLinker)
+  {
+    delete this->legacyLinker;
+  }
 #ifdef ADVANCED_SENSING
   if (this->advancedSensing)
     delete this->advancedSensing;
 #endif
 
-  OsdkOsal_TaskDestroy(sendHeartbeatToFCHandle);
 }
 
 
@@ -783,12 +788,16 @@ Vehicle::processAdvancedSensingImgs(RecvContainer* receivedFrame)
 bool
 Vehicle::initOSDKHeartBeatThread() {
     /*! create task for OSDK heart beat */
-    E_OsdkStat osdkStat = OsdkOsal_TaskCreate(&sendHeartbeatToFCHandle,
-                                              (void *(*)( void *)) (sendHeartbeatToFCTask),
-                                              OSDK_TASK_STACK_SIZE_DEFAULT, this->linker);
-    if (osdkStat != OSDK_STAT_OK) {
+    if(!sendHeartbeatToFCHandle) {
+      E_OsdkStat osdkStat = OsdkOsal_TaskCreate(&sendHeartbeatToFCHandle,
+                                                (void *(*)(
+                                                    void *)) (sendHeartbeatToFCTask),
+                                                OSDK_TASK_STACK_SIZE_DEFAULT,
+                                                this->linker);
+      if (osdkStat != OSDK_STAT_OK) {
         DERROR("osdk heart beat task create error:%d", osdkStat);
         return false;
+      }
     }
 
     return true;
@@ -1212,6 +1221,9 @@ Vehicle::sendHeartbeatToFCTask(void *arg) {
               DJI::OSDK::Vehicle::sendHeartbeatToFCFunc(linker);
               preHeartBeatTimeStamp = curHeartBeatTimeStamp;
           }
+
+          /*! TODO: with out sleep 100ms, the time will get the same as last time. */
+          OsdkOsal_TaskSleepMs(100);
       }
     } else {
       DERROR("Osdk send heart beat to fc task run failed because of the invalid linker "

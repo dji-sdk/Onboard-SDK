@@ -209,16 +209,34 @@ int main(int argc, char **argv) {
         p->stopRecordVideoSyncSample(PAYLOAD_INDEX_0);
         break;
       case 'm':
+        DSTATUS("Current gimbal %d angle (p,r,y) = (%0.2f°, %0.2f°, %0.2f°)", PAYLOAD_INDEX_0,
+                vehicle->subscribe->getValue<TOPIC_GIMBAL_FULL_DATA>().gbData[PAYLOAD_INDEX_0].pitch,
+                vehicle->subscribe->getValue<TOPIC_GIMBAL_FULL_DATA>().gbData[PAYLOAD_INDEX_0].roll,
+                vehicle->subscribe->getValue<TOPIC_GIMBAL_FULL_DATA>().gbData[PAYLOAD_INDEX_0].yaw);
         GimbalModule::Rotation rotation;
-        rotation.roll = 10.0f;
+        rotation.roll = 0.0f;
         rotation.pitch = 25.0f;
         rotation.yaw = 90.0f;
         rotation.rotationMode = 0;
         rotation.time = 0.5;
         g->rotateSyncSample(PAYLOAD_INDEX_0, rotation);
+        sleep(2);
+        DSTATUS("Current gimbal %d angle (p,r,y) = (%0.2f°, %0.2f°, %0.2f°)", PAYLOAD_INDEX_0,
+                vehicle->subscribe->getValue<TOPIC_GIMBAL_FULL_DATA>().gbData[PAYLOAD_INDEX_0].pitch,
+                vehicle->subscribe->getValue<TOPIC_GIMBAL_FULL_DATA>().gbData[PAYLOAD_INDEX_0].roll,
+                vehicle->subscribe->getValue<TOPIC_GIMBAL_FULL_DATA>().gbData[PAYLOAD_INDEX_0].yaw);
         break;
       case 'n':
+        DSTATUS("Current gimbal %d angle (p,r,y) = (%0.2f°, %0.2f°, %0.2f°)", PAYLOAD_INDEX_0,
+                vehicle->subscribe->getValue<TOPIC_GIMBAL_FULL_DATA>().gbData[PAYLOAD_INDEX_0].pitch,
+                vehicle->subscribe->getValue<TOPIC_GIMBAL_FULL_DATA>().gbData[PAYLOAD_INDEX_0].roll,
+                vehicle->subscribe->getValue<TOPIC_GIMBAL_FULL_DATA>().gbData[PAYLOAD_INDEX_0].yaw);
         g->resetSyncSample(PAYLOAD_INDEX_0);
+        sleep(2);
+        DSTATUS("Current gimbal %d angle (p,r,y) = (%0.2f°, %0.2f°, %0.2f°)", PAYLOAD_INDEX_0,
+                vehicle->subscribe->getValue<TOPIC_GIMBAL_FULL_DATA>().gbData[PAYLOAD_INDEX_0].pitch,
+                vehicle->subscribe->getValue<TOPIC_GIMBAL_FULL_DATA>().gbData[PAYLOAD_INDEX_0].roll,
+                vehicle->subscribe->getValue<TOPIC_GIMBAL_FULL_DATA>().gbData[PAYLOAD_INDEX_0].yaw);
         break;
       case 'q':
         DSTATUS("Quit now ...");

@@ -29,13 +29,51 @@
 
 #include "gimbal_manager_sync_sample.hpp"
 
+#define GIMBA_SUB_PACKAGE_INDEX 0
+
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
 
 GimbalManagerSyncSample::GimbalManagerSyncSample(Vehicle *vehiclePtr)
-    : vehicle(vehiclePtr) {}
+    : vehicle(vehiclePtr) {
+  /*! verify the subscribe function */
+  ACK::ErrorCode ack = vehiclePtr->subscribe->verify(1);
+  if (ACK::getError(ack) != ACK::SUCCESS) {
+    ACK::getErrorCodeMessage(ack, __func__);
+  }
 
-GimbalManagerSyncSample::~GimbalManagerSyncSample() {}
+  /*! Package 0: Subscribe to TOPIC_GIMBAL_FULL_DATA at freq 50 Hz */
+  ACK::ErrorCode subscribeStatus;
+  int       pkgIndex        = GIMBA_SUB_PACKAGE_INDEX;
+  int       freq            = 50;
+  TopicName topicList50Hz[]  = { TOPIC_GIMBAL_FULL_DATA };
+  int       numTopic        = sizeof(topicList50Hz) / sizeof(topicList50Hz[0]);
+  bool      enableTimestamp = false;
+
+  bool pkgStatus = vehicle->subscribe->initPackageFromTopicList(
+      pkgIndex, numTopic, topicList50Hz, enableTimestamp, freq);
+  if (!(pkgStatus))
+  {
+    DERROR("init package for TOPIC_GIMBAL_FULL_DATA failed." );
+  }
+  subscribeStatus = vehicle->subscribe->startPackage(pkgIndex, 1);
+  if (ACK::getError(subscribeStatus) != ACK::SUCCESS)
+  {
+    ACK::getErrorCodeMessage(subscribeStatus, __func__);
+    vehicle->subscribe->removePackage(pkgIndex, 1);
+    DERROR("subscribe TOPIC_GIMBAL_FULL_DATA failed." );
+  }
+}
+
+GimbalManagerSyncSample::~GimbalManagerSyncSample() {
+  ACK::ErrorCode subscribeStatus =
+      vehicle->subscribe->removePackage(GIMBA_SUB_PACKAGE_INDEX, 1);
+  if (ACK::getError(subscribeStatus) != ACK::SUCCESS)
+  {
+    ACK::getErrorCodeMessage(subscribeStatus, __func__);
+    DERROR("remove subscribe package TOPIC_GIMBAL_FULL_DATA failed." );
+  }
+}
 
 ErrorCode::ErrorCodeType GimbalManagerSyncSample::resetSyncSample(
     PayloadIndexType index) {
