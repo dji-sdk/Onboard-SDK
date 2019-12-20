@@ -82,9 +82,11 @@ extern "C" {
 #define sample_flag 10
 #elif CAMERA_MANAGER_SAMPLE_2
 #define sample_flag 11
+#elif GIMBAL_MANAGER_SAMPLE
+#define sample_flag 12
 #endif
 
-const int sampleToRun = 0;//sample_flag;
+const int sampleToRun = 12;//sample_flag;
 
 /*-----------------------DJI_LIB VARIABLE-----------------------------*/
 using namespace DJI::OSDK;
@@ -274,6 +276,11 @@ void *mainLoopTask(void *p){
           DSTATUS("Please make sure Z30 camera is at the payload 0 site\r\n");
           cameraManagerTest(v, Z30_AT_PAYLOAD_1);
           break;
+        case 12:
+          DSTATUS("Starting executing gimbal manager sample:\r\n");
+          DSTATUS("Please make sure camera is mounted at the payload 0 site\r\n");
+          gimbalManagerTest(v, PAYLOAD_INDEX_0);
+          break;
         default:
           DSTATUS("Pass as preprocessor flag to run desired sample:\r\n");
           DSTATUS("FLIGHT_CONTROL_SAMPLE\r\n");
@@ -285,6 +292,7 @@ void *mainLoopTask(void *p){
           DSTATUS("TIME_SYNC\r\n");
           DSTATUS("PAYLOAD_SAMPLE\r\n");
           DSTATUS("CAMERA_MANAGER_SAMPLE\r\n");
+          DSTATUS("GIMBAL_MANAGER_SAMPLE\r\n");
           break;
       }
     }
