@@ -71,8 +71,7 @@ void USBH_USR_ResetDevice(void)
 {
 	printf("USBH_USR_ResetDevice\r\n");
 }
-//???????
-//DeviceSpeed:????(0,1,2 / ??)
+
 void USBH_USR_DeviceSpeedDetected(uint8_t DeviceSpeed)
 {
 	if(DeviceSpeed==HPRT0_PRTSPD_HIGH_SPEED)
@@ -251,11 +250,6 @@ static void CDC_OutputData(uint8_t *ptr)
   }
 }
 
-/**
-* @brief  Set the cdc demo intial values
-* @param  None
-* @retval None
-*/
 static void CDC_SetInitialValue( void)
 {
 	/*Set the initial value*/
@@ -366,17 +360,11 @@ static void CDC_SetInitialValue( void)
   }
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////
-//??????,?ALIENTEK??,???USB??
 
-//USB????????,??USB?????????
-//phost:USB_HOST?????
-//???:0,????
-//       1,???,????????USB??.
 u8 USBH_Check_EnumeDead(USBH_HOST *phost)
 {
 	static u16 errcnt=0;
-	//????,??????,???USB???.
+
 	if(phost->gState==HOST_CTRL_XFER&&(phost->EnumState==ENUM_IDLE||phost->EnumState==ENUM_GET_FULL_DEV_DESC))
 	{
 		errcnt++;
@@ -392,21 +380,6 @@ u8 USBH_Check_EnumeDead(USBH_HOST *phost)
 	return 0;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
-//USB????????
-
-//?????
-void USR_MOUSE_Init	(void)
-{
- 	printf("USR_MOUSE_Init\n");
-	USB_FIRST_PLUGIN_FLAG=1;//???????
-}
-//?????
-void  USR_KEYBRD_Init(void)
-{
- 	printf("USR_KEYBRD_Init\n");
-	USB_FIRST_PLUGIN_FLAG=1;//???????
-}
 
 
 

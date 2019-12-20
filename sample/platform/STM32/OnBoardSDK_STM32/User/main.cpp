@@ -84,7 +84,7 @@ extern "C" {
 #define sample_flag 11
 #endif
 
-const int sampleToRun = sample_flag;
+const int sampleToRun = 0;//sample_flag;
 
 /*-----------------------DJI_LIB VARIABLE-----------------------------*/
 using namespace DJI::OSDK;
@@ -92,36 +92,43 @@ using namespace DJI::OSDK;
 bool threadSupport = false;
 STM32Setup *env = new STM32Setup();
 Vehicle* v = NULL;
-TaskHandle_t mainLoopHandler;
-TaskHandle_t USBProcessHandler;
+T_OsdkTaskHandle mainLoopHandler;
+T_OsdkTaskHandle USBProcessHandler;
 #if CPU_RATE_DEBUG
-TaskHandle_t debugHandler;
+T_OsdkTaskHandle debugHandler;
 #endif
 
 extern uint64_t timer1Tick;
-void debugTask(void *p){
-  char pcWriteBuffer[300] = {0};
+void *debugTask(void *p){
+  char pcWriteBuffer[512] = {0};
   while (true) {
     delay_nms(3000);
+    /*! Debug Only : print the remain free heap size of the OS */
     DSTATUS("xPortGetFreeHeapSize=%d\r\n", xPortGetFreeHeapSize());
-    vTaskList(pcWriteBuffer);
-    DSTATUS("strlen(pcWriteBuffer)=%d\r\n%s\r\n", strlen(pcWriteBuffer), pcWriteBuffer);
 
+    /*! Debug Only : print the info about the task list */
+    vTaskList(pcWriteBuffer);
+    DSTATUS("Task List Info :\r\n"
+            "Task\tState\tPrior\tStack\tNum\r\n"
+            "%s\r\n", pcWriteBuffer);
+
+    /*! Debug Only : print the info about the CPU rate */
     memset(pcWriteBuffer, 0, sizeof(pcWriteBuffer));
     vTaskGetRunTimeStats((char *)pcWriteBuffer);
-    DSTATUS("strlen(pcWriteBuffer)=%d\r\nTask      times        CPU_percent\r\n%s\r\n",
-    strlen(pcWriteBuffer), pcWriteBuffer);
+    DSTATUS("CPU Rate Info :\r\n"
+            "Task\tTimes\t\tCPU_RATE\r\n"
+            "%s\r\n", pcWriteBuffer);
   }
 }
 
-void USBProcessTask(void *p){
+void *USBProcessTask(void *p){
   DSTATUS("Start USB processing ...");
   while(1) {
     USBH_Process(&USB_OTG_Core, &USB_Host);
     delay_nms(1);
   }
 }
-void mainLoopTask(void *p){
+void *mainLoopTask(void *p){
   char func[50];
   uint32_t runOnce = 1;
 
@@ -137,11 +144,11 @@ void mainLoopTask(void *p){
       DSTATUS("Sample App for STM3241G-EVAL Board");
       delay_nms(30);
 
-      DSTATUS("Prerequisites:");
-      DSTATUS("1. Vehicle connected to the Assistant and simulation is ON");
-      DSTATUS("2. Battery fully chanrged");
-      DSTATUS("3. DJIGO App connected (for the first time run)");
-      DSTATUS("4. Gimbal mounted if needed");
+      DSTATUS("Prerequisites:\n"
+      "1. Set flight simulation is ON by DJI Assistant or config tool\n"
+      "2. Battery fully chanrged\n"
+      "3. App connected (for the first time run)\n"
+      "4. Gimbal mounted if needed\n");
       delay_nms(30);
 
       //! Initialize functional Vehicle components like
@@ -297,10 +304,10 @@ int main() {
   &USB_Host, &CDC_cb, &USR_Callbacks);
 
   /*! create tasks */
-  xTaskCreate(mainLoopTask, "mainLoop", 1024, NULL, 1, &mainLoopHandler);
-  xTaskCreate(USBProcessTask, "USBTask",  1024, NULL, 2, &USBProcessHandler);
+  OsdkOsal_TaskCreate(&mainLoopHandler, mainLoopTask, 1024, NULL);
+  OsdkOsal_TaskCreate(&USBProcessHandler, USBProcessTask, 1024, NULL);
 #if CPU_RATE_DEBUG
-  xTaskCreate(debugTask,    "debug",    1024, NULL, 1, &debugHandler);
+  OsdkOsal_TaskCreate(&debugHandler, debugTask, 1024, NULL);
 #endif
   vTaskStartScheduler();
 }

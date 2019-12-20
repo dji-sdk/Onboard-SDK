@@ -108,13 +108,13 @@ Log::print(const char* fmt, ...)
     va_start(args, fmt);
     mutex->lock();
     vsnprintf(log, sizeof(log) - 1, fmt, args);
-    mutex->unlock();
     va_end(args);
     if(log[strlen(log)] != '\n') {
       printf("%s\n", log);
     } else {
       printf("%s", log);
     };
+    mutex->unlock();
 #if defined(__linux__)
     fflush(stdout);
 #endif
