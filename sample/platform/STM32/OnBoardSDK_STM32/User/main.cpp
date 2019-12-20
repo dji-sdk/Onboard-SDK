@@ -86,7 +86,7 @@ extern "C" {
 #define sample_flag 12
 #endif
 
-const int sampleToRun = 12;//sample_flag;
+const int sampleToRun = sample_flag;
 
 /*-----------------------DJI_LIB VARIABLE-----------------------------*/
 using namespace DJI::OSDK;
