@@ -471,11 +471,6 @@
               <FilePath>..\User\MissionSample.cpp</FilePath>
             </File>
             <File>
-              <FileName>CameraGimbalSample.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\User\CameraGimbalSample.cpp</FilePath>
-            </File>
-            <File>
               <FileName>MobileSample.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\User\MobileSample.cpp</FilePath>
@@ -506,9 +501,19 @@
               <FilePath>..\User\PayloadSample.cpp</FilePath>
             </File>
             <File>
-              <FileName>CameraManagerSample.cpp</FileName>
+              <FileName>dji_stm32_helpers.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>..\User\CameraManagerSample.cpp</FilePath>
+              <FilePath>..\User\dji_stm32_helpers.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>gimbal_manager_async_sample.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\core\src\gimbal_manager_async_sample.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>gimbal_manager_sync_sample.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\core\src\gimbal_manager_sync_sample.cpp</FilePath>
             </File>
             <File>
               <FileName>camera_manager_async_sample.cpp</FileName>
@@ -516,14 +521,29 @@
               <FilePath>..\..\..\..\core\src\camera_manager_async_sample.cpp</FilePath>
             </File>
             <File>
-              <FileName>dji_stm32_helpers.cpp</FileName>
+              <FileName>camera_manager_sync_sample.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>..\User\dji_stm32_helpers.cpp</FilePath>
+              <FilePath>..\..\..\..\core\src\camera_manager_sync_sample.cpp</FilePath>
             </File>
             <File>
-              <FileName>usbh_usr.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Bsp\usbh_usr.c</FilePath>
+              <FileName>GimbalManagerSample.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\User\GimbalManagerSample.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>CameraManagerSample.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\User\CameraManagerSample.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>CameraGimbalSample.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\User\CameraGimbalSample.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>usbh_usr.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\User\usbh_usr.cpp</FilePath>
             </File>
           </Files>
         </Group>

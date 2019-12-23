@@ -1,11 +1,10 @@
-/*! @file main.cpp
-*  @version 3.1.8
- *  @date Aug 05 2016
+/*! @file GimbalManagerSample.hpp
+ *  @version 3.9
+ *  @date July 29 2019
  *
- *  @brief
- *  An exmaple program of DJI-onboard-SDK portable for stm32
+ *  @brief Tesf for the GimbalManager. All tests are basic on callback method.
  *
- *  @Copyright (c) 2016-2017 DJI
+ *  @Copyright (c) 2019 DJI
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,28 +26,12 @@
  *
  */
 
-#ifndef MAIN_H
-#define MAIN_H
+#ifndef ONBOARDSDK_GIMBALMANAGERSAMPLE_HPP
+#define ONBOARDSDK_GIMBALMANAGERSAMPLE_HPP
 
-#include "Activate.h"
-#include "BspUsart.h"
-#include "CameraGimbalSample.h"
-#include "FlightControlSample.h"
-#include "MissionSample.h"
-#include "MobileSample.h"
-#include "PayloadSample.h"
-#include "Receive.h"
-#include "TelemetrySample.h"
-#include "TimeSyncSample.h"
-#include "CameraManagerSample.hpp"
-#include "GimbalManagerSample.hpp"
-#include "bsp.h"
-#include "cppforstm32.h"
-#include "dji_vehicle.hpp"
-#include "stm32f4xx_conf.h"
-#include "timer.h"
-extern uint32_t tick; // tick is the time stamp,which record how many ms since u
-                      // initialize the system.
-// warnning: after 49 days of non-reset running, tick will RESET to ZERO.
+#include <dji_vehicle.hpp>
+#include "dji_gimbal_manager.hpp"
 
-#endif // MAIN_H
+int gimbalManagerTest(Vehicle *vehicle, PayloadIndexType index);
+
+#endif  // ONBOARDSDK_GIMBALMANAGERSAMPLE_HPP
