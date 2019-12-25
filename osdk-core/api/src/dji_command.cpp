@@ -286,3 +286,42 @@ const uint8_t DJI::OSDK::V1ProtocolCMD::Common::getVersion[] = {
 const uint8_t DJI::OSDK::V1ProtocolCMD::fc::usbFlightMode[] = {
     V1ProtocolCMD::CMDSet::fc, 0x1B
 };
+
+const uint8_t DJI::OSDK::V1ProtocolCMD::waypointV2::waypointInitV2[] = {
+  V1ProtocolCMD::CMDSet::waypointV2, 0x01};
+const uint8_t DJI::OSDK::V1ProtocolCMD::waypointV2::waypointUploadV2[] = {
+  V1ProtocolCMD::CMDSet::waypointV2, 0x02};
+const uint8_t DJI::OSDK::V1ProtocolCMD::waypointV2::waypointStartStopV2[]= {
+  V1ProtocolCMD::CMDSet::waypointV2, 0x03};
+const uint8_t DJI::OSDK::V1ProtocolCMD::waypointV2::waypointSetGlobVelocityV2[]= {
+  V1ProtocolCMD::CMDSet::waypointV2, 0x05};
+const uint8_t DJI::OSDK::V1ProtocolCMD::waypointV2::waypointGetGlobVelocityV2[]= {
+  V1ProtocolCMD::CMDSet::waypointV2, 0x06};
+const uint8_t DJI::OSDK::V1ProtocolCMD::waypointV2::waypointResumePauseV2[]= {
+  V1ProtocolCMD::CMDSet::waypointV2, 0x07};
+const uint8_t DJI::OSDK::V1ProtocolCMD::waypointV2::waypointDownloadInitV2[]= {
+  V1ProtocolCMD::CMDSet::waypointV2, 0x08};
+const uint8_t DJI::OSDK::V1ProtocolCMD::waypointV2::waypointDownloadPtV2[]= {
+  V1ProtocolCMD::CMDSet::waypointV2, 0x09};
+const uint8_t DJI::OSDK::V1ProtocolCMD::waypointV2::waypointUploadActionV2[]= {
+  V1ProtocolCMD::CMDSet::waypointV2, 0x0B};
+const uint8_t DJI::OSDK::V1ProtocolCMD::waypointV2::waypointGetMaxPtNumV2[]= {
+  V1ProtocolCMD::CMDSet::waypointV2, 0x0d};
+const uint8_t DJI::OSDK::V1ProtocolCMD::waypointV2::waypointGetWayptIdxInListV2[]= {
+  V1ProtocolCMD::CMDSet::waypointV2, 0x0E};
+const uint8_t DJI::OSDK::V1ProtocolCMD::waypointV2::waypointBreakRestoreV2[]= {
+  V1ProtocolCMD::CMDSet::waypointV2, 0x17};
+const uint8_t DJI::OSDK::V1ProtocolCMD::waypointV2::waypointDownloadActionV2[]= {
+  V1ProtocolCMD::CMDSet::waypointV2, 0x19};
+const uint8_t DJI::OSDK::V1ProtocolCMD::waypointV2::waypointGetRemainSpaceV2[]= {
+  V1ProtocolCMD::CMDSet::waypointV2, 0x1A};
+const uint8_t DJI::OSDK::V1ProtocolCMD::waypointV2::waypointGetStatePushDataV2[]= {
+  V1ProtocolCMD::CMDSet::waypointV2, 0x1B};
+const uint8_t DJI::OSDK::V1ProtocolCMD::waypointV2::waypointGetEventPushDataV2[]= {
+  V1ProtocolCMD::CMDSet::waypointV2, 0x1C};
+const uint8_t DJI::OSDK::V1ProtocolCMD::waypointV2::waypointGetInfoV2[]= {
+  V1ProtocolCMD::CMDSet::waypointV2, 0x1D};
+const uint8_t DJI::OSDK::V1ProtocolCMD::waypointV2::waypointGetMinMaxActionIDV2[]= {
+  V1ProtocolCMD::CMDSet::waypointV2, 0x1E};
+const uint8_t DJI::OSDK::V1ProtocolCMD::waypointV2::waypointGetBreakInfoV2[]= {
+  V1ProtocolCMD::CMDSet::waypointV2, 0x27};

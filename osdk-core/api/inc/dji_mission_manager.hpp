@@ -151,6 +151,13 @@ public:
    *
    */
   void printInfo();
+  #ifdef WAYPT2_CORE
+    static E_OsdkStat updateWPV2PushStateCB(struct _CommandHandle *cmdHandle, const T_CmdInfo *cmdInfo,
+                                            const uint8_t *cmdData, void *userData);
+  #endif
+
+
+
 
   Vehicle*         vehicle;
   WaypointMission* wpMission;

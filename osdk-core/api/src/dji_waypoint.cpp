@@ -669,7 +669,7 @@ bool
 WaypointMission::DownloadMissionV2(dji::waypointv2::WaypointMission &outMission,
                                    WaypointV2Interface::CommonErrorCallback errorCallback)
 {
-  waypointV2Interface.DownloadMission(outMission, errorCallback);
+  return waypointV2Interface.DownloadMission(outMission, errorCallback);
 }
 
 void

@@ -232,12 +232,12 @@ void *LegacyLinker::decodeAck(E_OsdkStat ret, T_CmdInfo &ackInfo,
         && OpenProtocolCMD::CMDSet::Mission::waypointInitV2[1] <= cmd[1]
         &&  cmd[1] <= OpenProtocolCMD::CMDSet::Mission::waypointGetMinMaxActionIDV2[1])
     {
-      /*
+
       wayPoint2CommonRspACK.info      = recvFrame.recvInfo;
       wayPoint2CommonRspACK.info.buf  = recvFrame.recvData.raw_ack_array;
       wayPoint2CommonRspACK.updated   = true;
       pACK = static_cast<void*>(&this->wayPoint2CommonRspACK);
-     */
+
       DERROR("TODO : to be implemented.");
     }
     else
@@ -290,6 +290,14 @@ void *LegacyLinker::decodeAck(E_OsdkStat ret, T_CmdInfo &ackInfo,
       memcpy(paramAck.data.paramValue, recvFrame.recvData.paramAckData.paramValue, MAX_PARAMETER_VALUE_LENGTH);
       paramAck.updated         = true;
       pACK = static_cast<void*>(&this->paramAck);
+    }
+    else if (memcmp(cmd, OpenProtocolCMD::CMDSet::Control::setHomeLocation, sizeof(cmd))==0)
+    {
+      setHomeLocationAck.info = setHomeLocationAck.info;
+      setHomeLocationAck.data.retCode =recvFrame.recvData.setHomeLocationAck.data.retCode;
+      setHomeLocationAck.data.result =recvFrame.recvData.setHomeLocationAck.data.result;
+      setHomeLocationAck.updated         = true;
+      pACK = static_cast<void*>(&this->setHomeLocationAck);
     }
     else
     {

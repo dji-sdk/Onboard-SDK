@@ -137,9 +137,9 @@ ErrorCode::ErrorCodeType FlightController::setCollisionAvoidanceEnabledSync(
 }
 
 void FlightController::setCollisionAvoidanceEnabledAsync(
-  AvoidEnable avoidEnable,
-  void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
-  UserData userData) {
+    AvoidEnable avoidEnable,
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
+    UserData userData) {
   if (flightAssistant) {
     flightAssistant->setCollisionAvoidanceEnabledAsync(avoidEnable,
                                                        UserCallBack, userData);
@@ -159,9 +159,9 @@ ErrorCode::ErrorCodeType FlightController::getCollisionAvoidanceEnabledSync(
 }
 
 void FlightController::getCollisionAvoidanceEnabledAsync(
-  void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
-                       AvoidEnable rtkEnable, UserData userData),
-  UserData userData) {
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
+                         AvoidEnable rtkEnable, UserData userData),
+    UserData userData) {
   if (flightAssistant) {
     flightAssistant->getCollisionAvoidanceEnabledAsync(UserCallBack, userData);
   } else {
@@ -172,6 +172,51 @@ void FlightController::getCollisionAvoidanceEnabledAsync(
   }
 }
 
+ErrorCode::ErrorCodeType FlightController::setUpwardsAvoidanceEnabledSync(
+    UpwardsAvoidEnable upwardsAvoidEnable, int timeout) {
+  if (flightAssistant)
+    return flightAssistant->setUpwardsAvoidanceEnabledSync(upwardsAvoidEnable,
+                                                           timeout);
+  else
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
+}
+
+void FlightController::setUpwardsAvoidanceEnabledAsync(
+    UpwardsAvoidEnable upwardsAvoidEnable,
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
+    UserData userData) {
+  if (flightAssistant) {
+    flightAssistant->setUpwardsAvoidanceEnabledAsync(upwardsAvoidEnable,
+                                                     UserCallBack, userData);
+  } else {
+    if (UserCallBack)
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
+  }
+}
+
+ErrorCode::ErrorCodeType FlightController::getUpwardsAvoidanceEnabledSync(
+    UpwardsAvoidEnable& upwardsAvoidEnable, int timeout) {
+  if (flightAssistant)
+    return flightAssistant->getUpwardsAvoidanceEnabledSync(upwardsAvoidEnable,
+                                                           timeout);
+  else
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
+}
+
+void FlightController::getUpwardsAvoidanceEnabledAsync(
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
+                         UpwardsAvoidEnable upwardsEnable, UserData userData),
+    UserData userData) {
+  if (flightAssistant) {
+    flightAssistant->getUpwardsAvoidanceEnabledAsync(UserCallBack, userData);
+  } else {
+    UpwardsAvoidEnable upwardsEnable =
+        UpwardsAvoidEnable::UPWARDS_AVOID_DISABLE;
+    if (UserCallBack)
+      UserCallBack(ErrorCode::SysCommonErr::AllocMemoryFailed, upwardsEnable,
+                   userData);
+  }
+}
 ErrorCode::ErrorCodeType FlightController::setHomeLocationSync(
     HomeLocation homeLocation, int timeout) {
   if (flightAssistant) {
@@ -460,14 +505,12 @@ void FlightController::getJoystickMode(
   }
 }
 
-
 ErrorCode::ErrorCodeType FlightController::killSwitch(KillSwitch cmd,
-                                                   int wait_timeout,
-                                                   char debugMsg[10])
-{  if (flightActions) {
-    return flightActions->killSwitch(cmd,wait_timeout,debugMsg);
+                                                      int wait_timeout,
+                                                      char debugMsg[10]) {
+  if (flightActions) {
+    return flightActions->killSwitch(cmd, wait_timeout, debugMsg);
   } else {
     DSTATUS("Kill switch fail, Alloc memory failed");
   }
-
 }

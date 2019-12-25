@@ -502,7 +502,6 @@ static E_OsdkStat OsdkCommand_DealCmd(T_CmdHandle *cmdHandle,
     OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "OsdkCommand_DealCmd param check failed");
     return OSDK_STAT_ERR_PARAM;
   }
-
   if (cmdInfo->packetType == OSDK_COMMAND_PACKET_TYPE_ACK) {
     for (int k = 0; k < PROT_MAX_WAIT_ACK_LIST; k++) {
       if (cmdHandle->waitAckItem[k].isValid == true) {

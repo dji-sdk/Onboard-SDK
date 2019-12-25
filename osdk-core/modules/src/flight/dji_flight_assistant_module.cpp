@@ -195,6 +195,18 @@ void FlightAssistant::getAvoidEnableDecoder(
   }
 }
 
+void FlightAssistant::getUpwardsAvoidEnableDecoder(
+    Vehicle* vehicle, RecvContainer recvFrame,
+    UCBRetParamHandler<UpwardsAvoidEnable>* ucb) {
+  if (ucb && ucb->UserCallBack) {
+    UpwardsAvoidEnableAck ack = {0};
+    ErrorCode::ErrorCodeType retCode =
+        commonDataUnpacker<UpwardsAvoidEnableAck>(recvFrame, ack);
+    ucb->UserCallBack(retCode, (UpwardsAvoidEnable)ack.upwardsAvoidEnable,
+                      ucb->userData);
+  }
+}
+
 void FlightAssistant::getGoHomeAltitudeDecoder(
     Vehicle* vehicle, RecvContainer recvFrame,
     UCBRetParamHandler<GoHomeAltitude>* ucb) {
@@ -210,16 +222,16 @@ void FlightAssistant::setHomePointAckDecoder(Vehicle* vehicle,
                                              RecvContainer recvFrame,
                                              UCBRetCodeHandler* ucb) {
   if (ucb && ucb->UserCallBack) {
-    ACK::ErrorCode ack = {0};
+    ACK::SetHomeLocationAckInternal ack = {0};
     ErrorCode::ErrorCodeType ret = 0;
-    if (recvFrame.recvInfo.len - OpenProtocol::PackageMin <= sizeof(ack.data)) {
-      ack.data = *(uint32_t*)(recvFrame.recvData.raw_ack_array);
+    if (recvFrame.recvInfo.len - OpenProtocol::PackageMin <= sizeof(ack)) {
+      ack.result = recvFrame.recvData.setHomeLocationAck.data.result;
+      printf("Set home location async ret code%x\n", ack.result);
       ret = ErrorCode::getErrorCode(ErrorCode::FCModule,
-                                    ErrorCode::FCSetHomeLocation, ack.data);
+                                    ErrorCode::FCSetHomeLocation, ack.result);
     } else {
       DERROR("ACK is exception, data len %d (expect >= %d)\n",
-             recvFrame.recvInfo.len - OpenProtocol::PackageMin,
-             sizeof(ack.data));
+             recvFrame.recvInfo.len - OpenProtocol::PackageMin, sizeof(ack));
       ret = ErrorCode::SysCommonErr::UnpackDataMismatch;
     }
     ucb->UserCallBack(ret, ucb->userData);
@@ -309,25 +321,25 @@ void FlightAssistant::getGoHomeAltitudeAsync(
 
 ErrorCode::ErrorCodeType FlightAssistant::setCollisionAvoidanceEnabledSync(
     AvoidEnable avoidEnable, int timeout) {
-  return writeParameterByHashSync(ParamHashValue::USER_AVOID_ENABLE,
+  return writeParameterByHashSync(ParamHashValue::HORIZ_AVOID,
                                   (void*)&avoidEnable, sizeof(avoidEnable),
                                   timeout);
 }
 
 void FlightAssistant::setCollisionAvoidanceEnabledAsync(
-  FlightAssistant::AvoidEnable avoidEnable,
-  void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
-  UserData userData) {
-  writeParameterByHashAsync(ParamHashValue::USER_AVOID_ENABLE,
-                            (void*)&avoidEnable, sizeof(avoidEnable),
-                            setParameterDecoder, UserCallBack, userData);
+    FlightAssistant::AvoidEnable avoidEnable,
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
+    UserData userData) {
+  writeParameterByHashAsync(ParamHashValue::HORIZ_AVOID, (void*)&avoidEnable,
+                            sizeof(avoidEnable), setParameterDecoder,
+                            UserCallBack, userData);
 }
 
 ErrorCode::ErrorCodeType FlightAssistant::getCollisionAvoidanceEnabledSync(
     AvoidEnable& avoidEnable, int timeout) {
   uint8_t param[MAX_PARAMETER_VALUE_LENGTH];
-  ErrorCode::ErrorCodeType ret = readParameterByHashSync(
-      ParamHashValue::USER_AVOID_ENABLE, param, timeout);
+  ErrorCode::ErrorCodeType ret =
+      readParameterByHashSync(ParamHashValue::HORIZ_AVOID, param, timeout);
   if (ret == ErrorCode::SysCommonErr::Success) {
     avoidEnable = *(AvoidEnable*)param;
   }
@@ -335,24 +347,69 @@ ErrorCode::ErrorCodeType FlightAssistant::getCollisionAvoidanceEnabledSync(
 }
 
 void FlightAssistant::getCollisionAvoidanceEnabledAsync(
-  void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
-                       AvoidEnable avoidEnable, UserData userData),
-  UserData userData) {
-  readParameterByHashAsync<AvoidEnable>(ParamHashValue::USER_AVOID_ENABLE,
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
+                         AvoidEnable avoidEnable, UserData userData),
+    UserData userData) {
+  readParameterByHashAsync<AvoidEnable>(ParamHashValue::HORIZ_AVOID,
                                         getAvoidEnableDecoder, UserCallBack,
                                         userData);
+}
+
+ErrorCode::ErrorCodeType FlightAssistant::setUpwardsAvoidanceEnabledSync(
+    UpwardsAvoidEnable upwardsAvoidEnable, int timeout) {
+  return writeParameterByHashSync(ParamHashValue::UPWARDS_AVOID,
+                                  (void*)&upwardsAvoidEnable,
+                                  sizeof(upwardsAvoidEnable), timeout);
+}
+
+void FlightAssistant::setUpwardsAvoidanceEnabledAsync(
+    UpwardsAvoidEnable upwardsAvoidEnable,
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
+    UserData userData) {
+  writeParameterByHashAsync(
+      ParamHashValue::UPWARDS_AVOID, (void*)&upwardsAvoidEnable,
+      sizeof(upwardsAvoidEnable), setParameterDecoder, UserCallBack, userData);
+}
+
+ErrorCode::ErrorCodeType FlightAssistant::getUpwardsAvoidanceEnabledSync(
+    UpwardsAvoidEnable& upwardsAvoidEnable, int timeout) {
+  uint8_t param[MAX_PARAMETER_VALUE_LENGTH];
+  ErrorCode::ErrorCodeType ret =
+      readParameterByHashSync(ParamHashValue::UPWARDS_AVOID, param, timeout);
+  if (ret == ErrorCode::SysCommonErr::Success) {
+    upwardsAvoidEnable = *(UpwardsAvoidEnable*)param;
+  }
+  return ret;
+}
+
+void FlightAssistant::getUpwardsAvoidanceEnabledAsync(
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
+                         UpwardsAvoidEnable upwardsEnable, UserData userData),
+    UserData userData) {
+  readParameterByHashAsync<UpwardsAvoidEnable>(ParamHashValue::UPWARDS_AVOID,
+                                               getUpwardsAvoidEnableDecoder,
+                                               UserCallBack, userData);
 }
 
 ErrorCode::ErrorCodeType FlightAssistant::setHomeLocationSync(
     SetHomeLocationData homeLocation, int timeout) {
   if (flightLink) {
-    ACK::ErrorCode rsp = *(ACK::ErrorCode*)flightLink->sendSync(
-        OpenProtocolCMD::CMDSet::Control::setHomeLocation, &homeLocation,
-        sizeof(homeLocation), timeout);
+    ACK::SetHomeLocationAck rsp =
+        *(ACK::SetHomeLocationAck*)flightLink->sendSync(
+            OpenProtocolCMD::CMDSet::Control::setHomeLocation, &homeLocation,
+            sizeof(homeLocation), timeout);
+
+    printf("Set home location Sync result : %x\n", rsp.data.result);
+    printf(
+        "rsp.info.len:%d   OpenProtocol::PackageMin%d "
+        "sizeof(ACK::SetHomeLocationAckInternal)%d\n",
+        rsp.info.len, OpenProtocol::PackageMin,
+        sizeof(ACK::SetHomeLocationAckInternal));
+
     if ((rsp.info.len - OpenProtocol::PackageMin <=
-         sizeof(ACK::ParamAckInternal))) {
-      return ErrorCode::getErrorCode(ErrorCode::FCModule,
-                                     ErrorCode::FCSetHomeLocation, rsp.data);
+         sizeof(ACK::SetHomeLocationAckInternal))) {
+      return ErrorCode::getErrorCode(
+          ErrorCode::FCModule, ErrorCode::FCSetHomeLocation, rsp.data.result);
     } else {
       return ErrorCode::SysCommonErr::UnpackDataMismatch;
     }
