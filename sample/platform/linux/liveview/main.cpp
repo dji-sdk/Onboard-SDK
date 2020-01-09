@@ -29,15 +29,12 @@
  */
 
 #include "dji_linux_helpers.hpp"
-#include "dji_camera_stream_decoder.hpp"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <dirent.h>
 #include "osdk_logger_internal.h"
 #include "osdk_device_id.h"
-
-#define TEST_WATCH_LIVEVIEW 1
 
 #ifdef OPEN_CV_INSTALLED
 #include "opencv2/opencv.hpp"
@@ -61,8 +58,6 @@ void show_rgb(CameraRGBImage img, char* name)
 
 using namespace DJI::OSDK;
 
-#define FPV_STREAM_FILE_NAME                    "fpv.dat"
-#define MAIN_CAMERA_STREAM_FILE_NAME            "main_camera.dat"
 #define IMAGE_FILE_PATH_LEN                     (64)
 
 #define OSDK_CMDSET_LIVEVIEW                    (0x08)
@@ -214,27 +209,23 @@ typedef struct {
   T_LiveViewMiniChannelItem channel;
 } __attribute__((packed)) T_LiveViewUnsubscribeItem;
 
-static E_OsdkStat bulkHandler1(struct _CommandHandle *cmdHandle,
-                      const T_CmdInfo *cmdInfo, const uint8_t *cmdData, void *userData);
-static E_OsdkStat bulkHandler2(struct _CommandHandle *cmdHandle,
+static E_OsdkStat RecordStreamHandler(struct _CommandHandle *cmdHandle,
                       const T_CmdInfo *cmdInfo, const uint8_t *cmdData, void *userData);
 static E_OsdkStat liveViewInfoHandler(struct _CommandHandle *cmdHandle,
-                      const T_CmdInfo *cmdInfo, const uint8_t *cmdData, void *userData);
-
-static int writeFpvData(const uint8_t *data, uint32_t len);
-static int writeData(const uint8_t *data, uint32_t len);
+                               const T_CmdInfo *cmdInfo, const uint8_t *cmdData, void *userData);
+static int writeStreamData(const char *fileName, const uint8_t *data, uint32_t len);
 
 static pthread_t taskHandle;
 
 T_RecvCmdItem s_bulkCmdList[] = {
-    PROT_CMD_ITEM(0, 0, 0x65, 0x54, MASK_HOST_DEVICE_SET_ID, NULL,
-                  bulkHandler1),
-    PROT_CMD_ITEM(0, 0, 0x65, 0x55, MASK_HOST_DEVICE_SET_ID, NULL,
-                  bulkHandler2),
-    PROT_CMD_ITEM(0, 0, 0x65, 0x56, MASK_HOST_DEVICE_SET_ID, NULL,
-                  bulkHandler2),
-    PROT_CMD_ITEM(0, 0, 0x65, 0x57, MASK_HOST_DEVICE_SET_ID, NULL,
-                  bulkHandler2),
+    PROT_CMD_ITEM(0, 0, 0x65, 0x54, MASK_HOST_DEVICE_SET_ID, (void *)"FPV.h264",
+                  RecordStreamHandler),
+    PROT_CMD_ITEM(0, 0, 0x65, 0x55, MASK_HOST_DEVICE_SET_ID, (void *)"MainCam.h264",
+                  RecordStreamHandler),
+    PROT_CMD_ITEM(0, 0, 0x65, 0x56, MASK_HOST_DEVICE_SET_ID, (void *)"ViceCam.h264",
+                  RecordStreamHandler),
+    PROT_CMD_ITEM(0, 0, 0x65, 0x57, MASK_HOST_DEVICE_SET_ID, (void *)"TopCam.h264",
+                  RecordStreamHandler),
 };
 
 T_RecvCmdItem s_v1CmdList[] = {
@@ -242,36 +233,16 @@ T_RecvCmdItem s_v1CmdList[] = {
                    MASK_HOST_DEVICE_SET_ID, NULL, liveViewInfoHandler),
 };
 
-DJICameraStreamDecoder *cameraDecoder = new DJICameraStreamDecoder();
-
-E_OsdkStat bulkHandler1(struct _CommandHandle *cmdHandle,
+E_OsdkStat RecordStreamHandler(struct _CommandHandle *cmdHandle,
                     const T_CmdInfo *cmdInfo, const uint8_t *cmdData, void *userData) {
-#if TEST_WATCH_LIVEVIEW
-  cameraDecoder->decodeBuffer((uint8_t *)cmdData, cmdInfo->dataLen);
-#else
-  if(writeFpvData(cmdData, cmdInfo->dataLen) != 0) {
+  const char* fileName = "loggingFile";
+  if (userData) fileName = (const char *)userData;
+
+  if(writeStreamData(fileName, cmdData, cmdInfo->dataLen) != 0) {
     printf("write data failed!\n");
   } else {
-    OSDK_LOG_INFO("FPV_LiveView", "writing data %d\n", cmdInfo->dataLen);
+    OSDK_LOG_INFO("LiveView Writing", "writing data %d to file:%s\n", cmdInfo->dataLen, fileName);
   }
-#endif
-
-  return OSDK_STAT_OK;
-}
-
-E_OsdkStat bulkHandler2(struct _CommandHandle *cmdHandle,
-                    const T_CmdInfo *cmdInfo, const uint8_t *cmdData, void *userData) {
-#if TEST_WATCH_LIVEVIEW
-  OSDK_LOG_INFO("###","0.0 Get Raw Data");
-  cameraDecoder->decodeBuffer((uint8_t *)cmdData, cmdInfo->dataLen);
-  OSDK_LOG_INFO("###","0.1 Decode Finish");
-#else
-  if(writeData(cmdData, cmdInfo->dataLen) != 0) {
-    printf("write data failed!\n");
-  } else {
-    OSDK_LOG_INFO("Camera_LiveView", "writing data %d\n", cmdInfo->dataLen);
-  }
-#endif
 
   return OSDK_STAT_OK;
 }
@@ -288,32 +259,11 @@ E_OsdkStat liveViewInfoHandler(struct _CommandHandle *cmdHandle,
   return OSDK_STAT_OK;
 }
 
-int writeFpvData(const uint8_t *data, uint32_t len) {
+int writeStreamData(const char *fileName, const uint8_t *data, uint32_t len) {
   FILE *fp = NULL;
   size_t size = 0;
   
-  fp = fopen(FPV_STREAM_FILE_NAME, "a+");
-  if(fp == NULL) {
-    printf("fopen failed!\n");
-    return -1;
-  }
-  size = fwrite(data, 1, len, fp);
-  if(size != len) {
-    return -1;
-  }
-  
-  fflush(fp);
-  if(fp) {
-    fclose(fp);
-  }
-  return 0;
-}
-
-int writeData(const uint8_t *data, uint32_t len) {
-  FILE *fp = NULL;
-  size_t size = 0;
-  
-  fp = fopen(MAIN_CAMERA_STREAM_FILE_NAME, "a+");
+  fp = fopen(fileName, "a+");
   if(fp == NULL) {
     printf("fopen failed!\n");
     return -1;
@@ -345,7 +295,6 @@ E_OsdkStat getCameraPushing(struct _CommandHandle *cmdHandle,
                    cmdInfo->receiver, cmdInfo->dataLen);*/
     if (userData && (cmdInfo->dataLen >= 34)) {
       CameraListType *camList = (CameraListType *) userData;
-      printf("相机类型:%d\n", cmdData[33]);
       switch (cmdInfo->sender) {
         case 0x01:
         case 0x21:
@@ -728,11 +677,19 @@ int stopHeartBeatTask() {
 }
 
 int startLiveViewTest(Vehicle *vehicle, E_OSDK_CameraPosition pos) {
-  CameraListType cameraList = getCameraList(vehicle);
-  if ((pos < 3) && (pos >= 0) && (cameraList.isMounted[pos])) {
-    DSTATUS("camera[%d] is mounted\n", pos);
+  E_OSDKCameraType targetCamType;
+  if ((pos <= OSDK_CAMERA_POSITION_NO_3) && (pos >= OSDK_CAMERA_POSITION_NO_1)) {
+    CameraListType cameraList = getCameraList(vehicle);
+    if (cameraList.isMounted[pos]) {
+      DSTATUS("camera[%d] is mounted\n", pos);
+      targetCamType = cameraList.cameraType[pos];
+    } else {
+      DERROR("camera[%d] is not mounted\n", pos);
+      return -1;
+    }
   } else if (pos == OSDK_CAMERA_POSITION_FPV){
     DSTATUS("Getting FPV Test");
+    targetCamType = OSDK_CAMERA_TYPE_FPV;
   } else {
     DERROR("camera[%d] is not mounted\n", pos);
     return -1;
@@ -741,7 +698,7 @@ int startLiveViewTest(Vehicle *vehicle, E_OSDK_CameraPosition pos) {
   if(subscribeLiveViewInfo(vehicle) == -1)
     return -1;
   vehicle->linker->createLiveViewTask();
-  if(subscribeLiveViewData(vehicle, cameraList.cameraType[pos], pos) == -1) {
+  if(subscribeLiveViewData(vehicle, targetCamType, pos) == -1) {
      vehicle->linker->destroyLiveViewTask();
      return -1;
   }
@@ -777,12 +734,6 @@ main(int argc, char** argv)
   LinuxSetup linuxEnvironment(argc, argv);
   Vehicle *vehicle = linuxEnvironment.getVehicle();
 
-  if(!cameraDecoder->init())
-  {
-    DERROR("There is issue with decoder");
-    return false;
-  }
-
   if (vehicle == NULL) {
       std::cout << "Vehicle not initialized, exiting. \n";
       return -1;
@@ -802,7 +753,16 @@ main(int argc, char** argv)
     << "| Available commands:                                            |"
     << std::endl;
   std::cout
-    << "| [a] start main camera liveview test                                    |"
+    << "| [a] start fpv camera liveview test                             |"
+    << std::endl;
+  std::cout
+    << "| [b] start main camera liveview test                            |"
+    << std::endl;
+  std::cout
+    << "| [c] start vice camera liveview test                            |"
+    << std::endl;
+  std::cout
+    << "| [d] start top camera liveview test                             |"
     << std::endl;
   std::cout
     << "| [q] quit                                                       |"
@@ -824,34 +784,15 @@ main(int argc, char** argv)
       startLiveViewTest(vehicle, OSDK_CAMERA_POSITION_NO_3);
       break;
       case 'q': {
-        cameraDecoder->cleanup();
         return 0;
       }
       break;
       default:
         break;
     }
-#if TEST_WATCH_LIVEVIEW
-    for (int i = 0; i < 500; ) {
-      if (cameraDecoder->decodedImageHandler.newImageIsReady()) {
-        OSDK_LOG_INFO("***","1.0 Get Image start");
-        CameraRGBImage copyOfImage;
-        if (cameraDecoder->getNewImage(copyOfImage, 20)) {
-          OSDK_LOG_INFO("***","1.1 Got Image start");
-          char testName[] = "liveview test";
-          OSDK_LOG_INFO("***","1.3 Show Image start");
-          show_rgb(copyOfImage, testName);
-          OSDK_LOG_INFO("***","1.4 Show Image finish");
-        } else {
-          cout << "Time out" << endl;
-        }
-        i++;
-      }
-      //usleep(2e4);
-    }
-#else
+
     sleep(10);
-#endif
+
     switch (inputChar) {
       case 'a':
         stopLiveViewTest(vehicle, OSDK_CAMERA_POSITION_FPV);
@@ -866,7 +807,6 @@ main(int argc, char** argv)
         stopLiveViewTest(vehicle, OSDK_CAMERA_POSITION_NO_3);
         break;
       case 'q': {
-        cameraDecoder->cleanup();
         return 0;
       }
         break;
