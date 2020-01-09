@@ -41,11 +41,12 @@ extern "C" {
 
 /* Exported functions --------------------------------------------------------*/
 E_OsdkStat OsdkProtocol_sdkInit(void **pProtocolExtData);
+E_OsdkStat OsdkProtocol_sdkDeinit(void *pProtocolExtData);
 E_OsdkStat OsdkProtocol_sdkPack(void *protocolExtData, uint8_t *pFrame,
-                                uint16_t *len, const T_CmdInfo *pInfo,
+                                uint32_t *len, const T_CmdInfo *pInfo,
                                 const uint8_t *cmdData);
 E_OsdkStat OsdkProtocol_sdkParse(T_CmdParse *protParse, uint8_t byte,
-                                 uint8_t **pParseFrame, uint16_t *parseLen);
+                                 uint8_t **pParseFrame, uint32_t *parseLen);
 E_OsdkStat OsdkProtocol_sdkUnpack(void *protocolExtData, uint8_t *pFrame,
                                   T_CmdInfo *pInfo, uint8_t *cmdData);
 E_OsdkStat OsdkProtocol_sdkGetLen(char *buffer, uint32_t *length);

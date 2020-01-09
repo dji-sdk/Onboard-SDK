@@ -49,6 +49,14 @@ static T_OsdkHalUartHandler halUartHandler = {
     .UartReadData = OsdkLinux_UartReadData,
 };
 
+#ifdef ADVANCED_SENSING
+static T_OsdkHalUSBBulkHandler halUSBBulkHandler = {
+    .USBBulkInit = OsdkLinux_USBBulkInit,
+    .USBBulkWriteData = OsdkLinux_USBBulkSendData,
+    .USBBulkReadData = OsdkLinux_USBBulkReadData,
+};
+#endif
+
 static T_OsdkOsalHandler osalHandler = {	
     .TaskCreate = OsdkLinux_TaskCreate,
     .TaskDestroy = OsdkLinux_TaskDestroy,
@@ -107,6 +115,12 @@ LinuxSetup::setupEnvironment(int argc, char** argv)
   if(DJI_REG_UART_HANDLER(&halUartHandler) != true) {
     throw std::runtime_error("Uart handler register fail");
   }
+
+#ifdef ADVANCED_SENSING
+  if(DJI_REG_USB_BULK_HANDLER(&halUSBBulkHandler) != true) {
+    throw std::runtime_error("USB Bulk handler register fail");
+  };
+#endif
 
   if(DJI_REG_OSAL_HANDLER(&osalHandler) != true) {
     throw std::runtime_error("Osal handler register fail");
@@ -240,6 +254,15 @@ LinuxSetup::initVehicle()
   {
     std::cout << "Failed to initialize ACM Linker channel!" << std::endl;
   }
+
+#ifdef ADVANCED_SENSING
+  /*! Linker add USB Bulk channel */
+  if (!linker->addUSBBulkChannel(0x001F, 0x2CA3, 3, 0x84, 0x03,
+                                 USB_BULK_LIVEVIEW_CHANNEL_ID))
+  {
+    std::cout << "Failed to initialize USB Bulk Linker channel!" << std::endl;
+  }
+#endif
 
   /*! Vehicle initialization */
   this->vehicle = new Vehicle(linker);

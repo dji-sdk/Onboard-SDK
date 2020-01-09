@@ -56,6 +56,9 @@ bool addUartChannel(const char *device, uint32_t baudrate,
 
 #ifdef __linux__
 bool addUdpChannel(const char *addr, uint16_t port, E_ChannelIDType id);
+
+bool addUSBBulkChannel(uint16_t pid, uint16_t vid, uint16_t num,
+                       uint16_t epIn, uint16_t epOut, E_ChannelIDType id);
 #endif
 
 void setKey(const char *key);
@@ -72,6 +75,14 @@ sendSync(T_CmdInfo *cmdInfo, const uint8_t *cmdData,
 bool send(T_CmdInfo *cmdInfo, const uint8_t *cmdData);
 
 bool registerCmdHandler(T_RecvCmdHandle *recvCmdHandle);
+
+bool createAdvancedSensingTask();
+
+bool createLiveViewTask();
+
+bool destroyAdvancedSensingTask();
+
+bool destroyLiveViewTask();
 
 };
 }

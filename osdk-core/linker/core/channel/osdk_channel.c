@@ -33,14 +33,20 @@
 
 /* Private constants ---------------------------------------------------------*/
 #define OSDK_CHANNEL_TASK_FREQ (1000)
+#define UART_MAX_BUF_SIZE (1024)
+#define UDP_MAX_BUF_SIZE (1024)
+#define USB_BIG_DATA_MAX_BUF_SIZE (1024*512)
 
 /* Private types -------------------------------------------------------------*/
 
 /* Private variables ---------------------------------------------------------*/
 static T_ChannelListItem s_chnListItem;
+static T_ChannelListItem s_bigDataChnListItem;
 const static T_ProtocolMapKey protoMapTable[] = {
     {FC_UART_CHANNEL_ID, PROTOCOL_SDK},
-    {USB_ACM_CHANNEL_ID, PROTOCOL_V1}};
+    {USB_ACM_CHANNEL_ID, PROTOCOL_V1},
+    {USB_BULK_LIVEVIEW_CHANNEL_ID, PROTOCOL_USBMC},
+    {USB_BULK_ADVANCED_SENSING_CHANNEL_ID, PROTOCOL_USBMC}};
 
 static T_msgQueue *s_msgQueuePointer;
 static T_OsdkWorkNode s_osdkChannelWorkNode = {0};
@@ -50,7 +56,7 @@ static uint32_t s_osdkChannelWorkStep = 0;
 static E_OsdkStat OsdkChannel_MsgQueueInit(void);
 static void OsdkChannel_Task(void *arg);
 static E_OsdkStat OsdkChannel_RecvProcess(T_ChannelItem *channelItem,
-                                          const uint8_t *pData, uint16_t len);
+                                          const uint8_t *pData, uint32_t len);
 
 /* Exported functions definition ---------------------------------------------*/
 
@@ -89,19 +95,17 @@ E_OsdkStat OsdkChannel_CheckDuplicate(T_ChannelListItem *chnListCtx,
 /**
  * @brief Add channel item to channel list
  * @param channelItem: pointer to channel item.
+ * @param chnListCtx: pointer to channel list item.
  * @return error code.
  */
-E_OsdkStat OsdkChannel_AddChannel(T_ChannelItem *channelItem) {
+E_OsdkStat OsdkChannel_AddChannel(T_ChannelItem *channelItem, T_ChannelListItem *chnListCtx) {
   E_OsdkStat osdkStat;
 
-  T_ChannelListItem *chnListCtx = NULL;
-
-  if(!channelItem) {
+  if(!channelItem || !chnListCtx) {
     OSDK_LOG_ERROR(MODULE_NAME_CHANNEL,
                   "OsdkChannel_AddChannel param check failed");
     return OSDK_STAT_ERR_PARAM;
   }
-  chnListCtx = OsdkChannel_GetListInstance();
 
   osdkStat = OsdkChannel_CheckDuplicate(chnListCtx, channelItem);
   if (osdkStat != OSDK_STAT_OK) {
@@ -123,8 +127,6 @@ E_OsdkStat OsdkChannel_AddChannel(T_ChannelItem *channelItem) {
 }
 
 E_OsdkStat OsdkChannel_ChannelListInit(T_ChannelListItem *chnListCtx) {
-  E_OsdkStat osdkStat;
-
   if(!chnListCtx) {
     OSDK_LOG_ERROR(MODULE_NAME_CHANNEL,
                   "OsdkChannel_ChannelListInit param check failed");
@@ -133,6 +135,35 @@ E_OsdkStat OsdkChannel_ChannelListInit(T_ChannelListItem *chnListCtx) {
 
   OsdkList_Init(&chnListCtx->head);
   chnListCtx->chnCount = 0;
+  return OSDK_STAT_OK;
+}
+
+E_OsdkStat OsdkChannel_ChannelListDeinit(T_ChannelListItem *chnListCtx) {
+  T_ChannelItem *pNode = NULL;
+  T_ChannelItem *pBackup = NULL;
+
+  if(!chnListCtx) {
+    OSDK_LOG_ERROR(MODULE_NAME_CHANNEL,
+                  "OsdkChannel_ChannelListDeinit param check failed");
+    return OSDK_STAT_ERR_PARAM;
+  }
+  if (chnListCtx->chnCount > 0) {
+    OSDK_LIST_FOR_EACH_ENTRY_SAFE(pNode, pBackup, &chnListCtx->head, head) {
+      //@TODO need to be done
+      //pNode->halOps.close(pNode->halObject);
+      OsdkOsal_Free(pNode->recvParse.parseBuff);
+      OsdkOsal_Free(pNode->sendFrameBuff);
+      pNode->protocolOps.Deinit(pNode->protocolExtData);
+      OsdkOsal_MutexDestroy(pNode->sendMutex);
+      OsdkOsal_MutexDestroy(pNode->seqMutex);
+      OsdkList_Del(&pNode->head);
+    }
+  }
+  chnListCtx->chnCount = 0;
+}
+
+E_OsdkStat OsdkChannel_ChannelTaskInit() {
+  E_OsdkStat osdkStat;
   s_osdkChannelWorkNode.name = "channelTask";
   s_osdkChannelWorkNode.taskFunc = OsdkChannel_Task;
   s_osdkChannelWorkNode.arg = (void *)NULL;
@@ -199,12 +230,15 @@ E_OsdkStat OsdkChannel_InitUartChannel(const char *port,
 
   channelItem->channelName = "UART";
   channelItem->channelId = id;
+  channelItem->bufMaxSize = UART_MAX_BUF_SIZE;
   channelItem->seqNum = 0;
   channelItem->recvParse.parseIndex = 0;
-  memset(channelItem->recvParse.parseBuff, 0, OSDK_PACKAGE_MAX_LEN);
+  channelItem->recvParse.parseBuff = OsdkOsal_Malloc(channelItem->bufMaxSize);
+  memset(channelItem->recvParse.parseBuff, 0, channelItem->bufMaxSize);
   channelItem->Send = OsdkChannel_CommonSend;
   channelItem->Recv = OsdkChannel_CommonRecv;
-  memset(channelItem->sendFrameBuff, 0x00, sizeof(channelItem->sendFrameBuff));
+  channelItem->sendFrameBuff = OsdkOsal_Malloc(channelItem->bufMaxSize);
+  memset(channelItem->sendFrameBuff, 0, sizeof(channelItem->sendFrameBuff));
 
   if (OsdkHal_GetHalOps("UART", &channelItem->halOps) != OSDK_STAT_OK) {
     OSDK_LOG_ERROR(MODULE_NAME_CHANNEL, "can't get hal ops");
@@ -239,7 +273,7 @@ E_OsdkStat OsdkChannel_InitUartChannel(const char *port,
     goto err;
   }
 
-  if (OsdkChannel_AddChannel(channelItem) != OSDK_STAT_OK) {
+  if (OsdkChannel_AddChannel(channelItem, OsdkChannel_GetListInstance()) != OSDK_STAT_OK) {
     OSDK_LOG_ERROR(MODULE_NAME_CHANNEL, "add uart channel error");
     goto err;
   }
@@ -273,12 +307,19 @@ E_OsdkStat OsdkChannel_InitUDPChannel(const char *addr, uint16_t port,
     OSDK_LOG_ERROR(MODULE_NAME_CHANNEL, "malloc memory for channel fail");
     return OSDK_STAT_ERR_ALLOC;
   }
+
   channelItem->channelName = "UDP";
   channelItem->channelId = id;
+  channelItem->bufMaxSize = UDP_MAX_BUF_SIZE;
   channelItem->seqNum = 0;
+  channelItem->recvParse.parseIndex = 0;
+  channelItem->recvParse.parseBuff = OsdkOsal_Malloc(channelItem->bufMaxSize);
+  memset(channelItem->recvParse.parseBuff, 0, channelItem->bufMaxSize);
   channelItem->Send = OsdkChannel_CommonSend;
   channelItem->Recv = OsdkChannel_CommonRecv;
-  memset(channelItem->sendFrameBuff, 0x00, sizeof(channelItem->sendFrameBuff));
+  channelItem->sendFrameBuff = OsdkOsal_Malloc(channelItem->bufMaxSize);
+  memset(channelItem->sendFrameBuff, 0, sizeof(channelItem->sendFrameBuff));
+
 
   if (OsdkHal_GetHalOps("UDP", &channelItem->halOps) != OSDK_STAT_OK) {
     OSDK_LOG_ERROR(MODULE_NAME_CHANNEL, "get hal ops failed");
@@ -312,7 +353,7 @@ E_OsdkStat OsdkChannel_InitUDPChannel(const char *addr, uint16_t port,
     goto err;
   }
 
-  if (OsdkChannel_AddChannel(channelItem) != OSDK_STAT_OK) {
+  if (OsdkChannel_AddChannel(channelItem, OsdkChannel_GetListInstance()) != OSDK_STAT_OK) {
     OSDK_LOG_ERROR(MODULE_NAME_CHANNEL, "add udp channel error");
     goto err;
   }
@@ -323,6 +364,82 @@ err:
   OsdkOsal_Free(channelItem);
   return OSDK_STAT_ERR;
 }
+
+/**
+ * @brief Init UDP channel item.
+ * @param addr: udp address.
+ * @param port: udp port.
+ * @return error code.
+ */
+E_OsdkStat OsdkChannel_InitUSBBulkChannel(uint16_t pid, uint16_t vid, uint16_t num,
+                                          uint16_t epIn, uint16_t epOut,
+                                          E_ChannelIDType id) {
+  T_ChannelItem *channelItem = NULL;
+  E_OsdkStat osdkStat = OSDK_STAT_OK;
+
+  channelItem = OsdkOsal_Malloc(sizeof(T_ChannelItem));
+  if (channelItem == NULL) {
+    OSDK_LOG_ERROR(MODULE_NAME_CHANNEL, "malloc memory for channel fail");
+    return OSDK_STAT_ERR_ALLOC;
+  }
+
+  channelItem->channelName = "USB_BULK";
+  channelItem->channelId = id;
+  channelItem->bufMaxSize = USB_BIG_DATA_MAX_BUF_SIZE;
+  channelItem->seqNum = 0;
+  channelItem->recvParse.parseIndex = 0;
+  channelItem->recvParse.parseBuff = OsdkOsal_Malloc(channelItem->bufMaxSize);
+  memset(channelItem->recvParse.parseBuff, 0, channelItem->bufMaxSize);
+  channelItem->Send = OsdkChannel_BigDataSend;
+  channelItem->Recv = OsdkChannel_BigDataRecv;
+  channelItem->sendFrameBuff = OsdkOsal_Malloc(channelItem->bufMaxSize);
+  memset(channelItem->sendFrameBuff, 0, sizeof(channelItem->sendFrameBuff));
+
+
+  if (OsdkHal_GetHalOps("USB_BULK", &channelItem->halOps) != OSDK_STAT_OK) {
+    OSDK_LOG_ERROR(MODULE_NAME_CHANNEL, "get hal ops failed");
+    goto err;
+  }
+
+  if (OsdkHal_USBBulkInit(pid, vid, num, epIn, epOut, &channelItem->halObject) != OSDK_STAT_OK) {
+    OSDK_LOG_ERROR(MODULE_NAME_CHANNEL, "USB BULK init failed");
+    goto err;
+  }
+
+  if (OsdkChannel_GetProtoOps(channelItem->channelId,
+                              &channelItem->protocolOps) != OSDK_STAT_OK) {
+    OSDK_LOG_ERROR(MODULE_NAME_CHANNEL, "can't get protocol ops");
+    goto err;
+  }
+
+  if (channelItem->protocolOps.Init(&channelItem->protocolExtData) !=
+      OSDK_STAT_OK) {
+    OSDK_LOG_ERROR(MODULE_NAME_CHANNEL, "protocol init error");
+    goto err;
+  }
+
+  if (OsdkOsal_MutexCreate(&channelItem->sendMutex) != OSDK_STAT_OK) {
+    OSDK_LOG_ERROR(MODULE_NAME_CHANNEL, "send mutex create error");
+    return OSDK_STAT_ERR;
+  }
+
+  if (OsdkOsal_MutexCreate(&channelItem->seqMutex) != OSDK_STAT_OK) {
+    OSDK_LOG_ERROR(MODULE_NAME_CHANNEL, "seq mutex create error");
+    goto err;
+  }
+
+  if (OsdkChannel_AddChannel(channelItem, OsdkChannel_GetBigDataListInstance()) != OSDK_STAT_OK) {
+    OSDK_LOG_ERROR(MODULE_NAME_CHANNEL, "add usb channel error");
+    goto err;
+  }
+
+  return OSDK_STAT_OK;
+
+  err:
+  OsdkOsal_Free(channelItem);
+  return OSDK_STAT_ERR;
+}
+
 #endif
 
 /**
@@ -388,7 +505,7 @@ E_OsdkStat OsdkChannel_GetSeqNum(T_ChannelItem *channelItem, uint16_t *seq) {
 E_OsdkStat OsdkChannel_CommonSend(T_ChannelItem *channelItem,
                                   const T_CmdInfo *cmdInfo,
                                   const uint8_t *cmdData) {
-  uint16_t length = 0;
+  uint32_t length = 0;
 
   if(!channelItem || !cmdInfo || !cmdData) {
     OSDK_LOG_ERROR(MODULE_NAME_CHANNEL, "OsdkChannel_CommonSend param check failed");
@@ -404,9 +521,6 @@ E_OsdkStat OsdkChannel_CommonSend(T_ChannelItem *channelItem,
                                     channelItem->sendFrameBuff, &length,
                                     cmdInfo, cmdData) != OSDK_STAT_OK) {
     OSDK_LOG_ERROR(MODULE_NAME_CHANNEL, "protocol pack error");
-    if (OsdkOsal_MutexUnlock(channelItem->sendMutex) != OSDK_STAT_OK) {
-      OSDK_LOG_ERROR(MODULE_NAME_CHANNEL, "mutex unlock error");
-    }
     return OSDK_STAT_ERR;
   }
 
@@ -414,9 +528,6 @@ E_OsdkStat OsdkChannel_CommonSend(T_ChannelItem *channelItem,
                                channelItem->sendFrameBuff,
                                length) != OSDK_STAT_OK) {
     OSDK_LOG_ERROR(MODULE_NAME_CHANNEL, "hal send error");
-    if (OsdkOsal_MutexUnlock(channelItem->sendMutex) != OSDK_STAT_OK) {
-      OSDK_LOG_ERROR(MODULE_NAME_CHANNEL, "mutex unlock error");
-    }
     return OSDK_STAT_ERR;
   }
 
@@ -428,13 +539,94 @@ E_OsdkStat OsdkChannel_CommonSend(T_ChannelItem *channelItem,
   return OSDK_STAT_OK;
 }
 
+E_OsdkStat OsdkChannel_BigDataSend(T_ChannelItem *channelItem,
+                                  const T_CmdInfo *cmdInfo,
+                                  const uint8_t *cmdData) {
+  uint32_t length = 0;
+
+  if(!channelItem || !cmdInfo || !cmdData) {
+    OSDK_LOG_ERROR(MODULE_NAME_CHANNEL, "OsdkChannel_CommonSend param check failed");
+    return OSDK_STAT_ERR_PARAM;
+  }
+
+  if (OsdkOsal_MutexLock(channelItem->sendMutex) != OSDK_STAT_OK) {
+    OSDK_LOG_ERROR(MODULE_NAME_CHANNEL, "mutex lock error");
+    return OSDK_STAT_ERR;
+  }
+
+  if (channelItem->protocolOps.Pack(channelItem->protocolExtData,
+                                    channelItem->sendFrameBuff, &length,
+                                    cmdInfo, cmdData) != OSDK_STAT_OK) {
+    OSDK_LOG_ERROR(MODULE_NAME_CHANNEL, "protocol pack error");
+    return OSDK_STAT_ERR;
+  }
+
+  if (channelItem->halOps.Send(&channelItem->halObject,
+                               channelItem->sendFrameBuff,
+                               length) != OSDK_STAT_OK) {
+    OSDK_LOG_ERROR(MODULE_NAME_CHANNEL, "hal send error");
+    return OSDK_STAT_ERR;
+  }
+
+  if (OsdkOsal_MutexUnlock(channelItem->sendMutex) != OSDK_STAT_OK) {
+    OSDK_LOG_ERROR(MODULE_NAME_CHANNEL, "mutex unlock error");
+    return OSDK_STAT_ERR;
+  }
+
+  return OSDK_STAT_OK;
+}
+
+E_OsdkStat OsdkChannel_BigDataRecv(T_ChannelItem *channelItem,
+                                  const T_CmdInfo *cmdInfo,
+                                  const uint8_t *cmdData) {
+  E_OsdkStat osdkStat;
+  uint32_t parseLen;
+  uint8_t *pFrame;
+  if(!channelItem) {
+    OSDK_LOG_ERROR(MODULE_NAME_CHANNEL, "OsdkChannel_CommonRecv param check failed");
+    return OSDK_STAT_ERR_PARAM;
+  }
+  T_recvBufferCtx *bufferCtx = channelItem->protocolExtData;
+  if(bufferCtx->bufferLen == 0) {
+    osdkStat =
+              channelItem->halOps.Read(&channelItem->halObject, bufferCtx->buffer, &bufferCtx->bufferLen);
+    if (osdkStat != OSDK_STAT_OK || bufferCtx->bufferLen == 0) {
+      OSDK_LOG_WARN(MODULE_NAME_CHANNEL, "hal read error");
+      bufferCtx->bufferLen == 0;
+      return osdkStat;
+    }
+  }
+  for(; bufferCtx->useIdx < bufferCtx->bufferLen; bufferCtx->useIdx++) {
+    osdkStat = channelItem->protocolOps.Parse(&channelItem->recvParse,
+                                             bufferCtx->buffer[bufferCtx->useIdx], &pFrame, &parseLen);
+    if (osdkStat == OSDK_STAT_OK) {
+       break;
+    }
+  }
+
+  if(bufferCtx->useIdx == bufferCtx->bufferLen) {
+    bufferCtx->useIdx = 0;
+    bufferCtx->bufferLen = 0;
+  }
+
+  if(osdkStat == OSDK_STAT_OK) {
+    osdkStat = channelItem->protocolOps.Unpack(channelItem->protocolExtData,
+		                                           pFrame, cmdInfo, cmdData);
+    if(osdkStat != OSDK_STAT_OK) {
+      OSDK_LOG_INFO(MODULE_NAME_CHANNEL, "protocol unpack error");
+      return osdkStat;
+    }
+  }
+  return osdkStat;
+}
+
 /* @TODO To be completed */
 E_OsdkStat OsdkChannel_CommonRecv(T_ChannelItem *channelItem,
                                   const T_CmdInfo *cmdInfo,
                                   const uint8_t *cmdData) {
   E_OsdkStat osdkStat;
-  uint8_t dataRecv[HAL_ONCE_READ_LEN] = {0};
-  uint16_t recvLen = 0;
+  uint8_t dataRecv[channelItem->bufMaxSize];
+  uint32_t recvLen = 0;
 
   if(!channelItem) {
     OSDK_LOG_ERROR(MODULE_NAME_CHANNEL, "OsdkChannel_CommonRecv param check failed");
@@ -455,15 +647,10 @@ E_OsdkStat OsdkChannel_CommonRecv(T_ChannelItem *channelItem,
 }
 
 static E_OsdkStat OsdkChannel_RecvProcess(T_ChannelItem *channelItem,
-                                          const uint8_t *pData, uint16_t len) {
-  uint16_t parseLen;
+                                          const uint8_t *pData, uint32_t len) {
+  uint32_t parseLen;
   uint8_t *pFrame;
   E_OsdkStat OsdkStat = OSDK_STAT_OK;
-  uint8_t buf[OSDK_PACKAGE_MAX_LEN + sizeof(T_CmdInfo)];
-  T_CmdInfo *cmdInfo = (T_CmdInfo *)buf;
-  uint8_t *databuf = &buf[sizeof(T_CmdInfo)];
-  uint64_t timeFuncBefore;
-  uint64_t timeFuncAfter;
   int i;
 
   if(!channelItem || !pData) {
@@ -476,12 +663,17 @@ static E_OsdkStat OsdkChannel_RecvProcess(T_ChannelItem *channelItem,
                                               &pFrame, &parseLen);
 
     if (OsdkStat == OSDK_STAT_OK) {
+      uint8_t buf[channelItem->bufMaxSize + sizeof(T_CmdInfo)];
+      T_CmdInfo *cmdInfo = (T_CmdInfo *)buf;
+      uint8_t *databuf = &buf[sizeof(T_CmdInfo)];
       if (channelItem->protocolOps.Unpack(channelItem->protocolExtData, pFrame,
                                           cmdInfo, databuf) != OSDK_STAT_OK) {
         OSDK_LOG_INFO(MODULE_NAME_CHANNEL, "protocol unpack error");
       } else {
         cmdInfo->channelId = channelItem->channelId;
 #ifdef OS_DEBUG
+        uint64_t timeFuncBefore;
+        uint64_t timeFuncAfter;
         if (OsdkOsal_GetTimeUs(&timeFuncBefore) != OSDK_STAT_OK) {
           OSDK_LOG_ERROR(MODULE_NAME_CHANNEL, "get system time error");
         }
@@ -500,7 +692,6 @@ static E_OsdkStat OsdkChannel_RecvProcess(T_ChannelItem *channelItem,
 		                    (timeFuncAfter - timeFuncBefore));
 #endif
       }
-    } else {
     }
   }
 
@@ -516,11 +707,19 @@ static E_OsdkStat OsdkChannel_MsgQueueInit(void) {
 
 T_ChannelListItem *OsdkChannel_GetListInstance(void) { return &s_chnListItem; }
 
+T_ChannelListItem *OsdkChannel_GetBigDataListInstance(void) { return &s_bigDataChnListItem; }
+
 E_OsdkStat OsdkChannel_InitInstance(void) {
   if (OsdkChannel_MsgQueueInit() != OSDK_STAT_OK) {
     return OSDK_STAT_ERR;
   }
-  return OsdkChannel_ChannelListInit(&s_chnListItem);
+  if (OsdkChannel_ChannelListInit(&s_bigDataChnListItem) != OSDK_STAT_OK) {
+    return OSDK_STAT_ERR;
+  }
+  if (OsdkChannel_ChannelListInit(&s_chnListItem) != OSDK_STAT_OK) {
+    return OSDK_STAT_ERR;
+  }
+  return OsdkChannel_ChannelTaskInit();
 }
 
 T_msgQueue *OsdkChannel_GetMsgqInstance(void) { return s_msgQueuePointer; }

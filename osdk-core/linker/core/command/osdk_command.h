@@ -111,7 +111,13 @@ typedef struct _CommandHandle {
 /* Exported functions --------------------------------------------------------*/
 E_OsdkStat OsdkCommand_Init(T_CmdHandle *cmdHandle, const T_CmdInitConf *conf);
 E_OsdkStat OsdkCommand_DeInit(T_CmdHandle *cmdHandle);
+E_OsdkStat OsdkCommand_CreateLiveViewTask(void);
+E_OsdkStat OsdkCommand_DestroyLiveViewTask(void);
+E_OsdkStat OsdkCommand_CreateAdvancedSensingTask(void);
+E_OsdkStat OsdkCommand_DestroyAdvancedSensingTask(void);
+
 E_OsdkStat OsdkCommand_Send(T_CmdInfo *cmdInfo, const uint8_t *cmdData);
+E_OsdkStat OsdkCommand_BigDataSend(T_CmdInfo *cmdInfo, const uint8_t *cmdData);
 
 E_OsdkStat OsdkCommand_RegRecvCmdHandler(T_CmdHandle *cmdHandle,
                                          T_RecvCmdHandle *recvCmdHandle);

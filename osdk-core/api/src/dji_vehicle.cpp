@@ -211,11 +211,11 @@ Vehicle::init()
   }
 
 #ifdef ADVANCED_SENSING
-  if (!initAdvancedSensing())
+  /*if (!initAdvancedSensing())
   {
     DERROR("Failed to initialize AdvancedSensing!\n");
     return false;
-  }
+  }*/
 #endif
 
   return true;

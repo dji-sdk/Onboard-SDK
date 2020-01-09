@@ -65,7 +65,8 @@ typedef enum {
 typedef enum {
   PROTOCOL_SDK = 1,
   PROTOCOL_V1 = 2,
-  PROTOCOL_RAW = 3
+  PROTOCOL_USBMC = 3,
+  PROTOCOL_RAW = 4
 } E_ProtocolType;
 
 /*! @brief The structure of command information.*/
@@ -124,7 +125,7 @@ typedef struct _cmdInfo {
   /*! Specifies data part length.
    *  User must assign values before using send func.
    */
-  uint16_t dataLen;
+  uint32_t dataLen;
 
   /*! Specifies command transfer channel address.
    *  
@@ -152,11 +153,17 @@ typedef struct {
    *  the received data is temporarily stored in this buff until
    *  parse func receives a complete frame.
    */
-  uint8_t parseBuff[OSDK_PACKAGE_MAX_LEN];
+  uint8_t *parseBuff;
 
   /*! Specifies parse buff index.*/
-  uint16_t parseIndex;
+  uint32_t parseIndex;
 } T_CmdParse;
+
+typedef struct {
+  char *buffer;
+  uint32_t bufferLen;
+  uint32_t useIdx;
+} T_recvBufferCtx;
 
 
 typedef enum {

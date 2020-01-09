@@ -42,6 +42,8 @@
 
 static T_OsdkTaskHandle s_osdkRecvThread;
 static T_OsdkTaskHandle s_osdkSendPollThread;
+static T_OsdkTaskHandle s_osdkLiveViewThread;
+static T_OsdkTaskHandle s_osdkAdvancedSensingThread;
 /* Private types -------------------------------------------------------------*/
 typedef struct {
   T_OsdkSemHandle waitAckSemaphore;
@@ -63,6 +65,7 @@ static E_OsdkStat OsdkCommand_DealCmd(T_CmdHandle *cmdHandle,
                                       T_CmdInfo *cmdInfo, uint8_t *cmdData);
 static void OsdkCommand_SendPoll(T_CmdHandle *cmdHandle);
 static void *OsdkCommand_SendPollTask(void *arg);
+static void *OsdkCommand_BigDataRecvTask(void *arg);
 static void *OsdkCommand_RecvTask(void *arg);
 static void OsdkCommand_SendSyncCallback(const T_CmdInfo *cmdInfo,
                                                const uint8_t *cmdData,
@@ -72,13 +75,17 @@ static E_OsdkStat OsdkCommand_GetPackageFromMsgq(T_msgQueue *msgq,
                                                  uint8_t *dataBuf);
 static E_OsdkStat OsdkCommand_GetChannelItemByAddr(uint32_t userAddr,
                                                    T_ChannelItem **channelItem);
+static E_OsdkStat OsdkCommand_GetBigDataChannelItemByAddr(uint32_t userAddr,
+                                                   T_ChannelItem **channelItem);
 
 /* Private variables ---------------------------------------------------------*/
 const static T_RouteKey routeTable[] = {
     {GEN_ADDR_INDEX_ONLY(ADDR_SDK_COMMAND_INDEX), ADDR_INDEX_ONLY_MASK,
      FC_UART_CHANNEL_ID},
     {GEN_ADDR_INDEX_ONLY(ADDR_V1_COMMAND_INDEX), ADDR_INDEX_ONLY_MASK,
-     USB_ACM_CHANNEL_ID}};
+     USB_ACM_CHANNEL_ID},
+    {GEN_ADDR_INDEX_ONLY(ADDR_BIGDATA_ADVANCED_SENSING_INDEX), ADDR_INDEX_ONLY_MASK,
+     USB_BULK_ADVANCED_SENSING_CHANNEL_ID}};
 
 /* Exported functions definition ---------------------------------------------*/
 
@@ -131,6 +138,87 @@ E_OsdkStat OsdkCommand_DeInit(T_CmdHandle *cmdHandle) {
   OsdkOsal_MutexDestroy(cmdHandle->recvCmdHandleListMutex);
   OsdkOsal_TaskDestroy(s_osdkRecvThread);
   OsdkOsal_TaskDestroy(s_osdkSendPollThread);
+  return OSDK_STAT_OK;
+}
+
+E_OsdkStat OsdkCommand_CreateLiveViewTask() {
+  E_OsdkStat osdkStat;
+  T_ChannelItem *channelItem;
+  osdkStat = OsdkChannel_GetChannelItemByChnId(OsdkChannel_GetBigDataListInstance(),
+                                               USB_BULK_LIVEVIEW_CHANNEL_ID, &channelItem);
+  if(osdkStat != OSDK_STAT_OK) {
+    OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "get liveview channel failed, errcode:%d", osdkStat);
+    return osdkStat;
+  }
+  osdkStat = OsdkOsal_TaskCreate(&s_osdkLiveViewThread, OsdkCommand_BigDataRecvTask,
+                                      OSDK_TASK_STACK_SIZE_DEFAULT, channelItem);
+  if (osdkStat != OSDK_STAT_OK) {
+    OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "liveview task create error:%d", osdkStat);
+    return osdkStat;
+  }
+  return OSDK_STAT_OK;
+}
+
+E_OsdkStat OsdkCommand_DestroyLiveViewTask() {
+  if (s_osdkLiveViewThread) OsdkOsal_TaskDestroy(s_osdkLiveViewThread);
+  s_osdkLiveViewThread = NULL;
+  return OSDK_STAT_OK;
+}
+
+E_OsdkStat OsdkCommand_CreateAdvancedSensingTask() {
+  E_OsdkStat osdkStat;
+  T_ChannelItem *channelItem;
+  osdkStat = OsdkChannel_GetChannelItemByChnId(OsdkChannel_GetBigDataListInstance(),
+                                               USB_BULK_ADVANCED_SENSING_CHANNEL_ID, &channelItem);
+  if(osdkStat != OSDK_STAT_OK) {
+    OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "get advanced sensing channel failed, errcode:%d", osdkStat);
+    return osdkStat;
+  }
+  osdkStat = OsdkOsal_TaskCreate(&s_osdkAdvancedSensingThread, OsdkCommand_BigDataRecvTask,
+                                      OSDK_TASK_STACK_SIZE_DEFAULT, channelItem);
+  if (osdkStat != OSDK_STAT_OK) {
+    OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "advanced sensing task create error:%d", osdkStat);
+    return osdkStat;
+  }
+  return OSDK_STAT_OK;
+}
+
+E_OsdkStat OsdkCommand_DestroyAdvancedSensingTask() {
+  OsdkOsal_TaskDestroy(s_osdkAdvancedSensingThread);
+  return OSDK_STAT_OK;
+}
+
+/**
+ * @brief big data send function.
+ * @param cmdInfo: pointer to command information.
+ * @param cmdData: pointer to command data.
+ * @return error code.
+ */
+E_OsdkStat OsdkCommand_BigDataSend(T_CmdInfo *cmdInfo, const uint8_t *cmdData) {
+  T_ChannelItem *channelItem;
+  uint64_t time;
+
+  if(!cmdInfo || !cmdData) {
+    OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "OsdkCommand_Send param check failed");
+    return OSDK_STAT_ERR_PARAM;
+  }
+
+  if (OsdkCommand_GetBigDataChannelItemByAddr(cmdInfo->addr, &channelItem) !=
+      OSDK_STAT_OK) {
+    OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "get channel item error");
+    return OSDK_STAT_ERR;
+  }
+  cmdInfo->channelId = channelItem->channelId;
+  if (OsdkChannel_GetSeqNum(channelItem, &cmdInfo->seqNum) != OSDK_STAT_OK) {
+    OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "get seq num failed!");
+    return OSDK_STAT_ERR;
+  }
+
+  if (channelItem->Send(channelItem, cmdInfo, cmdData) != OSDK_STAT_OK) {
+    OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "channel send failed!");
+    return OSDK_STAT_ERR;
+  }
+
   return OSDK_STAT_OK;
 }
 
@@ -482,6 +570,44 @@ static E_OsdkStat OsdkCommand_GetChannelItemByAddr(
   return OSDK_STAT_OK;
 }
 
+/**
+ * @brief Get big data channel item by addr.
+ * @param userAddr: user input addr.
+ * @param channelItem: pointer to store channel item.
+ * @return error code.
+ */
+static E_OsdkStat OsdkCommand_GetBigDataChannelItemByAddr(
+    uint32_t userAddr, T_ChannelItem **channelItem) {
+  int i = 0;
+  uint32_t channelId = 0;
+
+  if(!channelItem) {
+    OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "OsdkCommand_GetBigDataChannelItemByAddr param check failed");
+    return OSDK_STAT_ERR_PARAM;
+  }
+
+  for (i = 0; i < sizeof(routeTable) / sizeof(routeTable[0]); i++) {
+    if ((userAddr & routeTable[i].mask) == routeTable[i].addr) {
+      channelId = routeTable[i].channelId;
+      break;
+    }
+  }
+
+  if (i == sizeof(routeTable) / sizeof(routeTable[0])) {
+    OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "can't get channel id");
+    return OSDK_STAT_ERR;
+  }
+
+  if (OsdkChannel_GetChannelItemByChnId(OsdkChannel_GetBigDataListInstance(),
+                                        channelId,
+                                        channelItem) != OSDK_STAT_OK) {
+    OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "can't get big data channel item");
+    return OSDK_STAT_ERR;
+  }
+
+  return OSDK_STAT_OK;
+}
+
 /* Private functions definition-----------------------------------------------*/
 /**
  * @brief Deal command function.
@@ -819,6 +945,80 @@ void *OsdkCommand_RecvTask(void *arg) {
         OSDK_LOG_WARN(MODULE_NAME_COMMAND, "deal command failed");
       }
     }
+  }
+  return 0;
+}
+
+void *OsdkCommand_BigDataRecvTask(void *arg) {
+
+  if(!arg) {
+    OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "OsdkCommand_BigDataRecvTask param check failed");
+    return 0;
+  }
+  E_OsdkStat osdkStat;
+  T_ChannelItem *channelItem = (T_ChannelItem *)arg;
+  T_CmdHandle *cmdHandle = (T_CmdHandle *)OsdkCommand_GetInstance();
+  T_CmdInfo cmdInfo = {0};
+  bool findHandleFlag = false;
+  uint8_t *buffer;
+
+  buffer = OsdkOsal_Malloc(channelItem->bufMaxSize);
+  memset(buffer, 0, channelItem->bufMaxSize);
+
+  while (1) {
+    osdkStat = channelItem->Recv(channelItem, &cmdInfo, buffer);
+    if (osdkStat == OSDK_STAT_ERR) {
+      OSDK_LOG_WARN(MODULE_NAME_COMMAND, "big data recv failed");
+      continue;
+    } else if(osdkStat != OSDK_STAT_OK) {
+      OsdkOsal_TaskSleepMs(2);
+    }
+
+    for (int i = 0; i < cmdHandle->recvCmdHandleListCount; i++) {
+      if (cmdHandle->recvCmdHandleList[i].protoType == cmdInfo.protoType) {
+        for (int j = 0; j < cmdHandle->recvCmdHandleList[i].cmdCount; j++) {
+          if (cmdInfo.cmdId ==
+                  cmdHandle->recvCmdHandleList[i].cmdList[j].cmdId &&
+              cmdInfo.cmdSet ==
+                  cmdHandle->recvCmdHandleList[i].cmdList[j].cmdSet) {
+            findHandleFlag = true;
+            if(cmdHandle->recvCmdHandleList[i].cmdList[j].pFunc != NULL) {
+#ifdef OS_DEBUG
+              uint64_t timeFuncBefore;
+              uint64_t timeFuncAfter;
+              if (OsdkOsal_GetTimeUs(&timeFuncBefore) != OSDK_STAT_OK) {
+                OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "get system time error");
+              }
+#endif
+		          if (cmdHandle->recvCmdHandleList[i].cmdList[j].pFunc(
+		                  cmdHandle, &cmdInfo, buffer,
+		              cmdHandle->recvCmdHandleList[i].cmdList[j].userData)
+		            != OSDK_STAT_OK) {
+		            OSDK_LOG_ERROR(
+		                MODULE_NAME_COMMAND,
+		                "cmd handle failure, cmdset = 0x%02x, cmdid = 0x%02x",
+		                cmdInfo.cmdSet, cmdInfo.cmdId);
+		          }
+#ifdef OS_DEBUG
+              if (OsdkOsal_GetTimeUs(&timeFuncAfter) != OSDK_STAT_OK) {
+                OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "get system time error");
+              }
+              if((timeFuncAfter - timeFuncBefore) > 1000)
+                      OSDK_LOG_DEBUG(MODULE_NAME_COMMAND, "big data func deal about: %d us",
+                              (timeFuncAfter - timeFuncBefore));
+#endif
+            }
+            goto out;
+          }
+        }
+      }
+    }
+
+out:
+    if(!findHandleFlag)
+      OSDK_LOG_ERROR(MODULE_NAME_COMMAND,
+                     "can't find cmdset %d cmdid %d handle func",
+                                  cmdInfo.cmdSet, cmdInfo.cmdId);
   }
   return 0;
 }
