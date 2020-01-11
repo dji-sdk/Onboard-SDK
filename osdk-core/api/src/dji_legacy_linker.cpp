@@ -55,7 +55,7 @@ void *LegacyLinker::legacyX5SEnableTask(void *arg) {
     cmdInfo.packetType = OSDK_COMMAND_PACKET_TYPE_REQUEST;
     cmdInfo.addr = GEN_ADDR(0, ADDR_V1_COMMAND_INDEX);
     cmdInfo.receiver = 0x00;
-    cmdInfo.sender = OSDK_COMMAND_PC_DEVICE_ID;
+    cmdInfo.sender = linker->getLocalSenderId();
     for(;;) {
       OsdkOsal_TaskSleepMs(500);
       linker->send(&cmdInfo, (uint8_t *) &data);

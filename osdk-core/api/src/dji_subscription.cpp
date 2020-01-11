@@ -86,7 +86,8 @@ TopicInfo Telemetry::TopicDataBase[] =
   {TOPIC_AVOID_DATA                , UID_AVOID_DATA               , sizeof(TypeMap<TOPIC_AVOID_DATA              >::type), 100,   0,  255,  0},
   {TOPIC_HOME_POINT_SET_STATUS     , UID_HOME_POINT_SET_STATUS    , sizeof(TypeMap<TOPIC_HOME_POINT_SET_STATUS   >::type), 50  ,  0,  255,  0},
   {TOPIC_HOME_POINT_INFO           , UID_HOME_POINT_INFO          , sizeof(TypeMap<TOPIC_HOME_POINT_INFO         >::type), 50  ,  0,  255,  0},
-  {TOPIC_GIMBAL_FULL_DATA          , UID_GIMBAL_FULL_DATA         , sizeof(TypeMap<TOPIC_GIMBAL_FULL_DATA        >::type), 50  ,  0,  255,  0},
+  {TOPIC_DUAL_GIMBAL_DATA          , UID_DUAL_GIMBAL_FULL_DATA    , sizeof(TypeMap<TOPIC_DUAL_GIMBAL_DATA        >::type), 50  ,  0,  255,  0},
+  {TOPIC_THREE_GIMBAL_DATA         , UID_THREE_GIMBAL_FULL_DATA   , sizeof(TypeMap<TOPIC_THREE_GIMBAL_DATA       >::type), 50  ,  0,  255,  0},
 };
 // clang-format on
 

@@ -35,6 +35,7 @@
 #include "osdk_channel.h"
 #include "dji_log.hpp"
 #include "osdk_root_task.h"
+#include "osdk_device_id.h"
 
 namespace DJI
 {
@@ -44,7 +45,7 @@ namespace OSDK
 class Linker
 {
 public:
-  Linker();
+  Linker(uint8_t defaultSenderId = OSDK_COMMAND_PC_DEVICE_ID);
   ~Linker();
 
 bool init();
@@ -60,6 +61,10 @@ bool addUdpChannel(const char *addr, uint16_t port, E_ChannelIDType id);
 bool addUSBBulkChannel(uint16_t pid, uint16_t vid, uint16_t num,
                        uint16_t epIn, uint16_t epOut, E_ChannelIDType id);
 #endif
+
+void setSenderId(uint8_t senderId);
+
+uint8_t getLocalSenderId();
 
 void setKey(const char *key);
 
@@ -83,6 +88,9 @@ bool createLiveViewTask();
 bool destroyAdvancedSensingTask();
 
 bool destroyLiveViewTask();
+
+private:
+uint8_t senderId;
 
 };
 }

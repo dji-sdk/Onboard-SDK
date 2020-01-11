@@ -103,7 +103,8 @@ typedef enum
   TOPIC_AVOID_DATA,
   TOPIC_HOME_POINT_SET_STATUS,
   TOPIC_HOME_POINT_INFO,
-  TOPIC_GIMBAL_FULL_DATA,
+  TOPIC_DUAL_GIMBAL_DATA,
+  TOPIC_THREE_GIMBAL_DATA,
   TOTAL_TOPIC_NUMBER              // Always put this line in the end
 } TopicName;
 // clang-format on
@@ -159,7 +160,8 @@ typedef enum
   UID_FLIGHT_ANOMALY           = 0x0a624b4b,
   UID_POSITION_VO              = 0xd3462697,
   UID_AVOID_DATA               = 0xf6405daa,
-  UID_GIMBAL_FULL_DATA         = 0xcfeea4fa,
+  UID_DUAL_GIMBAL_FULL_DATA    = 0xcfeea4fa,
+  UID_THREE_GIMBAL_FULL_DATA   = 0x19d374a0,
 } TOPIC_UID;
 
 // clang-format on
@@ -663,21 +665,27 @@ typedef union
 
 typedef uint8_t GimbalControlMode;
 
-typedef struct GimbalFullSingle
+typedef struct GimbalSingleData
 {
   float32_t pitch;
   float32_t roll;
   float32_t yaw;
   uint32_t status;
   uint8_t mode;
-} GimbalFullSingle;
+} GimbalSingleData;
 
 #define SDK_M210_GIMBAL_MAX_NUM 2
+#define SDK_M300_GIMBAL_MAX_NUM 3
 
-typedef struct GimbalFull
+typedef struct GimbalDualData
 {
-  GimbalFullSingle gbData[SDK_M210_GIMBAL_MAX_NUM];
-} GimbalFull;
+  GimbalSingleData gbData[SDK_M210_GIMBAL_MAX_NUM];
+} GimbalDualData;
+
+typedef struct GimbalThreeData
+{
+  GimbalSingleData gbData[SDK_M300_GIMBAL_MAX_NUM];
+} GimbalThreeData;
 
 /*!
  * @brief struct for TOPIC_FLIGHT_ANOMALY
@@ -831,7 +839,8 @@ template <> struct TypeMap<TOPIC_POSITION_VO              > { typedef LocalPosit
 template <> struct TypeMap<TOPIC_AVOID_DATA               > { typedef RelativePosition type;};
 template <> struct TypeMap<TOPIC_HOME_POINT_SET_STATUS    > { typedef HomeLocationSetStatus type;};
 template <> struct TypeMap<TOPIC_HOME_POINT_INFO          > { typedef HomeLocationData    type;};
-template <> struct TypeMap<TOPIC_GIMBAL_FULL_DATA         > { typedef GimbalFull          type;};
+template <> struct TypeMap<TOPIC_DUAL_GIMBAL_DATA         > { typedef GimbalDualData          type;};
+template <> struct TypeMap<TOPIC_THREE_GIMBAL_DATA        > { typedef GimbalThreeData         type;};
 // clang-format on
 }
 }

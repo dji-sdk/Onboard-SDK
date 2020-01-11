@@ -28,6 +28,7 @@
  */
 
 #include "dji_vehicle.hpp"
+#include "osdk_device_id.h"
 #include <new>
 
 using namespace DJI;
@@ -227,11 +228,6 @@ Vehicle::functionalSetUp()
   uint16_t tryTimes = 20;
   bool shakeHandRet = false;
 
-  if(!this->init()) {
-    DERROR("vehicle init fail. Exiting.");
-    return false;
-  }
-
   for (uint16_t i = 0; i < tryTimes; i++) {
     shakeHandRet = initVersion();
     if (shakeHandRet == true) {
@@ -252,11 +248,15 @@ Vehicle::functionalSetUp()
     }
   }
 
-  if (this->getFwVersion() < extendedVersionBase &&
-           this->getFwVersion() != Version::M100_31 && !(this->isLegacyM600()))
+  if (!this->isM210V2() && !this->isM300())
   {
-    DERROR("Upgrade firmware using Assistant software!\n");
-    return true;
+    DERROR("Only support M210 V2 series and M300!\n");
+    return false;
+  }
+
+  if(!this->init()) {
+    DERROR("vehicle init fail. Exiting.");
+    return false;
   }
 
   return false;
@@ -1025,6 +1025,7 @@ Vehicle::activate(ActivateData* data, uint32_t timeoutMs)
   cmdInfo.needAck = OSDK_COMMAND_NEED_ACK_FINISH_ACK;
   cmdInfo.packetType = OSDK_COMMAND_PACKET_TYPE_REQUEST;
   cmdInfo.addr = GEN_ADDR(0, ADDR_SDK_COMMAND_INDEX);
+  cmdInfo.protoType = PROTOCOL_SDK;
   cmdInfo.channelId = 0;
 
   if(timeoutMs > 3)
@@ -1266,6 +1267,8 @@ Vehicle::getDroneVersionCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
     {
       DSTATUS("Version CRC = 0x%X\n", vehiclePtr->versionData.version_crc);
     }
+    if (vehiclePtr->isM300() && vehiclePtr->linker) vehiclePtr->linker->setSenderId(OSDK_COMMAND_OSDK_DEVICE_ID);
+    else vehiclePtr->linker->setSenderId(OSDK_COMMAND_PC_DEVICE_ID);
   }
 }
 
@@ -1373,6 +1376,8 @@ Vehicle::getDroneVersion(uint32_t timeoutMs)
             sizeof(this->versionData.hw_serial_num));
     droneVersionACK.data.hw_serial_num[sizeof(this->versionData.hw_serial_num) - 1] =
       '\0';
+    if (isM300() && linker) linker->setSenderId(OSDK_COMMAND_OSDK_DEVICE_ID);
+    else linker->setSenderId(OSDK_COMMAND_PC_DEVICE_ID);
   }
   return droneVersionACK;
 }
@@ -1476,6 +1481,16 @@ bool
 Vehicle::isM210V2()
 {
   if (strncmp(versionData.hwVersion, Version::M210V2, 5) == 0)
+  {
+    return true;
+  }
+  return false;
+}
+
+bool
+Vehicle::isM300()
+{
+  if (strncmp(versionData.hwVersion, Version::M300, 5) == 0)
   {
     return true;
   }

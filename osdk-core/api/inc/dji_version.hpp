@@ -52,6 +52,7 @@ public:
   constexpr static const char* A3     = "A3";
   constexpr static const char* M210   = "PM410";
   constexpr static const char* M210V2 = "PM420";
+  constexpr static const char* M300   = "PM430";
   constexpr static const char* M600   = "PM820";
 
   typedef struct VersionData

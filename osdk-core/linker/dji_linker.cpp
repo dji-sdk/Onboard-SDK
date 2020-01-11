@@ -33,7 +33,8 @@
 using namespace DJI;
 using namespace DJI::OSDK;
 
-Linker::Linker()
+Linker::Linker(uint8_t defaultSenderId)
+:senderId(defaultSenderId)
 {
 }
 
@@ -127,6 +128,17 @@ void
 Linker::setKey(const char *key)
 {
   OsdkCommand_SetKey(key);
+}
+
+
+void
+Linker::setSenderId(uint8_t senderId) {
+  this->senderId = senderId;
+}
+
+uint8_t
+Linker::getLocalSenderId() {
+  return senderId;
 }
 
 bool

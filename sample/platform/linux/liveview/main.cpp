@@ -355,7 +355,7 @@ CameraListType getCameraList(Vehicle *vehicle) {
   cmdInfo.addr = GEN_ADDR(0, ADDR_V1_COMMAND_INDEX);
   cmdInfo.receiver =
       OSDK_COMMAND_DEVICE_ID(OSDK_COMMAND_DEVICE_TYPE_CENTER, 0);
-  cmdInfo.sender = OSDK_COMMAND_PC_DEVICE_ID;
+  cmdInfo.sender = vehicle->linker->getLocalSenderId();
   E_OsdkStat linkAck =
       vehicle->linker->sendSync(&cmdInfo, (uint8_t *) reqStartData, &ackInfo, ackData,
                                 1000 / 4, 4);
@@ -372,7 +372,7 @@ CameraListType getCameraList(Vehicle *vehicle) {
   cmdInfo.addr = GEN_ADDR(0, ADDR_V1_COMMAND_INDEX);
   cmdInfo.receiver =
       OSDK_COMMAND_DEVICE_ID(OSDK_COMMAND_DEVICE_TYPE_CENTER, 0);
-  cmdInfo.sender = OSDK_COMMAND_PC_DEVICE_ID;
+  cmdInfo.sender = vehicle->linker->getLocalSenderId();
   linkAck =
       vehicle->linker->sendSync(&cmdInfo, (uint8_t *) reqEndData, &ackInfo, ackData,
                                 1000 / 4, 4);
@@ -697,7 +697,11 @@ int startLiveViewTest(Vehicle *vehicle, E_OSDK_CameraPosition pos) {
 
   if(subscribeLiveViewInfo(vehicle) == -1)
     return -1;
-  vehicle->linker->createLiveViewTask();
+  static uint8_t liveviewTaskRunning = 0;
+  if (liveviewTaskRunning == 0) {
+    liveviewTaskRunning = 1;
+    vehicle->linker->createLiveViewTask();
+  }
   if(subscribeLiveViewData(vehicle, targetCamType, pos) == -1) {
      vehicle->linker->destroyLiveViewTask();
      return -1;
@@ -712,7 +716,7 @@ int stopLiveViewTest(Vehicle *vehicle, E_OSDK_CameraPosition pos) {
   unsubscribeLiveViewInfo(vehicle);
   unsubscribeLiveViewData(vehicle, pos);
   stopHeartBeatTask();
-  vehicle->linker->destroyLiveViewTask();
+  //vehicle->linker->destroyLiveViewTask();
 }
 
 int

@@ -289,7 +289,7 @@ E_OsdkStat OsdkLinux_USBBulkReadData(const T_HalObj *obj, uint8_t *pBuf,
 
   handle = (struct libusb_device_handle *)obj->bulkObject.handle;
   ret = libusb_bulk_transfer(handle, obj->bulkObject.epIn,
-                             pBuf, 128*1024, bufLen, 1000);
+                             pBuf, 128*1024, bufLen, (unsigned int)(-1));
   if (ret != 0) {
     if (-7 == ret)
       OSDK_LOG_ERROR(MODULE_NAME_PLATFORM, "LIBUSB read timeout");

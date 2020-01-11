@@ -272,12 +272,6 @@ LinuxSetup::initVehicle()
     goto err;
   }
 
-  if(!vehicle->init())
-  {
-    std::cout << "vehicle init fail. Exiting." << std::endl;
-    goto err;
-  }
-
   // Activate
   activateData.ID = environment->getApp_id();
   char app_key[65];
