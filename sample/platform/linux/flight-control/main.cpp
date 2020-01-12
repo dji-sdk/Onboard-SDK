@@ -110,7 +110,7 @@ int main(int argc, char** argv) {
       flightSample->setGoHomeAltitude(50);
 
       /*! Move to another position */
-      flightSample->moveByPositionOffset((FlightSample::Vector3f){40, 0, 0}, 0);
+      flightSample->moveByPositionOffset((FlightSample::Vector3f){20, 0, 0}, 0);
 
       vehicle->flightController->setCollisionAvoidanceEnabledSync(
         FlightController::AvoidEnable::AVOID_DISABLE, 1);

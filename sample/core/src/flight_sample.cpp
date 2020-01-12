@@ -112,9 +112,9 @@ bool FlightSample::moveByPositionOffset(const Vector3f& offsetDesired,
   //! get origin position and relative height(from home point)of aircraft.
   Telemetry::TypeMap<TOPIC_GPS_FUSED>::type originGPSPosition =
       vehicle->subscribe->getValue<TOPIC_GPS_FUSED>();
-  Telemetry::TypeMap<TOPIC_HEIGHT_FUSION>::type originHeightBaseHomepoint =
-      vehicle->subscribe->getValue<TOPIC_HEIGHT_FUSION>();
-
+  /*! TODO: TOPIC_HEIGHT_FUSION is abnormal in real world but normal in simulator */
+  Telemetry::GlobalPosition currentBroadcastGP = vehicle->broadcast->getGlobalPosition();
+  float32_t originHeightBaseHomepoint = currentBroadcastGP.height;
   FlightController::JoystickMode joystickMode = {
     FlightController::HorizontalLogic::HORIZONTAL_POSITION,
     FlightController::VerticalLogic::VERTICAL_POSITION,
