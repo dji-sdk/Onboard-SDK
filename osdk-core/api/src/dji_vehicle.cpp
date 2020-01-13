@@ -1553,7 +1553,7 @@ void
 Vehicle::sendBuriedDataPkgToFC(void)
 {
     char sdk_version[MAX_OSDK_VERSION_SIZE];
-    sprintf(sdk_version,"OSDK%d.%d.%d",DJIOSDK_MAJOR_VERSION, DJIOSDK_MINOR_VERSION, DJIOSDK_PATCH_VERSION);
+    sprintf(sdk_version,"OSDK%d.%d.%d beta",DJIOSDK_MAJOR_VERSION, DJIOSDK_MINOR_VERSION, DJIOSDK_PATCH_VERSION);
     DataBuryPack data = {" ", DJIOSDK_IS_DEBUG, DJIOSDK_HARDWARE_TYPE, DJIOSDK_OPERATOR_TYPE};
     memcpy(data.sdk_version , sdk_version, sizeof(data.sdk_version) / sizeof(char));
 #ifdef STM32
