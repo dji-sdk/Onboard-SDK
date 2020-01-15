@@ -285,7 +285,10 @@ Vehicle::functionalSetUp()
 
 Vehicle::~Vehicle()
 {
-  OsdkOsal_TaskDestroy(sendHeartbeatToFCHandle);
+  if(sendHeartbeatToFCHandle)
+  {
+    OsdkOsal_TaskDestroy(sendHeartbeatToFCHandle);
+  }
 
   if (this->subscribe)
   {
