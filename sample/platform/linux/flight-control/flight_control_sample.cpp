@@ -300,7 +300,7 @@ moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired,
   // the
   // mission
   int responseTimeout              = 1;
-  int timeoutInMilSec              = 40000;
+  int timeoutInMilSec              = 10000;
   int controlFreqInHz              = 50; // Hz
   int cycleTimeInMs                = 1000 / controlFreqInHz;
   int outOfControlBoundsTimeLimit  = 10 * cycleTimeInMs; // 10 cycles
@@ -389,11 +389,17 @@ moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired,
                              static_cast<void*>(&currentBroadcastGP),
                              static_cast<void*>(&originBroadcastGP));
   }
+  
+
 
   // Get initial offset. We will update this in a loop later.
   double xOffsetRemaining = xOffsetDesired - localOffset.x;
   double yOffsetRemaining = yOffsetDesired - localOffset.y;
-  double zOffsetRemaining = zOffsetDesired - localOffset.z;
+  double zOffsetRemaining = zOffsetDesired - (-localOffset.z);
+  
+  //std::cout << getGlobalPosition().x <<std::endl;
+  //std::cout << getGlobalPosition().y <<std::endl;
+  //std::cout << getGlobalPosition().z <<std::endl;
 
   // Conversions
   double yawDesiredRad     = DEG2RAD * yawDesired;
@@ -424,6 +430,15 @@ moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired,
   int   brakeCounter        = 0;
   int   speedFactor         = 2;
   float xCmd, yCmd, zCmd;
+  // There is a deadband in position control
+  // the z cmd is absolute height
+  // while x and y are in relative
+  float zDeadband = 0.12;
+
+  if (vehicle->isM100() || vehicle->isLegacyM600())
+  {
+    zDeadband = 0.12 * 10;
+  }
 
   /*! Calculate the inputs to send the position controller. We implement basic
    *  receding setpoint position control and the setpoint is always 1 m away
@@ -454,7 +469,9 @@ moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired,
   {
     zCmd = currentBroadcastGP.height + zOffsetDesired;
   }
-
+  //std::cout << xCmd <<std::endl;
+  //std::cout << yCmd <<std::endl;
+  //std::cout << zCmd <<std::endl;
   //! Main closed-loop receding setpoint position control
   while (elapsedTimeInMs < timeoutInMilSec)
   {
@@ -490,7 +507,7 @@ moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired,
     //! See how much farther we have to go
     xOffsetRemaining = xOffsetDesired - localOffset.x;
     yOffsetRemaining = yOffsetDesired - localOffset.y;
-    zOffsetRemaining = zOffsetDesired - localOffset.z;
+    zOffsetRemaining = zOffsetDesired - (-localOffset.z);
 
     //! See if we need to modify the setpoint
     if (std::abs(xOffsetRemaining) < speedFactor)
@@ -511,7 +528,7 @@ moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired,
     }
     else if (std::abs(xOffsetRemaining) < posThresholdInM &&
              std::abs(yOffsetRemaining) < posThresholdInM &&
-             std::abs(zOffsetRemaining) < posThresholdInM &&
+             std::abs(zOffsetRemaining) < zDeadband &&
              std::abs(yawInRad - yawDesiredRad) < yawThresholdInRad)
     {
       //! 1. We are within bounds; start incrementing our in-bound counter
@@ -665,14 +682,12 @@ monitoredLanding(Vehicle* vehicle, int timeout)
   if (landingNotStarted == timeoutCycles)
   {
     std::cout << "Landing failed. Aircraft is still in the air." << std::endl;
-    if (!vehicle->isM100() && !vehicle->isLegacyM600())
+    // Cleanup before return
+    ACK::ErrorCode ack = vehicle->subscribe->removePackage(pkgIndex, timeout);
+    if (ACK::getError(ack))
     {
-      // Cleanup before return
-      ACK::ErrorCode ack = vehicle->subscribe->removePackage(pkgIndex, timeout);
-      if (ACK::getError(ack)) {
-        std::cout << "Error unsubscribing; please restart the drone/FC to get "
-                     "back to a clean state.\n";
-      }
+      std::cout << "Error unsubscribing; please restart the drone/FC to get "
+                   "back to a clean state.\n";
     }
     return false;
   }
