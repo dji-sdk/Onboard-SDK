@@ -53,11 +53,6 @@ int main(int argc, char** argv) {
   // TODO: move this to flight controlller
   vehicle->control->obtainCtrlAuthority(functionTimeout);
   FlightSample* flightSample = new FlightSample(vehicle);
-
-  FlightController::UpwardsAvoidEnable avoidEnable =
-   FlightController::UpwardsAvoidEnable::UPWARDS_AVOID_ENABLE;
-  ErrorCode::ErrorCodeType ret = vehicle->flightController->setUpwardsAvoidanceEnabledSync(avoidEnable,1);
-  std::cout<<"ret::   "<<ret<<std::endl;
   // Display interactive prompt
   std::cout
       << "| Available commands:                                            |"
@@ -91,7 +86,6 @@ int main(int argc, char** argv) {
     /*! @NOTE: case 'c' only support for m210 V2*/
     case 'c':
       /*!  Take off */
-
 
       flightSample->monitoredTakeoff();
       vehicle->flightController->setCollisionAvoidanceEnabledSync(

@@ -293,9 +293,9 @@ void *LegacyLinker::decodeAck(E_OsdkStat ret, T_CmdInfo &ackInfo,
     }
     else if (memcmp(cmd, OpenProtocolCMD::CMDSet::Control::setHomeLocation, sizeof(cmd))==0)
     {
-      setHomeLocationAck.info = setHomeLocationAck.info;
-      setHomeLocationAck.data.retCode =recvFrame.recvData.setHomeLocationAck.data.retCode;
-      setHomeLocationAck.data.result =recvFrame.recvData.setHomeLocationAck.data.result;
+      setHomeLocationAck.info = recvFrame.recvInfo;
+      setHomeLocationAck.data.retCode =recvFrame.recvData.setHomeLocationACK.result;
+      setHomeLocationAck.data.result =recvFrame.recvData.setHomeLocationACK.result;
       setHomeLocationAck.updated         = true;
       pACK = static_cast<void*>(&this->setHomeLocationAck);
     }

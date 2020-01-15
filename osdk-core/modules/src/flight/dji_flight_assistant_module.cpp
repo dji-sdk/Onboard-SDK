@@ -225,7 +225,7 @@ void FlightAssistant::setHomePointAckDecoder(Vehicle* vehicle,
     ACK::SetHomeLocationAckInternal ack = {0};
     ErrorCode::ErrorCodeType ret = 0;
     if (recvFrame.recvInfo.len - OpenProtocol::PackageMin <= sizeof(ack)) {
-      ack.result = recvFrame.recvData.setHomeLocationAck.data.result;
+      ack.result = recvFrame.recvData.setHomeLocationACK.result;
       printf("Set home location async ret code%x\n", ack.result);
       ret = ErrorCode::getErrorCode(ErrorCode::FCModule,
                                     ErrorCode::FCSetHomeLocation, ack.result);
@@ -398,18 +398,10 @@ ErrorCode::ErrorCodeType FlightAssistant::setHomeLocationSync(
         *(ACK::SetHomeLocationAck*)flightLink->sendSync(
             OpenProtocolCMD::CMDSet::Control::setHomeLocation, &homeLocation,
             sizeof(homeLocation), timeout);
-
-    printf("Set home location Sync result : %x\n", rsp.data.result);
-    printf(
-        "rsp.info.len:%d   OpenProtocol::PackageMin%d "
-        "sizeof(ACK::SetHomeLocationAckInternal)%d\n",
-        rsp.info.len, OpenProtocol::PackageMin,
-        sizeof(ACK::SetHomeLocationAckInternal));
-
     if ((rsp.info.len - OpenProtocol::PackageMin <=
          sizeof(ACK::SetHomeLocationAckInternal))) {
       return ErrorCode::getErrorCode(
-          ErrorCode::FCModule, ErrorCode::FCSetHomeLocation, rsp.data.result);
+          ErrorCode::FCModule, ErrorCode::FCSetHomeLocation, rsp.data.retCode);
     } else {
       return ErrorCode::SysCommonErr::UnpackDataMismatch;
     }

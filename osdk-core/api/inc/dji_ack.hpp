@@ -360,7 +360,7 @@ public:
     WayPointVelocityInternal wpVelocityACK;
     MFIOGetInternal          mfioGetACK;
     ParamAckInternal         paramAckData;
-    SetHomeLocationAck       setHomeLocationAck;
+    SetHomeLocationAckInternal   setHomeLocationACK;
 
     /*
      * Push Data in ground-station mode
