@@ -972,6 +972,7 @@ void *OsdkCommand_BigDataRecvTask(void *arg) {
       continue;
     } else if(osdkStat != OSDK_STAT_OK) {
       OsdkOsal_TaskSleepMs(2);
+      continue;
     }
 
     for (int i = 0; i < cmdHandle->recvCmdHandleListCount; i++) {
