@@ -76,6 +76,18 @@ Platform::registerHalUdpHandler(const T_OsdkHalUdpHandler *halUdpHandler)
     return false;
   }
 }
+
+bool Platform::registerHalUSBBulkHandler(const T_OsdkHalUSBBulkHandler *halUSBBulkHandler)
+{
+  E_OsdkStat errCode;
+  errCode = OsdkPlatform_RegHalUSBBulkHandler(halUSBBulkHandler);
+
+  if (errCode == OSDK_STAT_OK) {
+    return true;
+  }else {
+    return false;
+  }
+}
 #endif
 
 bool

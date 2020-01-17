@@ -60,7 +60,8 @@ typedef struct _ChannelItem {
   char *channelName;
   uint32_t channelId;
   uint16_t seqNum;
-  uint8_t sendFrameBuff[OSDK_PACKAGE_MAX_LEN];
+  uint32_t bufMaxSize;
+  uint8_t *sendFrameBuff;
   T_ProtocolOps protocolOps;
   T_HalObj halObject;
   T_HalOps halOps;
@@ -84,8 +85,9 @@ typedef struct {
 /* Exported functions --------------------------------------------------------*/
 E_OsdkStat OsdkChannel_CheckDuplicate(T_ChannelListItem *chnListCtx,
                                       T_ChannelItem *channelItem);
-E_OsdkStat OsdkChannel_AddChannel(T_ChannelItem *channelItem);
+E_OsdkStat OsdkChannel_AddChannel(T_ChannelItem *channelItem, T_ChannelListItem *chnListCtx);
 E_OsdkStat OsdkChannel_ChannelListInit(T_ChannelListItem *chnListCtx);
+E_OsdkStat OsdkChannel_ChannelListDeinit(T_ChannelListItem *chnListCtx);
 E_OsdkStat OsdkChannel_GetChannelItemByChnId(T_ChannelListItem *chnListCtx,
                                              uint32_t channelId,
                                              T_ChannelItem **channelItem);
@@ -94,6 +96,12 @@ E_OsdkStat OsdkChannel_GetProtoOps(const uint32_t channelId,
                                    T_ProtocolOps *ops);
 E_OsdkStat OsdkChannel_GetSeqNum(T_ChannelItem *channelItem, uint16_t *seq);
 
+E_OsdkStat OsdkChannel_BigDataSend(T_ChannelItem *channelItem,
+                                  const T_CmdInfo *cmdInfo,
+                                  const uint8_t *cmdData);
+E_OsdkStat OsdkChannel_BigDataRecv(T_ChannelItem *channelItem,
+                                  const T_CmdInfo *cmdInfo,
+                                  const uint8_t *cmdData);
 E_OsdkStat OsdkChannel_CommonSend(T_ChannelItem *channelItem,
                                   const T_CmdInfo *cmdInfo,
                                   const uint8_t *cmdData);
@@ -102,6 +110,7 @@ E_OsdkStat OsdkChannel_CommonRecv(T_ChannelItem *channelItem,
                                   const uint8_t *cmdData);
 T_msgQueue *OsdkChannel_GetMsgqInstance(void);
 T_ChannelListItem *OsdkChannel_GetListInstance(void);
+T_ChannelListItem *OsdkChannel_GetBigDataListInstance(void);
 
 #ifdef __cplusplus
 }

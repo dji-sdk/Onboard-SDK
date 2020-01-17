@@ -42,11 +42,11 @@ GimbalManagerAsyncSample::GimbalManagerAsyncSample(Vehicle *vehiclePtr)
     ACK::getErrorCodeMessage(ack, __func__);
   }
 
-  /*! Package 0: Subscribe to TOPIC_GIMBAL_FULL_DATA at freq 50 Hz */
+  /*! Package 0: Subscribe to gimbal data at freq 50 Hz */
   ACK::ErrorCode subscribeStatus;
   int       pkgIndex        = GIMBA_SUB_PACKAGE_INDEX;
   int       freq            = 50;
-  TopicName topicList50Hz[]  = { TOPIC_GIMBAL_FULL_DATA };
+  TopicName topicList50Hz[]  = { vehiclePtr->isM300() ? TOPIC_THREE_GIMBAL_DATA : TOPIC_DUAL_GIMBAL_DATA };
   int       numTopic        = sizeof(topicList50Hz) / sizeof(topicList50Hz[0]);
   bool      enableTimestamp = false;
 
@@ -54,14 +54,14 @@ GimbalManagerAsyncSample::GimbalManagerAsyncSample(Vehicle *vehiclePtr)
       pkgIndex, numTopic, topicList50Hz, enableTimestamp, freq);
   if (!(pkgStatus))
   {
-    DERROR("init package for TOPIC_GIMBAL_FULL_DATA failed." );
+    DERROR("init package for gimbal data failed." );
   }
   subscribeStatus = vehicle->subscribe->startPackage(pkgIndex, 1);
   if (ACK::getError(subscribeStatus) != ACK::SUCCESS)
   {
     ACK::getErrorCodeMessage(subscribeStatus, __func__);
     vehicle->subscribe->removePackage(pkgIndex, 1);
-    DERROR("subscribe TOPIC_GIMBAL_FULL_DATA failed." );
+    DERROR("subscribe gimbal data failed." );
   }
 }
 
@@ -71,7 +71,7 @@ GimbalManagerAsyncSample::~GimbalManagerAsyncSample() {
   if (ACK::getError(subscribeStatus) != ACK::SUCCESS)
   {
     ACK::getErrorCodeMessage(subscribeStatus, __func__);
-    DERROR("remove subscribe package TOPIC_GIMBAL_FULL_DATA failed." );
+    DERROR("remove subscribe package gimbal data failed." );
   }
 }
 
@@ -110,4 +110,16 @@ void GimbalManagerAsyncSample::rotateAsyncSample(PayloadIndexType index,
           " time:%0.2fs", index, rotation.pitch, rotation.roll, rotation.yaw,
           rotation.rotationMode, rotation.time);
   p->rotateAsync(index, rotation, UserCallBack, userData);
+}
+
+GimbalSingleData GimbalManagerAsyncSample::getGimbalData(PayloadIndexType index) {
+  if (vehicle->isM300() && index <= PAYLOAD_INDEX_2 && index >= PAYLOAD_INDEX_0)
+    return vehicle->subscribe->getValue<TOPIC_THREE_GIMBAL_DATA>().gbData[index];
+  else if (index <= PAYLOAD_INDEX_1 && index >= PAYLOAD_INDEX_0)
+    return vehicle->subscribe->getValue<TOPIC_DUAL_GIMBAL_DATA>().gbData[index];
+  else {
+    GimbalSingleData data = {0};
+    DERROR("Invalid payload index : %d", index);
+    return data;
+  }
 }

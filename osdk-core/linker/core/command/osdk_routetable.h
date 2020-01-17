@@ -39,7 +39,8 @@ extern "C" {
 
 #define ADDR_SDK_COMMAND_INDEX 0x0
 #define ADDR_V1_COMMAND_INDEX 0x1
-#define ADDR_V1_BIGDATA_INDEX 0x2
+#define ADDR_BIGDATA_LIVEVIEW_INDEX 0x2
+#define ADDR_BIGDATA_ADVANCED_SENSING_INDEX 0x3
 
 #define GEN_ADDR(receiver, index) \
   (((receiver << 16) & 0x00FF0000) | ((index << 8) & 0x0000FF00))

@@ -101,12 +101,17 @@ E_OsdkStat OsdkProtocol_v1Init(void **pProtocolExtData) {
   return OSDK_STAT_OK;
 }
 
+E_OsdkStat OsdkProtocol_v1Deinit(void *pProtocolExtData) {
+  return OSDK_STAT_OK;
+}
+
+
 E_OsdkStat OsdkProtocol_v1Pack(void *protocolExtData, uint8_t *pFrame,
-                               uint16_t *len, const T_CmdInfo *pInfo,
+                               uint32_t *len, const T_CmdInfo *pInfo,
                                const uint8_t *cmdData) {
   T_V1ProtocolHeader *pHeader = (T_V1ProtocolHeader *)pFrame;
-  uint16_t frameLen;
-  uint16_t frameDataLen;
+  uint32_t frameLen;
+  uint32_t frameDataLen;
 
   if(!pFrame || !len || !pInfo || !cmdData) {
     OSDK_LOG_ERROR(MODULE_NAME_PROTOCOL, "OsdkProtocol_v1Pack param check failed");
@@ -118,7 +123,7 @@ E_OsdkStat OsdkProtocol_v1Pack(void *protocolExtData, uint8_t *pFrame,
   *len = frameLen;
 
   pHeader->sof = V1_COMMAND_SOF;
-  pHeader->lenAndVer.lv.len = frameLen;
+  pHeader->lenAndVer.lv.len = (uint16_t)frameLen;
   pHeader->lenAndVer.lv.ver = V1_COMMAND_VERSION;
   pHeader->headCheckCrc8 = OsdkCrc_crc8Calc(
       pFrame, (V1_COMMAND_MIN_HEADER_LEN - V1_COMMAND_CRCHEAD_LEN));
@@ -148,9 +153,9 @@ E_OsdkStat OsdkProtocol_v1Pack(void *protocolExtData, uint8_t *pFrame,
 }
 
 E_OsdkStat OsdkProtocol_v1Parse(T_CmdParse *protParse, uint8_t byte,
-                                uint8_t **pParseFrame, uint16_t *parseLen) {
-  uint16_t frameLen;
-  uint16_t frameVer;
+                                uint8_t **pParseFrame, uint32_t *parseLen) {
+  uint32_t frameLen;
+  uint32_t frameVer;
 
   if(!protParse || !pParseFrame || !parseLen) {
     OSDK_LOG_ERROR(MODULE_NAME_PROTOCOL, "OsdkProtocol_v1Parse param check failed");
@@ -226,7 +231,7 @@ E_OsdkStat OsdkProtocol_v1Unpack(void *protocolExtData, uint8_t *pFrame,
   }
 
   T_V1ProtocolHeader *pHeader = (T_V1ProtocolHeader *)pFrame;
-  uint16_t frameDataLen = pHeader->lenAndVer.lv.len -
+  uint32_t frameDataLen = pHeader->lenAndVer.lv.len -
                           sizeof(T_V1ProtocolHeader) - V1_COMMAND_CRCDATA_LEN;
   pInfo->packetType = pHeader->cmdType.cmdType.packetType;
   pInfo->needAck = pHeader->cmdType.cmdType.needAck;

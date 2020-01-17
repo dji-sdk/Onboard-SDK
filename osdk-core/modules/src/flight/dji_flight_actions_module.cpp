@@ -66,7 +66,7 @@ bool FlightActions::setUSBFlightOn(Vehicle* v, bool en) {
   cmdInfo.packetType = OSDK_COMMAND_PACKET_TYPE_REQUEST;
   cmdInfo.addr = GEN_ADDR(0, ADDR_V1_COMMAND_INDEX);
   cmdInfo.receiver = OSDK_COMMAND_FC_DEVICE_ID;
-  cmdInfo.sender = 0xCA;
+  cmdInfo.sender = v->linker->getLocalSenderId();
   E_OsdkStat ret =
       v->linker->sendSync(&cmdInfo, (uint8_t*)&data, &ackInfo, cbData, 500, 3);
   if ((ret != OSDK_STAT_OK) && (cbData[0] == 0x00)) {

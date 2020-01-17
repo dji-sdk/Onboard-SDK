@@ -106,7 +106,7 @@ void GimbalModule::resetAsync(
           getIndex() == PAYLOAD_INDEX_0 ? getIndex() : getIndex() + 1;
       cmdInfo.receiver = OSDK_COMMAND_DEVICE_ID(OSDK_COMMAND_DEVICE_TYPE_GIMBAL,
                                                 V1GimbalIndex);
-      cmdInfo.sender = OSDK_COMMAND_PC_DEVICE_ID;
+      cmdInfo.sender = linker->getLocalSenderId();
 
       HandlerData *handler = (HandlerData *)malloc(sizeof(HandlerData));
       handler->cb = userCB;
@@ -139,7 +139,7 @@ ErrorCode::ErrorCodeType GimbalModule::resetSync(int timeout) {
       getIndex() == PAYLOAD_INDEX_0 ? getIndex() : getIndex() + 1;
   cmdInfo.receiver =
       OSDK_COMMAND_DEVICE_ID(OSDK_COMMAND_DEVICE_TYPE_GIMBAL, V1GimbalIndex);
-  cmdInfo.sender = OSDK_COMMAND_PC_DEVICE_ID;
+  cmdInfo.sender = linker->getLocalSenderId();
   E_OsdkStat linkAck =
       linker->sendSync(&cmdInfo, (uint8_t *) &setting, &ackInfo, ackData,
                        timeout * 1000 / 4, 4);
@@ -180,7 +180,7 @@ void GimbalModule::rotateAsync(Rotation rotation,
         getIndex() == PAYLOAD_INDEX_0 ? getIndex() : getIndex() + 1;
     cmdInfo.receiver =
         OSDK_COMMAND_DEVICE_ID(OSDK_COMMAND_DEVICE_TYPE_GIMBAL, V1GimbalIndex);
-    cmdInfo.sender = OSDK_COMMAND_PC_DEVICE_ID;
+    cmdInfo.sender = linker->getLocalSenderId();
 
     HandlerData *handler = (HandlerData *)malloc(sizeof(HandlerData));
     handler->cb = userCB;
@@ -222,7 +222,7 @@ ErrorCode::ErrorCodeType GimbalModule::rotateSync(Rotation rotation,
       getIndex() == PAYLOAD_INDEX_0 ? getIndex() : getIndex() + 1;
   cmdInfo.receiver =
       OSDK_COMMAND_DEVICE_ID(OSDK_COMMAND_DEVICE_TYPE_GIMBAL, V1GimbalIndex);
-  cmdInfo.sender = OSDK_COMMAND_PC_DEVICE_ID;
+  cmdInfo.sender = linker->getLocalSenderId();
   E_OsdkStat linkAck =
       linker->sendSync(&cmdInfo, (uint8_t *) &setting, &ackInfo, ackData,
                        timeout * 1000 / 4, 4);

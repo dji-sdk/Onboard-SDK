@@ -35,12 +35,14 @@
 static T_OsdkHalUartHandler s_osdkHalUart;
 #ifdef __linux__
 static T_OsdkHalUdpHandler s_osdkHalUdp;
+static T_OsdkHalUSBBulkHandler s_osdkHalUSBBulk;
 #endif
 
-static T_HalOps halOps[INTERFACE_MAX_NUM] = {
+static T_HalOps halOps[] = {
     {"UART",  OsdkHal_UartSendData, OsdkHal_UartReadData},
 #ifdef __linux__
     {"UDP",  OsdkHal_UdpSendData, OsdkHal_UdpReadData},
+    {"USB_BULK",  OsdkHal_USBBulkSendData, OsdkHal_USBBulkReadData},
 #endif
 };
 /* Private functions declaration ---------------------------------------------*/
@@ -92,7 +94,7 @@ E_OsdkStat OsdkHal_UartInit(const char *port, const int baudrate, T_HalObj *obj)
  * @param bufLen:  send data length.
  * @return an enum that represents a status of OSDK
  */
-E_OsdkStat OsdkHal_UartSendData(const T_HalObj *obj, const uint8_t *pBuf, uint16_t bufLen)
+E_OsdkStat OsdkHal_UartSendData(const T_HalObj *obj, const uint8_t *pBuf, uint32_t bufLen)
 {
     E_OsdkStat osdkStat;
 
@@ -112,7 +114,7 @@ E_OsdkStat OsdkHal_UartSendData(const T_HalObj *obj, const uint8_t *pBuf, uint16
  * @param bufLen:  receive data length.
  * @return an enum that represents a status of OSDK
  */
-E_OsdkStat OsdkHal_UartReadData(const T_HalObj *obj, uint8_t *pBuf, uint16_t *bufLen)
+E_OsdkStat OsdkHal_UartReadData(const T_HalObj *obj, uint8_t *pBuf, uint32_t *bufLen)
 {
     E_OsdkStat osdkStat;
 
@@ -128,21 +130,21 @@ E_OsdkStat OsdkHal_UartReadData(const T_HalObj *obj, uint8_t *pBuf, uint16_t *bu
 #ifdef __linux__
 E_OsdkStat OsdkPlatform_RegHalUdpHandler(const T_OsdkHalUdpHandler *halUdpHandler)
 {
-    if (halUdpHandler->UdpInit == NULL) {
-        return OSDK_STAT_ERR_PARAM;
-    }
+  if (halUdpHandler->UdpInit == NULL) {
+    return OSDK_STAT_ERR_PARAM;
+  }
 
-    if (halUdpHandler->UdpWriteData == NULL) {
-        return OSDK_STAT_ERR_PARAM;
-    }
+  if (halUdpHandler->UdpWriteData == NULL) {
+    return OSDK_STAT_ERR_PARAM;
+  }
 
-    if (halUdpHandler->UdpReadData == NULL) {
-        return OSDK_STAT_ERR_PARAM;
-    }
+  if (halUdpHandler->UdpReadData == NULL) {
+    return OSDK_STAT_ERR_PARAM;
+  }
 
-    memcpy(&s_osdkHalUdp, halUdpHandler, sizeof(T_OsdkHalUdpHandler));
+  memcpy(&s_osdkHalUdp, halUdpHandler, sizeof(T_OsdkHalUdpHandler));
 
-    return OSDK_STAT_OK;
+  return OSDK_STAT_OK;
 }
 
 
@@ -155,15 +157,15 @@ E_OsdkStat OsdkPlatform_RegHalUdpHandler(const T_OsdkHalUdpHandler *halUdpHandle
  */
 E_OsdkStat OsdkHal_UdpInit(const char *addr, const uint16_t port, T_HalObj *obj)
 {
-    E_OsdkStat osdkStat;
+  E_OsdkStat osdkStat;
 
-    osdkStat = s_osdkHalUdp.UdpInit(addr, port, obj);
-    if (osdkStat != OSDK_STAT_OK) {
-        OSDK_LOG_ERROR(MODULE_NAME_PLATFORM, "udp init error, stat:%lld", osdkStat);
-        return osdkStat;
-    }
-
+  osdkStat = s_osdkHalUdp.UdpInit(addr, port, obj);
+  if (osdkStat != OSDK_STAT_OK) {
+    OSDK_LOG_ERROR(MODULE_NAME_PLATFORM, "udp init error, stat:%lld", osdkStat);
     return osdkStat;
+  }
+
+  return osdkStat;
 }
 
 /**
@@ -173,17 +175,17 @@ E_OsdkStat OsdkHal_UdpInit(const char *addr, const uint16_t port, T_HalObj *obj)
  * @param bufLen:  send data length.
  * @return an enum that represents a status of OSDK
  */
-E_OsdkStat OsdkHal_UdpSendData(const T_HalObj *obj, const uint8_t *pBuf, uint16_t bufLen)
+E_OsdkStat OsdkHal_UdpSendData(const T_HalObj *obj, const uint8_t *pBuf, uint32_t bufLen)
 {
-    E_OsdkStat osdkStat;
+  E_OsdkStat osdkStat;
 
-    osdkStat = s_osdkHalUdp.UdpWriteData(obj, pBuf, bufLen);
-    if (osdkStat != OSDK_STAT_OK) {
-        OSDK_LOG_ERROR(MODULE_NAME_PLATFORM, "uart write data error, stat:%lld", osdkStat);
-        return osdkStat;
-    }
-
+  osdkStat = s_osdkHalUdp.UdpWriteData(obj, pBuf, bufLen);
+  if (osdkStat != OSDK_STAT_OK) {
+    OSDK_LOG_ERROR(MODULE_NAME_PLATFORM, "uart write data error, stat:%lld", osdkStat);
     return osdkStat;
+  }
+
+  return osdkStat;
 }
 
 /**
@@ -193,18 +195,102 @@ E_OsdkStat OsdkHal_UdpSendData(const T_HalObj *obj, const uint8_t *pBuf, uint16_
  * @param bufLen:  receive data length.
  * @return an enum that represents a status of OSDK
  */
-E_OsdkStat OsdkHal_UdpReadData(const T_HalObj *obj, uint8_t *pBuf, uint16_t *bufLen)
+E_OsdkStat OsdkHal_UdpReadData(const T_HalObj *obj, uint8_t *pBuf, uint32_t *bufLen)
 {
-    E_OsdkStat osdkStat;
+  E_OsdkStat osdkStat;
 
-    osdkStat = s_osdkHalUdp.UdpReadData(obj, pBuf, bufLen);
-    if (osdkStat != OSDK_STAT_OK) {
-        OSDK_LOG_ERROR(MODULE_NAME_PLATFORM, "udp read data error, stat:%lld", osdkStat);
-        return osdkStat;
-    }
-
+  osdkStat = s_osdkHalUdp.UdpReadData(obj, pBuf, bufLen);
+  if (osdkStat != OSDK_STAT_OK) {
+    OSDK_LOG_ERROR(MODULE_NAME_PLATFORM, "udp read data error, stat:%lld", osdkStat);
     return osdkStat;
+  }
+
+  return osdkStat;
 }
+
+E_OsdkStat OsdkPlatform_RegHalUSBBulkHandler(const T_OsdkHalUSBBulkHandler *halUSBBulkHandler)
+{
+  if (halUSBBulkHandler->USBBulkInit == NULL) {
+    return OSDK_STAT_ERR_PARAM;
+  }
+
+  if (halUSBBulkHandler->USBBulkWriteData == NULL) {
+    return OSDK_STAT_ERR_PARAM;
+  }
+
+  if (halUSBBulkHandler->USBBulkReadData == NULL) {
+    return OSDK_STAT_ERR_PARAM;
+  }
+
+  memcpy(&s_osdkHalUSBBulk, halUSBBulkHandler, sizeof(T_OsdkHalUSBBulkHandler));
+
+  return OSDK_STAT_OK;
+}
+
+
+/**
+ * @brief USBBulk interface init function.
+ * @param pid: USBBulk product id.
+ * @param vid: USBBulk vendor id.
+ * @param num: USBBulk interface num.
+ * @param epIn: USBBulk input endpoint .
+ * @param epOut: USBBulk output endpoint.
+ * @param obj: pointer to the hal object, which is used to store USBBulk interface parameters.
+ * @return an enum that represents a status of OSDK
+ */
+E_OsdkStat OsdkHal_USBBulkInit(uint16_t pid, uint16_t vid, uint16_t num, uint16_t epIn, uint16_t epOut, T_HalObj *obj)
+{
+  E_OsdkStat osdkStat;
+
+  osdkStat = s_osdkHalUSBBulk.USBBulkInit(pid, vid, num, epIn, epOut, obj);
+  if (osdkStat != OSDK_STAT_OK) {
+    OSDK_LOG_ERROR(MODULE_NAME_PLATFORM, "USBBulk init error, stat:%lld", osdkStat);
+    return osdkStat;
+  }
+
+  return osdkStat;
+}
+
+/**
+ * @brief USBBulk interface send function.
+ * @param obj: pointer to the hal object, which including USBBulk interface parameters.
+ * @param pBuf:  pointer to the buffer which is used to store send data.
+ * @param bufLen:  send data length.
+ * @return an enum that represents a status of OSDK
+ */
+E_OsdkStat OsdkHal_USBBulkSendData(const T_HalObj *obj, const uint8_t *pBuf, uint32_t bufLen)
+{
+  E_OsdkStat osdkStat;
+
+  osdkStat = s_osdkHalUSBBulk.USBBulkWriteData(obj, pBuf, bufLen);
+  if (osdkStat != OSDK_STAT_OK) {
+    OSDK_LOG_ERROR(MODULE_NAME_PLATFORM, "uart write data error, stat:%lld", osdkStat);
+    return osdkStat;
+  }
+
+  return osdkStat;
+}
+
+/**
+ * @brief USBBulk interface receive function.
+ * @param obj: pointer to the hal object, which including USBBulk interface parameters.
+ * @param pBuf:  pointer to the buffer which is used to store receive data.
+ * @param bufLen:  receive data length.
+ * @return an enum that represents a status of OSDK
+ */
+E_OsdkStat OsdkHal_USBBulkReadData(const T_HalObj *obj, uint8_t *pBuf, uint32_t *bufLen)
+{
+  E_OsdkStat osdkStat;
+
+  osdkStat = s_osdkHalUSBBulk.USBBulkReadData(obj, pBuf, bufLen);
+  if (osdkStat != OSDK_STAT_OK) {
+    OSDK_LOG_ERROR(MODULE_NAME_PLATFORM, "USBBulk read data error, stat:%lld", osdkStat);
+    return osdkStat;
+  }
+
+  return osdkStat;
+}
+
 #endif
 /**
  * @brief Function used to get hal operations.
@@ -215,7 +301,7 @@ E_OsdkStat OsdkHal_UdpReadData(const T_HalObj *obj, uint8_t *pBuf, uint16_t *buf
 E_OsdkStat OsdkHal_GetHalOps(const char *interface, T_HalOps *ops)
 {
   int i = 0;
-  for (; i < INTERFACE_MAX_NUM; ++i) {
+  for (; i < (sizeof(halOps) / sizeof(T_HalOps)); ++i) {
     if (strcmp(halOps[i].name, interface) == 0) {
       *ops = halOps[i];
       return OSDK_STAT_OK;

@@ -37,19 +37,18 @@ extern "C" {
 #endif
 
 /* Exported constants --------------------------------------------------------*/
-#define INTERFACE_MAX_NUM 2
 #define HAL_ONCE_READ_LEN 1024
 
 /* Exported types ------------------------------------------------------------*/
 typedef E_OsdkStat (*Hal_Send)(
     const T_HalObj *obj,
     const uint8_t *pBuf,
-    uint16_t bufLen);
+    uint32_t bufLen);
 
 typedef E_OsdkStat (*Hal_Read)(
     const T_HalObj *obj,
     uint8_t *pBuf,
-    uint16_t *bufLen);
+    uint32_t *bufLen);
 
 typedef struct {
   char *name;
@@ -58,12 +57,16 @@ typedef struct {
 } T_HalOps;
 /* Exported functions --------------------------------------------------------*/
 E_OsdkStat OsdkHal_UartInit(const char *port, const int baudrate, T_HalObj *obj);
-E_OsdkStat OsdkHal_UartSendData(const T_HalObj *obj, const uint8_t *pBuf, uint16_t bufLen);
-E_OsdkStat OsdkHal_UartReadData(const T_HalObj *obj, uint8_t *pBuf, uint16_t *bufLen);
+E_OsdkStat OsdkHal_UartSendData(const T_HalObj *obj, const uint8_t *pBuf, uint32_t bufLen);
+E_OsdkStat OsdkHal_UartReadData(const T_HalObj *obj, uint8_t *pBuf, uint32_t *bufLen);
 #ifdef __linux__
 E_OsdkStat OsdkHal_UdpInit(const char *addr, const uint16_t port, T_HalObj *obj);
-E_OsdkStat OsdkHal_UdpSendData(const T_HalObj *obj, const uint8_t *pBuf, uint16_t bufLen);
-E_OsdkStat OsdkHal_UdpReadData(const T_HalObj *obj, uint8_t *pBuf, uint16_t *bufLen);
+E_OsdkStat OsdkHal_UdpSendData(const T_HalObj *obj, const uint8_t *pBuf, uint32_t bufLen);
+E_OsdkStat OsdkHal_UdpReadData(const T_HalObj *obj, uint8_t *pBuf, uint32_t *bufLen);
+
+E_OsdkStat OsdkHal_USBBulkInit(uint16_t pid, uint16_t vid, uint16_t num, uint16_t epIn, uint16_t epOut, T_HalObj *obj);
+E_OsdkStat OsdkHal_USBBulkSendData(const T_HalObj *obj, const uint8_t *pBuf, uint32_t bufLen);
+E_OsdkStat OsdkHal_USBBulkReadData(const T_HalObj *obj, uint8_t *pBuf, uint32_t *bufLen);
 #endif
 E_OsdkStat OsdkHal_GetHalOps(const char *interface, T_HalOps *ops);
 

@@ -1,9 +1,9 @@
 /**
  ********************************************************************
- * @file    osdk_device_id.h
- * @version V2.0.0
- * @date    2019/07/01
- * @brief   This is the header file for "osdk_device_id.c", defining the
+ * @file    osdk_protocol_usbmc.h
+ * @version V1.0.0
+ * @date    2019/09/25
+ * @brief   This is the header file for "osdk_protocol_sdk.c", defining the
  *structure and
  * (exported) function prototypes.
  *
@@ -27,47 +27,34 @@
  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef OSDK_DEVICE_ID_H
-#define OSDK_DEVICE_ID_H
+#ifndef OSDK_PROTOCOL_USBMC_H
+#define OSDK_PROTOCOL_USBMC_H
 
 /* Includes ------------------------------------------------------------------*/
+#include "osdk_typedef.h"
 #include "osdk_protocol_common.h"
+#include "osdk_logger_internal.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/* Exported constants --------------------------------------------------------*/
-#define OSDK_COMMAND_DEVICE_ID(type, index) (((index) << 5) | (type))
-
-/* Exported types ------------------------------------------------------------*/
-typedef enum {
-  OSDK_COMMAND_LIB_HOST_ID =
-      OSDK_COMMAND_DEVICE_ID(OSDK_COMMAND_DEVICE_TYPE_CENTER, 7),
-  OSDK_COMMAND_CAMERA_HOST_ID =
-      OSDK_COMMAND_DEVICE_ID(OSDK_COMMAND_DEVICE_TYPE_CAMERA, 0),
-  OSDK_COMMAND_GIMBAL_HOST_ID =
-      OSDK_COMMAND_DEVICE_ID(OSDK_COMMAND_DEVICE_TYPE_GIMBAL, 0)
-} E_OsdkCommandHostId;
-
-typedef enum {
-  OSDK_COMMAND_PC_DEVICE_ID =
-      OSDK_COMMAND_DEVICE_ID(OSDK_COMMAND_DEVICE_TYPE_PC, 1),
-  OSDK_COMMAND_OSDK_DEVICE_ID =
-      OSDK_COMMAND_DEVICE_ID(OSDK_COMMAND_DEVICE_TYPE_PC, 6),
-  OSDK_COMMAND_APP_DEVICE_ID =
-      OSDK_COMMAND_DEVICE_ID(OSDK_COMMAND_DEVICE_TYPE_APP, 0),
-  OSDK_COMMAND_SKYPORT_DEVICE_ID =
-      OSDK_COMMAND_DEVICE_ID(OSDK_COMMAND_DEVICE_TYPE_CENTER, 3),
-  OSDK_COMMAND_FC_DEVICE_ID =
-      OSDK_COMMAND_DEVICE_ID(OSDK_COMMAND_DEVICE_TYPE_FC, 0)
-} E_OsdkCommandDeviceId;
-
 /* Exported functions --------------------------------------------------------*/
+E_OsdkStat OsdkProtocol_usbmcInit(void **pProtocolExtData);
+E_OsdkStat OsdkProtocol_usbmcDeinit(void *pProtocolExtData);
+E_OsdkStat OsdkProtocol_usbmcPack(void *protocolExtData, uint8_t *pFrame,
+                                uint32_t *len, const T_CmdInfo *pInfo,
+                                const uint8_t *cmdData);
+E_OsdkStat OsdkProtocol_usbmcParse(T_CmdParse *protParse, uint8_t byte,
+                                 uint8_t **pParseFrame, uint32_t *parseLen);
+E_OsdkStat OsdkProtocol_usbmcUnpack(void *protocolExtData, uint8_t *pFrame,
+                                  T_CmdInfo *pInfo, uint8_t *cmdData);
+E_OsdkStat OsdkProtocol_usbmcGetLen(char *buffer, uint32_t *length);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif  // OSDK_DEVICE_ID_H
- /************************ (C) COPYRIGHT DJI Innovations *******END OF FILE******/
+#endif  // OSDK_PROTOCOL_USBMC_H
+        /************************ (C) COPYRIGHT DJI Innovations *******END OF
+         * FILE******/

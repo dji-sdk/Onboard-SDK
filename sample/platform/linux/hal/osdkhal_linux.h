@@ -44,6 +44,9 @@
 #include "osdk_logger_internal.h"
 #include "osdk_platform.h"
 
+#ifdef ADVANCED_SENSING
+#include <libusb-1.0/libusb.h>
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -55,12 +58,21 @@ extern "C" {
 
 /* Exported functions --------------------------------------------------------*/
 
-E_OsdkStat OsdkLinux_UartSendData(const T_HalObj *obj, const uint8_t *pBuf, uint16_t bufLen);
-E_OsdkStat OsdkLinux_UartReadData(const T_HalObj *obj, uint8_t *pBuf, uint16_t *bufLen);
-E_OsdkStat OsdkLinux_UdpSendData(const T_HalObj *obj, const uint8_t *pBuf, uint16_t bufLen);
-E_OsdkStat OsdkLinux_UdpReadData(const T_HalObj *obj, uint8_t *pBuf, uint16_t *bufLen);
+E_OsdkStat OsdkLinux_UartSendData(const T_HalObj *obj, const uint8_t *pBuf, uint32_t bufLen);
+E_OsdkStat OsdkLinux_UartReadData(const T_HalObj *obj, uint8_t *pBuf, uint32_t *bufLen);
+E_OsdkStat OsdkLinux_UdpSendData(const T_HalObj *obj, const uint8_t *pBuf, uint32_t bufLen);
+E_OsdkStat OsdkLinux_UdpReadData(const T_HalObj *obj, uint8_t *pBuf, uint32_t *bufLen);
 E_OsdkStat OsdkLinux_UartInit(const char *port, const int baudrate, T_HalObj *obj);
 E_OsdkStat OsdkLinux_UdptInit(const char *addr, uint16_t port, T_HalObj *obj);
+
+#ifdef ADVANCED_SENSING
+E_OsdkStat OsdkLinux_USBBulkInit(uint16_t pid, uint16_t vid, uint16_t num, uint16_t epIn,
+                                 uint16_t epOut, T_HalObj *obj);
+E_OsdkStat OsdkLinux_USBBulkSendData(const T_HalObj *obj, const uint8_t *pBuf,
+                                     uint32_t bufLen);
+E_OsdkStat OsdkLinux_USBBulkReadData(const T_HalObj *obj, uint8_t *pBuf,
+                                     uint32_t *bufLen);
+#endif
 
 #ifdef __cplusplus
 }

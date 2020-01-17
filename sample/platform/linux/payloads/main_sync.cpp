@@ -72,6 +72,14 @@ int main(int argc, char **argv) {
     DERROR("Init Camera module Sample_gimbal_2 failed.");
     ErrorCode::printErrorCodeMsg(ret);
   }
+  if (vehicle->isM300()) {
+    ret = vehicle->gimbalManager->initGimbalModule(PAYLOAD_INDEX_2,
+                                                   "Sample_gimbal_3");
+    if (ret != ErrorCode::SysCommonErr::Success) {
+      DERROR("Init Camera module Sample_gimbal_3 failed.");
+      ErrorCode::printErrorCodeMsg(ret);
+    }
+  }
 
   CameraManagerSyncSample *p = new CameraManagerSyncSample(vehicle);
   GimbalManagerSyncSample *g = new GimbalManagerSyncSample(vehicle);
@@ -210,9 +218,9 @@ int main(int argc, char **argv) {
         break;
       case 'm':
         DSTATUS("Current gimbal %d angle (p,r,y) = (%0.2f°, %0.2f°, %0.2f°)", PAYLOAD_INDEX_0,
-                vehicle->subscribe->getValue<TOPIC_GIMBAL_FULL_DATA>().gbData[PAYLOAD_INDEX_0].pitch,
-                vehicle->subscribe->getValue<TOPIC_GIMBAL_FULL_DATA>().gbData[PAYLOAD_INDEX_0].roll,
-                vehicle->subscribe->getValue<TOPIC_GIMBAL_FULL_DATA>().gbData[PAYLOAD_INDEX_0].yaw);
+                g->getGimbalData(PAYLOAD_INDEX_0).pitch,
+                g->getGimbalData(PAYLOAD_INDEX_0).roll,
+                g->getGimbalData(PAYLOAD_INDEX_0).yaw);
         GimbalModule::Rotation rotation;
         rotation.roll = 0.0f;
         rotation.pitch = 25.0f;
@@ -222,21 +230,21 @@ int main(int argc, char **argv) {
         g->rotateSyncSample(PAYLOAD_INDEX_0, rotation);
         sleep(2);
         DSTATUS("Current gimbal %d angle (p,r,y) = (%0.2f°, %0.2f°, %0.2f°)", PAYLOAD_INDEX_0,
-                vehicle->subscribe->getValue<TOPIC_GIMBAL_FULL_DATA>().gbData[PAYLOAD_INDEX_0].pitch,
-                vehicle->subscribe->getValue<TOPIC_GIMBAL_FULL_DATA>().gbData[PAYLOAD_INDEX_0].roll,
-                vehicle->subscribe->getValue<TOPIC_GIMBAL_FULL_DATA>().gbData[PAYLOAD_INDEX_0].yaw);
+                g->getGimbalData(PAYLOAD_INDEX_0).pitch,
+                g->getGimbalData(PAYLOAD_INDEX_0).roll,
+                g->getGimbalData(PAYLOAD_INDEX_0).yaw);
         break;
       case 'n':
         DSTATUS("Current gimbal %d angle (p,r,y) = (%0.2f°, %0.2f°, %0.2f°)", PAYLOAD_INDEX_0,
-                vehicle->subscribe->getValue<TOPIC_GIMBAL_FULL_DATA>().gbData[PAYLOAD_INDEX_0].pitch,
-                vehicle->subscribe->getValue<TOPIC_GIMBAL_FULL_DATA>().gbData[PAYLOAD_INDEX_0].roll,
-                vehicle->subscribe->getValue<TOPIC_GIMBAL_FULL_DATA>().gbData[PAYLOAD_INDEX_0].yaw);
+                g->getGimbalData(PAYLOAD_INDEX_0).pitch,
+                g->getGimbalData(PAYLOAD_INDEX_0).roll,
+                g->getGimbalData(PAYLOAD_INDEX_0).yaw);
         g->resetSyncSample(PAYLOAD_INDEX_0);
         sleep(2);
         DSTATUS("Current gimbal %d angle (p,r,y) = (%0.2f°, %0.2f°, %0.2f°)", PAYLOAD_INDEX_0,
-                vehicle->subscribe->getValue<TOPIC_GIMBAL_FULL_DATA>().gbData[PAYLOAD_INDEX_0].pitch,
-                vehicle->subscribe->getValue<TOPIC_GIMBAL_FULL_DATA>().gbData[PAYLOAD_INDEX_0].roll,
-                vehicle->subscribe->getValue<TOPIC_GIMBAL_FULL_DATA>().gbData[PAYLOAD_INDEX_0].yaw);
+                g->getGimbalData(PAYLOAD_INDEX_0).pitch,
+                g->getGimbalData(PAYLOAD_INDEX_0).roll,
+                g->getGimbalData(PAYLOAD_INDEX_0).yaw);
         break;
       case 'q':
         DSTATUS("Quit now ...");

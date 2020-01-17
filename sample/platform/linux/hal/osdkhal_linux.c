@@ -37,7 +37,7 @@
  * @return an enum that represents a status of OSDK
  */
 E_OsdkStat OsdkLinux_UartSendData(const T_HalObj *obj, const uint8_t *pBuf,
-                                uint16_t bufLen) {
+                                uint32_t bufLen) {
   int32_t realLen;
 
   if (obj->uartObject.fd == -1) {
@@ -62,7 +62,7 @@ E_OsdkStat OsdkLinux_UartSendData(const T_HalObj *obj, const uint8_t *pBuf,
  * @return an enum that represents a status of OSDK
  */
 E_OsdkStat OsdkLinux_UartReadData(const T_HalObj *obj, uint8_t *pBuf,
-                                uint16_t *bufLen) {
+                                uint32_t *bufLen) {
   if (obj->uartObject.fd == -1) {
     OSDK_LOG_ERROR(MODULE_NAME_PLATFORM, "uart fd error");
     return OSDK_STAT_ERR;
@@ -81,7 +81,7 @@ E_OsdkStat OsdkLinux_UartReadData(const T_HalObj *obj, uint8_t *pBuf,
  * @return an enum that represents a status of OSDK
  */
 E_OsdkStat OsdkLinux_UdpSendData(const T_HalObj *obj, const uint8_t *pBuf,
-                               uint16_t bufLen) {
+                               uint32_t bufLen) {
   int32_t realLen;
 
   if (obj->udpObject.fd == -1) {
@@ -108,7 +108,7 @@ E_OsdkStat OsdkLinux_UdpSendData(const T_HalObj *obj, const uint8_t *pBuf,
  * @return an enum that represents a status of OSDK
  */
 E_OsdkStat OsdkLinux_UdpReadData(const T_HalObj *obj, uint8_t *pBuf,
-                               uint16_t *bufLen) {
+                               uint32_t *bufLen) {
   return OSDK_STAT_OK;
 }
 
@@ -214,5 +214,92 @@ E_OsdkStat OsdkLinux_UdpInit(const char *addr, uint16_t port, T_HalObj *obj) {
 
   return OSDK_STAT_OK;
 }
+
+#ifdef ADVANCED_SENSING
+
+/**
+ * @brief USBBulk interface init function.
+ * @param pid: USBBulk product id.
+ * @param vid: USBBulk vendor id.
+ * @param num: USBBulk interface num.
+ * @param epIn: USBBulk input endpoint .
+ * @param epOut: USBBulk output endpoint.
+ * @param obj: pointer to the hal object, which is used to store USBBulk interface parameters.
+ * @return an enum that represents a status of OSDK
+ */
+E_OsdkStat OsdkLinux_USBBulkInit(uint16_t pid, uint16_t vid, uint16_t num, uint16_t epIn,
+                                 uint16_t epOut, T_HalObj *obj) {
+  OSDK_LOG_DEBUG(MODULE_NAME_PLATFORM, "Looking for USB device...\n");
+  struct libusb_device_handle *handle = NULL;
+
+  int ret = libusb_init(NULL);
+  if(ret < 0) {
+    OSDK_LOG_ERROR(MODULE_NAME_PLATFORM, "Failed to Initialized libusb session...\n");
+    return OSDK_STAT_ERR;
+  }
+
+  OSDK_LOG_DEBUG(MODULE_NAME_PLATFORM, "Attempting to open DJI USB device...\n");
+
+  handle = libusb_open_device_with_vid_pid(NULL, vid, pid);
+  if (!handle)
+  {
+    OSDK_LOG_ERROR(MODULE_NAME_PLATFORM, "Failed to open DJI USB device...ret = %d\n", handle);
+    OSDK_LOG_ERROR(MODULE_NAME_PLATFORM, "please check if the pid and vid are correct.\n");
+    return OSDK_STAT_ERR;
+  }
+
+  ret = libusb_claim_interface(handle, num);
+  if(ret != LIBUSB_SUCCESS){
+    libusb_close(handle);
+    return OSDK_STAT_ERR;
+  }
+
+  obj->bulkObject.handle = (void *)handle;
+  obj->bulkObject.epIn = epIn;
+  obj->bulkObject.epOut = epOut;
+
+  OSDK_LOG_DEBUG(MODULE_NAME_PLATFORM, "...DJI USB device started successfully.\n");
+
+  return OSDK_STAT_OK;
+}
+
+
+E_OsdkStat OsdkLinux_USBBulkSendData(const T_HalObj *obj, const uint8_t *pBuf,
+                                     uint32_t bufLen) {
+  struct libusb_device_handle *handle = NULL;
+  int sent_len = 0, ret;
+
+  handle = (struct libusb_device_handle *)obj->bulkObject.handle;
+  ret = libusb_bulk_transfer(handle, obj->bulkObject.epOut,
+                             (uint8_t *)pBuf, bufLen,
+                             &sent_len, 50);
+  if (0 != ret){
+    OSDK_LOG_ERROR(MODULE_NAME_PLATFORM, "LIBUSB send error");
+    OsdkLinux_USBBulkSendData(obj, pBuf, bufLen);
+    return OSDK_STAT_ERR;
+  }
+  return OSDK_STAT_OK;
+}
+
+
+E_OsdkStat OsdkLinux_USBBulkReadData(const T_HalObj *obj, uint8_t *pBuf,
+                                     uint32_t *bufLen) {
+  struct libusb_device_handle *handle = NULL;
+  int ret;
+
+  handle = (struct libusb_device_handle *)obj->bulkObject.handle;
+  ret = libusb_bulk_transfer(handle, obj->bulkObject.epIn,
+                             pBuf, 128*1024, bufLen, (unsigned int)(-1));
+  if (ret != 0) {
+    if (-7 == ret)
+      OSDK_LOG_ERROR(MODULE_NAME_PLATFORM, "LIBUSB read timeout");
+    else
+      OSDK_LOG_ERROR(MODULE_NAME_PLATFORM, "LIBUSB read error, ret = %d", ret);
+    return OSDK_STAT_ERR;
+  }
+  return OSDK_STAT_OK;
+}
+
+#endif
 
 /****************** (C) COPYRIGHT DJI Innovations *****END OF FILE****/

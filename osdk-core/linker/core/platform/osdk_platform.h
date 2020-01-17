@@ -69,6 +69,11 @@ typedef struct {
     int fd;
     struct sockaddr_in socketAddr;
 }T_UdpObj;
+typedef struct {
+    void* handle;
+    uint16_t epIn;
+    uint16_t epOut;
+}T_UsbBulkObj;
 #endif
 
 typedef struct {
@@ -77,6 +82,7 @@ typedef struct {
         T_UsbObj  usbObject;
 #ifdef __linux__
         T_UdpObj  udpObject;
+        T_UsbBulkObj bulkObject;
 #endif
     };
 }T_HalObj;
@@ -91,12 +97,12 @@ typedef struct {
     /*! Specifies payload uart write data interface, need register by this format. Users need to implement the sending
      * interface of their serial device and register it. Please use the relevant tools to test the interface before
      * registering. */
-    E_OsdkStat (*UartWriteData)(const T_HalObj *obj, const uint8_t *pBuf, uint16_t bufLen);
+    E_OsdkStat (*UartWriteData)(const T_HalObj *obj, const uint8_t *pBuf, uint32_t bufLen);
 
     /*! Specifies payload uart read data interface that need register by this format. Users need to implement the read
      * interface of their serial device and register it. Please use the relevant tools to test the interface before
      * registering.*/
-    E_OsdkStat (*UartReadData)(const T_HalObj *obj, uint8_t *pBuf, uint16_t *bufLen);
+    E_OsdkStat (*UartReadData)(const T_HalObj *obj, uint8_t *pBuf, uint32_t *bufLen);
 } T_OsdkHalUartHandler;
 
 #ifdef __linux__
@@ -109,13 +115,30 @@ typedef struct {
     /*! Specifies payload uart write data interface, need register by this format. Users need to implement the sending
      * interface of their serial device and register it. Please use the relevant tools to test the interface before
      * registering. */
-    E_OsdkStat (*UdpWriteData)(const T_HalObj *obj, const uint8_t *pBuf, uint16_t bufLen);
+    E_OsdkStat (*UdpWriteData)(const T_HalObj *obj, const uint8_t *pBuf, uint32_t bufLen);
 
     /*! Specifies payload udp read data interface that need register by this format. Users need to implement the read
      * interface of their serial device and register it. Please use the relevant tools to test the interface before
      * registering.*/
-    E_OsdkStat (*UdpReadData)(const T_HalObj *obj, uint8_t *pBuf, uint16_t *bufLen);
+    E_OsdkStat (*UdpReadData)(const T_HalObj *obj, uint8_t *pBuf, uint32_t *bufLen);
 } T_OsdkHalUdpHandler;
+
+typedef struct {
+  /*! Specifies payload uart init interface that need register by this format. Users need to implement the initialization
+   * interface of their serial device and register it. For the related parameter settings of the serial port, please
+   * refer to the Quick Start document.*/
+  E_OsdkStat (*USBBulkInit)(uint16_t pid, uint16_t vid, uint16_t num, uint16_t epIn, uint16_t epOut, T_HalObj *obj);
+
+  /*! Specifies payload uart write data interface, need register by this format. Users need to implement the sending
+   * interface of their serial device and register it. Please use the relevant tools to test the interface before
+   * registering. */
+  E_OsdkStat (*USBBulkWriteData)(const T_HalObj *obj, const uint8_t *pBuf, uint32_t bufLen);
+
+  /*! Specifies payload USBBulk read data interface that need register by this format. Users need to implement the read
+   * interface of their serial device and register it. Please use the relevant tools to test the interface before
+   * registering.*/
+  E_OsdkStat (*USBBulkReadData)(const T_HalObj *obj, uint8_t *pBuf, uint32_t *bufLen);
+} T_OsdkHalUSBBulkHandler;
 #endif
 
 typedef struct {
@@ -239,6 +262,8 @@ E_OsdkStat OsdkPlatform_RegHalUartHandler(const T_OsdkHalUartHandler *halUartHan
  * @return The return code represents the status of the interface execution. For details, please refer to the osdk_typedef.h.
  */
 E_OsdkStat OsdkPlatform_RegHalUdpHandler(const T_OsdkHalUdpHandler *halUdpHandler);
+
+E_OsdkStat OsdkPlatform_RegHalUSBBulkHandler(const T_OsdkHalUSBBulkHandler *halUSBBulkHandler);
 #endif
 
 /**

@@ -53,6 +53,8 @@ typedef enum {
   FC_UART_CHANNEL_ID = CHANNEL_ID(CHANNEL_TYPE_UART, 1),
   USB_ACM_CHANNEL_ID = CHANNEL_ID(CHANNEL_TYPE_UART, 2),
   RNDIS_UDP_CHANNEL_ID = CHANNEL_ID(CHANNEL_TYPE_UDP, 0),
+  USB_BULK_LIVEVIEW_CHANNEL_ID = CHANNEL_ID(CHANNEL_TYPE_USB, 1),
+  USB_BULK_ADVANCED_SENSING_CHANNEL_ID = CHANNEL_ID(CHANNEL_TYPE_USB, 2),
 } E_ChannelIDType;
 
 /* Exported types ------------------------------------------------------------*/
@@ -66,6 +68,10 @@ E_OsdkStat OsdkChannel_InitUartChannel(const char *port,
 #ifdef __linux__
 E_OsdkStat OsdkChannel_InitUDPChannel(const char *addr, uint16_t port,
                                       E_ChannelIDType id);
+
+E_OsdkStat OsdkChannel_InitUSBBulkChannel(uint16_t pid, uint16_t vid, uint16_t num,
+                                          uint16_t epIn, uint16_t epOut,
+                                          E_ChannelIDType id);
 #endif
 
 #ifdef __cplusplus

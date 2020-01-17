@@ -62,9 +62,9 @@ int gimbalManagerTest(Vehicle *vehicle, PayloadIndexType index) {
 
   /*! print the current angle of gimbal */
   DSTATUS("Current gimbal %d angle (p,r,y) = (%0.2fdeg, %0.2fdeg, %0.2fdeg", index,
-        vehicle->subscribe->getValue<TOPIC_GIMBAL_FULL_DATA>().gbData[PAYLOAD_INDEX_0].pitch,
-        vehicle->subscribe->getValue<TOPIC_GIMBAL_FULL_DATA>().gbData[PAYLOAD_INDEX_0].roll,
-        vehicle->subscribe->getValue<TOPIC_GIMBAL_FULL_DATA>().gbData[PAYLOAD_INDEX_0].yaw);
+          p->getGimbalData(PAYLOAD_INDEX_0).pitch,
+          p->getGimbalData(PAYLOAD_INDEX_0).roll,
+          p->getGimbalData(PAYLOAD_INDEX_0).yaw);
 
   GimbalModule::Rotation rotation;
   rotation.roll = 0.0f;
@@ -77,17 +77,17 @@ int gimbalManagerTest(Vehicle *vehicle, PayloadIndexType index) {
 
   /*! print the current angle of gimbal */
   DSTATUS("Current gimbal %d angle (p,r,y) = (%0.2fdeg, %0.2fdeg, %0.2fdeg", index,
-          vehicle->subscribe->getValue<TOPIC_GIMBAL_FULL_DATA>().gbData[PAYLOAD_INDEX_0].pitch,
-          vehicle->subscribe->getValue<TOPIC_GIMBAL_FULL_DATA>().gbData[PAYLOAD_INDEX_0].roll,
-          vehicle->subscribe->getValue<TOPIC_GIMBAL_FULL_DATA>().gbData[PAYLOAD_INDEX_0].yaw);
+          p->getGimbalData(PAYLOAD_INDEX_0).pitch,
+          p->getGimbalData(PAYLOAD_INDEX_0).roll,
+          p->getGimbalData(PAYLOAD_INDEX_0).yaw);
   p->resetSyncSample(index);
   delay_nms(2000);
 
   /*! print the current angle of gimbal */
   DSTATUS("Current gimbal %d angle (p,r,y) = (%0.2fdeg, %0.2fdeg, %0.2fdeg", index,
-          vehicle->subscribe->getValue<TOPIC_GIMBAL_FULL_DATA>().gbData[PAYLOAD_INDEX_0].pitch,
-          vehicle->subscribe->getValue<TOPIC_GIMBAL_FULL_DATA>().gbData[PAYLOAD_INDEX_0].roll,
-          vehicle->subscribe->getValue<TOPIC_GIMBAL_FULL_DATA>().gbData[PAYLOAD_INDEX_0].yaw);
+          p->getGimbalData(PAYLOAD_INDEX_0).pitch,
+          p->getGimbalData(PAYLOAD_INDEX_0).roll,
+          p->getGimbalData(PAYLOAD_INDEX_0).yaw);
 
   delete p;
   return 0;

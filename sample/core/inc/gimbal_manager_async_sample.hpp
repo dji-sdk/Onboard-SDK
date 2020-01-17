@@ -32,6 +32,9 @@
 
 #include <dji_vehicle.hpp>
 #include "dji_gimbal_manager.hpp"
+#include "dji_telemetry.hpp"
+
+using namespace DJI::OSDK::Telemetry;
 
 /*! @brief gimbal manager async sample
  */
@@ -50,6 +53,9 @@ class GimbalManagerAsyncSample {
                         void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
                                              UserData userData),
                         UserData userData);
+
+  GimbalSingleData getGimbalData(PayloadIndexType index);
+
  private:
   Vehicle* vehicle;
 };

@@ -210,7 +210,7 @@ public:
   bool              isLegacyM600();
   bool              isM100();
   bool              isM210V2();
-  bool              isM210V3();
+  bool              isM300();
 
 private:
   Version::VersionData versionData;

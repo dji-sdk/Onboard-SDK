@@ -30,13 +30,17 @@
 /* Private functions definition ---------------------------------------------*/
 
 /* Private constants --------------------------------------------------------*/
-const static T_ProtocolOps protocolOps[PROTOCOL_MAX_NUM] = {
-    {PROTOCOL_SDK, OsdkProtocol_sdkInit, OsdkProtocol_sdkPack,
+const static T_ProtocolOps protocolOps[] = {
+    {PROTOCOL_SDK, OsdkProtocol_sdkInit, OsdkProtocol_sdkDeinit, OsdkProtocol_sdkPack,
      OsdkProtocol_sdkParse, OsdkProtocol_sdkUnpack,
      OsdkProtocol_sdkGetLen, OsdkProtocol_setSdkKey},
-    {PROTOCOL_V1, OsdkProtocol_v1Init, OsdkProtocol_v1Pack,
+    {PROTOCOL_V1, OsdkProtocol_v1Init, OsdkProtocol_v1Deinit, OsdkProtocol_v1Pack,
      OsdkProtocol_v1Parse, OsdkProtocol_v1Unpack,
-     OsdkProtocol_v1GetLen, NULL}};
+     OsdkProtocol_v1GetLen, NULL},
+    {PROTOCOL_USBMC, OsdkProtocol_usbmcInit, OsdkProtocol_usbmcDeinit,
+     OsdkProtocol_usbmcPack, OsdkProtocol_usbmcParse,
+     OsdkProtocol_usbmcUnpack, OsdkProtocol_usbmcGetLen,
+     NULL}};
 /* Private types ------------------------------------------------------------*/
 
 /* Exported functions definition ---------------------------------------------*/
@@ -48,7 +52,7 @@ E_OsdkStat OsdkProtocol_getProtocolOps(E_ProtocolType type,
                    "OsdkProtocol_getProtocolOps param check failed");
     return OSDK_STAT_ERR_PARAM;
   }
-  for (i = 0; i < PROTOCOL_MAX_NUM; ++i) {
+  for (i = 0; i < (sizeof(protocolOps) / sizeof(T_ProtocolOps)) ; ++i) {
     if (protocolOps[i].type == type) {
       *ops = protocolOps[i];
       return OSDK_STAT_OK;

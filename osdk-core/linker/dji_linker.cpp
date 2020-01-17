@@ -33,7 +33,8 @@
 using namespace DJI;
 using namespace DJI::OSDK;
 
-Linker::Linker()
+Linker::Linker(uint8_t defaultSenderId)
+:senderId(defaultSenderId)
 {
 }
 
@@ -93,6 +94,16 @@ Linker::addUdpChannel(const char *addr, uint16_t port, E_ChannelIDType id)
   errCode = OsdkChannel_InitUDPChannel(addr, port, id);
   return (errCode == OSDK_STAT_OK) ? true : false;
 }
+
+bool
+Linker::addUSBBulkChannel(uint16_t pid, uint16_t vid, uint16_t num, uint16_t epIn,
+                          uint16_t epOut, E_ChannelIDType id)
+{
+  E_OsdkStat errCode;
+  errCode = OsdkChannel_InitUSBBulkChannel(pid, vid, num, epIn, epOut, id);
+  return (errCode == OSDK_STAT_OK) ? true : false;
+}
+
 #endif
 
 void
@@ -119,6 +130,17 @@ Linker::setKey(const char *key)
   OsdkCommand_SetKey(key);
 }
 
+
+void
+Linker::setSenderId(uint8_t senderId) {
+  this->senderId = senderId;
+}
+
+uint8_t
+Linker::getLocalSenderId() {
+  return senderId;
+}
+
 bool
 Linker::send(T_CmdInfo *cmdInfo, const uint8_t *cmdData)
 {
@@ -132,6 +154,38 @@ Linker::registerCmdHandler(T_RecvCmdHandle *recvCmdHandle)
 {
   E_OsdkStat errCode;
   errCode = OsdkCommand_RegRecvCmdHandler(OsdkCommand_GetInstance(), recvCmdHandle);
+  return (errCode == OSDK_STAT_OK) ? true : false;
+}
+
+bool
+Linker::createLiveViewTask()
+{
+  E_OsdkStat errCode;
+  errCode = OsdkCommand_CreateLiveViewTask();
+  return (errCode == OSDK_STAT_OK) ? true : false;
+}
+
+bool
+Linker::destroyLiveViewTask()
+{
+  E_OsdkStat errCode;
+  errCode = OsdkCommand_DestroyLiveViewTask();
+  return (errCode == OSDK_STAT_OK) ? true : false;
+}
+
+bool
+Linker::createAdvancedSensingTask()
+{
+  E_OsdkStat errCode;
+  errCode = OsdkCommand_CreateAdvancedSensingTask();
+  return (errCode == OSDK_STAT_OK) ? true : false;
+}
+
+bool
+Linker::destroyAdvancedSensingTask()
+{
+  E_OsdkStat errCode;
+  errCode = OsdkCommand_DestroyAdvancedSensingTask();
   return (errCode == OSDK_STAT_OK) ? true : false;
 }
 
