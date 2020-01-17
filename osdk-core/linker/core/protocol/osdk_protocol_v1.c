@@ -228,7 +228,6 @@ E_OsdkStat OsdkProtocol_v1Unpack(void *protocolExtData, uint8_t *pFrame,
   T_V1ProtocolHeader *pHeader = (T_V1ProtocolHeader *)pFrame;
   uint16_t frameDataLen = pHeader->lenAndVer.lv.len -
                           sizeof(T_V1ProtocolHeader) - V1_COMMAND_CRCDATA_LEN;
-
   pInfo->packetType = pHeader->cmdType.cmdType.packetType;
   pInfo->needAck = pHeader->cmdType.cmdType.needAck;
   pInfo->encType = pHeader->cmdType.cmdType.encrypt;

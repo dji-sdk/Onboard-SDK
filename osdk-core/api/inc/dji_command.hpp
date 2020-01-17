@@ -213,6 +213,29 @@ class V1ProtocolCMD : public ErrorCode
     const static uint8_t usbFlightMode[MAX_CMD_ARRAY_SIZE];
   } fc;
 
+  typedef struct waypointV2
+  {
+    const static uint8_t waypointInitV2[MAX_CMD_ARRAY_SIZE];
+    const static uint8_t waypointUploadV2[MAX_CMD_ARRAY_SIZE];
+    const static uint8_t waypointUploadActionV2[MAX_CMD_ARRAY_SIZE];
+    const static uint8_t waypointStartStopV2[MAX_CMD_ARRAY_SIZE];
+    const static uint8_t waypointResumePauseV2[MAX_CMD_ARRAY_SIZE];
+    const static uint8_t waypointBreakRestoreV2[MAX_CMD_ARRAY_SIZE];
+    const static uint8_t waypointDownloadInitV2[MAX_CMD_ARRAY_SIZE];
+    const static uint8_t waypointDownloadPtV2[MAX_CMD_ARRAY_SIZE];
+    const static uint8_t waypointDownloadActionV2[MAX_CMD_ARRAY_SIZE];
+    const static uint8_t waypointSetGlobVelocityV2[MAX_CMD_ARRAY_SIZE];
+    const static uint8_t waypointGetGlobVelocityV2[MAX_CMD_ARRAY_SIZE];
+    const static uint8_t waypointGetMaxPtNumV2[MAX_CMD_ARRAY_SIZE];
+    const static uint8_t waypointGetWayptIdxInListV2[MAX_CMD_ARRAY_SIZE];
+    const static uint8_t waypointGetRemainSpaceV2[MAX_CMD_ARRAY_SIZE];
+    const static uint8_t waypointGetBreakInfoV2[MAX_CMD_ARRAY_SIZE];
+    const static uint8_t waypointGetStatePushDataV2[MAX_CMD_ARRAY_SIZE];
+    const static uint8_t waypointGetEventPushDataV2[MAX_CMD_ARRAY_SIZE];
+    const static uint8_t waypointGetInfoV2[MAX_CMD_ARRAY_SIZE];
+    const static uint8_t waypointGetMinMaxActionIDV2[MAX_CMD_ARRAY_SIZE];
+  }waypointV2;
+
   class CMDSet
   {
    public:
@@ -230,6 +253,7 @@ class V1ProtocolCMD : public ErrorCode
     const static uint8_t moBinocular  = 10;
     const static uint8_t battery      = 13;
     const static uint8_t rtk          = 15;
+    const static uint8_t waypointV2   = 34;
     const static uint8_t enterprise   = 25;
     const static uint8_t psdk         = 60;
     const static uint8_t vb           = 72;

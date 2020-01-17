@@ -128,6 +128,11 @@ public:
     uint8_t paramValue[8]; /*!< parameter value*/
   } ParamAckInternal;      // pack(1)
 
+  typedef struct SetHomeLocationAckInternal
+  {
+    uint8_t result;       /*!< set result 1:fail,0:success*/
+    uint8_t retCode;      /*!< set fail reason */
+  } SetHomeLocationAckInternal;      // pack(1)
   /*
    * ACK structures exposed to user
    */
@@ -155,6 +160,12 @@ public:
     bool updated = false;
   } ParamAck;  // pack(1)
 
+  typedef struct SetHomeLocationAck
+  {
+    Entry info;
+    SetHomeLocationAckInternal data;
+    bool updated = false;
+  }SetHomeLocationAck;
   /*! @brief This struct is returned from the DJI::OSDK::MFIO::getValue
    * blocking API
    *
@@ -349,6 +360,7 @@ public:
     WayPointVelocityInternal wpVelocityACK;
     MFIOGetInternal          mfioGetACK;
     ParamAckInternal         paramAckData;
+    SetHomeLocationAckInternal   setHomeLocationACK;
 
     /*
      * Push Data in ground-station mode

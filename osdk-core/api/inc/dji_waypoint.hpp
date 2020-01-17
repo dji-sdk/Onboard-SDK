@@ -400,6 +400,7 @@ public:
    *
    */
   inline dji::waypointv2::ActionState getPrevActionState() { return waypointV2Interface.getPrevActionState(); }
+
 #endif
 
 private:

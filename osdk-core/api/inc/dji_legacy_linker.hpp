@@ -165,12 +165,13 @@ public:
   /*!WayPoint index download command ACK
    * @note Download index settings*/
   ACK::WayPointIndex      waypointIndexACK;
-  //ACK::WayPoint2CommonRsp wayPoint2CommonRspACK;
+  ACK::WayPoint2CommonRsp wayPoint2CommonRspACK;
   /*!WayPoint add point command ACK*/
   ACK::WayPointAddPoint waypointAddPointACK;
   ACK::MFIOGet          mfioGetACK;
   ACK::ExtendedFunctionRsp extendedFunctionRspAck;
   ACK::ParamAck         paramAck;
+  ACK::SetHomeLocationAck setHomeLocationAck;
   /*! Heart Beat Ack*/
   ACK::HeartBeatAck     heartBeatAck;
 

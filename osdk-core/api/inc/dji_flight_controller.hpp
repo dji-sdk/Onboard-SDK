@@ -48,6 +48,7 @@ class FlightController {
   typedef FlightAssistant::RtkEnableData
       RtkEnabled; /*!< 0: disable, 1: enable*/
   typedef FlightAssistant::AvoidEnable AvoidEnable;
+  typedef FlightAssistant::UpwardsAvoidEnable UpwardsAvoidEnable;
   typedef FlightAssistant::GoHomeAltitude
       GoHomeHeight; /*!< unit:meter, range 20~500*/
   typedef struct FlightJoystick::ControlCommand JoystickCommand;
@@ -217,6 +218,58 @@ class FlightController {
     void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
                          AvoidEnable avoidEnable, UserData userData),
     UserData userData);
+
+
+  /*! @brief Set upwards avoidance enable or disable, blocking calls
+   *
+   *  @param UpwardsAvoidEnable UpwardsAvoidEnable  UPWARDS_AVOID_DISABLE: disable,
+   *  UPWARDS_AVOID_ENABLE: enable
+   *  @param timeout blocking timeout in seconds
+   *  @return ErrorCode::ErrorCodeType error code
+   */
+  ErrorCode::ErrorCodeType setUpwardsAvoidanceEnabledSync(UpwardsAvoidEnable upwardsAvoidEnable,
+                                                          int timeout);
+
+  /*! @brief Set upwards avoidance enable or disable, non-blocking calls
+   *
+   *  @param upwardsAvoidEnable UpwardsAvoidEnable  UPWARDS_AVOID_DISABLE: disable,
+   *  UPWARDS_AVOID_ENABLE: enable
+   *  @param UserCallBack callback function defined by user
+   *  @arg @b retCode  OSDK ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to transfer userData in when the callback
+   *  is called
+   *  @param userData when UserCallBack is called, used in UserCallBack
+   */
+  void setUpwardsAvoidanceEnabledAsync(UpwardsAvoidEnable upwardsAvoidEnable,
+                                       void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
+                                                            UserData userData),
+                                       UserData userData);
+
+  /*! @brief Get upwards avoidance enable or disable, blocking calls
+   *
+   *  @param upwardsAvoidEnable UpwardsAvoidEnable  UPWARDS_AVOID_DISABLE: disable,
+   *  UPWARDS_AVOID_ENABLE: enable
+   *  @param timeout blocking timeout in seconds
+   *  @return OSDK ErrorCode::ErrorCodeType error code
+   */
+  ErrorCode::ErrorCodeType getUpwardsAvoidanceEnabledSync(UpwardsAvoidEnable &upwardsAvoidEnable,
+                                                          int timeout);
+
+  /*! @brief Get upwards avoidance enable or disable, non-blocking calls
+   *
+   *  @param UserCallBack callback function defined by user
+   *  @arg @b retCode the OSDK ErrorCode::ErrorCodeType error code
+   *  @arg @b upwardsEnable UpwardsAvoidEnable, UPWARDS_AVOID_DISABLE: disable,
+   *  UPWARDS_AVOID_ENABLE: enable
+   *  @arg @b userData the interface to pass userData in when the callback is
+   *  called
+   *  @param userData when UserCallBack is called, used in UserCallBack
+   */
+  void getUpwardsAvoidanceEnabledAsync(void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
+                                                            UpwardsAvoidEnable upwardsEnable,
+                                                            UserData userData),
+                                       UserData userData);
+
 
   /*! @brief Set customized GPS(not RTK) home location, blocking calls.
    *

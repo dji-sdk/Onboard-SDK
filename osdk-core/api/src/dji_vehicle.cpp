@@ -661,7 +661,6 @@ Vehicle::initMissionManager()
   {
     return false;
   }
-
   return true;
 }
 
@@ -1482,6 +1481,11 @@ Vehicle::isM210V2()
   return false;
 }
 
+bool
+Vehicle::isM210V3()
+{
+  return (strncmp(versionData.hwVersion, Version::M210V3, 5) == 0)? true : false;
+}
 
 void
 Vehicle::initCMD_SetSupportMatrix()
