@@ -41,12 +41,6 @@ GimbalModule::GimbalModule(Linker *linker, PayloadIndexType payloadIndex,
 GimbalModule::~GimbalModule(){
 }
 
-
-typedef struct HandlerData {
-  void (*cb)(ErrorCode::ErrorCodeType retCode, UserData userData);
-  UserData udata;
-} HandlerData;
-
 ErrorCode::ErrorCodeType getLinkerErrorCode(E_OsdkStat cb_type) {
   switch (cb_type)
   {
@@ -61,13 +55,13 @@ ErrorCode::ErrorCodeType getLinkerErrorCode(E_OsdkStat cb_type) {
   }
 }
 
-void GimbalModule::handlerCB(const T_CmdInfo *cmdInfo,
-                     const uint8_t *cmdData,
-                     void *userData, E_OsdkStat cb_type) {
+void GimbalModule::callbackWrapperFunc(const T_CmdInfo *cmdInfo,
+                                       const uint8_t *cmdData,
+                                       void *userData, E_OsdkStat cb_type) {
   if(!userData)
     return;
 
-  HandlerData *handler = (HandlerData *)userData;
+  callbackWarpperHandler *handler = (callbackWarpperHandler *)userData;
   if ((cmdInfo) && (cmdInfo->dataLen >= sizeof(retCodeType))) {
     if (handler->cb) {
       ErrorCode::ErrorCodeType ret = getLinkerErrorCode(cb_type);
@@ -108,11 +102,11 @@ void GimbalModule::resetAsync(
                                                 V1GimbalIndex);
       cmdInfo.sender = linker->getLocalSenderId();
 
-      HandlerData *handler = (HandlerData *)malloc(sizeof(HandlerData));
+      callbackWarpperHandler *handler = (callbackWarpperHandler *)malloc(sizeof(callbackWarpperHandler));
       handler->cb = userCB;
       handler->udata = userData;
 
-      linker->sendAsync(&cmdInfo, (uint8_t *) &setting, handlerCB,
+      linker->sendAsync(&cmdInfo, (uint8_t *) &setting, callbackWrapperFunc,
                         handler, 500, 4);
     } else {
       if (userCB) userCB(ErrorCode::SysCommonErr::ReqNotSupported, userData);
@@ -182,11 +176,11 @@ void GimbalModule::rotateAsync(Rotation rotation,
         OSDK_COMMAND_DEVICE_ID(OSDK_COMMAND_DEVICE_TYPE_GIMBAL, V1GimbalIndex);
     cmdInfo.sender = linker->getLocalSenderId();
 
-    HandlerData *handler = (HandlerData *)malloc(sizeof(HandlerData));
+    callbackWarpperHandler *handler = (callbackWarpperHandler *)malloc(sizeof(callbackWarpperHandler));
     handler->cb = userCB;
     handler->udata = userData;
 
-    linker->sendAsync(&cmdInfo, (uint8_t *) &setting, handlerCB,
+    linker->sendAsync(&cmdInfo, (uint8_t *) &setting, callbackWrapperFunc,
                       handler, 500, 4);
   } else {
     if (userCB) userCB(ErrorCode::SysCommonErr::ReqNotSupported, userData);

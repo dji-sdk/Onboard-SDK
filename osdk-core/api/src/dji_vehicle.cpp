@@ -85,6 +85,7 @@ Vehicle::Vehicle(Linker* linker)
 #ifdef ADVANCED_SENSING
   , advancedSensing(NULL)
   , advSensingErrorPrintOnce(false)
+  , liveView(NULL)
 #endif
 {
   ackErrorCode.data = OpenProtocolCMD::ErrorCode::CommonACK::NO_RESPONSE_ERROR;
@@ -212,11 +213,31 @@ Vehicle::init()
   }
 
 #ifdef ADVANCED_SENSING
-  /*if (!initAdvancedSensing())
-  {
-    DERROR("Failed to initialize AdvancedSensing!\n");
+  /*! If M300 here will use a new linker to do usb bulk
+   * */
+  if (isM300()) {
+    /*! Linker add USB Bulk channel */
+    if (!linker->addUSBBulkChannel(0x001F, 0x2CA3, 3, 0x84, 0x03,
+                                   USB_BULK_LIVEVIEW_CHANNEL_ID)) {
+      DERROR("Failed to initialize USB Bulk Linker channel!");
+    } else {
+      DSTATUS("Start bulk channel for M300");
+    }
+  } else {
+    if (!initAdvancedSensing()) {
+      DERROR("Failed to initialize AdvancedSensing!\n");
+      return false;
+    } else {
+      DSTATUS("Start advanced sensing initalization for M210");
+    }
+  }
+
+  if (!initLiveView()) {
+    DERROR("Failed to initialize LiveView!\n");
     return false;
-  }*/
+  } else {
+    DSTATUS("Start LiveView initalization for M210");
+  }
 #endif
 
   return true;
@@ -334,6 +355,9 @@ Vehicle::~Vehicle()
 #ifdef ADVANCED_SENSING
   if (this->advancedSensing)
     delete this->advancedSensing;
+
+  if (this->liveView)
+    delete this->liveView;
 #endif
 
 }
@@ -732,6 +756,26 @@ Vehicle::initAdvancedSensing()
     return false;
   }
   this->advancedSensing->init();
+
+  return true;
+}
+
+bool
+Vehicle::initLiveView()
+{
+  if(this->liveView)
+  {
+    DDEBUG("vehicle->liveView already initalized!");
+    return true;
+  }
+
+  this->liveView = new (std::nothrow) LiveView(this);
+  if (this->liveView == 0)
+  {
+    DERROR("Failed to allocate memory for LiveView!\n");
+    return false;
+  }
+  //this->liveView->init();
 
   return true;
 }
@@ -1309,6 +1353,9 @@ Vehicle::getDroneVersion(uint32_t timeoutMs)
   T_CmdInfo ackInfo = {0};
   uint8_t data[1024];
   uint8_t  cmd_data = 0;
+
+  droneVersionACK.ack.info.cmd_set = OpenProtocolCMD::CMDSet::Activation::getVersion[0];
+  droneVersionACK.ack.info.cmd_id = OpenProtocolCMD::CMDSet::Activation::getVersion[1];
 
   versionData.version_ack =
     OpenProtocolCMD::ErrorCode::CommonACK::NO_RESPONSE_ERROR;
