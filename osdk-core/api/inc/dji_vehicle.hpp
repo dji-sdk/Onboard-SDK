@@ -57,7 +57,6 @@
 #include "dji_psdk_manager.hpp"
 #ifdef ADVANCED_SENSING
 #include "dji_advanced_sensing.hpp"
-#include "dji_liveview.hpp"
 #endif
 
 namespace DJI
@@ -113,7 +112,6 @@ public:
   GimbalManager*       gimbalManager;
 #ifdef ADVANCED_SENSING
   AdvancedSensing* advancedSensing;
-  LiveView*        liveView;
 #endif
 
   int functionalSetUp();
@@ -271,7 +269,6 @@ public:
   bool initOSDKHeartBeatThread();
 #ifdef ADVANCED_SENSING
   bool initAdvancedSensing();
-  bool initLiveView();
 #endif
 
 #ifdef ADVANCED_SENSING

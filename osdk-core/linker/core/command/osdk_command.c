@@ -147,13 +147,13 @@ E_OsdkStat OsdkCommand_CreateLiveViewTask() {
   osdkStat = OsdkChannel_GetChannelItemByChnId(OsdkChannel_GetBigDataListInstance(),
                                                USB_BULK_LIVEVIEW_CHANNEL_ID, &channelItem);
   if(osdkStat != OSDK_STAT_OK) {
-    OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "get liveview channel failed, errcode:%d", osdkStat);
+    OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "get h264_liveview_sample channel failed, errcode:%d", osdkStat);
     return osdkStat;
   }
   osdkStat = OsdkOsal_TaskCreate(&s_osdkLiveViewThread, OsdkCommand_BigDataRecvTask,
                                       OSDK_TASK_STACK_SIZE_DEFAULT, channelItem);
   if (osdkStat != OSDK_STAT_OK) {
-    OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "liveview task create error:%d", osdkStat);
+    OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "h264_liveview_sample task create error:%d", osdkStat);
     return osdkStat;
   }
   return OSDK_STAT_OK;

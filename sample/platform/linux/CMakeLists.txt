@@ -76,7 +76,6 @@ add_subdirectory(payload-3rd-party)
 add_subdirectory(payloads)
 
 if(ADVANCED_SENSING)
-    add_subdirectory(liveview)
     add_definitions(-DADVANCED_SENSING)
     message(STATUS "AdvancedSensing sample is enabled")
     add_subdirectory(advanced-sensing)

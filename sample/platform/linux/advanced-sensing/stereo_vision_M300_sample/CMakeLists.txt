@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-project(stereo-vision-demo-sample)
+project(stereo-vision-m300-sample)
 
 set(HELPER_FUNCTIONS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../common)
 add_executable(${PROJECT_NAME}

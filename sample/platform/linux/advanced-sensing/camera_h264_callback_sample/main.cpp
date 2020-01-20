@@ -113,22 +113,22 @@ main(int argc, char** argv) {
 
     switch (inputChar) {
       case 'a':
-        vehicle->liveView->startH264Stream(LiveView::OSDK_CAMERA_POSITION_FPV,
+        vehicle->advancedSensing->startH264Stream(LiveView::OSDK_CAMERA_POSITION_FPV,
                                            liveViewSampleCb,
                                            (void *) "FPV.h264");
         break;
       case 'b':
-        vehicle->liveView->startH264Stream(LiveView::OSDK_CAMERA_POSITION_NO_1,
+        vehicle->advancedSensing->startH264Stream(LiveView::OSDK_CAMERA_POSITION_NO_1,
                                            liveViewSampleCb,
                                            (void *) "MainCam.h264");
         break;
       case 'c':
-        vehicle->liveView->startH264Stream(LiveView::OSDK_CAMERA_POSITION_NO_2,
+        vehicle->advancedSensing->startH264Stream(LiveView::OSDK_CAMERA_POSITION_NO_2,
                                            liveViewSampleCb,
                                            (void *) "ViceCam.h264");
         break;
       case 'd':
-        vehicle->liveView->startH264Stream(LiveView::OSDK_CAMERA_POSITION_NO_3,
+        vehicle->advancedSensing->startH264Stream(LiveView::OSDK_CAMERA_POSITION_NO_3,
                                            liveViewSampleCb,
                                            (void *) "TopCam.h264");
         break;
