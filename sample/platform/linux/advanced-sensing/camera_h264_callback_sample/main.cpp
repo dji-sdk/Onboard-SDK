@@ -75,20 +75,8 @@ main(int argc, char** argv) {
     return -1;
   }
 
-  std::string sampleCase = linuxEnvironment.getEnvironment()->getSampleCase();
-  bool sampleCaseValidFlag = false;
-  char inputChar = 0;
-  if (sampleCase.size() == 1) {
-    if ((sampleCase <= "l") && (sampleCase >= "a")) {
-      inputChar = sampleCase[0];
-    } else {
-      inputChar = 0;
-      DERROR("sample_case is an invalid string !");
-      sleep(2);
-    }
-  }
-
   /*! sample loop start */
+  char inputChar = 0;
   while (true) {
     std::cout << std::endl;
     std::cout
@@ -103,13 +91,7 @@ main(int argc, char** argv) {
         << "| [d] Start getting top camera H264 stream sample                |"
         << std::endl;
 
-    if (inputChar != 0) {
-      sampleCaseValidFlag = true;
-      DSTATUS("Get inputChar from argv, case [%c] will be executed", inputChar);
-      sleep(3);
-    } else {
-      std::cin >> inputChar;
-    }
+    std::cin >> inputChar;
 
     switch (inputChar) {
       case 'a':
@@ -132,9 +114,25 @@ main(int argc, char** argv) {
                                            liveViewSampleCb,
                                            (void *) "TopCam.h264");
         break;
-
     }
 
-    return 0;
+    DSTATUS("Wait 10 second to record stream");
+    sleep(10);
+
+    switch (inputChar) {
+      case 'a':
+        vehicle->advancedSensing->stopH264Stream(LiveView::OSDK_CAMERA_POSITION_FPV);
+        break;
+      case 'b':
+        vehicle->advancedSensing->stopH264Stream(LiveView::OSDK_CAMERA_POSITION_NO_1);
+        break;
+      case 'c':
+        vehicle->advancedSensing->stopH264Stream(LiveView::OSDK_CAMERA_POSITION_NO_2);
+        break;
+      case 'd':
+        vehicle->advancedSensing->stopH264Stream(LiveView::OSDK_CAMERA_POSITION_NO_3);
+        break;
+
+    }
   }
 }

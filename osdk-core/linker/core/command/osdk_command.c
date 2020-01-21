@@ -36,6 +36,7 @@
 #include "osdk_osal.h"
 #include "osdk_protocol.h"
 #include "osdk_work.h"
+#include "osdk_command_instance.h"
 
 /* Private constants ---------------------------------------------------------*/
 #define OSDK_Send_POLL_TASK_FREQ (100)

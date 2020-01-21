@@ -255,22 +255,6 @@ LinuxSetup::initVehicle()
     std::cout << "Failed to initialize ACM Linker channel!" << std::endl;
   }
 
-#ifdef ADVANCED_SENSING
-  /*! Linker add USB Bulk channel */
-  if (!linker->addUSBBulkChannel(0x001F, 0x2CA3, 3, 0x84, 0x03,
-                                 USB_BULK_LIVEVIEW_CHANNEL_ID))
-  {
-    std::cout << "Failed to initialize h264_liveview_sample USB Bulk Linker channel!" << std::endl;
-  }
-
-  if (!linker->addUSBBulkChannel(0x001F, 0x2CA3, 6, 0x87, 0x05,
-                                 USB_BULK_ADVANCED_SENSING_CHANNEL_ID))
-  {
-    std::cout << "Failed to initialize advanced-sensing USB Bulk Linker channel!" << std::endl;
-  }
-
-#endif
-
   /*! Vehicle initialization */
   this->vehicle = new Vehicle(linker);
   if (this->vehicle == 0)
