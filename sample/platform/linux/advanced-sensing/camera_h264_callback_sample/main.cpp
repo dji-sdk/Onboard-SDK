@@ -68,7 +68,8 @@ void liveViewSampleCb(uint8_t* buf, int bufLen, void* userData) {
 int
 main(int argc, char** argv) {
   // Setup OSDK.
-  LinuxSetup linuxEnvironment(argc, argv);
+  bool enableAdvancedSensing = true;
+  LinuxSetup linuxEnvironment(argc, argv, enableAdvancedSensing);
   Vehicle *vehicle = linuxEnvironment.getVehicle();
   if (vehicle == nullptr) {
     std::cout << "Vehicle not initialized, exiting.\n";

@@ -60,15 +60,17 @@ int main(int argc, char **argv) {
   }
 
   /*! init gimbal modules for gimbalManager */
-  ret = vehicle->gimbalManager->initGimbalModule(
-      PAYLOAD_INDEX_0, "Sample_gimbal_1");
-  if (ret != ErrorCode::SysCommonErr::Success) {
+  ret = vehicle->gimbalManager->initGimbalModule(PAYLOAD_INDEX_0,
+                                                 "Sample_gimbal_1");
+  if (ret != ErrorCode::SysCommonErr::Success)
+  {
     DERROR("Init Camera module Sample_gimbal_1 failed.");
     ErrorCode::printErrorCodeMsg(ret);
   }
   ret = vehicle->gimbalManager->initGimbalModule(PAYLOAD_INDEX_1,
                                                  "Sample_gimbal_2");
-  if (ret != ErrorCode::SysCommonErr::Success) {
+  if (ret != ErrorCode::SysCommonErr::Success)
+  {
     DERROR("Init Camera module Sample_gimbal_2 failed.");
     ErrorCode::printErrorCodeMsg(ret);
   }

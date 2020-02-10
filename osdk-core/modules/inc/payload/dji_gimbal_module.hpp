@@ -64,10 +64,22 @@ class GimbalModule : public PayloadBase {
   typedef uint8_t retCodeType;
 
   typedef struct Rotation {
+    /*! rotation cooradiration
+     *  0 = execute angle command based on the previously set reference point
+     *  1 = execute angle command based on the current point
+     */
     uint8_t rotationMode;
+    /*! pitch angle in degree, unit : deg
+     */
     float pitch;
+    /*! roll angle in degree, unit : deg
+     */
     float roll;
+    /*! yaw angle in degree, unit : deg
+     */
     float yaw;
+    /*! execution time, unit : second
+     */
     double time;
   } Rotation;
 
