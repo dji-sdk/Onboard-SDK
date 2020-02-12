@@ -91,6 +91,12 @@ void STM32Setup::initVehicle() {
     DERROR("Failed to allocate memory for Vehicle!");
     return;
   }
+  
+  if (!this->vehicle->initLegacyLinker())
+  {
+    DERROR("Failed to initialize legacyLinker!\n");
+    return;
+  }
 }
 
 void

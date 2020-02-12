@@ -521,6 +521,10 @@ E_OsdkStat OsdkChannel_CommonSend(T_ChannelItem *channelItem,
                                     channelItem->sendFrameBuff, &length,
                                     cmdInfo, cmdData) != OSDK_STAT_OK) {
     OSDK_LOG_ERROR(MODULE_NAME_CHANNEL, "protocol pack error");
+		if (OsdkOsal_MutexUnlock(channelItem->sendMutex) != OSDK_STAT_OK) {
+			OSDK_LOG_ERROR(MODULE_NAME_CHANNEL, "mutex unlock error");
+			return OSDK_STAT_ERR;
+		}
     return OSDK_STAT_ERR;
   }
 
@@ -528,6 +532,10 @@ E_OsdkStat OsdkChannel_CommonSend(T_ChannelItem *channelItem,
                                channelItem->sendFrameBuff,
                                length) != OSDK_STAT_OK) {
     OSDK_LOG_ERROR(MODULE_NAME_CHANNEL, "hal send error");
+		if (OsdkOsal_MutexUnlock(channelItem->sendMutex) != OSDK_STAT_OK) {
+			OSDK_LOG_ERROR(MODULE_NAME_CHANNEL, "mutex unlock error");
+			return OSDK_STAT_ERR;
+		}
     return OSDK_STAT_ERR;
   }
 
@@ -624,15 +632,16 @@ E_OsdkStat OsdkChannel_BigDataRecv(T_ChannelItem *channelItem,
 E_OsdkStat OsdkChannel_CommonRecv(T_ChannelItem *channelItem,
                                   const T_CmdInfo *cmdInfo,
                                   const uint8_t *cmdData) {
-  E_OsdkStat osdkStat;
-  uint8_t dataRecv[channelItem->bufMaxSize];
-  uint32_t recvLen = 0;
-
   if(!channelItem) {
     OSDK_LOG_ERROR(MODULE_NAME_CHANNEL, "OsdkChannel_CommonRecv param check failed");
     return OSDK_STAT_ERR_PARAM;
   }
 
+  E_OsdkStat osdkStat;
+  //uint8_t dataRecv[channelItem->bufMaxSize];
+  uint8_t *dataRecv = OsdkOsal_Malloc(channelItem->bufMaxSize);
+  uint32_t recvLen = 0;
+	
   osdkStat =
       channelItem->halOps.Read(&channelItem->halObject, dataRecv, &recvLen);
   if (osdkStat == OSDK_STAT_OK) {
@@ -642,6 +651,8 @@ E_OsdkStat OsdkChannel_CommonRecv(T_ChannelItem *channelItem,
   } else {
     OSDK_LOG_WARN(MODULE_NAME_CHANNEL, "hal read error");
   }
+
+	OsdkOsal_Free(dataRecv);
 
   return osdkStat;
 }
@@ -663,7 +674,8 @@ static E_OsdkStat OsdkChannel_RecvProcess(T_ChannelItem *channelItem,
                                               &pFrame, &parseLen);
 
     if (OsdkStat == OSDK_STAT_OK) {
-      uint8_t buf[channelItem->bufMaxSize + sizeof(T_CmdInfo)];
+      //uint8_t buf[channelItem->bufMaxSize + sizeof(T_CmdInfo)];
+			uint8_t *buf = OsdkOsal_Malloc(channelItem->bufMaxSize + sizeof(T_CmdInfo));
       T_CmdInfo *cmdInfo = (T_CmdInfo *)buf;
       uint8_t *databuf = &buf[sizeof(T_CmdInfo)];
       if (channelItem->protocolOps.Unpack(channelItem->protocolExtData, pFrame,
@@ -692,6 +704,7 @@ static E_OsdkStat OsdkChannel_RecvProcess(T_ChannelItem *channelItem,
 		                    (timeFuncAfter - timeFuncBefore));
 #endif
       }
+			OsdkOsal_Free(buf);
     }
   }
 

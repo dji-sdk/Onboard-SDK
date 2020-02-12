@@ -374,8 +374,7 @@ Vehicle::initVersion()
 {
 #if STM32
   //! Non blocking call for STM32 as it does not support multi-thread
-  getDroneVersion();
-  DJI_TASK_SLEEP_MS(2000);
+  getDroneVersion(2000);
   if(this->getFwVersion() > 0)
   {
     return true;

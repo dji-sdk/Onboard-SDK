@@ -43,7 +43,7 @@ enum STM32_LINK_FD
 };
 
 /* Exported functions definition ---------------------------------------------*/
-E_OsdkStat OsdkSTM32_UartSendData(const T_HalObj *obj, const uint8_t *pBuf, uint16_t bufLen) {
+E_OsdkStat OsdkSTM32_UartSendData(const T_HalObj *obj, const uint8_t *pBuf, uint32_t bufLen) {
   while (bufLen--)
   {
     if (obj->uartObject.fd == UART_FD) {
@@ -58,7 +58,7 @@ E_OsdkStat OsdkSTM32_UartSendData(const T_HalObj *obj, const uint8_t *pBuf, uint
   return OSDK_STAT_OK;
 }
 
-E_OsdkStat OsdkSTM32_UartReadData(const T_HalObj *obj, uint8_t *pBuf, uint16_t *bufLen) {
+E_OsdkStat OsdkSTM32_UartReadData(const T_HalObj *obj, uint8_t *pBuf, uint32_t *bufLen) {
   uint8_t recvByte;
   
   if ((!pBuf) || (!bufLen)) {
@@ -92,11 +92,11 @@ E_OsdkStat OsdkSTM32_UartReadData(const T_HalObj *obj, uint8_t *pBuf, uint16_t *
   return OSDK_STAT_OK;
 }
 
-E_OsdkStat OsdkSTM32_UdpSendData(const T_HalObj *obj, const uint8_t *pBuf, uint16_t bufLen) {
+E_OsdkStat OsdkSTM32_UdpSendData(const T_HalObj *obj, const uint8_t *pBuf, uint32_t bufLen) {
   return OSDK_STAT_ERR;
 }
 
-E_OsdkStat OsdkSTM32_UdpReadData(const T_HalObj *obj, uint8_t *pBuf, uint16_t *bufLen) {
+E_OsdkStat OsdkSTM32_UdpReadData(const T_HalObj *obj, uint8_t *pBuf, uint32_t *bufLen) {
   return OSDK_STAT_ERR;
 }
 
