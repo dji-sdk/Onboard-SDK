@@ -169,7 +169,7 @@ monitoredTakeOff()
   do
   {
     //! Two seconds delay
-    delay_nms(2000);
+    delay_nms(500);
 
     if (v->getFwVersion() != Version::M100_31)
     {

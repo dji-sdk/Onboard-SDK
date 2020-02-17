@@ -34,6 +34,12 @@ extern "C" {
 #endif
 #include "dji_log.hpp"
 
+#ifdef OSDK_USB_DEBUG
+#define USB_DEBUG DSTATUS
+#else
+#define USB_DEBUG
+#endif
+
 extern USB_OTG_CORE_HANDLE USB_OTG_Core;
 extern USBH_HOST  USB_Host;
 extern CDC_LineCodingTypeDef         CDC_GetLineCode;
@@ -71,65 +77,65 @@ static void CDC_SetInitialValue( void);
 
 void USBH_USR_Init(void)
 {
-	DSTATUS("USB OTG FS MSC Host");
-	DSTATUS("> USB Host library started.");
-	DSTATUS("  USB Host Library v2.2.0");
+	USB_DEBUG("USB OTG FS MSC Host");
+	USB_DEBUG("> USB Host library started.");
+	USB_DEBUG("  USB Host Library v2.2.0");
 
 }
 
 void USBH_USR_DeviceAttached(void)
 {
-	DSTATUS("USBH_USR_DeviceAttached!");
+	USB_DEBUG("USBH_USR_DeviceAttached!");
 }
 
 void USBH_USR_DeviceDisconnected (void)
 {
-	DSTATUS("USBH_USR_DeviceDisconnected!");
+	USB_DEBUG("USBH_USR_DeviceDisconnected!");
 }
 
 void USBH_USR_ResetDevice(void)
 {
-	DSTATUS("USBH_USR_ResetDevice");
+	USB_DEBUG("USBH_USR_ResetDevice");
 }
 
 void USBH_USR_DeviceSpeedDetected(uint8_t DeviceSpeed)
 {
 	if(DeviceSpeed==HPRT0_PRTSPD_HIGH_SPEED)
 	{
-		DSTATUS("(HS)USB Device Found!");
+		USB_DEBUG("(HS)USB Device Found!");
  	}
 	else if(DeviceSpeed==HPRT0_PRTSPD_FULL_SPEED)
 	{
-		DSTATUS("(FS)USB Device Found!");
+		USB_DEBUG("(FS)USB Device Found!");
 	}
 	else if(DeviceSpeed==HPRT0_PRTSPD_LOW_SPEED)
 	{
-		DSTATUS("(LS)USB Device Found!");
+		USB_DEBUG("(LS)USB Device Found!");
 	}
 	else
 	{
-		DSTATUS("Device Error");
+		USB_DEBUG("Device Error");
 	}
 }
 
 void USBH_USR_Device_DescAvailable(void *DeviceDesc)
 {
 	USBH_DevDesc_TypeDef DevDesc = *(USBH_DevDesc_TypeDef *)DeviceDesc;
-	DSTATUS("bDescriptorType    : %02Xh" , (uint8_t)DevDesc.bDescriptorType);
-	DSTATUS("VID                : %04Xh" , (uint16_t)DevDesc.idVendor);
-	DSTATUS("PID                : %04Xh" , (uint16_t)DevDesc.idProduct);
-	DSTATUS("bcdUSB             : %04Xh" , (uint16_t)DevDesc.bcdUSB);
-	DSTATUS("bDeviceClass       : %04Xh" , (uint8_t)DevDesc.bDeviceClass);
-	DSTATUS("bDeviceSubClass    : %04Xh" , (uint8_t)DevDesc.bDeviceSubClass);
-	DSTATUS("bDeviceProtocol    : %04Xh" , (uint8_t)DevDesc.bDeviceProtocol);
-	DSTATUS("bMaxPacketSize     : %04Xh" , (uint8_t)DevDesc.bMaxPacketSize);
-	DSTATUS("iManufacturer      : %04Xh" , (uint8_t)DevDesc.iManufacturer);
-	DSTATUS("bNumConfigurations : %04Xh" , (uint8_t)DevDesc.bNumConfigurations);
+	USB_DEBUG("bDescriptorType    : %02Xh" , (uint8_t)DevDesc.bDescriptorType);
+	USB_DEBUG("VID                : %04Xh" , (uint16_t)DevDesc.idVendor);
+	USB_DEBUG("PID                : %04Xh" , (uint16_t)DevDesc.idProduct);
+	USB_DEBUG("bcdUSB             : %04Xh" , (uint16_t)DevDesc.bcdUSB);
+	USB_DEBUG("bDeviceClass       : %04Xh" , (uint8_t)DevDesc.bDeviceClass);
+	USB_DEBUG("bDeviceSubClass    : %04Xh" , (uint8_t)DevDesc.bDeviceSubClass);
+	USB_DEBUG("bDeviceProtocol    : %04Xh" , (uint8_t)DevDesc.bDeviceProtocol);
+	USB_DEBUG("bMaxPacketSize     : %04Xh" , (uint8_t)DevDesc.bMaxPacketSize);
+	USB_DEBUG("iManufacturer      : %04Xh" , (uint8_t)DevDesc.iManufacturer);
+	USB_DEBUG("bNumConfigurations : %04Xh" , (uint8_t)DevDesc.bNumConfigurations);
 }
 
 void USBH_USR_DeviceAddressAssigned(void)
 {
-	DSTATUS("USBH_USR_DeviceAddressAssigned!");
+	USB_DEBUG("USBH_USR_DeviceAddressAssigned!");
 }
 
 void USBH_USR_Configuration_DescAvailable(USBH_CfgDesc_TypeDef * cfgDesc,
@@ -139,83 +145,83 @@ void USBH_USR_Configuration_DescAvailable(USBH_CfgDesc_TypeDef * cfgDesc,
 
 	USBH_InterfaceDesc_TypeDef *id;
 	id = itfDesc;
-	DSTATUS("USBH_USR_Configuration_DescAvailable ...");
+	USB_DEBUG("USBH_USR_Configuration_DescAvailable ...");
 	if((*id).bInterfaceClass==0x08)
 	{
-		DSTATUS("MSC Interface!");
+		USB_DEBUG("MSC Interface!");
 	}else if((*id).bInterfaceClass==0x03)
 	{
-		DSTATUS("HID Interface!");
+		USB_DEBUG("HID Interface!");
 	}
 	else if((*id).bInterfaceClass  == COMMUNICATION_DEVICE_CLASS_CODE)
 	{
-		DSTATUS("CDC Interface!");
+		USB_DEBUG("CDC Interface!");
 	}
 	else
 	{
-		DSTATUS("Unsupport Device");
-		DSTATUS("bInterfaceClass is %04Xh",(*id).bInterfaceClass);
+		USB_DEBUG("Unsupport Device");
+		USB_DEBUG("bInterfaceClass is %04Xh",(*id).bInterfaceClass);
 	}
 }
 
 void USBH_USR_Manufacturer_String(void *ManufacturerString)
 {
-	DSTATUS("Manufacturer: %s",(char *)ManufacturerString);
+	USB_DEBUG("Manufacturer: %s",(char *)ManufacturerString);
 }
 
 void USBH_USR_Product_String(void *ProductString)
 {
-	DSTATUS("Product: %s",(char *)ProductString);
+	USB_DEBUG("Product: %s",(char *)ProductString);
 }
 
 void USBH_USR_SerialNum_String(void *SerialNumString)
 {
-	DSTATUS("Serial Number: %s",(char *)SerialNumString);
+	USB_DEBUG("Serial Number: %s",(char *)SerialNumString);
 }
 
 void USBH_USR_EnumerationDone(void)
 {
-	DSTATUS("EnumerationDone!");
+	USB_DEBUG("EnumerationDone!");
 	UserCb.Receive = CDC_OutputData;
 }
 
 void USBH_USR_DeviceNotSupported(void)
 {
-	DSTATUS("DeviceNotSupported!");
+	USB_DEBUG("DeviceNotSupported!");
 }
 
 USBH_USR_Status USBH_USR_UserInput(void)
 {
-	DSTATUS("USBH_USR_UserInput!");
+	USB_DEBUG("USBH_USR_UserInput!");
 	CDCUsrState = CDC_DEMO_IDLE;
 	return USBH_USR_RESP_OK;
 }
 
 void USBH_USR_OverCurrentDetected (void)
 {
-	DSTATUS("USBH_USR_OverCurrentDetected");
+	USB_DEBUG("USBH_USR_OverCurrentDetected");
 }
 
 void USBH_USR_DeInit(void)
 {
-	DSTATUS("USBH_USR_DeInit!");
+	USB_DEBUG("USBH_USR_DeInit!");
 }
 
 void USBH_USR_UnrecoveredError (void)
 {
-	DSTATUS("USBH_USR_UnrecoveredError!!");
+	USB_DEBUG("USBH_USR_UnrecoveredError!!");
 }
 int USBH_USR_Application(void)
 {
 	if(CDCUsrState == CDC_DEMO_IDLE)
 	{
-		DSTATUS("USBH_USR_Application CDC_DEMO_IDLE!!!");
+		USB_DEBUG("USBH_USR_Application CDC_DEMO_IDLE!!!");
 		CDCUsrState = CDC_DEMO_CONFIGURATION;
 		CDC_StartReception(&USB_OTG_Core);
 	}
 	else if(CDCUsrState == CDC_DEMO_CONFIGURATION)
 	{
-		DSTATUS("USBH_USR_Application CDC_DEMO_CONFIGURATION!!!");
+		USB_DEBUG("USBH_USR_Application CDC_DEMO_CONFIGURATION!!!");
 		CDC_SetInitialValue();
 		CDCUsrState = CDC_DEMO_SEND;
 	}
@@ -246,12 +252,12 @@ static void CDC_OutputData(uint8_t *ptr)
   BaseType_t xHigherPriorityTaskWoken = 0;
   CDC_Xfer_TypeDef *cdc_Data = (CDC_Xfer_TypeDef *)ptr;
   #if 0
-	DSTATUS("receive cdc data:");
+	USB_DEBUG("receive cdc data:");
 	for (int i = 0; i < cdc_Data->DataLength; i++)
   {
-    DSTATUS(" %02X", cdc_Data->pEmptyBuff[i]);
+    USB_DEBUG(" %02X", cdc_Data->pEmptyBuff[i]);
   }
-  DSTATUS("");
+  USB_DEBUG("");
   #endif
   for (int i = 0; i < cdc_Data->DataLength; i++)
   {
@@ -266,10 +272,10 @@ static void CDC_SetInitialValue(void)
 	CDC_SetLineCode.b.bDataBits = 8;
 	CDC_SetLineCode.b.bParityType = 0;
 	CDC_SetLineCode.b.bCharFormat = 0;
-	DSTATUS("dwDTERate   : %d", CDC_SetLineCode.b.dwDTERate);
-  DSTATUS("bDataBits   : %d", CDC_SetLineCode.b.bDataBits);
-  DSTATUS("bParityType : %d", CDC_SetLineCode.b.bParityType);
-  DSTATUS("bCharFormat : %d", CDC_SetLineCode.b.bCharFormat);
+	USB_DEBUG("dwDTERate   : %d", CDC_SetLineCode.b.dwDTERate);
+	USB_DEBUG("bDataBits   : %d", CDC_SetLineCode.b.bDataBits);
+	USB_DEBUG("bParityType : %d", CDC_SetLineCode.b.bParityType);
+	USB_DEBUG("bCharFormat : %d", CDC_SetLineCode.b.bCharFormat);
 	CDC_ChangeStateToIssueSetConfig(&USB_OTG_Core, &USB_Host);
 }
 

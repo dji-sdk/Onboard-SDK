@@ -1237,6 +1237,7 @@ Vehicle::sendHeartbeatToFCFunc(Linker *linker)
 
 void *
 Vehicle::sendHeartbeatToFCTask(void *arg) {
+    OsdkOsal_TaskSleepMs(1000);
     DSTATUS("OSDK send heart beat to fc task created.");
     if(arg) {
       Linker *linker = (Linker *) arg;

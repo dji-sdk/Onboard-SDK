@@ -290,7 +290,7 @@ runHotpointMission(int initialRadius)
     return false;
   }*/
 
-  delay_nms(4000);
+  delay_nms(20000);
 
   // Pause
   printf("Pause for 5s\n");
