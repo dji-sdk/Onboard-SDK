@@ -33,6 +33,7 @@
 /*TODO:flight_control_sample will by replace by flight_sample in the future*/
 #include "flight_control_sample.hpp"
 #include "flight_sample.hpp"
+#include "dji_linux_helpers.hpp"
 
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;

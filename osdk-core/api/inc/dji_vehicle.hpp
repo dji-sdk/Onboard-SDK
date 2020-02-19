@@ -37,7 +37,6 @@
 #include "dji_type.hpp"
 #include "dji_vehicle_callback.hpp"
 #include "dji_version.hpp"
-#include "dji_linker.hpp"
 #include "dji_legacy_linker.hpp"
 #include "dji_log.hpp"
 #include "dji_broadcast.hpp"
@@ -63,9 +62,6 @@ namespace DJI
 {
 namespace OSDK
 {
-
-
-
 /*! @brief A top-level encapsulation of a DJI drone/FC connected to your OES.
  *
  * @details This class instantiates objects for all features your drone/FC

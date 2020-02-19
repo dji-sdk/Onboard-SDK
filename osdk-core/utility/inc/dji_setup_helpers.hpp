@@ -1,12 +1,11 @@
-/*! @file dji_linux_helpers.hpp
- *  @version 3.3
- *  @date Jun 05 2017
+/*! @file dji_setup_helpers.hpp
+ *  @version 4.0
+ *  @date Feb 19 2020
  *
  *  @brief
- *  Helper functions to handle user configuration parsing, version query and
- * activation.
+ *  Base helper to handle user set up environment.
  *
- *  @Copyright (c) 2017 DJI
+ *  @Copyright (c) 2020 DJI
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,48 +27,41 @@
  *
  */
 
-#ifndef ONBOARDSDK_HELPERS_H
-#define ONBOARDSDK_HELPERS_H
+#ifndef ONBOARDSDK_DJI_SETUP_HELPERS_H
+#define ONBOARDSDK_DJI_SETUP_HELPERS_H
 
-#include <iostream>
-#include <fstream>
-#include <dji_linux_environment.hpp>
-#include <dji_vehicle.hpp>
-#include <dji_platform.hpp>
-#include <dji_setup_helpers.hpp>
 
-using namespace std;
+#include "osdk_channel.h"
 
-class LinuxSetup : private Setup {
-public:
-  LinuxSetup(int argc, char **argv, bool enableAdvancedSensing = false);
-  ~LinuxSetup();
+namespace DJI
+{
+namespace OSDK {
+/*! forward declaration*/
+class Linker;
+class Vehicle;
 
-public:
-  void setupEnvironment(int argc, char** argv);
-  bool initVehicle();
+class Setup {
+ public:
+  Setup(bool enableAdvancedSensing = false);
+  ~Setup();
 
-public:
-  DJI_Environment *getEnvironment() {
-    return this->environment;
-  }
+ public:
+  bool initLinker();
+  bool addUartChannel(const char *device, uint32_t baudrate,
+                      E_ChannelIDType id);
+  bool addUdpChannel(const char *addr, uint16_t port, E_ChannelIDType id);
+  bool addUSBBulkChannel(uint16_t pid, uint16_t vid, uint16_t num,
+                         uint16_t epIn, uint16_t epOut, E_ChannelIDType id);
 
-  Vehicle::ActivateData *getActivateData() {
-    return &this->activateData;
-  }
+  virtual bool initVehicle();
+  virtual void setupEnvironment();
 
-  Vehicle *getVehicle() {
-    return vehicle;
-  }
-
-  Linker *getLinker() {
-    return linker;
-  }
-
-private:
-  uint32_t functionTimeout;
-  Vehicle::ActivateData activateData;
-  DJI_Environment* environment;
+ public:
+  Vehicle *vehicle;
+  Linker *linker;
+  bool useAdvancedSensing;
 };
+}
+}
 
-#endif // ONBOARDSDK_HELPERS_H
+#endif // ONBOARDSDK_DJI_SETUP_HELPERS_H

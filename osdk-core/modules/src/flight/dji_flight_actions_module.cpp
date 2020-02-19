@@ -30,6 +30,7 @@
 #include <dji_vehicle.hpp>
 #include "dji_flight_link.hpp"
 #include "osdk_device_id.h"
+#include "dji_linker.hpp"
 
 using namespace DJI;
 using namespace DJI::OSDK;

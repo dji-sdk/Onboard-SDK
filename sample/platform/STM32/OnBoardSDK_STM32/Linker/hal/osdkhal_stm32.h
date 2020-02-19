@@ -34,7 +34,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "osdk_typedef.h"
-#include "osdk_logger_internal.h"
+#include "osdk_logger.h"
 
 #define UART_PORT "UART"
 #define ACM_PORT  "ACM"

@@ -27,6 +27,7 @@
  */
 
 #include "dji_gimbal_module.hpp"
+#include "dji_linker.hpp"
 #include "dji_legacy_linker.hpp"
 
 #include <vector>
@@ -55,14 +56,15 @@ ErrorCode::ErrorCodeType getLinkerErrorCode(E_OsdkStat cb_type) {
   }
 }
 
-void GimbalModule::callbackWrapperFunc(const T_CmdInfo *cmdInfo,
+void callbackWrapperFunc(const T_CmdInfo *cmdInfo,
                                        const uint8_t *cmdData,
                                        void *userData, E_OsdkStat cb_type) {
   if(!userData)
     return;
 
-  callbackWarpperHandler *handler = (callbackWarpperHandler *)userData;
-  if ((cmdInfo) && (cmdInfo->dataLen >= sizeof(retCodeType))) {
+  GimbalModule::callbackWarpperHandler
+      *handler = (GimbalModule::callbackWarpperHandler *) userData;
+  if ((cmdInfo) && (cmdInfo->dataLen >= sizeof(uint8_t))) {
     if (handler->cb) {
       ErrorCode::ErrorCodeType ret = getLinkerErrorCode(cb_type);
       if(ret != ErrorCode::SysCommonErr::Success) {

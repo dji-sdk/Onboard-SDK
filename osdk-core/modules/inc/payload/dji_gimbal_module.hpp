@@ -35,6 +35,11 @@
 
 namespace DJI {
 namespace OSDK {
+
+/*! Forward Declaration
+ */
+class Linker;
+
 /*! @brief gimbal module
  */
 class GimbalModule : public PayloadBase {
@@ -214,9 +219,6 @@ class GimbalModule : public PayloadBase {
 
  private:
   Linker *linker;
-  static void callbackWrapperFunc(const T_CmdInfo *cmdInfo,
-                                  const uint8_t *cmdData,
-                                  void *userData, E_OsdkStat cb_type);
 
 }; /* GimbalModule */
 }  // namespace OSDK

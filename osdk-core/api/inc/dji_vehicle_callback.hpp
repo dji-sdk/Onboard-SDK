@@ -32,7 +32,6 @@
 #include "dji_ack.hpp"
 #include "dji_log.hpp"
 #include "dji_type.hpp"
-#include "dji_linker.hpp"
 
 namespace DJI
 {

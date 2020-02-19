@@ -27,7 +27,7 @@
  *
  */
 
-#include <dji_linux_helpers.hpp>
+#include "dji_linux_helpers.hpp"
 #include "osdkhal_linux.h"
 #include "osdkosal_linux.h"
 
@@ -80,14 +80,10 @@ static T_OsdkOsalHandler osalHandler = {
 
 using namespace DJI::OSDK;
 
-LinuxSetup::LinuxSetup(int argc, char** argv, bool enableAdvancedSensing)
+LinuxSetup::LinuxSetup(int argc, char **argv, bool enableAdvancedSensing)
+    : Setup(enableAdvancedSensing)
 {
-  this->functionTimeout     = 1; // s
-  this->vehicle             = nullptr;
-  this->platform            = nullptr;
-  this->environment         = nullptr;
-  this->useAdvancedSensing  = enableAdvancedSensing;
-
+  functionTimeout = 1; //second
   setupEnvironment(argc, argv);
   initVehicle();
 }
@@ -164,8 +160,6 @@ LinuxSetup::setupEnvironment(int argc, char** argv)
     }
   }
 
-
-
   if (!config_file_path.empty())
   {
     std::ifstream fStream(config_file_path.c_str());
@@ -200,66 +194,45 @@ LinuxSetup::setupEnvironment(int argc, char** argv)
     std::cout << "Set sample case:" << sample_case_name.c_str() << std::endl;
     this->environment->setSampleCase(sample_case_name);
   }
-
-  /*  this->testSerialDevice = new LinuxSerialDevice(
-      environment->getDevice().c_str(), environment->getBaudrate());
-    testSerialDevice->init();
-    bool setupStatus = validateSerialPort();
-
-    if (!setupStatus)
-    {
-      delete (testSerialDevice);
-      delete (environment);
-      return NULL;
-    }
-    else
-    {
-      delete (testSerialDevice);
-    }
-  */
 }
 
-void
+bool
 LinuxSetup::initVehicle()
 {
   ACK::ErrorCode ack;
 
   /*! Linker initialization */
-  Linker *linker = new (std::nothrow) Linker();
-  if (linker == 0)
-  {
-    std::cout << "Failed to allocate memory for Linker!" << std::endl;
-    goto err;
-  }
-
-  if (!linker->init())
-  {
-    std::cout << "Failed to initialize Linker!" << std::endl;
-    goto err;
+  if (!initLinker()) {
+    DERROR("Failed to initialize Linker");
+    return false;
   }
 
   /*! Linker add uart channel */
-  if (!linker->addUartChannel(environment->getDevice().c_str(),
-                              environment->getBaudrate(),
-                              FC_UART_CHANNEL_ID))
-  {
-    std::cout << "Failed to initialize Linker channel" << std::endl;
-    goto err;
+  if (!addUartChannel(environment->getDevice().c_str(),
+                      environment->getBaudrate(),
+                      FC_UART_CHANNEL_ID)) {
+    DERROR("Failed to initialize Linker channel");
+    return false;
   }
 
   /*! Linker add USB acm channel */
-  if (!linker->addUartChannel(environment->getDeviceAcm().c_str(),
-                              environment->getACMDefaultBaudrate(),
-                              USB_ACM_CHANNEL_ID))
-  {
-    std::cout << "Failed to initialize ACM Linker channel!" << std::endl;
+  if (!addUartChannel(environment->getDeviceAcm().c_str(),
+                      environment->getACMDefaultBaudrate(),
+                      USB_ACM_CHANNEL_ID)) {
+    DERROR("Failed to initialize ACM Linker channel!");
   }
 
   /*! Vehicle initialization */
-  this->vehicle = new Vehicle(linker);
-  if (this->vehicle == 0)
+  if (!linker)
   {
-    std::cout << "Failed to allocate memory for Linker!" << std::endl;
+    DERROR("Linker get failed.");
+    goto err;
+  }
+
+  vehicle = new Vehicle(linker);
+  if (!vehicle)
+  {
+    DERROR("Vehicle create failed.");
     goto err;
   }
 
@@ -277,13 +250,12 @@ LinuxSetup::initVehicle()
     goto err;
   }
 
-  return;
+  return true;
 
 err:
-  delete (vehicle);
-  delete (environment);
-  delete (linker);
-  this->platform    = nullptr;
+  if (vehicle) delete (vehicle);
+  if (environment) delete (environment);
   this->environment = nullptr;
   this->vehicle     = nullptr;
+  return false;
 }

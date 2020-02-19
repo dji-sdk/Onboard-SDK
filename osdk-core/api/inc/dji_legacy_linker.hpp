@@ -112,12 +112,6 @@ public:
   //! Destructor
   ~LegacyLinker();
 
-  typedef struct legacyAdaptingData {
-    VehicleCallBack cb;
-    UserData udata;
-    Vehicle *vehicle;
-  } legacyAdaptingData;
-
   /************************** Init ******************************************/
 public:
   void init();
@@ -137,20 +131,10 @@ public:
 
  private:
   Vehicle* vehicle;
-  static void legacyAdaptingAsyncCB(const T_CmdInfo *cmdInfo,
-                                    const uint8_t *cmdData,
-                                    void *userData, E_OsdkStat cb_type);
-
-  static E_OsdkStat legacyAdaptingRegisterCB(struct _CommandHandle *cmdHandle,
-                                             const T_CmdInfo *cmdInfo,
-                                             const uint8_t *cmdData,
-                                             void *userData);
-  static RecvContainer recvFrameAdapting(const T_CmdInfo &cmdInfo,
-                                         const uint8_t *cmdData);
-  void* decodeAck(E_OsdkStat ret, T_CmdInfo &ackInfo, uint8_t *ackData);
 
   void initX5SEnableThread();
-
+  void *decodeAck(E_OsdkStat ret, uint8_t cmdSet, uint8_t cmdId,
+                  RecvContainer recvFrame);
  private:
   uint8_t rawVersionACK[MAX_ACK_SIZE];
 
@@ -175,12 +159,6 @@ public:
   /*! Heart Beat Ack*/
   ACK::HeartBeatAck     heartBeatAck;
 
-
-  typedef struct CmdListData {
-    T_RecvCmdHandle recvCmdHandle;
-    T_RecvCmdItem cmdItemList;
-  } CmdListData;
-  static CmdListData cmdListData[];
   T_OsdkTaskHandle legacyX5SEnableHandle;
   static void *legacyX5SEnableTask(void *arg);
 }; // class LegacyLinker
