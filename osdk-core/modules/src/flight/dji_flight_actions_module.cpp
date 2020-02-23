@@ -30,6 +30,7 @@
 #include <dji_vehicle.hpp>
 #include "dji_flight_link.hpp"
 #include "osdk_device_id.h"
+#include "dji_linker.hpp"
 
 using namespace DJI;
 using namespace DJI::OSDK;
@@ -42,6 +43,7 @@ FlightActions::FlightActions(Vehicle* vehicle) {
 FlightActions::~FlightActions() { delete this->flightLink; }
 
 bool FlightActions::setUSBFlightOn(Vehicle* v, bool en) {
+  uint8_t retryTimes = 4;
   uint16_t l = 1;
   uint16_t h = 1;
   uint16_t c = (h << 8) | (l & 0xff);
@@ -67,13 +69,21 @@ bool FlightActions::setUSBFlightOn(Vehicle* v, bool en) {
   cmdInfo.addr = GEN_ADDR(0, ADDR_V1_COMMAND_INDEX);
   cmdInfo.receiver = OSDK_COMMAND_FC_DEVICE_ID;
   cmdInfo.sender = v->linker->getLocalSenderId();
+retryUSBFlight:
+  DSTATUS("Trying to set usb-connected-flight as [%s]", en ? "enable" : "disable");
   E_OsdkStat ret =
-      v->linker->sendSync(&cmdInfo, (uint8_t*)&data, &ackInfo, cbData, 500, 3);
-  if ((ret != OSDK_STAT_OK) && (cbData[0] == 0x00)) {
-    DERROR("Configure usb-connected-flight on failed! Cannot take off !");
-    return false;
+      v->linker->sendSync(&cmdInfo, (uint8_t*)&data, &ackInfo, cbData, 1000, 3);
+  if ((ret != OSDK_STAT_OK) || (cbData[0] == 0x00)) {
+    retryTimes--;
+    if (retryTimes > 0) {
+      OsdkOsal_TaskSleepMs(1000);
+      goto retryUSBFlight;
+    } else {
+      DERROR("Configure usb-connected-flight failed! Cannot take off !");
+      return false;
+    }
   } else {
-    DSTATUS("Configure usb-connected-flight on successfully.");
+    DSTATUS("Configure usb-connected-flight successfully.");
     return true;
   }
 }

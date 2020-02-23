@@ -37,10 +37,13 @@ const static T_ProtocolOps protocolOps[] = {
     {PROTOCOL_V1, OsdkProtocol_v1Init, OsdkProtocol_v1Deinit, OsdkProtocol_v1Pack,
      OsdkProtocol_v1Parse, OsdkProtocol_v1Unpack,
      OsdkProtocol_v1GetLen, NULL},
+#ifdef __linux__    
     {PROTOCOL_USBMC, OsdkProtocol_usbmcInit, OsdkProtocol_usbmcDeinit,
      OsdkProtocol_usbmcPack, OsdkProtocol_usbmcParse,
      OsdkProtocol_usbmcUnpack, OsdkProtocol_usbmcGetLen,
-     NULL}};
+     NULL}
+#endif
+     };
 /* Private types ------------------------------------------------------------*/
 
 /* Exported functions definition ---------------------------------------------*/

@@ -35,6 +35,14 @@
 #include "dji_telemetry.hpp"
 #include "dji_vehicle_callback.hpp"
 
+#ifdef __linux__
+#include <cstring>
+#elif STM32
+//! handle array of characters
+#include <stdlib.h>
+#include <string.h>
+#endif
+
 namespace DJI
 {
 namespace OSDK

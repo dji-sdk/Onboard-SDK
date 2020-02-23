@@ -56,25 +56,11 @@ static E_OsdkStat OsdkUser_Console(const uint8_t *data, uint16_t dataLen) {
 }
 
 void STM32Setup::initVehicle() {
-  /*! Linker initialization */
-  Linker *linker = new (std::nothrow) Linker();
-  if (!linker) {
-    DERROR("Failed to allocate memory for Linker!");
-    this->vehicle = NULL;
-    return;
-  }
-
-  if (!linker->init()) {
-    DERROR("Failed to initialize Linker!");
-    delete linker;
-    this->vehicle = NULL;
-    return;
-  }
-
+  /*! Linker add uart channel */
   for (int i = 0; i < (sizeof(uartChnParams) / sizeof(UartChannelInitParams)); i++) {
-    if (!linker->addUartChannel(uartChnParams[i].device,
-                                uartChnParams[i].baudrate,
-                                uartChnParams[i].id)) {
+    if (!Platform::instance().addUartChannel(uartChnParams[i].device,
+                                             uartChnParams[i].baudrate,
+                                             uartChnParams[i].id)) {
       DERROR("Failed to initialize Linker uart channel :");
       DERROR("device : %s, baudrate : %d, channel id : 0x%08X", uartChnParams[i].device,
              uartChnParams[i].baudrate, uartChnParams[i].id);
@@ -86,9 +72,23 @@ void STM32Setup::initVehicle() {
   }
 
   /*! Vehicle initialization */
+  Linker *linker = Platform::instance().getLinker();
+  if (linker == 0)
+  {
+    DERROR("Linker get failed.");
+    return;
+  }
+
+  /*! Vehicle initialization */
   this->vehicle = new Vehicle(linker);
   if (!this->vehicle) {
     DERROR("Failed to allocate memory for Vehicle!");
+    return;
+  }
+
+  if (!this->vehicle->initLegacyLinker())
+  {
+    DERROR("Failed to initialize legacyLinker!\n");
     return;
   }
 }

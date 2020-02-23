@@ -23,8 +23,6 @@
 cmake_minimum_required(VERSION 2.8)
 project(djiosdk-liveview-sample)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread -g -O0")
-
 # Try to see if user has OpenCV installed
 # if yes, default callback will display the image
 find_package( OpenCV QUIET )
@@ -38,26 +36,19 @@ else()
     message( STATUS "Did not find OpenCV in the system, image data is inside RecvContainer as raw data")
 endif ()
 
-include_directories(${ONBOARDSDK_SOURCE}/api/inc)
-include_directories(${ONBOARDSDK_SOURCE}/utility/inc)
-include_directories(${MODULES_HEADER_DIR})
-include_directories(${FLIGHT_MODULES_HEADER_DIR})
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../common)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../core/inc)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../hal)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../osal)
-
-FILE(GLOB SOURCE_FILES *.hpp *.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_environment.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_helpers.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/../hal/*.c
-        ${CMAKE_CURRENT_SOURCE_DIR}/../osal/*.c
-        ${LINKER_HEADER_SRC}
+set(HELPER_FUNCTIONS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../common)
+add_executable(${PROJECT_NAME}
+        ${SOURCE_FILES}
+        ${HELPER_FUNCTIONS_DIR}/dji_linux_environment.cpp
+        ${HELPER_FUNCTIONS_DIR}/dji_linux_helpers.cpp
+         main.cpp
         )
 
-add_executable(${PROJECT_NAME} ${SOURCE_FILES})
-target_link_libraries(${PROJECT_NAME} djiosdk-core usb-1.0)
 target_include_directories(${PROJECT_NAME} PRIVATE ${OpenCV_INCLUDE_DIRS})
+
+target_link_libraries(${PROJECT_NAME}
+        djiosdk-core
+        )
 
 if (OpenCV_FOUND)
     target_link_libraries(${PROJECT_NAME}

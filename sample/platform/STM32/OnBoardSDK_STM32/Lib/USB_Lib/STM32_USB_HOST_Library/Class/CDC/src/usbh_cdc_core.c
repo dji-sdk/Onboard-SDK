@@ -155,10 +155,12 @@ static USBH_Status CDC_InterfaceInit ( USB_OTG_CORE_HANDLE *pdev,
   /* Communication Interface */
   for (int i=0; i<USBH_MAX_NUM_INTERFACES; i++)
   {
+#ifdef OSDK_USB_DEBUG
     printf("bInterfaceClass: %04Xh,bInterfaceSubClass: %04Xh,bInterfaceProtocol: %04Xh\r\n",
            pphost->device_prop.Itf_Desc[i].bInterfaceClass,pphost->device_prop.Itf_Desc[i].bInterfaceSubClass,
            pphost->device_prop.Itf_Desc[i].bInterfaceProtocol
           );
+#endif
   }
   
   /* Communication Interface */

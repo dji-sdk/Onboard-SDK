@@ -109,9 +109,9 @@ teardownSubscription(DJI::OSDK::Vehicle* vehicle, const int pkgIndex,
 bool
 createAndUploadWaypointMission(Vehicle *vehicle, uint8_t numWaypoints, int responseTimeout)
 {
-  if(!vehicle->isM210V2())
+  if(!vehicle->isM210V3())
   {
-    DSTATUS("This sample only supports M210 V2!\n");
+    DSTATUS("This sample only supports M210 V3!\n");
     return false;
   }
 
@@ -146,12 +146,12 @@ createAndUploadWaypointMission(Vehicle *vehicle, uint8_t numWaypoints, int respo
   dji::waypointv2::AbstractionState currentState = vehicle->missionManager->wpMission->getCurrentState();
   while(currentState != dji::waypointv2::ReadyToUpload && waitTime < timeOut)
   {
+    std::cout<< "currentState: "<<currentState<< std::endl;
     sleep(interval);
     currentState = vehicle->missionManager->wpMission->getCurrentState();
     waitTime += interval;
   }
   DSTATUS("Waited %d secs for WP2 state change to ReadyToUpload..\n", waitTime);
-
 
   DSTATUS("Uploading Waypoints..\n");
   funcName = "uploadMissionV2";
@@ -161,11 +161,8 @@ createAndUploadWaypointMission(Vehicle *vehicle, uint8_t numWaypoints, int respo
   // We wait here for up to 1 sec to
   // 1. get the response of the callback
   // 2. wait for the end of the execution
-  {
-    std::unique_lock<std::mutex> lk(m);
-    condVar.wait_for(lk, std::chrono::seconds(1));
-  }
-
+  {std::unique_lock<std::mutex> lk(m);
+    condVar.wait_for(lk, std::chrono::seconds(1));}
   return true;
 }
 
@@ -175,9 +172,9 @@ createActions(DJI::OSDK::Vehicle *vehicle,
               dji::waypointv2::WaypointActionTriggerType triggerType,
               std::vector<dji::waypointv2::WaypointActionConfig> &actions)
 {
-  if(!vehicle->isM210V2())
+  if(!vehicle->isM210V3())
   {
-    DSTATUS("This sample only supports M210 V2!\n");
+    DSTATUS("This sample only supports M210 V3!\n");
     return false;
   }
 
@@ -339,9 +336,9 @@ createActions(DJI::OSDK::Vehicle *vehicle,
 bool uploadActions(DJI::OSDK::Vehicle *vehicle,
                    std::vector<dji::waypointv2::WaypointActionConfig> &actions)
 {
-  if(!vehicle->isM210V2())
+  if(!vehicle->isM210V3())
   {
-    DSTATUS("This sample only supports M210 V2!\n");
+    DSTATUS("This sample only supports M210 V3!\n");
     return false;
   }
 
@@ -357,9 +354,9 @@ bool uploadActions(DJI::OSDK::Vehicle *vehicle,
 bool
 startWaypointMission(DJI::OSDK::Vehicle *vehicle)
 {
-  if(!vehicle->isM210V2())
+  if(!vehicle->isM210V3())
   {
-    DSTATUS("This sample only supports M210 V2!\n");
+    DSTATUS("This sample only supports M210 V3!\n");
     return false;
   }
 
@@ -372,7 +369,7 @@ startWaypointMission(DJI::OSDK::Vehicle *vehicle)
   }
 
   //wait until in the middle of execution
-  sleep(8);
+  sleep(2);
 
   DSTATUS("Compare init data ....\n");
   dji::waypointv2::WaypointMission mission;
@@ -391,13 +388,12 @@ startWaypointMission(DJI::OSDK::Vehicle *vehicle)
   }
 
   //wait until in the middle of execution
-  sleep(16);
+  sleep(2);
 
   float currentSpeed = -1;
   funcName = "getCurrentSpeed";
   vehicle->missionManager->wpMission->getCurrentSpeed(
-    [&currentSpeed](float cruiseSpeed,
-                    WaypointV2Interface::CommonErrorCode error_code){
+    [&currentSpeed](float cruiseSpeed, WaypointV2Interface::CommonErrorCode error_code){
       if(error_code == 0)
       {
         currentSpeed = cruiseSpeed;

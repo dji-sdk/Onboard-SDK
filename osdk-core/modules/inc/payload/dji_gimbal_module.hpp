@@ -35,6 +35,11 @@
 
 namespace DJI {
 namespace OSDK {
+
+/*! Forward Declaration
+ */
+class Linker;
+
 /*! @brief gimbal module
  */
 class GimbalModule : public PayloadBase {
@@ -64,10 +69,22 @@ class GimbalModule : public PayloadBase {
   typedef uint8_t retCodeType;
 
   typedef struct Rotation {
+    /*! rotation cooradiration
+     *  0 = execute angle command based on the previously set reference point
+     *  1 = execute angle command based on the current point
+     */
     uint8_t rotationMode;
+    /*! pitch angle in degree, unit : deg
+     */
     float pitch;
+    /*! roll angle in degree, unit : deg
+     */
     float roll;
+    /*! yaw angle in degree, unit : deg
+     */
     float yaw;
+    /*! execution time, unit : second
+     */
     double time;
   } Rotation;
 
@@ -129,14 +146,26 @@ class GimbalModule : public PayloadBase {
     uint8_t atti_or_joint_ref:1;
   } gimbalAngleSetting;
 
+
   typedef struct gimbalWorkModeAndReturnCenterSetting
   {
+    /*! Gimbal workmode setting parameter, ref to DJI::OSDK::GimbalModule
+     */
     GimbalWorkMode workMode;
+    /*! Gimbal return center parameter, ref to DJI::OSDK::ReturnCenterCMD
+     */
     ReturnCenterCMD returnCenterCmd;
   } gimbalWorkModeAndReturnCenterSetting;
 #pragma pack()
 
-
+  /*! Used as the type of userData to be passed in the callbackWrapperFunc to
+   * wrapper the callback handling.
+   *
+   */
+  typedef struct callbackWarpperHandler {
+    void (*cb)(ErrorCode::ErrorCodeType retCode, UserData userData);
+    UserData udata;
+  } callbackWarpperHandler;
 
  public:
   GimbalModule(Linker *linker, PayloadIndexType payloadIndex,
@@ -144,23 +173,52 @@ class GimbalModule : public PayloadBase {
 
   ~GimbalModule();
 
+  /*! @brief reset gimbal in pitch and yaw, non-blocking calls
+   *
+   *  @param UserCallBack callback function defined by user
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to pass userData in when the callback is
+   * called
+   *  @param userData when UserCallBack is called, used in UserCallBack
+   */
   void resetAsync(void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
                                        UserData userData),
                   UserData userData);
 
+  /*! @brief reset gimbal in pitch and yaw, blocking calls
+   *
+   *  @param timeout blocking timeout in seconds
+   *  @return ErrorCode::ErrorCodeType error code
+   */
   ErrorCode::ErrorCodeType resetSync(int timeout);
 
+  /*! @brief reset gimbal in pitch and yaw, non-blocking calls
+   *
+   *  @param rotation rotation parameter to be set, ref to
+   * DJI::OSDK::GimbalModule::Rotation
+   *  @param UserCallBack callback function defined by user
+   *  @arg @b retCode is the ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to pass userData in when the callback is
+   * called
+   *  @param userData when UserCallBack is called, used in UserCallBack
+   *  @return ErrorCode::ErrorCodeType error code
+   */
   void rotateAsync(Rotation rotation,
                    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
                                         UserData userData),
                    UserData userData);
 
+  /*! @brief rotate gimbal angle, blocking calls
+   *
+   *  @param rotation rotation parameter to be set, ref to
+   * DJI::OSDK::GimbalModule::Rotation
+   *  @param timeout blocking timeout in seconds
+   *  @return ErrorCode::ErrorCodeType error code
+   */
   ErrorCode::ErrorCodeType rotateSync(Rotation rotation, int timeout);
 
  private:
   Linker *linker;
-  static void handlerCB(const T_CmdInfo *cmdInfo, const uint8_t *cmdData,
-                        void *userData, E_OsdkStat cb_type);
 
 }; /* GimbalModule */
 }  // namespace OSDK

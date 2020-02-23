@@ -56,11 +56,18 @@ Log::~Log()
 Log&
 Log::title(int level, const char* prefix, const char* func, int line)
 {
+  if(!initFlag)
+  {
+    mutex = new Mutex();
+    initFlag = true;
+  }
+
   if (level)
   {
     vaild = true;
-
+    mutex->lock();
     printf("%s/%d @ %s, L%d: ", prefix, level, func, line);
+    mutex->unlock();
   }
   else
   {
@@ -73,11 +80,18 @@ Log::title(int level, const char* prefix, const char* func, int line)
 Log&
 Log::title(int level, const char* prefix)
 {
+  if(!initFlag)
+  {
+    mutex = new Mutex();
+    initFlag = true;
+  }
+
   if (level)
   {
     vaild = true;
-
+    mutex->lock();
     printf("%s/%d" , prefix, level);
+    mutex->unlock();
   }
   else
   {

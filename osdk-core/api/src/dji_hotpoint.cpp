@@ -196,80 +196,30 @@ HotpointMission::resume(int timeout)
 }
 
 void
-HotpointMission::updateYawRate(HotpointMission::YawRate& Data,
-                               VehicleCallBack callback, UserData userData)
+HotpointMission::updateYawRate(HotpointMission::YawRate& Data)
 {
   hotPointData.yawRate   = Data.yawRate;
   hotPointData.clockwise = Data.clockwise ? 1 : 0;
-  VehicleCallBack cb = NULL;
-  UserData udata = NULL;
 
-  if (callback)
-  {
-    cb = callback;
-    udata = userData;
-  }
-  else
-  {
-    cb = MissionManager::missionCallback;
-    udata = NULL;
-  }
-  vehicle->legacyLinker->sendAsync(
+  vehicle->legacyLinker->send(
     OpenProtocolCMD::CMDSet::Mission::hotpointYawRate, &Data,
-    sizeof(Data), 500, 2, cb, udata);
-}
-
-ACK::ErrorCode
-HotpointMission::updateYawRate(HotpointMission::YawRate& Data, int timeout)
-{
-  ACK::ErrorCode ack;
-  hotPointData.yawRate   = Data.yawRate;
-  hotPointData.clockwise = Data.clockwise ? 1 : 0;
-
-  return *(ACK::ErrorCode *) vehicle->legacyLinker->sendSync(
-      OpenProtocolCMD::CMDSet::Mission::hotpointYawRate, &Data, sizeof(Data),
-      timeout * 1000 / 2, 2);
+    sizeof(Data));
 }
 
 void
-HotpointMission::updateYawRate(float32_t yawRate, bool isClockwise,
-                               VehicleCallBack callback, UserData userData)
+HotpointMission::updateYawRate(float32_t yawRate, bool isClockwise)
 {
   YawRate p;
   p.yawRate   = yawRate;
   p.clockwise = isClockwise ? 1 : 0;
-  updateYawRate(p, callback, userData);
+  updateYawRate(p);
 }
 
 void
-HotpointMission::updateRadius(float32_t meter, VehicleCallBack callback,
-                              UserData userData)
+HotpointMission::updateRadius(float32_t meter)
 {
-  VehicleCallBack cb = NULL;
-  UserData udata = NULL;
-  if (callback)
-  {
-    cb = callback;
-    udata = userData;
-  }
-  else
-  {
-    cb = MissionManager::missionCallback;
-    udata = NULL;
-  }
-  vehicle->legacyLinker->sendAsync(
-      OpenProtocolCMD::CMDSet::Mission::hotpointRadius, &meter, sizeof(meter),
-      500, 2, cb, udata);
-}
-
-ACK::ErrorCode
-HotpointMission::updateRadius(float32_t meter, int timeout)
-{
-  ACK::ErrorCode ack;
-
-  return *(ACK::ErrorCode *) vehicle->legacyLinker->sendSync(
-      OpenProtocolCMD::CMDSet::Mission::hotpointRadius, &meter, sizeof(meter),
-      timeout * 1000 / 2, 2);
+  vehicle->legacyLinker->send(
+      OpenProtocolCMD::CMDSet::Mission::hotpointRadius, &meter, sizeof(meter));
 }
 
 void

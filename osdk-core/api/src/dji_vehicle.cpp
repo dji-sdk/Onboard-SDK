@@ -29,6 +29,7 @@
 
 #include "dji_vehicle.hpp"
 #include "osdk_device_id.h"
+#include "dji_linker.hpp"
 #include <new>
 
 using namespace DJI;
@@ -212,11 +213,38 @@ Vehicle::init()
   }
 
 #ifdef ADVANCED_SENSING
-  /*if (!initAdvancedSensing())
-  {
-    DERROR("Failed to initialize AdvancedSensing!\n");
-    return false;
-  }*/
+  /*! If M300 here will use a new linker to do usb bulk
+   * */
+  if (isM300()) {
+    if (!initAdvancedSensing()) {
+      DERROR("Failed to initialize AdvancedSensing!\n");
+      return false;
+    } else {
+      DSTATUS("Start advanced sensing initalization for M210");
+    }
+    /*! Linker add liveview USB Bulk channel */
+    if (!linker->addUSBBulkChannel(0x001F, 0x2CA3, 3, 0x84, 0x03,
+                                   USB_BULK_LIVEVIEW_CHANNEL_ID)) {
+      DERROR("Failed to initialize USB Bulk Linker channel for liveview!");
+    } else {
+      DSTATUS("Start bulk channel for M300's liveview!");
+    }
+
+    /*! Linker add perception USB Bulk channel */
+    if (!linker->addUSBBulkChannel(0x001F, 0x2CA3, 6, 0x87, 0x05,
+                                   USB_BULK_ADVANCED_SENSING_CHANNEL_ID)) {
+      DERROR("Failed to initialize USB Bulk Linker channel for perception!");
+    } else {
+      DSTATUS("Start bulk channel for M300's perception");
+    }
+  } else {
+    if (!initAdvancedSensing()) {
+      DERROR("Failed to initialize AdvancedSensing!\n");
+      return false;
+    } else {
+      DSTATUS("Start advanced sensing initalization for M210");
+    }
+  }
 #endif
 
   return true;
@@ -347,8 +375,7 @@ Vehicle::initVersion()
 {
 #if STM32
   //! Non blocking call for STM32 as it does not support multi-thread
-  getDroneVersion();
-  DJI_TASK_SLEEP_MS(2000);
+  getDroneVersion(2000);
   if(this->getFwVersion() > 0)
   {
     return true;
@@ -664,7 +691,6 @@ Vehicle::initMissionManager()
   {
     return false;
   }
-
   return true;
 }
 
@@ -1212,6 +1238,7 @@ Vehicle::sendHeartbeatToFCFunc(Linker *linker)
 
 void *
 Vehicle::sendHeartbeatToFCTask(void *arg) {
+    OsdkOsal_TaskSleepMs(1000);
     DSTATUS("OSDK send heart beat to fc task created.");
     if(arg) {
       Linker *linker = (Linker *) arg;
@@ -1313,6 +1340,9 @@ Vehicle::getDroneVersion(uint32_t timeoutMs)
   T_CmdInfo ackInfo = {0};
   uint8_t data[1024];
   uint8_t  cmd_data = 0;
+
+  droneVersionACK.ack.info.cmd_set = OpenProtocolCMD::CMDSet::Activation::getVersion[0];
+  droneVersionACK.ack.info.cmd_id = OpenProtocolCMD::CMDSet::Activation::getVersion[1];
 
   versionData.version_ack =
     OpenProtocolCMD::ErrorCode::CommonACK::NO_RESPONSE_ERROR;
@@ -1571,7 +1601,7 @@ void
 Vehicle::sendBuriedDataPkgToFC(void)
 {
     char sdk_version[MAX_OSDK_VERSION_SIZE];
-    sprintf(sdk_version,"OSDK%d.%d.%d",DJIOSDK_MAJOR_VERSION, DJIOSDK_MINOR_VERSION, DJIOSDK_PATCH_VERSION);
+    sprintf(sdk_version,"OSDK%d.%d.%d beta",DJIOSDK_MAJOR_VERSION, DJIOSDK_MINOR_VERSION, DJIOSDK_PATCH_VERSION);
     DataBuryPack data = {" ", DJIOSDK_IS_DEBUG, DJIOSDK_HARDWARE_TYPE, DJIOSDK_OPERATOR_TYPE};
     memcpy(data.sdk_version , sdk_version, sizeof(data.sdk_version) / sizeof(char));
 #ifdef STM32

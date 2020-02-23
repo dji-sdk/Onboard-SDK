@@ -47,12 +47,13 @@ class FlightAssistant {
   const static uint32_t MAX_FLY_RADIUS = 20000;
 
   enum ParamHashValue : uint32_t {
-    USE_RTK_DATA = 1288992843,    /*! Set rtk switch on or off*/
-    GO_HOME_ALTITUDE = 952919004, /*! Set return home altitude*/
-    USER_AVOID_ENABLE = 3001460201,
+    USE_RTK_DATA = 1288992843,      /*! Set rtk switch on or off*/
+    GO_HOME_ALTITUDE = 952919004,   /*! Set return home altitude*/
+    HORIZ_AVOID = 3001460201, /*! Set horiz avoid enable*/
+    UPWARDS_AVOID = 854709684,
   };
 
-  enum RtkEnableData : uint8_t {
+  enum  RtkEnableData : uint8_t {
     RTK_DISABLE = 0, /*!< 0: disable */
     RTK_ENABLE = 1,  /*!< 1: enable  */
   };
@@ -60,7 +61,10 @@ class FlightAssistant {
     AVOID_DISABLE = 0,
     AVOID_ENABLE = 1,
   };
-
+  enum UpwardsAvoidEnable : uint8_t {
+    UPWARDS_AVOID_DISABLE = 0,
+    UPWARDS_AVOID_ENABLE = 1,
+  };
   enum HomeLocationType : uint8_t {
     DJI_HOMEPOINT_AIRCRAFT_LOACTON =
         0, /*!< Make aircraft current position as the home location*/
@@ -88,6 +92,12 @@ class FlightAssistant {
     uint32_t hashValue;
     uint8_t avoidEnable;
   } AvoidEnableAck;
+
+  typedef struct UpwardsAvoidEnableAck {
+    uint8_t retCode;
+    uint32_t hashValue;
+    uint8_t upwardsAvoidEnable;
+  } UpwardsAvoidEnableAck;
 
   /*! set parameter and get parameter's return data is same*/
   typedef struct GoHomeAltitudeAck {
@@ -222,6 +232,55 @@ class FlightAssistant {
                                               UserData userData),
                          UserData userData);
 
+ /*! @brief Set upwards avoidance enable or disable, blocking calls
+  *
+  *  @param UpwardsAvoidEnable UpwardsAvoidEnable  UPWARDS_AVOID_DISABLE: disable,
+  *  UPWARDS_AVOID_ENABLE: enable
+  *  @param timeout blocking timeout in seconds
+  *  @return ErrorCode::ErrorCodeType error code
+  */
+  ErrorCode::ErrorCodeType setUpwardsAvoidanceEnabledSync(UpwardsAvoidEnable upwardsAvoidEnable,
+                                            int timeout);
+
+  /*! @brief Set upwards avoidance enable or disable, non-blocking calls
+   *
+   *  @param upwardsAvoidEnable UpwardsAvoidEnable  UPWARDS_AVOID_DISABLE: disable,
+   *  UPWARDS_AVOID_ENABLE: enable
+   *  @param UserCallBack callback function defined by user
+   *  @arg @b retCode  OSDK ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to transfer userData in when the callback
+   *  is called
+   *  @param userData when UserCallBack is called, used in UserCallBack
+   */
+  void setUpwardsAvoidanceEnabledAsync(UpwardsAvoidEnable upwardsAvoidEnable,
+                         void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
+                                              UserData userData),
+                         UserData userData);
+
+  /*! @brief Get upwards avoidance enable or disable, blocking calls
+   *
+   *  @param upwardsAvoidEnable UpwardsAvoidEnable  UPWARDS_AVOID_DISABLE: disable,
+   *  UPWARDS_AVOID_ENABLE: enable
+   *  @param timeout blocking timeout in seconds
+   *  @return OSDK ErrorCode::ErrorCodeType error code
+   */
+  ErrorCode::ErrorCodeType getUpwardsAvoidanceEnabledSync(UpwardsAvoidEnable &upwardsAvoidEnable,
+                                            int timeout);
+
+  /*! @brief Get upwards avoidance enable or disable, non-blocking calls
+   *
+   *  @param UserCallBack callback function defined by user
+   *  @arg @b retCode the OSDK ErrorCode::ErrorCodeType error code
+   *  @arg @b upwardsEnable UpwardsAvoidEnable, UPWARDS_AVOID_DISABLE: disable,
+   *  UPWARDS_AVOID_ENABLE: enable
+   *  @arg @b userData the interface to pass userData in when the callback is
+   *  called
+   *  @param userData when UserCallBack is called, used in UserCallBack
+   */
+  void getUpwardsAvoidanceEnabledAsync(void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
+                                                            UpwardsAvoidEnable upwardsEnable,
+                                              UserData userData),
+                         UserData userData);
   /*! @brief Set go home altitude, blocking calls
    *
    *  @note If aircraft's current altitude is higher than the setting value of
@@ -378,7 +437,8 @@ class FlightAssistant {
 
   static void getAvoidEnableDecoder(Vehicle *vehicle, RecvContainer recvFrame,
                                     UCBRetParamHandler<AvoidEnable > *ucb);
-
+  static void getUpwardsAvoidEnableDecoder(Vehicle *vehicle, RecvContainer recvFrame,
+                                           UCBRetParamHandler<UpwardsAvoidEnable > *ucb);
   static void getGoHomeAltitudeDecoder(Vehicle *vehicle,
                                        RecvContainer recvFrame,
                                        UCBRetParamHandler<GoHomeAltitude> *ucb);

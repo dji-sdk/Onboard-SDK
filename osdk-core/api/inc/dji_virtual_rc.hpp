@@ -31,7 +31,6 @@
 #define DJI_VIRTUAL_RC_HPP
 
 #include "dji_ack.hpp"
-#include "dji_legacy_linker.hpp"
 #include "dji_type.hpp"
 //#include "dji_vehicle_callback.hpp"
 #include "dji_telemetry.hpp"
@@ -40,6 +39,8 @@ namespace DJI
 {
 namespace OSDK
 {
+
+class Vehicle;
 
 /*! @brief VirtualRC class has all the methods to mimic the RC functionality via
  * OSDK

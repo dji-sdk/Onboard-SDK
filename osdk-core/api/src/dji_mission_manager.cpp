@@ -29,20 +29,16 @@
  */
 
 #include "dji_mission_manager.hpp"
+#include <dji_vehicle.hpp>
 #include "dji_legacy_linker.hpp"
 
 using namespace DJI;
 using namespace DJI::OSDK;
 
 MissionManager::MissionManager(Vehicle* vehiclePtr)
-  : vehicle(vehiclePtr)
-  , wpMission(NULL)
-  , hpMission(NULL)
-{
-}
+    : vehicle(vehiclePtr), wpMission(NULL), hpMission(NULL) {}
 
-MissionManager::~MissionManager()
-{
+MissionManager::~MissionManager() {
   for (int i = 0; i < wpMissionVector.size(); ++i) {
     delete wpMissionVector[i];
   }
@@ -51,19 +47,13 @@ MissionManager::~MissionManager()
   }
 }
 
-ACK::ErrorCode
-MissionManager::init(DJI_MISSION_TYPE type, int timeout, UserData missionData)
-{
-  if (type == WAYPOINT)
-  {
+ACK::ErrorCode MissionManager::init(DJI_MISSION_TYPE type, int timeout,
+                                    UserData missionData) {
+  if (type == WAYPOINT) {
     return this->initWayptMission(timeout, missionData);
-  }
-  else if (type == HOTPOINT)
-  {
+  } else if (type == HOTPOINT) {
     return this->initHotptMission(timeout, missionData);
-  }
-  else
-  {
+  } else {
     DERROR("Cannot recognize the mission type provided\n");
     // @todo return a false ack
     ACK::ErrorCode ack;
@@ -73,67 +63,81 @@ MissionManager::init(DJI_MISSION_TYPE type, int timeout, UserData missionData)
   }
 }
 
-void
-MissionManager::init(DJI_MISSION_TYPE type, VehicleCallBack callback,
-                     UserData missionData)
-{
-  if (type == WAYPOINT)
-  {
+void MissionManager::init(DJI_MISSION_TYPE type, VehicleCallBack callback,
+                          UserData missionData) {
+  if (type == WAYPOINT) {
     this->initWayptMission(callback, missionData);
-  }
-  else if (type == HOTPOINT)
-  {
+  } else if (type == HOTPOINT) {
     // @note hotpoint init() doesn't have blocking calls, timeout use 10
     this->initHotptMission(10, missionData);
-  }
-  else
-  {
+  } else {
     DERROR("Cannot recognize the mission type provided\n");
   }
 }
 
-ACK::ErrorCode
-MissionManager::initWayptMission(int timeout, UserData wayptData)
-{
+ACK::ErrorCode MissionManager::initWayptMission(int timeout,
+                                                UserData wayptData) {
   WaypointMission* newMission = new WaypointMission(this->vehicle);
   wpMissionVector.push_back(newMission);
   wpMission = wpMissionVector.back();
 
 #ifdef WAYPT2_CORE
-  // Do nothing
+  static T_RecvCmdHandle handle = {0};
+  static T_RecvCmdItem item = {0};
+  handle.protoType = PROTOCOL_V1;
+  handle.cmdCount = 1;
+  handle.cmdList = &item;
+  item.cmdSet = V1ProtocolCMD::waypointV2::waypointGetStatePushDataV2[0];
+  item.cmdId = V1ProtocolCMD::waypointV2::waypointGetStatePushDataV2[1];
+  item.mask = MASK_HOST_XXXXXX_SET_ID;
+  item.host = 0;
+  item.device = 0;
+  item.pFunc = updateWPV2PushStateCB;
+  item.userData = (void*)wpMission;
+  bool ret = this->vehicle->linker->registerCmdHandler(&handle);
+  if(!ret)
+  DERROR("register waypoint V2 push state call back failed, ret is: %d", ret);
 #else
   // @todo timeout needs to be defined somewhere globally
   return wpMission->init((WayPointInitSettings*)wayptData, timeout);
 #endif
 }
 
-void
-MissionManager::initWayptMission(VehicleCallBack callback, UserData wayptData)
-{
+void MissionManager::initWayptMission(VehicleCallBack callback,
+                                      UserData wayptData) {
   WaypointMission* newMission = new WaypointMission(this->vehicle);
   wpMissionVector.push_back(newMission);
   wpMission = wpMissionVector.back();
-
 #ifdef WAYPT2_CORE
-  // Do nothing
+  static T_RecvCmdHandle handle = {0};
+  static T_RecvCmdItem item = {0};
+  handle.protoType = PROTOCOL_V1;
+  handle.cmdCount = 1;
+  handle.cmdList = &item;
+  item.cmdSet = V1ProtocolCMD::waypointV2::waypointGetStatePushDataV2[0];
+  item.cmdId = V1ProtocolCMD::waypointV2::waypointGetStatePushDataV2[1];
+  item.mask = MASK_HOST_XXXXXX_SET_ID;
+  item.host = 0;
+  item.device = 0;
+  item.pFunc = updateWPV2PushStateCB;
+  item.userData = (void*)wpMission;
+  bool ret = this->vehicle->linker->registerCmdHandler(&handle);
+  if(!ret)
+    DERROR("register waypoint V2 push state call back failed, ret is: %d", ret);
 #else
   wpMission->init((WayPointInitSettings*)wayptData, callback, wayptData);
 #endif
 }
 
-ACK::ErrorCode
-MissionManager::initHotptMission(int timeout, UserData hotptData)
-{
+ACK::ErrorCode MissionManager::initHotptMission(int timeout,
+                                                UserData hotptData) {
   HotpointMission* newMission = new HotpointMission(this->vehicle);
   hpMissionVector.push_back(newMission);
   hpMission = hpMissionVector.back();
 
-  if (hotptData)
-  {
+  if (hotptData) {
     hpMission->setData((HotPointSettings*)hotptData);
-  }
-  else
-  {
+  } else {
     hpMission->initData();
   }
 
@@ -145,43 +149,34 @@ MissionManager::initHotptMission(int timeout, UserData hotptData)
   return ack;
 }
 
-void
-MissionManager::initHotptMission(VehicleCallBack callback, UserData wayptData)
-{
+void MissionManager::initHotptMission(VehicleCallBack callback,
+                                      UserData wayptData) {
   /*! @note hotpoint init() doesn't have blocking calls
    *        put it here for future uses
    */
 }
 
-void
-MissionManager::missionCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
-                                UserData userData)
-{
-  char           func[50];
+void MissionManager::missionCallback(Vehicle* vehiclePtr,
+                                     RecvContainer recvFrame,
+                                     UserData userData) {
+  char func[50];
   ACK::ErrorCode ack;
 
   if (recvFrame.recvInfo.len - OpenProtocol::PackageMin <=
-      sizeof(ACK::ErrorCode))
-  {
+      sizeof(ACK::ErrorCode)) {
     ack.info = recvFrame.recvInfo;
     ack.data = recvFrame.recvData.missionACK;
 
-    if (ACK::getError(ack))
-    {
+    if (ACK::getError(ack)) {
       ACK::getErrorCodeMessage(ack, func);
     }
-  }
-  else
-  {
+  } else {
     DERROR("ACK is exception,sequence %d\n", recvFrame.recvInfo.seqNumber);
   }
 }
 
-WaypointMission*
-MissionManager::getWaypt(int index)
-{
-  if (index >= wpMissionVector.size())
-  {
+WaypointMission* MissionManager::getWaypt(int index) {
+  if (index >= wpMissionVector.size()) {
     DERROR("The waypt index does not exist in Mission Manager\n");
     return NULL;
   }
@@ -189,11 +184,8 @@ MissionManager::getWaypt(int index)
   return wpMissionVector[index];
 }
 
-HotpointMission*
-MissionManager::getHotpt(int index)
-{
-  if (index >= hpMissionVector.size())
-  {
+HotpointMission* MissionManager::getHotpt(int index) {
+  if (index >= hpMissionVector.size()) {
     DERROR("The hotpt index does not exist in Mission Manager\n");
     return NULL;
   }
@@ -201,10 +193,22 @@ MissionManager::getHotpt(int index)
   return hpMissionVector[index];
 }
 
-void
-MissionManager::printInfo()
-{
+void MissionManager::printInfo() {
   DSTATUS("Mission Manager status: \n");
   DSTATUS("There are %d waypt missions and %d hotpoint missions\n",
           wpMissionVector.size(), hpMissionVector.size());
 }
+
+#ifdef WAYPT2_CORE
+E_OsdkStat MissionManager::updateWPV2PushStateCB(struct _CommandHandle *cmdHandle, const T_CmdInfo *cmdInfo,
+                                                 const uint8_t *cmdData, void *userData){
+  if (cmdInfo) {
+    WaypointMission* wpMission = (WaypointMission*)userData;
+    wpMission->updateV2PushData(cmdInfo->cmdId, cmdInfo->seqNum, cmdData,
+                                cmdInfo->dataLen);
+
+    return OSDK_STAT_OK;
+  } else
+    return OSDK_STAT_ERR_ALLOC;
+}
+#endif

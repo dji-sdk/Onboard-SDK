@@ -36,6 +36,7 @@
 #include "osdk_osal.h"
 #include "osdk_protocol.h"
 #include "osdk_work.h"
+#include "osdk_command_instance.h"
 
 /* Private constants ---------------------------------------------------------*/
 #define OSDK_Send_POLL_TASK_FREQ (100)
@@ -147,13 +148,13 @@ E_OsdkStat OsdkCommand_CreateLiveViewTask() {
   osdkStat = OsdkChannel_GetChannelItemByChnId(OsdkChannel_GetBigDataListInstance(),
                                                USB_BULK_LIVEVIEW_CHANNEL_ID, &channelItem);
   if(osdkStat != OSDK_STAT_OK) {
-    OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "get liveview channel failed, errcode:%d", osdkStat);
+    OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "get h264_liveview_sample channel failed, errcode:%d", osdkStat);
     return osdkStat;
   }
   osdkStat = OsdkOsal_TaskCreate(&s_osdkLiveViewThread, OsdkCommand_BigDataRecvTask,
                                       OSDK_TASK_STACK_SIZE_DEFAULT, channelItem);
   if (osdkStat != OSDK_STAT_OK) {
-    OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "liveview task create error:%d", osdkStat);
+    OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "h264_liveview_sample task create error:%d", osdkStat);
     return osdkStat;
   }
   return OSDK_STAT_OK;
@@ -628,7 +629,6 @@ static E_OsdkStat OsdkCommand_DealCmd(T_CmdHandle *cmdHandle,
     OSDK_LOG_ERROR(MODULE_NAME_COMMAND, "OsdkCommand_DealCmd param check failed");
     return OSDK_STAT_ERR_PARAM;
   }
-
   if (cmdInfo->packetType == OSDK_COMMAND_PACKET_TYPE_ACK) {
     for (int k = 0; k < PROT_MAX_WAIT_ACK_LIST; k++) {
       if (cmdHandle->waitAckItem[k].isValid == true) {
