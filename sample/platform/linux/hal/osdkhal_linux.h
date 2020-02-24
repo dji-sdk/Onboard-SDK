@@ -41,7 +41,6 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include "osdk_typedef.h"
-#include "osdk_logger_internal.h"
 #include "osdk_platform.h"
 
 #ifdef ADVANCED_SENSING

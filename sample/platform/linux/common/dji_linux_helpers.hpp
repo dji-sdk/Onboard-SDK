@@ -41,15 +41,15 @@
 using namespace std;
 
 class LinuxSetup : private Setup {
-public:
+ public:
   LinuxSetup(int argc, char **argv, bool enableAdvancedSensing = false);
   ~LinuxSetup();
 
-public:
+ public:
   void setupEnvironment(int argc, char** argv);
   bool initVehicle();
 
-public:
+ public:
   DJI_Environment *getEnvironment() {
     return this->environment;
   }
@@ -62,11 +62,7 @@ public:
     return vehicle;
   }
 
-  Linker *getLinker() {
-    return linker;
-  }
-
-private:
+ private:
   uint32_t functionTimeout;
   Vehicle::ActivateData activateData;
   DJI_Environment* environment;

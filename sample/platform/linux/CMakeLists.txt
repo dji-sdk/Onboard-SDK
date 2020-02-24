@@ -24,43 +24,17 @@
 cmake_minimum_required(VERSION 2.8)
 project(onboardsdk-linux-samples)
 
-if(NOT ONBOARDSDK_SOURCE)
-    set(ONBOARDSDK_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/../../../osdk-core")
-endif()
 
-if(NOT MODULES_HEADER_DIR)
-    set(MODULES_HEADER_DIR "${ONBOARDSDK_SOURCE}/modules/inc/payload")
-endif()
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR})
 
-include_directories(${ONBOARDSDK_SOURCE}/linker/core)
-include_directories(${ONBOARDSDK_SOURCE}/linker/core/platform)
-#include_directories(${ONBOARDSDK_SOURCE}/linker/core/command)
-include_directories(${ONBOARDSDK_SOURCE}/linker/core/channel)
-#include_directories(${ONBOARDSDK_SOURCE}/linker/core/utils/inc)
-include_directories(${ONBOARDSDK_SOURCE}/linker/core/logger)
-include_directories(${ONBOARDSDK_SOURCE}/linker/core/protocol)
-include_directories(${ONBOARDSDK_SOURCE}/linker/core/root_task)
-include_directories(${ONBOARDSDK_SOURCE}/hal/inc)
-include_directories(${ONBOARDSDK_SOURCE}/logger/inc)
-include_directories(${ONBOARDSDK_SOURCE}/platform/inc)
+find_package(djiosdk-core QUIET)
+find_package(DJIOSDK REQUIRED)
+
+
+include_directories(${DJIOSDK_INCLUDE_DIRS})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/common)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/hal)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/osal)
-
-if(NOT LINKER_HEADER_SRC)
-    set(LINKER_HEADER_SRC "${ONBOARDSDK_SOURCE}/linker/core/platform/*.c \
-                            ${ONBOARDSDK_SOURCE}/linker/core/root_task/*.c \
-                            ${ONBOARDSDK_SOURCE}/linker/core/logger/*.c \
-                            ${ONBOARDSDK_SOURCE}/linker/core/protocol/*.c \
-                            ${ONBOARDSDK_SOURCE}/utils/src/*.c* \
-                            ${ONBOARDSDK_SOURCE}/linker/core/channel/*.c \
-                            ${ONBOARDSDK_SOURCE}/linker/core/command/*.c \
-                            ${ONBOARDSDK_SOURCE}/platform/src/*.c* \
-                            ${ONBOARDSDK_SOURCE}/logger/src/*.c*")
-endif()
-
-if(NOT FLIGHT_MODULES_HEADER_DIR)
-    set(FLIGHT_MODULES_HEADER_DIR "${ONBOARDSDK_SOURCE}/modules/inc/flight")
-endif()
 
 add_subdirectory(camera-gimbal)
 add_subdirectory(flight-control)

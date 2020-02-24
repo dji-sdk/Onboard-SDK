@@ -35,32 +35,25 @@
 #include <dji_vehicle.hpp>
 #include <dji_platform.hpp>
 
-class STM32Setup
+class STM32Setup : private Setup
 {
-public:
+ public:
   STM32Setup();
   ~STM32Setup();
 
-public:
+ public:
   void setupEnvironment();
-  void initVehicle();
+  bool initVehicle();
 
-public:
-  DJI::OSDK::Vehicle* getVehicle()
+ public:
+  Vehicle* getVehicle()
   {
     return this->vehicle;
   }
 
-private:
-  DJI::OSDK::Vehicle* vehicle;
+ private:
+  Vehicle* vehicle;
 
-  typedef struct UartChannelInitParams {
-    const char *device;
-    uint32_t baudrate;
-    E_ChannelIDType id;
-  } UartChannelInitParams;
-
-  static UartChannelInitParams uartChnParams[];
 };
 
 #endif // STM32_HELPERS_HPP

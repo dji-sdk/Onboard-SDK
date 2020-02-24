@@ -62,29 +62,18 @@ bool Setup::initLinker() {
 }
 
 bool
-Setup::addUartChannel(const char *device, uint32_t baudrate,
-                      E_ChannelIDType id) {
+Setup::addFCUartChannel(const char *device, uint32_t baudrate) {
   if (linker) {
-    return linker->addUartChannel(device, baudrate, id);
+    return linker->addUartChannel(device, baudrate, FC_UART_CHANNEL_ID);
   } else {
     return false;
   }
 }
 
 bool
-Setup::addUdpChannel(const char *addr, uint16_t port, E_ChannelIDType id) {
+Setup::addUSBACMChannel(const char *device, uint32_t baudrate) {
   if (linker) {
-    return linker->addUdpChannel(addr, port, id);
-  } else {
-    return false;
-  }
-}
-
-bool
-Setup::addUSBBulkChannel(uint16_t pid, uint16_t vid, uint16_t num,
-                         uint16_t epIn, uint16_t epOut, E_ChannelIDType id) {
-  if (linker) {
-    return linker->addUSBBulkChannel(pid, vid, num, epIn, epOut, id);
+    return linker->addUartChannel(device, baudrate, USB_ACM_CHANNEL_ID);
   } else {
     return false;
   }

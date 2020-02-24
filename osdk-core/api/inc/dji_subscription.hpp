@@ -30,7 +30,6 @@
 #ifndef DJI_DATASUBSCRIPTION_H
 #define DJI_DATASUBSCRIPTION_H
 
-#include "osdk_osal.h"
 #include "dji_log.hpp"
 #include "dji_telemetry.hpp"
 #include "dji_vehicle_callback.hpp"

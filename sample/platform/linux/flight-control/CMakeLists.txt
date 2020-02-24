@@ -25,14 +25,7 @@ project(djiosdk-flightcontrol-sample)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread -g -O0")
 
-include_directories(${ONBOARDSDK_SOURCE}/api/inc)
-include_directories(${ONBOARDSDK_SOURCE}/utility/inc)
-include_directories(${MODULES_HEADER_DIR})
-include_directories(${FLIGHT_MODULES_HEADER_DIR})
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../common)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../core/inc)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../hal)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../osal)
 
 FILE(GLOB SOURCE_FILES *.hpp *.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_environment.cpp
@@ -45,5 +38,4 @@ FILE(GLOB SOURCE_FILES *.hpp *.cpp
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 target_link_libraries(${PROJECT_NAME} djiosdk-core)
-
 

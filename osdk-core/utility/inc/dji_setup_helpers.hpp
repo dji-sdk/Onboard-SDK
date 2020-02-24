@@ -30,8 +30,7 @@
 #ifndef ONBOARDSDK_DJI_SETUP_HELPERS_H
 #define ONBOARDSDK_DJI_SETUP_HELPERS_H
 
-
-#include "osdk_channel.h"
+#include <stdint.h>
 
 namespace DJI
 {
@@ -47,11 +46,10 @@ class Setup {
 
  public:
   bool initLinker();
-  bool addUartChannel(const char *device, uint32_t baudrate,
-                      E_ChannelIDType id);
-  bool addUdpChannel(const char *addr, uint16_t port, E_ChannelIDType id);
-  bool addUSBBulkChannel(uint16_t pid, uint16_t vid, uint16_t num,
-                         uint16_t epIn, uint16_t epOut, E_ChannelIDType id);
+
+  /*! add Uart channel*/
+  bool addFCUartChannel(const char *device, uint32_t baudrate);
+  bool addUSBACMChannel(const char *device, uint32_t baudrate);
 
   virtual bool initVehicle();
   virtual void setupEnvironment();

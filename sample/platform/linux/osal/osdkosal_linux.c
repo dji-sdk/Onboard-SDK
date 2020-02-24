@@ -46,7 +46,7 @@
  * @return an enum that represents a status of OSDK
  */
 E_OsdkStat OsdkLinux_TaskCreate(T_OsdkTaskHandle *task, void *(*taskFunc)(void *),
-                               uint32_t stackSize, void *arg) {
+                                uint32_t stackSize, void *arg) {
   int result;
 
   *task = malloc(sizeof(pthread_t));
@@ -152,7 +152,7 @@ E_OsdkStat OsdkLinux_MutexUnlock(T_OsdkMutexHandle mutex) {
  * @return an enum that represents a status of OSDK
  */
 E_OsdkStat OsdkLinux_SemaphoreCreate(T_OsdkSemHandle *semaphore,
-                                    uint32_t initValue) {
+                                     uint32_t initValue) {
   int result;
 
   *semaphore = malloc(sizeof(sem_t));
@@ -203,7 +203,7 @@ E_OsdkStat OsdkLinux_SemaphoreWait(T_OsdkSemHandle semaphore) {
  * @return an enum that represents a status of OSDK
  */
 E_OsdkStat OsdkLinux_SemaphoreTimedWait(T_OsdkSemHandle semaphore,
-                                       uint32_t waitTime) {
+                                        uint32_t waitTime) {
   int result;
   struct timespec semaphoreWaitTime;
   struct timeval systemTime;
@@ -275,11 +275,11 @@ E_OsdkStat OsdkLinux_GetTimeUs(uint64_t *us) {
 
 void *OsdkLinux_Malloc(uint32_t size)
 {
-    return malloc(size);
+  return malloc(size);
 }
 
 void OsdkLinux_Free(void *ptr)
 {
-    free(ptr);
+  free(ptr);
 }
 /****************** (C) COPYRIGHT DJI Innovations *****END OF FILE****/

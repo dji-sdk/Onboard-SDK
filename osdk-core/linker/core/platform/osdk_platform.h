@@ -36,6 +36,8 @@
 #endif
 #include "osdk_typedef.h"
 
+#define OSDK_TASK_STACK_SIZE_DEFAULT 1024
+
 #ifdef __cplusplus
 extern "C" {
 #endif

@@ -52,7 +52,7 @@ extern "C" {
 /* Exported functions --------------------------------------------------------*/
 // TODO:adapter for different system task interface void*
 E_OsdkStat OsdkLinux_TaskCreate(T_OsdkTaskHandle *task, void *(*taskFunc)(void *),
-                               uint32_t stackSize, void *arg);
+                                uint32_t stackSize, void *arg);
 E_OsdkStat OsdkLinux_TaskDestroy(T_OsdkTaskHandle task);
 E_OsdkStat OsdkLinux_TaskSleepMs(uint32_t time_ms);
 
@@ -62,11 +62,11 @@ E_OsdkStat OsdkLinux_MutexLock(T_OsdkMutexHandle mutex);
 E_OsdkStat OsdkLinux_MutexUnlock(T_OsdkMutexHandle mutex);
 
 E_OsdkStat OsdkLinux_SemaphoreCreate(T_OsdkSemHandle *semaphore,
-                                    uint32_t initValue);
+                                     uint32_t initValue);
 E_OsdkStat OsdkLinux_SemaphoreDestroy(T_OsdkSemHandle semaphore);
 E_OsdkStat OsdkLinux_SemaphoreWait(T_OsdkSemHandle semaphore);
 E_OsdkStat OsdkLinux_SemaphoreTimedWait(T_OsdkSemHandle semaphore,
-                                       uint32_t waitTime);
+                                        uint32_t waitTime);
 E_OsdkStat OsdkLinux_SemaphorePost(T_OsdkSemHandle semaphore);
 
 E_OsdkStat OsdkLinux_GetTimeMs(uint32_t *ms);

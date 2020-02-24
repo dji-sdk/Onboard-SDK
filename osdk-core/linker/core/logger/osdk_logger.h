@@ -37,16 +37,6 @@
 extern "C" {
 #endif
 
-/* Exported constants --------------------------------------------------------*/
-#define OSDK_USER_LOG_DEBUG(fmt, ...) \
-  OSDK_LOG_DEBUG(MODULE_NAME_USER, fmt, ##__VA_ARGS__)
-#define OSDK_USER_LOG_INFO(fmt, ...) \
-  OSDK_LOG_INFO(MODULE_NAME_USER, fmt, ##__VA_ARGS__)
-#define OSDK_USER_LOG_WARNING(fmt, ...) \
-  OSDK_LOG_WARNING(MODULE_NAME_USER, fmt, ##__VA_ARGS__)
-#define OSDK_USER_LOG_ERROR(fmt, ...) \
-  OSDK_LOG_ERROR(MODULE_NAME_USER, fmt, ##__VA_ARGS__)
-
 /* Exported types ------------------------------------------------------------*/
 typedef E_OsdkStat (*OsdkLogger_ConsoleFunc)(const uint8_t *data,
                                              uint16_t dataLen);

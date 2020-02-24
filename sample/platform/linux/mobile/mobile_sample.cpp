@@ -47,7 +47,7 @@ parseFromMobileCallback(Vehicle* vehicle, RecvContainer recvFrame,
   LinuxSetup* linuxEnvironment = (LinuxSetup*)userData;
   uint16_t    mobile_data_id;
   mobile_data_id =
-    *(reinterpret_cast<uint16_t*>(&recvFrame.recvData.raw_ack_array));
+      *(reinterpret_cast<uint16_t*>(&recvFrame.recvData.raw_ack_array));
 
   DSTATUS("receive mobile_data_id = %d\n", mobile_data_id);
   // Now, let's set up some variables that don't cross case initializations
@@ -136,7 +136,7 @@ parseFromMobileCallback2(Vehicle* vehicle, RecvContainer recvFrame,
   LinuxSetup* linuxEnvironment = (LinuxSetup*)userData;
   uint16_t    mobile_data_id;
   mobile_data_id =
-    *(reinterpret_cast<uint16_t*>(&recvFrame.recvData.raw_ack_array));
+      *(reinterpret_cast<uint16_t*>(&recvFrame.recvData.raw_ack_array));
 
   std::cout << "Received the mobile data ID is " << mobile_data_id << std::endl;
 }
@@ -207,7 +207,7 @@ controlAuthorityMobileCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
       vehiclePtr->control->obtainCtrlAuthority(controlAuthorityMobileCallback);
     }
     else if (ack.data == OpenProtocolCMD::ControlACK::SetControl::
-                           RELEASE_CONTROL_IN_PROGRESS)
+    RELEASE_CONTROL_IN_PROGRESS)
     {
       ACK::getErrorCodeMessage(ack, __func__);
       vehiclePtr->control->releaseCtrlAuthority(controlAuthorityMobileCallback);
@@ -257,7 +257,7 @@ actionMobileCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
 
     AckReturnToMobile mobileAck;
     const uint8_t     cmd[] = { recvFrame.recvInfo.cmd_set,
-                            recvFrame.recvInfo.cmd_id };
+                                recvFrame.recvInfo.cmd_id };
 
     mobileAck.cmdID = mobileCMD;
     mobileAck.ack   = static_cast<uint16_t>(ack.data);
@@ -288,7 +288,7 @@ sendDroneVersionFromCache(DJI::OSDK::Vehicle* vehiclePtr)
 }
 
 VersionMobilePacket::VersionMobilePacket(uint16_t cmdID, char* versionPack)
-  : version{ 0 }
+    : version{ 0 }
 {
   this->cmdID = cmdID;
   memcpy(this->version, versionPack, sizeof(version) / sizeof(version[0]));
@@ -316,7 +316,7 @@ activateMobileCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
 
     if (ACK::getError(ack) &&
         ack_data ==
-          OpenProtocolCMD::ErrorCode::ActivationACK::OSDK_VERSION_ERROR)
+            OpenProtocolCMD::ErrorCode::ActivationACK::OSDK_VERSION_ERROR)
     {
       DERROR("SDK version did not match\n");
       vehiclePtr->getDroneVersion();
@@ -369,7 +369,7 @@ runPositionControlSample(Vehicle* vehicle)
   positionControlError &= monitoredLanding(vehicle);
 
   return (!positionControlError); // We want to return success status, not error
-                                  // status
+  // status
 }
 
 pthread_t
@@ -430,14 +430,14 @@ mobileSamplePoll(void* vehiclePtr)
       case 0x41:
         wayptPolygonSides = 6;
         coreMissionStatus =
-          runWaypointMission(vehicle, wayptPolygonSides, responseTimeout);
+            runWaypointMission(vehicle, wayptPolygonSides, responseTimeout);
         sendAckToMobile(vehicle, 0x41, coreMissionStatus);
         mobileDataID_glob = 0;
         break;
       case 0x42:
         hotptInitRadius = 10;
         coreMissionStatus =
-          runHotpointMission(vehicle, hotptInitRadius, responseTimeout);
+            runHotpointMission(vehicle, hotptInitRadius, responseTimeout);
         sendAckToMobile(vehicle, 0x42, coreMissionStatus);
         mobileDataID_glob = 0;
         break;

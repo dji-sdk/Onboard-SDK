@@ -57,7 +57,6 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/libs)
 if (ADVANCED_SENSING)
   add_definitions(-DADVANCED_SENSING)
 endif()
-add_subdirectory(osdk-core)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES Linux)
   add_subdirectory(sample/platform/linux)

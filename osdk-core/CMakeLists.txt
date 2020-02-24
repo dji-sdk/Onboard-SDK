@@ -21,7 +21,7 @@ endif (MSVC)
 if (CMAKE_SYSTEM_NAME MATCHES Linux)
   set(COMMON_CXX_FLAGS "-std=c++11 -pthread -fPIC")
   add_definitions(-DDJIOSDK_OPERATOR_TYPE=1)
-  else()
+else()
   add_definitions(-DDJIOSDK_OPERATOR_TYPE=0)
 endif ()
 
@@ -112,15 +112,15 @@ if(ADVANCED_SENSING)
   find_package(FFMPEG REQUIRED)
 
   if(FFMPEG_FOUND)
-      message( STATUS "Found FFmpeg ${FFMPEG_VERSION} installed in the system.")
-      message( STATUS " - Includes: ${FFMPEG_INCLUDE_DIRS}")
-      message( STATUS " - Libraries: ${FFMPEG_LIBRARIES}")
+    message( STATUS "Found FFmpeg ${FFMPEG_VERSION} installed in the system.")
+    message( STATUS " - Includes: ${FFMPEG_INCLUDE_DIRS}")
+    message( STATUS " - Libraries: ${FFMPEG_LIBRARIES}")
   else()
     message("Cannot Find FFMPEG")
   endif(FFMPEG_FOUND)
 
   target_include_directories(${PROJECT_NAME} PUBLIC
-                             $<BUILD_INTERFACE:${ADVANCED_SENSING_INCLUDE_DIRS}>)
+          $<BUILD_INTERFACE:${ADVANCED_SENSING_INCLUDE_DIRS}>)
   target_link_libraries(${PROJECT_NAME} PRIVATE ${ADVANCED_SENSING_LIBRARY})
 
 
@@ -240,35 +240,32 @@ install(FILES
         DESTINATION "${INSTALL_CMAKE_DIR}" COMPONENT dev)
 
 FILE(GLOB OSDK_LIB_HEADERS
+        ##aircraft function APIs related header files
         api/inc/*.h*
         modules/inc/payload/*.h*
         modules/inc/flight/*.h*
+        ##osdk application related header files
         platform/inc/*.h*
         logger/inc/*.h*
         utility/inc/*.h*
-        linker/*.hpp
-        linker/core/*.h
-        linker/core/channel/*.h
-        linker/core/command/*.h
-        linker/core/logger/*.h
-        linker/core/protocol/*.h
-        linker/core/platform/*.h
-        linker/core/utils/inc/*.h
-        linker/core/root_task/*.h)
+        ##linker layer related header files
+        linker/core/osdk_typedef.h
+        linker/core/logger/osdk_logger.h
+        linker/core/platform/osdk_platform.h
+        )
 
 # Append advanced sensing headers
 if(ADVANCED_SENSING)
+  FILE(GLOB ADVANCED_SENSING_HEADERS
+          ${ADVANCED_SENSING_INCLUDE_DIRS}/*.h*)
+
   install(FILES ${ADVANCED_SENSING_LIBRARY}
-        DESTINATION "${INSTALL_LIB_DIR}" COMPONENT shlib)
+          DESTINATION "${INSTALL_LIB_DIR}" COMPONENT shlib)
 
   set(OSDK_LIB_HEADERS
-      ${OSDK_LIB_HEADERS}
-      ${ADVANCED_SENSING_INCLUDE_DIRS}/dji_advanced_sensing.hpp
-      ${ADVANCED_SENSING_INCLUDE_DIRS}/dji_advanced_sensing_protocol.hpp
-      ${ADVANCED_SENSING_INCLUDE_DIRS}/linux_usb_device.hpp
-      ${ADVANCED_SENSING_INCLUDE_DIRS}/dji_camera_image.hpp
-      ${ADVANCED_SENSING_INCLUDE_DIRS}/dji_camera_stream.hpp
-      )
+          ${OSDK_LIB_HEADERS}
+          ${ADVANCED_SENSING_HEADERS})
+
 endif()
 if(WAYPT2_CORE)
   install(FILES ${WAYPT2_CORE_LIBRARY}

@@ -32,7 +32,6 @@
 
 #include "dji_telemetry.hpp"
 #include "dji_vehicle_callback.hpp"
-#include "osdk_osal.h"
 
 namespace DJI
 {

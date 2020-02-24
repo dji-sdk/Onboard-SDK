@@ -36,7 +36,7 @@ STM32Setup::UartChannelInitParams STM32Setup::uartChnParams[] = {
   {ACM_PORT,  921600, USB_ACM_CHANNEL_ID},
 };
 
-STM32Setup::STM32Setup() {
+STM32Setup::STM32Setup() : Setup(false) {
   this->vehicle = NULL;
   setupEnvironment();
 }
@@ -56,34 +56,36 @@ static E_OsdkStat OsdkUser_Console(const uint8_t *data, uint16_t dataLen) {
 }
 
 void STM32Setup::initVehicle() {
+
+  /*! Linker initialization */
+  if (!initLinker()) {
+    DERROR("Failed to initialize Linker");
+    return false;
+  }
+
   /*! Linker add uart channel */
-  for (int i = 0; i < (sizeof(uartChnParams) / sizeof(UartChannelInitParams)); i++) {
-    if (!Platform::instance().addUartChannel(uartChnParams[i].device,
-                                             uartChnParams[i].baudrate,
-                                             uartChnParams[i].id)) {
-      DERROR("Failed to initialize Linker uart channel :");
-      DERROR("device : %s, baudrate : %d, channel id : 0x%08X", uartChnParams[i].device,
-             uartChnParams[i].baudrate, uartChnParams[i].id);
-    } else {
-      DSTATUS("Success to initialize Linker uart channel :");
-      DSTATUS("device : %s, baudrate : %d, channel id : 0x%08X", uartChnParams[i].device,
-              uartChnParams[i].baudrate, uartChnParams[i].id);
-    }
+  if (!addFCUartChannel(UART_PORT, 921600) {
+    DERROR("Failed to initialize Linker channel");
+    return false;
+  }
+
+  /*! Linker add USB acm channel */
+  if (!addUSBACMChannel(ACM_PORT, 921600) {
+    DERROR("Failed to initialize ACM Linker channel!");
   }
 
   /*! Vehicle initialization */
-  Linker *linker = Platform::instance().getLinker();
-  if (linker == 0)
+  if (!linker)
   {
     DERROR("Linker get failed.");
-    return;
+    goto err;
   }
 
-  /*! Vehicle initialization */
-  this->vehicle = new Vehicle(linker);
-  if (!this->vehicle) {
-    DERROR("Failed to allocate memory for Vehicle!");
-    return;
+  vehicle = new Vehicle(linker);
+  if (!vehicle)
+  {
+    DERROR("Vehicle create failed.");
+    goto err;
   }
 
   if (!this->vehicle->initLegacyLinker())
