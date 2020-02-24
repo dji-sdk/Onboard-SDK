@@ -34,6 +34,7 @@
 #include <fstream>
 #include <dji_vehicle.hpp>
 #include <dji_platform.hpp>
+#include <dji_setup_helpers.hpp>
 
 class STM32Setup : private Setup
 {

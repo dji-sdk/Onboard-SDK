@@ -34,8 +34,8 @@
 using namespace DJI::OSDK;
 
 Setup::Setup(bool enableAdvancedSensing) {
-  this->linker = nullptr;
-  this->vehicle = nullptr;
+  this->linker = NULL;
+  this->vehicle = NULL;
   this->useAdvancedSensing = enableAdvancedSensing;
 }
 

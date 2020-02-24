@@ -23,12 +23,12 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+#include "osdkhal_stm32.h"
 #include "usbh_usr.h"
 #include "usbh_cdc_core.h"
 #include "string.h"
 #include "FreeRTOS.h"
 #include "queue.h"
-#include "osdk_hal.h"
 #ifdef __cplusplus
 }
 #endif

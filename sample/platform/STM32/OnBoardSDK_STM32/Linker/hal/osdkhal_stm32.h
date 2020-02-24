@@ -34,9 +34,11 @@
 #include <stdio.h>
 #include <string.h>
 #include "osdk_typedef.h"
+#include "osdk_platform.h"
 
 #define UART_PORT "UART"
 #define ACM_PORT  "ACM"
+#define HAL_ONCE_READ_LEN 1024
 
 #ifdef __cplusplus
 extern "C" {

@@ -31,11 +31,6 @@
 #include "osdkhal_stm32.h"
 #include "osdkosal_stm32.h"
 
-STM32Setup::UartChannelInitParams STM32Setup::uartChnParams[] = {
-  {UART_PORT, 921600, FC_UART_CHANNEL_ID},
-  {ACM_PORT,  921600, USB_ACM_CHANNEL_ID},
-};
-
 STM32Setup::STM32Setup() : Setup(false) {
   this->vehicle = NULL;
   setupEnvironment();
@@ -55,7 +50,7 @@ static E_OsdkStat OsdkUser_Console(const uint8_t *data, uint16_t dataLen) {
   return OSDK_STAT_OK;
 }
 
-void STM32Setup::initVehicle() {
+bool STM32Setup::initVehicle() {
 
   /*! Linker initialization */
   if (!initLinker()) {
@@ -64,13 +59,13 @@ void STM32Setup::initVehicle() {
   }
 
   /*! Linker add uart channel */
-  if (!addFCUartChannel(UART_PORT, 921600) {
+  if (!addFCUartChannel(UART_PORT, 921600)) {
     DERROR("Failed to initialize Linker channel");
     return false;
   }
 
   /*! Linker add USB acm channel */
-  if (!addUSBACMChannel(ACM_PORT, 921600) {
+  if (!addUSBACMChannel(ACM_PORT, 921600)) {
     DERROR("Failed to initialize ACM Linker channel!");
   }
 
@@ -91,8 +86,15 @@ void STM32Setup::initVehicle() {
   if (!this->vehicle->initLegacyLinker())
   {
     DERROR("Failed to initialize legacyLinker!\n");
-    return;
+    return false;
   }
+
+  return true;
+
+err:
+	if (vehicle) delete vehicle;
+	vehicle = NULL;
+	return false;
 }
 
 void

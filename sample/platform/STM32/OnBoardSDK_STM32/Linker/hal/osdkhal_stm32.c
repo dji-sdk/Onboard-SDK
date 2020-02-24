@@ -29,7 +29,6 @@
 #include "stm32f4xx.h"
 #include "FreeRTOS.h"
 #include "queue.h"
-#include "osdk_hal.h"
 
 extern QueueHandle_t UartDataRecvQueue;
 extern QueueHandle_t ACMDataRecvQueue;
