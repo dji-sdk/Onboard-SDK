@@ -84,6 +84,49 @@ void PerceptionImageCB(Perception::ImageInfoType info, uint8_t *imageRawBuffer,
   }
 }
 
+void PerceptionCamParamCB(Perception::CamParamPacketType pack,
+                          void *userData) {
+  DSTATUS("stereo cam parameters : timestamp(%d) dirNum(%d)", pack.timeStamp, pack.directionNum);
+  if ((pack.directionNum > 0) && (pack.directionNum <= IMAGE_MAX_DIRECTION_NUM))
+  for (int i = 0 ; i < pack.directionNum; i++) {
+    DSTATUS("dir[%d] parameters :", pack.cameraParam[i].direction);
+    DSTATUS("\tleftIntrinsics \t= {%f, %f, %f, %f, %f, %f, %f, %f, %f }",
+            pack.cameraParam[i].leftIntrinsics[0],
+            pack.cameraParam[i].leftIntrinsics[1],
+            pack.cameraParam[i].leftIntrinsics[2],
+            pack.cameraParam[i].leftIntrinsics[3],
+            pack.cameraParam[i].leftIntrinsics[4],
+            pack.cameraParam[i].leftIntrinsics[5],
+            pack.cameraParam[i].leftIntrinsics[6],
+            pack.cameraParam[i].leftIntrinsics[7],
+            pack.cameraParam[i].leftIntrinsics[8]);
+    DSTATUS("\trightIntrinsics \t= {%f, %f, %f, %f, %f, %f, %f, %f, %f }",
+            pack.cameraParam[i].rightIntrinsic[0],
+            pack.cameraParam[i].rightIntrinsic[1],
+            pack.cameraParam[i].rightIntrinsic[2],
+            pack.cameraParam[i].rightIntrinsic[3],
+            pack.cameraParam[i].rightIntrinsic[4],
+            pack.cameraParam[i].rightIntrinsic[5],
+            pack.cameraParam[i].rightIntrinsic[6],
+            pack.cameraParam[i].rightIntrinsic[7],
+            pack.cameraParam[i].rightIntrinsic[8]);
+    DSTATUS("\trotaionLeftInRight \t= {%f, %f, %f, %f, %f, %f, %f, %f, %f }",
+            pack.cameraParam[i].rotaionLeftInRight[0],
+            pack.cameraParam[i].rotaionLeftInRight[1],
+            pack.cameraParam[i].rotaionLeftInRight[2],
+            pack.cameraParam[i].rotaionLeftInRight[3],
+            pack.cameraParam[i].rotaionLeftInRight[4],
+            pack.cameraParam[i].rotaionLeftInRight[5],
+            pack.cameraParam[i].rotaionLeftInRight[6],
+            pack.cameraParam[i].rotaionLeftInRight[7],
+            pack.cameraParam[i].rotaionLeftInRight[8]);
+    DSTATUS("\ttranslationLeftInRight \t= {%f, %f, %f }",
+            pack.cameraParam[i].translationLeftInRight[0],
+            pack.cameraParam[i].translationLeftInRight[1],
+            pack.cameraParam[i].translationLeftInRight[2]);
+  }
+}
+
 int
 main(int argc, char** argv)
 {
@@ -104,10 +147,10 @@ main(int argc, char** argv)
       << "| Available commands:                                            |"
       << std::endl;
     std::cout
-      << "| [a] start advanced sensing test                                |"
+      << "| [a] Front stereo camera advanced sensing function test         |"
       << std::endl;
     std::cout
-      << "| [b] stop advanced sensing test                                 |"
+      << "| [b] Upward stereo camera advanced sensing function test        |"
       << std::endl;
     std::cout
       << "| [q] quit                                                       |"
@@ -118,7 +161,8 @@ main(int argc, char** argv)
     {
       case 'a': {
         DSTATUS("Do stereo camera parameters subscription");
-        vehicle->advancedSensing->camParamPushOnce();
+        vehicle->advancedSensing->setStereoCamParamsObserver(PerceptionCamParamCB, NULL);
+        vehicle->advancedSensing->triggerStereoCamParamsPushing();
         DSTATUS("Do stereo camera imagines subscription");
         vehicle->advancedSensing->subscribePerceptionImage(
             Perception::DirectionType::RECTIFY_FRONT, PerceptionImageCB, NULL);
@@ -130,7 +174,8 @@ main(int argc, char** argv)
         break;
       case 'b': {
         DSTATUS("Do stereo camera parameters subscription");
-        vehicle->advancedSensing->camParamPushOnce();
+        vehicle->advancedSensing->setStereoCamParamsObserver(PerceptionCamParamCB, NULL);
+        vehicle->advancedSensing->triggerStereoCamParamsPushing();
         DSTATUS("Do stereo camera imagines subscription");
         vehicle->advancedSensing->subscribePerceptionImage(
             Perception::DirectionType::RECTIFY_UP, PerceptionImageCB, NULL);
