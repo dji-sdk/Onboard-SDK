@@ -336,7 +336,7 @@ void LegacyLinker::send(const uint8_t cmd[], void *pdata, size_t len) {
   cmdInfo.needAck = OSDK_COMMAND_NEED_ACK_NO_NEED;
   cmdInfo.packetType = OSDK_COMMAND_PACKET_TYPE_REQUEST;
   cmdInfo.addr = GEN_ADDR(0, ADDR_SDK_COMMAND_INDEX);
-  cmdInfo.encType = vehicle->getEncryption();
+  cmdInfo.encType = (vehicle->getEncryption() == true) ? 1 : 0;
   cmdInfo.channelId = 0;
   vehicle->linker->send(&cmdInfo, (uint8_t *) pdata);
 }
@@ -374,7 +374,7 @@ void LegacyLinker::sendAsync(const uint8_t cmd[], void *pdata, size_t len,
   cmdInfo.needAck = OSDK_COMMAND_NEED_ACK_FINISH_ACK;
   cmdInfo.packetType = OSDK_COMMAND_PACKET_TYPE_REQUEST;
   cmdInfo.addr = GEN_ADDR(0, ADDR_SDK_COMMAND_INDEX);
-  cmdInfo.encType = vehicle->getEncryption();
+  cmdInfo.encType = (vehicle->getEncryption() == true) ? 1 : 0;
   cmdInfo.channelId = 0;
   legacyAdaptingData
       *udata = (legacyAdaptingData *) malloc(sizeof(legacyAdaptingData));
@@ -397,7 +397,7 @@ void* LegacyLinker::sendSync(const uint8_t cmd[], void *pdata,
   cmdInfo.needAck = OSDK_COMMAND_NEED_ACK_FINISH_ACK;
   cmdInfo.packetType = OSDK_COMMAND_PACKET_TYPE_REQUEST;
   cmdInfo.addr = GEN_ADDR(0, ADDR_SDK_COMMAND_INDEX);
-  cmdInfo.encType = vehicle->getEncryption();
+  cmdInfo.encType = (vehicle->getEncryption() == true) ? 1 : 0;
   cmdInfo.channelId = 0;
 
   /*! default ack info value */

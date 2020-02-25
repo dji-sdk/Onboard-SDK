@@ -50,11 +50,15 @@ bool Setup::initLinker() {
   linker = new(std::nothrow) Linker();
   if (linker == 0) {
     DERROR("Failed to allocate memory for Linker!");
+    return false;
   } else {
     if (!linker->init()) {
       DERROR("Failed to initialize Linker!");
+      return false;
     }
   }
+
+  return true;
 }
 
 bool
