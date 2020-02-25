@@ -139,6 +139,9 @@ main(int argc, char** argv)
       return -1;
   }
 
+  DSTATUS("This sample only supports the M300. This is the beta version,"
+          "and the APIs wil be optimized in the future.");
+
   char inputChar;
 
   while(1) {
