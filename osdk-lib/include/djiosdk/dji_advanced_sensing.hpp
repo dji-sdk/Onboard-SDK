@@ -300,24 +300,24 @@ public:
   /*! @brief
    *
    *  Trigger the perception parameters to be passed to the callback which is
-   *  registered by DJI::OSDK::Perception::setCamParamGetter. (Only for M300 series)
+   *  registered by DJI::OSDK::Perception::setStereoCamParamsObserver. (Only for M300 series)
    *
    *  @return Errorcode of liveivew, ref to DJI::OSDK::LiveView::LiveViewErrCode
    */
-  Perception::PerceptionErrCode camParamPushOnce();
+  Perception::PerceptionErrCode triggerStereoCamParamsPushing();
 
   /*! @brief
    *
    *  Set the callback to catch the perception camera parameters. (Only for M300 series)
    *
    *  @note  The callback will be triggered by calling
-   *  DJI::OSDK::Perception::camParamPushOnce() or when the parameters of
+   *  DJI::OSDK::Perception::triggerStereoCamParamsPushing() or when the parameters of
    *  perception cameras are refreshed.
    *  @param cb callback function that is called in a callback thread when the
    *  getting the parameters of perception cameras.
    *  @param userData a void pointer that users can manipulate inside the callback
    */
-  void setCamParamGetter(Perception::PerceptionCamParamCB cb, void *userData);
+  void setStereoCamParamsObserver(Perception::PerceptionCamParamCB cb, void *userData);
 
 private:
 void sendCommonCmd(uint8_t *data, uint8_t data_len, uint8_t cmd_id);

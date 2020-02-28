@@ -247,6 +247,10 @@ LinuxSetup::initVehicle()
     goto err;
   }
 
+  if (!vehicle->isM300()) {
+    vehicle->setUSBFlightOn(true);
+  }
+
   return true;
 
   err:

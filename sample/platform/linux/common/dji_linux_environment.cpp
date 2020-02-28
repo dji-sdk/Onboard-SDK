@@ -178,7 +178,14 @@ DJI_Environment::parse(std::string config_file_path)
     else
     {
       std::cout << "There's an error with your UserConfig.txt file.\n";
+      std::cout << "Recommended format of UserConfig.txt :\n"
+                   "app_id : 123456\n"
+                   "app_key : 0123456789abcdefghijklmnopqrstuvwxyz\n"
+                   "device : /dev/ttyUSBx\n"
+                   "baudrate : 921600\n"
+                   "acm_port : /dev/ttyACMx\n\n";
       result = false;
+
     }
 
     if (!setACM)
@@ -188,9 +195,12 @@ DJI_Environment::parse(std::string config_file_path)
                    "   GimbalManager APIs\n"
                    "   CameraManager APIs\n"
                    "   Advance sensing APIs\n";
-      std::cout << "Please make sure ACM device is configured in the config"
-                   " file ! Adding a line like :\n"
-                   "\"acm_port : /dev/ttyACM0\"\n\n";
+      std::cout << "Recommended format of UserConfig.txt :\n"
+                   "app_id : 123456\n"
+                   "app_key : 0123456789abcdefghijklmnopqrstuvwxyz\n"
+                   "device : /dev/ttyUSBx\n"
+                   "baudrate : 921600\n"
+                   "acm_port : /dev/ttyACMx\n\n";
     }
 
     read.close();

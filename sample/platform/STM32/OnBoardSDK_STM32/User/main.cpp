@@ -166,6 +166,10 @@ void *mainLoopTask(void *p){
       userActivate();
       delay_nms(500);
 
+      if (!v->isM300()) {
+        v->setUSBFlightOn(true);
+      }
+
       // Verify subscription
       if (v->getFwVersion() != Version::M100_31) {
         v->subscribe->verify();

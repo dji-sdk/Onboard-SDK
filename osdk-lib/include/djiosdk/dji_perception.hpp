@@ -125,9 +125,9 @@ class Perception {
 
   PerceptionErrCode unsubscribePerceptionImage(DirectionType direction);
 
-  PerceptionErrCode camParamPushOnce();
+  PerceptionErrCode triggerStereoCamParamsPushing();
 
-  void setCamParamGetter(PerceptionCamParamCB cb, void *userData);
+  void setStereoCamParamsObserver(PerceptionCamParamCB cb, void *userData);
 
  private:
   Vehicle *vehicle;

@@ -140,6 +140,14 @@ public:
   */
   ACK::ErrorCode activate(ActivateData* data, uint32_t timeoutMs);
 
+  /*! @brief Set up take-off permission when the aircraft is connected with
+    * a USB cable
+    *  @note This api is meaningless to M300. Only for M210 V1/V2 series
+    *  @param en enable or disable take-off permission
+    *  @return ErrorCode::ErrorCodeType error code
+    */
+  bool setUSBFlightOn(bool en);
+
   /*! @brief A callback function for activate non-blocking calls
    *  @param receivedFrame: RecvContainer populated by the protocolLayer
    *  @return NULL
