@@ -25,9 +25,7 @@ cmake_minimum_required(VERSION 2.8)
 project(onboardsdk-linux-samples)
 
 
-set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR})
-
-find_package(djiosdk-core QUIET)
+set(DJIOSDK_DIR ${OSDK_CORE_LIB_DIR}/lib/cmake/djiosdk)
 find_package(DJIOSDK REQUIRED)
 
 

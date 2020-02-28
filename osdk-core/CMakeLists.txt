@@ -195,16 +195,34 @@ set_property(TARGET ${PROJECT_NAME}
 # Installation #
 ################
 
-set(INSTALL_LIB_DIR lib)
-set(INSTALL_BIN_DIR bin)
-set(INSTALL_INCLUDE_DIR include/djiosdk)
-set(DEF_INSTALL_CMAKE_DIR lib/cmake/djiosdk)
+set(OSDK_LIB_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../osdk-lib)
+set(INSTALL_LIB_DIR ${OSDK_LIB_ROOT_DIR}/lib)
+set(INSTALL_BIN_DIR ${OSDK_LIB_ROOT_DIR}/bin)
+set(INSTALL_INCLUDE_DIR ${OSDK_LIB_ROOT_DIR}/include/djiosdk)
+set(DEF_INSTALL_CMAKE_DIR  ${OSDK_LIB_ROOT_DIR}/lib/cmake/djiosdk)
 set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR})
+
+if(OSDK_LIB_REFRESH)
+  message("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+  set(CMAKE_INSTALL_PREFIX ${OSDK_LIB_ROOT_DIR})
+  message("!!! CAUTION : CMAKE_INSTALL_PREFIX -----------> ${CMAKE_INSTALL_PREFIX}")
+  message("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+else()
+  message("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+  message("!!! CAUTION : CMAKE_INSTALL_PREFIX -----------> ${CMAKE_INSTALL_PREFIX}")
+  message("!!! CAUTION : ALL THE LIB WILL BE INSTALLED HEAR. YOU CAN TYPE : ")
+  message("  cmake .. -DCMAKE_INSTALL_PREFIX=${OSDK_LIB_ROOT_DIR}")
+  message("      OR  ")
+  message("  cmake .. -DOSDK_LIB_REFRESH=ON")
+  message("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+endif()
+
 foreach(p LIB BIN INCLUDE CMAKE)
-  set(var INSTALL_${p}_DIR)
-  if(NOT IS_ABSOLUTE "${${var}}")
-    set(${var} "${CMAKE_INSTALL_PREFIX}/${${var}}")
-  endif()
+  #set(var INSTALL_${p}_DIR)
+  #if(NOT IS_ABSOLUTE "${${var}}")
+  #  set(${var} "${CMAKE_INSTALL_PREFIX}/${${var}}")
+  #endif()
+  #message("*******---===+++---->>> INSTALL_${p}_DIR : ${INSTALL_${p}_DIR}")
 endforeach()
 
 # Add all targets to the build-tree export set
