@@ -24,15 +24,67 @@
 cmake_minimum_required(VERSION 2.8)
 project(onboardsdk-linux-samples)
 
-
-set(DJIOSDK_DIR ${OSDK_CORE_LIB_DIR}/lib/cmake/djiosdk)
-find_package(DJIOSDK REQUIRED)
-
+# set(DJIOSDK_DIR ${OSDK_CORE_LIB_DIR}/lib/cmake/djiosdk)
+# find_package(DJIOSDK REQUIRED)
 
 include_directories(${DJIOSDK_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/common)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/hal)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/osal)
+
+set(OSDK_LIB ${CMAKE_CURRENT_SOURCE_DIR}/../../../osdk-lib)
+set(OSDK_CORE_LIB ${OSDK_LIB}/osdk-core)
+set(ADVANCED_SENSING_LIB ${OSDK_LIB}/advanced-sensing-2.0.3)
+set(WP2_CORE_LIB  ${OSDK_LIB}/waypointv2-core-1.0.0)
+
+include_directories(${OSDK_CORE_LIB}/inc)
+include_directories(${ADVANCED_SENSING_LIB}/inc)
+
+
+set(CMAKE_MODULE_PATH ${OSDK_LIB}/cmake-modules)
+find_package(LibUSB REQUIRED)
+find_package(FFMPEG REQUIRED)
+find_package(Waypt2Core REQUIRED)
+
+## Waypoint2 Core
+if(NOT WAYPT2_CORE)
+    message(STATUS "Compiling without WaypointV2 Core")
+else()
+
+    set(MODULE_BUILD_INTERFACE ${MODULE_BUILD_INTERFACE}
+            ${WAYPT2_CORE_LIBRARY}
+            ${SDK_COMMON_LIBRARY}
+            ${DJI_PROTOBUF_LIBRARY}
+            ${WAYPT2_INTERFACE_LIBRARY}
+            )
+    set(MODULE_INSTALL_INTERFACE ${MODULE_INSTALL_INTERFACE}
+            $<INSTALL_PREFIX>/lib/libwaypointv2-interface.a
+            $<INSTALL_PREFIX>/lib/libwaypointv2-core.a
+            $<INSTALL_PREFIX>/lib/libdjisdk-common.a
+            $<INSTALL_PREFIX>/lib/libDJIProtobuf.a
+            )
+
+    set(OSDK_INTERFACE_LIBS ${OSDK_INTERFACE_LIBS}
+            ${WAYPT2_CORE_LIBRARY}
+            ${SDK_COMMON_LIBRARY}
+            ${DJI_PROTOBUF_LIBRARY}
+            ${WAYPT2_INTERFACE_LIBRARY}
+            )
+
+endif()
+
+
+if(FFMPEG_FOUND)
+    message( STATUS "Found FFmpeg ${FFMPEG_VERSION} installed in the system.")
+    message( STATUS " - Includes: ${FFMPEG_INCLUDE_DIRS}")
+    message( STATUS " - Libraries: ${FFMPEG_LIBRARIES}")
+else()
+    message("Cannot Find FFMPEG")
+endif(FFMPEG_FOUND)
+
+
+include_directories(${LIBUSB_1_INCLUDE_DIRS})
+include_directories(${FFMPEG_INCLUDE_DIR})
 
 add_subdirectory(camera-gimbal)
 add_subdirectory(flight-control)
@@ -44,9 +96,6 @@ add_subdirectory(logging)
 add_subdirectory(time-sync)
 add_subdirectory(payload-3rd-party)
 add_subdirectory(payloads)
+add_subdirectory(advanced-sensing)
 
-if(ADVANCED_SENSING)
-    add_definitions(-DADVANCED_SENSING)
-    message(STATUS "AdvancedSensing sample is enabled")
-    add_subdirectory(advanced-sensing)
-endif()
+

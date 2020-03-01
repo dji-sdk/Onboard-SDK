@@ -36,7 +36,10 @@ add_executable(time_sync_callback_sample
         ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_environment.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_helpers.cpp
         )
-target_link_libraries(time_sync_callback_sample djiosdk-core)
+target_link_libraries(time_sync_callback_sample ${OSDK_CORE_LIB}/lib/libdjiosdk-core.a)
+target_link_libraries(time_sync_callback_sample ${ADVANCED_SENSING_LIB}/lib/libadvanced-sensing.a)
+target_link_libraries(time_sync_callback_sample ${LIBUSB_1_LIBRARIES})
+target_link_libraries(time_sync_callback_sample ${FFMPEG_LIBRARIES})
 
 add_executable(time_sync_poll_sample
         ${SOURCE_FILES}
@@ -44,4 +47,7 @@ add_executable(time_sync_poll_sample
         ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_environment.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_helpers.cpp
         )
-target_link_libraries(time_sync_poll_sample djiosdk-core)
+target_link_libraries(time_sync_poll_sample ${OSDK_CORE_LIB}/lib/libdjiosdk-core.a)
+target_link_libraries(time_sync_poll_sample ${ADVANCED_SENSING_LIB}/lib/libadvanced-sensing.a)
+target_link_libraries(time_sync_poll_sample ${LIBUSB_1_LIBRARIES})
+target_link_libraries(time_sync_poll_sample ${FFMPEG_LIBRARIES})

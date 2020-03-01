@@ -137,7 +137,6 @@ if(ADVANCED_SENSING)
   target_compile_definitions(${PROJECT_NAME} PUBLIC -DADVANCED_SENSING)
 
 endif()
-
 ## Waypoint2 Core
 if(NOT WAYPT2_CORE)
   message(STATUS "Compiling without WaypointV2 Core")
@@ -195,14 +194,20 @@ set_property(TARGET ${PROJECT_NAME}
 # Installation #
 ################
 
-set(OSDK_LIB_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../osdk-lib)
+
+set(OSDK_CORE_LIB ${CMAKE_CURRENT_SOURCE_DIR}/../osdk-lib/osdk-core)
+set(INSTALL_LIB_DIR ${OSDK_CORE_LIB}/lib)
+set(INSTALL_INCLUDE_DIR ${OSDK_CORE_LIB}/inc)
+
+
+#[[set(OSDK_LIB_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../osdk-lib)
 set(INSTALL_LIB_DIR ${OSDK_LIB_ROOT_DIR}/lib)
 set(INSTALL_BIN_DIR ${OSDK_LIB_ROOT_DIR}/bin)
 set(INSTALL_INCLUDE_DIR ${OSDK_LIB_ROOT_DIR}/include/djiosdk)
 set(DEF_INSTALL_CMAKE_DIR  ${OSDK_LIB_ROOT_DIR}/lib/cmake/djiosdk)
-set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR})
+set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR})]]
 
-if(OSDK_LIB_REFRESH)
+#[[if(OSDK_LIB_REFRESH)
   message("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
   set(CMAKE_INSTALL_PREFIX ${OSDK_LIB_ROOT_DIR})
   message("!!! CAUTION : CMAKE_INSTALL_PREFIX -----------> ${CMAKE_INSTALL_PREFIX}")
@@ -215,7 +220,7 @@ else()
   message("      OR  ")
   message("  cmake .. -DOSDK_LIB_REFRESH=ON")
   message("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-endif()
+endif()]]
 
 foreach(p LIB BIN INCLUDE CMAKE)
   #set(var INSTALL_${p}_DIR)
@@ -225,7 +230,7 @@ foreach(p LIB BIN INCLUDE CMAKE)
   #message("*******---===+++---->>> INSTALL_${p}_DIR : ${INSTALL_${p}_DIR}")
 endforeach()
 
-# Add all targets to the build-tree export set
+#[[# Add all targets to the build-tree export set
 export(TARGETS djiosdk-core
         FILE "${PROJECT_BINARY_DIR}/djiosdkTargets.cmake")
 
@@ -255,7 +260,7 @@ configure_file(${CURRENT_CMAKE_MODULE_PATH}/DJIOSDKConfigVersion.cmake.in
 install(FILES
         "${CURRENT_CMAKE_MODULE_PATH}/DJIOSDKConfig.cmake"
         "${CURRENT_CMAKE_MODULE_PATH}/DJIOSDKConfigVersion.cmake"
-        DESTINATION "${INSTALL_CMAKE_DIR}" COMPONENT dev)
+        DESTINATION "${INSTALL_CMAKE_DIR}" COMPONENT dev)]]
 
 FILE(GLOB OSDK_LIB_HEADERS
         ##aircraft function APIs related header files
@@ -273,6 +278,7 @@ FILE(GLOB OSDK_LIB_HEADERS
         )
 
 # Append advanced sensing headers
+#[[
 if(ADVANCED_SENSING)
   FILE(GLOB ADVANCED_SENSING_HEADERS
           ${ADVANCED_SENSING_INCLUDE_DIRS}/*.h*)
@@ -305,6 +311,7 @@ if(WAYPT2_CORE)
           PATTERN "*.h*")
 
 endif()
+]]
 set_target_properties(${PROJECT_NAME} PROPERTIES
         PUBLIC_HEADER "${OSDK_LIB_HEADERS}")
 
@@ -314,6 +321,8 @@ install(TARGETS ${PROJECT_NAME}
         PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}" COMPONENT dev
         )
 
+
 # Install the export set for use with the install-tree
+#[[
 install(EXPORT djiosdkTargets DESTINATION
-        "${INSTALL_CMAKE_DIR}" COMPONENT dev)
+        "${INSTALL_CMAKE_DIR}" COMPONENT dev)]]
