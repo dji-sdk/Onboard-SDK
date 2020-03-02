@@ -39,4 +39,7 @@ target_link_libraries(${PROJECT_NAME} ${ADVANCED_SENSING_LIB}/lib/libadvanced-se
 target_link_libraries(${PROJECT_NAME}  ${LIBUSB_1_LIBRARIES})
 target_link_libraries(${PROJECT_NAME}  ${FFMPEG_LIBRARIES})
 
-
+target_link_libraries(${PROJECT_NAME} ${WP2_CORE_LIB}/lib/libwaypointv2-interface.a)
+target_link_libraries(${PROJECT_NAME} ${WP2_CORE_LIB}/lib/libwaypointv2-core.a)
+target_link_libraries(${PROJECT_NAME} ${WP2_CORE_LIB}/lib/libDJIProtobuf.a)
+target_link_libraries(${PROJECT_NAME} ${WP2_CORE_LIB}/lib/libdjisdk-common.a)

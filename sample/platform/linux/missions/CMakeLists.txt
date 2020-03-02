@@ -46,7 +46,7 @@ target_link_libraries(${PROJECT_NAME} ${FFMPEG_LIBRARIES})
 
 if(WAYPT2_CORE)
 #waypoint v2
-include_directories(${WAYPT2_CORE_INCLUDE_DIRS})
+
 add_executable(djiosdk-waypoint-v2-sample
           ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_environment.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_helpers.cpp

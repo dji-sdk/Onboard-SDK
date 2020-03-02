@@ -59,6 +59,10 @@ if (ADVANCED_SENSING)
   add_definitions(-DADVANCED_SENSING)
 endif()
 
+if (WAYPT2_CORE)
+    add_definitions(-DWAYPT2_CORE)
+endif()
+
 if (${CMAKE_SYSTEM_NAME} MATCHES Linux)
   add_subdirectory(sample/platform/linux)
 endif()

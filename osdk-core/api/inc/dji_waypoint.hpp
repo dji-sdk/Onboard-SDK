@@ -30,8 +30,10 @@
 #define DJI_WAYPOINT_H
 
 #include "dji_mission_base.hpp"
-#include "dji_waypointv2_interface.hpp"
 
+#ifdef WAYPT2_CORE
+#include "dji_waypointv2_interface.hpp"
+#endif
 
 namespace DJI
 {
@@ -283,7 +285,7 @@ public:
    */
   void setWaypointCallback(VehicleCallBack callback, UserData userData);
 
-
+#ifdef WAYPT2_CORE
   /*! @brief
    *
    *  update push data from the drone to the internal waypt core library
@@ -399,12 +401,15 @@ public:
    */
   inline dji::waypointv2::ActionState getPrevActionState() { return waypointV2Interface.getPrevActionState(); }
 
-
+#endif
 
 private:
   WayPointInitSettings info;
   WayPointSettings*    index;
+
+#ifdef WAYPT2_CORE
   WaypointV2Interface waypointV2Interface;
+#endif
 };
 
 } // namespace OSDK

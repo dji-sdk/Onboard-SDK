@@ -58,6 +58,7 @@ endif(FFMPEG_FOUND)
 
 include_directories(${LIBUSB_1_INCLUDE_DIRS})
 include_directories(${FFMPEG_INCLUDE_DIR})
+include_directories(${WAYPT2_CORE_INCLUDE_DIRS})
 
 add_subdirectory(camera-gimbal)
 add_subdirectory(flight-control)

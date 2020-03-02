@@ -41,6 +41,12 @@ target_link_libraries(time_sync_callback_sample ${ADVANCED_SENSING_LIB}/lib/liba
 target_link_libraries(time_sync_callback_sample ${LIBUSB_1_LIBRARIES})
 target_link_libraries(time_sync_callback_sample ${FFMPEG_LIBRARIES})
 
+
+target_link_libraries(time_sync_callback_sample ${WP2_CORE_LIB}/lib/libwaypointv2-interface.a)
+target_link_libraries(time_sync_callback_sample ${WP2_CORE_LIB}/lib/libwaypointv2-core.a)
+target_link_libraries(time_sync_callback_sample ${WP2_CORE_LIB}/lib/libDJIProtobuf.a)
+target_link_libraries(time_sync_callback_sample ${WP2_CORE_LIB}/lib/libdjisdk-common.a)
+
 add_executable(time_sync_poll_sample
         ${SOURCE_FILES}
         time_sync_poll_sample.cpp
@@ -51,3 +57,8 @@ target_link_libraries(time_sync_poll_sample ${OSDK_CORE_LIB}/lib/libdjiosdk-core
 target_link_libraries(time_sync_poll_sample ${ADVANCED_SENSING_LIB}/lib/libadvanced-sensing.a)
 target_link_libraries(time_sync_poll_sample ${LIBUSB_1_LIBRARIES})
 target_link_libraries(time_sync_poll_sample ${FFMPEG_LIBRARIES})
+
+target_link_libraries(time_sync_poll_sample ${WP2_CORE_LIB}/lib/libwaypointv2-interface.a)
+target_link_libraries(time_sync_poll_sample ${WP2_CORE_LIB}/lib/libwaypointv2-core.a)
+target_link_libraries(time_sync_poll_sample ${WP2_CORE_LIB}/lib/libDJIProtobuf.a)
+target_link_libraries(time_sync_poll_sample ${WP2_CORE_LIB}/lib/libdjisdk-common.a)
