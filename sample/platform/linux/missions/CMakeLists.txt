@@ -43,8 +43,10 @@ target_link_libraries(${PROJECT_NAME} ${OSDK_CORE_LIB}/lib/libdjiosdk-core.a)
 target_link_libraries(${PROJECT_NAME} ${ADVANCED_SENSING_LIB}/lib/libadvanced-sensing.a)
 target_link_libraries(${PROJECT_NAME} ${LIBUSB_1_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} ${FFMPEG_LIBRARIES})
+
 if(WAYPT2_CORE)
 #waypoint v2
+include_directories(${WAYPT2_CORE_INCLUDE_DIRS})
 add_executable(djiosdk-waypoint-v2-sample
           ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_environment.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_helpers.cpp
@@ -54,12 +56,16 @@ add_executable(djiosdk-waypoint-v2-sample
           waypoint_v2_sample.cpp)
 
 target_link_libraries(djiosdk-waypoint-v2-sample ${OSDK_CORE_LIB}/lib/libdjiosdk-core.a)
-target_include_directories(djiosdk-waypoint-v2-sample PUBLIC
-        $<BUILD_INTERFACE:${WAYPT2_CORE_INCLUDE_DIRS}>)
-target_link_libraries(djiosdk-waypoint-v2-sample PUBLIC
-        ${WAYPT2_CORE_LIBRARY}
-     #   ${SDK_COMMON_LIBRARY}
-        ${DJI_PROTOBUF_LIBRARY}
-        ${WAYPT2_INTERFACE_LIBRARY}
-        )
+
+target_link_libraries(djiosdk-waypoint-v2-sample ${WP2_CORE_LIB}/lib/libwaypointv2-interface.a)
+target_link_libraries(djiosdk-waypoint-v2-sample ${WP2_CORE_LIB}/lib/libwaypointv2-core.a)
+target_link_libraries(djiosdk-waypoint-v2-sample ${WP2_CORE_LIB}/lib/libDJIProtobuf.a)
+target_link_libraries(djiosdk-waypoint-v2-sample ${WP2_CORE_LIB}/lib/libdjisdk-common.a)
+
+target_link_libraries(djiosdk-waypoint-v2-sample  ${ADVANCED_SENSING_LIB}/lib/libadvanced-sensing.a)
+target_link_libraries(djiosdk-waypoint-v2-sample  ${LIBUSB_1_LIBRARIES})
+target_link_libraries(djiosdk-waypoint-v2-sample  ${FFMPEG_LIBRARIES})
 endif(WAYPT2_CORE)
+
+
+

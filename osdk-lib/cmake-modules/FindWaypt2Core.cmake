@@ -8,7 +8,6 @@
 
 if (WAYPT2_CORE_LIBRARY AND WAYPT2_CORE_INCLUDE_DIRS)
   set(WAYPT2_CORE_FOUND TRUE)
-  message("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb")
 else (WAYPT2_CORE_LIBRARY AND WAYPT2_CORE_INCLUDE_DIRS)
 
   find_path(WAYPT2_CORE_INCLUDE_DIRS

@@ -38,7 +38,7 @@
 #include <mutex>
 #include <condition_variable>
 #include <chrono>
-
+#include "WaypointV2.pb.h"
 // DJI OSDK includes
 #include <dji_vehicle.hpp>
 

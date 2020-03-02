@@ -46,33 +46,6 @@ find_package(LibUSB REQUIRED)
 find_package(FFMPEG REQUIRED)
 find_package(Waypt2Core REQUIRED)
 
-## Waypoint2 Core
-if(NOT WAYPT2_CORE)
-    message(STATUS "Compiling without WaypointV2 Core")
-else()
-
-    set(MODULE_BUILD_INTERFACE ${MODULE_BUILD_INTERFACE}
-            ${WAYPT2_CORE_LIBRARY}
-            ${SDK_COMMON_LIBRARY}
-            ${DJI_PROTOBUF_LIBRARY}
-            ${WAYPT2_INTERFACE_LIBRARY}
-            )
-    set(MODULE_INSTALL_INTERFACE ${MODULE_INSTALL_INTERFACE}
-            $<INSTALL_PREFIX>/lib/libwaypointv2-interface.a
-            $<INSTALL_PREFIX>/lib/libwaypointv2-core.a
-            $<INSTALL_PREFIX>/lib/libdjisdk-common.a
-            $<INSTALL_PREFIX>/lib/libDJIProtobuf.a
-            )
-
-    set(OSDK_INTERFACE_LIBS ${OSDK_INTERFACE_LIBS}
-            ${WAYPT2_CORE_LIBRARY}
-            ${SDK_COMMON_LIBRARY}
-            ${DJI_PROTOBUF_LIBRARY}
-            ${WAYPT2_INTERFACE_LIBRARY}
-            )
-
-endif()
-
 
 if(FFMPEG_FOUND)
     message( STATUS "Found FFmpeg ${FFMPEG_VERSION} installed in the system.")

@@ -30,7 +30,7 @@
  */
 
 #include "waypoint_v2_sample.hpp"
-
+#include "dji_waypointv2_interface.hpp"
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
 
@@ -109,7 +109,7 @@ teardownSubscription(DJI::OSDK::Vehicle* vehicle, const int pkgIndex,
 bool
 createAndUploadWaypointMission(Vehicle *vehicle, uint8_t numWaypoints, int responseTimeout)
 {
-  if(!vehicle->isM210V3())
+  if(!vehicle->isM300())
   {
     DSTATUS("This sample only supports M210 V3!\n");
     return false;
@@ -172,7 +172,7 @@ createActions(DJI::OSDK::Vehicle *vehicle,
               dji::waypointv2::WaypointActionTriggerType triggerType,
               std::vector<dji::waypointv2::WaypointActionConfig> &actions)
 {
-  if(!vehicle->isM210V3())
+  if(!vehicle->isM300())
   {
     DSTATUS("This sample only supports M210 V3!\n");
     return false;
@@ -336,7 +336,7 @@ createActions(DJI::OSDK::Vehicle *vehicle,
 bool uploadActions(DJI::OSDK::Vehicle *vehicle,
                    std::vector<dji::waypointv2::WaypointActionConfig> &actions)
 {
-  if(!vehicle->isM210V3())
+  if(!vehicle->isM300())
   {
     DSTATUS("This sample only supports M210 V3!\n");
     return false;
@@ -354,7 +354,7 @@ bool uploadActions(DJI::OSDK::Vehicle *vehicle,
 bool
 startWaypointMission(DJI::OSDK::Vehicle *vehicle)
 {
-  if(!vehicle->isM210V3())
+  if(!vehicle->isM300())
   {
     DSTATUS("This sample only supports M210 V3!\n");
     return false;
