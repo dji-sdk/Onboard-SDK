@@ -31,6 +31,7 @@
 #include "dji_mission_manager.hpp"
 #include <dji_vehicle.hpp>
 #include "dji_legacy_linker.hpp"
+#include "dji_linker.hpp"
 
 using namespace DJI;
 using namespace DJI::OSDK;
@@ -46,6 +47,20 @@ MissionManager::~MissionManager() {
     delete hpMissionVector[i];
   }
 }
+
+#ifdef WAYPT2_CORE
+E_OsdkStat updateWPV2PushStateCB(struct _CommandHandle *cmdHandle, const T_CmdInfo *cmdInfo,
+                                                 const uint8_t *cmdData, void *userData){
+  if (cmdInfo) {
+    WaypointMission* wpMission = (WaypointMission*)userData;
+    wpMission->updateV2PushData(cmdInfo->cmdId, cmdInfo->seqNum, cmdData,
+                                cmdInfo->dataLen);
+
+    return OSDK_STAT_OK;
+  } else
+    return OSDK_STAT_ERR_ALLOC;
+}
+#endif
 
 ACK::ErrorCode MissionManager::init(DJI_MISSION_TYPE type, int timeout,
                                     UserData missionData) {
@@ -198,17 +213,3 @@ void MissionManager::printInfo() {
   DSTATUS("There are %d waypt missions and %d hotpoint missions\n",
           wpMissionVector.size(), hpMissionVector.size());
 }
-
-#ifdef WAYPT2_CORE
-E_OsdkStat MissionManager::updateWPV2PushStateCB(struct _CommandHandle *cmdHandle, const T_CmdInfo *cmdInfo,
-                                                 const uint8_t *cmdData, void *userData){
-  if (cmdInfo) {
-    WaypointMission* wpMission = (WaypointMission*)userData;
-    wpMission->updateV2PushData(cmdInfo->cmdId, cmdInfo->seqNum, cmdData,
-                                cmdInfo->dataLen);
-
-    return OSDK_STAT_OK;
-  } else
-    return OSDK_STAT_ERR_ALLOC;
-}
-#endif
