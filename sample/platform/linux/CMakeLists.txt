@@ -32,7 +32,9 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/common)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/hal)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/osal)
 
-set(OSDK_LIB ${CMAKE_CURRENT_SOURCE_DIR}/../../../osdk-lib)
+set(OSDK_LIB ${CMAKE_CURRENT_SOURCE_DIR}/../../../osdk-lib/${ARCH})
+set(CMAKE_MODULE_PATH ${OSDK_LIB}/../cmake-modules)
+
 set(OSDK_CORE_LIB ${OSDK_LIB}/osdk-core)
 set(ADVANCED_SENSING_LIB ${OSDK_LIB}/advanced-sensing-2.0.3)
 set(WP2_CORE_LIB  ${OSDK_LIB}/waypointv2-core-1.0.0)
@@ -40,12 +42,9 @@ set(WP2_CORE_LIB  ${OSDK_LIB}/waypointv2-core-1.0.0)
 include_directories(${OSDK_CORE_LIB}/inc)
 include_directories(${ADVANCED_SENSING_LIB}/inc)
 
-
-set(CMAKE_MODULE_PATH ${OSDK_LIB}/cmake-modules)
 find_package(LibUSB REQUIRED)
 find_package(FFMPEG REQUIRED)
 find_package(Waypt2Core REQUIRED)
-
 
 if(FFMPEG_FOUND)
     message( STATUS "Found FFmpeg ${FFMPEG_VERSION} installed in the system.")
