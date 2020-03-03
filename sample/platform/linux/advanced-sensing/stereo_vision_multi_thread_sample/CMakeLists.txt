@@ -26,11 +26,6 @@ add_executable(${PROJECT_NAME}
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${OpenCV_INCLUDE_DIRS})
 
-target_link_libraries(${PROJECT_NAME} ${OSDK_CORE_LIB}/lib/libdjiosdk-core.a)
-target_link_libraries(${PROJECT_NAME} ${ADVANCED_SENSING_LIB}/lib/libadvanced-sensing.a)
-
-target_link_libraries(${PROJECT_NAME}  ${LIBUSB_1_LIBRARIES})
-target_link_libraries(${PROJECT_NAME}  ${FFMPEG_LIBRARIES})
 if (OpenCV_FOUND)
     target_link_libraries(${PROJECT_NAME}
             ${OpenCV_LIBRARIES}

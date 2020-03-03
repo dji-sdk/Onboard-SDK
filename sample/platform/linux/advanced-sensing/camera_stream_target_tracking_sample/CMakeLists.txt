@@ -61,9 +61,3 @@ target_link_libraries(${PROJECT_NAME}
   kcf_tracker
   ${OpenCV_LIBRARIES}
   )
-
-target_link_libraries(${PROJECT_NAME} ${OSDK_CORE_LIB}/lib/libdjiosdk-core.a)
-target_link_libraries(${PROJECT_NAME} ${ADVANCED_SENSING_LIB}/lib/libadvanced-sensing.a)
-
-target_link_libraries(${PROJECT_NAME}  ${LIBUSB_1_LIBRARIES})
-target_link_libraries(${PROJECT_NAME}  ${FFMPEG_LIBRARIES})

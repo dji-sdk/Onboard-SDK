@@ -39,11 +39,6 @@ add_executable(${PROJECT_NAME}
         main.cpp
         mission_sample.cpp)
 
-target_link_libraries(${PROJECT_NAME} ${OSDK_CORE_LIB}/lib/libdjiosdk-core.a)
-target_link_libraries(${PROJECT_NAME} ${ADVANCED_SENSING_LIB}/lib/libadvanced-sensing.a)
-target_link_libraries(${PROJECT_NAME} ${LIBUSB_1_LIBRARIES})
-target_link_libraries(${PROJECT_NAME} ${FFMPEG_LIBRARIES})
-
 if(WAYPT2_CORE)
 #waypoint v2
 
@@ -54,17 +49,6 @@ add_executable(djiosdk-waypoint-v2-sample
           ${CMAKE_CURRENT_SOURCE_DIR}/../hal/osdkhal_linux.c
           waypoint_v2_main.cpp
           waypoint_v2_sample.cpp)
-
-target_link_libraries(djiosdk-waypoint-v2-sample ${OSDK_CORE_LIB}/lib/libdjiosdk-core.a)
-
-target_link_libraries(djiosdk-waypoint-v2-sample ${WP2_CORE_LIB}/lib/libwaypointv2-interface.a)
-target_link_libraries(djiosdk-waypoint-v2-sample ${WP2_CORE_LIB}/lib/libwaypointv2-core.a)
-target_link_libraries(djiosdk-waypoint-v2-sample ${WP2_CORE_LIB}/lib/libDJIProtobuf.a)
-target_link_libraries(djiosdk-waypoint-v2-sample ${WP2_CORE_LIB}/lib/libdjisdk-common.a)
-
-target_link_libraries(djiosdk-waypoint-v2-sample  ${ADVANCED_SENSING_LIB}/lib/libadvanced-sensing.a)
-target_link_libraries(djiosdk-waypoint-v2-sample  ${LIBUSB_1_LIBRARIES})
-target_link_libraries(djiosdk-waypoint-v2-sample  ${FFMPEG_LIBRARIES})
 endif(WAYPT2_CORE)
 
 

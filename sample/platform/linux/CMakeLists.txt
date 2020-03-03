@@ -60,6 +60,23 @@ include_directories(${LIBUSB_1_INCLUDE_DIRS})
 include_directories(${FFMPEG_INCLUDE_DIR})
 include_directories(${WAYPT2_CORE_INCLUDE_DIRS})
 
+#link libraries
+
+link_libraries(${OSDK_CORE_LIB}/lib/libdjiosdk-core.a)
+
+if(ADVANCED_SENSING)
+    link_libraries(${ADVANCED_SENSING_LIB}/lib/libadvanced-sensing.a)
+    link_libraries(${LIBUSB_1_LIBRARIES})
+    link_libraries(${FFMPEG_LIBRARIES})
+endif()
+
+if(WAYPT2_CORE)
+    link_libraries(${WP2_CORE_LIB}/lib/libwaypointv2-interface.a)
+    link_libraries(${WP2_CORE_LIB}/lib/libwaypointv2-core.a)
+    link_libraries(${WP2_CORE_LIB}/lib/libDJIProtobuf.a)
+    link_libraries(${WP2_CORE_LIB}/lib/libdjisdk-common.a)
+endif()
+
 add_subdirectory(camera-gimbal)
 add_subdirectory(flight-control)
 add_subdirectory(mfio)

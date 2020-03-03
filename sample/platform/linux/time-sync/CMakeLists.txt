@@ -36,16 +36,6 @@ add_executable(time_sync_callback_sample
         ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_environment.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_helpers.cpp
         )
-target_link_libraries(time_sync_callback_sample ${OSDK_CORE_LIB}/lib/libdjiosdk-core.a)
-target_link_libraries(time_sync_callback_sample ${ADVANCED_SENSING_LIB}/lib/libadvanced-sensing.a)
-target_link_libraries(time_sync_callback_sample ${LIBUSB_1_LIBRARIES})
-target_link_libraries(time_sync_callback_sample ${FFMPEG_LIBRARIES})
-
-
-target_link_libraries(time_sync_callback_sample ${WP2_CORE_LIB}/lib/libwaypointv2-interface.a)
-target_link_libraries(time_sync_callback_sample ${WP2_CORE_LIB}/lib/libwaypointv2-core.a)
-target_link_libraries(time_sync_callback_sample ${WP2_CORE_LIB}/lib/libDJIProtobuf.a)
-target_link_libraries(time_sync_callback_sample ${WP2_CORE_LIB}/lib/libdjisdk-common.a)
 
 add_executable(time_sync_poll_sample
         ${SOURCE_FILES}
@@ -53,12 +43,3 @@ add_executable(time_sync_poll_sample
         ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_environment.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_helpers.cpp
         )
-target_link_libraries(time_sync_poll_sample ${OSDK_CORE_LIB}/lib/libdjiosdk-core.a)
-target_link_libraries(time_sync_poll_sample ${ADVANCED_SENSING_LIB}/lib/libadvanced-sensing.a)
-target_link_libraries(time_sync_poll_sample ${LIBUSB_1_LIBRARIES})
-target_link_libraries(time_sync_poll_sample ${FFMPEG_LIBRARIES})
-
-target_link_libraries(time_sync_poll_sample ${WP2_CORE_LIB}/lib/libwaypointv2-interface.a)
-target_link_libraries(time_sync_poll_sample ${WP2_CORE_LIB}/lib/libwaypointv2-core.a)
-target_link_libraries(time_sync_poll_sample ${WP2_CORE_LIB}/lib/libDJIProtobuf.a)
-target_link_libraries(time_sync_poll_sample ${WP2_CORE_LIB}/lib/libdjisdk-common.a)

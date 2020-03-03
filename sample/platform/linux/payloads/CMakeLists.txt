@@ -38,16 +38,8 @@ add_executable(payloads_sync_sample
         main_sync.cpp
         ${SOURCE_FILES})
 
-target_link_libraries(payloads_sync_sample ${OSDK_CORE_LIB}/lib/libdjiosdk-core.a)
-target_link_libraries(payloads_sync_sample ${ADVANCED_SENSING_LIB}/lib/libadvanced-sensing.a)
-target_link_libraries(payloads_sync_sample ${LIBUSB_1_LIBRARIES})
-target_link_libraries(payloads_sync_sample ${FFMPEG_LIBRARIES})
 
 add_executable(payloads_async_sample
         main_async.cpp
         ${SOURCE_FILES})
 
-target_link_libraries(payloads_async_sample ${OSDK_CORE_LIB}/lib/libdjiosdk-core.a)
-target_link_libraries(payloads_async_sample ${ADVANCED_SENSING_LIB}/lib/libadvanced-sensing.a)
-target_link_libraries(payloads_async_sample ${LIBUSB_1_LIBRARIES})
-target_link_libraries(payloads_async_sample ${FFMPEG_LIBRARIES})
