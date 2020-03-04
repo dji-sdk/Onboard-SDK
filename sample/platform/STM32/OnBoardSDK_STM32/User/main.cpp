@@ -101,6 +101,7 @@ T_OsdkTaskHandle debugHandler;
 #endif
 
 extern uint64_t timer1Tick;
+#if CPU_RATE_DEBUG
 void *debugTask(void *p){
   char pcWriteBuffer[512] = {0};
   while (true) {
@@ -122,7 +123,7 @@ void *debugTask(void *p){
             "%s\r\n", pcWriteBuffer);
   }
 }
-
+#endif
 void *USBProcessTask(void *p){
   DSTATUS("Start USB processing ...");
   while(1) {
