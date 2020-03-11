@@ -54,6 +54,7 @@
 #include "dji_gimbal_manager.hpp"
 #include "dji_flight_controller.hpp"
 #include "dji_psdk_manager.hpp"
+#include "dji_hms.hpp"
 #ifdef ADVANCED_SENSING
 #include "dji_advanced_sensing.hpp"
 #endif
@@ -106,6 +107,7 @@ public:
   FlightController*    flightController;
   PSDKManager*         psdkManager;
   GimbalManager*       gimbalManager;
+  DJIHMS*              djiHms;
 #ifdef ADVANCED_SENSING
   AdvancedSensing* advancedSensing;
 #endif
@@ -242,7 +244,7 @@ public:
 private:
   const int            wait_timeout   = 1000;
   const int            GIMBAL_MOUNTED = 1;
-  static const uint8_t NUM_CMD_SET    = 9;
+  static const uint8_t NUM_CMD_SET    = 10;
   CMD_SETSupportMatrix cmd_setSupportMatrix[NUM_CMD_SET];
 
 public:
@@ -270,6 +272,7 @@ public:
   bool initFlightController();
   bool initPSDKManager();
   bool initGimbalManager();
+  bool initDJIHms();
   bool initOSDKHeartBeatThread();
 #ifdef ADVANCED_SENSING
   bool initAdvancedSensing();
