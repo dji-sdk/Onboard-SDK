@@ -72,6 +72,7 @@ LinuxSetup::setupEnvironment(int argc, char** argv)
       .UartInit = OsdkLinux_UartInit,
       .UartWriteData = OsdkLinux_UartSendData,
       .UartReadData = OsdkLinux_UartReadData,
+      .UartClose = OsdkLinux_UartClose,
   };
 
 #ifdef ADVANCED_SENSING
@@ -79,6 +80,7 @@ LinuxSetup::setupEnvironment(int argc, char** argv)
       .USBBulkInit = OsdkLinux_USBBulkInit,
       .USBBulkWriteData = OsdkLinux_USBBulkSendData,
       .USBBulkReadData = OsdkLinux_USBBulkReadData,
+      .USBBulkClose = OsdkLinux_USBBulkClose,
   };
 #endif
 

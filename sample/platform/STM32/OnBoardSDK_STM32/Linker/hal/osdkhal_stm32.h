@@ -52,10 +52,8 @@ extern "C" {
 
 E_OsdkStat OsdkSTM32_UartSendData(const T_HalObj *obj, const uint8_t *pBuf, uint32_t bufLen);
 E_OsdkStat OsdkSTM32_UartReadData(const T_HalObj *obj, uint8_t *pBuf, uint32_t *bufLen);
-E_OsdkStat OsdkSTM32_UdpSendData(const T_HalObj *obj, const uint8_t *pBuf, uint32_t bufLen);
-E_OsdkStat OsdkSTM32_UdpReadData(const T_HalObj *obj, uint8_t *pBuf, uint32_t *bufLen);
 E_OsdkStat OsdkSTM32_UartInit(const char *port, const int baudrate, T_HalObj *obj);
-E_OsdkStat OsdkSTM32_UdptInit(const char *addr, uint16_t port, T_HalObj *obj);
+E_OsdkStat OsdkSTM32_UartClose(T_HalObj *obj);
 
 #ifdef __cplusplus
 }

@@ -91,14 +91,6 @@ E_OsdkStat OsdkSTM32_UartReadData(const T_HalObj *obj, uint8_t *pBuf, uint32_t *
   return OSDK_STAT_OK;
 }
 
-E_OsdkStat OsdkSTM32_UdpSendData(const T_HalObj *obj, const uint8_t *pBuf, uint32_t bufLen) {
-  return OSDK_STAT_ERR;
-}
-
-E_OsdkStat OsdkSTM32_UdpReadData(const T_HalObj *obj, uint8_t *pBuf, uint32_t *bufLen) {
-  return OSDK_STAT_ERR;
-}
-
 /* Private functions definition-----------------------------------------------*/
 E_OsdkStat OsdkSTM32_UartInit(const char *port, const int baudrate,
                             T_HalObj *obj) {
@@ -113,8 +105,7 @@ E_OsdkStat OsdkSTM32_UartInit(const char *port, const int baudrate,
   return OSDK_STAT_OK;
 }
 
-E_OsdkStat OsdkSTM32_UdpInit(const char *addr, uint16_t port, T_HalObj *obj) {
-  return OSDK_STAT_ERR;
+E_OsdkStat OsdkSTM32_UartClose(T_HalObj *obj) {
+  return OSDK_STAT_OK;
 }
-
 /****************** (C) COPYRIGHT DJI Innovations *****END OF FILE****/
