@@ -63,6 +63,34 @@ GimbalManagerAsyncSample::GimbalManagerAsyncSample(Vehicle *vehiclePtr)
     vehicle->subscribe->removePackage(pkgIndex, 1);
     DERROR("subscribe gimbal data failed." );
   }
+
+  /*! init gimbal modules for gimbalManager */
+  ErrorCode::ErrorCodeType ret;
+  /*! main gimbal init */
+  ret = vehicle->gimbalManager->initGimbalModule(PAYLOAD_INDEX_0,
+                                                 "Sample_main_gimbal");
+  if (ret != ErrorCode::SysCommonErr::Success)
+  {
+    DERROR("Init Camera module Sample_main_gimbal failed.");
+    ErrorCode::printErrorCodeMsg(ret);
+  }
+  /*! vice gimbal init */
+  ret = vehicle->gimbalManager->initGimbalModule(PAYLOAD_INDEX_1,
+                                                 "Sample_vice_gimbal");
+  if (ret != ErrorCode::SysCommonErr::Success)
+  {
+    DERROR("Init Camera module Sample_vice_gimbal failed.");
+    ErrorCode::printErrorCodeMsg(ret);
+  }
+  /*! top gimbal init */
+  if (vehicle->isM300()) {
+    ret = vehicle->gimbalManager->initGimbalModule(PAYLOAD_INDEX_2,
+                                                   "Sample_top_gimbal");
+    if (ret != ErrorCode::SysCommonErr::Success) {
+      DERROR("Init Camera module Sample_top_gimbal failed.");
+      ErrorCode::printErrorCodeMsg(ret);
+    }
+  }
 }
 
 GimbalManagerAsyncSample::~GimbalManagerAsyncSample() {

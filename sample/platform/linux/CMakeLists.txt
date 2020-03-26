@@ -41,6 +41,7 @@ set(WP2_CORE_LIB  ${OSDK_LIB}/waypointv2-core-1.0.0)
 
 include_directories(${OSDK_CORE_LIB}/inc)
 include_directories(${ADVANCED_SENSING_LIB}/inc)
+include_directories(${WP2_CORE_LIB}/inc)
 
 find_package(LibUSB REQUIRED)
 find_package(FFMPEG REQUIRED)

@@ -33,7 +33,32 @@ using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
 
 CameraManagerSyncSample::CameraManagerSyncSample(Vehicle *vehiclePtr)
-    : vehicle(vehiclePtr) {}
+    : vehicle(vehiclePtr) {
+  /*! init camera modules for cameraManager */
+  /*! main camera init */
+  ErrorCode::ErrorCodeType ret = vehicle->cameraManager->initCameraModule(
+      PAYLOAD_INDEX_0, "Sample_main_camera");
+  if (ret != ErrorCode::SysCommonErr::Success) {
+    DERROR("Init Camera module Sample_main_camera failed.");
+    ErrorCode::printErrorCodeMsg(ret);
+  }
+  /*! vice camera init */
+  ret = vehicle->cameraManager->initCameraModule(PAYLOAD_INDEX_1,
+                                                 "Sample_vice_camera");
+  if (ret != ErrorCode::SysCommonErr::Success) {
+    DERROR("Init Camera module Sample_vice_camera failed.");
+    ErrorCode::printErrorCodeMsg(ret);
+  }
+  /*! top camera init for M300 */
+  if (vehiclePtr->isM300()) {
+    ret = vehicle->cameraManager->initCameraModule(PAYLOAD_INDEX_2,
+                                                   "Sample_top_camera");
+    if (ret != ErrorCode::SysCommonErr::Success) {
+      DERROR("Init Camera module Sample_top_camera failed.");
+      ErrorCode::printErrorCodeMsg(ret);
+    }
+  }
+}
 
 CameraManagerSyncSample::~CameraManagerSyncSample() {}
 
@@ -368,7 +393,7 @@ CameraManagerSyncSample::startShootSinglePhotoSyncSample(
 
   /*!< set camera work mode as shoot photo */
   DSTATUS("set camera work mode as SHOOT_PHOTO");
-  retCode = pm->setModeSync(index, CameraModule::WorkMode::SHOOT_PHOTO, 1);
+  retCode = pm->setModeSync(index, CameraModule::WorkMode::SHOOT_PHOTO, 3);
   if (retCode != ErrorCode::SysCommonErr::Success) {
     DERROR("Camera take photo fail. Error code : 0x%lX", retCode);
     ErrorCode::printErrorCodeMsg(retCode);
@@ -418,7 +443,7 @@ CameraManagerSyncSample::startShootBurstPhotoSyncSample(
 
   /*!< set camera work mode as SHOOT_PHOTO */
   DSTATUS("set camera work mode as SHOOT_PHOTO");
-  retCode = pm->setModeSync(index, CameraModule::WorkMode::SHOOT_PHOTO, 1);
+  retCode = pm->setModeSync(index, CameraModule::WorkMode::SHOOT_PHOTO, 3);
   if (retCode != ErrorCode::SysCommonErr::Success) {
     DERROR("Set camera as SHOOT_PHOTO fail. Error code : 0x%lX", retCode);
     ErrorCode::printErrorCodeMsg(retCode);
@@ -471,7 +496,7 @@ ErrorCode::ErrorCodeType CameraManagerSyncSample::startShootAEBPhotoSyncSample(
 
   /*!< set camera work mode as SHOOT_PHOTO */
   DSTATUS("set camera work mode as SHOOT_PHOTO");
-  retCode = pm->setModeSync(index, CameraModule::WorkMode::SHOOT_PHOTO, 1);
+  retCode = pm->setModeSync(index, CameraModule::WorkMode::SHOOT_PHOTO, 3);
   if (retCode != ErrorCode::SysCommonErr::Success) {
     DERROR("Set camera as SHOOT_PHOTO fail. Error code : 0x%lX", retCode);
     ErrorCode::printErrorCodeMsg(retCode);
@@ -525,7 +550,7 @@ CameraManagerSyncSample::startShootIntervalPhotoSyncSample(
 
   /*!< set camera work mode as SHOOT_PHOTO */
   DSTATUS("set camera work mode as SHOOT_PHOTO");
-  retCode = pm->setModeSync(index, CameraModule::WorkMode::SHOOT_PHOTO, 2);
+  retCode = pm->setModeSync(index, CameraModule::WorkMode::SHOOT_PHOTO, 3);
   if (retCode != ErrorCode::SysCommonErr::Success) {
     DERROR("Set camera as SHOOT_PHOTO fail. Error code : 0x%lX", retCode);
     ErrorCode::printErrorCodeMsg(retCode);
@@ -602,7 +627,7 @@ ErrorCode::ErrorCodeType CameraManagerSyncSample::startRecordVideoSyncSample(
 
   /*!< set camera work mode as RECORD_VIDEO */
   DSTATUS("Set camera mode to RECORD_VIDEO");
-  retCode = pm->setModeSync(index, CameraModule::WorkMode::RECORD_VIDEO, 2);
+  retCode = pm->setModeSync(index, CameraModule::WorkMode::RECORD_VIDEO, 3);
   if (retCode != ErrorCode::SysCommonErr::Success) {
     DERROR("Set camera as RECORD_VIDEO mode fail. Error code : 0x%lX", retCode);
     ErrorCode::printErrorCodeMsg(retCode);
