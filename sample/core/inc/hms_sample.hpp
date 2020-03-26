@@ -69,32 +69,23 @@ public:
    */
     bool subscribeHMSInf(bool enable, uint32_t timeOutMs = 500);
 
-  /*! @brief subscribe flight's status
+  /*! @brief subscribe flight's status in 10HZ
    *
-   *  @param vehicle pointer to vehicle
    *  @param pkgIndex index of subscribe package
-   *  @param freq freq of subscription
-   *  @param topicList list of topic.
-   *  @param topicSize size of topiclist
-   *  @param timeout
    *
    *  @return bool whether subscribe success
    *  true:success
    */
-    bool setUpSubscription(int pkgIndex, int freq,
-                           Telemetry::TopicName topicList[], uint8_t topicSize,
-                           int timeout = 1);
+    bool subscribeFlightStatus(const int pkgIndex);
 
-    /*! @brief subscribe flight's status
+    /*! @brief unsubscribe flight's status
      *
-     *  @param vehicle pointer to vehicle
      *  @param pkgIndex index of subscribe package
-     *  @param timeout
      *
      *  @return bool whether teardown success
      *  true:success
      */
-    bool teardownSubscription(const int pkgIndex, int timeout = 1);
+    bool unsubscribeFlightStatus(const int pkgIndex);
 
     /*! @brief The interface of getting flight status
      *
@@ -107,6 +98,10 @@ public:
      */
     uint8_t getFlightStatus(void);
 
+    /*! @brief print all raw pushed data
+     *
+     *  @note After successful subscribing, the data will be valid.
+     */
     void printAllError(void);
 };
 

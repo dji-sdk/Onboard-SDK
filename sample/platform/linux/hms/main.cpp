@@ -31,7 +31,7 @@
 #include "dji_vehicle.hpp"
 #include "dji_linux_helpers.hpp"
 #include "dji_hms.hpp"
-#include "../../../core/inc/hms_sample.hpp"
+#include "hms_sample.hpp"
 #include "osdkosal_linux.h"
 
 
@@ -39,9 +39,6 @@ using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
 
 int main(int argc, char** argv) {
-    // Initialize variables
-    int functionTimeout = 1;
-
     // Setup OSDK.
     LinuxSetup linuxEnvironment(argc, argv);
     Vehicle *vehicle = linuxEnvironment.getVehicle();
@@ -51,40 +48,28 @@ int main(int argc, char** argv) {
         return -1;
     }
 
-    // Obtain Control Authority
-    vehicle->control->obtainCtrlAuthority(functionTimeout);
-
     HMSSample* hmsSample = new HMSSample(vehicle);
-    uint32_t timeOut = 500;
+    uint32_t timeOutMs = 500;
 
     //! get hms version
     std::string hmsVerison = hmsSample->getHMSVersion();
     DSTATUS("HMS Version: %s\n",hmsVerison.c_str());
 
-    //! 1. subscribe HMS's pushing.
-    bool ret = hmsSample->subscribeHMSInf(true, timeOut);
+    //! 1.subscribe flight'status.(or default Error Information is about on the ground)
     int pkgIndex = 0;
-    int controlFreqInHz = 10;  // Hz
-    int responseTimeout = 1;
-    if (true == ret)
-    {
-        //! 1.1  when subscription is succcess, subscribe flight status.
-        //!      different prompt information will be displayed according to different flight status
-        //!      If this step is not performed, the prompt message of flight status on the ground will be displayed by default.
-
-        TopicName topicList[] = { TOPIC_STATUS_FLIGHT };
-        int numTopic = sizeof(topicList) / sizeof(topicList[0]);
-        if (!hmsSample->setUpSubscription(pkgIndex, controlFreqInHz, topicList, numTopic,
-                                          responseTimeout)) {
-            return -1;
-        }
-    }
-    else
+    if (!hmsSample->subscribeFlightStatus(pkgIndex))
     {
         return -1;
     }
 
-    //5HZ.
+    //! 2.subscribe HMS's pushing.(Then it will print all error information with 5HZ in English)
+    if (!hmsSample->subscribeHMSInf(true, timeOutMs))
+    {
+        hmsSample->unsubscribeFlightStatus((pkgIndex));
+        return -1;
+    }
+
+    //! 2.1 print all pushed raw error data with 5HZ in 30 senconds
     const int waitTimeMs = 200;
     int timeSoFar = 0;
     int totalTimeMs = 30*1000; // 30 secs
@@ -96,10 +81,10 @@ int main(int argc, char** argv) {
         timeSoFar += waitTimeMs;
     }
 
-    //! 2. reset osdk's subscription for HMS's pushing
-    hmsSample->subscribeHMSInf(false, timeOut);
-    //! 3. tear down flight status's subscription
-    hmsSample->teardownSubscription(pkgIndex, timeOut);
+    //! 3. reset osdk's subscription for HMS's pushing
+    hmsSample->subscribeHMSInf(false, timeOutMs);
+    //! 4. unsubscribe flight status
+    hmsSample->unsubscribeFlightStatus(pkgIndex);
 
     return 0;
 }

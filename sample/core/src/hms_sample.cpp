@@ -28,7 +28,7 @@
  * SOFTWARE.
  *
  */
-#include "../inc/hms_sample.hpp"
+#include "hms_sample.hpp"
 
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
@@ -54,32 +54,40 @@ bool HMSSample::subscribeHMSInf(bool enable, uint32_t timeOutMs)
     return vehicle->djiHms->subscribeHMSInf(enable, timeOutMs);
 }
 
-bool HMSSample::setUpSubscription(int pkgIndex, int freq,
-                                  TopicName topicList[], uint8_t topicSize,
-                                  int timeout) {
+bool HMSSample::subscribeFlightStatus(const int pkgIndex)
+{
     if (vehicle) {
         /*! Telemetry: Verify the subscription*/
         ACK::ErrorCode subscribeStatus;
         subscribeStatus = vehicle->subscribe->verify(1);
-        if (ACK::getError(subscribeStatus) != ACK::SUCCESS) {
+        if (ACK::getError(subscribeStatus) != ACK::SUCCESS)
+        {
             ACK::getErrorCodeMessage(subscribeStatus, __func__);
             return false;
         }
 
         bool enableTimestamp = false;
+        TopicName topicList[] = { TOPIC_STATUS_FLIGHT };
+        int numTopic = sizeof(topicList) / sizeof(topicList[0]);
+        int freq = 10;  // Hz
+        int responseTimeout = 1;
+
         bool pkgStatus = vehicle->subscribe->initPackageFromTopicList(
-                pkgIndex, topicSize, topicList, enableTimestamp, freq);
-        if (!(pkgStatus)) {
+                pkgIndex, numTopic, topicList, enableTimestamp, freq);
+        if (!(pkgStatus))
+        {
             return pkgStatus;
         }
 
         /*! Start listening to the telemetry data */
-        subscribeStatus = vehicle->subscribe->startPackage(pkgIndex, timeout);
-        if (ACK::getError(subscribeStatus) != ACK::SUCCESS) {
+        subscribeStatus = vehicle->subscribe->startPackage(pkgIndex, responseTimeout);
+        if (ACK::getError(subscribeStatus) != ACK::SUCCESS)
+        {
             ACK::getErrorCodeMessage(subscribeStatus, __func__);
             /*! Cleanup*/
-            ACK::ErrorCode ack = vehicle->subscribe->removePackage(pkgIndex, timeout);
-            if (ACK::getError(ack)) {
+            ACK::ErrorCode ack = vehicle->subscribe->removePackage(pkgIndex, responseTimeout);
+            if (ACK::getError(ack))
+            {
                 DERROR(
                         "Error unsubscription; please restart the drone/FC to get "
                         "back to a clean state");
@@ -87,14 +95,17 @@ bool HMSSample::setUpSubscription(int pkgIndex, int freq,
             return false;
         }
         return true;
-    } else {
+    }
+    else
+    {
         DERROR("vehicle haven't been initialized", __func__);
         return false;
     }
 }
 
-bool HMSSample::teardownSubscription(const int pkgIndex, int timeout) {
-    ACK::ErrorCode ack = vehicle->subscribe->removePackage(pkgIndex, timeout);
+bool HMSSample::unsubscribeFlightStatus(const int pkgIndex) {
+    int responseTimeout = 1;
+    ACK::ErrorCode ack = vehicle->subscribe->removePackage(pkgIndex, responseTimeout);
     if (ACK::getError(ack)) {
         DERROR(
                 "Error unsubscription; please restart the drone/FC to get back "
@@ -114,7 +125,7 @@ void HMSSample::printAllError(void)
 {
     HMSPushPacket hmsPushPacket = vehicle->djiHms->getHMSPushPacket();
     uint8_t deviceIndex = vehicle->djiHms->getDeviceIndex();
-    DSTATUS("TimeStamp:%ld,msgversion: %d,globalIndex: %d,msgEnd: %d, msgIndex: %d",
+    DSTATUS("TimeStamp: %ld, msgversion: %d, globalIndex: %d, msgEnd: %d, msgIndex: %d",
             hmsPushPacket.timeStamp,
             hmsPushPacket.hmsPushData.msgVersion,
             hmsPushPacket.hmsPushData.globalIndex,
@@ -122,7 +133,7 @@ void HMSSample::printAllError(void)
             hmsPushPacket.hmsPushData.msgIndex);
     for (size_t i = 0; i < hmsPushPacket.hmsPushData.errList.size(); i++)
     {
-        DSTATUS("hmsErrListNum: %d, alarm_id: 0x%08x, sensorIndex: %d,level: %d",
+        DSTATUS("hmsErrListNum: %d, alarm_id: 0x%08x, sensorIndex: %d, level: %d",
                 i, hmsPushPacket.hmsPushData.errList[i].alarmID,
                 hmsPushPacket.hmsPushData.errList[i].sensorIndex,
                 hmsPushPacket.hmsPushData.errList[i].reportLevel);
