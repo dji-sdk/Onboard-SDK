@@ -77,7 +77,6 @@ if(WAYPT2_CORE)
     link_libraries(${WP2_CORE_LIB}/lib/libdjisdk-common.a)
 endif()
 
-add_subdirectory(camera-gimbal)
 add_subdirectory(flight-control)
 add_subdirectory(mfio)
 add_subdirectory(missions)

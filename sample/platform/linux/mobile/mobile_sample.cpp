@@ -422,11 +422,6 @@ mobileSamplePoll(void* vehiclePtr)
         sendAckToMobile(vehicle, 0x3E, coreMissionStatus);
         mobileDataID_glob = 0;
         break;
-      case 0x40:
-        coreMissionStatus = gimbalCameraControl(vehicle);
-        sendAckToMobile(vehicle, 0x40, coreMissionStatus);
-        mobileDataID_glob = 0;
-        break;
       case 0x41:
         wayptPolygonSides = 6;
         coreMissionStatus =
