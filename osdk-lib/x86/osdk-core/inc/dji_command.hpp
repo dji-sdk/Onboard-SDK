@@ -213,6 +213,12 @@ class V1ProtocolCMD : public ErrorCode
     const static uint8_t usbFlightMode[MAX_CMD_ARRAY_SIZE];
   } fc;
 
+  typedef struct HMS
+  {
+    const static uint8_t hmsStatus[MAX_CMD_ARRAY_SIZE];
+    const static uint8_t hmsPushData[MAX_CMD_ARRAY_SIZE];
+  } HMS;
+
   typedef struct waypointV2
   {
     const static uint8_t waypointInitV2[MAX_CMD_ARRAY_SIZE];
@@ -255,6 +261,7 @@ class V1ProtocolCMD : public ErrorCode
     const static uint8_t rtk          = 15;
     const static uint8_t waypointV2   = 34;
     const static uint8_t enterprise   = 25;
+    const static uint8_t hms          = 33;
     const static uint8_t psdk         = 60;
     const static uint8_t vb           = 72;
   };

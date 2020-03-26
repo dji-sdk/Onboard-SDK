@@ -78,9 +78,13 @@ int main(int argc, char** argv) {
       break;
     case 'b':
       monitoredTakeoff(vehicle);
+      DSTATUS("Take off over!\n");
       moveByPositionOffset(vehicle, 0, 6, 6, 30);
+      DSTATUS("Step 1 over!\n");
       moveByPositionOffset(vehicle, 6, 0, -3, -30);
+      DSTATUS("Step 2 over!\n");
       moveByPositionOffset(vehicle, -6, -6, 0, 0);
+      DSTATUS("Step 3 over!\n");
       monitoredLanding(vehicle);
       break;
 
