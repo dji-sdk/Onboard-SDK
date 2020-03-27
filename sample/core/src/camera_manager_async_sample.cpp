@@ -33,7 +33,32 @@ using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
 
 CameraManagerAsyncSample::CameraManagerAsyncSample(Vehicle *vehiclePtr)
-    : vehicle(vehiclePtr) {}
+    : vehicle(vehiclePtr) {
+  /*! init camera modules for cameraManager */
+  /*! main camera init */
+  ErrorCode::ErrorCodeType ret = vehicle->cameraManager->initCameraModule(
+      PAYLOAD_INDEX_0, "Sample_main_camera");
+  if (ret != ErrorCode::SysCommonErr::Success) {
+    DERROR("Init Camera module Sample_main_camera failed.");
+    ErrorCode::printErrorCodeMsg(ret);
+  }
+  /*! vice camera init */
+  ret = vehicle->cameraManager->initCameraModule(PAYLOAD_INDEX_1,
+                                                 "Sample_vice_camera");
+  if (ret != ErrorCode::SysCommonErr::Success) {
+    DERROR("Init Camera module Sample_vice_camera failed.");
+    ErrorCode::printErrorCodeMsg(ret);
+  }
+  /*! top camera init for M300 */
+  if (vehiclePtr->isM300()) {
+    ret = vehicle->cameraManager->initCameraModule(PAYLOAD_INDEX_2,
+                                                   "Sample_top_camera");
+    if (ret != ErrorCode::SysCommonErr::Success) {
+      DERROR("Init Camera module Sample_top_camera failed.");
+      ErrorCode::printErrorCodeMsg(ret);
+    }
+  }
+}
 
 CameraManagerAsyncSample::~CameraManagerAsyncSample() {}
 

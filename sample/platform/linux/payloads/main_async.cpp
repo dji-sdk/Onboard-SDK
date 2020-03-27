@@ -105,57 +105,24 @@ void callbackToSetExposureCompensation(ErrorCode::ErrorCodeType retCode,
 }
 
 int main(int argc, char **argv) {
+  /*! Setup the OSDK: Read config file, create vehicle, activate. */
   LinuxSetup linuxEnvironment(argc, argv);
   Vehicle *vehicle = linuxEnvironment.getVehicle();
   if (vehicle == NULL) {
     std::cout << "Vehicle not initialized, exiting. \n";
     return -1;
   }
-  std::string sampleCase = linuxEnvironment.getEnvironment()->getSampleCase();
 
-  /*! init camera modules for cameraManager */
-  ErrorCode::ErrorCodeType ret = vehicle->cameraManager->initCameraModule(
-      PAYLOAD_INDEX_0, "Sample_camera_1");
-  if (ret != ErrorCode::SysCommonErr::Success) {
-    DERROR("Init Camera module Sample_camera_1 failed.");
-    ErrorCode::printErrorCodeMsg(ret);
-  }
-  ret = vehicle->cameraManager->initCameraModule(PAYLOAD_INDEX_1,
-                                                 "Sample_camera_2");
-  if (ret != ErrorCode::SysCommonErr::Success) {
-    DERROR("Init Camera module Sample_camera_2 failed.");
-    ErrorCode::printErrorCodeMsg(ret);
-  }
-
-  /*! init gimbal modules for gimbalManager */
-  ret = vehicle->gimbalManager->initGimbalModule(
-      PAYLOAD_INDEX_0, "Sample_gimbal_1");
-  if (ret != ErrorCode::SysCommonErr::Success) {
-    DERROR("Init Camera module Sample_gimbal_1 failed.");
-    ErrorCode::printErrorCodeMsg(ret);
-  }
-  ret = vehicle->gimbalManager->initGimbalModule(PAYLOAD_INDEX_1,
-                                                 "Sample_gimbal_2");
-  if (ret != ErrorCode::SysCommonErr::Success) {
-    DERROR("Init Camera module Sample_gimbal_2 failed.");
-    ErrorCode::printErrorCodeMsg(ret);
-  }
-  if (vehicle->isM300()) {
-    ret = vehicle->gimbalManager->initGimbalModule(PAYLOAD_INDEX_2,
-                                                   "Sample_gimbal_3");
-    if (ret != ErrorCode::SysCommonErr::Success) {
-      DERROR("Init Camera module Sample_gimbal_3 failed.");
-      ErrorCode::printErrorCodeMsg(ret);
-    }
-  }
-
+  /*! Create an example object, which users can modify according to their own needs */
   CameraManagerAsyncSample *p = new CameraManagerAsyncSample(vehicle);
   GimbalManagerAsyncSample *g = new GimbalManagerAsyncSample(vehicle);
 
+  /*! check whether enviroment passing valid running parameter or not */
   bool sampleCaseValidFlag = false;
   char inputChar = 0;
+  std::string sampleCase = linuxEnvironment.getEnvironment()->getSampleCase();
   if (sampleCase.size() == 1) {
-    if ((sampleCase <= "l") && (sampleCase >= "a")) {
+    if ((sampleCase <= "n") && (sampleCase >= "a")) {
       inputChar = sampleCase[0];
     } else {
       inputChar = 0;

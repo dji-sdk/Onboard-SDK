@@ -38,7 +38,6 @@
 #include <dji_linux_helpers.hpp>
 
 // Other samples for missions implementation
-#include <camera_gimbal_sample.hpp>
 #include <flight_control_sample.hpp>
 #include <mission_sample.hpp>
 

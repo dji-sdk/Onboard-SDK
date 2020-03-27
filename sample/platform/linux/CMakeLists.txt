@@ -41,6 +41,7 @@ set(WP2_CORE_LIB  ${OSDK_LIB}/waypointv2-core-1.0.0)
 
 include_directories(${OSDK_CORE_LIB}/inc)
 include_directories(${ADVANCED_SENSING_LIB}/inc)
+include_directories(${WP2_CORE_LIB}/inc)
 
 find_package(LibUSB REQUIRED)
 find_package(FFMPEG REQUIRED)
@@ -76,7 +77,6 @@ if(WAYPT2_CORE)
     link_libraries(${WP2_CORE_LIB}/lib/libdjisdk-common.a)
 endif()
 
-add_subdirectory(camera-gimbal)
 add_subdirectory(flight-control)
 add_subdirectory(mfio)
 add_subdirectory(missions)
@@ -87,5 +87,6 @@ add_subdirectory(time-sync)
 add_subdirectory(payload-3rd-party)
 add_subdirectory(payloads)
 add_subdirectory(advanced-sensing)
+add_subdirectory(hms)
 
 
