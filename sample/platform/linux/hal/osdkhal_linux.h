@@ -59,10 +59,8 @@ extern "C" {
 
 E_OsdkStat OsdkLinux_UartSendData(const T_HalObj *obj, const uint8_t *pBuf, uint32_t bufLen);
 E_OsdkStat OsdkLinux_UartReadData(const T_HalObj *obj, uint8_t *pBuf, uint32_t *bufLen);
-E_OsdkStat OsdkLinux_UdpSendData(const T_HalObj *obj, const uint8_t *pBuf, uint32_t bufLen);
-E_OsdkStat OsdkLinux_UdpReadData(const T_HalObj *obj, uint8_t *pBuf, uint32_t *bufLen);
 E_OsdkStat OsdkLinux_UartInit(const char *port, const int baudrate, T_HalObj *obj);
-E_OsdkStat OsdkLinux_UdptInit(const char *addr, uint16_t port, T_HalObj *obj);
+E_OsdkStat OsdkLinux_UartClose(T_HalObj *obj);
 
 #ifdef ADVANCED_SENSING
 E_OsdkStat OsdkLinux_USBBulkInit(uint16_t pid, uint16_t vid, uint16_t num, uint16_t epIn,
@@ -71,6 +69,7 @@ E_OsdkStat OsdkLinux_USBBulkSendData(const T_HalObj *obj, const uint8_t *pBuf,
                                      uint32_t bufLen);
 E_OsdkStat OsdkLinux_USBBulkReadData(const T_HalObj *obj, uint8_t *pBuf,
                                      uint32_t *bufLen);
+E_OsdkStat OsdkLinux_USBBulkClose(T_HalObj *obj);
 #endif
 
 #ifdef __cplusplus
