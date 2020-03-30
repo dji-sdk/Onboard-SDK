@@ -512,6 +512,9 @@ using namespace DJI::OSDK::Telemetry;
  * @details Please be aware that some of the data elements in this topic may not be able to update
  * at high rates due to the limitations of the sensing for that data. e.g. current can only update @ 1 Hz.
  * @platforms A3,N3, M600,M210
+ * @units
+ * |voltage           | mV |
+ * |current           | mA |
  * @datastruct \ref Battery
  */
 

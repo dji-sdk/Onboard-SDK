@@ -31,7 +31,6 @@
 
 #include "dji_command.hpp"
 #include "dji_payload_base.hpp"
-#include "dji_payload_link.hpp"
 #include "dji_type.hpp"
 #include "dji_vehicle_callback.hpp"
 
@@ -537,23 +536,11 @@ class CameraModule : public PayloadBase {
 
 #pragma pack(1)
 
-  /*! @brief Temporary struct used in the special Open Protocol CMD
-   * DJI::OSDK::CameraModule::FunctionID. User should choose the Function ID to
-   * choose the function and then use the payloadNodeIndex to specify which
-   * device to receive the data.
-   */
-  typedef struct FuncParam {
-    uint8_t funcIndex;        /*!< ref to DJI::OSDK::CameraModule::FunctionID */
-    uint8_t payloadNodeIndex; /*!< PayloadNode index. It should be paid
-                                 attention that real payload node index +1 */
-  } FuncParam;                // pack(1)
-
   /*! @brief It is the common ack of Open Protocol CMD
    * DJI::OSDK::CameraModule::FunctionID. All the ack data from this CMD will
    * include the ack struct.
    */
   typedef struct CommonAck {
-    FuncParam funcParam; /*!< ref to DJI::OSDK::CameraModule::FuncParam */
     uint8_t ret_code;    /*!< original return code from vehicle */
   } CommonAck;           // pack(1)
 
@@ -593,7 +580,6 @@ class CameraModule : public PayloadBase {
   /*! @brief Request data to take photo mode
    */
   typedef struct CaptureParamReq {
-    FuncParam funcParam; /*!< function ID and payloadnode indiex ID */
     CaptureParamData
         captureParam; /*!< Take photo mode parameters, ref to
                          DJI::OSDK::CameraModule::CaptureParamData */
@@ -602,7 +588,6 @@ class CameraModule : public PayloadBase {
   /*! @brief Response data of take photo mode
    */
   typedef struct CaptureParamAck {
-    FuncParam funcParam;           /*!< function ID and payloadnode indiex ID */
     uint8_t ret_code;              /*!< original return code from vehicle */
     CaptureParamData captureParam; /*!< Take photo mode parameters, ref to
                          DJI::OSDK::CameraModule::CaptureParamData */
@@ -611,7 +596,6 @@ class CameraModule : public PayloadBase {
   /*! @brief Request data to record video mode
    */
   typedef struct RecordVideoReq {
-    FuncParam funcParam;           /*!< function ID and payloadnode indiex ID */
     uint8_t recording_control : 2; /*!< ref to
                                       DJI::OSDK::DJI_CAMERA_RECORDING_CONTROL */
     uint8_t
@@ -627,7 +611,6 @@ class CameraModule : public PayloadBase {
    * layer.
    */
   typedef struct WorkModeReq {
-    FuncParam funcParam;      /*!< function ID and payloadnode indiex ID */
     WorkModeData workingMode; /*!< ref to DJI::OSDK::CameraModule::WorkMode */
   } WorkModeReq;              // pack(1)
 
@@ -635,7 +618,6 @@ class CameraModule : public PayloadBase {
    * layer.
    */
   typedef struct WorkModeAck {
-    FuncParam funcParam;      /*!< function ID and payloadnode indiex ID */
     uint8_t ret_code;         /*!< original return code from vehicle */
     WorkModeData workingMode; /*!< ref to DJI::OSDK::CameraModule::WorkMode */
   } WorkModeAck;              // pack(1)
@@ -643,7 +625,6 @@ class CameraModule : public PayloadBase {
   /*! @brief Requesting take photo mode, used in internal link layer.
    */
   typedef struct ShootPhotoReq {
-    FuncParam funcParam; /*!< function ID and payloadnode indiex ID */
     ShootPhotoModeData
         takePhotoType; /*!< ref to DJI::OSDK::CameraModule::ShootPhotoMode */
   } ShootPhotoReq;     // pack(1)
@@ -656,14 +637,12 @@ class CameraModule : public PayloadBase {
   /*! @brief Requesting focus mode, used in internal link layer.
    */
   typedef struct FocusModeReq {
-    FuncParam funcParam;     /*!< function ID and payloadnode indiex ID */
     FocusModeData focusMode; /*!< ref to DJI::OSDK::CameraModule::FocusMode */
   } FocusModeReq;            // pack(1)
 
   /*! @brief Response data struct of focus mode, used in internal link layer.
    */
   typedef struct FocusModeAck {
-    FuncParam funcParam;     /*!< function ID and payloadnode indiex ID */
     uint8_t ret_code;        /*!< original return code from vehicle */
     FocusModeData focusMode; /*!< ref to DJI::OSDK::CameraModule::FocusMode */
   } FocusModeAck;            // pack(1)
@@ -676,7 +655,6 @@ class CameraModule : public PayloadBase {
   /*! @brief Requesting exposure mode, used in internal link layer.
    */
   typedef struct ExposureModeReq {
-    FuncParam funcParam; /*!< function ID and payloadnode indiex ID */
     ExposureModeData
         exposureModeMode; /*!< ref to DJI::OSDK::CameraModule::ExposureMode */
     uint8_t reserve;
@@ -685,7 +663,6 @@ class CameraModule : public PayloadBase {
   /*! @brief Response data struct of exposure mode, used in internal link layer.
    */
   typedef struct ExposureModeAck {
-    FuncParam funcParam; /*!< function ID and payloadnode indiex ID */
     uint8_t ret_code;    /*!< original return code from vehicle */
     ExposureModeData
         exposureMode; /*!< ref to DJI::OSDK::CameraModule::ExposureMode */
@@ -723,7 +700,6 @@ class CameraModule : public PayloadBase {
   /*! @brief Requesting optical zoom, used in internal link layer.
    */
   typedef struct zoomOptiParamReq {
-    FuncParam funcParam; /*!< function ID and payloadnode indiex ID */
     zoomOptiParamType zoomOptiParam; /*!< optical zoom parameters */
   } zoomOptiParamReq;
 
@@ -738,7 +714,6 @@ class CameraModule : public PayloadBase {
   /*! @brief Requesting to set tap zoom enable, used in internal link layer.
    */
   typedef struct TapZoomEnableReq {
-    FuncParam funcParam; /*!< function ID and payloadnode indiex ID */
     TapZoomEnableData tapZoomEnable;  /*!< tap zoom enabled parameter */
     TapZoomMultiplierData multiplier; /*!< tap zoom multiplier parameter */
   } TapZoomEnableReq;                 // pack(1)
@@ -747,7 +722,6 @@ class CameraModule : public PayloadBase {
    * link layer.
    */
   typedef struct TapZoomEnableAck {
-    FuncParam funcParam; /*!< function ID and payloadnode indiex ID */
     uint8_t ret_code;    /*!< original return code from vehicle */
     TapZoomEnableData tapZoomEnable;  /*!< tap zoom enabled parameter */
     TapZoomMultiplierData multiplier; /*!< tap zoom multiplier parameter */
@@ -772,7 +746,6 @@ class CameraModule : public PayloadBase {
    * internal link layer.
    */
   typedef struct FloatPointReq {
-    FuncParam funcParam; /*!< function ID and payloadnode indiex ID */
     FloatPoint p;        /*!< float x and float y of the point */
   } FloatPointReq;
 
@@ -790,7 +763,6 @@ class CameraModule : public PayloadBase {
    * internal link layer.
    */
   typedef struct TapFocusPosAck {
-    FuncParam funcParam; /*!< function ID and payloadnode indiex ID */
     uint8_t ret_code;    /*!< original return code from vehicle */
     TapZoomPosData p;    /*!< tap zoom point data */
     int8_t hor_region_num;
@@ -804,14 +776,12 @@ class CameraModule : public PayloadBase {
   /*! @brief Requesting to set ISO parameter, used in internal link layer.
    */
   typedef struct ISOParamReq {
-    FuncParam funcParam; /*!< function ID and payloadnode indiex ID */
     ISOParamData iso;    /*!< ref to DJI::OSDK::CameraModule::ISO */
   } ISOParamReq;         // pack(1)
 
   /*! @brief Response data struct of ISO parameter, used in internal link layer.
    */
   typedef struct ISOParamAck {
-    FuncParam funcParam; /*!< function ID and payloadnode indiex ID */
     uint8_t ret_code;    /*!< original return code from vehicle */
     ISOParamData iso;    /*!< ref to DJI::OSDK::CameraModule::ISO */
   } ISOParamAck;         // pack(1)
@@ -824,14 +794,12 @@ class CameraModule : public PayloadBase {
   /*! @brief Requesting to set aperture parameter, used in internal link layer.
    */
   typedef struct ApertureReq {
-    FuncParam funcParam; /*!< function ID and payloadnode indiex ID */
     ApertureData size;   /*!< aperture value of camera */
   } ApertureReq;         // pack(1)
 
   /*! @brief Response data struct of aperture, used in internal link layer.
    */
   typedef struct ApertureAck {
-    FuncParam funcParam; /*!< function ID and payloadnode indiex ID */
     uint8_t ret_code;    /*!< original return code from vehicle */
     ApertureData size;   /*!< aperture value of camera */
   } ApertureAck;         // pack(1)
@@ -852,7 +820,6 @@ class CameraModule : public PayloadBase {
   /*! @brief Requesting to set shutter parameter, used in internal link layer.
    */
   typedef struct ShutterReq {
-    FuncParam funcParam;  /*!< function ID and payloadnode indiex ID */
     uint8_t shutter_mode; /*!< ref to DJI::OSDK::CameraModule::ShutterMode */
     ShutterSpeedType shutterSpeed; /*!< shutter speed of camera */
   } ShutterReq;                    // pack(1)
@@ -860,7 +827,6 @@ class CameraModule : public PayloadBase {
   /*! @brief Response data struct of shutter, used in internal link layer.
    */
   typedef struct ShutterAck {
-    FuncParam funcParam;  /*!< function ID and payloadnode indiex ID */
     uint8_t ret_code;     /*!< original return code from vehicle */
     uint8_t shutter_mode; /*!< ref to DJI::OSDK::CameraModule::ShutterMode */
     ShutterSpeedType shutter;
@@ -877,7 +843,6 @@ class CameraModule : public PayloadBase {
    * layer.
    */
   typedef struct ExposureCompensationReq {
-    FuncParam funcParam; /*!< function ID and payloadnode indiex ID */
     ExposureCompensationData
         ev; /*!< ref to DJI::OSDK::CameraModule::ExposureCompensation */
   } ExposureCompensationReq;  // pack(1)
@@ -886,7 +851,6 @@ class CameraModule : public PayloadBase {
    * link layer.
    */
   typedef struct ExposureCompensationAck {
-    FuncParam param;  /*!< function ID and payloadnode indiex ID */
     uint8_t ret_code; /*!< original return code from vehicle */
     ExposureCompensationData
         ev_param; /*!< ref to DJI::OSDK::CameraModule::ExposureCompensation */
@@ -918,7 +882,7 @@ class CameraModule : public PayloadBase {
   using UCBRetParamHandler = UCBRetParamStruct<T>;
 
  public:
-  CameraModule(PayloadLink* payloadLink, PayloadIndexType payloadIndex,
+  CameraModule(Linker* linker, PayloadIndexType payloadIndex,
                std::string name, bool enable);
 
   ~CameraModule();
@@ -1795,90 +1759,15 @@ class CameraModule : public PayloadBase {
   ErrorCode::ErrorCodeType getExposureCompensationSync(ExposureCompensation& ev,
                                                        int timeout);
 
+  /*! @brief obtaion the download right from camera, blocking calls
+   *
+   *  @param enable obtain the download right from the camera or not
+   *  @param timeout blocking timeout in seconds
+   *  @return ErrorCode::ErrorCodeType error code
+   */
+  ErrorCode::ErrorCodeType obtainDownloadRightSync(bool enable, int timeout);
+
  private:
-  /*! @brief Decoder callback to decode common ack of camera module, then call
-   * the ucb
-   *
-   *  @param vehicle vehicle instance
-   *  @param recvFrame data frame decoded from link layer
-   *  @param ucb include the user callback and userdata defined by user, it will
-   * be called once the data frame is valid.
-   */
-  static void commonAckDecoder(Vehicle* vehicle, RecvContainer recvFrame,
-                               UCBRetCodeHandler* ucb);
-
-  /*! @brief Decoder callback to decode the ack of getting ExposureMode, then
-   * call the ucb
-   *
-   *  @param vehicle vehicle instance
-   *  @param recvFrame data frame decoded from link layer
-   *  @param ucb include the user callback and userdata defined by user, it will
-   * be called once the data frame is valid.
-   */
-  static void getExposureModeDecoder(Vehicle* vehicle, RecvContainer recvFrame,
-                                     UCBRetParamHandler<ExposureMode>* ucb);
-
-  /*! @brief Decoder callback to decode the ack of getting ISO, then call the
-   * ucb
-   *
-   *  @param vehicle vehicle instance
-   *  @param recvFrame data frame decoded from link layer
-   *  @param ucb include the user callback and userdata defined by user, it will
-   * be called once the data frame is valid.
-   */
-  static void getISODecoder(Vehicle* vehicle, RecvContainer recvFrame,
-                            UCBRetParamHandler<ISO>* ucb);
-
-  /*! @brief Decoder callback to decode the ack of getting camera work mode ,
-   * then call the ucb
-   *
-   *  @param vehicle vehicle instance
-   *  @param recvFrame data frame decoded from link layer
-   *  @param ucb include the user callback and userdata defined by user, it will
-   * be called once the data frame is valid.
-   */
-  static void getModeDecoder(Vehicle* vehicle, RecvContainer recvFrame,
-                             UCBRetParamHandler<WorkMode>* ucb);
-  /*! @brief Decoder callback to decode the ack of getting focus mode, then call
-   * the ucb
-   *
-   *  @param vehicle vehicle instance
-   *  @param recvFrame data frame decoded from link layer
-   *  @param ucb include the user callback and userdata defined by user, it will
-   * be called once the data frame is valid.
-   */
-  static void getFocusModeDecoder(Vehicle* vehicle, RecvContainer recvFrame,
-                                  UCBRetParamHandler<FocusMode>* ucb);
-  /*! @brief Decoder callback to decode the ack of getting focus target, then
-   * call the ucb
-   *
-   *  @param vehicle vehicle instance
-   *  @param recvFrame data frame decoded from link layer
-   *  @param ucb include the user callback and userdata defined by user, it will
-   * be called once the data frame is valid.
-   */
-  static void getFocusTargetDecoder(Vehicle* vehicle, RecvContainer recvFrame,
-                                    UCBRetParamHandler<TapFocusPosData>* ucb);
-  /*! @brief Decoder callback to decode the ack of getting aperture, then call
-   * the ucb
-   *
-   *  @param vehicle vehicle instance
-   *  @param recvFrame data frame decoded from link layer
-   *  @param ucb include the user callback and userdata defined by user, it will
-   * be called once the data frame is valid.
-   */
-  static void getApertureDecoder(Vehicle* vehicle, RecvContainer recvFrame,
-                                 UCBRetParamHandler<Aperture>* ucb);
-  /*! @brief Decoder callback to decode the ack of getting shutter speed, then
-   * call the ucb
-   *
-   *  @param vehicle vehicle instance
-   *  @param recvFrame data frame decoded from link layer
-   *  @param ucb include the user callback and userdata defined by user, it will
-   * be called once the data frame is valid.
-   */
-  static void getShutterSpeedDecoder(Vehicle* vehicle, RecvContainer recvFrame,
-                                     UCBRetParamHandler<ShutterSpeed>* ucb);
   /*! @brief Decoder callback to decode the ack of getting tap zoom enable
    * parameter, then call the ucb
    *
@@ -1887,19 +1776,9 @@ class CameraModule : public PayloadBase {
    *  @param ucb include the user callback and userdata defined by user, it will
    * be called once the data frame is valid.
    */
-  static void getTapZoomEnabledDecoder(Vehicle* vehicle,
-                                       RecvContainer recvFrame,
-                                       UCBRetParamHandler<bool>* ucb);
-  /*! @brief Decoder callback to decode the ack of getting exposure compensation
-   * parameter, then call the ucb
-   *
-   *  @param vehicle vehicle instance
-   *  @param recvFrame data frame decoded from link layer
-   *  @param ucb include the user callback and userdata defined by user, it will
-   * be called once the data frame is valid.
-   */
-  static void getEVDecoder(Vehicle* vehicle, RecvContainer recvFrame,
-                           UCBRetParamHandler<ExposureCompensation>* ucb);
+  static void getTapZoomEnabledDecoder(ErrorCode::ErrorCodeType retCode,
+                                       TapZoomEnableAck data, UserData userData);
+
   /*! @brief Decoder callback to decode the ack of getting tap zoom multiplier,
    * then call the ucb
    *
@@ -1908,20 +1787,10 @@ class CameraModule : public PayloadBase {
    *  @param ucb include the user callback and userdata defined by user, it will
    * be called once the data frame is valid.
    */
-  static void getTapZoomMultiplierDecoder(
-      Vehicle* vehicle, RecvContainer recvFrame,
-      UCBRetParamHandler<TapZoomMultiplierData>* ucb);
-  /*! @brief Decoder callback to decode the ack of getting capture parameters
-   * data, then call the ucb
-   *
-   *  @param vehicle vehicle instance
-   *  @param recvFrame data frame decoded from link layer
-   *  @param ucb include the user callback and userdata defined by user, it will
-   * be called once the data frame is valid.
-   */
-  static void getCaptureParamDataDecoder(
-      Vehicle* vehicle, RecvContainer recvFrame,
-      UCBRetParamHandler<CaptureParamData>* ucb);
+  static void getTapZoomMultiplierDecoder(ErrorCode::ErrorCodeType retCode,
+                                          TapZoomEnableAck data,
+                                          UserData userData);
+
   /*! @brief Decoder callback to decode the ack of getting shoot photo mode,
    * then call the ucb
    *
@@ -1930,9 +1799,9 @@ class CameraModule : public PayloadBase {
    *  @param ucb include the user callback and userdata defined by user, it will
    * be called once the data frame is valid.
    */
-  static void getShootPhotoModeDataDecoder(
-      Vehicle* vehicle, RecvContainer recvFrame,
-      UCBRetParamHandler<ShootPhotoMode>* ucb);
+  static void getShootPhotoModeDataDecoder(ErrorCode::ErrorCodeType retCode,
+                                           CaptureParamData captureParam,
+                                           UserData userData);
   /*! @brief Decoder callback to decode the ack of getting burst count parameter
    * of BURST mode, then call the ucb
    *
@@ -1941,12 +1810,13 @@ class CameraModule : public PayloadBase {
    *  @param ucb include the user callback and userdata defined by user, it will
    * be called once the data frame is valid.
    */
-  static void getPhotoBurstCountDecoder(
-      Vehicle* vehicle, RecvContainer recvFrame,
-      UCBRetParamHandler<PhotoBurstCount>* ucb);
+  static void getPhotoBurstCountDecoder(ErrorCode::ErrorCodeType retCode,
+                                        CaptureParamData captureParam,
+                                        UserData userData);
 
-  static void getPhotoAEBCountDecoder(Vehicle* vehicle, RecvContainer recvFrame,
-                                      UCBRetParamHandler<PhotoAEBCount>* ucb);
+  static void getPhotoAEBCountDecoder(ErrorCode::ErrorCodeType retCode,
+                                      CaptureParamData captureParam,
+                                      UserData userData);
   /*! @brief Decoder callback to decode the ack of getting parameters of
    * INTERVAL mode, then call the ucb
    *
@@ -1955,9 +1825,9 @@ class CameraModule : public PayloadBase {
    *  @param ucb include the user callback and userdata defined by user, it will
    * be called once the data frame is valid.
    */
-  static void getPhotoIntervalDatasDecoder(
-      Vehicle* vehicle, RecvContainer recvFrame,
-      UCBRetParamHandler<PhotoIntervalData>* ucb);
+  static void getPhotoIntervalDatasDecoder(ErrorCode::ErrorCodeType retCode,
+                                           CaptureParamData captureParam,
+                                           UserData userData);
 
   static void callbackToSetTapZoomMultiplier(ErrorCode::ErrorCodeType retCode,
                                              bool enable, UserData userData);
@@ -1974,79 +1844,48 @@ class CameraModule : public PayloadBase {
       ErrorCode::ErrorCodeType retCode, CaptureParamData captureParam,
       UserData userData);
 
-  static const int maxSize = 32;
-
-  UCBRetCodeHandler ucbHandler[maxSize];
-
-  /*! @brief alloc memory for ucb handler
-   *
-   *  @details Mainly used in handling userData memory issues for the callback
-   * in payloads. The userData recorded in vehicle->nbUserData will be called
-   * when the callback is called. So this function is to avoid the userData to
-   * be a invalid value in the callback.
-   * @TODO Here is only the temporary way to alloc memory for the asynchronous
-   * interface to stash the user data. This method will be optimized in the
-   * future.
-   * @Note There are 32 memory units for this method. So if the API calling
-   * this method too fast, the memory units of this API may overflow. So the
-   * calling frequency of releated APIs should less than 10Hz
-   */
-  UCBRetCodeHandler* allocUCBHandler(void* callback, UserData userData);
-
-  template <typename AckT>
-  static ErrorCode::ErrorCodeType commonDataUnpacker(RecvContainer recvFrame,
-                                                     AckT& ack);
-
   template <typename DataT>
-  void getInterfaceAsync(
-      FuncParam req,
-      void (*ackDecoderCB)(Vehicle* vehicle, RecvContainer recvFrame,
-                           UCBRetParamHandler<DataT>* ucb),
-      void (*userCB)(ErrorCode::ErrorCodeType, DataT data, UserData userData),
-      UserData userData, int timeout = 500, int retry_time = 2);
+  void getInterfaceAsync(const uint8_t cmd[2],
+                         void (*userCB)(ErrorCode::ErrorCodeType, DataT data,
+                                        UserData),
+                         UserData userData, int timeout = 500,
+                         int retry_time = 2);
 
-  template <typename AckT>
-  ErrorCode::ErrorCodeType getInterfaceSync(FuncParam req, AckT& ack,
-                                            int timeout);
+  ErrorCode::ErrorCodeType getInterfaceSync(const uint8_t cmd[2],
+                                            uint8_t *outData,
+                                            uint32_t &outDataLen, int timeout,
+                                            int rtyTimes);
 
-  template <typename ReqT>
   void setInterfaceAsync(
-      ReqT req,
-      void (*ackDecoderCB)(Vehicle* vehicle, RecvContainer recvFrame,
-                           UCBRetCodeHandler* ucb),
-      void (*userCB)(ErrorCode::ErrorCodeType, UserData userData),
+      const uint8_t cmd[2], const uint8_t *pdata, uint32_t dataLen,
+      void (*userCB)(ErrorCode::ErrorCodeType, UserData),
       UserData userData, int timeout = 500, int retry_time = 2);
 
-  template <typename ReqT>
-  ErrorCode::ErrorCodeType setInterfaceSync(ReqT req, int timeout);
+  ErrorCode::ErrorCodeType setInterfaceSync(const uint8_t cmd[2],
+                                            const uint8_t *pdata,
+                                            uint32_t dataLen, int timeout,
+                                            uint8_t rtyTimes);
 
-  template <typename ReqT>
   void actionInterfaceAsync(
-      ReqT req,
-      void (*ackDecoderCB)(Vehicle* vehicle, RecvContainer recvFrame,
-                           UCBRetCodeHandler* ucb),
-      void (*userCB)(ErrorCode::ErrorCodeType, UserData userData),
+      const uint8_t cmd[2], const uint8_t *pdata, uint32_t dataLen,
+      void (*userCB)(ErrorCode::ErrorCodeType, UserData),
       UserData userData, int timeout = 500, int retry_time = 2);
-  template <typename ReqT>
-  ErrorCode::ErrorCodeType actionInterfaceSync(ReqT req, int timeout);
+
+  ErrorCode::ErrorCodeType actionInterfaceSync(const uint8_t cmd[2],
+                                               const uint8_t *pdata,
+                                               uint32_t dataLen,
+                                               int timeout,
+                                               uint8_t rtyTimes);
 
  private:
-  PayloadLink* payloadLink;
-
-  static ShutterSpeedType createShutterSpeedStruct(int reciprocal,
-                                                   int integer_part,
-                                                   int decimal_part);
-
-  static ShutterSpeedType ShutterSpeedEnumToShutterSpeedType(
-      ShutterSpeed shutterSpeed);
-
-  static ShutterSpeed ShutterSpeedTypeToShutterSpeedEnum(int reciprocal,
-                                                         int integer_part,
-                                                         int decimal_part);
 
   void getCaptureParamDataAsync(
       void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
                            CaptureParamData captureParam, UserData userData),
+      UserData userData);
+  void getTapZoomDataAckAsync(
+      void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
+                           TapZoomEnableAck data, UserData userData),
       UserData userData);
 
   ErrorCode::ErrorCodeType getCaptureParamDataSync(

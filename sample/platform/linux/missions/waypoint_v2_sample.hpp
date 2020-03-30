@@ -53,7 +53,6 @@ public:
   ~WaypointV2MissionSample();
 
 
-
 public:
 
   ErrorCode::ErrorCodeType initMissionSetting(int timeout);

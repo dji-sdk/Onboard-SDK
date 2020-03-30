@@ -71,6 +71,10 @@ namespace OSDK
  * DJI OSDK API.
  *
  */
+//forward declaration
+class Firewall;
+class Linker;
+
 class Vehicle
 {
 public:
@@ -289,6 +293,9 @@ public:
   bool advSensingErrorPrintOnce;
 #endif
 private:
+  Firewall *firewall;
+  bool initFirewall();
+
   void setActivationStatus(bool is_activated);
   void initCMD_SetSupportMatrix();
   bool isCmdSetSupported(const uint8_t cmdSet);

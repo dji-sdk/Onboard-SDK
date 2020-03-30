@@ -35,6 +35,7 @@
 #include <cstdint>
 #endif
 #include <map>
+#include "osdk_typedef.h"
 
 namespace DJI {
 namespace OSDK {
@@ -92,13 +93,15 @@ class ErrorCode {
   /*! @brief Function ID used with FCModule in error codes
    */
   enum FCFunctionID {
-    FCControlTask    = 0,
-    FCSubscribe      = 1,
-    FCMission        = 2,
-    FCEmergencyBrake = 3,
-    FCParameterTable = 4,
-    FCSetHomeLocation= 5,
-    FCAvoidObstacle  = 6,
+    FCControlTask       = 0,
+    FCSubscribe         = 1,
+    FCWaypointMissionV1 = 2,
+    FCWaypointMissionV2 = 3,
+    FCParameterTable    = 4,
+    FCSetHomeLocation   = 5,
+    FCAvoidObstacle     = 6,
+    FCEmergencyBrake    = 7,
+    FCHotpointMission   = 8,
   };
 
   /*! @brief Function ID used with CameraModule in error codes
@@ -204,6 +207,8 @@ class ErrorCode {
    *  @return Function name
    */
   static ErrorCode::RawRetCodeType getRawRetCode(ErrorCodeType errCode);
+
+  static ErrorCode::ErrorCodeType getLinkerErrorCode(E_OsdkStat cb_type);
 
   /*! @brief Get error code messages from errCode
    *  @param errCode Unified error type
