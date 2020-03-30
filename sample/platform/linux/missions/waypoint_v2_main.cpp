@@ -49,174 +49,71 @@ main(int argc, char** argv)
     return -1;
   }
 
-  int     responseTimeout = 1;
+  int responseTimeout = 1;
 
   // Obtain Control Authority
   vehicle->control->obtainCtrlAuthority(functionTimeout);
 
+  WaypointV2MissionSample *sample = new WaypointV2MissionSample(vehicle);
 
   // Set up telemetry subscription
-  if (!setUpSubscription(vehicle, responseTimeout))
+  if (!sample->setUpSubscription(responseTimeout))
   {
     std::cout << "Failed to set up Subscription!" << std::endl;
     return -1;
   }
-
-  // Setup variables for use
-  uint8_t wayptPolygonSides;
-
   // wait for the subscription
+  sleep(responseTimeout);
+
+  ErrorCode::ErrorCodeType ret;
+  ret = sample->initMissionSetting(responseTimeout);
+  DSTATUS("initMissionSetting ErrorCode:%x\n", ret);
+
+  auto *missionPtr = vehicle->missionManager->wpMissionV2;
+
+  //missionPtr->getCurrentState();
   sleep(2);
+  ret = sample->uploadWaypointMission(responseTimeout);
+  DSTATUS("uploadWaypointMission ErrorCode:%x\n", ret);
 
-  wayptPolygonSides = 6;
-  createAndUploadWaypointMission(vehicle, wayptPolygonSides, responseTimeout);
+  sleep(2);
+  std::vector<DJIWaypointV2> mission;
+  ret = sample->dowloadWaypointMission(mission,responseTimeout);
 
-  using namespace dji::waypointv2;
+//  for (int i = 0; i<mission.size();i ++)
+//  {
+//    DSTATUS("waypoint [%d] positionX: %f",i, mission[i].positionX);
+//    DSTATUS("waypoint [%d] positionY: %f",i, mission[i].positionY);
+//    DSTATUS("waypoint [%d] positionZ: %f",i, mission[i].positionZ);
+//  }
 
-  // wait for the WP2 state to be ReadyToExecute
-  sleep(4);
+  DSTATUS("downloadWapointActions ErrorCode:%x\n", ret);
 
-  std::vector<WaypointActionConfig> actions;
-  char inputChar = ' ';
 
-  int actionCounter = 0;
-  while(inputChar != 'n')
-  {
-    if(actionCounter >= wayptPolygonSides)
-    {
-      std::cout << "There are enough actions for this waypoint mission.\n";
-      std::cout << "You could add more but for demo purpose we will exit here\n";
-      break;
-    }
+ // missionPtr->getMissionState();
+//  sleep(2);
+  ret = sample->uploadWapointActions(responseTimeout);
+  DSTATUS("uploadWapointActions ErrorCode:%x\n", ret);
+  sleep(2);
+ // missionPtr->getMissionState();
+  //ErrorCode::ErrorCodeType retCode2 = missionPtr->getActionRemainMemory(1);
+ // DSTATUS("getActionRemainMemory%d\n",retCode2);
 
-    std::cout
-      << "| Would you like to add some or more actions to your mission?"
-      << std::endl;
-    std::cout
-      << "| [y] Yes"
-      << std::endl;
-    std::cout
-      << "| [n] No"
-      << std::endl;
-    std::cin >> inputChar;
 
-    if(inputChar == 'n')
-    {
-      break;
-    }
+//  DSTATUS("getWaypointIndexInList ErrorCode:%x\n", retCode3);
+ // DSTATUS("getWaypointIndexInList start index:%d, end index:%d\n", ack.startIndex, ack.endIndex);
 
-    WaypointActionActuatorType actuatorType;
-    WaypointActionTriggerType triggerType;
+  ret = sample->startWaypointMission(vehicle);
 
-    std::cout
-      << "| Available Actuator Type:"
-      << std::endl;
-    std::cout
-      << "| [a] Camera"
-      << std::endl;
-    std::cout
-      << "| [b] Gimbal"
-      << std::endl;
-    std::cout
-      << "| [c] Aircraft Control"
-      << std::endl;
-
-    std::cin >> inputChar;
-    switch (inputChar)
-    {
-      case 'a':
-      { actuatorType = dji::waypointv2::Camera;}
-        break;
-      case 'b':
-      { actuatorType = dji::waypointv2::Gimbal; // namespace ambiguity }
-        break;
-        case 'c':
-        { actuatorType = AircraftControl; }
-        break;
-        default:
-        {
-          std::cout << "User input the wrong actuator type" << std::endl;
-          continue;
-        }
-          break;
-      }
-    }
-
-    std::cout
-      << "| Available Trigger Type:"
-      << std::endl;
-    std::cout
-      << "| [a] ReachPoints (Not supported yet)"
-      << std::endl;
-    std::cout
-      << "| [b] Associate"
-      << std::endl;
-    std::cout
-      << "| [c] Trajectory (Not supported yet)"
-      << std::endl;
-    std::cout
-      << "| [d] Simple Interval"
-      << std::endl;
-    std::cout
-      << "| [e] Simple Reach Point"
-      << std::endl;
-
-    std::cin >> inputChar;
-    switch (inputChar)
-    {
-      case 'a':
-      { triggerType= ReachPoints;
-        std::cout << "This trigger is not supported yet" << std::endl;
-        continue;
-      }
-        break;
-      case 'b':
-      { triggerType= Associate; }
-        break;
-      case 'c':
-      { triggerType= Trajectory;
-        std::cout << "This trigger is not supported yet" << std::endl;
-        continue;
-      }
-        break;
-      case 'd':
-      { triggerType= SimpleInterval; }
-        break;
-      case 'e':
-      { triggerType= SimpleReachPoint; }
-        break;
-      default:
-      {
-        std::cout << "User input the wrong trigger type" << std::endl;
-        continue;
-      }
-        break;
-    }
-
-    if(createActions(vehicle, actuatorType, triggerType, actions))
-    {
-      ++actionCounter;
-    }
-    sleep(1);
-  }
-
-  if(actionCounter > 0)
-  {
-    uploadActions(vehicle, actions);
-  }
-
-  sleep(1);
-
-  startWaypointMission(vehicle);
-
-  if(!teardownSubscription(vehicle, DEFAULT_PACKAGE_INDEX, responseTimeout))
+  DSTATUS("startWaypointMission ErrorCode:%x\n", ret);
+  sleep(100);
+  if(!sample->teardownSubscription(DEFAULT_PACKAGE_INDEX, responseTimeout))
   {
     std::cout << "Failed to tear down Subscription!" << std::endl;
     return -1;
   }
 
   // Mission will continue when we exit here
-  sleep(6);
 
   return 0;
 }
