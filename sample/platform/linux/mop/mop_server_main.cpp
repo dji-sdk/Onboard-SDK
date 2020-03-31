@@ -35,6 +35,27 @@
 
 using namespace DJI::OSDK;
 
+#define TEST_MO_PIPELINE_ID 20
+
+static int non_block_get_char()
+{
+  fd_set rfds;
+  struct timeval tv;
+  int ch = 0;
+
+  FD_ZERO(&rfds);
+  FD_SET(0, &rfds);
+  tv.tv_sec = 0;
+  tv.tv_usec = 10;
+
+  if (select(1, &rfds, NULL, NULL, &tv) > 0)
+  {
+    ch = getchar();
+  }
+
+  return ch;
+}
+
 int writeStreamData(const char *fileName, const uint8_t *data, uint32_t len) {
   FILE *fp = NULL;
   size_t size = 0;
@@ -79,9 +100,6 @@ int readStreamData(const char *fileName, uint32_t pos, uint8_t *data, uint32_t l
   return size;
 }
 
-#define TEST_MO_PIPELINE_ID 20
-T_OsdkTaskHandle recvTaskHandle;
-
 void *recvTask(void *arg) {
   uint64_t recvBytesCnt = 0;
   if (arg) {
@@ -111,6 +129,7 @@ int main(int argc, char** argv)
 {
   LinuxSetup linuxEnvironment(argc, argv);
   Vehicle *vehicle = linuxEnvironment.getVehicle();
+  T_OsdkTaskHandle recvTaskHandle;
 
   if (vehicle == NULL) {
     DERROR("Vehicle not initialized, exiting.");
@@ -172,5 +191,19 @@ int main(int argc, char** argv)
     }
     DSTATUS("mark .............................    2333");
     OsdkOsal_TaskSleepMs(500);
+    int keyBoardInput = non_block_get_char();
+    if (keyBoardInput == 'q') {
+      OsdkOsal_TaskSleepMs(1000);
+      DSTATUS("Got key board input : q, exit the test.");
+      OsdkOsal_TaskSleepMs(2000);
+      break;
+    }
+  }
+
+  /*! close pipeline */
+  if (vehicle->mopServer->close(TEST_MO_PIPELINE_ID) != MOP_PASSED) {
+    DERROR("MOP Pipeline disconnect pipeline(%d) failed", TEST_MO_PIPELINE_ID);
+  } else {
+    DSTATUS("Disconnect mop pipeline id(%d) successfully", TEST_MO_PIPELINE_ID);
   }
 }

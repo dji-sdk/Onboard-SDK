@@ -35,6 +35,25 @@
 
 using namespace DJI::OSDK;
 
+static int non_block_get_char()
+{
+  fd_set rfds;
+  struct timeval tv;
+  int ch = 0;
+
+  FD_ZERO(&rfds);
+  FD_SET(0, &rfds);
+  tv.tv_sec = 0;
+  tv.tv_usec = 10;
+
+  if (select(1, &rfds, NULL, NULL, &tv) > 0)
+  {
+    ch = getchar();
+  }
+
+  return ch;
+}
+
 int writeStreamData(const char *fileName, const uint8_t *data, uint32_t len) {
   FILE *fp = NULL;
   size_t size = 0;
@@ -56,6 +75,8 @@ int writeStreamData(const char *fileName, const uint8_t *data, uint32_t len) {
   return 0;
 }
 
+#define TEST_OP_PIPELINE_ID 14
+
 int main(int argc, char** argv)
 {
   LinuxSetup linuxEnvironment(argc, argv);
@@ -66,31 +87,41 @@ int main(int argc, char** argv)
     return -1;
   }
 
-  MopPipeline *O2PWrOnlyPipeline = NULL;
-  MopPipeline *P2ORdOnlyPipeline = NULL;
-
-  if ((vehicle->mopClient->connect(P2O_PIPELINE, UNRELIABLE, SLOT_0,
-                                   P2ORdOnlyPipeline) != MOP_PASSED)
-      || (P2ORdOnlyPipeline == NULL)) {
-    DERROR("MOP Pipeline connect failed");
-    return -1;
-  } else {
-    DSTATUS("Connect to mop pipeline id(%d) successfully", P2O_PIPELINE);
+  /*! main psdk device init */
+  ErrorCode::ErrorCodeType ret = vehicle->psdkManager->initPSDKModule(
+      PAYLOAD_INDEX_0, "Main_psdk_device");
+  if (ret != ErrorCode::SysCommonErr::Success) {
+    DERROR("Init PSDK module Main_psdk_device failed.");
+    ErrorCode::printErrorCodeMsg(ret);
   }
 
-  if ((vehicle->mopClient->connect(O2P_PIPELINE, UNRELIABLE, SLOT_0,
-                                   O2PWrOnlyPipeline) != MOP_PASSED)
-      || (O2PWrOnlyPipeline == NULL)) {
+  /*! get the mop client */
+  MopClient *mopClient = NULL;
+  ret = vehicle->psdkManager->getMopClient(PAYLOAD_INDEX_0, mopClient);
+  if (ret != ErrorCode::SysCommonErr::Success) {
+    DERROR("Get MOP client object for_psdk_device failed.");
+    ErrorCode::printErrorCodeMsg(ret);
+    return -1;
+  }
+  if (!mopClient) {
+    DERROR("Get MOP client object is a null value.");
+    return -1;
+  }
+
+  /*! connect pipeline */
+  MopPipeline *OP_Pipeline = NULL;
+  if ((mopClient->connect(TEST_OP_PIPELINE_ID, UNRELIABLE, OP_Pipeline)
+      != MOP_PASSED) || (OP_Pipeline == NULL)) {
     DERROR("MOP Pipeline connect failed");
     return -1;
   } else {
-    DSTATUS("Connect to mop pipeline id(%d) successfully", O2P_PIPELINE);
+    DSTATUS("Connect to mop pipeline id(%d) successfully", TEST_OP_PIPELINE_ID);
   }
 
   /*! Define the buffer and the log file name */
   uint8_t readBuffer[1024];
   uint8_t writeBuffer[1024];
-  MopErrCode ret;
+  MopErrCode mopRet;
   uint32_t transTimes = 0;
   struct timeval tv;
   struct tm tm;
@@ -103,8 +134,8 @@ int main(int argc, char** argv)
   while (1) {
     /*! Reading data from PSDK */
     MopPipeline::DataPackType readPacket = {readBuffer, sizeof(readBuffer)};
-    ret = P2ORdOnlyPipeline->recvData(readPacket, &readPacket.length);
-    if (ret == MOP_PASSED) {
+    mopRet = OP_Pipeline->recvData(readPacket, &readPacket.length);
+    if (mopRet == MOP_PASSED) {
       DSTATUS("Receive %d bytes from PSDK :", readPacket.length);
       if (readPacket.length >= 3)
         DSTATUS("data[0]=%d data[1]=%d data[2]=%d ..",
@@ -113,7 +144,7 @@ int main(int argc, char** argv)
       writeStreamData(logFileName, readPacket.data, readPacket.length);
       transTimes++;
     } else {
-      DERROR("Receive bytes from PSDK failed (%d)", ret);
+      DERROR("Receive bytes from PSDK failed (%d)", mopRet);
     }
 
     /*! Writing data to PSDK */
@@ -121,31 +152,30 @@ int main(int argc, char** argv)
       /*! transTimes/100 means 100k Bytes */
       memset(writeBuffer, (uint8_t)(transTimes/100), sizeof(writeBuffer));
       MopPipeline::DataPackType writePacket = {writeBuffer, sizeof(writeBuffer)};
-      //sprintf((char *)writeBuffer, "Success transing time : %d", transTimes);
-      //ret = O2PWrOnlyPipeline->sendData(writePacket, &writePacket.length);
-      ret = P2ORdOnlyPipeline->sendData(writePacket, &writePacket.length);
-      if (ret == MOP_PASSED) {
+      mopRet = OP_Pipeline->sendData(writePacket, &writePacket.length);
+      if (mopRet == MOP_PASSED) {
         DSTATUS("-----Send %d bytes to PSDK :", writePacket.length);
         if (writePacket.length >= 3)
           DSTATUS("-----data[0]=%d data[1]=%d data[2]=%d ..",
                   writePacket.length, writePacket.data[0], writePacket.data[1],
                   writePacket.data[2]);
       } else {
-        DERROR("Send bytes to PSDK failed (%d)", ret);
+        DERROR("Send bytes to PSDK failed (%d)", mopRet);
       }
+    }
+    int keyBoardInput = non_block_get_char();
+    if (keyBoardInput == 'q') {
+      OsdkOsal_TaskSleepMs(1000);
+      DSTATUS("Got key board input : q, exit the test.");
+      OsdkOsal_TaskSleepMs(2000);
+      break;
     }
   }
 
   /*! Disconnect pipeline */
-  if (vehicle->mopClient->disconnect(P2O_PIPELINE) != MOP_PASSED) {
-    DERROR("MOP Pipeline disconnect pipeline(%d) failed", P2O_PIPELINE);
+  if (mopClient->disconnect(TEST_OP_PIPELINE_ID) != MOP_PASSED) {
+    DERROR("MOP Pipeline disconnect pipeline(%d) failed", TEST_OP_PIPELINE_ID);
   } else {
-    DSTATUS("Disconnect mop pipeline id(%d) successfully", P2O_PIPELINE);
-  }
-
-  if (vehicle->mopClient->disconnect(O2P_PIPELINE) != MOP_PASSED) {
-    DERROR("MOP Pipeline disconnect pipeline(%d) failed", O2P_PIPELINE);
-  } else {
-    DSTATUS("Disconnect mop pipeline id(%d) successfully", O2P_PIPELINE);
+    DSTATUS("Disconnect mop pipeline id(%d) successfully", TEST_OP_PIPELINE_ID);
   }
 }
