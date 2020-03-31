@@ -37,10 +37,10 @@ using namespace DJI::OSDK::Telemetry;
 int
 main(int argc, char** argv)
 {
-  // Initialize variables
-  int functionTimeout = 1;
+  /*! Initialize variables*/
 
-  // Setup OSDK.
+  int functionTimeout = 1;
+  /*! Setup OSDK.*/
   LinuxSetup linuxEnvironment(argc, argv);
   Vehicle*   vehicle = linuxEnvironment.getVehicle();
   if (vehicle == NULL)
@@ -48,72 +48,19 @@ main(int argc, char** argv)
     std::cout << "Vehicle not initialized, exiting.\n";
     return -1;
   }
-
   int responseTimeout = 1;
 
-  // Obtain Control Authority
+  /*! Obtain Control Authority*/
   vehicle->control->obtainCtrlAuthority(functionTimeout);
 
-  WaypointV2MissionSample *sample = new WaypointV2MissionSample(vehicle);
+  /*! Initialize a new WaypointV2 mission sample*/
+  auto *sample = new WaypointV2MissionSample(vehicle);
 
-  // Set up telemetry subscription
-  if (!sample->setUpSubscription(responseTimeout))
-  {
-    std::cout << "Failed to set up Subscription!" << std::endl;
-    return -1;
-  }
-  // wait for the subscription
-  sleep(responseTimeout);
+  /*! run a new WaypointV2 mission sample*/
+  sample->runWaypointV2Mission();
 
-  ErrorCode::ErrorCodeType ret;
-  ret = sample->initMissionSetting(responseTimeout);
-  DSTATUS("initMissionSetting ErrorCode:%x\n", ret);
-
-  auto *missionPtr = vehicle->missionManager->wpMissionV2;
-
-  //missionPtr->getCurrentState();
-  sleep(2);
-  ret = sample->uploadWaypointMission(responseTimeout);
-  DSTATUS("uploadWaypointMission ErrorCode:%x\n", ret);
-
-  sleep(2);
-  std::vector<DJIWaypointV2> mission;
-  ret = sample->dowloadWaypointMission(mission,responseTimeout);
-
-//  for (int i = 0; i<mission.size();i ++)
-//  {
-//    DSTATUS("waypoint [%d] positionX: %f",i, mission[i].positionX);
-//    DSTATUS("waypoint [%d] positionY: %f",i, mission[i].positionY);
-//    DSTATUS("waypoint [%d] positionZ: %f",i, mission[i].positionZ);
-//  }
-
-  DSTATUS("downloadWapointActions ErrorCode:%x\n", ret);
-
-
- // missionPtr->getMissionState();
-//  sleep(2);
-  ret = sample->uploadWapointActions(responseTimeout);
-  DSTATUS("uploadWapointActions ErrorCode:%x\n", ret);
-  sleep(2);
- // missionPtr->getMissionState();
-  //ErrorCode::ErrorCodeType retCode2 = missionPtr->getActionRemainMemory(1);
- // DSTATUS("getActionRemainMemory%d\n",retCode2);
-
-
-//  DSTATUS("getWaypointIndexInList ErrorCode:%x\n", retCode3);
- // DSTATUS("getWaypointIndexInList start index:%d, end index:%d\n", ack.startIndex, ack.endIndex);
-
-  ret = sample->startWaypointMission(vehicle);
-
-  DSTATUS("startWaypointMission ErrorCode:%x\n", ret);
-  sleep(100);
-  if(!sample->teardownSubscription(DEFAULT_PACKAGE_INDEX, responseTimeout))
-  {
-    std::cout << "Failed to tear down Subscription!" << std::endl;
-    return -1;
-  }
+  delete(sample);
 
   // Mission will continue when we exit here
-
   return 0;
 }

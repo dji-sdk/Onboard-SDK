@@ -643,10 +643,9 @@ typedef struct WayPointFinishData
 /*! TODO:增加注释*/
 typedef struct WayPointV2InitSettings{
 
-  uint16_t version;
-  uint8_t  saveFile:1;
-  uint8_t  reserved:7;
+  uint16_t version = 25856;
 
+  uint8_t  reserved = 0;
   /**
    *  The Mission ID.
    */

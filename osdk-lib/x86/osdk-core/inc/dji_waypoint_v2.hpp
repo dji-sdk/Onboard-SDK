@@ -39,12 +39,10 @@ namespace OSDK
 {
 
   class Linker;
-  /*! @brief APIs for GPS Waypoint Missions
+  /*! @brief APIs for GPS Waypoint Missions V2  Version
    *
-   *  @details This class inherits from MissionBase and can be used with
-   *  MissionManager.
    */
-  class WaypointMissionV2 //: public MissionBase
+  class WaypointV2MissionOperator //: public MissionBase
   {
   public:
     const uint16_t MAX_WAYPOINT_NUM_SIGNAL_PUSH = 260;
@@ -212,35 +210,34 @@ namespace OSDK
 
     #pragma pack()
 
+    WaypointV2MissionOperator(Vehicle* vehiclePtr);
 
-    WaypointMissionV2(Vehicle* vehiclePtr);
-
-    ~WaypointMissionV2();
+    ~WaypointV2MissionOperator();
 
     ErrorCode::ErrorCodeType init(WayPointV2InitSettings* Info, int timeout);
 
-    ErrorCode::ErrorCodeType startV2(int timeout);
+    ErrorCode::ErrorCodeType start(int timeout);
     /*! @brief
      *
      *  stop the waypt mission
      *
      *  @param register a callback function for error code
      */
-    ErrorCode::ErrorCodeType stopV2(int timeout);
+    ErrorCode::ErrorCodeType stop(int timeout);
     /*! @brief
      *
      *  pause the waypt mission
      *
      *  @param register a callback function for error code
      */
-    ErrorCode::ErrorCodeType pauseV2(int timeout);
+    ErrorCode::ErrorCodeType pause(int timeout);
     /*! @brief
      *
      *  resume the waypt mission
      *
      *  @param register a callback function for error code
      */
-    ErrorCode::ErrorCodeType resumeV2(int timeout);
+    ErrorCode::ErrorCodeType resume(int timeout);
 
     ErrorCode::ErrorCodeType uploadMission(const std::vector<WaypointV2> &mission,int timeout);
 
@@ -292,54 +289,6 @@ namespace OSDK
     void resume(VehicleCallBack callback, UserData userData);
 
 
-  //  /*! @brief
-  //   *
-  //   *  get current speed of the waypt mission
-  //   *
-  //   *  @param register a callback function for error code
-  //   */
-  //  void getCurrentSpeed(std::function<void(float cruise_speed, WaypointV2Interface::CommonErrorCode error_code)> callback);
-  //  /*! @brief
-  //   *
-  //   *  set current speed of the waypt mission
-  //   *
-  //   *  @param register a callback function for error code
-  //   */
-  //  void setCurrentSpeed(float speed, CommonErrorCallback errorCallback);
-    /*! @brief
-     *
-     *  upload a waypt mission with new data strucutre
-     *
-     *  @param mission settings
-     *  @param register a callback function for error code
-     */
-    void uploadMissionV2(const std::vector<WaypointV2> &waypointV2Mission,
-                         VehicleCallBack callback, UserData userData);
-
-    /*! @brief
-     *
-     *  download a waypt mission with new data strucutre
-     *
-     *  @param mission setting data struct to be written
-     *  @param register a callback function for error code
-     */
-    bool DownloadMissionV2(const std::vector<WaypointV2> &waypointV2Mission,
-                           VehicleCallBack callback, UserData userData);
-
-
-
-  //  /*! @brief
-  //   *
-  //   *  upload a action which work in parallel with waypt mission
-  //   *
-  //   *  @param action settings
-  //   *  @param register a callback function for error code
-  //   */
-  //  void uploadActionV2(const std::vector<dji::waypointv2::WaypointActionConfig> &actions,
-  //                      VehicleCallBack callback, UserData userData);
-  //
-  //  void downloadActionV2(const std::vector<dji::waypointv2::WaypointActionConfig> &actions,
-  //                        VehicleCallBack callback, UserData userData);
     /*! @brief
      *
      *  get current mission state
@@ -371,12 +320,11 @@ namespace OSDK
     void setCurrentState(DJIWaypointV2MissionState state) {currentState = state; }
 
   private:
-    WayPointV2InitSettings info;
-    //WayPointSettings*    index;
-    Vehicle *vehicle;
-    Linker *linker;
+    //WayPointV2InitSettings info;
     DJIWaypointV2MissionState currentState;
     DJIWaypointV2MissionState prevState;
+    Vehicle *vehicle;
+    Linker *linker;
   };
 
 } // namespace OSDK

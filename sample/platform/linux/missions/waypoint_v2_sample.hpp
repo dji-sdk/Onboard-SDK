@@ -52,15 +52,11 @@ public:
 
   ~WaypointV2MissionSample();
 
-
 public:
 
   ErrorCode::ErrorCodeType initMissionSetting(int timeout);
 
-  bool setUpSubscription(int responseTimeout);
-
-  bool teardownSubscription( const int pkgIndex,
-                            int responseTimeout);
+  ErrorCode::ErrorCodeType runWaypointV2Mission();
 
   ErrorCode::ErrorCodeType uploadWaypointMission(int responseTimeout);
 
@@ -68,24 +64,24 @@ public:
 
   ErrorCode::ErrorCodeType dowloadWaypointMission(std::vector<DJIWaypointV2> &mission,int responseTimeout);
 
-  ErrorCode::ErrorCodeType startWaypointMission(DJI::OSDK::Vehicle* vehicle);
+  ErrorCode::ErrorCodeType startWaypointMission(int responseTimeout);
 
-  // void setWaypointDefaults(DJI::OSDK::WayPointSettings* wp);
+  ErrorCode::ErrorCodeType stopWaypointMission(int responseTimeout);
 
-  void setWaypointInitDefaults(DJI::OSDK::WayPointInitSettings* fdata);
+  ErrorCode::ErrorCodeType pauseWaypointMission(int responseTimeout);
 
-  std::vector<DJI::OSDK::WayPointSettings> createWaypoints(
-      DJI::OSDK::Vehicle* vehicle, int numWaypoints,
-      DJI::OSDK::float64_t distanceIncrement, DJI::OSDK::float32_t start_alt);
+  ErrorCode::ErrorCodeType resumeWaypointMission(int responseTimeout);
 
+  bool setUpSubscription(int responseTimeout);
 
+  bool teardownSubscription(const int pkgIndex,
+                            int responseTimeout);
 
   void setWaypointV2Defaults(DJIWaypointV2* waypointV2);
 
   std::vector<DJIWaypointV2> generatePolygonWaypoints(float32_t radius, uint16_t polygonNum);
 
   std::vector<DJIWaypointV2Action> generateWaypointActions(uint16_t actionNum);
-
 
 private:
   Vehicle *vehiclePtr;

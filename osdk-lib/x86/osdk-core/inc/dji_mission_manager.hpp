@@ -44,8 +44,7 @@ namespace OSDK
 enum DJI_MISSION_TYPE
 {
   WAYPOINT   = 0,
-  WAYPOINTV2 = 1,
-  HOTPOINT   = 2,
+  HOTPOINT   = 1,
 };
 
 enum MISSION_ACTION
@@ -58,7 +57,6 @@ enum MISSION_ACTION
 
 class WaypointMission;
 class HotpointMission;
-class WaypointMissionV2;
 /*! @brief MissionManager class for chaining/managing missions
  *
  */
@@ -119,15 +117,6 @@ private:
 
   /*! @brief
    *
-   *  init waypt mission, blocking calls
-   *
-   *  @param timeout timeout
-   *  @param wayptData initData for the waypt (void ptr)
-   */
-  bool initWayptMissionV2(int timeout = 10, UserData wayptData = 0);
-
-  /*! @brief
-   *
    *  init hot pt mission, blocking calls
    *
    *  @param timeout timeout
@@ -169,7 +158,6 @@ public:
   Vehicle*         vehicle;
   WaypointMission* wpMission;
   HotpointMission* hpMission;
-  WaypointMissionV2 *wpMissionV2;
 
   std::vector<WaypointMission*> wpMissionVector;
   std::vector<HotpointMission*> hpMissionVector;

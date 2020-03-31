@@ -103,6 +103,7 @@ public:
   MFIO*                mfio;
   MobileDevice*        mobileDevice;
   MissionManager*      missionManager;
+  WaypointV2MissionOperator*   waypointV2Mission;
   HardwareSync*        hardSync;
   // Supported only on Matrice 100
   VirtualRC*           virtualRC;
@@ -270,6 +271,7 @@ public:
   bool initMobileDevice();
   bool initPayloadDevice();
   bool initMissionManager();
+  bool initWaypointV2Mission();
   bool initHardSync();
   bool initVirtualRC();
   bool initCameraManager();
