@@ -259,35 +259,6 @@ namespace OSDK
 
     void RegisterMissionEventCallback();
 
-    /*! @brief
-     *
-     *  start the waypt mission
-     *
-     *  @param register a callback function for error code
-     */
-    void start(VehicleCallBack callback, UserData userData);
-    /*! @brief
-     *
-     *  stop the waypt mission
-     *
-     *  @param register a callback function for error code
-     */
-    void stop(VehicleCallBack callback, UserData userData);
-    /*! @brief
-     *
-     *  pause the waypt mission
-     *
-     *  @param register a callback function for error code
-     */
-    void pause(VehicleCallBack callback, UserData userData);
-    /*! @brief
-     *
-     *  resume the waypt mission
-     *
-     *  @param register a callback function for error code
-     */
-    void resume(VehicleCallBack callback, UserData userData);
-
 
     /*! @brief
      *
@@ -302,18 +273,6 @@ namespace OSDK
      */
     inline DJIWaypointV2MissionState getPrevState() { return prevState; }
 
-//    /*! @brief
-//     *
-//     *  get current action state
-//     *
-//     */
-//    inline DJIWaypointV2MissionState getCurrentActionState() { return waypointV2Interface.getCurrentActionState(); }
-//    /*! @brief
-//     *
-//     *  get previous action state
-//     *
-//     */
-//    inline DJIWaypointV2MissionState getPrevActionState() { return waypointV2Interface.getPrevActionState(); }
 
     void setPrevState(DJIWaypointV2MissionState state) {prevState = state; }
 
@@ -323,8 +282,7 @@ namespace OSDK
     //WayPointV2InitSettings info;
     DJIWaypointV2MissionState currentState;
     DJIWaypointV2MissionState prevState;
-    Vehicle *vehicle;
-    Linker *linker;
+    Vehicle *vehiclePtr;
   };
 
 } // namespace OSDK

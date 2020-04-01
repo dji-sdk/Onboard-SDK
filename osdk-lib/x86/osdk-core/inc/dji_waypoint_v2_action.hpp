@@ -369,16 +369,10 @@ typedef struct DJIWaypointV2Actuator {
 * determines how
 *  action is performed when a waypoint mission is executed.
 */
-class DJIWaypointV2Action {
+typedef struct DJIWaypointV2Action {
 
-public:
-  DJIWaypointV2Action() = delete;
+  DJIWaypointV2Action(uint32_t id, const DJIWaypointV2Trigger &trigger, const DJIWaypointV2Actuator &actuator):actionId(id), trigger(&trigger), actuator(&actuator){};
 
-  DJIWaypointV2Action(uint32_t id,const   DJIWaypointV2Trigger &trigger,const   DJIWaypointV2Actuator &actuator);
-
-  ~DJIWaypointV2Action();
-
-public:
   /**
    *  The ID of Action.
    */
@@ -393,7 +387,7 @@ public:
    *  The actuator of action.
    */
   const  DJIWaypointV2Actuator *actuator;
-};
+}DJIWaypointV2Action;
   }
 }
 #endif //DJIOSDK_CORE_DJI_WAYPOINT_V2_ACTION_HPP

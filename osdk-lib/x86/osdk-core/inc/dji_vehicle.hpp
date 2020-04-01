@@ -55,6 +55,7 @@
 #include "dji_flight_controller.hpp"
 #include "dji_psdk_manager.hpp"
 #include "dji_hms.hpp"
+#include "dji_waypoint_v2.hpp"
 #ifdef ADVANCED_SENSING
 #include "dji_advanced_sensing.hpp"
 #endif

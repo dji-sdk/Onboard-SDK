@@ -51,7 +51,6 @@ using namespace DJI::OSDK::Telemetry;
 WaypointV2MissionSample::WaypointV2MissionSample(Vehicle *vehicle):vehiclePtr(vehicle){}
 
 WaypointV2MissionSample::~WaypointV2MissionSample() {
-  delete (vehiclePtr);
 }
 
 bool WaypointV2MissionSample::setUpSubscription(int responseTimeout) {
@@ -278,7 +277,8 @@ ErrorCode::ErrorCodeType WaypointV2MissionSample::runWaypointV2Mission()
   ret = initMissionSetting(responseTimeout);
   if(ret != ErrorCode::SysCommonErr::Success)
   {
-    DERROR("Init mission setting ErrorCode:%x\n", ret);
+    DERROR("Init mission setting ErrorCode:0x%lX\n", ret);
+    ErrorCode::printErrorCodeMsg(ret);
     return ret;
   }
   else
@@ -290,7 +290,8 @@ ErrorCode::ErrorCodeType WaypointV2MissionSample::runWaypointV2Mission()
   ret = uploadWaypointMission(responseTimeout);
   if(ret != ErrorCode::SysCommonErr::Success)
   {
-    DERROR("Upload waypoint v2 mission ErrorCode:%x\n", ret);
+    DERROR("Upload waypoint v2 mission ErrorCode:0x%lX\n", ret);
+    ErrorCode::printErrorCodeMsg(ret);
     return ret;
   }
   else
@@ -303,7 +304,8 @@ ErrorCode::ErrorCodeType WaypointV2MissionSample::runWaypointV2Mission()
   ret = dowloadWaypointMission(mission,responseTimeout);
   if(ret != ErrorCode::SysCommonErr::Success)
   {
-    DERROR("Download waypoint v2 mission ErrorCode:%x\n", ret);
+    DERROR("Download waypoint v2 mission ErrorCode:0x%lX\n", ret);
+    ErrorCode::printErrorCodeMsg(ret);
     return ret;
   }
   else
@@ -315,7 +317,8 @@ ErrorCode::ErrorCodeType WaypointV2MissionSample::runWaypointV2Mission()
   ret = uploadWapointActions(responseTimeout);
   if(ret != ErrorCode::SysCommonErr::Success)
   {
-    DERROR("Upload waypoint v2 actions ErrorCode:%x\n", ret);
+    DERROR("Upload waypoint v2 actions ErrorCode:0x%lX\n", ret);
+    ErrorCode::printErrorCodeMsg(ret);
     return ret;
   }
   else
@@ -327,7 +330,8 @@ ErrorCode::ErrorCodeType WaypointV2MissionSample::runWaypointV2Mission()
   ret = startWaypointMission(responseTimeout);
   if(ret != ErrorCode::SysCommonErr::Success)
   {
-    DERROR("Start waypoint v2 mission ErrorCode:%x\n", ret);
+    DERROR("Start waypoint v2 mission ErrorCode:0x%lX\n", ret);
+    ErrorCode::printErrorCodeMsg(ret);
     return ret;
   }
   else
@@ -339,26 +343,28 @@ ErrorCode::ErrorCodeType WaypointV2MissionSample::runWaypointV2Mission()
   ret = pauseWaypointMission(responseTimeout);
   if(ret != ErrorCode::SysCommonErr::Success)
   {
-    DERROR("Pause waypoint v2 mission ErrorCode:%x\n", ret);
+    DERROR("Pause waypoint v2 mission ErrorCode:0x%lX\n", ret);
+    ErrorCode::printErrorCodeMsg(ret);
     return ret;
   }
   else
   {
     DSTATUS("Pause waypoint v2 mission successfully!\n");
   }
-  sleep(responseTimeout);
+  sleep(5);
 
   ret = resumeWaypointMission(responseTimeout);
   if(ret != ErrorCode::SysCommonErr::Success)
   {
-    DERROR("Resume Waypoint v2 mission ErrorCode:%x\n", ret);;
+    DERROR("Resume Waypoint v2 mission ErrorCode:0x%lX\n", ret);
+    ErrorCode::printErrorCodeMsg(ret);
     return ret;
   }
   else
   {
     DSTATUS("Resume Waypoint v2 mission successfully!\n");
   }
-  sleep(responseTimeout);
+  sleep(5);
 
   /*! Set up telemetry subscription*/
   if(!teardownSubscription(DEFAULT_PACKAGE_INDEX, responseTimeout))

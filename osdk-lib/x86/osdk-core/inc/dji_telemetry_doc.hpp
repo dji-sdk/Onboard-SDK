@@ -192,7 +192,7 @@ using namespace DJI::OSDK::Telemetry;
  */
 
 /*!
- * @var TOPIC_HEIGHT_HOMEPOINT
+ * @var TOPIC_ALTITUDE_OF_HOMEPOINT
  * @brief Provides the altitude from sea level when the aircraft last took off.
  * @details
  * This is a fusion output from the flight control system, and also uses the ICAO model.

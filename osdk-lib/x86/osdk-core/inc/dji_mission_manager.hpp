@@ -33,7 +33,6 @@
 
 #include "dji_hotpoint.hpp"
 #include "dji_waypoint.hpp"
-#include "dji_waypoint_v2.hpp"
 #include <vector>
 
 namespace DJI
