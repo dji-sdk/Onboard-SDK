@@ -31,6 +31,7 @@ FILE(GLOB SOURCE_FILES
         ${CMAKE_CURRENT_SOURCE_DIR}/../hal/*.c
         ${CMAKE_CURRENT_SOURCE_DIR}/../osal/*.c
         )
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../core/inc)
 
 add_executable(${PROJECT_NAME}
         ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_environment.cpp
@@ -45,10 +46,10 @@ if(WAYPT2_CORE)
 add_executable(djiosdk-waypoint-v2-sample
           ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_environment.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_helpers.cpp
+          ${CMAKE_CURRENT_SOURCE_DIR}/../../../core/src/waypoint_v2_sample.cpp
           ${CMAKE_CURRENT_SOURCE_DIR}/../osal/osdkosal_linux.c
           ${CMAKE_CURRENT_SOURCE_DIR}/../hal/osdkhal_linux.c
-          waypoint_v2_main.cpp
-          waypoint_v2_sample.cpp)
+          waypoint_v2_main.cpp)
 endif(WAYPT2_CORE)
 
 
