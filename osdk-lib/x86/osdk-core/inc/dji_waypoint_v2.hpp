@@ -37,16 +37,17 @@ namespace DJI
 {
 namespace OSDK
 {
-
-  class Linker;
-  /*! @brief APIs for GPS Waypoint Missions V2  Version
-   *
-   */
-  class WaypointV2MissionOperator //: public MissionBase
+ /*! The waypoint operator is the only object that controls, runs and monitors
+  *  Waypoint v2 Missions.
+  *  */
+  class WaypointV2MissionOperator
   {
   public:
     const uint16_t MAX_WAYPOINT_NUM_SIGNAL_PUSH = 260;
 
+    /**
+     *  All the possible state of ``WaypointV2MissionOperator``.
+     */
     enum DJIWaypointV2MissionState{
       /**
        *  The state of the operator is unknown. It is the initial state when the operator
@@ -55,54 +56,49 @@ namespace OSDK
         DJIWaypointV2MissionStateUnWaypointActionActuatorknown = -1,
 
       /**
-       *  The connection between the mobile device, remote controller and aircraft is
+       *  The connection OSDK device, remote controller and aircraft is
        *  broken.
        */
-        DJIWaypointV2MissionStateDisconnected,
+        DJIWaypointV2MissionStateDisconnected = 0,
 
       /**
-       *  The connection between the mobile device, remote controller and aircraft is
-       *  built-up. The operator is synchronizing the state from the aircraft.
+       *  Raed to execute the mission.
        */
-        DJIWaypointV2MissionStateRecovering,
-
-      /**
-       *  The connected product does not support waypoint mission 2.0.
-       */
-        DJIWaypointV2MissionStateNotSupported,
-
-      /**
-       *  The aircraft is ready to upload a mission.
-       */
-        DJIWaypointV2MissionStateReadyToUpload,
-
-      /**
-       *  The uploading is started successfully. Detail information for each waypoint is
-       *  being uploaded one by one.
-       */
-        DJIWaypointV2MissionStateUploading,
-
-      /**
-       *  Waypoint mission is uploaded completely and the aircraft is ready to start the
-       *  execution.
-       */
-        DJIWaypointV2MissionStateReadyToExecute,
+        DJIWaypointV2MissionStateReadyToExecute = 1,
 
       /**
        *  The execution is started successfully.
        */
-        DJIWaypointV2MissionStateExecuting,
+        DJIWaypointV2MissionStateExecuting = 2,
 
       /**
-       *  Waypoint mission is paused successfully. User can call
-       *  ``DJIWaypointV2MissionOperator_interruptMission`` to continue the execution.
+       *  Waypoint mission is paused successfully.
        */
-        DJIWaypointV2MissionStateInterrupted,
+        DJIWaypointV2MissionStateInterrupted = 3,
+
+      /**
+       *  Waypoint mission is restarted after interrupted.
+       */
+        DJIWaypointV2MissionStateResumeAfterInterrupted = 4,
+
+      /**
+       *  Waypoint mission is exited.
+       */
+        DJIWaypointV2MissionStateExitMission = 5,
+
+      /**
+       *  Waypoint mission is finished.
+       */
+        DJIWaypointV2MissionStateFinishedMission = 6,
     };
 
     typedef uint8_t  RetCodeType;
+
+    /*! Common ack of waypoint 2.0*/
     typedef uint32_t WaypointV2CommonAck;
-    typedef uint16_t GlobalCruiseSpeed;
+
+    /*! Common ack of waypoint 2.0*/
+    typedef float32_t GlobalCruiseSpeed;
 
     #pragma pack(1)
     typedef struct UploadMissionRawAck
@@ -118,6 +114,25 @@ namespace OSDK
       uint16_t errorActionId;
     }UploadActionSRawAck;
 
+    typedef struct DownloadMissionRsp
+   {
+     uint16_t startIndex;
+     uint16_t endIndex;
+   }DownloadMissionRsp;
+
+    typedef struct DownloadMissionAck
+   {
+     uint32_t result;
+     uint16_t startIndex;
+     uint16_t endIndex;
+   }DownloadMissionAck;
+
+    typedef struct GetGlobalCruiseVelAck{
+      uint32_t result;
+      /*!Unit: cm/s*/
+      uint16_t globalCruiseVel;
+    }GetGlobalCruiseVelAck;
+
     typedef struct GetRemainRamAck
     {
       uint16_t totalMemory;
@@ -131,24 +146,12 @@ namespace OSDK
       uint16_t endIndex;
     }GetWaypontStartEndIndexAck;
 
-    typedef struct DownloadMissionRsp
-    {
-      uint16_t startIndex;
-      uint16_t endIndex;
-    }DownloadMissionRsp;
-
-    typedef struct DownloadMissionAck
-    {
-      uint32_t result;
-      uint16_t startIndex;
-      uint16_t endIndex;
-    }DownloadMissionAck;
-
     typedef struct MissionStateCommanData
     {
 
       uint16_t curWaypointIndex;
-      uint8_t  state;
+      uint8_t  stateDetail:4;
+      uint8_t  state:4;
       uint16_t velocity;
       uint8_t  config;
     }MissionStateCommanData;
@@ -158,8 +161,6 @@ namespace OSDK
       uint8_t commonDataVersion = 1;
       uint16_t commonDataLen;
       MissionStateCommanData data;
-//      uint8_t uniqueDataVersion ;
-//      uint16_t uniqueDataLength;
     }MissionStatePushAck;
 
     typedef union Eventdata
@@ -207,14 +208,13 @@ namespace OSDK
       uint16_t FCTimestamp;
       Eventdata data;
     }MissionEventPushAck;
-
     #pragma pack()
 
     WaypointV2MissionOperator(Vehicle* vehiclePtr);
 
     ~WaypointV2MissionOperator();
 
-    ErrorCode::ErrorCodeType init(WayPointV2InitSettings* Info, int timeout);
+    ErrorCode::ErrorCodeType init(WayPointV2InitSettings* info, int timeout);
 
     ErrorCode::ErrorCodeType start(int timeout);
     /*! @brief
@@ -273,13 +273,10 @@ namespace OSDK
      */
     inline DJIWaypointV2MissionState getPrevState() { return prevState; }
 
-
     void setPrevState(DJIWaypointV2MissionState state) {prevState = state; }
-
     void setCurrentState(DJIWaypointV2MissionState state) {currentState = state; }
 
   private:
-    //WayPointV2InitSettings info;
     DJIWaypointV2MissionState currentState;
     DJIWaypointV2MissionState prevState;
     Vehicle *vehiclePtr;

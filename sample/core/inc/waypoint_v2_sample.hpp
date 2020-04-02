@@ -72,6 +72,11 @@ public:
 
   ErrorCode::ErrorCodeType resumeWaypointMission(int responseTimeout);
 
+  void getGlogalCruiseSpeed(int responseTimeout);
+
+  void setGlogalCruiseSpeed(const WaypointV2MissionOperator::GlobalCruiseSpeed &cruiseSpeed, int responseTimeout);
+
+
   bool setUpSubscription(int responseTimeout);
 
   bool teardownSubscription(const int pkgIndex,

@@ -125,39 +125,48 @@ ErrorCode::ErrorCodeType WaypointV2MissionSample::uploadWapointActions(int respo
 }
 
 ErrorCode::ErrorCodeType WaypointV2MissionSample::startWaypointMission(int responseTimeout) {
-  if (!vehiclePtr->isM300()) {
-    DSTATUS("This sample only supports M300 V3!\n");
-    return false;
-  }
   ErrorCode::ErrorCodeType ret = vehiclePtr->waypointV2Mission->start(responseTimeout);
   return ret;
 }
 
 ErrorCode::ErrorCodeType WaypointV2MissionSample::stopWaypointMission(int responseTimeout) {
-  if (!vehiclePtr->isM300()) {
-    DSTATUS("This sample only supports M300 V3!\n");
-    return false;
-  }
   ErrorCode::ErrorCodeType ret = vehiclePtr->waypointV2Mission->stop(responseTimeout);
   return ret;
 }
 
 ErrorCode::ErrorCodeType WaypointV2MissionSample::pauseWaypointMission(int responseTimeout) {
-  if (!vehiclePtr->isM300()) {
-    DSTATUS("This sample only supports M300 V3!\n");
-    return false;
-  }
   ErrorCode::ErrorCodeType ret = vehiclePtr->waypointV2Mission->pause(responseTimeout);
   return ret;
 }
 
 ErrorCode::ErrorCodeType WaypointV2MissionSample::resumeWaypointMission(int responseTimeout) {
-  if (!vehiclePtr->isM300()) {
-    DSTATUS("This sample only supports M300 V3!\n");
-    return false;
-  }
   ErrorCode::ErrorCodeType ret = vehiclePtr->waypointV2Mission->resume(responseTimeout);
   return ret;
+}
+
+void  WaypointV2MissionSample::getGlogalCruiseSpeed(int responseTimeout)
+{
+  WaypointV2MissionOperator::GlobalCruiseSpeed cruiseSpeed;
+  ErrorCode::ErrorCodeType ret = vehiclePtr->waypointV2Mission->getGlogalCruiseSpeed(cruiseSpeed, responseTimeout);
+  if(ret !=  ErrorCode::SysCommonErr::Success)
+  {
+    DERROR("Get glogal cruise speed failed ErrorCode:0x%lX\n", ret);
+    ErrorCode::printErrorCodeMsg(ret);
+    return;
+  }
+  DSTATUS("Current cruise speed is: %f m/s\n",cruiseSpeed);
+}
+
+void WaypointV2MissionSample::setGlogalCruiseSpeed(const WaypointV2MissionOperator::GlobalCruiseSpeed &cruiseSpeed, int responseTimeout)
+{
+  ErrorCode::ErrorCodeType ret = vehiclePtr->waypointV2Mission->setGlogalCruiseSpeed(cruiseSpeed, responseTimeout);
+  if(ret !=  ErrorCode::SysCommonErr::Success)
+  {
+    DERROR("Set glogal cruise speed %f m/s failed ErrorCode:0x%lX\n", cruiseSpeed, ret);
+    ErrorCode::printErrorCodeMsg(ret);
+    return;
+  }
+  DSTATUS("Current cruise speed is: %f m/s\n", cruiseSpeed);
 }
 
 std::vector<DJIWaypointV2> WaypointV2MissionSample::generatePolygonWaypoints(float32_t radius, uint16_t polygonNum) {
@@ -222,14 +231,14 @@ void WaypointV2MissionSample::setWaypointV2Defaults(DJIWaypointV2* waypointV2) {
 
   waypointV2->pointOfInterest.longitude = 0;
   waypointV2->pointOfInterest.latitude = 0;
-  waypointV2->maxFlightSpeed = 900;
-  waypointV2->autoFlightSpeed = 400;
+  waypointV2->maxFlightSpeed = 9;
+  waypointV2->autoFlightSpeed = 2;
 }
 
 ErrorCode::ErrorCodeType WaypointV2MissionSample::initMissionSetting(int timeout) {
 
   /*generate waypoints*/
-  float32_t radius = 10;
+  float32_t radius = 40;
   uint32_t polygonNum = 6;
   uint16_t actionNum = 2;
   srand(int(time(0)));
@@ -242,8 +251,8 @@ ErrorCode::ErrorCodeType WaypointV2MissionSample::initMissionSetting(int timeout
   missionInitSettings.missTotalLen = mission.size();
   missionInitSettings.repeatTimes  = 1;
   missionInitSettings.finishedAction = DJIWaypointV2MissionFinishedGoHome;
-  missionInitSettings.maxFlightSpeed = 1000;
-  missionInitSettings.autoFlightSpeed = 500;
+  missionInitSettings.maxFlightSpeed = 10;
+  missionInitSettings.autoFlightSpeed = 1;
   missionInitSettings.startIndex = 0;
   missionInitSettings.exitMissionOnRCSignalLost = 1;
   missionInitSettings.gotoFirstWaypointMode = DJIWaypointV2MissionGotoFirstWaypointModePointToPoint;
@@ -252,13 +261,18 @@ ErrorCode::ErrorCodeType WaypointV2MissionSample::initMissionSetting(int timeout
   subscribeGPosition = vehiclePtr->subscribe->getValue<TOPIC_GPS_FUSED>();
   missionInitSettings.refLati = subscribeGPosition.latitude;
   missionInitSettings.refLong = subscribeGPosition.longitude;
-  missionInitSettings.refAlti = 0;
+  missionInitSettings.refAlti = 11;
   ErrorCode::ErrorCodeType retCode = vehiclePtr->waypointV2Mission->init(&missionInitSettings,timeout);
   return retCode;
 }
 
 ErrorCode::ErrorCodeType WaypointV2MissionSample::runWaypointV2Mission()
 {
+  if (!vehiclePtr->isM300()) {
+    DSTATUS("This sample only supports M300 V3!\n");
+    return false;
+  }
+
   int responseTimeout = 1;
   ErrorCode::ErrorCodeType ret;
 
@@ -338,7 +352,12 @@ ErrorCode::ErrorCodeType WaypointV2MissionSample::runWaypointV2Mission()
   {
     DSTATUS("Start waypoint v2 mission successfully!\n");
   }
-  sleep(20);
+  sleep(40);
+
+  setGlogalCruiseSpeed(1.5,responseTimeout);
+
+  sleep(responseTimeout);
+  getGlogalCruiseSpeed(responseTimeout);
 
   ret = pauseWaypointMission(responseTimeout);
   if(ret != ErrorCode::SysCommonErr::Success)
@@ -366,6 +385,7 @@ ErrorCode::ErrorCodeType WaypointV2MissionSample::runWaypointV2Mission()
   }
   sleep(5);
 
+  sleep(100);
   /*! Set up telemetry subscription*/
   if(!teardownSubscription(DEFAULT_PACKAGE_INDEX, responseTimeout))
   {
