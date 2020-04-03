@@ -33,52 +33,151 @@
 #include <dirent.h>
 #include <stdio.h>
 
+#include <sys/mman.h>
+#include <openssl/md5.h>
+#include <fcntl.h>
+#include <pthread.h>
+
+#define TEST_OP_PIPELINE_ID                    14
+#define MOP_VERIFY_FILE_LEN                    (177438017)
+
+//"f32510ba39f6417fdc6c2e898a864e46"
+static unsigned char FILE_MD5[] = {0xf3, 0x25, 0x10, 0xba, 0x39, 0xf6, 0x41, 0x7f,
+                                   0xdc, 0x6c, 0x2e, 0x89, 0x8a, 0x86, 0x4e, 0x46};
+
+static bool send_finish = false;
+static bool recv_finish = false;
+
 using namespace DJI::OSDK;
 
-static int non_block_get_char()
+bool verifyFile(void* buf, uint32_t len, unsigned char* md5_in) {
+  MD5_CTX ctx;
+  int i = 0;
+  unsigned char md5_out[16];
+  MD5_Init(&ctx);
+  MD5_Update(&ctx, buf, len);
+  MD5_Final(md5_out, &ctx);
+  if(memcmp(md5_out, md5_in, 16) == 0) {
+    return true;
+  } else {
+    printf("md5 verify failed!\n");
+    for(i = 0; i < 16; i++) {
+        printf("%02X", md5_out[i]);
+    }
+    printf("\n");
+    return false;
+  }
+  return true;
+}
+
+static void* MopRecvTask(void *arg)
 {
-  fd_set rfds;
-  struct timeval tv;
-  int ch = 0;
+    MopPipeline *handle;
+    MopErrCode mopRet;
+    void *recvBuf = NULL;
+    int cnt = 0;
 
-  FD_ZERO(&rfds);
-  FD_SET(0, &rfds);
-  tv.tv_sec = 0;
-  tv.tv_usec = 10;
+    handle = (MopPipeline *)arg;
+    if(handle == NULL) {
+        printf("recv task param check failed!\n");
+        recv_finish = true;
+        return NULL;
+    }
 
-  if (select(1, &rfds, NULL, NULL, &tv) > 0)
-  {
-    ch = getchar();
-  }
+    recvBuf = malloc(MOP_VERIFY_FILE_LEN);
+    if (recvBuf == NULL) {
+        printf("malloc recv buffer error\n");
+        recv_finish = true;
+        return NULL;
+    }
 
-  return ch;
+    MopPipeline::DataPackType readPacket = {(uint8_t *)recvBuf, MOP_VERIFY_FILE_LEN};
+
+    while (1) {
+        memset(recvBuf, 0, MOP_VERIFY_FILE_LEN);
+        mopRet = handle->recvData(readPacket, &readPacket.length);
+        if (mopRet != MOP_PASSED) {
+            printf("recv verify file failed!, realLen = %d\n", readPacket.length);
+            break;
+        }
+        if(verifyFile(recvBuf, MOP_VERIFY_FILE_LEN, FILE_MD5) != true) {
+            printf("verify file failed!\n");
+            break;
+        }
+        cnt++;
+        printf("recv cnt %d!\n", cnt);
+    }
+    printf("mop channel recv task end!\n");
+
+    if(recvBuf != NULL)
+      free(recvBuf);
+    recv_finish = true;
+    return NULL;
 }
 
-int writeStreamData(const char *fileName, const uint8_t *data, uint32_t len) {
-  FILE *fp = NULL;
-  size_t size = 0;
+static void* MopSendTask(void *arg)
+{
+    MopPipeline *handle;
+    MopErrCode mopRet;
+    int fd = -1;
+    void* addr = NULL;
+    int cnt = 0;
 
-  fp = fopen(fileName, "a+");
-  if(fp == NULL) {
-    printf("fopen failed!\n");
-    return -1;
-  }
-  size = fwrite(data, 1, len, fp);
-  if(size != len) {
-    return -1;
-  }
+    handle = (MopPipeline *)arg;
+    if(handle == NULL) {
+        printf("send task param check failed!\n");
+        send_finish = true;
+        return NULL;
+    }
 
-  fflush(fp);
-  if(fp) {
-    fclose(fp);
-  }
-  return 0;
+    fd = open("/home/dji/Downloads/verify.dat", O_RDONLY, 0666);
+    if(fd == -1) {
+        printf("open file failed!\n");
+        send_finish = true;
+        return NULL;
+    }
+
+    addr = mmap(NULL, MOP_VERIFY_FILE_LEN, PROT_READ, MAP_SHARED, fd, 0);
+    if(addr == NULL) {
+        printf("mmap file failed!");
+        close(fd);
+        send_finish = true;
+        return NULL;
+    }
+
+    MopPipeline::DataPackType writePacket = {(uint8_t *)addr, MOP_VERIFY_FILE_LEN};
+
+    while (1) {
+        mopRet = handle->sendData(writePacket, &writePacket.length);
+        if (mopRet != MOP_PASSED) {
+            printf("mop send error,stat:%lld", mopRet);
+            break;
+        }
+        cnt++;
+        printf("send cnt %d!\n", cnt);
+        if(cnt == 10) {
+          break;
+        }
+        //5 secends for verify
+        sleep(5);
+    }
+   printf("mop channel send task end!\n");
+
+  if(addr != NULL)
+    munmap(addr, MOP_VERIFY_FILE_LEN);
+  if(fd != -1)
+    close(fd);
+  send_finish = true;
+  return NULL;
 }
-
-#define TEST_OP_PIPELINE_ID 14
 
 int main(int argc, char** argv)
 {
+  pthread_t recvTask;
+  pthread_t sendTask;
+  MopErrCode mopRet;
+  int result = -1;
+
   LinuxSetup linuxEnvironment(argc, argv);
   Vehicle *vehicle = linuxEnvironment.getVehicle();
 
@@ -103,6 +202,7 @@ int main(int argc, char** argv)
     ErrorCode::printErrorCodeMsg(ret);
     return -1;
   }
+
   if (!mopClient) {
     DERROR("Get MOP client object is a null value.");
     return -1;
@@ -110,7 +210,7 @@ int main(int argc, char** argv)
 
   /*! connect pipeline */
   MopPipeline *OP_Pipeline = NULL;
-  if ((mopClient->connect(TEST_OP_PIPELINE_ID, UNRELIABLE, OP_Pipeline)
+  if ((mopClient->connect(TEST_OP_PIPELINE_ID, RELIABLE, OP_Pipeline)
       != MOP_PASSED) || (OP_Pipeline == NULL)) {
     DERROR("MOP Pipeline connect failed");
     return -1;
@@ -118,60 +218,21 @@ int main(int argc, char** argv)
     DSTATUS("Connect to mop pipeline id(%d) successfully", TEST_OP_PIPELINE_ID);
   }
 
-  /*! Define the buffer and the log file name */
-  uint8_t readBuffer[1024];
-  uint8_t writeBuffer[1024];
-  MopErrCode mopRet;
-  uint32_t transTimes = 0;
-  struct timeval tv;
-  struct tm tm;
-  gettimeofday(&tv, NULL);
-  localtime_r(&tv.tv_sec, &tm);
-  char logFileName[128] = {0};
-  sprintf(logFileName, "mop_file_%d-%d-%d_%d::%d::%d", tm.tm_year + 1900,
-          tm.tm_mon, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
-
-  while (1) {
-    /*! Reading data from PSDK */
-    MopPipeline::DataPackType readPacket = {readBuffer, sizeof(readBuffer)};
-    mopRet = OP_Pipeline->recvData(readPacket, &readPacket.length);
-    if (mopRet == MOP_PASSED) {
-      DSTATUS("Receive %d bytes from PSDK :", readPacket.length);
-      if (readPacket.length >= 3)
-        DSTATUS("data[0]=%d data[1]=%d data[2]=%d ..",
-                readPacket.length, readPacket.data[0], readPacket.data[1],
-                readPacket.data[2]);
-      writeStreamData(logFileName, readPacket.data, readPacket.length);
-      transTimes++;
-    } else {
-      DERROR("Receive bytes from PSDK failed (%d)", mopRet);
-    }
-
-    /*! Writing data to PSDK */
-    if ((transTimes % 100) == 0) {
-      /*! transTimes/100 means 100k Bytes */
-      memset(writeBuffer, (uint8_t)(transTimes/100), sizeof(writeBuffer));
-      MopPipeline::DataPackType writePacket = {writeBuffer, sizeof(writeBuffer)};
-      mopRet = OP_Pipeline->sendData(writePacket, &writePacket.length);
-      if (mopRet == MOP_PASSED) {
-        DSTATUS("-----Send %d bytes to PSDK :", writePacket.length);
-        if (writePacket.length >= 3)
-          DSTATUS("-----data[0]=%d data[1]=%d data[2]=%d ..",
-                  writePacket.length, writePacket.data[0], writePacket.data[1],
-                  writePacket.data[2]);
-      } else {
-        DERROR("Send bytes to PSDK failed (%d)", mopRet);
-      }
-    }
-    int keyBoardInput = non_block_get_char();
-    if (keyBoardInput == 'q') {
-      OsdkOsal_TaskSleepMs(1000);
-      DSTATUS("Got key board input : q, exit the test.");
-      OsdkOsal_TaskSleepMs(2000);
-      break;
-    }
+  result = pthread_create(&sendTask, NULL, MopSendTask, (void *)OP_Pipeline);
+  if(result != 0) {
+    printf("send task create failed!\n");
+    send_finish = true;
   }
 
+  result = pthread_create(&recvTask, NULL, MopRecvTask, (void *)OP_Pipeline);
+  if(result != 0) {
+    printf("recv task create failed!\n");
+    recv_finish = true;
+  }
+
+  while(!send_finish || !recv_finish) {
+    sleep(1);
+  }
   /*! Disconnect pipeline */
   if (mopClient->disconnect(TEST_OP_PIPELINE_ID) != MOP_PASSED) {
     DERROR("MOP Pipeline disconnect pipeline(%d) failed", TEST_OP_PIPELINE_ID);
