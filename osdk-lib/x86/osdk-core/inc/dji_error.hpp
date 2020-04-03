@@ -35,6 +35,7 @@
 #include <cstdint>
 #endif
 #include <map>
+#include "osdk_typedef.h"
 
 namespace DJI {
 namespace OSDK {
@@ -204,6 +205,8 @@ class ErrorCode {
    *  @return Function name
    */
   static ErrorCode::RawRetCodeType getRawRetCode(ErrorCodeType errCode);
+
+  static ErrorCode::ErrorCodeType getLinkerErrorCode(E_OsdkStat cb_type);
 
   /*! @brief Get error code messages from errCode
    *  @param errCode Unified error type

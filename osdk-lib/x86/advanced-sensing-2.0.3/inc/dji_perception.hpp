@@ -58,7 +58,6 @@ class Perception {
     OSDK_LIVEVIEW_UNKNOWN = 0xFF,
   } PerceptionErrCode;
 
-
   typedef enum CamPositionType : uint32_t {
     RECTIFY_DOWN_LEFT = 1,
     RECTIFY_DOWN_RIGHT = 2,
@@ -74,7 +73,7 @@ class Perception {
     RECTIFY_RIGHT_RIGHT = 26
   } CamPositionType;
 
-  typedef enum DirectionType {
+  typedef enum DirectionType : uint8_t {
     RECTIFY_DOWN = 0,
     RECTIFY_FRONT = 1,
     RECTIFY_REAR = 2,
@@ -86,7 +85,7 @@ class Perception {
 #pragma pack(1)
   typedef struct RawImageInfoType {
     uint32_t index;
-    uint8_t direction;
+    DirectionType direction;
     uint8_t bpp;
     uint32_t width;
     uint32_t height;
@@ -101,7 +100,7 @@ class Perception {
   } ImageInfoType;
 
   typedef struct CamParamType {
-    int8_t direction;
+    DirectionType direction;
     float leftIntrinsics[9];
     float rightIntrinsic[9];
     float rotaionLeftInRight[9];
@@ -115,18 +114,51 @@ class Perception {
   } CamParamPacketType;
 #pragma pack()
 
+  /*! @bref callback type to receive stereo camera parameters */
   typedef void(*PerceptionCamParamCB)
       (Perception::CamParamPacketType paramPacket, void *userData);
 
+  /*! @bref callback type to receive stereo camera image */
   typedef void(*PerceptionImageCB)
       (Perception::ImageInfoType, uint8_t *imageRawBuffer, int bufferLen, void *userData);
 
+ public:
+
+  /*! @brief subscribe the raw images of both stereo cameras in the same
+   * direction. Default frequency at 20 Hz.
+   *
+   *  @param direction to specifly the direction of the subscription. Ref to
+   * DJI::OSDK::Perception::DirectionType
+   *  @param cb callback to observer the stereo camera image and info.
+   *  @param userData when cb is called, used in cb.
+   *  @return error code. Ref to DJI::OSDK::Perception::PerceptionErrCode
+   */
   PerceptionErrCode subscribePerceptionImage(DirectionType direction, PerceptionImageCB cb, void* userData);
 
+  /*! @brief unsubscribe the raw image of both stereo cameras in the same
+   * direction.
+   *
+   *  @param direction to specifly the direction of the subscription. Ref to
+   * DJI::OSDK::Perception::DirectionType
+   *  @return error code. Ref to DJI::OSDK::Perception::PerceptionErrCode
+   */
   PerceptionErrCode unsubscribePerceptionImage(DirectionType direction);
 
+  /*! @brief trigger stereo cameras parameters pushing once.
+   *
+   *  @param direction to specifly the direction of the subscription. Ref to
+   * DJI::OSDK::Perception::DirectionType
+   *  @return error code. Ref to DJI::OSDK::Perception::PerceptionErrCode
+   */
   PerceptionErrCode triggerStereoCamParamsPushing();
 
+  /*! @brief set callback to get stereo camera parameters after trigger stereo
+   * camera parameters pushing.
+   *
+   *  @param cb callback to observer the parameters of stereo cameras. Ref to
+   * DJI::OSDK:Perception::PerceptionCamParamCB
+   *  @param userData when cb is called, used in cb.
+   */
   void setStereoCamParamsObserver(PerceptionCamParamCB cb, void *userData);
 
  private:

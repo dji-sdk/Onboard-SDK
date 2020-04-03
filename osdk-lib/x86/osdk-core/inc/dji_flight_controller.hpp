@@ -44,14 +44,14 @@ class FlightController {
   FlightController(Vehicle *vehicle);
   ~FlightController();
 
-  typedef struct Telemetry::HomeLocationData HomeLocation;
+  typedef Telemetry::HomeLocationData HomeLocation;
   typedef FlightAssistant::RtkEnableData
       RtkEnabled; /*!< 0: disable, 1: enable*/
   typedef FlightAssistant::AvoidEnable AvoidEnable;
   typedef FlightAssistant::UpwardsAvoidEnable UpwardsAvoidEnable;
   typedef FlightAssistant::GoHomeAltitude
       GoHomeHeight; /*!< unit:meter, range 20~500*/
-  typedef struct FlightJoystick::ControlCommand JoystickCommand;
+  typedef FlightJoystick::ControlCommand JoystickCommand;
   typedef enum FlightJoystick::HorizontalLogic HorizontalLogic;
   typedef enum FlightJoystick::VerticalLogic VerticalLogic;
   typedef enum FlightJoystick::YawLogic YawLogic;

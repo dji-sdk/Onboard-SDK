@@ -88,5 +88,6 @@ add_subdirectory(payload-3rd-party)
 add_subdirectory(payloads)
 add_subdirectory(advanced-sensing)
 add_subdirectory(hms)
+add_subdirectory(battery)
 
 

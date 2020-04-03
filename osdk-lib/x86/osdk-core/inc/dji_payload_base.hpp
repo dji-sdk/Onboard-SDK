@@ -31,6 +31,8 @@
 
 #include <stdint.h>
 #include <string>
+#include "osdk_typedef.h"
+#include "dji_error.hpp"
 
 namespace DJI {
 namespace OSDK {
@@ -45,11 +47,13 @@ enum PayloadIndexType {
   PAYLOAD_INDEX_INVALID = 0x03,
 };
 
+class Linker;
+
 /*! @brief PayloadBase
  */
 class PayloadBase {
  public:
-  PayloadBase(PayloadIndexType index, std::string name, bool enable);
+  PayloadBase(Linker* linker, PayloadIndexType index, std::string name, bool enable);
 
   ~PayloadBase();
 
@@ -72,10 +76,13 @@ class PayloadBase {
 
   void setName(std::string name);
 
+  Linker *getLinker() { return linker; }
+
  private:
   std::string name;
   PayloadIndexType index;
   bool enable;
+  Linker *linker;
 };
 }  // namespace OSDK
 }  // namespace DJI

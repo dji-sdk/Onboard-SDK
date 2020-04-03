@@ -55,6 +55,7 @@
 #include "dji_flight_controller.hpp"
 #include "dji_psdk_manager.hpp"
 #include "dji_hms.hpp"
+#include "dji_battery.hpp"
 #ifdef ADVANCED_SENSING
 #include "dji_advanced_sensing.hpp"
 #endif
@@ -71,6 +72,10 @@ namespace OSDK
  * DJI OSDK API.
  *
  */
+//forward declaration
+class Firewall;
+class Linker;
+
 class Vehicle
 {
 public:
@@ -111,7 +116,7 @@ public:
 #ifdef ADVANCED_SENSING
   AdvancedSensing* advancedSensing;
 #endif
-
+  DJIBattery*         djiBattery;
   int functionalSetUp();
   ////////// Blocking calls ///////////
 
@@ -277,6 +282,7 @@ public:
 #ifdef ADVANCED_SENSING
   bool initAdvancedSensing();
 #endif
+  bool initDJIBattery();
 
 #ifdef ADVANCED_SENSING
   /*! @brief This function takes a frame and calls the right handlers/functions
@@ -289,6 +295,9 @@ public:
   bool advSensingErrorPrintOnce;
 #endif
 private:
+  Firewall *firewall;
+  bool initFirewall();
+
   void setActivationStatus(bool is_activated);
   void initCMD_SetSupportMatrix();
   bool isCmdSetSupported(const uint8_t cmdSet);

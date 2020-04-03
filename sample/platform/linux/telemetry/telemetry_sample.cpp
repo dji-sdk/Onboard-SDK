@@ -50,6 +50,7 @@ getBroadcastData(DJI::OSDK::Vehicle* vehicle, int responseTimeout)
   // 4. Velocity
   // 5. Quaternion
   // 6. Avoid obstacle data
+  // 7. Compass status
 
   // Please make sure your drone is in simulation mode. You can
   // fly the drone with your RC to get different values.
@@ -60,6 +61,7 @@ getBroadcastData(DJI::OSDK::Vehicle* vehicle, int responseTimeout)
   Telemetry::Vector3f       velocity;
   Telemetry::Quaternion     quaternion;
   Telemetry::RelativePosition avoidData;
+  Telemetry::Compass        compassData;
 
   const int TIMEOUT = 20;
 
@@ -76,6 +78,7 @@ getBroadcastData(DJI::OSDK::Vehicle* vehicle, int responseTimeout)
     velocity       = vehicle->broadcast->getVelocity();
     quaternion     = vehicle->broadcast->getQuaternion();
     avoidData      = vehicle->broadcast->getRelativePosition();
+    compassData    = vehicle->broadcast->getCompassData();
 
     std::cout << "Counter = " << elapsedTimeInMs << ":\n";
     std::cout << "-------\n";
@@ -95,6 +98,8 @@ getBroadcastData(DJI::OSDK::Vehicle* vehicle, int responseTimeout)
               << avoidData.down  << ", "<< avoidData.front << ", "
               << avoidData.right << ", "<< avoidData.back  << ", "
               << avoidData.left  << ", "<< avoidData.up    << "\n";
+    std::cout << "Compass status       (normal,need_cali,need_dir_fix,need_restart) ="
+              << compassData.compassStatus   << "\n";
     std::cout << "-------\n\n";
 
     usleep(5000);
