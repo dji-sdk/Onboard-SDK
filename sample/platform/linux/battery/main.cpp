@@ -49,20 +49,23 @@ int main(int argc, char** argv) {
     }
     bool enableSubscribeBatteryWholeInfo = true;
     bool enableSubscribeSingleBatteryDynamicInfoCmd = true;
-    uint8_t batteryIndex = 1;
     BatteryWholeInfo batteryWholeInfo;
     SmartBatteryDynamicInfo firstBatteryDynamicInfo;
     SmartBatteryDynamicInfo secondBatteryDynamicInfo;
+    const int waitTimeMs = 500;
 
     vehicle->djiBattery->subscribeBatteryWholeInfo(enableSubscribeBatteryWholeInfo);
-    vehicle->djiBattery->subscribeSingleBatteryDynamicInfo(enableSubscribeSingleBatteryDynamicInfoCmd, batteryIndex);
-    batteryIndex = 2;
-    vehicle->djiBattery->subscribeSingleBatteryDynamicInfo(enableSubscribeSingleBatteryDynamicInfoCmd, batteryIndex);
+    vehicle->djiBattery->subscribeSingleBatteryDynamicInfo(enableSubscribeSingleBatteryDynamicInfoCmd,
+                                                DJIBattery::RequestSmartBatteryIndex::FIRST_SMART_BATTERY);
+    vehicle->djiBattery->subscribeSingleBatteryDynamicInfo(enableSubscribeSingleBatteryDynamicInfoCmd,
+                                                DJIBattery::RequestSmartBatteryIndex::SECOND_SMART_BATTERY);
     while(true)
     {
         vehicle->djiBattery->getBatteryWholeInfo(batteryWholeInfo);
-        vehicle->djiBattery->getFirstBatteryDynamicInfo(firstBatteryDynamicInfo);
-        vehicle->djiBattery->getSecondBatteryDynamicInfo(secondBatteryDynamicInfo);
+        vehicle->djiBattery->getSingleBatteryDynamicInfo(DJIBattery::RequestSmartBatteryIndex::FIRST_SMART_BATTERY, firstBatteryDynamicInfo);
+        vehicle->djiBattery->getSingleBatteryDynamicInfo(DJIBattery::RequestSmartBatteryIndex::FIRST_SMART_BATTERY, secondBatteryDynamicInfo);
+
+        OsdkLinux_TaskSleepMs(waitTimeMs);
     }
 
     return 0;

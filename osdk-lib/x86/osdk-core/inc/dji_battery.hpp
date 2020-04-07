@@ -212,6 +212,7 @@ typedef struct SmartBatteryDynamicInfo {
 // 相对功率百分比
     uint8_t SOP;
 } SmartBatteryDynamicInfo;
+
 #pragma pack()
 
 class Vehicle;
@@ -219,6 +220,13 @@ class DJIBatteryImpl;
 
 class DJIBattery
 {
+public:
+    enum class RequestSmartBatteryIndex
+    {
+        FIRST_SMART_BATTERY  = 1,
+        SECOND_SMART_BATTERY = 2,
+    };
+
 public:
     DJIBattery(Vehicle *vehicle = 0);
     ~DJIBattery();
@@ -228,12 +236,10 @@ public:
 
 public:
     bool subscribeBatteryWholeInfo(bool enable);
-    bool subscribeSingleBatteryDynamicInfo(bool enable, uint8_t batteryIndex);
+    bool subscribeSingleBatteryDynamicInfo(bool enable, const DJIBattery::RequestSmartBatteryIndex batteryIndex);
 
     void getBatteryWholeInfo(BatteryWholeInfo& batteryWholeInfo);
-    void getFirstBatteryDynamicInfo(SmartBatteryDynamicInfo& batteryDynamicInfo);
-    void getSecondBatteryDynamicInfo(SmartBatteryDynamicInfo& batteryDynamicInfo);
-    void getBatteryIndex(uint8_t& batteryIndex);
+    void getSingleBatteryDynamicInfo(const DJIBattery::RequestSmartBatteryIndex batteryIndex, SmartBatteryDynamicInfo& batteryDynamicInfo);
 
 private:
     bool enableListeningSingleBatteryDynamicInfo(bool enable);
