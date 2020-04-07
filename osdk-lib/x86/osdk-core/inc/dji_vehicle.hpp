@@ -104,7 +104,9 @@ public:
   MFIO*                mfio;
   MobileDevice*        mobileDevice;
   MissionManager*      missionManager;
+#ifdef WAYPT2_CORE
   WaypointV2MissionOperator*   waypointV2Mission;
+#endif
   HardwareSync*        hardSync;
   // Supported only on Matrice 100
   VirtualRC*           virtualRC;

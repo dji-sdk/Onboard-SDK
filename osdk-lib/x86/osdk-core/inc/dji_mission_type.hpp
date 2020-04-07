@@ -333,7 +333,7 @@ enum  DJIWaypointV2ActionTriggerType:uint8_t {
    */
     DJIWaypointV2ActionTriggerTypeInterval,
 
-  DJIWaypointV2ActionTriggerTypeSampleReachPoint,
+    DJIWaypointV2ActionTriggerTypeSampleReachPoint,
 
   /**
    *  Unknown
@@ -434,7 +434,7 @@ enum DJIWaypointV2ActionActuatorCameraOperationType:uint16_t {
 
 
 /**
-*
+* Possible types of aircraft control actuator operation.
 */
 enum  DJIWaypointV2ActionActuatorAircraftControlOperationType:uint8_t {
 
@@ -645,6 +645,210 @@ typedef enum  DJIWaypointV2TurnMode:uint8_t {
     DJIWaypointV2TurnModeUnknown = 0xFF,
 }DJIWaypointV2TurnMode;
 
+
+/**
+ *  All the possible state of ``WaypointV2MissionOperator``.
+ */
+enum DJIWaypointV2MissionState{
+  /**
+   *  The state of the operator is unknown. It is the initial state when the operator
+   *  is just created.
+   */
+    DJIWaypointV2MissionStateUnWaypointActionActuatorknown = -1,
+
+  /**
+   *  The connection OSDK device, remote controller and aircraft is
+   *  broken.
+   */
+    DJIWaypointV2MissionStateDisconnected = 0,
+
+  /**
+   *  Raed to execute the mission.
+   */
+    DJIWaypointV2MissionStateReadyToExecute = 1,
+
+  /**
+   *  The execution is started successfully.
+   */
+    DJIWaypointV2MissionStateExecuting = 2,
+
+  /**
+   *  Waypoint mission is paused successfully.
+   */
+    DJIWaypointV2MissionStateInterrupted = 3,
+
+  /**
+   *  Waypoint mission is restarted after interrupted.
+   */
+    DJIWaypointV2MissionStateResumeAfterInterrupted = 4,
+
+  /**
+   *  Waypoint mission is exited.
+   */
+    DJIWaypointV2MissionStateExitMission = 5,
+
+  /**
+   *  Waypoint mission is finished.
+   */
+    DJIWaypointV2MissionStateFinishedMission = 6,
+};
+
+typedef uint8_t  RetCodeType;
+
+typedef uint32_t WaypointV2CommonAck;
+
+/*! Global cruise speed of mission
+ *  unit: m/s
+ *  range:[0,WayPointV2InitSettings::maxFlightSpeed]
+ */
+typedef float32_t GlobalCruiseSpeed;
+
+/*! Upload mission raw ack data
+ */
+typedef struct UploadMissionRawAck
+{
+  /*! 0: success; other:failed*/
+  uint32_t result;
+
+  /*! mission's first waypoint index*/
+  uint16_t startIndex;
+
+  /*! mission's final waypoint index*/
+  uint16_t endIndex;
+}UploadMissionRawAck;
+
+/*! Upload actions raw ack data
+ */
+typedef struct UploadActionsRawAck
+{
+  /*! upload result 0: success; other:failed*/
+  uint32_t result;
+
+  /*! When upload failed, return the error action id*/
+  uint16_t errorActionId;
+}UploadActionsRawAck;
+
+/*! Download mission raw request data
+ */
+typedef struct DownloadMissionRsp
+{
+  uint16_t startIndex;
+  uint16_t endIndex;
+}DownloadMissionRsp;
+
+/*! Download mission raw ack data
+ */
+typedef struct DownloadMissionAck
+{
+  /*! download result 0: success; other:failed*/
+  uint32_t result;
+
+  /*! mission's first waypoint index*/
+  uint16_t startIndex;
+
+  /*! mission's first waypoint index*/
+  uint16_t endIndex;
+}DownloadMissionAck;
+
+/*! Get the  mission global cruise speed raw ack data
+ */
+typedef struct GetGlobalCruiseVelAck{
+
+  /*! get result 0: success; other:failed*/
+  uint32_t result;
+
+  /*!Unit: cm/s*/
+  uint16_t globalCruiseVel;
+}GetGlobalCruiseVelAck;
+
+/*! Get the remain memory  ack data
+ */
+typedef struct GetRemainRamAck
+{
+  uint16_t totalMemory;
+  uint16_t remainMemory;
+}getRemainRamAck;
+
+/*! Get the mission's start and stop index ack data
+ */
+typedef struct GetWaypontStartEndIndexAck
+{
+  uint32_t result;
+  uint16_t startIndex;
+  uint16_t endIndex;
+}GetWaypontStartEndIndexAck;
+
+/*! Mission's state  data
+ */
+typedef struct MissionStateCommanData
+{
+
+  uint16_t curWaypointIndex;
+  uint8_t  stateDetail:4;
+  uint8_t  state:4;
+  uint16_t velocity;
+  uint8_t  config;
+}MissionStateCommanData;
+
+/*! Mission's state push ack data
+ */
+typedef struct MissionStatePushAck
+{
+  uint8_t commonDataVersion = 1;
+  uint16_t commonDataLen;
+  MissionStateCommanData data;
+}MissionStatePushAck;
+
+/*! Mission's event data
+ */
+typedef union Eventdata
+{
+  /*ID:0x01*/
+  uint8_t interruptReason;
+
+  /*ID:0x02*/
+  uint8_t recoverProcess;
+
+  /*ID:0x03*/
+  uint8_t finishReason;
+
+  /*ID:0x10*/
+  uint16_t waypointIndex;
+
+  /*ID:0x11*/
+  struct MissionExecEvent{
+    uint8_t currentMissionExecNum;
+    uint8_t finishedAllExecNum:1;
+    uint8_t reserved:7;
+  }MissionExecEvent;
+
+  /*ID:0x12*/
+  uint8_t avoidState;
+
+  /*ID:0x20*/
+  struct MissionValidityEvent {
+    uint8_t misValidityFlag;
+    float32_t estimateRunTime;
+  }MissionValidityEvent;
+
+  /*ID:0x30*/
+  struct ActionExecEvent{
+    uint16_t actionId;
+    uint8_t preActuatorState;
+    uint8_t curActuatorState;
+    uint32_t result;
+  }ActionExecEvent;
+}Eventdata;
+
+/*! Mission's event push ack data
+ */
+typedef struct MissionEventPushAck
+{
+  uint8_t event ;
+  uint32_t FCTimestamp;
+  Eventdata data;
+}MissionEventPushAck;
+
 /**
  * @brief Waypoint V2 Mission Initialization settings
  * @details This is one of the few structs in the OSDK codebase that
@@ -685,8 +889,8 @@ typedef struct WayPointV2InitSettings{
    *  `maxFlightSpeed`] with a resolution of 1000 steps. If the  offset speed is
    *  negative, then the aircraft will fly backwards to previous waypoints. When it
    *  reaches the  first waypoint, it will then hover in place until a positive speed
-   *  is  applied. `maxFlightSpeed` has a range of [200,15000] cm/s.
-   *  unit: cm/s
+   *  is  applied. `maxFlightSpeed` has a range of [2,15] m/s.
+   *  unit: m/s
    */
   float32_t maxFlightSpeed;
 
@@ -700,11 +904,10 @@ typedef struct WayPointV2InitSettings{
    *  `autoFlightSpeed` <0 and the  aircraft is at the first waypoint, the aircraft
    *  will hover in place until the speed is made positive by  the remote controller
    *  joystick.
+   *  unit: m/s
    */
   float32_t autoFlightSpeed;
 
-
-  uint16_t startIndex;
 
   /**
    *  Determines whether the mission should stop when connection between the  aircraft
@@ -718,18 +921,31 @@ typedef struct WayPointV2InitSettings{
    */
   DJIWaypointV2MissionGotoFirstWaypointMode gotoFirstWaypointMode;
 
+  /**
+   *  Reference point latitude
+   *  unit: rad
+   *  range:[-pi/2, pi/2]
+   */
   float64_t refLati;
 
+  /**
+   *  Reference point longitude
+   *  unit: rad
+   *  range:[-pi, pi]
+   */
   float64_t refLong;
 
+  /**
+   *  Reference point's altitude in WGS 84 reference ellipsoid
+   *  unit: m
+   */
   float32_t refAlti;
 
 }WayPointV2InitSettings;
 
 /**
- * @brief Waypoint V2 Mission Initialization settings
- * @details This is one of the few structs in the OSDK codebase that
- * is used in both a sending and a receiving API.
+ * @brief Waypoint V2 Mission Initialization Settings Internal
+ * User have no need to use it
  */
 typedef struct WayPointV2InitSettingsInternal{
 
@@ -764,17 +980,28 @@ typedef struct WayPointV2InitSettingsInternal{
   float32_t refAlti;
 
 }WayPointV2InitSettingsInternal;
+/*! waypoint position relative to WayPointV2InitSettings's reference point
+ * unit: m
+ */
+typedef struct RelativePosition{
+  float32_t positionX; /*! X distance to reference point, North is positive*/
+  float32_t positionY; /*! Y distance to reference point, East is positive*/
+  float32_t positionZ; /*! Z distance to reference point, UP is positive*/
+} RelativePosition;
 
-typedef struct {
-      float32_t latitude;
-      float32_t longitude;
-      float32_t altitude;
-    } CLLocationCoordinate3D;
-
+/**
+ *  Represents current waypoint's speed config.
+ */
 typedef struct WaypointV2Config
   {
+    /*! 0: set local waypoint's cruise speed,
+     *  1: unset global waypoint's cruise speed*/
     uint16_t  useLocalCruiseVel:1;
+
+    /*! 0: set local waypoint's max speed,
+     *  1: unset global waypoint's max speed*/
     uint16_t  useLocalMaxVel:1;
+
     uint16_t  reserved :14;
 
   }WaypointV2Config;
@@ -784,13 +1011,26 @@ typedef struct WaypointV2Config
 */
 typedef struct WaypointV2
 {
-  float32_t positionX;
-  float32_t positionY;
-  float32_t positionZ;
+  /*! waypoint position relative to WayPointV2InitSettings's reference point
+   * unit: m
+   */
+  float32_t positionX; /*! X distance to reference point, North is positive*/
+  float32_t positionY; /*! Y distance to reference point, East is positive*/
+  float32_t positionZ; /*! Z distance to reference point, UP is positive*/
 
+ /**
+  *  Waypoint flight path mode.
+  */
   DJIWaypointV2FlightPathMode   waypointType;
+
+ /**
+  *  Represents current aircraft's heading mode on current waypoint.
+  */
   DJIWaypointV2HeadingMode      headingMode;
 
+  /**
+   *  Represents current waypoint's speed config.
+   */
   WaypointV2Config config;
 
   uint16_t dampingDistance;
@@ -811,12 +1051,12 @@ typedef struct WaypointV2
   DJIWaypointV2TurnMode turnMode;
 
   /**
-*  Property is used when ``DJIWaypointV2_headingMode`` is
-*  ``DJIWaypointV2_DJIWaypointV2HeadingMode_TowardPointOfInterest``.
-*  Aircraft will always be heading to point while executing mission. Default is
-*  "kCLLocationCoordinate2DInvalid".
-*/
-  CLLocationCoordinate3D pointOfInterest;
+  *  Property is used when ``DJIWaypointV2_headingMode`` is
+  *  ``DJIWaypointV2_DJIWaypointV2HeadingMode_TowardPointOfInterest``.
+  *  Aircraft will always be heading to point while executing mission. Default is
+  *  "kCLLocationCoordinate2DInvalid".
+  */
+  RelativePosition pointOfInterest;
 
   /**
   *  While the aircraft is travelling between waypoints, you can offset its speed by
@@ -849,6 +1089,89 @@ typedef struct WaypointV2
   float32_t autoFlightSpeed;
 }DJIWaypointV2;
 
+/**
+*  The struct represents a target point in the waypoint mission. For a waypoint
+*  mission, a flight route  consists of multiple `WaypointV2` objects.
+*/
+typedef struct WaypointV2WGS84
+{
+  /*! waypoint position relative to WayPointV2InitSettings's reference point
+   * unit: m
+   */
+  fpos64_t longitude;
+  fpos64_t latitude;
+  float32_t relativeHeight; /*! relative to homepoint*/
+
+  /**
+   *  Waypoint flight path mode.
+   */
+  DJIWaypointV2FlightPathMode   waypointType;
+
+  /**
+   *  Represents current aircraft's heading mode on current waypoint.
+   */
+  DJIWaypointV2HeadingMode      headingMode;
+
+  /**
+   *  Represents current waypoint's speed config.
+   */
+  WaypointV2Config config;
+
+  uint16_t dampingDistance;
+
+  /**
+  *  The heading to which the aircraft will rotate by the time it reaches the
+  *  waypoint. The aircraft heading  will gradually change between two waypoints with
+  *  different headings if the waypoint  mission's `headingMode` is set  to
+  *  `DJIWaypointV2_DJIWaypointV2HeadingMode_WaypointCustom`. A heading has a range of
+  *  [-180, 180] degrees, where 0 represents True North.
+  */
+  float32_t heading;
+
+  /**
+  *  Determines whether the aircraft will turn clockwise or anticlockwise when
+  *  changing its heading.
+  */
+  DJIWaypointV2TurnMode turnMode;
+
+  /**
+  *  Property is used when ``DJIWaypointV2_headingMode`` is
+  *  ``DJIWaypointV2_DJIWaypointV2HeadingMode_TowardPointOfInterest``.
+  *  Aircraft will always be heading to point while executing mission. Default is
+  *  "kCLLocationCoordinate2DInvalid".
+  */
+  RelativePosition pointOfInterest;
+
+  /**
+  *  While the aircraft is travelling between waypoints, you can offset its speed by
+  *  using the throttle joystick on the remote controller. "maxFlightSpeed" is this
+  *  offset when the joystick is pushed to maximum deflection. For example, If
+  *  maxFlightSpeed is 10 m/s, then pushing the throttle joystick all the way up will
+  *  add 10 m/s to the aircraft speed, while pushing down will subtract 10 m/s from
+  *  the aircraft speed. If the remote controller stick is not at maximum deflection,
+  *  then the offset speed will be interpolated between "[0, maxFlightSpeed]"" with a
+  *  resolution of 1000 steps. If the offset speed is negative, then the aircraft
+  *  will fly backwards to previous waypoints. When it reaches the first waypoint, it
+  *  will then hover in place until a positive speed is applied. "maxFlightSpeed" has
+  *  a range of [2,15] m/s.
+  */
+  float32_t maxFlightSpeed;
+
+  /**
+  *  The base automatic speed of the aircraft as it moves between waypoints with
+  *  range [-15, 15] m/s. The aircraft's actual speed is a combination of the base
+  *  automatic speed, and the speed control given by the throttle joystick on the
+  *  remote controller. If "autoFlightSpeed >0": Actual speed is "autoFlightSpeed" +
+  *  Joystick Speed (with combined max of "maxFlightSpeed") If "autoFlightSpeed =0":
+  *  Actual speed is controlled only by the remote controller joystick. If
+  *  "autoFlightSpeed <0" and the aircraft is at the first waypoint, the aircraft
+  *  will hover in place until the speed is made positive by the remote controller
+  *  joystick. In flight controller firmware 3.2.10.0 or above, different speeds
+  *  between individual waypoints can also be set in waypoint objects which will
+  *  overwrite "autoFlightSpeed".
+  */
+  float32_t autoFlightSpeed;
+}WaypointV2WGS84;
 
 #pragma pack()
 

@@ -1059,7 +1059,7 @@ class ErrorCode {
       GS_ERR_CODE_TRAJ_DOWNLOAD_WPS_NOT_IN_STORED_RAGNE           = 0x10006,   /*!< the index of first and end waypoint expected to download is not in range of stored in FC */
       GS_ERR_CODE_TRAJ_CUR_POS_IS_FAR_AWAY_FROM_FIRST_WP          = 0x10008,   /*!< current position is far away from the first waypoint. */
       GS_ERR_CODE_TRAJ_ADJ_WPS_TOO_CLOSE                          = 0x1000a,   /*!< it is too close from two adjacent waypoints, the value of which might be distinguish from products */
-      GS_ERR_CODE_TRAJ_ADJ_WPS_TOO_FAR                            = 0x1000b,   /*!< it is too far from two adjacent waypoints, the value of which might be distinguish from products */
+      GS_ERR_CODE_TRAJ_ADJ_WPS_TOO_FAR                            = 0x1000b,   /*!< the distance betwween two adjacent waypoints is not in[0.5m, 5000m] the value of which might be distinguish from products */
       GS_ERR_CODE_TRAJ_UPLOAD_MAX_VEL_GT_GLOBAL                   = 0x1000c,   /*!< the max vel of uplod wp is greater than global max vel */
       GS_ERR_CODE_TRAJ_UPLOAD_LOCAL_CRUISE_VEL_GT_LOCAL_MAX       = 0x1000d,   /*!< the local cruise vel of upload wp is greater than local max vel */
       GS_ERR_CODE_TRAJ_UPLOAD_LOCAL_CRUISE_VEL_GT_GLOBAL_MAX      = 0x1000e,   /*!< the local cruise vel of upload wp is greater than global max vel */

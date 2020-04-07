@@ -65,7 +65,7 @@ bool WaypointV2MissionSample::setUpSubscription(int responseTimeout) {
 
   // Telemetry: Subscribe to flight status and mode at freq 10 Hz
   int freq = 10;
-  TopicName topicList10Hz[] = {TOPIC_GPS_FUSED};
+  TopicName topicList10Hz[] = {TOPIC_GPS_FUSED, TOPIC_ALTITUDE_FUSIONED};
   int numTopic = sizeof(topicList10Hz) / sizeof(topicList10Hz[0]);
   bool enableTimestamp = false;
 
@@ -109,23 +109,63 @@ bool WaypointV2MissionSample::teardownSubscription(const int pkgIndex,
 ErrorCode::ErrorCodeType WaypointV2MissionSample::uploadWaypointMission(int responseTimeout) {
 
   ErrorCode::ErrorCodeType ret = vehiclePtr->waypointV2Mission->uploadMission(this->mission,responseTimeout);
+  if(ret != ErrorCode::SysCommonErr::Success)
+  {
+    DERROR("Upload waypoint v2 mission ErrorCode:0x%lX\n", ret);
+    ErrorCode::printErrorCodeMsg(ret);
+    return ret;
+  }
+  else
+  {
+    DSTATUS("Upload waypoint v2 mission successfully!\n");
+  }
   return ret;
 }
 
 ErrorCode::ErrorCodeType WaypointV2MissionSample::dowloadWaypointMission(std::vector<DJIWaypointV2> &mission,int responseTimeout)
 {
   ErrorCode::ErrorCodeType ret = vehiclePtr->waypointV2Mission->downloadMission(mission, responseTimeout);
+  if(ret != ErrorCode::SysCommonErr::Success)
+  {
+    DERROR("Download waypoint v2 mission ErrorCode:0x%lX\n", ret);
+    ErrorCode::printErrorCodeMsg(ret);
+    return ret;
+  }
+  else
+  {
+    DSTATUS("Download waypoint v2 mission successfully!\n");
+  }
   return ret;
 }
 
 ErrorCode::ErrorCodeType WaypointV2MissionSample::uploadWapointActions(int responseTimeout)
 {
-  ErrorCode::ErrorCodeType ret = vehiclePtr->waypointV2Mission->uploadActionV2(actions,responseTimeout);
+  ErrorCode::ErrorCodeType ret = vehiclePtr->waypointV2Mission->uploadAction(actions,responseTimeout);
+  if(ret != ErrorCode::SysCommonErr::Success)
+  {
+    DERROR("Upload waypoint v2 actions ErrorCode:0x%lX\n", ret);
+    ErrorCode::printErrorCodeMsg(ret);
+    return ret;
+  }
+  else
+  {
+    DSTATUS("Upload waypoint v2 actions successfully!\n");
+  }
     return ret;
 }
 
 ErrorCode::ErrorCodeType WaypointV2MissionSample::startWaypointMission(int responseTimeout) {
   ErrorCode::ErrorCodeType ret = vehiclePtr->waypointV2Mission->start(responseTimeout);
+  if(ret != ErrorCode::SysCommonErr::Success)
+  {
+    DERROR("Start waypoint v2 mission ErrorCode:0x%lX\n", ret);
+    ErrorCode::printErrorCodeMsg(ret);
+    return ret;
+  }
+  else
+  {
+    DSTATUS("Start waypoint v2 mission successfully!\n");
+  }
   return ret;
 }
 
@@ -136,18 +176,40 @@ ErrorCode::ErrorCodeType WaypointV2MissionSample::stopWaypointMission(int respon
 
 ErrorCode::ErrorCodeType WaypointV2MissionSample::pauseWaypointMission(int responseTimeout) {
   ErrorCode::ErrorCodeType ret = vehiclePtr->waypointV2Mission->pause(responseTimeout);
+  if(ret != ErrorCode::SysCommonErr::Success)
+  {
+    DERROR("Pause waypoint v2 mission ErrorCode:0x%lX\n", ret);
+    ErrorCode::printErrorCodeMsg(ret);
+    return ret;
+  }
+  else
+  {
+    DSTATUS("Pause waypoint v2 mission successfully!\n");
+  }
+  sleep(5);
   return ret;
 }
 
 ErrorCode::ErrorCodeType WaypointV2MissionSample::resumeWaypointMission(int responseTimeout) {
+
   ErrorCode::ErrorCodeType ret = vehiclePtr->waypointV2Mission->resume(responseTimeout);
+  if(ret != ErrorCode::SysCommonErr::Success)
+  {
+    DERROR("Resume Waypoint v2 mission ErrorCode:0x%lX\n", ret);
+    ErrorCode::printErrorCodeMsg(ret);
+    return ret;
+  }
+  else
+  {
+    DSTATUS("Resume Waypoint v2 mission successfully!\n");
+  }
   return ret;
 }
 
 void  WaypointV2MissionSample::getGlogalCruiseSpeed(int responseTimeout)
 {
-  WaypointV2MissionOperator::GlobalCruiseSpeed cruiseSpeed;
-  ErrorCode::ErrorCodeType ret = vehiclePtr->waypointV2Mission->getGlogalCruiseSpeed(cruiseSpeed, responseTimeout);
+  GlobalCruiseSpeed cruiseSpeed;
+  ErrorCode::ErrorCodeType ret = vehiclePtr->waypointV2Mission->getGlobalCruiseSpeed(cruiseSpeed, responseTimeout);
   if(ret !=  ErrorCode::SysCommonErr::Success)
   {
     DERROR("Get glogal cruise speed failed ErrorCode:0x%lX\n", ret);
@@ -157,9 +219,9 @@ void  WaypointV2MissionSample::getGlogalCruiseSpeed(int responseTimeout)
   DSTATUS("Current cruise speed is: %f m/s\n",cruiseSpeed);
 }
 
-void WaypointV2MissionSample::setGlogalCruiseSpeed(const WaypointV2MissionOperator::GlobalCruiseSpeed &cruiseSpeed, int responseTimeout)
+void WaypointV2MissionSample::setGlogalCruiseSpeed(const GlobalCruiseSpeed &cruiseSpeed, int responseTimeout)
 {
-  ErrorCode::ErrorCodeType ret = vehiclePtr->waypointV2Mission->setGlogalCruiseSpeed(cruiseSpeed, responseTimeout);
+  ErrorCode::ErrorCodeType ret = vehiclePtr->waypointV2Mission->setGlobalCruiseSpeed(cruiseSpeed, responseTimeout);
   if(ret !=  ErrorCode::SysCommonErr::Success)
   {
     DERROR("Set glogal cruise speed %f m/s failed ErrorCode:0x%lX\n", cruiseSpeed, ret);
@@ -177,7 +239,7 @@ std::vector<DJIWaypointV2> WaypointV2MissionSample::generatePolygonWaypoints(flo
 
   startPoint.positionX = 0;
   startPoint.positionY = 0;
-  startPoint.positionZ = 10;
+  startPoint.positionZ = 5;
   setWaypointV2Defaults(&startPoint);
   waypointList.push_back(startPoint);
 
@@ -197,25 +259,21 @@ std::vector<DJIWaypointV2> WaypointV2MissionSample::generatePolygonWaypoints(flo
 
 std::vector<DJIWaypointV2Action> WaypointV2MissionSample::generateWaypointActions(uint16_t actionNum)
 {
-  std::vector<DJIWaypointV2Action> actions;
+  std::vector<DJIWaypointV2Action> actionVector;
 
-  for(uint32_t i = 0; i < actionNum; i++)
+  for(uint16_t i = 0; i < actionNum; i++)
   {
-    DJIWaypointV2SampleReachPointTriggerParam reachPointTriggerParam;
-    reachPointTriggerParam.Index = 0;
-    reachPointTriggerParam.terminateNum = 0;
+    DJIWaypointV2SampleReachPointTriggerParam sampleReachPointTriggerParam;
+    sampleReachPointTriggerParam.waypointIndex = i;
+    sampleReachPointTriggerParam.terminateNum = 0;
 
-    auto *trigger = new DJIWaypointV2Trigger(DJIWaypointV2ActionTriggerTypeSampleReachPoint,(void *)&reachPointTriggerParam);
-
+    auto *trigger = new DJIWaypointV2Trigger(DJIWaypointV2ActionTriggerTypeSampleReachPoint,&sampleReachPointTriggerParam);
     auto *cameraActuatorParam = new DJIWaypointV2CameraActuatorParam(DJIWaypointV2ActionActuatorCameraOperationTypeTakePhoto, nullptr);
-
     auto *actuator = new DJIWaypointV2Actuator(DJIWaypointV2ActionActuatorTypeCamera, 0, cameraActuatorParam);
-
     auto *action = new DJIWaypointV2Action(i, *trigger,*actuator);
-
-    actions.push_back(*action);
+    actionVector.push_back(*action);
   }
-  return actions;
+  return actionVector;
 }
 
 void WaypointV2MissionSample::setWaypointV2Defaults(DJIWaypointV2* waypointV2) {
@@ -229,41 +287,56 @@ void WaypointV2MissionSample::setWaypointV2Defaults(DJIWaypointV2* waypointV2) {
   waypointV2->heading = 0;
   waypointV2->turnMode = DJIWaypointV2TurnModeClockwise;
 
-  waypointV2->pointOfInterest.longitude = 0;
-  waypointV2->pointOfInterest.latitude = 0;
-  waypointV2->maxFlightSpeed = 9;
+  waypointV2->pointOfInterest.positionX = 0;
+  waypointV2->pointOfInterest.positionY = 0;
+  waypointV2->pointOfInterest.positionZ = 0;
+  waypointV2->maxFlightSpeed= 9;
   waypointV2->autoFlightSpeed = 2;
 }
 
 ErrorCode::ErrorCodeType WaypointV2MissionSample::initMissionSetting(int timeout) {
 
   /*generate waypoints*/
-  float32_t radius = 40;
-  uint32_t polygonNum = 6;
-  uint16_t actionNum = 2;
+  uint16_t polygonNum = 6;
+  float32_t radius = 6;
+
+  uint16_t actionNum = 5;
   srand(int(time(0)));
 
   this->mission = generatePolygonWaypoints(radius, polygonNum);
   this->actions = generateWaypointActions(actionNum);
-
   WayPointV2InitSettings missionInitSettings;
   missionInitSettings.missionID = rand();
   missionInitSettings.missTotalLen = mission.size();
+  /*! set mission's repeat times is 2*/
   missionInitSettings.repeatTimes  = 1;
   missionInitSettings.finishedAction = DJIWaypointV2MissionFinishedGoHome;
   missionInitSettings.maxFlightSpeed = 10;
-  missionInitSettings.autoFlightSpeed = 1;
-  missionInitSettings.startIndex = 0;
+  missionInitSettings.autoFlightSpeed = 3;
   missionInitSettings.exitMissionOnRCSignalLost = 1;
   missionInitSettings.gotoFirstWaypointMode = DJIWaypointV2MissionGotoFirstWaypointModePointToPoint;
-  // Global position retrieved via subscription
+
   Telemetry::TypeMap<TOPIC_GPS_FUSED>::type subscribeGPosition;
+  Telemetry::TypeMap<TOPIC_ALTITUDE_FUSIONED>::type subscribetakeoffAltitude;
+
+  subscribetakeoffAltitude =  vehiclePtr->subscribe->getValue<TOPIC_ALTITUDE_FUSIONED>();
   subscribeGPosition = vehiclePtr->subscribe->getValue<TOPIC_GPS_FUSED>();
   missionInitSettings.refLati = subscribeGPosition.latitude;
   missionInitSettings.refLong = subscribeGPosition.longitude;
-  missionInitSettings.refAlti = 11;
-  ErrorCode::ErrorCodeType retCode = vehiclePtr->waypointV2Mission->init(&missionInitSettings,timeout);
-  return retCode;
+  missionInitSettings.refAlti = subscribetakeoffAltitude;
+  ErrorCode::ErrorCodeType ret = vehiclePtr->waypointV2Mission->init(&missionInitSettings,timeout);
+
+  if(ret != ErrorCode::SysCommonErr::Success)
+  {
+    DERROR("Init mission setting ErrorCode:0x%lX\n", ret);
+    ErrorCode::printErrorCodeMsg(ret);
+    return ret;
+  }
+  else
+  {
+    DSTATUS("Init mission setting successfully!\n");
+  }
+  return ret;
 }
 
 ErrorCode::ErrorCodeType WaypointV2MissionSample::runWaypointV2Mission()
@@ -285,106 +358,53 @@ ErrorCode::ErrorCodeType WaypointV2MissionSample::runWaypointV2Mission()
   {
     DSTATUS("Set up subscription successfully!\n");
   }
-
   /*! wait for subscription data come*/
   sleep(responseTimeout);
+
   ret = initMissionSetting(responseTimeout);
   if(ret != ErrorCode::SysCommonErr::Success)
-  {
-    DERROR("Init mission setting ErrorCode:0x%lX\n", ret);
-    ErrorCode::printErrorCodeMsg(ret);
     return ret;
-  }
-  else
-  {
-    DSTATUS("Init mission setting successfully!\n");
-  }
   sleep(responseTimeout);
 
-  ret = uploadWaypointMission(responseTimeout);
+  uploadWaypointMission(responseTimeout);
   if(ret != ErrorCode::SysCommonErr::Success)
-  {
-    DERROR("Upload waypoint v2 mission ErrorCode:0x%lX\n", ret);
-    ErrorCode::printErrorCodeMsg(ret);
     return ret;
-  }
-  else
-  {
-    DSTATUS("Upload waypoint v2 mission successfully!\n");
-  }
   sleep(responseTimeout);
 
   std::vector<DJIWaypointV2> mission;
-  ret = dowloadWaypointMission(mission,responseTimeout);
+  dowloadWaypointMission(mission,responseTimeout);
   if(ret != ErrorCode::SysCommonErr::Success)
-  {
-    DERROR("Download waypoint v2 mission ErrorCode:0x%lX\n", ret);
-    ErrorCode::printErrorCodeMsg(ret);
     return ret;
-  }
-  else
-  {
-    DSTATUS("Download waypoint v2 mission successfully!\n");
-  }
   sleep(responseTimeout);
 
-  ret = uploadWapointActions(responseTimeout);
+  uploadWapointActions(responseTimeout);
   if(ret != ErrorCode::SysCommonErr::Success)
-  {
-    DERROR("Upload waypoint v2 actions ErrorCode:0x%lX\n", ret);
-    ErrorCode::printErrorCodeMsg(ret);
     return ret;
-  }
-  else
-  {
-    DSTATUS("Upload waypoint v2 actions successfully!\n");
-  }
   sleep(responseTimeout);
 
-  ret = startWaypointMission(responseTimeout);
+  startWaypointMission(responseTimeout);
   if(ret != ErrorCode::SysCommonErr::Success)
-  {
-    DERROR("Start waypoint v2 mission ErrorCode:0x%lX\n", ret);
-    ErrorCode::printErrorCodeMsg(ret);
     return ret;
-  }
-  else
-  {
-    DSTATUS("Start waypoint v2 mission successfully!\n");
-  }
   sleep(40);
 
   setGlogalCruiseSpeed(1.5,responseTimeout);
-
+  if(ret != ErrorCode::SysCommonErr::Success)
+    return ret;
   sleep(responseTimeout);
+
   getGlogalCruiseSpeed(responseTimeout);
-
-  ret = pauseWaypointMission(responseTimeout);
   if(ret != ErrorCode::SysCommonErr::Success)
-  {
-    DERROR("Pause waypoint v2 mission ErrorCode:0x%lX\n", ret);
-    ErrorCode::printErrorCodeMsg(ret);
     return ret;
-  }
-  else
-  {
-    DSTATUS("Pause waypoint v2 mission successfully!\n");
-  }
+  sleep(responseTimeout);
+
+  pauseWaypointMission(responseTimeout);
+  if(ret != ErrorCode::SysCommonErr::Success)
+    return ret;
   sleep(5);
 
-  ret = resumeWaypointMission(responseTimeout);
+  resumeWaypointMission(responseTimeout);
   if(ret != ErrorCode::SysCommonErr::Success)
-  {
-    DERROR("Resume Waypoint v2 mission ErrorCode:0x%lX\n", ret);
-    ErrorCode::printErrorCodeMsg(ret);
     return ret;
-  }
-  else
-  {
-    DSTATUS("Resume Waypoint v2 mission successfully!\n");
-  }
-  sleep(5);
-
   sleep(100);
   /*! Set up telemetry subscription*/
   if(!teardownSubscription(DEFAULT_PACKAGE_INDEX, responseTimeout))

@@ -124,7 +124,7 @@ typedef enum
   UID_ANGULAR_RATE_RAW         = 0x700389ee,
   UID_ALTITUDE_FUSIONED        = 0x11e9c81a,
   UID_ALTITUDE_BAROMETER       = 0x27396a39,
-  UID_ALTITUDE_OF_HOMEPOINT         = 0x252c164b,
+  UID_ALTITUDE_OF_HOMEPOINT    = 0x252c164b,
   UID_HEIGHT_FUSION            = 0x87cf419d,
   UID_GPS_FUSED                = 0x4b19a8c7,
   UID_GPS_DATE                 = 0x598f79bc,
@@ -816,7 +816,7 @@ template <> struct TypeMap<TOPIC_RTK_VELOCITY             > { typedef Vector3f  
 template <> struct TypeMap<TOPIC_RTK_YAW                  > { typedef int16_t         type;};
 template <> struct TypeMap<TOPIC_RTK_POSITION_INFO        > { typedef uint8_t         type;};
 template <> struct TypeMap<TOPIC_RTK_YAW_INFO             > { typedef uint8_t         type;};
-template <> struct TypeMap<TOPIC_COMPASS         > { typedef Mag             type;};
+template <> struct TypeMap<TOPIC_COMPASS                  > { typedef Mag             type;};
 template <> struct TypeMap<TOPIC_RC                       > { typedef RC              type;};
 template <> struct TypeMap<TOPIC_GIMBAL_ANGLES            > { typedef Vector3f        type;};
 template <> struct TypeMap<TOPIC_GIMBAL_STATUS            > { typedef GimbalStatus    type;};
@@ -839,7 +839,7 @@ template <> struct TypeMap<TOPIC_POSITION_VO              > { typedef LocalPosit
 template <> struct TypeMap<TOPIC_AVOID_DATA               > { typedef RelativePosition type;};
 template <> struct TypeMap<TOPIC_HOME_POINT_SET_STATUS    > { typedef HomeLocationSetStatus type;};
 template <> struct TypeMap<TOPIC_HOME_POINT_INFO          > { typedef HomeLocationData type;};
-template <> struct TypeMap<TOPIC_DUAL_GIMBAL_DATA> { typedef GimbalDualData   type;};
+template <> struct TypeMap<TOPIC_DUAL_GIMBAL_DATA         > { typedef GimbalDualData   type;};
 template <> struct TypeMap<TOPIC_THREE_GIMBAL_DATA        > { typedef GimbalThreeData  type;};
 // clang-format on
 }

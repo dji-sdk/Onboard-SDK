@@ -74,7 +74,7 @@ public:
 
   void getGlogalCruiseSpeed(int responseTimeout);
 
-  void setGlogalCruiseSpeed(const WaypointV2MissionOperator::GlobalCruiseSpeed &cruiseSpeed, int responseTimeout);
+  void setGlogalCruiseSpeed(const GlobalCruiseSpeed &cruiseSpeed, int responseTimeout);
 
 
   bool setUpSubscription(int responseTimeout);

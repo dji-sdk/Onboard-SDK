@@ -39,244 +39,141 @@ namespace OSDK
 {
  /*! The waypoint operator is the only object that controls, runs and monitors
   *  Waypoint v2 Missions.
-  *  */
+  */
   class WaypointV2MissionOperator
   {
   public:
     const uint16_t MAX_WAYPOINT_NUM_SIGNAL_PUSH = 260;
 
-    /**
-     *  All the possible state of ``WaypointV2MissionOperator``.
-     */
-    enum DJIWaypointV2MissionState{
-      /**
-       *  The state of the operator is unknown. It is the initial state when the operator
-       *  is just created.
-       */
-        DJIWaypointV2MissionStateUnWaypointActionActuatorknown = -1,
-
-      /**
-       *  The connection OSDK device, remote controller and aircraft is
-       *  broken.
-       */
-        DJIWaypointV2MissionStateDisconnected = 0,
-
-      /**
-       *  Raed to execute the mission.
-       */
-        DJIWaypointV2MissionStateReadyToExecute = 1,
-
-      /**
-       *  The execution is started successfully.
-       */
-        DJIWaypointV2MissionStateExecuting = 2,
-
-      /**
-       *  Waypoint mission is paused successfully.
-       */
-        DJIWaypointV2MissionStateInterrupted = 3,
-
-      /**
-       *  Waypoint mission is restarted after interrupted.
-       */
-        DJIWaypointV2MissionStateResumeAfterInterrupted = 4,
-
-      /**
-       *  Waypoint mission is exited.
-       */
-        DJIWaypointV2MissionStateExitMission = 5,
-
-      /**
-       *  Waypoint mission is finished.
-       */
-        DJIWaypointV2MissionStateFinishedMission = 6,
-    };
-
-    typedef uint8_t  RetCodeType;
-
-    /*! Common ack of waypoint 2.0*/
-    typedef uint32_t WaypointV2CommonAck;
-
-    /*! Common ack of waypoint 2.0*/
-    typedef float32_t GlobalCruiseSpeed;
-
-    #pragma pack(1)
-    typedef struct UploadMissionRawAck
-    {
-      uint32_t result;
-      uint16_t startIndex;
-      uint16_t endIndex;
-    }UploadMissionRawAck;
-
-    typedef struct UploadActionsRawAck
-    {
-      uint32_t result;
-      uint16_t errorActionId;
-    }UploadActionSRawAck;
-
-    typedef struct DownloadMissionRsp
-   {
-     uint16_t startIndex;
-     uint16_t endIndex;
-   }DownloadMissionRsp;
-
-    typedef struct DownloadMissionAck
-   {
-     uint32_t result;
-     uint16_t startIndex;
-     uint16_t endIndex;
-   }DownloadMissionAck;
-
-    typedef struct GetGlobalCruiseVelAck{
-      uint32_t result;
-      /*!Unit: cm/s*/
-      uint16_t globalCruiseVel;
-    }GetGlobalCruiseVelAck;
-
-    typedef struct GetRemainRamAck
-    {
-      uint16_t totalMemory;
-      uint16_t remainMemory;
-    }getRemainRamAck;
-
-    typedef struct GetWaypontStartEndIndexAck
-    {
-      uint32_t result;
-      uint16_t startIndex;
-      uint16_t endIndex;
-    }GetWaypontStartEndIndexAck;
-
-    typedef struct MissionStateCommanData
-    {
-
-      uint16_t curWaypointIndex;
-      uint8_t  stateDetail:4;
-      uint8_t  state:4;
-      uint16_t velocity;
-      uint8_t  config;
-    }MissionStateCommanData;
-
-    typedef struct MissionStatePushAck
-    {
-      uint8_t commonDataVersion = 1;
-      uint16_t commonDataLen;
-      MissionStateCommanData data;
-    }MissionStatePushAck;
-
-    typedef union Eventdata
-    {
-      /*ID:0x01*/
-      uint8_t interruptReason;
-
-      /*ID:0x02*/
-      uint8_t RecoverProcess;
-
-      /*ID:0x03*/
-      uint8_t finishReason;
-
-      /*ID:0x10*/
-      uint16_t waypointIndex;
-
-      /*ID:0x11*/
-       struct MissionExecEvent{
-        uint8_t CurrentMissionExecNum;
-        uint8_t finishedAllExecNum:1;
-        uint8_t reserved:7;
-      }MissionExecEvent;
-
-      /*ID:0x12*/
-      uint8_t avoidState;
-
-      /*ID:0x20*/
-       struct MissionValidityEvent {
-        uint8_t misValidityFlag;
-        float32_t estimateRunTime;
-      }MissionValidityEvent;
-
-      /*ID:0x30*/
-       struct ActionExecEvent{
-        uint16_t actionId;
-        uint8_t preActuatorState;
-        uint8_t curActuatorState;
-        uint32_t result;
-      };
-    }Eventdata;
-
-    typedef struct MissionEventPushAck
-    {
-      uint8_t event ;
-      uint16_t FCTimestamp;
-      Eventdata data;
-    }MissionEventPushAck;
-    #pragma pack()
-
     WaypointV2MissionOperator(Vehicle* vehiclePtr);
 
     ~WaypointV2MissionOperator();
 
+   /*! @brief Init waypoint v2 mission settings
+    *
+    *  @param Info init settings struct DJI::OSDK::WayPointV2InitSettings
+    *  @param timeout blocking timeout in seconds
+    *  @return ErrorCode::ErrorCodeType error code
+    */
     ErrorCode::ErrorCodeType init(WayPointV2InitSettings* info, int timeout);
 
+   /*! @brief Start　execute waypoint v2 mission
+    *
+    *  @param timeout blocking timeout in seconds
+    *  @return ErrorCode::ErrorCodeType error code
+    */
     ErrorCode::ErrorCodeType start(int timeout);
-    /*! @brief
-     *
-     *  stop the waypt mission
-     *
-     *  @param register a callback function for error code
-     */
+
+   /*! @brief Stop execute waypoint v2 mission
+    *
+    *  @param timeout blocking timeout in seconds
+    *  @return ErrorCode::ErrorCodeType error code
+    */
     ErrorCode::ErrorCodeType stop(int timeout);
-    /*! @brief
-     *
-     *  pause the waypt mission
-     *
-     *  @param register a callback function for error code
-     */
+
+   /*! @brief Pause waypoint v2 mission
+    *
+    *  @param timeout blocking timeout in seconds
+    *  @return ErrorCode::ErrorCodeType error code
+    */
     ErrorCode::ErrorCodeType pause(int timeout);
-    /*! @brief
-     *
-     *  resume the waypt mission
-     *
-     *  @param register a callback function for error code
-     */
+
+   /*! @brief Resume waypoint v2 mission
+    *
+    *  @param timeout blocking timeout in seconds
+    *  @return ErrorCode::ErrorCodeType error code
+    */
     ErrorCode::ErrorCodeType resume(int timeout);
 
+   /*! @brief Upload all the waypoint v2 mission
+    *
+    *  @param mission vector contains of a series of WaypointV2,
+    *  refer the definition of DJI::OSDK::WaypointV2
+    *  @param timeout blocking timeout in seconds
+    *  @return ErrorCode::ErrorCodeType error code
+    */
     ErrorCode::ErrorCodeType uploadMission(const std::vector<WaypointV2> &mission,int timeout);
 
-    ErrorCode::ErrorCodeType downloadMission(std::vector<WaypointV2> &vector, int timeout);
+   /*! @brief Download all the waypoint v2 mission
+    *
+    *  @param mission vector contains of a series of WaypointV2,
+    *  refer the definition of DJI::OSDK::WaypointV2
+    *  @param timeout blocking timeout in seconds
+    *  @return ErrorCode::ErrorCodeType error code
+    */
+    ErrorCode::ErrorCodeType downloadMission(std::vector<WaypointV2> &mission, int timeout);
 
-    ErrorCode::ErrorCodeType getGlogalCruiseSpeed(GlobalCruiseSpeed &cruiseSpeed,int timeout);
 
-    ErrorCode::ErrorCodeType setGlogalCruiseSpeed(const GlobalCruiseSpeed &cruiseSpeed,int timeout);
+    ErrorCode::ErrorCodeType uploadMissionWGS84(const std::vector<WaypointV2WGS84> &mission,int timeout);
 
-    ErrorCode::ErrorCodeType uploadActionV2(std::vector<DJIWaypointV2Action> &actions,int timeout);
+   /*! @brief Get the global cruise speed setting from flight controller
+    *
+    *  @param cruiseSpeed auto cruise speed refer to
+    *  definition of DJI::OSDK::GlobalCruiseSpeed,
+    *  @param timeout blocking timeout in seconds
+    *  @return ErrorCode::ErrorCodeType error code, 0: success, other: fail
+    */
+    ErrorCode::ErrorCodeType getGlobalCruiseSpeed(GlobalCruiseSpeed &cruiseSpeed, int timeout);
 
-    ErrorCode::ErrorCodeType downloadActionV2(int timeout);
+   /*! @brief Set the global cruise speed to flight controller
+    *
+    *  @param cruiseSpeed auto cruise speed refer to
+    *  definition of DJI::OSDK::GlobalCruiseSpeed,
+    *  cruiseSpeed must in the range of [0, WayPointV2InitSettings::maxFlightSpeed]
+    *  @param timeout blocking timeout in seconds
+    *  @return ErrorCode::ErrorCodeType error code, 0: success, other: fail
+    */
+    ErrorCode::ErrorCodeType setGlobalCruiseSpeed(const GlobalCruiseSpeed &cruiseSpeed, int timeout);
 
+   /*! @brief Upload all actions to flight controller
+    *
+    *  @param actions vector contains of a series of action,
+    *  refer for the definition  of DJI::OSDK::DJIWaypointV2Action
+    *  @param timeout blocking timeout in seconds
+    *  @return ErrorCode::ErrorCodeType error code
+    */
+    ErrorCode::ErrorCodeType uploadAction(std::vector<DJIWaypointV2Action> &actions, int timeout);
+
+   /*! @brief Get action's remain memory
+    *
+    *  @param remainRamAck contains total memory and remain memory
+    *  refer to the definition of DJI::OSDK::GetRemainRamAck
+    *  @param timeout blocking timeout in seconds
+    *  @return ErrorCode::ErrorCodeType error code
+    */
     ErrorCode::ErrorCodeType getActionRemainMemory(GetRemainRamAck &remainRamAck, int timeout);
 
+   /*! @brief Get mission's waypoint start index and end index
+    *
+    *  @param startEndIndexAck contains start index and end index
+    *  refer to the definition of DJI::OSDK::GetWaypontStartEndIndexAck
+    *  @param timeout blocking timeout in seconds
+    *  @return ErrorCode::ErrorCodeType error code
+    */
     ErrorCode::ErrorCodeType getWaypointIndexInList(GetWaypontStartEndIndexAck &startEndIndexAck, int timeout);
 
     void RegisterMissionStateCallback();
 
     void RegisterMissionEventCallback();
 
-
-    /*! @brief
-     *
-     *  get current mission state
-     *
-     */
+   /*! @brief Get current status of the mission executing process
+    *
+    *  @return DJIWaypointV2MissionState state
+    */
     inline DJIWaypointV2MissionState getCurrentState() { return currentState; }
-    /*! @brief
-     *
-     *  get previous mission state
-     *
-     */
+
+   /*! @brief Get previous status of the mission executing process
+    *
+    *  @return DJIWaypointV2MissionState state
+    */
     inline DJIWaypointV2MissionState getPrevState() { return prevState; }
 
     void setPrevState(DJIWaypointV2MissionState state) {prevState = state; }
+
     void setCurrentState(DJIWaypointV2MissionState state) {currentState = state; }
 
   private:
+
     DJIWaypointV2MissionState currentState;
     DJIWaypointV2MissionState prevState;
     Vehicle *vehiclePtr;
