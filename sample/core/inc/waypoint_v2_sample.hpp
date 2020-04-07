@@ -53,39 +53,117 @@ public:
   ~WaypointV2MissionSample();
 
 public:
-
-  ErrorCode::ErrorCodeType initMissionSetting(int timeout);
-
+  /*! @brief Sample to run a complete mission, include init mission,
+   * upload mission and action, start, pause, resume mission and so on
+   *
+   *  @note If any one of the steps fails, it will return the failed error code
+   *  @return ErrorCode::ErrorCodeType error code
+   */
   ErrorCode::ErrorCodeType runWaypointV2Mission();
 
-  ErrorCode::ErrorCodeType uploadWaypointMission(int responseTimeout);
+  /*! @brief Sample to init mission settings,
+   *
+   *  @param timeout blocking timeout in seconds
+   *  @return ErrorCode::ErrorCodeType error code
+   */
+  ErrorCode::ErrorCodeType initMissionSetting(int timeout);
 
-  ErrorCode::ErrorCodeType uploadWapointActions(int responseTimeout);
+  /*! @brief Sample to upload mission
+   *
+   *  @param timeout blocking timeout in seconds
+   *  @return ErrorCode::ErrorCodeType error code
+   */
+  ErrorCode::ErrorCodeType uploadWaypointMission(int timeout);
 
-  ErrorCode::ErrorCodeType dowloadWaypointMission(std::vector<DJIWaypointV2> &mission,int responseTimeout);
+  /*! @brief Sample to upload actions
+   *
+   *  @param timeout blocking timeout in seconds
+   *  @return ErrorCode::ErrorCodeType error code
+   */
+  ErrorCode::ErrorCodeType uploadWapointActions(int timeout);
 
-  ErrorCode::ErrorCodeType startWaypointMission(int responseTimeout);
+  /*! @brief Sample to download mission
+   *
+   *  @param timeout blocking timeout in seconds
+   *  @return ErrorCode::ErrorCodeType error code
+   */
+  ErrorCode::ErrorCodeType dowloadWaypointMission(std::vector<DJIWaypointV2> &mission,int timeout);
 
-  ErrorCode::ErrorCodeType stopWaypointMission(int responseTimeout);
+  /*! @brief Sample to start mission
+   *
+   *  @param timeout blocking timeout in seconds
+   *  @return ErrorCode::ErrorCodeType error code
+   */
+  ErrorCode::ErrorCodeType startWaypointMission(int timeout);
 
-  ErrorCode::ErrorCodeType pauseWaypointMission(int responseTimeout);
+  /*! @brief Sample to stop mission
+   *
+   *  @param timeout blocking timeout in seconds
+   *  @return ErrorCode::ErrorCodeType error code
+   */
+  ErrorCode::ErrorCodeType stopWaypointMission(int timeout);
 
-  ErrorCode::ErrorCodeType resumeWaypointMission(int responseTimeout);
+  /*! @brief Sample to pause mission
+   *
+   *  @param timeout blocking timeout in seconds
+   *  @return ErrorCode::ErrorCodeType error code
+   */
+  ErrorCode::ErrorCodeType pauseWaypointMission(int timeout);
 
-  void getGlogalCruiseSpeed(int responseTimeout);
+  /*! @brief Sample to resume mission
+   *
+   *  @param timeout blocking timeout in seconds
+   *  @return ErrorCode::ErrorCodeType error code
+   */
+  ErrorCode::ErrorCodeType resumeWaypointMission(int timeout);
 
-  void setGlogalCruiseSpeed(const GlobalCruiseSpeed &cruiseSpeed, int responseTimeout);
+  /*! @brief Sample to get global cruise speed
+   *
+   *  @param timeout blocking timeout in seconds
+   */
+  void getGlobalCruiseSpeed(int timeout);
 
+  /*! @brief Sample to set global cruise speed
+   *
+   *  @param cruiseSpeed global cruise speed,unit: m/s
+   *  @param timeout blocking timeout in seconds
+   *  @return ErrorCode::ErrorCodeType error code
+   */
+  void setGlobalCruiseSpeed(const GlobalCruiseSpeed &cruiseSpeed, int timeout);
 
-  bool setUpSubscription(int responseTimeout);
+  /*! @brief Sample to set up subscription
+   *
+   *  @param timeout blocking timeout in seconds
+   *  @return bool result, 0:fail, 1:success
+   */
+  bool setUpSubscription(int timeout);
 
+  /*! @brief Sample to tear down subscription
+   *
+   *  @param timeout blocking timeout in seconds
+   *  @return bool result, 0:fail, 1:success
+   */
   bool teardownSubscription(const int pkgIndex,
-                            int responseTimeout);
+                            int timeout);
+  /*! @brief Sample to set single waypoint default value
+   *
+   *  @param waypointV2 struct of DJIWaypointV2
+   */
+  void setWaypointV2Defaults(DJIWaypointV2& waypointV2);
 
-  void setWaypointV2Defaults(DJIWaypointV2* waypointV2);
-
+  /*! @brief Sample generate polygon waypoints
+   *
+   *  @param radius radius of polygon,unit: meter
+   *  @param polygonNum number of polygon sides
+   *  @return vector of DJIWaypointV2
+   */
   std::vector<DJIWaypointV2> generatePolygonWaypoints(float32_t radius, uint16_t polygonNum);
 
+  /*! @brief Sample generate polygon waypoints
+   *
+   *  @param actionNum number of actions
+   *  @param vector of DJIWaypointV2Action
+   */
   std::vector<DJIWaypointV2Action> generateWaypointActions(uint16_t actionNum);
 
 private:

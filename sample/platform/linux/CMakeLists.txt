@@ -70,10 +70,6 @@ if(ADVANCED_SENSING)
 endif()
 
 #if(WAYPT2_CORE)
-#    link_libraries(${WP2_CORE_LIB}/lib/libwaypointv2-operator.a)
-#    link_libraries(${WP2_CORE_LIB}/lib/libwaypointv2-core.a)
-#    link_libraries(${WP2_CORE_LIB}/lib/libDJIProtobuf.a)
-#    link_libraries(${WP2_CORE_LIB}/lib/libdjisdk-common.a)
 #endif()
 
 #add_subdirectory(camera-gimbal)
@@ -87,5 +83,6 @@ add_subdirectory(time-sync)
 add_subdirectory(payload-3rd-party)
 add_subdirectory(payloads)
 add_subdirectory(advanced-sensing)
+add_subdirectory(hms)
 
 
