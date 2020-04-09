@@ -39,7 +39,10 @@
 using namespace DJI::OSDK;
 
 #define TEST_OP_PIPELINE_ID 15
-#define READ_ONCE_BUFFER_SIZE 64*1024
+#define READ_ONCE_BUFFER_SIZE 100*1024
+#define SEND_ONCE_BUFFER_SIZE 100*1024
+#define TEST_SEND_FILE_NAME "/home/dji/M210_Manual.pdf"
+
 
 static uint32_t get_file_size(const char *path)
 {
@@ -67,7 +70,7 @@ static int non_block_get_char()
   if (select(1, &rfds, NULL, NULL, &tv) > 0)
   {
     ch = getchar();
-    printf("getchar: %c \n", ch);
+    DSTATUS("getchar: %c \n", ch);
   }
 
   return ch;
@@ -125,7 +128,7 @@ static void* MopRecvTask(void *arg)
   gettimeofday(&tv, NULL);
   localtime_r(&tv.tv_sec, &tm);
   char logFileName[128] = {0};
-  sprintf(logFileName, "mop_file_%d-%d-%d_%d-%d-%d", tm.tm_year + 1900,
+  sprintf(logFileName, "mop_recv_file_%d-%d-%d_%d-%d-%d", tm.tm_year + 1900,
           tm.tm_mon, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
 
   MopPipeline::DataPackType readPacket = {(uint8_t *)recvBuf, READ_ONCE_BUFFER_SIZE};
@@ -156,7 +159,6 @@ static void* MopSendTask(void *arg)
 {
   MopPipeline *handle;
   MopErrCode mopRet;
-  int fd = -1;
   void* addr = NULL;
   int cnt = 0;
 
@@ -175,56 +177,43 @@ static void* MopSendTask(void *arg)
   sprintf(logFileName, "mop_send_file_%d-%d-%d_%d-%d-%d", tm.tm_year + 1900,
           tm.tm_mon, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
 
-
-/*
-  fd = open("/home/dji/M210_Manual.pdf", O_RDONLY, 0666);
-  if(fd == -1) {
-    printf("open file failed!\n");
-    send_finish = true;
+  auto targetFileSize = get_file_size(TEST_SEND_FILE_NAME);
+  FILE *fp = fopen(TEST_SEND_FILE_NAME, "r");
+  if (fp == NULL) {
+    printf("open %s error\n ", TEST_SEND_FILE_NAME);
     return NULL;
   }
+  printf("targetFileSize = %d", targetFileSize);
+  addr = malloc(SEND_ONCE_BUFFER_SIZE);
 
-  addr = mmap(NULL, PDF_SIZE, PROT_READ, MAP_SHARED, fd, 0);
-  if(addr == NULL) {
-    printf("mmap file failed!\n");
-    close(fd);
-    send_finish = true;
-    return NULL;
-  }
-*/
-  auto targetFileSize = get_file_size("/home/dji/resources.7z");
-  FILE *fp = fopen("/home/dji/resources.7z", "a+");
-  addr = malloc(targetFileSize);
-  int ret = fread((uint8_t *)addr, 1, targetFileSize, fp);
-  writeStreamData(logFileName, (const uint8_t *)addr, targetFileSize);
-  printf("----------- pdf read bytes ret = %d\n", ret);
-sleep(2);
-  MopPipeline::DataPackType writePacket = {(uint8_t *)addr, targetFileSize};
+  int totalSize = 0;
+  do {
+    int ret = fread((uint8_t *) addr, 1, SEND_ONCE_BUFFER_SIZE, fp);
+    totalSize += ret;
+    printf("total read size : %d\n", totalSize);
+    printf("----------- pdf read bytes ret = %d\n", ret);
 
-  while (1) {
+    MopPipeline::DataPackType writePacket = {(uint8_t *) addr, (uint32_t) ret};
+
     printf("Do sendData to PSDK, size : %d\n", writePacket.length);
     mopRet = handle->sendData(writePacket, &writePacket.length);
     if (mopRet != MOP_PASSED) {
-      printf("mop send error,stat:%lld, writePacket.length = %d\n", mopRet, writePacket.length);
+      printf("mop send error,stat:%lld, writePacket.length = %d\n", mopRet,
+             writePacket.length);
       break;
     } else {
-      printf("mop send success,stat:%lld, writePacket.length = %d\n", mopRet, writePacket.length);
+      printf("mop send success,stat:%lld, writePacket.length = %d\n", mopRet,
+             writePacket.length);
     }
     cnt++;
     printf("send cnt %d!\n", cnt);
-    if(cnt == 10) {
-      break;
-    }
-    //5 secends for verify
-    sleep(600);
-  }
+
+  } while (totalSize < targetFileSize);
+
   printf("mop channel send task end!\n");
-/*
-  if(addr != NULL)
-    munmap(addr, targetFileSize);
-  if(fd != -1)
-    close(fd);
-      */
+  free(addr);
+  fclose(fp);
+
   send_finish = true;
 
   return NULL;
