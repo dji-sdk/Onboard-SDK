@@ -103,6 +103,17 @@ class PSDKManager {
                                                bool &enable);
 
  public:
+  /*! @brief Get the mop client object of the target psdk module.
+   *
+   *  @param index payload node index, input limit see enum
+   * DJI::OSDK::PayloadIndexType
+   *  @param mopClient If this api called successfully, this pointer will point
+   *  to the mop client object of target psdk module.
+   *  @return ErrorCode::ErrorCodeType error code
+   */
+  ErrorCode::ErrorCodeType getMopClient(
+      PayloadIndexType index, MopClient *&mopClient);
+
   /*! @brief Sample to configure the value, blocking
    *
    *  @param index payload node index, input limit see enum
