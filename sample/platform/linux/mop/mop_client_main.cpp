@@ -150,7 +150,7 @@ static void* MopSendTask(void *arg)
     while (1) {
         mopRet = handle->sendData(writePacket, &writePacket.length);
         if (mopRet != MOP_PASSED) {
-            printf("mop send error,stat:%lld", mopRet);
+            printf("mop send error,stat:%d", mopRet);
             break;
         }
         cnt++;
