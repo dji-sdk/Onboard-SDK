@@ -131,10 +131,9 @@ static void* MopRecvTask(void *arg)
   sprintf(logFileName, "mop_recv_file_%d-%d-%d_%d-%d-%d", tm.tm_year + 1900,
           tm.tm_mon, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
 
-  MopPipeline::DataPackType readPacket = {(uint8_t *)recvBuf, READ_ONCE_BUFFER_SIZE};
-
   while (1) {
     memset(recvBuf, 0, READ_ONCE_BUFFER_SIZE);
+    MopPipeline::DataPackType readPacket = {(uint8_t *)recvBuf, READ_ONCE_BUFFER_SIZE};
     mopRet = handle->recvData(readPacket, &readPacket.length);
     if (mopRet != MOP_PASSED) {
       printf("recv whole file data failed!, realLen = %d\n", readPacket.length);
