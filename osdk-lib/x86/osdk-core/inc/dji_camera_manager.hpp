@@ -34,6 +34,7 @@
 
 namespace DJI {
 namespace OSDK {
+class FileMgr;
 /*! @brief The manager of camera module
  */
 class CameraManager {
@@ -1600,8 +1601,13 @@ class CameraManager {
       PayloadIndexType index, CameraModule::ExposureCompensation &ev,
       int timeout);
 
+  ErrorCode::ErrorCodeType obtainDownloadRightSync(PayloadIndexType index,
+                                                   bool enable, int timeout);
+
+  ErrorCode::ErrorCodeType startReqFileList(int timeout);
+
  private:
-  PayloadLink *payloadLink;
+  FileMgr *fileMgr;
   std::vector<CameraModule *> cameraModuleVector;
 
   CameraModule *getCameraModule(PayloadIndexType index);

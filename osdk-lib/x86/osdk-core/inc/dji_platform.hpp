@@ -42,10 +42,6 @@
 #define DJI_REG_USB_BULK_HANDLER(handlerPtr)                        \
   DJI::OSDK::Platform::instance()                                   \
   .registerHalUSBBulkHandler(handlerPtr)
-
-#define DJI_REG_UDP_HANDLER(handlerPtr)                             \
-  DJI::OSDK::Platform::instance()                                   \
-  .registerHalUdpHandler(handlerPtr)
 #endif
 
 #define DJI_REG_OSAL_HANDLER(handlerPtr)                            \
@@ -137,17 +133,11 @@ public:
  
   bool isHalUartReady();
 
-#ifdef __linux__
-  bool isHalUdpReady();
-#endif
-
   bool isLoggerReady();
 
   bool registerHalUartHandler(const T_OsdkHalUartHandler *halUartHandler);
 
 #ifdef __linux__
-  bool registerHalUdpHandler(const T_OsdkHalUdpHandler *halUdpHandler);
-
   bool registerHalUSBBulkHandler(const T_OsdkHalUSBBulkHandler *halUSBBulkHandler);
 #endif
 
@@ -192,9 +182,6 @@ public:
 private:
   bool osalRegFlag;
   bool halUartRegFlag;
-#ifdef __linux__
-  bool halUdpRegFlag;
-#endif
   bool loggerConsoleRegFlag;
 
 };

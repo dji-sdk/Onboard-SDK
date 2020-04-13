@@ -96,32 +96,13 @@ public:
     {
       // Waypoint mission commands
       const static uint8_t waypointInit[MAX_CMD_ARRAY_SIZE];
-      const static uint8_t waypointInitV2[MAX_CMD_ARRAY_SIZE];
       const static uint8_t waypointAddPoint[MAX_CMD_ARRAY_SIZE];
-      const static uint8_t waypointUploadV2[MAX_CMD_ARRAY_SIZE];
-      const static uint8_t waypointUploadActionV2[MAX_CMD_ARRAY_SIZE];
       const static uint8_t waypointSetStart[MAX_CMD_ARRAY_SIZE];
-      const static uint8_t waypointStartStopV2[MAX_CMD_ARRAY_SIZE];
       const static uint8_t waypointSetPause[MAX_CMD_ARRAY_SIZE];
-      const static uint8_t waypointResumePauseV2[MAX_CMD_ARRAY_SIZE];
-      const static uint8_t waypointBreakRestoreV2[MAX_CMD_ARRAY_SIZE];
       const static uint8_t waypointDownload[MAX_CMD_ARRAY_SIZE];
-      const static uint8_t waypointDownloadInitV2[MAX_CMD_ARRAY_SIZE];
-      const static uint8_t waypointDownloadPtV2[MAX_CMD_ARRAY_SIZE];
-      const static uint8_t waypointDownloadActionV2[MAX_CMD_ARRAY_SIZE];
       const static uint8_t waypointIndexDownload[MAX_CMD_ARRAY_SIZE];
       const static uint8_t waypointSetVelocity[MAX_CMD_ARRAY_SIZE];
-      const static uint8_t waypointSetGlobVelocityV2[MAX_CMD_ARRAY_SIZE];
-      const static uint8_t waypointGetGlobVelocityV2[MAX_CMD_ARRAY_SIZE];
       const static uint8_t waypointGetVelocity[MAX_CMD_ARRAY_SIZE];
-      const static uint8_t waypointGetMaxPtNumV2[MAX_CMD_ARRAY_SIZE];
-      const static uint8_t waypointGetWayptIdxInListV2[MAX_CMD_ARRAY_SIZE];
-      const static uint8_t waypointGetRemainSpaceV2[MAX_CMD_ARRAY_SIZE];
-      const static uint8_t waypointGetBreakInfoV2[MAX_CMD_ARRAY_SIZE];
-      const static uint8_t waypointGetStatePushDataV2[MAX_CMD_ARRAY_SIZE];
-      const static uint8_t waypointGetEventPushDataV2[MAX_CMD_ARRAY_SIZE];
-      const static uint8_t waypointGetInfoV2[MAX_CMD_ARRAY_SIZE];
-      const static uint8_t waypointGetMinMaxActionIDV2[MAX_CMD_ARRAY_SIZE];
       // Hotpint mission commands
       const static uint8_t hotpointStart[MAX_CMD_ARRAY_SIZE];
       const static uint8_t hotpointStop[MAX_CMD_ARRAY_SIZE];
@@ -190,83 +171,6 @@ public:
     const static uint8_t intelligent  = 0xFE;
   };
 };
-
-
-class V1ProtocolCMD : public ErrorCode
-{
- public:
-  const static int MAX_CMD_ARRAY_SIZE = 2;
-
-  typedef struct Gimbal
-  {
-    const static uint8_t resetAngle[MAX_CMD_ARRAY_SIZE];
-    const static uint8_t rotateAngle[MAX_CMD_ARRAY_SIZE];
-  } Gimbal;
-
-  typedef struct Common
-  {
-    const static uint8_t getVersion[MAX_CMD_ARRAY_SIZE];
-  } Common;
-
-  typedef struct fc
-  {
-    const static uint8_t usbFlightMode[MAX_CMD_ARRAY_SIZE];
-  } fc;
-
-  typedef struct HMS
-  {
-    const static uint8_t hmsStatus[MAX_CMD_ARRAY_SIZE];
-    const static uint8_t hmsPushData[MAX_CMD_ARRAY_SIZE];
-  } HMS;
-
-  typedef struct waypointV2
-  {
-    const static uint8_t waypointInitV2[MAX_CMD_ARRAY_SIZE];
-    const static uint8_t waypointUploadV2[MAX_CMD_ARRAY_SIZE];
-    const static uint8_t waypointUploadActionV2[MAX_CMD_ARRAY_SIZE];
-    const static uint8_t waypointStartStopV2[MAX_CMD_ARRAY_SIZE];
-    const static uint8_t waypointResumePauseV2[MAX_CMD_ARRAY_SIZE];
-    const static uint8_t waypointBreakRestoreV2[MAX_CMD_ARRAY_SIZE];
-    const static uint8_t waypointDownloadInitV2[MAX_CMD_ARRAY_SIZE];
-    const static uint8_t waypointDownloadPtV2[MAX_CMD_ARRAY_SIZE];
-    const static uint8_t waypointDownloadActionV2[MAX_CMD_ARRAY_SIZE];
-    const static uint8_t waypointSetGlobVelocityV2[MAX_CMD_ARRAY_SIZE];
-    const static uint8_t waypointGetGlobVelocityV2[MAX_CMD_ARRAY_SIZE];
-    const static uint8_t waypointGetMaxPtNumV2[MAX_CMD_ARRAY_SIZE];
-    const static uint8_t waypointGetWayptIdxInListV2[MAX_CMD_ARRAY_SIZE];
-    const static uint8_t waypointGetRemainSpaceV2[MAX_CMD_ARRAY_SIZE];
-    const static uint8_t waypointGetBreakInfoV2[MAX_CMD_ARRAY_SIZE];
-    const static uint8_t waypointGetStatePushDataV2[MAX_CMD_ARRAY_SIZE];
-    const static uint8_t waypointGetEventPushDataV2[MAX_CMD_ARRAY_SIZE];
-    const static uint8_t waypointGetInfoV2[MAX_CMD_ARRAY_SIZE];
-    const static uint8_t waypointGetMinMaxActionIDV2[MAX_CMD_ARRAY_SIZE];
-  }waypointV2;
-
-  class CMDSet
-  {
-   public:
-    //! CMD SET definitions
-    const static uint8_t common       = 0;
-    const static uint8_t special      = 1;
-    const static uint8_t camera       = 2;
-    const static uint8_t fc           = 3;
-    const static uint8_t gimbal       = 4;
-    const static uint8_t center       = 5;
-    const static uint8_t rc           = 6;
-    const static uint8_t wifi         = 7;
-    const static uint8_t dm368        = 8;
-    const static uint8_t ofdm         = 9;
-    const static uint8_t moBinocular  = 10;
-    const static uint8_t battery      = 13;
-    const static uint8_t rtk          = 15;
-    const static uint8_t waypointV2   = 34;
-    const static uint8_t enterprise   = 25;
-    const static uint8_t hms          = 33;
-    const static uint8_t psdk         = 60;
-    const static uint8_t vb           = 72;
-  };
-};
-
 } // namespace
 } // namespace
 

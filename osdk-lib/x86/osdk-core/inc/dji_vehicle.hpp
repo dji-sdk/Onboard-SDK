@@ -55,6 +55,7 @@
 #include "dji_flight_controller.hpp"
 #include "dji_psdk_manager.hpp"
 #include "dji_hms.hpp"
+#include "dji_waypoint_v2.hpp"
 #ifdef ADVANCED_SENSING
 #include "dji_advanced_sensing.hpp"
 #endif
@@ -71,6 +72,10 @@ namespace OSDK
  * DJI OSDK API.
  *
  */
+//forward declaration
+class Firewall;
+class Linker;
+
 class Vehicle
 {
 public:
@@ -99,6 +104,9 @@ public:
   MFIO*                mfio;
   MobileDevice*        mobileDevice;
   MissionManager*      missionManager;
+#ifdef WAYPT2_CORE
+  WaypointV2MissionOperator*   waypointV2Mission;
+#endif
   HardwareSync*        hardSync;
   // Supported only on Matrice 100
   VirtualRC*           virtualRC;
@@ -266,6 +274,7 @@ public:
   bool initMobileDevice();
   bool initPayloadDevice();
   bool initMissionManager();
+  bool initWaypointV2Mission();
   bool initHardSync();
   bool initVirtualRC();
   bool initCameraManager();
@@ -289,6 +298,9 @@ public:
   bool advSensingErrorPrintOnce;
 #endif
 private:
+  Firewall *firewall;
+  bool initFirewall();
+
   void setActivationStatus(bool is_activated);
   void initCMD_SetSupportMatrix();
   bool isCmdSetSupported(const uint8_t cmdSet);
