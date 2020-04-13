@@ -176,8 +176,10 @@ ErrorCode::ErrorCodeType WaypointV2MissionSample::runWaypointV2Mission()
   if(!teardownSubscription(DEFAULT_PACKAGE_INDEX, timeout))
   {
     std::cout << "Failed to tear down Subscription!" << std::endl;
-    return -1;
+    return ErrorCode::SysCommonErr::UndefinedError;
   }
+
+  return ErrorCode::SysCommonErr::Success;
 }
 
 ErrorCode::ErrorCodeType WaypointV2MissionSample::initMissionSetting(int timeout) {

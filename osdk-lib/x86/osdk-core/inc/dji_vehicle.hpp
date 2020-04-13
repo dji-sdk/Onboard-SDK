@@ -59,6 +59,9 @@
 #ifdef ADVANCED_SENSING
 #include "dji_advanced_sensing.hpp"
 #endif
+#if defined(__linux__)
+#include "dji_mop_server.hpp"
+#endif
 
 namespace DJI
 {
@@ -116,6 +119,11 @@ public:
   PSDKManager*         psdkManager;
   GimbalManager*       gimbalManager;
   DJIHMS*              djiHms;
+
+#if defined(__linux__)
+  MopServer*           mopServer;
+#endif
+
 #ifdef ADVANCED_SENSING
   AdvancedSensing* advancedSensing;
 #endif
@@ -282,6 +290,9 @@ public:
   bool initPSDKManager();
   bool initGimbalManager();
   bool initDJIHms();
+#if defined(__linux__)
+  bool initMopServer();
+#endif
   bool initOSDKHeartBeatThread();
 #ifdef ADVANCED_SENSING
   bool initAdvancedSensing();
