@@ -49,13 +49,21 @@ namespace OSDK
 
     ~WaypointV2MissionOperator();
 
-   /*! @brief Init waypoint v2 mission settings
-    *
-    *  @param Info init settings struct DJI::OSDK::WayPointV2InitSettings
-    *  @param timeout blocking timeout in seconds
-    *  @return ErrorCode::ErrorCodeType error code
-    */
-    ErrorCode::ErrorCodeType init(WayPointV2InitSettings* info, int timeout);
+    /*! @brief Init waypoint v2 mission settings
+     *
+     *  @param Info init settings struct DJI::OSDK::WayPointV2InitSettings
+     *  @param timeout blocking timeout in seconds
+     *  @return ErrorCode::ErrorCodeType error code
+     */
+    ErrorCode::ErrorCodeType init(WayPointV2InitSettings *info, int timeout);
+
+    /*! @brief Download the waypoint v2 init settings
+     *
+     *  @param Info init settings struct DJI::OSDK::WayPointV2InitSettingsInternal
+     *  @param timeout blocking timeout in seconds
+     *  @return ErrorCode::ErrorCodeType error code
+     */
+    ErrorCode::ErrorCodeType downloadInitSetting(WayPointV2InitSettingsInternal &info, int timeout);
 
    /*! @brief Start　execute waypoint v2 mission
     *
@@ -85,26 +93,23 @@ namespace OSDK
     */
     ErrorCode::ErrorCodeType resume(int timeout);
 
-   /*! @brief Upload all the waypoint v2 mission
-    *
-    *  @param mission vector contains of a series of WaypointV2,
-    *  refer the definition of DJI::OSDK::WaypointV2
-    *  @param timeout blocking timeout in seconds
-    *  @return ErrorCode::ErrorCodeType error code
-    */
-    ErrorCode::ErrorCodeType uploadMission(const std::vector<WaypointV2> &mission,int timeout);
+    /*! @brief Upload all the waypoint v2 mission
+     *
+     *  @param mission vector contains of a series of WaypointV2,
+     *  refer the definition of DJI::OSDK::WaypointV2
+     *  @param timeout blocking timeout in seconds
+     *  @return ErrorCode::ErrorCodeType error code
+     */
+    ErrorCode::ErrorCodeType uploadMission(int timeout);
 
-   /*! @brief Download all the waypoint v2 mission
-    *
-    *  @param mission vector contains of a series of WaypointV2,
-    *  refer the definition of DJI::OSDK::WaypointV2
-    *  @param timeout blocking timeout in seconds
-    *  @return ErrorCode::ErrorCodeType error code
-    */
+    /*! @brief Download all the waypoint v2 mission
+     *
+     *  @param mission vector contains of a series of WaypointV2,
+     *  refer the definition of DJI::OSDK::WaypointV2
+     *  @param timeout blocking timeout in seconds
+     *  @return ErrorCode::ErrorCodeType error code
+     */
     ErrorCode::ErrorCodeType downloadMission(std::vector<WaypointV2> &mission, int timeout);
-
-
-    ErrorCode::ErrorCodeType uploadMissionWGS84(const std::vector<WaypointV2WGS84> &mission,int timeout);
 
    /*! @brief Get the global cruise speed setting from flight controller
     *
@@ -152,10 +157,6 @@ namespace OSDK
     */
     ErrorCode::ErrorCodeType getWaypointIndexInList(GetWaypontStartEndIndexAck &startEndIndexAck, int timeout);
 
-    void RegisterMissionStateCallback();
-
-    void RegisterMissionEventCallback();
-
    /*! @brief Get current status of the mission executing process
     *
     *  @return DJIWaypointV2MissionState state
@@ -172,11 +173,20 @@ namespace OSDK
 
     void setCurrentState(DJIWaypointV2MissionState state) {currentState = state; }
 
-  private:
 
+    float32_t getTakeoffAltitude(){return takeoffAltitude;};
+
+    void setTakeoffAltitude(float32_t altitude){ takeoffAltitude =  altitude;};
+
+  private:
+    std::vector<WaypointV2> missionV2;
     DJIWaypointV2MissionState currentState;
     DJIWaypointV2MissionState prevState;
     Vehicle *vehiclePtr;
+
+    float32_t takeoffAltitude;
+    void RegisterOSDInfoCallback(Vehicle *vehiclePtr);
+
   };
 
 } // namespace OSDK

@@ -51,10 +51,10 @@ bool WaypointV2MissionSample::setUpSubscription(int timeout) {
     ACK::getErrorCodeMessage(subscribeStatus, __func__);
     return false;
   }
-
+  //TOPIC_ALTITUDE_OF_HOMEPOINT, TOPIC_GPS_POSITION
   // Telemetry: Subscribe to flight status and mode at freq 10 Hz
-  int freq = 10;
-  TopicName topicList10Hz[] = {TOPIC_GPS_FUSED, TOPIC_ALTITUDE_FUSIONED};
+  int freq = 1;
+  TopicName topicList10Hz[] = {TOPIC_GPS_FUSED };
   int numTopic = sizeof(topicList10Hz) / sizeof(topicList10Hz[0]);
   bool enableTimestamp = false;
 
@@ -63,10 +63,11 @@ bool WaypointV2MissionSample::setUpSubscription(int timeout) {
   if (!(pkgStatus)) {
     return pkgStatus;
   }
-
+  usleep(5000);
   // Start listening to the telemetry data
   subscribeStatus =
     vehiclePtr->subscribe->startPackage(DEFAULT_PACKAGE_INDEX, timeout);
+  usleep(5000);
   if (ACK::getError(subscribeStatus) != ACK::SUCCESS) {
     ACK::getErrorCodeMessage(subscribeStatus, __func__);
     // Cleanup
@@ -130,8 +131,8 @@ ErrorCode::ErrorCodeType WaypointV2MissionSample::runWaypointV2Mission()
   sleep(timeout);
 
  /*! download mission */
-  std::vector<DJIWaypointV2> mission;
-  dowloadWaypointMission(mission,timeout);
+  std::vector<WaypointV2> mission;
+  downloadWaypointMission(mission, timeout);
   if(ret != ErrorCode::SysCommonErr::Success)
     return ret;
   sleep(timeout);
@@ -170,7 +171,7 @@ ErrorCode::ErrorCodeType WaypointV2MissionSample::runWaypointV2Mission()
   resumeWaypointMission(timeout);
   if(ret != ErrorCode::SysCommonErr::Success)
     return ret;
-  sleep(100);
+  sleep(20);
   /*! Set up telemetry subscription*/
   if(!teardownSubscription(DEFAULT_PACKAGE_INDEX, timeout))
   {
@@ -188,7 +189,7 @@ ErrorCode::ErrorCodeType WaypointV2MissionSample::initMissionSetting(int timeout
   srand(int(time(0)));
 
   /*! Generate waypoints*/
-  this->mission = generatePolygonWaypoints(radius, polygonNum);
+
 
   /*! Generate actions*/
   this->actions = generateWaypointActions(actionNum);
@@ -196,24 +197,16 @@ ErrorCode::ErrorCodeType WaypointV2MissionSample::initMissionSetting(int timeout
   /*! Init waypoint settings*/
   WayPointV2InitSettings missionInitSettings;
   missionInitSettings.missionID = rand();
-  missionInitSettings.missTotalLen = mission.size();
   missionInitSettings.repeatTimes  = 1;
   missionInitSettings.finishedAction = DJIWaypointV2MissionFinishedGoHome;
   missionInitSettings.maxFlightSpeed = 10;
   missionInitSettings.autoFlightSpeed = 3;
   missionInitSettings.exitMissionOnRCSignalLost = 1;
   missionInitSettings.gotoFirstWaypointMode = DJIWaypointV2MissionGotoFirstWaypointModePointToPoint;
+  missionInitSettings.mission =  generatePolygonWaypoints(radius, polygonNum);
+  missionInitSettings.missTotalLen = missionInitSettings.mission.size();
 
-  Telemetry::TypeMap<TOPIC_GPS_FUSED>::type subscribeGPosition;
-  Telemetry::TypeMap<TOPIC_ALTITUDE_FUSIONED>::type subscribetakeoffAltitude;
-
-  subscribetakeoffAltitude =  vehiclePtr->subscribe->getValue<TOPIC_ALTITUDE_FUSIONED>();
-  subscribeGPosition = vehiclePtr->subscribe->getValue<TOPIC_GPS_FUSED>();
-  missionInitSettings.refLati = subscribeGPosition.latitude;
-  missionInitSettings.refLong = subscribeGPosition.longitude;
-  missionInitSettings.refAlti = subscribetakeoffAltitude;
   ErrorCode::ErrorCodeType ret = vehiclePtr->waypointV2Mission->init(&missionInitSettings,timeout);
-
   if(ret != ErrorCode::SysCommonErr::Success)
   {
     DERROR("Init mission setting ErrorCode:0x%lX\n", ret);
@@ -229,7 +222,8 @@ ErrorCode::ErrorCodeType WaypointV2MissionSample::initMissionSetting(int timeout
 
 ErrorCode::ErrorCodeType WaypointV2MissionSample::uploadWaypointMission(int timeout) {
 
-  ErrorCode::ErrorCodeType ret = vehiclePtr->waypointV2Mission->uploadMission(this->mission,timeout);
+//  ErrorCode::ErrorCodeType ret = vehiclePtr->waypointV2Mission->uploadMission(this->mission,timeout);
+  ErrorCode::ErrorCodeType ret = vehiclePtr->waypointV2Mission->uploadMission(timeout);
   if(ret != ErrorCode::SysCommonErr::Success)
   {
     DERROR("Upload waypoint v2 mission ErrorCode:0x%lX\n", ret);
@@ -243,7 +237,7 @@ ErrorCode::ErrorCodeType WaypointV2MissionSample::uploadWaypointMission(int time
   return ret;
 }
 
-ErrorCode::ErrorCodeType WaypointV2MissionSample::dowloadWaypointMission(std::vector<DJIWaypointV2> &mission,int timeout)
+ErrorCode::ErrorCodeType WaypointV2MissionSample::downloadWaypointMission(std::vector<WaypointV2> &mission,int timeout)
 {
   ErrorCode::ErrorCodeType ret = vehiclePtr->waypointV2Mission->downloadMission(mission, timeout);
   if(ret != ErrorCode::SysCommonErr::Success)
@@ -352,26 +346,28 @@ void WaypointV2MissionSample::setGlobalCruiseSpeed(const GlobalCruiseSpeed &crui
   DSTATUS("Current cruise speed is: %f m/s\n", cruiseSpeed);
 }
 
-std::vector<DJIWaypointV2> WaypointV2MissionSample::generatePolygonWaypoints(float32_t radius, uint16_t polygonNum) {
+std::vector<WaypointV2> WaypointV2MissionSample::generatePolygonWaypoints(float32_t radius, uint16_t polygonNum) {
   // Let's create a vector to store our waypoints in.
-  std::vector<DJIWaypointV2> waypointList;
-  DJIWaypointV2 startPoint;
-  DJIWaypointV2 waypointV2;
+  std::vector<WaypointV2> waypointList;
+  WaypointV2 startPoint;
+  WaypointV2 waypointV2;
 
-  startPoint.positionX = 0;
-  startPoint.positionY = 0;
-  startPoint.positionZ = 5;
+  Telemetry::TypeMap<TOPIC_GPS_FUSED>::type subscribeGPosition = vehiclePtr->subscribe->getValue<TOPIC_GPS_FUSED>();
+  startPoint.latitude  = subscribeGPosition.latitude;
+  startPoint.longitude = subscribeGPosition.longitude;
+  startPoint.relativeHeight = 15;
   setWaypointV2Defaults(startPoint);
   waypointList.push_back(startPoint);
 
   // Iterative algorithm
   for (int i = 0; i < polygonNum; i++) {
-
     float32_t angle = i * 2 * M_PI / polygonNum;
     setWaypointV2Defaults(waypointV2);
-    waypointV2.positionX = radius * cos(angle);
-    waypointV2.positionY = radius * sin(angle);
-    waypointV2.positionZ = startPoint.positionZ ;
+    float32_t X = radius * cos(angle);
+    float32_t Y = radius * sin(angle);
+    waypointV2.latitude = Y/EARTH_RADIUS + startPoint.latitude;
+    waypointV2.longitude = X/(EARTH_RADIUS * cos(startPoint.latitude)) + startPoint.longitude;
+    waypointV2.relativeHeight = startPoint.relativeHeight ;
     waypointList.push_back(waypointV2);
   }
   waypointList.push_back(startPoint);
@@ -397,7 +393,7 @@ std::vector<DJIWaypointV2Action> WaypointV2MissionSample::generateWaypointAction
   return actionVector;
 }
 
-void WaypointV2MissionSample::setWaypointV2Defaults(DJIWaypointV2& waypointV2) {
+void WaypointV2MissionSample::setWaypointV2Defaults(WaypointV2& waypointV2) {
 
   waypointV2.waypointType = DJIWaypointV2FlightPathModeGoToPointInAStraightLineAndStop;
   waypointV2.headingMode = DJIWaypointV2HeadingFixed;
@@ -414,6 +410,4 @@ void WaypointV2MissionSample::setWaypointV2Defaults(DJIWaypointV2& waypointV2) {
   waypointV2.maxFlightSpeed= 9;
   waypointV2.autoFlightSpeed = 2;
 }
-
-
 

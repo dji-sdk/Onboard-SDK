@@ -29,7 +29,7 @@
 
 #ifndef ONBOARDSDK_DJI_MISSION_TYPE_H
 #define ONBOARDSDK_DJI_MISSION_TYPE_H
-
+#include <vector>
 #include "dji_type.hpp"
 
 namespace DJI
@@ -37,7 +37,7 @@ namespace DJI
 
 namespace OSDK
 {
-
+  const float32_t EARTH_RADIUS =  6371004.0;
 
 // clang-format off
 /**********Mission structs/Enums***********/
@@ -850,100 +850,6 @@ typedef struct MissionEventPushAck
 }MissionEventPushAck;
 
 /**
- * @brief Waypoint V2 Mission Initialization settings
- * @details This is one of the few structs in the OSDK codebase that
- * is used in both a sending and a receiving API.
- */
-typedef struct WayPointV2InitSettings{
-
-  /**
-   *  The Mission ID. Use to distinguish　different mission
-   */
-  uint32_t missionID;
-
-  /**
-   *  The Mission waypoint total length, could not exceed 65535
-   */
-  uint16_t missTotalLen;
-
-  /**
-   *  Mission execution can be repeated more than once. A value of 0 means the mission
-   *  only executes once, and does not repeat. A value of 1 means the mission will
-   *  execute a total of two times.
-   */
-  uint8_t repeatTimes;
-
-  /**
-   *  Action the aircraft will take when the waypoint mission is complete.
-   */
-  DJIWaypointV2MissionFinishedAction finishedAction;
-
-  /**
-   *  While the aircraft is travelling between waypoints, you can offset its speed by
-   *  using the throttle joystick  on the remote controller. `maxFlightSpeed` is this
-   *  offset when the joystick is pushed  to maximum deflection. For example, If
-   *  maxFlightSpeed is 10 m/s, then pushing the throttle joystick all the  way up
-   *  will add 10 m/s to the aircraft speed, while pushing down will subtract 10 m/s
-   *  from the aircraft  speed. If the remote controller stick is not at maximum
-   *  deflection, then the offset speed will be  interpolated between [0,
-   *  `maxFlightSpeed`] with a resolution of 1000 steps. If the  offset speed is
-   *  negative, then the aircraft will fly backwards to previous waypoints. When it
-   *  reaches the  first waypoint, it will then hover in place until a positive speed
-   *  is  applied. `maxFlightSpeed` has a range of [2,15] m/s.
-   *  unit: m/s
-   */
-  float32_t maxFlightSpeed;
-
-  /**
-   *  The base automatic speed of the aircraft as it moves between waypoints with
-   *  range [-15, 15] m/s. The  aircraft's actual speed is a combination of the base
-   *  automatic speed, and the speed control given by  the throttle joystick on the
-   *  remote controller. If `autoFlightSpeed` >0: Actual  speed is `autoFlightSpeed` +
-   *  Joystick Speed (with combined max  of `maxFlightSpeed`) If `autoFlightSpeed` =0:
-   *  Actual speed is  controlled only by the remote controller joystick. If
-   *  `autoFlightSpeed` <0 and the  aircraft is at the first waypoint, the aircraft
-   *  will hover in place until the speed is made positive by  the remote controller
-   *  joystick.
-   *  unit: m/s
-   */
-  float32_t autoFlightSpeed;
-
-
-  /**
-   *  Determines whether the mission should stop when connection between the  aircraft
-   *  and remote controller is lost. Default is `NO`.
-   */
-  uint8_t exitMissionOnRCSignalLost;
-
-  /**
-   *  Defines how the aircraft will go to the first waypoint from its current
-   *  position. Default  is ``DJIWaypointV2MissionV2_DJIWaypointV2MissionGotoWaypointMode_Safely``.
-   */
-  DJIWaypointV2MissionGotoFirstWaypointMode gotoFirstWaypointMode;
-
-  /**
-   *  Reference point latitude
-   *  unit: rad
-   *  range:[-pi/2, pi/2]
-   */
-  float64_t refLati;
-
-  /**
-   *  Reference point longitude
-   *  unit: rad
-   *  range:[-pi, pi]
-   */
-  float64_t refLong;
-
-  /**
-   *  Reference point's altitude in WGS 84 reference ellipsoid
-   *  unit: m
-   */
-  float32_t refAlti;
-
-}WayPointV2InitSettings;
-
-/**
  * @brief Waypoint V2 Mission Initialization Settings Internal
  * User have no need to use it
  */
@@ -980,6 +886,15 @@ typedef struct WayPointV2InitSettingsInternal{
   float32_t refAlti;
 
 }WayPointV2InitSettingsInternal;
+
+typedef struct DownloadInitSettingRawAck
+{
+  /*! 0: success; other:failed*/
+  uint32_t result;
+  WayPointV2InitSettingsInternal initSettingsInternal;
+
+}DownloadInitSettingRawAck;
+
 /*! waypoint position relative to WayPointV2InitSettings's reference point
  * unit: m
  */
@@ -1005,11 +920,12 @@ typedef struct WaypointV2Config
     uint16_t  reserved :14;
 
   }WaypointV2Config;
+
 /**
 *  The struct represents a target point in the waypoint mission. For a waypoint
 *  mission, a flight route  consists of multiple `WaypointV2` objects.
 */
-typedef struct WaypointV2
+typedef struct WaypointV2Internal
 {
   /*! waypoint position relative to WayPointV2InitSettings's reference point
    * unit: m
@@ -1070,8 +986,9 @@ typedef struct WaypointV2
   *  will fly backwards to previous waypoints. When it reaches the first waypoint, it
   *  will then hover in place until a positive speed is applied. "maxFlightSpeed" has
   *  a range of [2,15] m/s.
+   *  unit:cm/s
   */
-  float32_t maxFlightSpeed;
+  uint16_t maxFlightSpeed;
 
   /**
   *  The base automatic speed of the aircraft as it moves between waypoints with
@@ -1085,22 +1002,23 @@ typedef struct WaypointV2
   *  joystick. In flight controller firmware 3.2.10.0 or above, different speeds
   *  between individual waypoints can also be set in waypoint objects which will
   *  overwrite "autoFlightSpeed".
+   * unit :cm/s
   */
-  float32_t autoFlightSpeed;
-}DJIWaypointV2;
+  uint16_t autoFlightSpeed;
+}WaypointV2Internal;
 
 /**
 *  The struct represents a target point in the waypoint mission. For a waypoint
 *  mission, a flight route  consists of multiple `WaypointV2` objects.
 */
-typedef struct WaypointV2WGS84
+typedef struct WaypointV2
 {
   /*! waypoint position relative to WayPointV2InitSettings's reference point
    * unit: m
    */
-  fpos64_t longitude;
-  fpos64_t latitude;
-  float32_t relativeHeight; /*! relative to homepoint*/
+  float64_t longitude;
+  float64_t latitude;
+  float32_t relativeHeight; /*! relative to takeoff height*/
 
   /**
    *  Waypoint flight path mode.
@@ -1171,9 +1089,130 @@ typedef struct WaypointV2WGS84
   *  overwrite "autoFlightSpeed".
   */
   float32_t autoFlightSpeed;
-}WaypointV2WGS84;
+}WaypointV2;
 
+/**
+ * @brief Waypoint V2 Mission Initialization settings
+ * @details This is one of the few structs in the OSDK codebase that
+ * is used in both a sending and a receiving API.
+ */
+typedef struct WayPointV2InitSettings{
+
+  /**
+   *  The Mission ID. Use to distinguish　different mission
+   */
+  uint32_t missionID;
+
+  /**
+   *  The Mission waypoint total length, could not exceed 65535
+   */
+  uint16_t missTotalLen;
+
+  /**
+   *  Mission execution can be repeated more than once. A value of 0 means the mission
+   *  only executes once, and does not repeat. A value of 1 means the mission will
+   *  execute a total of two times.
+   */
+  uint8_t repeatTimes;
+
+  /**
+   *  Action the aircraft will take when the waypoint mission is complete.
+   */
+  DJIWaypointV2MissionFinishedAction finishedAction;
+
+  /**
+   *  While the aircraft is travelling between waypoints, you can offset its speed by
+   *  using the throttle joystick  on the remote controller. `maxFlightSpeed` is this
+   *  offset when the joystick is pushed  to maximum deflection. For example, If
+   *  maxFlightSpeed is 10 m/s, then pushing the throttle joystick all the  way up
+   *  will add 10 m/s to the aircraft speed, while pushing down will subtract 10 m/s
+   *  from the aircraft  speed. If the remote controller stick is not at maximum
+   *  deflection, then the offset speed will be  interpolated between [0,
+   *  `maxFlightSpeed`] with a resolution of 1000 steps. If the  offset speed is
+   *  negative, then the aircraft will fly backwards to previous waypoints. When it
+   *  reaches the  first waypoint, it will then hover in place until a positive speed
+   *  is  applied. `maxFlightSpeed` has a range of [2,15] m/s.
+   *  unit: m/s
+   */
+  float32_t maxFlightSpeed;
+
+  /**
+   *  The base automatic speed of the aircraft as it moves between waypoints with
+   *  range [-15, 15] m/s. The  aircraft's actual speed is a combination of the base
+   *  automatic speed, and the speed control given by  the throttle joystick on the
+   *  remote controller. If `autoFlightSpeed` >0: Actual  speed is `autoFlightSpeed` +
+   *  Joystick Speed (with combined max  of `maxFlightSpeed`) If `autoFlightSpeed` =0:
+   *  Actual speed is  controlled only by the remote controller joystick. If
+   *  `autoFlightSpeed` <0 and the  aircraft is at the first waypoint, the aircraft
+   *  will hover in place until the speed is made positive by  the remote controller
+   *  joystick.
+   *  unit: m/s
+   */
+  float32_t autoFlightSpeed;
+
+  /**
+   *  Determines whether the mission should stop when connection between the  aircraft
+   *  and remote controller is lost. Default is `NO`.
+   */
+  uint8_t exitMissionOnRCSignalLost;
+
+  /**
+   *  Defines how the aircraft will go to the first waypoint from its current
+   *  position. Default  is ``DJIWaypointV2MissionV2_DJIWaypointV2MissionGotoWaypointMode_Safely``.
+   */
+  DJIWaypointV2MissionGotoFirstWaypointMode gotoFirstWaypointMode;
+
+  std::vector<WaypointV2> mission;
+
+}WayPointV2InitSettings;
+
+typedef struct  FCGroundStationDataPush
+{
+  // If (use_rtk_flag && in_rtk_mode)=1 , longitude is rtk lon, otherwise it's (gps_lon - gps2rtk_lon_offset).
+  // (The use_rtk_flag and in_rtk_mode are the members in the later section. )
+  // Unit: rad
+  double longitude;
+  // If (use_rtk_flag && in_rtk_mode)=1 , latitude is rtk lat, otherwise it's (gps_lat - gps2rtk_lat_offset).
+  // Unit: rad
+  double latitude;
+  // If (use_rtk_flag && in_rtk_mode && set_rtk_takeoff_alti_flag)=1 , relative_height is rtk_type, otherwise it's press_type.
+  // Unit: m
+  float relative_height;
+  // Unit: 0.1 degree
+  int16_t heading;
+  // use rtk or not 0: rtk switch is off or rtk device is not connect， 1: us rtk position。
+  uint8_t use_rtk_flag;
+  // 0: rtk not healthy, 1: rtk 3d healthy
+  uint8_t in_rtk_mode;
+  // utc time's seconds
+  uint32_t sec;
+  //  utc time's nano seconds
+  uint32_t nano_sec;
+  // home type。0=NA，1=gps_type，2=rtk_type
+  uint8_t home_type                :2;
+  // use rtk height：0=no，1=yes
+  uint8_t set_rtk_takeoff_alti_flag:1;
+  // distance to home type。0=NA，1=gps_type，2=rtk_type
+  uint8_t d2h_type                 :2;
+  // reserve
+  uint8_t resv                     :3;
+  // RTK or GPS's svn
+  uint8_t rtk_or_gps_svn;
+  // Unit: rad
+  double home_lon;
+  // Unit: rad
+  double home_lat;
+  // take off altitude。
+  // Unit: m
+  float takeoff_alti;
+  // aircraft's distance to home.
+  // Unit: m
+  float d2h;
+  float abs_height;
+  float gps_height;
+} FCGroundStationDataPush;
 #pragma pack()
+
 
 // clang-format on
 } // OSDK

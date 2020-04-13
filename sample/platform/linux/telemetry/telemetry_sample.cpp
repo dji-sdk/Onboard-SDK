@@ -689,7 +689,7 @@ subscribeToDataAndSaveLogToFile(Vehicle* vehicle, int responseTimeout)
         gpsPostion         = vehicle->subscribe->getValue<TOPIC_GPS_POSITION>();
         gpsVelocity        = vehicle->subscribe->getValue<TOPIC_GPS_VELOCITY>();
         status_displaymode = vehicle->subscribe->getValue<TOPIC_STATUS_DISPLAYMODE>();
-
+        DSTATUS("height_homepoint%f\n",height_homepoint);
         fprintf ( pFile, "%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%lf,%lf,%f,%d,%d,%d,%f,%f,%f,%d,%d,%d\n"
                  ,velocity.data.x
                  ,velocity.data.y

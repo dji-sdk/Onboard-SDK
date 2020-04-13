@@ -44,7 +44,6 @@
 // Helpers
 #include <dji_linux_helpers.hpp>
 const int DEFAULT_PACKAGE_INDEX = 0;
-
 class WaypointV2MissionSample {
 
 public:
@@ -87,7 +86,7 @@ public:
    *  @param timeout blocking timeout in seconds
    *  @return ErrorCode::ErrorCodeType error code
    */
-  ErrorCode::ErrorCodeType dowloadWaypointMission(std::vector<DJIWaypointV2> &mission,int timeout);
+  ErrorCode::ErrorCodeType downloadWaypointMission(std::vector<WaypointV2> &mission,int timeout);
 
   /*! @brief Sample to start mission
    *
@@ -149,15 +148,19 @@ public:
    *
    *  @param waypointV2 struct of DJIWaypointV2
    */
-  void setWaypointV2Defaults(DJIWaypointV2& waypointV2);
+//  void setWaypointV2Defaults(DJIWaypointV2& waypointV2);
 
+  void setWaypointV2Defaults(WaypointV2& waypointV2);
   /*! @brief Sample generate polygon waypoints
    *
    *  @param radius radius of polygon,unit: meter
    *  @param polygonNum number of polygon sides
    *  @return vector of DJIWaypointV2
    */
-  std::vector<DJIWaypointV2> generatePolygonWaypoints(float32_t radius, uint16_t polygonNum);
+//  std::vector<DJIWaypointV2> generatePolygonWaypoints(float32_t radius, uint16_t polygonNum);
+
+  std::vector<WaypointV2> generatePolygonWaypoints(float32_t radius, uint16_t polygonNum);
+
 
   /*! @brief Sample generate polygon waypoints
    *
@@ -168,7 +171,6 @@ public:
 
 private:
   Vehicle *vehiclePtr;
-  std::vector<DJIWaypointV2> mission;
   std::vector<DJIWaypointV2Action> actions;
 };
 
