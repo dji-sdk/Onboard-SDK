@@ -27,10 +27,10 @@ int
 main(int argc, char** argv)
 {
   if(argc >= 3){
-    DSTATUS("Input yaml file: %s\n", argv[2]);
+    printf("Input yaml file: %s\n", argv[2]);
   } else{
-    DERROR("Please specify a yaml file with camera parameters\n");
-    DERROR("Ex: ./stereo-vision-depth-perception-sample UserConfig.txt m210_stereo_param.yaml\n");
+      printf("Please specify a yaml file with camera parameters\n");
+      printf("Ex: ./stereo-vision-depth-perception-sample UserConfig.txt m210_stereo_param.yaml\n");
     return -1;
   }
 
@@ -47,7 +47,7 @@ main(int argc, char** argv)
   // Initialize variables
   int functionTimeout = 1;
   // Obtain Control Authority
-  vehicle->obtainCtrlAuthority(functionTimeout);
+  vehicle->control->obtainCtrlAuthority(functionTimeout);
 
   // Display interactive prompt
   std::cout

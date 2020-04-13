@@ -59,10 +59,10 @@ main(int argc, char** argv)
     << " If any error messages occur, please reboot the aircraft          \n"
     << std::endl
     << "| Available commands:                                            |\n"
-    << "| [a] Subscribe to 240p stereo images                            |\n"
-    << "| [b] Subscribe to VGA front stereo images                       |\n"
-    << "| [c] Unsubscribe to 240p stereo images                          |\n"
-    << "| [d] Unsubscribe to VGA front stereo images                     |\n"
+    << "| [a] Subscribe to 240p stereo images (M210 only)                |\n"
+    << "| [b] Subscribe to VGA front stereo images (M210/M300 only)      |\n"
+    << "| [c] Unsubscribe to 240p stereo images (M210 only)              |\n"
+    << "| [d] Unsubscribe to VGA front stereo images (M210/M300 only)    |\n"
     << std::endl;
   char inputChar = ' ';
   std::cin >> inputChar;
