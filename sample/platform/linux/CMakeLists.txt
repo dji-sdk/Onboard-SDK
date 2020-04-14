@@ -44,7 +44,7 @@ include_directories(${ADVANCED_SENSING_LIB}/inc)
 
 find_package(LibUSB REQUIRED)
 find_package(FFMPEG REQUIRED)
-find_package(Waypt2Core REQUIRED)
+#find_package(Waypt2Core REQUIRED)
 
 if(FFMPEG_FOUND)
     message( STATUS "Found FFmpeg ${FFMPEG_VERSION} installed in the system.")
@@ -57,7 +57,7 @@ endif(FFMPEG_FOUND)
 
 include_directories(${LIBUSB_1_INCLUDE_DIRS})
 include_directories(${FFMPEG_INCLUDE_DIR})
-include_directories(${WAYPT2_CORE_INCLUDE_DIRS})
+#include_directories(${WAYPT2_CORE_INCLUDE_DIRS})
 
 #link libraries
 
