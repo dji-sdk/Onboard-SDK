@@ -20,20 +20,14 @@
  */
 
 #include "stereo_vision_depth_perception_sample.hpp"
+#include "m300_stereo_param_tool.hpp"
+#define M300_FRONT_STEREO_PARAM_YAML_NAME "m300_front_stereo_param.yaml"
 
 using namespace DJI::OSDK;
 
 int
 main(int argc, char** argv)
 {
-  if(argc >= 3){
-    printf("Input yaml file: %s\n", argv[2]);
-  } else{
-      printf("Please specify a yaml file with camera parameters\n");
-      printf("Ex: ./stereo-vision-depth-perception-sample UserConfig.txt m210_stereo_param.yaml\n");
-    return -1;
-  }
-
   // Setup OSDK.
   bool enableAdvancedSensing = true;
   LinuxSetup linuxEnvironment(argc, argv, enableAdvancedSensing);
@@ -44,10 +38,37 @@ main(int argc, char** argv)
     return -1;
   }
 
+  if (vehicle->isM210V2()) {
+    if (argc >= 3) {
+      DSTATUS("Input yaml file: %s\n", argv[2]);
+    } else {
+      DERROR("Please specify a yaml file with camera parameters\n");
+      DERROR("Example: ./stereo-vision-depth-perception-sample UserConfig.txt m210_stereo_param.yaml\n");
+      return -1;
+    }
+  } else if (vehicle->isM300()) {
+    DSTATUS("M300 stereo parameters can be got from the drone. So yaml file is"
+            "not need here for M300 stereo camera.");
+  }
+
   // Initialize variables
   int functionTimeout = 1;
   // Obtain Control Authority
   vehicle->control->obtainCtrlAuthority(functionTimeout);
+
+  /*! get stereo camera parameters */
+  if (vehicle->isM210V2()) {
+    std::string yaml_file_path = argv[2];
+    M210_STEREO::Config::setParamFile(yaml_file_path);
+  } else if (vehicle->isM300()) {
+    M300StereoParamTool *tool = new M300StereoParamTool(vehicle);
+    Perception::CamParamType stereoParam =
+        tool->getM300stereoParams(Perception::DirectionType::RECTIFY_FRONT);
+    if (tool->createStereoParamsYamlFile(M300_FRONT_STEREO_PARAM_YAML_NAME, stereoParam))
+      tool->setParamFileForM300(M300_FRONT_STEREO_PARAM_YAML_NAME);
+    else
+      return -1;
+  }
 
   // Display interactive prompt
   std::cout
@@ -65,9 +86,6 @@ main(int argc, char** argv)
     << std::endl;
   char inputChar = ' ';
   std::cin >> inputChar;
-
-  std::string yaml_file_path = argv[2];
-  M210_STEREO::Config::setParamFile(yaml_file_path);
 
   image_process_container_ptr = new StereoProcessContainer(vehicle);
 
@@ -136,7 +154,7 @@ main(int argc, char** argv)
 //! processing thread will perform the image computation
 void storeStereoImgVGACallback(Vehicle *vehiclePtr, RecvContainer recvFrame, UserData userData)
 {
-  DSTATUS("sample VGACallback receive an image at frame: %d and time stamp: %d",
+  DSTATUS("sample VGACallback receive an image at frame: %d and time stamp: %u",
           recvFrame.recvData.stereoVGAImgData->frame_index,
           recvFrame.recvData.stereoVGAImgData->time_stamp);
 
