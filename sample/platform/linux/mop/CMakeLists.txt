@@ -36,4 +36,6 @@ add_executable(mop_client_sample ${SOURCE_FILES} mop_client_main.cpp)
 
 add_executable(mop_server_sample ${SOURCE_FILES} mop_server_main.cpp)
 
+add_executable(mop_QA_test ${SOURCE_FILES} mop_QA_test.cpp)
+
 target_link_libraries(mop_client_sample crypto)
