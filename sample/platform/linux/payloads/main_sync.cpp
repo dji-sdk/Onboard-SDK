@@ -151,38 +151,46 @@ static void printMediaFileMsg(MediaFile file) {
   static const std::map<const int, const char*> photoRatioMap(photoRatioPairs, photoRatioPairs + sizeof photoRatioPairs / sizeof photoRatioPairs[0]);
   static const std::map<const int, const char*> fileTypeMap(fileTypePairs, fileTypePairs + sizeof fileTypePairs / sizeof fileTypePairs[0]);
   if (file.valid) {
-    DSTATUS("#############Get File [DJI_00%02d%s%s]#############", file.fileIndex % 100, ".",
+    char logBuf[2048] = {0};
+    /*! file name */
+    sprintf(logBuf + strlen(logBuf), "##File [DJI_00%02d%s%s]", file.fileIndex % 100, ".",
             (fileTypeMap.find((int) file.fileType) == fileTypeMap.end() ? "???" : (fileTypeMap.find((int) file.fileType)->second)));
-    DSTATUS("file index : %d ; size : %dkB", file.fileIndex, file.fileSize / 1024);
-    DSTATUS("file date : %d-%d-%d %d-%d-%d", file.date.year + 1980,
+    /*! file index and size */
+    if (file.fileSize > 1024 * 1024 * 1024)
+      sprintf(logBuf + strlen(logBuf),"Index-%d; %0.2fGB; ", file.fileIndex, file.fileSize *1.0f / 1024 / 1024 / 1024);
+    else if (file.fileSize > 1024 * 1024)
+      sprintf(logBuf + strlen(logBuf),"Index-%d; %0.1fMB; ", file.fileIndex, file.fileSize *1.0f / 1024 / 1024);
+    else if (file.fileSize > 1024)
+      sprintf(logBuf + strlen(logBuf),"Index-%d; %0.1fKB; ", file.fileIndex, file.fileSize *1.0f / 1024);
+    else
+      sprintf(logBuf + strlen(logBuf),"Index-%d; %ldB; ", file.fileIndex, file.fileSize);
+    /*! file time */
+    sprintf(logBuf + strlen(logBuf), "%d-%d-%d_%d-%d-%d; ", file.date.year + 1980,
             file.date.month, file.date.day, file.date.hour, file.date.minute,
             file.date.second);
     if ((file.fileType == MediaFileType::MOV)
         || (file.fileType == MediaFileType::MP4)) {
-      DSTATUS(
-          "Video details :\n--duration : %ds\n--orientation : %s\n--resolution : %s\n--frameRate : %s\n",
-          file.duration,
-          (orientationMsgMap.find((int) file.orientation) == orientationMsgMap.end()) ? "UNKOWN" : orientationMsgMap.find((int) file.orientation)->second,
-          (videoResolutionMap.find((int) file.resolution) == videoResolutionMap.end()) ? "UNKOWN" : videoResolutionMap.find((int) file.resolution)->second,
-          (videoFrameRateMap.find((int) file.frameRate) == videoFrameRateMap.end()) ? "UNKOWN" : videoFrameRateMap.find((int) file.frameRate)->second);
+      sprintf(logBuf + strlen(logBuf), "Video details : %lds; %s; %s; %s;", file.duration,
+          (orientationMsgMap.find((int) file.orientation) == orientationMsgMap.end()) ? "ORIENTATION_UNKOWN" : orientationMsgMap.find((int) file.orientation)->second,
+          (videoResolutionMap.find((int) file.resolution) == videoResolutionMap.end()) ? "RESOLUTION_UNKOWN" : videoResolutionMap.find((int) file.resolution)->second,
+          (videoFrameRateMap.find((int) file.frameRate) == videoFrameRateMap.end()) ? "FRAME_RATE_UNKOWN" : videoFrameRateMap.find((int) file.frameRate)->second);
     } else if ((file.fileType == MediaFileType::JPEG)
         || (file.fileType == MediaFileType::DNG)
         || (file.fileType == MediaFileType::TIFF)) {
-      DSTATUS(
-          "Photo details :\n--orientation : %s\n--photoRatio : %s\n",
-          (orientationMsgMap.find((int) file.orientation) == orientationMsgMap.end()) ? "UNKOWN" : orientationMsgMap.find((int) file.orientation)->second,
-          (photoRatioMap.find((int) file.photoRatio) == photoRatioMap.end()) ? "UNKOWN" : photoRatioMap.find((int) file.photoRatio)->second);
+      sprintf(logBuf + strlen(logBuf), "Photo details : %s; %s;",
+          (orientationMsgMap.find((int) file.orientation) == orientationMsgMap.end()) ? "ORIENTATION_UNKOWN" : orientationMsgMap.find((int) file.orientation)->second,
+          (photoRatioMap.find((int) file.photoRatio) == photoRatioMap.end()) ? "RATIO_UNKOWN" : photoRatioMap.find((int) file.photoRatio)->second);
     }
+    DSTATUS("%s", logBuf);
   } else {
     DERROR("This file is a valid file.");
   }
 }
 
 void fileListReqCB(E_OsdkStat ret_code, const FilePackage file_list) {
-  DSTATUS("下载callback : ret = %d", ret_code);
+  DSTATUS("##Download file list callback : ret = %d", ret_code);
   if (ret_code == OSDK_STAT_OK) {
     DSTATUS("file_list.type = %d", file_list.type);
-    DSTATUS("file_list.common.size() = %d", file_list.common.size());
     DSTATUS("file_list.media.size() = %d", file_list.media.size());
     for (auto &file : file_list.media) {
       printMediaFileMsg(file);
@@ -191,7 +199,13 @@ void fileListReqCB(E_OsdkStat ret_code, const FilePackage file_list) {
 }
 
 
-
+void fileDataReqCB(E_OsdkStat ret_code) {
+  if (ret_code == OSDK_STAT_OK) {
+    DSTATUS("##Download file data successfully");
+  } else {
+    DERROR("##Download file data failed");
+  }
+}
 
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
@@ -389,9 +403,6 @@ int main(int argc, char **argv) {
         break;
       }
       case 'p': {
-
-//        extern void prepareFile(const char *fileName);
-//        prepareFile("temp.JPG");
         DSTATUS("回放模式......");
         vehicle->cameraManager->setModeSync(PAYLOAD_INDEX_0,
                                             CameraModule::WorkMode::PLAYBACK,
@@ -402,13 +413,11 @@ int main(int argc, char **argv) {
                                                             true, 2);
         ErrorCode::printErrorCodeMsg(ret);
         DSTATUS("尝试下载文件数据 .......");
-        ret = vehicle->cameraManager->startReqFileList(fileListReqCB);
+        ret = vehicle->cameraManager->startReqFileData(99902, "./DJI_0002.jpg", fileDataReqCB);
         ErrorCode::printErrorCodeMsg(ret);
         break;
       }
       case 'q':
-//        extern void closeFile();
-//        closeFile();
         DSTATUS("Quit now ...");
         delete p;
         return 0;
