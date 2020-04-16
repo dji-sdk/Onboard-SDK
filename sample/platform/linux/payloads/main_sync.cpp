@@ -187,9 +187,11 @@ static void printMediaFileMsg(MediaFile file) {
   }
 }
 
-void fileListReqCB(E_OsdkStat ret_code, const FilePackage file_list) {
-  DSTATUS("##Download file list callback : ret = %d", ret_code);
+FilePackage cur_file_list;
+void fileListReqCB(E_OsdkStat ret_code, const FilePackage file_list, void* udata) {
+  DSTATUS("\033[1;32;40m##[%s] : ret = %d \033[0m", udata, ret_code);
   if (ret_code == OSDK_STAT_OK) {
+    cur_file_list = file_list;
     DSTATUS("file_list.type = %d", file_list.type);
     DSTATUS("file_list.media.size() = %d", file_list.media.size());
     for (auto &file : file_list.media) {
@@ -198,13 +200,14 @@ void fileListReqCB(E_OsdkStat ret_code, const FilePackage file_list) {
   }
 }
 
-
-void fileDataReqCB(E_OsdkStat ret_code) {
+bool fileDataDownloadFinished = false;
+void fileDataReqCB(E_OsdkStat ret_code, void *udata) {
   if (ret_code == OSDK_STAT_OK) {
-    DSTATUS("##Download file data successfully");
+    DSTATUS("\033[1;32;40m##Download file [%s] successfully. \033[0m", udata);
   } else {
-    DERROR("##Download file data failed");
+    DERROR("\033[1;31;40m##Download file data failed. \033[0m");
   }
+  fileDataDownloadFinished = true;
 }
 
 using namespace DJI::OSDK;
@@ -398,23 +401,39 @@ int main(int argc, char **argv) {
                                                             true, 2);
         ErrorCode::printErrorCodeMsg(ret);
         DSTATUS("尝试下载文件列表 .......");
-        ret = vehicle->cameraManager->startReqFileList(fileListReqCB);
+        ret = vehicle->cameraManager->startReqFileList(fileListReqCB, (void *)("Download main camera file list"));
         ErrorCode::printErrorCodeMsg(ret);
         break;
       }
       case 'p': {
-        DSTATUS("回放模式......");
-        vehicle->cameraManager->setModeSync(PAYLOAD_INDEX_0,
-                                            CameraModule::WorkMode::PLAYBACK,
-                                            2);
-        DSTATUS("获取liveview下载权限......");
-        ErrorCode::ErrorCodeType ret =
-            vehicle->cameraManager->obtainDownloadRightSync(PAYLOAD_INDEX_0,
-                                                            true, 2);
-        ErrorCode::printErrorCodeMsg(ret);
-        DSTATUS("尝试下载文件数据 .......");
-        ret = vehicle->cameraManager->startReqFileData(99902, "./DJI_0002.jpg", fileDataReqCB);
-        ErrorCode::printErrorCodeMsg(ret);
+
+        DSTATUS("Download file number : %d", cur_file_list.media.size());
+        for (uint32_t i = 0; i < cur_file_list.media.size(); i++) {
+          fileDataDownloadFinished = false;
+          DSTATUS("回放模式......");
+          vehicle->cameraManager->setModeSync(PAYLOAD_INDEX_0,
+                                              CameraModule::WorkMode::PLAYBACK,
+                                              2);
+          DSTATUS("获取liveview下载权限......");
+          ErrorCode::ErrorCodeType ret =
+              vehicle->cameraManager->obtainDownloadRightSync(PAYLOAD_INDEX_0,
+                                                              true, 2);
+          ErrorCode::printErrorCodeMsg(ret);
+
+          DSTATUS("尝试下载文件数据 .......");
+          char pathBuffer[100] = {0};
+          sprintf(pathBuffer, "./DJI0%03d", cur_file_list.media[i].fileIndex - 99900);
+          std::string localPath(pathBuffer);
+
+          DSTATUS("cur_file_list.media[i].fileIndex = %d, localPath = %s", cur_file_list.media[i].fileIndex, localPath.c_str());
+          ret = vehicle->cameraManager->startReqFileData(cur_file_list.media[i].fileIndex, localPath, fileDataReqCB, (void *) (localPath.c_str()));
+          ErrorCode::printErrorCodeMsg(ret);
+          while (fileDataDownloadFinished == false) {
+            OsdkOsal_TaskSleepMs(1000);
+          }
+          DSTATUS("Prepare to do next downloading ...");
+          OsdkOsal_TaskSleepMs(1000);
+        }
         break;
       }
       case 'q':
