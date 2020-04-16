@@ -38,11 +38,13 @@
 
 using namespace DJI::OSDK;
 
-#define TEST_OP_PIPELINE_ID 15
+#define TEST_OM_PIPELINE_ID 49154
+#define TEST_OP_PIPELINE_ID 49153
 #define READ_ONCE_BUFFER_SIZE 100*1024
 #define SEND_ONCE_BUFFER_SIZE 100*1024
 #define TEST_SEND_FILE_NAME "/home/dji/M210_Manual.pdf"
 
+bool recvExitMsg = false;
 
 static uint32_t get_file_size(const char *path)
 {
@@ -82,7 +84,7 @@ int writeStreamData(const char *fileName, const uint8_t *data, uint32_t len) {
 
   fp = fopen(fileName, "a+");
   if(fp == NULL) {
-    printf("fopen failed!\n");
+    DERROR("fopen failed!\n");
     return -1;
   }
   size = fwrite(data, 1, len, fp);
@@ -97,12 +99,9 @@ int writeStreamData(const char *fileName, const uint8_t *data, uint32_t len) {
   return 0;
 }
 
-static bool send_finish = false;
-static bool recv_finish = false;
-
 using namespace DJI::OSDK;
 
-static void* MopRecvTask(void *arg)
+static void* PipelineRecvTask(void *arg)
 {
   MopPipeline *handle;
   MopErrCode mopRet;
@@ -111,15 +110,13 @@ static void* MopRecvTask(void *arg)
 
   handle = (MopPipeline *)arg;
   if(handle == NULL) {
-    printf("recv task param check failed!\n");
-    recv_finish = true;
+    DERROR("recv task param check failed!\n");
     return NULL;
   }
 
   recvBuf = malloc(READ_ONCE_BUFFER_SIZE);
   if (recvBuf == NULL) {
-    printf("malloc recv buffer error\n");
-    recv_finish = true;
+    DERROR("malloc recv buffer error\n");
     return NULL;
   }
 
@@ -128,7 +125,7 @@ static void* MopRecvTask(void *arg)
   gettimeofday(&tv, NULL);
   localtime_r(&tv.tv_sec, &tm);
   char logFileName[128] = {0};
-  sprintf(logFileName, "mop_recv_file_%d-%d-%d_%d-%d-%d", tm.tm_year + 1900,
+  sprintf(logFileName, "mop_id%d_recv_file_%d-%d-%d_%d-%d-%d", handle->getId(), tm.tm_year + 1900,
           tm.tm_mon, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
 
   while (1) {
@@ -136,25 +133,24 @@ static void* MopRecvTask(void *arg)
     MopPipeline::DataPackType readPacket = {(uint8_t *)recvBuf, READ_ONCE_BUFFER_SIZE};
     mopRet = handle->recvData(readPacket, &readPacket.length);
     if (mopRet != MOP_PASSED) {
-      printf("recv whole file data failed!, realLen = %d\n", readPacket.length);
+      DERROR("recv whole file data failed!, realLen = %d\n", readPacket.length);
       //break;
     } else {
-      printf("recv whole file data success!, realLen = %d\n", readPacket.length);
+      DSTATUS("recv whole file data success!, realLen = %d\n", readPacket.length);
     }
     writeStreamData(logFileName, readPacket.data, readPacket.length);
     cnt++;
-    printf("recv cnt %d!\n", cnt);
-    if (non_block_get_char() == 'q') break;
+    DSTATUS("recv cnt %d!\n", cnt);
+    if (recvExitMsg) break;
   }
-  printf("mop channel recv task end!\n");
+  DSTATUS("mop channel recv task end!\n");
 
   if(recvBuf != NULL)
     free(recvBuf);
-  recv_finish = true;
   return NULL;
 }
 
-static void* MopSendTask(void *arg)
+static void* PipelineSendTask(void *arg)
 {
   MopPipeline *handle;
   MopErrCode mopRet;
@@ -163,8 +159,7 @@ static void* MopSendTask(void *arg)
 
   handle = (MopPipeline *)arg;
   if(handle == NULL) {
-    printf("send task param check failed!\n");
-    send_finish = true;
+    DERROR("send task param check failed!\n");
     return NULL;
   }
 
@@ -179,59 +174,89 @@ static void* MopSendTask(void *arg)
   auto targetFileSize = get_file_size(TEST_SEND_FILE_NAME);
   FILE *fp = fopen(TEST_SEND_FILE_NAME, "r");
   if (fp == NULL) {
-    printf("open %s error\n ", TEST_SEND_FILE_NAME);
+    DERROR("open %s error\n ", TEST_SEND_FILE_NAME);
     return NULL;
   }
-  printf("targetFileSize = %d", targetFileSize);
+  DSTATUS("targetFileSize = %d", targetFileSize);
   addr = malloc(SEND_ONCE_BUFFER_SIZE);
 
   int totalSize = 0;
   do {
     int ret = fread((uint8_t *) addr, 1, SEND_ONCE_BUFFER_SIZE, fp);
     totalSize += ret;
-    printf("total read size : %d\n", totalSize);
-    printf("----------- pdf read bytes ret = %d\n", ret);
+    DSTATUS("total read size : %d\n", totalSize);
+    DSTATUS("----------- pdf read bytes ret = %d\n", ret);
 
     MopPipeline::DataPackType writePacket = {(uint8_t *) addr, (uint32_t) ret};
 
-    printf("Do sendData to PSDK, size : %d\n", writePacket.length);
+    DSTATUS("Do sendData to PSDK, size : %d\n", writePacket.length);
     mopRet = handle->sendData(writePacket, &writePacket.length);
     if (mopRet != MOP_PASSED) {
-      printf("mop send error,stat:%lld, writePacket.length = %d\n", mopRet,
+      DERROR("mop send error,stat:%lld, writePacket.length = %d\n", mopRet,
              writePacket.length);
       break;
     } else {
-      printf("mop send success,stat:%lld, writePacket.length = %d\n", mopRet,
+      DERROR("mop send success,stat:%lld, writePacket.length = %d\n", mopRet,
              writePacket.length);
     }
     cnt++;
-    printf("send cnt %d!\n", cnt);
+    DSTATUS("send cnt %d!\n", cnt);
 
+    if (recvExitMsg) break;
   } while (totalSize < targetFileSize);
 
-  printf("mop channel send task end!\n");
+  DSTATUS("mop channel send task end!\n");
   free(addr);
   fclose(fp);
-
-  send_finish = true;
 
   return NULL;
 }
 
-int main(int argc, char** argv)
+static void* MopServerTask(void *arg)
+{
+  static bool send_finish = false;
+  static bool recv_finish = false;
+  pthread_t recvTask;
+  pthread_t sendTask;
+  MopErrCode mopRet;
+  void *recvBuf = NULL;
+  int cnt = 0;
+  int result = 0;
+  MopPipeline *MO_Pipeline = NULL;
+  Vehicle *vehicle = (Vehicle *)arg;
+
+  while (!recvExitMsg) {
+    /*! Do accepting */
+    if (vehicle->mopServer->accept((PipelineID) TEST_OM_PIPELINE_ID, RELIABLE, MO_Pipeline)
+        != MOP_PASSED) {
+      DERROR("MOP Pipeline accept failed");
+      continue;
+    } else {
+      DSTATUS("Accept to mop pipeline id(%d) successfully", TEST_OM_PIPELINE_ID);
+
+      result = pthread_create(&sendTask, NULL, PipelineSendTask, (void *)MO_Pipeline);
+      if(result != 0) {
+        DERROR("send task create failed!\n");
+      }
+
+      result = pthread_create(&recvTask, NULL, PipelineRecvTask, (void *)MO_Pipeline);
+      if(result != 0) {
+        DERROR("recv task create failed!\n");
+      }
+    }
+    OsdkOsal_TaskSleepMs(1000);
+  }
+
+  return NULL;
+}
+
+static void* MopClientTask(void *arg)
 {
   pthread_t recvTask;
   pthread_t sendTask;
   MopErrCode mopRet;
   int result = -1;
-
-  LinuxSetup linuxEnvironment(argc, argv);
-  Vehicle *vehicle = linuxEnvironment.getVehicle();
-
-  if (vehicle == NULL) {
-    DERROR("Vehicle not initialized, exiting.");
-    return -1;
-  }
+  Vehicle *vehicle = (Vehicle *)arg;
 
   /*! main psdk device init */
   ErrorCode::ErrorCodeType ret = vehicle->psdkManager->initPSDKModule(
@@ -247,12 +272,12 @@ int main(int argc, char** argv)
   if (ret != ErrorCode::SysCommonErr::Success) {
     DERROR("Get MOP client object for_psdk_device failed.");
     ErrorCode::printErrorCodeMsg(ret);
-    return -1;
+    return NULL;
   }
 
   if (!mopClient) {
     DERROR("Get MOP client object is a null value.");
-    return -1;
+    return NULL;
   }
 
   /*! connect pipeline */
@@ -260,30 +285,68 @@ int main(int argc, char** argv)
   if ((mopClient->connect(TEST_OP_PIPELINE_ID, RELIABLE, OP_Pipeline)
       != MOP_PASSED) || (OP_Pipeline == NULL)) {
     DERROR("MOP Pipeline connect failed");
-    return -1;
+    return NULL;
   } else {
     DSTATUS("Connect to mop pipeline id(%d) successfully", TEST_OP_PIPELINE_ID);
   }
 
-  result = pthread_create(&sendTask, NULL, MopSendTask, (void *)OP_Pipeline);
+  result = pthread_create(&sendTask, NULL, PipelineSendTask, (void *)OP_Pipeline);
   if(result != 0) {
-    printf("send task create failed!\n");
-    send_finish = true;
+    DERROR("send task create failed!\n");
   }
 
-  result = pthread_create(&recvTask, NULL, MopRecvTask, (void *)OP_Pipeline);
+  result = pthread_create(&recvTask, NULL, PipelineRecvTask, (void *)OP_Pipeline);
   if(result != 0) {
-    printf("recv task create failed!\n");
-    recv_finish = true;
+    DERROR("recv task create failed!\n");
   }
 
-  while(!send_finish || !recv_finish) {
-    sleep(1);
+  while (!recvExitMsg) {
+    OsdkOsal_TaskSleepMs(1000);
   }
+
   /*! Disconnect pipeline */
   if (mopClient->disconnect(TEST_OP_PIPELINE_ID) != MOP_PASSED) {
     DERROR("MOP Pipeline disconnect pipeline(%d) failed", TEST_OP_PIPELINE_ID);
   } else {
     DSTATUS("Disconnect mop pipeline id(%d) successfully", TEST_OP_PIPELINE_ID);
   }
+}
+
+int main(int argc, char** argv)
+{
+  int result;
+  pthread_t clientTask;
+  pthread_t serverTask;
+
+  LinuxSetup linuxEnvironment(argc, argv);
+  Vehicle *vehicle = linuxEnvironment.getVehicle();
+
+  if (vehicle == NULL) {
+    DERROR("Vehicle not initialized, exiting.");
+    return -1;
+  }
+
+  result = pthread_create(&serverTask, NULL, MopServerTask, nullptr);
+  if(result != 0) {
+    DERROR("Server task create failed!\n");
+  } else {
+    DSTATUS("Server task create success!\n");
+  }
+
+  OsdkOsal_TaskSleepMs(1000);
+
+  result = pthread_create(&clientTask, NULL, MopClientTask, nullptr);
+  if(result != 0) {
+    DERROR("Client task create failed!\n");
+  } else {
+    DSTATUS("Client task create success!\n");
+  }
+
+  //press q to exit
+  while(non_block_get_char() != 'q') {
+    OsdkOsal_TaskSleepMs(1000);
+  }
+  recvExitMsg = true;
+  OsdkOsal_TaskSleepMs(3000);
+  DSTATUS("Sample exit.");
 }
