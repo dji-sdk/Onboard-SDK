@@ -47,7 +47,7 @@ main(int argc, char** argv)
   // Initialize variables
   int functionTimeout = 1;
   // Obtain Control Authority
-  vehicle->obtainCtrlAuthority(functionTimeout);
+  vehicle->control->obtainCtrlAuthority(functionTimeout);
 
   // Display interactive prompt
   std::cout

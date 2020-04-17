@@ -1,12 +1,12 @@
-/** @file hms_poll_sample.cpp
+/** @file main.cpp
  *  @version 4.0
- *  @date Dec 2019
+ *  @date April 2020
  *
  *  @brief
- *  HMS(Health Management System) API usage in a Linux environment
- *  show example usage of getting flight's health information by normal subscription
+ *  Battery API usage in a Linux environment
+ *  show example usage of getting flight's battery information
  *
- *  @Copyright (c) 2019 DJI
+ *  @Copyright (c) 2020 DJI
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,8 +30,6 @@
 
 #include "dji_vehicle.hpp"
 #include "dji_linux_helpers.hpp"
-#include "dji_hms.hpp"
-#include "hms_sample.hpp"
 #include "osdkosal_linux.h"
 
 
@@ -48,24 +46,20 @@ int main(int argc, char** argv) {
         return -1;
     }
     bool enableSubscribeBatteryWholeInfo = true;
-    bool enableSubscribeSingleBatteryDynamicInfoCmd = true;
     BatteryWholeInfo batteryWholeInfo;
     SmartBatteryDynamicInfo firstBatteryDynamicInfo;
     SmartBatteryDynamicInfo secondBatteryDynamicInfo;
     const int waitTimeMs = 500;
 
     vehicle->djiBattery->subscribeBatteryWholeInfo(enableSubscribeBatteryWholeInfo);
-    vehicle->djiBattery->subscribeSingleBatteryDynamicInfo(enableSubscribeSingleBatteryDynamicInfoCmd,
-                                                DJIBattery::RequestSmartBatteryIndex::FIRST_SMART_BATTERY);
-    vehicle->djiBattery->subscribeSingleBatteryDynamicInfo(enableSubscribeSingleBatteryDynamicInfoCmd,
-                                                DJIBattery::RequestSmartBatteryIndex::SECOND_SMART_BATTERY);
+
     while(true)
     {
-        vehicle->djiBattery->getBatteryWholeInfo(batteryWholeInfo);
-        vehicle->djiBattery->getSingleBatteryDynamicInfo(DJIBattery::RequestSmartBatteryIndex::FIRST_SMART_BATTERY, firstBatteryDynamicInfo);
-        vehicle->djiBattery->getSingleBatteryDynamicInfo(DJIBattery::RequestSmartBatteryIndex::FIRST_SMART_BATTERY, secondBatteryDynamicInfo);
+      vehicle->djiBattery->getBatteryWholeInfo(batteryWholeInfo);
+      vehicle->djiBattery->getSingleBatteryDynamicInfo(DJIBattery::RequestSmartBatteryIndex::FIRST_SMART_BATTERY, firstBatteryDynamicInfo);
+      vehicle->djiBattery->getSingleBatteryDynamicInfo(DJIBattery::RequestSmartBatteryIndex::SECOND_SMART_BATTERY, secondBatteryDynamicInfo);
 
-        OsdkLinux_TaskSleepMs(waitTimeMs);
+      OsdkLinux_TaskSleepMs(waitTimeMs);
     }
 
     return 0;
