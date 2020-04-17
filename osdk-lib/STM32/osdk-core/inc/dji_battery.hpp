@@ -155,7 +155,7 @@ typedef struct DJISmartBatteryState {
     uint16_t reserved4 :3;
     uint16_t hasCellBreak :1;
     uint16_t reserved5 :4;
-    uint16_t isBatteryEmbed :1;        /*! 0:embed;1:unmebed
+    uint16_t isBatteryEmbed :1;        /*! 0:embed;1:unmebed*/
     uint16_t heatState :2;             /*!enum-type: DJISmartBatteryHeatState*/
     uint16_t socState  :3;             /*!enum-type: DJISmartBatterySocWarning*/
 } DJISmartBatteryState;

@@ -599,7 +599,7 @@ subscribeToDataAndSaveLogToFile(Vehicle* vehicle, int responseTimeout)
 ///////////////////////////////////////////
     pkgIndex                   = 1;
     freq                       = 1;
-    TopicName topicList1Hz[] = { TOPIC_HEIGHT_HOMEPOINT
+    TopicName topicList1Hz[] = { TOPIC_ALTITUDE_OF_HOMEPOINT
                                  ,TOPIC_GPS_POSITION
                                  ,TOPIC_GPS_VELOCITY};
     numTopic        = sizeof(topicList1Hz) / sizeof(topicList1Hz[0]);
@@ -634,7 +634,7 @@ subscribeToDataAndSaveLogToFile(Vehicle* vehicle, int responseTimeout)
     TypeMap<TOPIC_POSITION_VO>::type        position_vo;
     TypeMap<TOPIC_ALTITUDE_FUSIONED>::type  altitude_fusioned;
     TypeMap<TOPIC_ALTITUDE_BAROMETER>::type altitude_barometer;
-    TypeMap<TOPIC_HEIGHT_HOMEPOINT>::type   height_homepoint;
+    TypeMap<TOPIC_ALTITUDE_OF_HOMEPOINT>::type   height_homepoint;
     TypeMap<TOPIC_HEIGHT_FUSION>::type      height_fusion;
     TypeMap<TOPIC_GPS_FUSED>::type          gps_fused;
     TypeMap<TOPIC_STATUS_DISPLAYMODE>::type status_displaymode;
@@ -688,13 +688,13 @@ subscribeToDataAndSaveLogToFile(Vehicle* vehicle, int responseTimeout)
         position_vo        = vehicle->subscribe->getValue<TOPIC_POSITION_VO>();
         altitude_fusioned  = vehicle->subscribe->getValue<TOPIC_ALTITUDE_FUSIONED>();
         altitude_barometer = vehicle->subscribe->getValue<TOPIC_ALTITUDE_BAROMETER>();
-        height_homepoint   = vehicle->subscribe->getValue<TOPIC_HEIGHT_HOMEPOINT>();
+        height_homepoint   = vehicle->subscribe->getValue<TOPIC_ALTITUDE_OF_HOMEPOINT>();
         height_fusion      = vehicle->subscribe->getValue<TOPIC_HEIGHT_FUSION>();
         gps_fused          = vehicle->subscribe->getValue<TOPIC_GPS_FUSED>();
         gpsPostion         = vehicle->subscribe->getValue<TOPIC_GPS_POSITION>();
         gpsVelocity        = vehicle->subscribe->getValue<TOPIC_GPS_VELOCITY>();
         status_displaymode = vehicle->subscribe->getValue<TOPIC_STATUS_DISPLAYMODE>();
-
+        DSTATUS("height_homepoint%f\n",height_homepoint);
         fprintf ( pFile, "%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%lf,%lf,%f,%d,%d,%d,%f,%f,%f,%d,%d,%d\n"
                  ,velocity.data.x
                  ,velocity.data.y

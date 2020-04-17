@@ -102,7 +102,7 @@ class Perception {
   typedef struct CamParamType {
     DirectionType direction;
     float leftIntrinsics[9];
-    float rightIntrinsic[9];
+    float rightIntrinsics[9];
     float rotaionLeftInRight[9];
     float translationLeftInRight[3];
   } CamParamType;

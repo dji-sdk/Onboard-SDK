@@ -56,8 +56,12 @@
 #include "dji_psdk_manager.hpp"
 #include "dji_hms.hpp"
 #include "dji_battery.hpp"
+#include "dji_waypoint_v2.hpp"
 #ifdef ADVANCED_SENSING
 #include "dji_advanced_sensing.hpp"
+#endif
+#if defined(__linux__)
+#include "dji_mop_server.hpp"
 #endif
 
 namespace DJI
@@ -104,6 +108,9 @@ public:
   MFIO*                mfio;
   MobileDevice*        mobileDevice;
   MissionManager*      missionManager;
+#ifdef WAYPT2_CORE
+  WaypointV2MissionOperator*   waypointV2Mission;
+#endif
   HardwareSync*        hardSync;
   // Supported only on Matrice 100
   VirtualRC*           virtualRC;
@@ -113,9 +120,15 @@ public:
   PSDKManager*         psdkManager;
   GimbalManager*       gimbalManager;
   DJIHMS*              djiHms;
+
+#if defined(__linux__)
+  MopServer*           mopServer;
+#endif
+
 #ifdef ADVANCED_SENSING
   AdvancedSensing* advancedSensing;
 #endif
+
   DJIBattery*         djiBattery;
   int functionalSetUp();
   ////////// Blocking calls ///////////
@@ -271,6 +284,7 @@ public:
   bool initMobileDevice();
   bool initPayloadDevice();
   bool initMissionManager();
+  bool initWaypointV2Mission();
   bool initHardSync();
   bool initVirtualRC();
   bool initCameraManager();
@@ -278,6 +292,9 @@ public:
   bool initPSDKManager();
   bool initGimbalManager();
   bool initDJIHms();
+#if defined(__linux__)
+  bool initMopServer();
+#endif
   bool initOSDKHeartBeatThread();
 #ifdef ADVANCED_SENSING
   bool initAdvancedSensing();

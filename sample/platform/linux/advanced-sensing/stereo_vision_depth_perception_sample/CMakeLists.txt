@@ -87,6 +87,7 @@ if (OPEN_CV_3_3_0_INSTALLED AND FOUND_OPENCV_VIZ)
             ${MULTI_THREAD_SAMPLE_DIR}/image_process_container.cpp
             ${MULTI_THREAD_SAMPLE_DIR}/utility_thread.cpp
             stereo_process_container.cpp
+            m300_stereo_param_tool.cpp
             utility/*.cpp
             )
 

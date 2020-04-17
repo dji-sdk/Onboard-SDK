@@ -37,15 +37,14 @@ set(CMAKE_MODULE_PATH ${OSDK_LIB}/../cmake-modules)
 
 set(OSDK_CORE_LIB ${OSDK_LIB}/osdk-core)
 set(ADVANCED_SENSING_LIB ${OSDK_LIB}/advanced-sensing-2.0.3)
-set(WP2_CORE_LIB  ${OSDK_LIB}/waypointv2-core-1.0.0)
+#set(WP2_CORE_LIB  ${OSDK_LIB}/waypointv2-core-1.0.0)
 
 include_directories(${OSDK_CORE_LIB}/inc)
 include_directories(${ADVANCED_SENSING_LIB}/inc)
-include_directories(${WP2_CORE_LIB}/inc)
 
 find_package(LibUSB REQUIRED)
 find_package(FFMPEG REQUIRED)
-find_package(Waypt2Core REQUIRED)
+#find_package(Waypt2Core REQUIRED)
 
 if(FFMPEG_FOUND)
     message( STATUS "Found FFmpeg ${FFMPEG_VERSION} installed in the system.")
@@ -58,7 +57,7 @@ endif(FFMPEG_FOUND)
 
 include_directories(${LIBUSB_1_INCLUDE_DIRS})
 include_directories(${FFMPEG_INCLUDE_DIR})
-include_directories(${WAYPT2_CORE_INCLUDE_DIRS})
+#include_directories(${WAYPT2_CORE_INCLUDE_DIRS})
 
 #link libraries
 
@@ -70,13 +69,10 @@ if(ADVANCED_SENSING)
     link_libraries(${FFMPEG_LIBRARIES})
 endif()
 
-if(WAYPT2_CORE)
-    link_libraries(${WP2_CORE_LIB}/lib/libwaypointv2-interface.a)
-    link_libraries(${WP2_CORE_LIB}/lib/libwaypointv2-core.a)
-    link_libraries(${WP2_CORE_LIB}/lib/libDJIProtobuf.a)
-    link_libraries(${WP2_CORE_LIB}/lib/libdjisdk-common.a)
-endif()
+#if(WAYPT2_CORE)
+#endif()
 
+#add_subdirectory(camera-gimbal)
 add_subdirectory(flight-control)
 add_subdirectory(mfio)
 add_subdirectory(missions)
@@ -89,5 +85,6 @@ add_subdirectory(payloads)
 add_subdirectory(advanced-sensing)
 add_subdirectory(hms)
 add_subdirectory(battery)
+add_subdirectory(mop)
 
 
