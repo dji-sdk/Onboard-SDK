@@ -437,6 +437,20 @@ typedef struct Mag
 } Mag; // pack(1)
 
 /*!
+ * @brief struct for data broadcast, return compass reading
+ *
+ * @note returned value is compass status,
+ * 0: compass is normal;
+ * 1: compass need calibrate;
+ * 2: compass need dir fix;
+ * 3: compass need restart.
+ */
+typedef struct Compass
+{
+    uint8_t compassStatus;
+} Compass;
+
+/*!
  * @brief struct for data broadcast and data subscription, return RC reading
  */
 typedef struct RC

@@ -55,6 +55,7 @@
 #include "dji_flight_controller.hpp"
 #include "dji_psdk_manager.hpp"
 #include "dji_hms.hpp"
+#include "dji_battery.hpp"
 #include "dji_waypoint_v2.hpp"
 #ifdef ADVANCED_SENSING
 #include "dji_advanced_sensing.hpp"
@@ -128,6 +129,7 @@ public:
   AdvancedSensing* advancedSensing;
 #endif
 
+  DJIBattery*         djiBattery;
   int functionalSetUp();
   ////////// Blocking calls ///////////
 
@@ -297,6 +299,7 @@ public:
 #ifdef ADVANCED_SENSING
   bool initAdvancedSensing();
 #endif
+  bool initDJIBattery();
 
 #ifdef ADVANCED_SENSING
   /*! @brief This function takes a frame and calls the right handlers/functions
