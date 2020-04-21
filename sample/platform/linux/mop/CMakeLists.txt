@@ -25,6 +25,8 @@ project(mop-sample)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread -g -O0")
 
+include_directories(./)
+
 FILE(GLOB SOURCE_FILES
         ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_environment.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_helpers.cpp
@@ -32,10 +34,10 @@ FILE(GLOB SOURCE_FILES
         ${CMAKE_CURRENT_SOURCE_DIR}/../osal/*.c
         )
 
-add_executable(mop_client_sample ${SOURCE_FILES} mop_client_main.cpp)
-
-add_executable(mop_server_sample ${SOURCE_FILES} mop_server_main.cpp)
-
 add_executable(mop_QA_test ${SOURCE_FILES} mop_QA_test.cpp)
 
-target_link_libraries(mop_client_sample crypto)
+add_executable(op_download_sample ${SOURCE_FILES} op_download_sample.cpp)
+
+add_executable(op_upload_sample ${SOURCE_FILES} op_upload_sample.cpp)
+
+target_link_libraries(op_download_sample crypto)
