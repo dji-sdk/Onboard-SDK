@@ -230,6 +230,7 @@ static void* MopServerTask(void *arg)
     if (vehicle->mopServer->accept((PipelineID) TEST_OM_PIPELINE_ID, RELIABLE, MO_Pipeline)
         != MOP_PASSED) {
       DERROR("MOP Pipeline accept failed");
+      OsdkOsal_TaskSleepMs(1000);
       continue;
     } else {
       DSTATUS("Accept to mop pipeline id(%d) successfully", TEST_OM_PIPELINE_ID);
@@ -326,7 +327,7 @@ int main(int argc, char** argv)
     return -1;
   }
 
-  result = pthread_create(&serverTask, NULL, MopServerTask, nullptr);
+  result = pthread_create(&serverTask, NULL, MopServerTask, vehicle);
   if(result != 0) {
     DERROR("Server task create failed!\n");
   } else {
@@ -335,7 +336,7 @@ int main(int argc, char** argv)
 
   OsdkOsal_TaskSleepMs(1000);
 
-  result = pthread_create(&clientTask, NULL, MopClientTask, nullptr);
+  result = pthread_create(&clientTask, NULL, MopClientTask, vehicle);
   if(result != 0) {
     DERROR("Client task create failed!\n");
   } else {
