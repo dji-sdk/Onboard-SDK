@@ -110,13 +110,13 @@ static void* PipelineRecvTask(void *arg)
 
   handle = (MopPipeline *)arg;
   if(handle == NULL) {
-    DERROR("recv task param check failed!\n");
+    DERROR("[PipelineID-%d]recv task param check failed!\n", handle->getId());
     return NULL;
   }
 
   recvBuf = malloc(READ_ONCE_BUFFER_SIZE);
   if (recvBuf == NULL) {
-    DERROR("malloc recv buffer error\n");
+    DERROR("[PipelineID-%d]malloc recv buffer error\n", handle->getId());
     return NULL;
   }
 
@@ -133,17 +133,17 @@ static void* PipelineRecvTask(void *arg)
     MopPipeline::DataPackType readPacket = {(uint8_t *)recvBuf, READ_ONCE_BUFFER_SIZE};
     mopRet = handle->recvData(readPacket, &readPacket.length);
     if (mopRet != MOP_PASSED) {
-      DERROR("recv whole file data failed!, realLen = %d\n", readPacket.length);
+      DERROR("[PipelineID-%d]recv whole file data failed!, realLen = %d\n", handle->getId(), readPacket.length);
       //break;
     } else {
-      DSTATUS("recv whole file data success!, realLen = %d\n", readPacket.length);
+      DSTATUS("[PipelineID-%d]recv whole file data success!, realLen = %d\n", handle->getId(), readPacket.length);
+      writeStreamData(logFileName, readPacket.data, readPacket.length);
+      cnt++;
+      DSTATUS("[PipelineID-%d]recv cnt %d!\n", handle->getId(), cnt);
     }
-    writeStreamData(logFileName, readPacket.data, readPacket.length);
-    cnt++;
-    DSTATUS("recv cnt %d!\n", cnt);
     if (recvExitMsg) break;
   }
-  DSTATUS("mop channel recv task end!\n");
+  DSTATUS("[PipelineID-%d]mop channel recv task end!\n", handle->getId());
 
   if(recvBuf != NULL)
     free(recvBuf);
@@ -159,7 +159,7 @@ static void* PipelineSendTask(void *arg)
 
   handle = (MopPipeline *)arg;
   if(handle == NULL) {
-    DERROR("send task param check failed!\n");
+    DERROR("[PipelineID-%d]send task param check failed!\n");
     return NULL;
   }
 
@@ -174,38 +174,38 @@ static void* PipelineSendTask(void *arg)
   auto targetFileSize = get_file_size(TEST_SEND_FILE_NAME);
   FILE *fp = fopen(TEST_SEND_FILE_NAME, "r");
   if (fp == NULL) {
-    DERROR("open %s error\n ", TEST_SEND_FILE_NAME);
+    DERROR("[PipelineID-%d]open %s error\n ", handle->getId(), TEST_SEND_FILE_NAME);
     return NULL;
   }
-  DSTATUS("targetFileSize = %d", targetFileSize);
+  DSTATUS("[PipelineID-%d]targetFileSize = %d", handle->getId(), targetFileSize);
   addr = malloc(SEND_ONCE_BUFFER_SIZE);
 
   int totalSize = 0;
   do {
     int ret = fread((uint8_t *) addr, 1, SEND_ONCE_BUFFER_SIZE, fp);
     totalSize += ret;
-    DSTATUS("total read size : %d\n", totalSize);
-    DSTATUS("----------- pdf read bytes ret = %d\n", ret);
+    DSTATUS("[PipelineID-%d]total read size : %d\n", handle->getId(), totalSize);
+    DSTATUS("[PipelineID-%d]----------- pdf read bytes ret = %d\n", handle->getId(), ret);
 
     MopPipeline::DataPackType writePacket = {(uint8_t *) addr, (uint32_t) ret};
 
-    DSTATUS("Do sendData to PSDK, size : %d\n", writePacket.length);
+    DSTATUS("[PipelineID-%d]Do sendData to PSDK, size : %d\n", handle->getId(), writePacket.length);
     mopRet = handle->sendData(writePacket, &writePacket.length);
     if (mopRet != MOP_PASSED) {
-      DERROR("mop send error,stat:%lld, writePacket.length = %d\n", mopRet,
+      DERROR("[PipelineID-%d]mop send error,stat:%lld, writePacket.length = %d\n", handle->getId(), mopRet,
              writePacket.length);
       break;
     } else {
-      DERROR("mop send success,stat:%lld, writePacket.length = %d\n", mopRet,
+      DERROR("[PipelineID-%d]mop send success,stat:%lld, writePacket.length = %d\n", handle->getId(), mopRet,
              writePacket.length);
     }
     cnt++;
-    DSTATUS("send cnt %d!\n", cnt);
+    DSTATUS("[PipelineID-%d]send cnt %d!\n", handle->getId(), cnt);
 
     if (recvExitMsg) break;
   } while (totalSize < targetFileSize);
 
-  DSTATUS("mop channel send task end!\n");
+  DSTATUS("[PipelineID-%d]mop channel send task end!\n", handle->getId());
   free(addr);
   fclose(fp);
 
