@@ -108,7 +108,7 @@ public:
   MFIO*                mfio;
   MobileDevice*        mobileDevice;
   MissionManager*      missionManager;
-#ifdef WAYPT2_CORE
+#if defined(__linux__)
   WaypointV2MissionOperator*   waypointV2Mission;
 #endif
   HardwareSync*        hardSync;

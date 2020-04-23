@@ -56,8 +56,11 @@ int main(int argc, char** argv) {
     while(true)
     {
       vehicle->djiBattery->getBatteryWholeInfo(batteryWholeInfo);
+      DSTATUS("batteryCapacityPercentage is %ld\n",batteryWholeInfo.batteryCapacityPercentage);
       vehicle->djiBattery->getSingleBatteryDynamicInfo(DJIBattery::RequestSmartBatteryIndex::FIRST_SMART_BATTERY, firstBatteryDynamicInfo);
+      DSTATUS("battery index %d batteryCapacityPercent is %ld\n",firstBatteryDynamicInfo.batteryIndex, firstBatteryDynamicInfo.batteryCapacityPercent);
       vehicle->djiBattery->getSingleBatteryDynamicInfo(DJIBattery::RequestSmartBatteryIndex::SECOND_SMART_BATTERY, secondBatteryDynamicInfo);
+      DSTATUS("battery index %d batteryCapacityPercent is %ld\n",secondBatteryDynamicInfo.batteryIndex, secondBatteryDynamicInfo.batteryCapacityPercent);
 
       OsdkLinux_TaskSleepMs(waitTimeMs);
     }
