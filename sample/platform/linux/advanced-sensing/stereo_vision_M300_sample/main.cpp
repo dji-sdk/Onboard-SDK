@@ -34,13 +34,10 @@
 #include <dirent.h>
 #include "dji_vehicle.hpp"
 
-using namespace DJI::OSDK;
-
-#define IMAGE_FILE_PATH                "./image"
-#define IMAGE_FILE_PATH_LEN            (64)
-#define IMAGE_INFO_LEN                 (sizeof(DUSS_MSG_OSDK_IMAGE_INFO_t))
-#define IMAGE_MAX_DIRECTION_NUM        (6)
-
+#ifdef OPEN_CV_INSTALLED
+#include "opencv2/opencv.hpp"
+#include "opencv2/highgui/highgui.hpp"
+#else
 int writePictureData(const uint8_t *data, uint32_t len) {
   DIR *dirp = NULL;
   FILE *fp = NULL;
@@ -71,16 +68,34 @@ int writePictureData(const uint8_t *data, uint32_t len) {
   index++;
   return 0;
 }
+#endif
+
+using namespace DJI::OSDK;
+
+#define IMAGE_FILE_PATH                "./image"
+#define IMAGE_FILE_PATH_LEN            (64)
+#define IMAGE_INFO_LEN                 (sizeof(DUSS_MSG_OSDK_IMAGE_INFO_t))
+#define IMAGE_MAX_DIRECTION_NUM        (6)
 
 void PerceptionImageCB(Perception::ImageInfoType info, uint8_t *imageRawBuffer,
                        int bufferLen, void *userData) {
-  DSTATUS("image info : dataId(%d) seq(%d) timestamp(%d) datatype(%d)", info.dataId, info.sequence,
-          info.timeStamp, info.dataType);
-  DSTATUS("image info : index(%d) h(%d) w(%d) dir(%d) bpp(%d) bufferlen(%d)",
-          info.rawInfo.index, info.rawInfo.height, info.rawInfo.width,
-          info.rawInfo.direction, info.rawInfo.bpp, bufferLen);
+  DSTATUS("image info : dataId(%d) seq(%d) timestamp(%d) datatype(%d) index(%d) h(%d) w(%d) dir(%d) "
+          "bpp(%d) bufferlen(%d)", info.dataId, info.sequence, info.timeStamp, info.dataType,
+          info.rawInfo.index, info.rawInfo.height, info.rawInfo.width, info.rawInfo.direction,
+          info.rawInfo.bpp, bufferLen);
   if (imageRawBuffer) {
+#ifdef OPEN_CV_INSTALLED
+    cv::Mat  cv_img_stereo = cv::Mat(480, 640, CV_8U);
+    char name[20] = {0};
+
+    memcpy(cv_img_stereo.data, imageRawBuffer, bufferLen);
+    sprintf(name, "Image_dataType : %d", info.dataType);
+    cv::imshow(name, cv_img_stereo);
+    cv::waitKey(1);
+#else
+    DSTATUS("Save images at local path.");
     writePictureData(imageRawBuffer, bufferLen);
+#endif
   }
 }
 
@@ -150,50 +165,73 @@ main(int argc, char** argv)
         << "| Available commands:                                            |"
         << std::endl;
     std::cout
-        << "| [a] Front stereo camera advanced sensing function test         |"
+        << "| [a] Subscribe down stereo camera pair images                   |"
         << std::endl;
     std::cout
-        << "| [b] Upward stereo camera advanced sensing function test        |"
+        << "| [b] Subscribe front stereo camera pair images                  |"
+        << std::endl;
+    std::cout
+        << "| [c] Subscribe rear stereo camera pair images                   |"
+        << std::endl;
+    std::cout
+        << "| [d] Subscribe up stereo camera pair images                     |"
+        << std::endl;
+    std::cout
+        << "| [e] Subscribe left stereo camera pair images                   |"
+        << std::endl;
+    std::cout
+        << "| [f] Subscribe right stereo camera pair images                  |"
+        << std::endl;
+    std::cout
+        << "| [g] get the parameters of all the stereo cameras               |"
         << std::endl;
     std::cout
         << "| [q] quit                                                       |"
         << std::endl;
 
+    Perception::DirectionType direction = (Perception::DirectionType)0xFF;
     std::cin >> inputChar;
-    switch (inputChar)
-    {
-      case 'a': {
+    switch (inputChar) {
+      case 'a':
+        DSTATUS("Subscribe down stereo camera pair images.");
+        direction = Perception::DirectionType::RECTIFY_DOWN;
+        break;
+      case 'b':
+        DSTATUS("Subscribe front stereo camera pair images.");
+        direction = Perception::DirectionType::RECTIFY_FRONT;
+        break;
+      case 'c':
+        DSTATUS("Subscribe rear stereo camera pair images.");
+        direction = Perception::DirectionType::RECTIFY_REAR;
+        break;
+      case 'd':
+        DSTATUS("Subscribe up stereo camera pair images.");
+        direction = Perception::DirectionType::RECTIFY_UP;
+        break;
+      case 'e':
+        DSTATUS("Subscribe left stereo camera pair images.");
+        direction = Perception::DirectionType::RECTIFY_LEFT;
+        break;
+      case 'f':
+        DSTATUS("Subscribe right stereo camera pair images.");
+        direction = Perception::DirectionType::RECTIFY_RIGHT;
+        break;
+      case 'g':
         DSTATUS("Do stereo camera parameters subscription");
         vehicle->advancedSensing->setStereoCamParamsObserver(PerceptionCamParamCB, NULL);
         vehicle->advancedSensing->triggerStereoCamParamsPushing();
-        DSTATUS("Do stereo camera imagines subscription");
-        vehicle->advancedSensing->subscribePerceptionImage(
-            Perception::DirectionType::RECTIFY_FRONT, PerceptionImageCB, NULL);
-        sleep(5);
-        DSTATUS("Do stereo camera imagines unsubscription");
-        vehicle->advancedSensing->unsubscribePerceptionImage(
-            Perception::DirectionType::RECTIFY_FRONT);
-      }
         break;
-      case 'b': {
-        DSTATUS("Do stereo camera parameters subscription");
-        vehicle->advancedSensing->setStereoCamParamsObserver(PerceptionCamParamCB, NULL);
-        vehicle->advancedSensing->triggerStereoCamParamsPushing();
-        DSTATUS("Do stereo camera imagines subscription");
-        vehicle->advancedSensing->subscribePerceptionImage(
-            Perception::DirectionType::RECTIFY_UP, PerceptionImageCB, NULL);
-        sleep(5);
-        DSTATUS("Do stereo camera imagines unsubscription");
-        vehicle->advancedSensing->unsubscribePerceptionImage(
-            Perception::DirectionType::RECTIFY_UP);
-      }
-        break;
-      case 'q': {
-        return 0;
-      }
-        break;
-      default:
-        break;
+      case 'q':return 0;
+      default:break;
+    }
+
+    if (direction != (Perception::DirectionType)0xFF) {
+      OsdkOsal_TaskSleepMs(1000);
+      DSTATUS("Do stereo camera imagines subscription");
+      vehicle->advancedSensing->subscribePerceptionImage(direction, PerceptionImageCB, NULL);
+      OsdkOsal_TaskSleepMs(5000);
+      vehicle->advancedSensing->unsubscribePerceptionImage(direction);
+      OsdkOsal_TaskSleepMs(1000);
     }
   }
 
