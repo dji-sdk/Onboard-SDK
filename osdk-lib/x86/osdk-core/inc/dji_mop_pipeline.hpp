@@ -56,6 +56,9 @@ class MopPipeline {
 
   void *channelHandle;
 
+  PipelineID getId();
+
+  PipelineType getType();
  private:
   PipelineID id;
   PipelineType type;

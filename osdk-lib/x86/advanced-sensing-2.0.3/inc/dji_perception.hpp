@@ -161,6 +161,10 @@ class Perception {
    */
   void setStereoCamParamsObserver(PerceptionCamParamCB cb, void *userData);
 
+  /*! @brief unsubscribe all the stereo camera parameters pushing.
+   */
+  void cancelAllSubsciptions();
+
  private:
   Vehicle *vehicle;
   PerceptionImpl *impl;

@@ -46,7 +46,6 @@
 #include "dji_subscription.hpp"
 #include "dji_mobile_device.hpp"
 #include "dji_payload_device.hpp"
-#include "dji_virtual_rc.hpp"
 #include "dji_hardware_sync.hpp"
 #include "dji_mfio.hpp"
 #include "dji_mission_manager.hpp"
@@ -113,7 +112,6 @@ public:
 #endif
   HardwareSync*        hardSync;
   // Supported only on Matrice 100
-  VirtualRC*           virtualRC;
   PayloadDevice*       payloadDevice;
   CameraManager*       cameraManager;
   FlightController*    flightController;

@@ -37,7 +37,7 @@ namespace DJI
 
 namespace OSDK
 {
-  const float32_t EARTH_RADIUS =  6371004.0;
+  const float32_t EARTH_RADIUS =  6378137.0;
 
 // clang-format off
 /**********Mission structs/Enums***********/
@@ -1109,8 +1109,8 @@ typedef struct WayPointV2InitSettings{
   uint16_t missTotalLen;
 
   /**
-   *  Mission execution can be repeated more than once. A value of 1 means the mission
-   *  only executes once, and does not repeat. A value of 2 means the mission will
+   *  Mission execution can be repeated more than once. A value of 0 means the mission
+   *  only executes once, and does not repeat. A value of 1 means the mission will
    *  execute a total of two times.
    */
   uint8_t repeatTimes;
