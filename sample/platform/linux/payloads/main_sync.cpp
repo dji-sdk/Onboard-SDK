@@ -349,7 +349,7 @@ int main(int argc, char **argv) {
       case 'k':
         CameraModule::PhotoIntervalData intervalData;
         intervalData.photoNumConticap = 255;
-        intervalData.timeInterval = 4;
+        intervalData.timeInterval = 3;
         p->startShootIntervalPhotoSyncSample(PAYLOAD_INDEX_0, intervalData);
         DSTATUS("Sleep 15 seconds");
         sleep(15);
