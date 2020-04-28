@@ -826,6 +826,14 @@ typedef struct {
 } dji_general_transfer_msg_ack;
 /////////////(0x00,0x26) 相关结构体定义////////////
 
+typedef struct {
+  uint32_t reserve;
+  uint32_t size;
+  uint32_t index;
+  uint8_t is_next_valid; //not used ,set to 0
+  uint8_t file_data[1];
+} dji_file_data_download_resp;
+
 #pragma pack()
 
 #endif //_DJI_FILE_INTERNAL_DEFINE_HPP_

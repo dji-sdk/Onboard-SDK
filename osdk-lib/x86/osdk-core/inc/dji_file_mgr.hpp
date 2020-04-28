@@ -45,11 +45,11 @@ class FileMgr {
   FileMgr(Linker *linker, uint8_t type, uint8_t index);
   ~FileMgr();
 
-  typedef void (*FileListReqCBType)(E_OsdkStat ret_code, const FilePackage file_list);
-  typedef void (*FileDataReqCBType)(E_OsdkStat ret_code);
+  typedef void (*FileListReqCBType)(E_OsdkStat ret_code, const FilePackage file_list, void* userData);
+  typedef void (*FileDataReqCBType)(E_OsdkStat ret_code, void* userData);
 
-  ErrorCode::ErrorCodeType startReqFileList(FileListReqCBType cb);
-  ErrorCode::ErrorCodeType startReqFileData(int fileIndex, std::string localPath, FileDataReqCBType cb);
+  ErrorCode::ErrorCodeType startReqFileList(FileListReqCBType cb, void* userData);
+  ErrorCode::ErrorCodeType startReqFileData(int fileIndex, std::string localPath, FileDataReqCBType cb, void* userData);
 
  private:
   FileMgrImpl *impl;

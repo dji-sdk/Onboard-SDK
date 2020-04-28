@@ -147,7 +147,7 @@ ErrorCode::ErrorCodeType WaypointV2MissionSample::runWaypointV2Mission()
   startWaypointMission(timeout);
   if(ret != ErrorCode::SysCommonErr::Success)
     return ret;
-  sleep(40);
+  sleep(20);
 
   /*! set global cruise speed */
   setGlobalCruiseSpeed(1.5, timeout);
@@ -202,7 +202,7 @@ ErrorCode::ErrorCodeType WaypointV2MissionSample::initMissionSetting(int timeout
   missionInitSettings.repeatTimes  = 1;
   missionInitSettings.finishedAction = DJIWaypointV2MissionFinishedGoHome;
   missionInitSettings.maxFlightSpeed = 10;
-  missionInitSettings.autoFlightSpeed = 3;
+  missionInitSettings.autoFlightSpeed = 2;
   missionInitSettings.exitMissionOnRCSignalLost = 1;
   missionInitSettings.gotoFirstWaypointMode = DJIWaypointV2MissionGotoFirstWaypointModePointToPoint;
   missionInitSettings.mission =  generatePolygonWaypoints(radius, polygonNum);
@@ -398,7 +398,7 @@ std::vector<DJIWaypointV2Action> WaypointV2MissionSample::generateWaypointAction
 void WaypointV2MissionSample::setWaypointV2Defaults(WaypointV2& waypointV2) {
 
   waypointV2.waypointType = DJIWaypointV2FlightPathModeGoToPointInAStraightLineAndStop;
-  waypointV2.headingMode = DJIWaypointV2HeadingFixed;
+  waypointV2.headingMode = DJIWaypointV2HeadingModeAuto;
   waypointV2.config.useLocalCruiseVel = 0;
   waypointV2.config.useLocalMaxVel = 0;
 

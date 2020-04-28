@@ -26,9 +26,10 @@ class DownloadBufferQueue final {
 public:
   typedef enum InsertRetType {
     INSERT_SUCCESS = 0,
-    INSERT_FAIL_FULL,
+    INSERT_SUCCESS_FULL,
     INSERT_FAIL_INVALID_PARAM,
     INSERT_FAIL_MEMORY_USED,
+    INSERT_FAIL_OUT_OF_RANGE,
     INSERT_FAIL_UNKOWN,
   } InsertRetType;
 

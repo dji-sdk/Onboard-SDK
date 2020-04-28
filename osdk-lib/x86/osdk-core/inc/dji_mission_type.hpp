@@ -37,7 +37,7 @@ namespace DJI
 
 namespace OSDK
 {
-  const float32_t EARTH_RADIUS =  6371004.0;
+  const float32_t EARTH_RADIUS =  6378137.0;
 
 // clang-format off
 /**********Mission structs/Enums***********/
