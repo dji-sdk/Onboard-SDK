@@ -108,4 +108,8 @@ E_OsdkStat OsdkSTM32_UartInit(const char *port, const int baudrate,
 E_OsdkStat OsdkSTM32_UartClose(T_HalObj *obj) {
   return OSDK_STAT_OK;
 }
+
+E_OsdkStat OsdkSTM32_UdpInit(const char *addr, uint16_t port, T_HalObj *obj) {
+  return OSDK_STAT_ERR;
+}
 /****************** (C) COPYRIGHT DJI Innovations *****END OF FILE****/
