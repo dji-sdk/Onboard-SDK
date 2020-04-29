@@ -50,6 +50,7 @@ typedef struct targetFileName {
 typedef struct sampleProtocolStruct {
   uint8_t cmd;
   uint8_t subcmd;
+  uint16_t seq;
   uint32_t dataLen;
   union dataType {
     fileInfo info;
@@ -59,7 +60,7 @@ typedef struct sampleProtocolStruct {
 } sampleProtocolStruct;
 #pragma pack()
 
-#define SIMPLE_CMD_PACK_LEN  (uint32_t)(2)
+#define SIMPLE_CMD_PACK_LEN  (uint32_t)(4)
 #define RAW_DATA_HEADER_LEN  (uint32_t)(SIMPLE_CMD_PACK_LEN + sizeof(uint32_t))
 #define FILEINFO_PACK_LEN    (uint32_t)(RAW_DATA_HEADER_LEN + sizeof(fileInfo))
 
