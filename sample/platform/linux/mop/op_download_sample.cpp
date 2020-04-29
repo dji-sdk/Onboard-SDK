@@ -65,7 +65,7 @@
 
 using namespace DJI::OSDK;
 
-#define TEST_OP_PIPELINE_ID 15
+#define TEST_OP_PIPELINE_ID 49153
 #define READ_ONCE_BUFFER_SIZE 100*1024
 #define SEND_ONCE_BUFFER_SIZE 100*1024
 #define TEST_RECV_FILE_NAME "test.mp4"
@@ -166,6 +166,7 @@ static void OPDownloadFileTask(MopPipeline *OP_Pipeline) {
         sampleProtocolStruct req = {
             .cmd = CMD_DL_FILENAME,
             .subcmd = 0xFF,
+            .seq = 0,
             .dataLen = sizeof(req.data.targetFile)
         };
         req.data.info.isExist = true;

@@ -94,26 +94,41 @@ main(int argc, char** argv) {
 
     std::cin >> inputChar;
 
+    struct timeval tv;
+    struct tm tm;
+    gettimeofday(&tv, NULL);
+    localtime_r(&tv.tv_sec, &tm);
+
+    char h264FileName[50] = {0};
+
     switch (inputChar) {
       case 'a':
+        sprintf(h264FileName, "FPV_%d-%d-%d_%d-%d-%d.h264", tm.tm_year + 1900,
+                tm.tm_mon, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
         vehicle->advancedSensing->startH264Stream(LiveView::OSDK_CAMERA_POSITION_FPV,
                                            liveViewSampleCb,
-                                           (void *) "FPV.h264");
+                                           (void *) h264FileName);
         break;
       case 'b':
+        sprintf(h264FileName, "MainCam_%d-%d-%d_%d-%d-%d.h264", tm.tm_year + 1900,
+                tm.tm_mon, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
         vehicle->advancedSensing->startH264Stream(LiveView::OSDK_CAMERA_POSITION_NO_1,
                                            liveViewSampleCb,
-                                           (void *) "MainCam.h264");
+                                           (void *) h264FileName);
         break;
       case 'c':
+        sprintf(h264FileName, "ViceCam_%d-%d-%d_%d-%d-%d.h264", tm.tm_year + 1900,
+                tm.tm_mon, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
         vehicle->advancedSensing->startH264Stream(LiveView::OSDK_CAMERA_POSITION_NO_2,
                                            liveViewSampleCb,
-                                           (void *) "ViceCam.h264");
+                                           (void *) h264FileName);
         break;
       case 'd':
+        sprintf(h264FileName, "TopCam_%d-%d-%d_%d-%d-%d.h264", tm.tm_year + 1900,
+                tm.tm_mon, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
         vehicle->advancedSensing->startH264Stream(LiveView::OSDK_CAMERA_POSITION_NO_3,
                                            liveViewSampleCb,
-                                           (void *) "TopCam.h264");
+                                           (void *) h264FileName);
         break;
     }
 

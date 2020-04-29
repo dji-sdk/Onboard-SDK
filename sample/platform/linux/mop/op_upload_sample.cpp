@@ -38,7 +38,7 @@
 
 using namespace DJI::OSDK;
 
-#define TEST_OP_PIPELINE_ID 15
+#define TEST_OP_PIPELINE_ID 49153
 #define READ_ONCE_BUFFER_SIZE 100*1024
 #define SEND_ONCE_BUFFER_SIZE 100*1024
 #define TEST_SEND_FILE_NAME "/home/dji/telemetryLogFile.txt"
@@ -111,6 +111,7 @@ static void OPUploadFileTask(MopPipeline *OP_Pipeline) {
         sampleProtocolStruct req = {
             .cmd = CMD_FILEINFO,
             .subcmd = 0xFF,
+            .seq = 0,
             .dataLen = sizeof(req.data.info)
         };
         req.data.info.isExist = true;
