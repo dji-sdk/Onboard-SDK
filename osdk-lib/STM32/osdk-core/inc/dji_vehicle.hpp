@@ -46,7 +46,6 @@
 #include "dji_subscription.hpp"
 #include "dji_mobile_device.hpp"
 #include "dji_payload_device.hpp"
-#include "dji_virtual_rc.hpp"
 #include "dji_hardware_sync.hpp"
 #include "dji_mfio.hpp"
 #include "dji_mission_manager.hpp"
@@ -54,8 +53,14 @@
 #include "dji_gimbal_manager.hpp"
 #include "dji_flight_controller.hpp"
 #include "dji_psdk_manager.hpp"
+#include "dji_battery.hpp"
+#include "dji_waypoint_v2.hpp"
 #ifdef ADVANCED_SENSING
 #include "dji_advanced_sensing.hpp"
+#endif
+#if defined(__linux__)
+#include "dji_hms.hpp"
+#include "dji_mop_server.hpp"
 #endif
 
 namespace DJI
@@ -70,6 +75,10 @@ namespace OSDK
  * DJI OSDK API.
  *
  */
+//forward declaration
+class Firewall;
+class Linker;
+
 class Vehicle
 {
 public:
@@ -98,18 +107,27 @@ public:
   MFIO*                mfio;
   MobileDevice*        mobileDevice;
   MissionManager*      missionManager;
+#if defined(__linux__)
+  WaypointV2MissionOperator*   waypointV2Mission;
+#endif
   HardwareSync*        hardSync;
   // Supported only on Matrice 100
-  VirtualRC*           virtualRC;
   PayloadDevice*       payloadDevice;
   CameraManager*       cameraManager;
   FlightController*    flightController;
   PSDKManager*         psdkManager;
   GimbalManager*       gimbalManager;
+
+#if defined(__linux__)
+  DJIHMS*              djiHms;
+  MopServer*           mopServer;
+#endif
+
 #ifdef ADVANCED_SENSING
   AdvancedSensing* advancedSensing;
 #endif
 
+  DJIBattery*         djiBattery;
   int functionalSetUp();
   ////////// Blocking calls ///////////
 
@@ -242,7 +260,7 @@ public:
 private:
   const int            wait_timeout   = 1000;
   const int            GIMBAL_MOUNTED = 1;
-  static const uint8_t NUM_CMD_SET    = 9;
+  static const uint8_t NUM_CMD_SET    = 10;
   CMD_SETSupportMatrix cmd_setSupportMatrix[NUM_CMD_SET];
 
 public:
@@ -264,16 +282,22 @@ public:
   bool initMobileDevice();
   bool initPayloadDevice();
   bool initMissionManager();
+  bool initWaypointV2Mission();
   bool initHardSync();
   bool initVirtualRC();
   bool initCameraManager();
   bool initFlightController();
   bool initPSDKManager();
   bool initGimbalManager();
+#if defined(__linux__)
+  bool initDJIHms();
+  bool initMopServer();
+#endif
   bool initOSDKHeartBeatThread();
 #ifdef ADVANCED_SENSING
   bool initAdvancedSensing();
 #endif
+  bool initDJIBattery();
 
 #ifdef ADVANCED_SENSING
   /*! @brief This function takes a frame and calls the right handlers/functions
@@ -286,6 +310,9 @@ public:
   bool advSensingErrorPrintOnce;
 #endif
 private:
+  Firewall *firewall;
+  bool initFirewall();
+
   void setActivationStatus(bool is_activated);
   void initCMD_SetSupportMatrix();
   bool isCmdSetSupported(const uint8_t cmdSet);

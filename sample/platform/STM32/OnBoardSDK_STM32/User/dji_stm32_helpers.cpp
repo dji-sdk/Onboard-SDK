@@ -108,6 +108,7 @@ STM32Setup::setupEnvironment()
   halUartHandler.UartInit = OsdkSTM32_UartInit;
   halUartHandler.UartWriteData = OsdkSTM32_UartSendData;
   halUartHandler.UartReadData = OsdkSTM32_UartReadData;
+  halUartHandler.UartClose = OsdkSTM32_UartClose;
 
   static T_OsdkOsalHandler osalHandler;
   osalHandler.TaskCreate = OsdkSTM32_TaskCreate;

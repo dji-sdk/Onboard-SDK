@@ -128,7 +128,6 @@ void *USBProcessTask(void *p){
   DSTATUS("Start USB processing ...");
   while(1) {
     USBH_Process(&USB_OTG_Core, &USB_Host);
-    delay_nms(1);
   }
 }
 void *mainLoopTask(void *p){
