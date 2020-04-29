@@ -67,7 +67,7 @@ typedef enum
   TOPIC_ANGULAR_RATE_RAW,
   TOPIC_ALTITUDE_FUSIONED,
   TOPIC_ALTITUDE_BAROMETER,
-  TOPIC_HEIGHT_HOMEPOINT,
+  TOPIC_ALTITUDE_OF_HOMEPOINT,
   TOPIC_HEIGHT_FUSION,
   TOPIC_GPS_FUSED,
   TOPIC_GPS_DATE,
@@ -124,7 +124,7 @@ typedef enum
   UID_ANGULAR_RATE_RAW         = 0x700389ee,
   UID_ALTITUDE_FUSIONED        = 0x11e9c81a,
   UID_ALTITUDE_BAROMETER       = 0x27396a39,
-  UID_HEIGHT_HOMEPOINT         = 0x252c164b,
+  UID_ALTITUDE_OF_HOMEPOINT    = 0x252c164b,
   UID_HEIGHT_FUSION            = 0x87cf419d,
   UID_GPS_FUSED                = 0x4b19a8c7,
   UID_GPS_DATE                 = 0x598f79bc,
@@ -435,6 +435,20 @@ typedef struct Mag
   int16_t y;
   int16_t z;
 } Mag; // pack(1)
+
+/*!
+ * @brief struct for data broadcast, return compass reading
+ *
+ * @note returned value is compass status,
+ * 0: compass is normal;
+ * 1: compass need calibrate;
+ * 2: compass need dir fix;
+ * 3: compass need restart.
+ */
+typedef struct Compass
+{
+    uint8_t compassStatus;
+} Compass;
 
 /*!
  * @brief struct for data broadcast and data subscription, return RC reading
@@ -803,7 +817,7 @@ template <> struct TypeMap<TOPIC_ANGULAR_RATE_FUSIONED    > { typedef Vector3f  
 template <> struct TypeMap<TOPIC_ANGULAR_RATE_RAW         > { typedef Vector3f        type;};
 template <> struct TypeMap<TOPIC_ALTITUDE_FUSIONED        > { typedef float32_t       type;};
 template <> struct TypeMap<TOPIC_ALTITUDE_BAROMETER       > { typedef float32_t       type;};
-template <> struct TypeMap<TOPIC_HEIGHT_HOMEPOINT         > { typedef float32_t       type;};
+template <> struct TypeMap<TOPIC_ALTITUDE_OF_HOMEPOINT    > { typedef float32_t       type;};
 template <> struct TypeMap<TOPIC_HEIGHT_FUSION            > { typedef float32_t       type;};
 template <> struct TypeMap<TOPIC_GPS_FUSED                > { typedef GPSFused        type;};
 template <> struct TypeMap<TOPIC_GPS_DATE                 > { typedef uint32_t        type;};
@@ -838,9 +852,9 @@ template <> struct TypeMap<TOPIC_FLIGHT_ANOMALY           > { typedef FlightAnom
 template <> struct TypeMap<TOPIC_POSITION_VO              > { typedef LocalPositionVO type;};
 template <> struct TypeMap<TOPIC_AVOID_DATA               > { typedef RelativePosition type;};
 template <> struct TypeMap<TOPIC_HOME_POINT_SET_STATUS    > { typedef HomeLocationSetStatus type;};
-template <> struct TypeMap<TOPIC_HOME_POINT_INFO          > { typedef HomeLocationData    type;};
-template <> struct TypeMap<TOPIC_DUAL_GIMBAL_DATA         > { typedef GimbalDualData          type;};
-template <> struct TypeMap<TOPIC_THREE_GIMBAL_DATA        > { typedef GimbalThreeData         type;};
+template <> struct TypeMap<TOPIC_HOME_POINT_INFO          > { typedef HomeLocationData type;};
+template <> struct TypeMap<TOPIC_DUAL_GIMBAL_DATA         > { typedef GimbalDualData   type;};
+template <> struct TypeMap<TOPIC_THREE_GIMBAL_DATA        > { typedef GimbalThreeData  type;};
 // clang-format on
 }
 }

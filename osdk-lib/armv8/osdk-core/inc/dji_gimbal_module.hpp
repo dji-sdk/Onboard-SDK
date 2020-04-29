@@ -217,9 +217,6 @@ class GimbalModule : public PayloadBase {
    */
   ErrorCode::ErrorCodeType rotateSync(Rotation rotation, int timeout);
 
- private:
-  Linker *linker;
-
 }; /* GimbalModule */
 }  // namespace OSDK
 }  // namespace DJI

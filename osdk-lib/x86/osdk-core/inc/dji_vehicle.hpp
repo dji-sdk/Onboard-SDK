@@ -53,13 +53,13 @@
 #include "dji_gimbal_manager.hpp"
 #include "dji_flight_controller.hpp"
 #include "dji_psdk_manager.hpp"
-#include "dji_hms.hpp"
 #include "dji_battery.hpp"
 #include "dji_waypoint_v2.hpp"
 #ifdef ADVANCED_SENSING
 #include "dji_advanced_sensing.hpp"
 #endif
 #if defined(__linux__)
+#include "dji_hms.hpp"
 #include "dji_mop_server.hpp"
 #endif
 
@@ -117,9 +117,9 @@ public:
   FlightController*    flightController;
   PSDKManager*         psdkManager;
   GimbalManager*       gimbalManager;
-  DJIHMS*              djiHms;
 
 #if defined(__linux__)
+  DJIHMS*              djiHms;
   MopServer*           mopServer;
 #endif
 
@@ -289,8 +289,8 @@ public:
   bool initFlightController();
   bool initPSDKManager();
   bool initGimbalManager();
-  bool initDJIHms();
 #if defined(__linux__)
+  bool initDJIHms();
   bool initMopServer();
 #endif
   bool initOSDKHeartBeatThread();

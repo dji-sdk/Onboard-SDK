@@ -103,6 +103,7 @@ class PSDKManager {
                                                bool &enable);
 
  public:
+#if defined(__linux__)
   /*! @brief Get the mop client object of the target psdk module.
    *
    *  @param index payload node index, input limit see enum
@@ -113,7 +114,7 @@ class PSDKManager {
    */
   ErrorCode::ErrorCodeType getMopClient(
       PayloadIndexType index, MopClient *&mopClient);
-
+#endif
   /*! @brief Sample to configure the value, blocking
    *
    *  @param index payload node index, input limit see enum
