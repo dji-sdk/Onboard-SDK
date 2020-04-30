@@ -105,8 +105,8 @@ public:
    *         blocking calls
    *
    *  @param enable whether subscribe HMS Info
-   *       0:reset aLL subcriber except APP
-   *       1:subscribe all HMS's information
+   *       false:reset aLL subcriber except APP
+   *       true:subscribe all HMS's information
    *  @param timeOutMs blocking time to wait for ACK, unit:ms
    *
    *  @return bool subscribe's ack result

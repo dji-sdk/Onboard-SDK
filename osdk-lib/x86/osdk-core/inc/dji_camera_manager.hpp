@@ -31,8 +31,9 @@
 
 #include <vector>
 #include "dji_camera_module.hpp"
+#if defined(__linux__)
 #include "dji_file_mgr.hpp"
-
+#endif
 namespace DJI {
 namespace OSDK {
 class FileMgr;
@@ -1604,12 +1605,14 @@ class CameraManager {
 
   ErrorCode::ErrorCodeType obtainDownloadRightSync(PayloadIndexType index,
                                                    bool enable, int timeout);
-
+#if defined(__linux__)
   ErrorCode::ErrorCodeType startReqFileList(FileMgr::FileListReqCBType cb, void *userData);
   ErrorCode::ErrorCodeType startReqFileData(int fileIndex, std::string localPath, FileMgr::FileDataReqCBType cb, void *userData);
-
+#endif
  private:
+#if defined(__linux__)
   FileMgr *fileMgr;
+#endif
   std::vector<CameraModule *> cameraModuleVector;
 
   CameraModule *getCameraModule(PayloadIndexType index);
