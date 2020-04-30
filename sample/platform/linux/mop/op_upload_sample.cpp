@@ -43,6 +43,8 @@ using namespace DJI::OSDK;
 #define SEND_ONCE_BUFFER_SIZE 100*1024
 #define TEST_SEND_FILE_NAME "/home/dji/telemetryLogFile.txt"
 #define EXPORT_SHORT_FILE_NAME "telemetryLogFile.txt"
+#define TEST_FILE_MD5_ARRAY {0xa1, 0xd0, 0xc4, 0x50, 0xe7, 0x49, 0xd0, 0x99, \
+                             0xb6, 0x95, 0x69, 0x0a, 0x46, 0xa5, 0x76, 0xbb}
 
 #define ASSERT_MOP_RET(ret) \
   if (ret != MOP_PASSED) { \
@@ -117,8 +119,7 @@ static void OPUploadFileTask(MopPipeline *OP_Pipeline) {
         req.data.info.isExist = true;
         req.data.info.fileLength = get_file_size(TEST_SEND_FILE_NAME);
         sprintf(req.data.info.fileName, EXPORT_SHORT_FILE_NAME);
-        uint8_t fileMd5[] = {0xa1, 0xd0, 0xc4, 0x50, 0xe7, 0x49, 0xd0, 0x99,
-                             0xb6, 0x95, 0x69, 0x0a, 0x46, 0xa5, 0x76, 0xbb};
+        uint8_t fileMd5[] = TEST_FILE_MD5_ARRAY;
         memcpy(req.data.info.md5Buf, fileMd5, sizeof(req.data.info.md5Buf));
 
         MopPipeline::DataPackType fileInfoPack = {.data = (uint8_t *) &req, .length = RAW_DATA_HEADER_LEN + req.dataLen};
