@@ -661,6 +661,24 @@ ErrorCode::ErrorCodeType CameraManager::startContinuousOpticalZoomSync(
   }
 }
 
+ErrorCode::ErrorCodeType CameraManager::setOpticalZoomFactorSync(PayloadIndexType index, float factor, int timeout) {
+  CameraModule* cameraMgr = getCameraModule(index);
+  if (cameraMgr) {
+    return cameraMgr->setOpticalZoomFactorSync(factor, timeout);
+  } else {
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
+  }
+}
+
+ErrorCode::ErrorCodeType CameraManager::getOpticalZoomFactorSync(PayloadIndexType index, float &factor, int timeout) {
+  CameraModule* cameraMgr = getCameraModule(index);
+  if (cameraMgr) {
+    return cameraMgr->getOpticalZoomFactorSync(factor, timeout);
+  } else {
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
+  }
+}
+
 void CameraManager::stopContinuousOpticalZoomAsync(
     PayloadIndexType index,
     void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),

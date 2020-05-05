@@ -812,6 +812,30 @@ ErrorCode::ErrorCodeType CameraModule::startContinuousOpticalZoomSync(
                           (uint8_t *) &req, sizeof(req), timeout * 1000 / 3, 3);
 }
 
+ErrorCode::ErrorCodeType CameraModule::setOpticalZoomFactorSync(float factor, int timeout) {
+  camera_zoom_data_type req = {0};
+  req.zoom_config.optical_zoom_mode = 1;
+  req.zoom_config.optical_zoom_enable = 1;
+  /*! factor in command struct is starting from 0, do adapting */
+  factor = factor - 1;
+  if (factor < 0) factor = 0;
+  req.optical_zoom_param.pos_param.zoom_pos_level = (uint16_t)(factor * 100);
+  return setInterfaceSync(V1ProtocolCMD::Camera::setCommonZoomPara,
+                          (uint8_t *) &req, sizeof(req), timeout * 1000 / 3, 3);
+}
+
+ErrorCode::ErrorCodeType CameraModule::getOpticalZoomFactorSync(float &factor, int timeout) {
+  uint8_t outData[1024] = {0};
+  uint32_t outDataLen = sizeof(outData);
+  ErrorCode::ErrorCodeType ret = getInterfaceSync(V1ProtocolCMD::Camera::getCommonZoomPara,
+      outData, outDataLen, timeout * 1000 / 3, 3);
+  if ((ret == ErrorCode::SysCommonErr::Success) && (outData[0] == 0x00)) {
+    factor = *(uint16_t *)(outData + 1) / 100.0f;
+  }
+
+  return ret;
+}
+
 void CameraModule::stopContinuousOpticalZoomAsync(
     void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {

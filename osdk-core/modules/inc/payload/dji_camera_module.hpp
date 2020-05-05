@@ -697,6 +697,44 @@ class CameraModule : public PayloadBase {
     } zoomParam;
   } zoomOptiParamType;
 
+  // Camera zoom parameters
+  typedef struct zoom_config_t
+  {
+    uint8_t digital_zoom_mode 	: 2;	/* 0:step 1:position 2:continuous */
+    uint8_t digital_reserve 	: 1;	/* reserve */
+    uint8_t digital_zoom_enable	: 1;	/* 0:not_ctrl 1:ctrl */
+    uint8_t optical_zoom_mode  	: 2;	/* 0:step 1:position 2:continuous */
+    uint8_t optical_reserve		: 1;	/* reserve */
+    uint8_t optical_zoom_enable	: 1;	/* 0:not_ctrl 1:ctrl */
+  } zoom_config_t;
+
+  typedef union zoom_param_t
+  {
+    struct
+    {
+      uint16_t zoom_cont_speed        : 8;	/* continuous speed 0~100 */
+      uint16_t zoom_cont_direction    : 1;
+      uint16_t zoom_cont_reserve      : 7;
+    }cont_param;
+    struct
+    {
+      uint16_t zoom_step_level		: 8;	/* level time * 100 = 1 times */
+      uint16_t zoom_step_direction    : 1;
+      uint16_t zoom_step_reserve      : 7;
+    }step_param;
+    struct
+    {
+      uint16_t zoom_pos_level;		        /* 180 = 1.8times */
+    }pos_param;
+  } zoom_param_t;
+
+  typedef struct camera_zoom_data_type
+  {
+    zoom_config_t zoom_config;
+    zoom_param_t optical_zoom_param;
+    zoom_param_t digital_zoom_param;
+  }camera_zoom_data_type;
+
   /*! @brief Requesting optical zoom, used in internal link layer.
    */
   typedef struct zoomOptiParamReq {
@@ -1359,6 +1397,30 @@ class CameraModule : public PayloadBase {
    */
   ErrorCode::ErrorCodeType startContinuousOpticalZoomSync(
       zoomDirectionData zoomDirection, zoomSpeedData zoomSpeed, int timeout);
+
+
+  /*! @brief set parameters for camera optical zooming, blocking calls
+   *
+   *  @note It is only supported by X5, X5R and X5S camera on Osmo with lens
+   * Olympus M.Zuiko ED 14-42mm f/3.5-5.6 EZ, Z3 camera, Z30 camera.
+   *  @note In this interface, the zoom will set the zoom factor as the your
+   * target value.
+   *  @param factor target zoom factor
+   *  @return ErrorCode::ErrorCodeType error code
+   */
+  ErrorCode::ErrorCodeType setOpticalZoomFactorSync(float factor, int timeout);
+
+  /*! @brief get parameters of camera optical zooming, blocking calls
+   *
+   *  @note It is only supported by X5, X5R and X5S camera on Osmo with lens
+   * Olympus M.Zuiko ED 14-42mm f/3.5-5.6 EZ, Z3 camera, Z30 camera.
+   *  @note In this interface, the zoom will set the zoom factor as the your
+   * target value.
+   *  @param factor zoom factor
+   *  @return ErrorCode::ErrorCodeType error code
+   */
+  ErrorCode::ErrorCodeType getOpticalZoomFactorSync(
+      float &factor, int timeout);
 
   /*! @brief stop camera optical zooming, non-blocking calls
    *
