@@ -269,7 +269,7 @@ FILE(GLOB OSDK_LIB_HEADERS
         ##linker/core/osdk_typedef.h
         ##linker/core/logger/osdk_logger.h
         ##linker/core/platform/osdk_platform.h
-        linker/inc/*.h*
+        linker/${ARCH}/inc/*.h*
         modules/inc/filemgr/*.h*
         modules/inc/filemgr/impl/*.h*
         )
