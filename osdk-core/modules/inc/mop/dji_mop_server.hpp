@@ -38,6 +38,8 @@ namespace OSDK {
 // Forward Declarations
 class Vehicle;
 
+/*! @brief Class providing APIs & data structures for acting as a MOP server
+ */
 class MopServer : MopPipelineManagerBase {
  public:
   MopServer();

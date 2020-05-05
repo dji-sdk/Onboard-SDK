@@ -32,7 +32,7 @@
 #include "dji_internal_command.hpp"
 
 #include <vector>
-#include <core/protocol/osdk_device_id.h>
+#include "osdk_device_id.h"
 using namespace DJI;
 using namespace DJI::OSDK;
 

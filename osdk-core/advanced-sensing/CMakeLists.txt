@@ -26,26 +26,31 @@ elseif(WIN32)
     set(MY_OS "WIN32")
 endif()
 
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "i386|i686|x86|AMD64|x86_64")
+    set(ARCH x86)
+    add_definitions(-DDJIOSDK_HARDWARE_TYPE=3)
+elseif((CMAKE_SYSTEM_PROCESSOR MATCHES "^arm*") OR (CMAKE_SYSTEM_PROCESSOR MATCHES "^aarch"))
+    if(CMAKE_SIZEOF_VOID_P EQUAL 4)
+        set(ARCH armv7)
+        add_definitions(-DDJIOSDK_HARDWARE_TYPE=1)
+    elseif(CMAKE_SIZEOF_VOID_P EQUAL 8)
+        set(ARCH armv8)
+        add_definitions(-DDJIOSDK_HARDWARE_TYPE=2)
+    endif()
+elseif()
+    add_definitions(-DDJIOSDK_HARDWARE_TYPE=0)
+endif()
+
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g -w -fPIC -Wextra -finline-functions -O3 -fno-strict-aliasing -fvisibility=hidden  -D${MY_CPU_ARCH} -D${MY_OS}")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
 set(ORI_OSDK_CORE_SRC "${CMAKE_CURRENT_SOURCE_DIR}/ori-osdk-core")
-set(NEW_OSDK_CORE_SRC "${CMAKE_CURRENT_SOURCE_DIR}/../osdk-core")
+set(NEW_OSDK_CORE_SRC "${CMAKE_CURRENT_SOURCE_DIR}/..")
 
 include_directories(
         ${NEW_OSDK_CORE_SRC}/platform/inc
         ${NEW_OSDK_CORE_SRC}/logger/inc
         ${NEW_OSDK_CORE_SRC}/utility/inc
-        ${NEW_OSDK_CORE_SRC}/linker
-        ${NEW_OSDK_CORE_SRC}/linker/core
-        ${NEW_OSDK_CORE_SRC}/linker/core/mop
-        ${NEW_OSDK_CORE_SRC}/linker/core/mop/mop_core/inc
-        ${NEW_OSDK_CORE_SRC}/linker/core/utils/inc
-        ${NEW_OSDK_CORE_SRC}/linker/core/channel
-        ${NEW_OSDK_CORE_SRC}/linker/core/command
-        ${NEW_OSDK_CORE_SRC}/linker/core/logger
-        ${NEW_OSDK_CORE_SRC}/linker/core/platform
-        ${NEW_OSDK_CORE_SRC}/linker/core/protocol
-        ${NEW_OSDK_CORE_SRC}/linker/core/root_task)
+        ${NEW_OSDK_CORE_SRC}/linker/${ARCH}/inc)
 
 include_directories(${NEW_OSDK_CORE_SRC}/api/inc)
 include_directories(${NEW_OSDK_CORE_SRC}/modules/inc/payload)
@@ -124,6 +129,6 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
         PUBLIC_HEADER "${ADVANCED_SENSING_HEADERS}")
 
 install(TARGETS ${PROJECT_NAME}
-        ARCHIVE DESTINATION "${CLOSED_SOURCE_LIBS}/lib" COMPONENT shlib
-        PUBLIC_HEADER DESTINATION "${CLOSED_SOURCE_LIBS}/inc" COMPONENT dev
+        ARCHIVE DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" COMPONENT shlib
+        PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_PREFIX}/include" COMPONENT dev
         )

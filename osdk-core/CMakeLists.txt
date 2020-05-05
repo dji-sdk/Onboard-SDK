@@ -62,7 +62,22 @@ endif ()
 
 add_definitions(-DPLATFORM_OSDK)
 
-include (${CMAKE_CURRENT_SOURCE_DIR}/../contrib/DJIConfig.cmake)
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "i386|i686|x86|AMD64|x86_64")
+  set(ARCH x86)
+  add_definitions(-DDJIOSDK_HARDWARE_TYPE=3)
+elseif((CMAKE_SYSTEM_PROCESSOR MATCHES "^arm*") OR (CMAKE_SYSTEM_PROCESSOR MATCHES "^aarch"))
+  if(CMAKE_SIZEOF_VOID_P EQUAL 4)
+    set(ARCH armv7)
+    add_definitions(-DDJIOSDK_HARDWARE_TYPE=1)
+  elseif(CMAKE_SIZEOF_VOID_P EQUAL 8)
+    set(ARCH armv8)
+    add_definitions(-DDJIOSDK_HARDWARE_TYPE=2)
+  endif()
+elseif()
+  add_definitions(-DDJIOSDK_HARDWARE_TYPE=0)
+endif()
+
+include (${CMAKE_CURRENT_SOURCE_DIR}/contrib/DJIConfig.cmake)
 include_directories(
         api/inc
         modules/inc/firewall
@@ -74,17 +89,7 @@ include_directories(
         platform/inc
         logger/inc
         utility/inc
-        linker
-        linker/core
-        linker/core/mop
-        linker/core/mop/mop_core/inc
-        linker/core/utils/inc
-        linker/core/channel
-        linker/core/command
-        linker/core/logger
-        linker/core/platform
-        linker/core/protocol
-        linker/core/root_task)
+        linker/${ARCH}/inc)
 
 ## Source code for OSDK CORE
 FILE(GLOB OSDK_LIB_SRCS
@@ -97,21 +102,27 @@ FILE(GLOB OSDK_LIB_SRCS
         modules/src/mop/*.cpp
         platform/src/*.c*
         logger/src/*.cpp
-        utility/src/*.cpp
-        linker/*.cpp
-        linker/core/mop/*.c*
-        linker/core/mop/mop_core/src/*.c
-        linker/core/channel/*.c
-        linker/core/command/*.c
-        linker/core/logger/*.c
-        linker/core/protocol/*.c
-        linker/core/platform/*.c
-        linker/core/utils/src/*.c
-        linker/core/root_task/*.c)
+        utility/src/*.cpp)
+
+link_libraries(${CMAKE_CURRENT_SOURCE_DIR}/linker/${ARCH}/lib/libdji-linker.a)
 
 add_library(${PROJECT_NAME}
         STATIC
         ${OSDK_LIB_SRCS})
+
+add_subdirectory(advanced-sensing)
+
+
+set(ADVANCED_SENSING_SOURCE_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/advanced-sensing)
+set(ADVANCED_SENSING_HEADERS_DIR
+    ${ADVANCED_SENSING_SOURCE_ROOT}/api/inc
+    ${ADVANCED_SENSING_SOURCE_ROOT}/platform/inc
+    ${ADVANCED_SENSING_SOURCE_ROOT}/protocol/inc
+    ${ADVANCED_SENSING_SOURCE_ROOT}/camera_stream/src
+    ${ADVANCED_SENSING_SOURCE_ROOT}/ori-osdk-core/protocol/inc
+    ${ADVANCED_SENSING_SOURCE_ROOT}/ori-osdk-core/hal/inc
+    ${ADVANCED_SENSING_SOURCE_ROOT}/ori-osdk-core/platform/linux/inc
+    )
 
 ## Libraries to propagate as dependencies to third-party code depending on osdk-core
 ## Append to this variable when you want a dependency to get propagated
@@ -128,8 +139,13 @@ if(ADVANCED_SENSING)
   set(CMAKE_MODULE_PATH ${CURRENT_CMAKE_MODULE_PATH})
 
   find_package(LibUSB REQUIRED)
-  find_package(AdvancedSensing REQUIRED)
+  #find_package(AdvancedSensing REQUIRED)
   find_package(FFMPEG REQUIRED)
+
+  message(${ADVANCED_SENSING_HEADERS_DIR})
+  include_directories(${ADVANCED_SENSING_HEADERS_DIR})
+
+
 
   if(FFMPEG_FOUND)
     message( STATUS "Found FFmpeg ${FFMPEG_VERSION} installed in the system.")
@@ -140,8 +156,8 @@ if(ADVANCED_SENSING)
   endif(FFMPEG_FOUND)
 
   target_include_directories(${PROJECT_NAME} PUBLIC
-          $<BUILD_INTERFACE:${ADVANCED_SENSING_INCLUDE_DIRS}>)
-  target_link_libraries(${PROJECT_NAME} PRIVATE ${ADVANCED_SENSING_LIBRARY})
+          $<BUILD_INTERFACE:${ADVANCED_SENSING_HEADERS_DIR}>)
+  target_link_libraries(${PROJECT_NAME} PRIVATE advanced-sensing)
 
 
   target_include_directories(${PROJECT_NAME} PUBLIC ${LIBUSB_1_INCLUDE_DIRS})
@@ -151,8 +167,8 @@ if(ADVANCED_SENSING)
   target_link_libraries(${PROJECT_NAME} PUBLIC ${FFMPEG_LIBRARIES})
 
   set(OSDK_INTERFACE_LIBS ${OSDK_INTERFACE_LIBS} ${LIBUSB_1_LIBRARIES} ${FFMPEG_LIBRARIES})
-  set(MODULE_BUILD_INTERFACE ${MODULE_BUILD_INTERFACE} ${ADVANCED_SENSING_LIBRARY})
-  set(MODULE_INSTALL_INTERFACE ${MODULE_INSTALL_INTERFACE} $<INSTALL_PREFIX>/lib/libadvanced-sensing.a)
+  set(MODULE_BUILD_INTERFACE ${MODULE_BUILD_INTERFACE} advanced-sensing)
+  set(MODULE_INSTALL_INTERFACE ${MODULE_INSTALL_INTERFACE} advanced-sensing)
 
   target_compile_definitions(${PROJECT_NAME} PUBLIC -DADVANCED_SENSING)
 
@@ -249,10 +265,11 @@ FILE(GLOB OSDK_LIB_HEADERS
         logger/inc/*.h*
         utility/inc/*.h*
         ##linker layer related header files
-        linker/core/mop/mop_entry_osdk.h
-        linker/core/osdk_typedef.h
-        linker/core/logger/osdk_logger.h
-        linker/core/platform/osdk_platform.h
+        ##linker/core/mop/mop_entry_osdk.h
+        ##linker/core/osdk_typedef.h
+        ##linker/core/logger/osdk_logger.h
+        ##linker/core/platform/osdk_platform.h
+        linker/inc/*.h*
         modules/inc/filemgr/*.h*
         modules/inc/filemgr/impl/*.h*
         )
@@ -269,13 +286,21 @@ FILE(GLOB OSDK_LIB_HEADERS
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
         PUBLIC_HEADER "${OSDK_LIB_HEADERS}")
-
+#[[
 install(TARGETS ${PROJECT_NAME}
         EXPORT djiosdkTargets
         ARCHIVE DESTINATION "${OSDK_CORE_INSTALL_LIB_DIR}" COMPONENT shlib
         PUBLIC_HEADER DESTINATION "${OSDK_CORE_INSTALL_INCLUDE_DIR}" COMPONENT dev
         )
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/advanced-sensing-2.0.3
-        DESTINATION ${OSDK_LIB_ARCH_DIR} )
+]]
+
+install(TARGETS ${PROJECT_NAME}
+        EXPORT djiosdkTargets
+        ARCHIVE DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" COMPONENT shlib
+        PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_PREFIX}/include" COMPONENT dev
+        )
+
+#install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/advanced-sensing-2.0.3
+#        DESTINATION ${OSDK_LIB_ARCH_DIR} )
 #install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/waypointv2-core-1.0.0
 #        DESTINATION ${OSDK_LIB_ARCH_DIR} )

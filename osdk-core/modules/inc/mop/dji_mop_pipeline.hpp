@@ -37,6 +37,9 @@ using namespace DJI::OSDK::MOP;
 
 namespace DJI {
 namespace OSDK {
+
+/*! @brief Class providing APIs & data structures MOP pipeline operations
+ */
 class MopPipeline {
  public:
   MopPipeline(PipelineID id, PipelineType type);

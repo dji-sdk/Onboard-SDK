@@ -284,7 +284,6 @@ public:
   bool initMissionManager();
   bool initWaypointV2Mission();
   bool initHardSync();
-  bool initVirtualRC();
   bool initCameraManager();
   bool initFlightController();
   bool initPSDKManager();

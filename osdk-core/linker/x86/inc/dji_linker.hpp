@@ -33,7 +33,6 @@
 #include <stdint.h>
 #include "osdk_command_instance.h"
 #include "osdk_channel.h"
-#include "dji_log.hpp"
 #include "osdk_root_task.h"
 #include "osdk_device_id.h"
 

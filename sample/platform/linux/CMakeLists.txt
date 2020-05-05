@@ -32,15 +32,64 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/common)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/hal)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/osal)
 
-set(OSDK_LIB ${CMAKE_CURRENT_SOURCE_DIR}/../../../osdk-lib/${ARCH})
-set(CMAKE_MODULE_PATH ${OSDK_LIB}/../cmake-modules)
 
-set(OSDK_CORE_LIB ${OSDK_LIB}/osdk-core)
-set(ADVANCED_SENSING_LIB ${OSDK_LIB}/advanced-sensing-2.0.3)
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "i386|i686|x86|AMD64|x86_64")
+    set(ARCH x86)
+    add_definitions(-DDJIOSDK_HARDWARE_TYPE=3)
+elseif((CMAKE_SYSTEM_PROCESSOR MATCHES "^arm*") OR (CMAKE_SYSTEM_PROCESSOR MATCHES "^aarch"))
+    if(CMAKE_SIZEOF_VOID_P EQUAL 4)
+        set(ARCH armv7)
+        add_definitions(-DDJIOSDK_HARDWARE_TYPE=1)
+    elseif(CMAKE_SIZEOF_VOID_P EQUAL 8)
+        set(ARCH armv8)
+        add_definitions(-DDJIOSDK_HARDWARE_TYPE=2)
+    endif()
+elseif()
+    add_definitions(-DDJIOSDK_HARDWARE_TYPE=0)
+endif()
+
+set(OSDK_CORE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../../../osdk-core)
+set(CMAKE_MODULE_PATH ${OSDK_CORE_PATH}/cmake-modules)
+
+#set(OSDK_LIB ${CMAKE_CURRENT_SOURCE_DIR}/../../../osdk-lib/${ARCH})
+#set(CMAKE_MODULE_PATH ${OSDK_LIB}/../cmake-modules)
+
+#set(OSDK_CORE_LIB ${OSDK_LIB}/osdk-core)
+#set(ADVANCED_SENSING_LIB ${OSDK_LIB}/advanced-sensing-2.0.3)
 #set(WP2_CORE_LIB  ${OSDK_LIB}/waypointv2-core-1.0.0)
 
-include_directories(${OSDK_CORE_LIB}/inc)
-include_directories(${ADVANCED_SENSING_LIB}/inc)
+#include_directories(${OSDK_CORE_LIB}/inc)
+#include_directories(${ADVANCED_SENSING_LIB}/inc)
+
+message("-----------OSDK_LIB_HEADERS_DIR------------")
+set(OSDK_LIB_HEADERS_DIR
+        ${OSDK_CORE_PATH}/api/inc
+        ${OSDK_CORE_PATH}/modules/inc/payload
+        ${OSDK_CORE_PATH}/modules/inc/flight
+        ${OSDK_CORE_PATH}/modules/inc/mop
+        ${OSDK_CORE_PATH}/platform/inc
+        ${OSDK_CORE_PATH}/logger/inc
+        ${OSDK_CORE_PATH}/utility/inc
+        ${OSDK_CORE_PATH}/linker/${ARCH}/inc
+        ${OSDK_CORE_PATH}/modules/inc/filemgr
+        )
+include_directories(${OSDK_LIB_HEADERS_DIR})
+message((${OSDK_LIB_HEADERS_DIR}))
+
+
+message("-----------ADVANCED_SENSING_HEADERS_DIR------------")
+set(ADVANCED_SENSING_SOURCE_ROOT ${OSDK_CORE_PATH}/advanced-sensing)
+set(ADVANCED_SENSING_HEADERS_DIR
+    ${ADVANCED_SENSING_SOURCE_ROOT}/api/inc
+    ${ADVANCED_SENSING_SOURCE_ROOT}/platform/inc
+    ${ADVANCED_SENSING_SOURCE_ROOT}/protocol/inc
+    ${ADVANCED_SENSING_SOURCE_ROOT}/camera_stream/src
+    ${ADVANCED_SENSING_SOURCE_ROOT}/ori-osdk-core/protocol/inc
+    ${ADVANCED_SENSING_SOURCE_ROOT}/ori-osdk-core/hal/inc
+    ${ADVANCED_SENSING_SOURCE_ROOT}/ori-osdk-core/platform/linux/inc
+    )
+include_directories(${ADVANCED_SENSING_HEADERS_DIR})
+message((${ADVANCED_SENSING_HEADERS_DIR}))
 
 find_package(LibUSB REQUIRED)
 find_package(FFMPEG REQUIRED)
@@ -61,10 +110,11 @@ include_directories(${FFMPEG_INCLUDE_DIR})
 
 #link libraries
 
-link_libraries(${OSDK_CORE_LIB}/lib/libdjiosdk-core.a)
+#link_libraries(${OSDK_CORE_LIB}/lib/libdjiosdk-core.a)
 
 if(ADVANCED_SENSING)
-    link_libraries(${ADVANCED_SENSING_LIB}/lib/libadvanced-sensing.a)
+    link_libraries(advanced-sensing)
+    link_libraries(djiosdk-core)
     link_libraries(${LIBUSB_1_LIBRARIES})
     link_libraries(${FFMPEG_LIBRARIES})
 endif()

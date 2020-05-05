@@ -34,6 +34,7 @@
 #include "osdk_command.h"
 #include "osdk_protocol.h"
 #include "dji_internal_command.hpp"
+#include "dji_log.hpp"
 
 using namespace DJI;
 using namespace DJI::OSDK;

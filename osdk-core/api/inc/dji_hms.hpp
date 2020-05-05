@@ -92,6 +92,8 @@ typedef enum
     OSDKSubSuccess = 0,
 } HMSSubcribeStatus;
 
+/*! @brief DJI health manager system of drone
+ */
 class DJIHMS {
 public:
     DJIHMS(Vehicle *vehicle = 0);

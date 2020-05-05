@@ -33,6 +33,7 @@
 #include "osdk_md5.h"
 #include "osdk_policy.hpp"
 #include "dji_internal_command.hpp"
+#include "dji_log.hpp"
 
 using namespace DJI;
 using namespace DJI::OSDK;

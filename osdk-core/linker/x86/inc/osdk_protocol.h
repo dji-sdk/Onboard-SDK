@@ -32,9 +32,8 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "osdk_logger_internal.h"
-#include "osdk_protocol_sdk.h"
-#include "osdk_protocol_v1.h"
-#include "osdk_protocol_usbmc.h"
+#include "osdk_typedef.h"
+#include "osdk_protocol_common.h"
 
 #ifdef __cplusplus
 extern "C" {

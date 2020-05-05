@@ -29,7 +29,6 @@
 #ifndef DJI_INTERNAL_COMMAND_H
 #define DJI_INTERNAL_COMMAND_H
 
-#include "dji_error.hpp"
 #include <stdint.h>
 
 namespace DJI
@@ -37,7 +36,7 @@ namespace DJI
 namespace OSDK
 {
 
-class V1ProtocolCMD : public ErrorCode
+class V1ProtocolCMD
 {
  public:
   const static int MAX_CMD_ARRAY_SIZE = 2;
@@ -60,6 +59,8 @@ class V1ProtocolCMD : public ErrorCode
     const static uint8_t getPointZoomMode[MAX_CMD_ARRAY_SIZE];
     const static uint8_t pointZoomCtrl[MAX_CMD_ARRAY_SIZE];
     const static uint8_t setZoomParameter[MAX_CMD_ARRAY_SIZE];
+    const static uint8_t setCommonZoomPara[MAX_CMD_ARRAY_SIZE];
+    const static uint8_t getCommonZoomPara[MAX_CMD_ARRAY_SIZE];
     const static uint8_t setIsoParameter[MAX_CMD_ARRAY_SIZE];
     const static uint8_t getIsoParameter[MAX_CMD_ARRAY_SIZE];
     const static uint8_t setShutterSpeed[MAX_CMD_ARRAY_SIZE];
@@ -148,19 +149,12 @@ class V1ProtocolCMD : public ErrorCode
     const static uint8_t camera       = 2;
     const static uint8_t fc           = 3;
     const static uint8_t gimbal       = 4;
-    const static uint8_t center       = 5;
     const static uint8_t rc           = 6;
-    const static uint8_t wifi         = 7;
-    const static uint8_t dm368        = 8;
-    const static uint8_t ofdm         = 9;
-    const static uint8_t moBinocular  = 10;
     const static uint8_t battery      = 13;
     const static uint8_t rtk          = 15;
     const static uint8_t waypointV2   = 34;
-    const static uint8_t enterprise   = 25;
     const static uint8_t hms          = 33;
     const static uint8_t psdk         = 60;
-    const static uint8_t vb           = 72;
     const static uint8_t sdk          = 73;
   };
 };
