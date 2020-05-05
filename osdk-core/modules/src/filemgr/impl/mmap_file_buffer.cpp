@@ -34,12 +34,15 @@ bool MmapFileBuffer::deInit() {
 
 // flag 代表是否覆盖已有队列缓存
 bool MmapFileBuffer::InsertBlock(const uint8_t *pack, uint32_t data_length, int index) {
+  static uint32_t tempAdaptingBufferCnt = 0;
   //DSTATUS("data_length = %d index = %d", data_length, index);
-  if (data_length != 800) DSTATUS("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!data_length != 800  (%d)\n", data_length);
+  if (data_length != tempAdaptingBufferCnt) DSTATUS("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!data_length != 800  (%d)\n", data_length);
+  tempAdaptingBufferCnt = data_length;
 
   if ((data_length <= 0) || !fdAddr) {
     return false;
   }
+  index = index * tempAdaptingBufferCnt;
   memcpy(fdAddr + index, pack, data_length);
 
   return true;

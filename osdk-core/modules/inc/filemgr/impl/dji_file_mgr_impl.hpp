@@ -145,7 +145,7 @@ class FileMgrImpl {
   void printFileDownloadStatus();
   //只是用于测试
  private:
-
+  uint8_t localSenderId;
   FILE *fp = NULL;
   int fd;
   void *fdAddr;

@@ -217,7 +217,7 @@ FileMgrImpl::FileMgrImpl(Linker *linker, E_OSDKCommandDeiveType type,
                                           index(index) {
   fileListHandler = new DownloadListHandler();
   fileDataHandler = new DownloadDataHandler();
-
+  localSenderId = OSDK_COMMAND_DEVICE_ID(OSDK_COMMAND_DEVICE_TYPE_APP, 0);
   static bool registerCBFlag = false;
   if (!registerCBFlag) {
     registerCBFlag = true;
@@ -280,7 +280,7 @@ ErrorCode::ErrorCodeType FileMgrImpl::SendReqFileListPack() {
   cmdInfo.packetType = OSDK_COMMAND_PACKET_TYPE_REQUEST;
   cmdInfo.addr = GEN_ADDR(0, ADDR_V1_COMMAND_INDEX);
   cmdInfo.receiver = OSDK_COMMAND_DEVICE_ID(type, index);
-  cmdInfo.sender = linker->getLocalSenderId();
+  cmdInfo.sender = localSenderId; //linker->getLocalSenderId();
 
 //    printf("-------------->request data :\n");
 //    for (int i = 0; i < cmdInfo.dataLen; i++) {
@@ -291,6 +291,10 @@ ErrorCode::ErrorCodeType FileMgrImpl::SendReqFileListPack() {
   E_OsdkStat linkAck =
       linker->sendSync(&cmdInfo, (uint8_t *) setting, &ackInfo, ackData,
                        2 * 1000 / 4, 4);
+
+  /*! @TODO fix H20T route */
+  if (localSenderId != linker->getLocalSenderId()) return ErrorCode::SysCommonErr::Success;
+
   ErrorCode::ErrorCodeType ret = ErrorCode::getLinkerErrorCode(linkAck);
   if (ret != ErrorCode::SysCommonErr::Success) return ret;
   return ErrorCode::getErrorCode(ErrorCode::CameraModule,
@@ -333,7 +337,7 @@ ErrorCode::ErrorCodeType FileMgrImpl::SendReqFileDataPack(int fileIndex) {
   cmdInfo.packetType = OSDK_COMMAND_PACKET_TYPE_REQUEST;
   cmdInfo.addr = GEN_ADDR(0, ADDR_V1_COMMAND_INDEX);
   cmdInfo.receiver = OSDK_COMMAND_DEVICE_ID(type, index);
-  cmdInfo.sender = linker->getLocalSenderId();
+  cmdInfo.sender = localSenderId; //linker->getLocalSenderId();
 
 //    printf("-------------->request data :\n");
 //    for (int i = 0; i < cmdInfo.dataLen; i++) {
@@ -344,6 +348,10 @@ ErrorCode::ErrorCodeType FileMgrImpl::SendReqFileDataPack(int fileIndex) {
   E_OsdkStat linkAck =
       linker->sendSync(&cmdInfo, (uint8_t *) setting, &ackInfo, ackData,
                        1000, 1);
+
+  /*! @TODO fix H20T route */
+  if (localSenderId != linker->getLocalSenderId()) return ErrorCode::SysCommonErr::Success;
+
   ErrorCode::ErrorCodeType ret = ErrorCode::getLinkerErrorCode(linkAck);
   if (ret != ErrorCode::SysCommonErr::Success) return ret;
   return ErrorCode::getErrorCode(ErrorCode::CameraModule,
@@ -559,12 +567,12 @@ bool FileMgrImpl::parseFileData(dji_general_transfer_msg_ack *rsp) {
     uint32_t data_size = rsp->msg_length;
     data_size -= sizeof(dji_general_transfer_msg_ack) - sizeof(uint8_t);
     data_size -= sizeof(dji_file_data_download_resp) - sizeof(uint8_t);
-    fileDataHandler->mmap_file_buffer_->InsertBlock(resp->file_data, data_size, rsp->seq * 800);
+    fileDataHandler->mmap_file_buffer_->InsertBlock(resp->file_data, data_size, rsp->seq);
   } else {
     /*! 1. 本包数据总大小计算 */
     uint32_t data_size = rsp->msg_length;
     data_size -= sizeof(dji_general_transfer_msg_ack) - sizeof(uint8_t);
-    fileDataHandler->mmap_file_buffer_->InsertBlock(rsp->data, data_size, rsp->seq * 800);
+    fileDataHandler->mmap_file_buffer_->InsertBlock(rsp->data, data_size, rsp->seq);
   }
 
 #if 0
@@ -627,7 +635,7 @@ bool FileMgrImpl::parseFileData(dji_general_transfer_msg_ack *rsp) {
         if (buffer.index == consumeBytes) {
           //DSTATUS("##記錄文件數據, %dBytes", buffer.index);
           if (rsp->seq * 800 + buffer.index <= mmap_file_buffer_->fdAddrSize)
-            mmap_file_buffer_->InsertBlock(buffer.data, buffer.index, rsp->seq * 800);
+            mmap_file_buffer_->InsertBlock(buffer.data, buffer.index, rsp->seq);
           parsingState = PARSING_FILEDATA;
         } else {
           //DSTATUS("##Parse 完了");
@@ -795,7 +803,7 @@ ErrorCode::ErrorCodeType FileMgrImpl::SendAbortPack(
   cmdInfo.packetType = OSDK_COMMAND_PACKET_TYPE_REQUEST;
   cmdInfo.addr = GEN_ADDR(0, ADDR_V1_COMMAND_INDEX);
   cmdInfo.receiver = OSDK_COMMAND_DEVICE_ID(type, index);
-  cmdInfo.sender = linker->getLocalSenderId();
+  cmdInfo.sender = localSenderId; //linker->getLocalSenderId();
 //  printf("-------------->request data :\n");
 //  for (int i = 0; i < cmdInfo.dataLen; i++) {
 //    printf("%02X ", ((uint8_t *) setting)[i]);
@@ -834,7 +842,7 @@ ErrorCode::ErrorCodeType FileMgrImpl::SendACKPack(DJI_GENERAL_DOWNLOAD_FILE_TASK
   cmdInfo.packetType = OSDK_COMMAND_PACKET_TYPE_REQUEST;
   cmdInfo.addr = GEN_ADDR(0, ADDR_V1_COMMAND_INDEX);
   cmdInfo.receiver = OSDK_COMMAND_DEVICE_ID(type, index);
-  cmdInfo.sender = linker->getLocalSenderId();
+  cmdInfo.sender = localSenderId; //linker->getLocalSenderId();
 
 //  printf("-------------->request data :\n");
 //  for (int i = 0; i < cmdInfo.dataLen; i++) {
