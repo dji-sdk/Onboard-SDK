@@ -294,6 +294,11 @@ install(TARGETS ${PROJECT_NAME}
         )
 ]]
 
+install(FILES
+        ${CMAKE_CURRENT_SOURCE_DIR}/linker/${ARCH}/lib/libdji-linker.a
+        DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" COMPONENT shlib
+        )
+
 install(TARGETS ${PROJECT_NAME}
         EXPORT djiosdkTargets
         ARCHIVE DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" COMPONENT shlib
