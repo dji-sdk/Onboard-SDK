@@ -49,14 +49,6 @@ LiveView::~LiveView()
 LiveView::LiveViewErrCode LiveView::startH264Stream(LiveViewCameraPosition pos, H264Callback cb, void *userData) {
   if(vehicle->isM300()) {
     return impl->startH264Stream(pos, cb, userData);
-  } else if(vehicle->isM210V2()) {
-    switch (pos) {
-      case OSDK_CAMERA_POSITION_FPV:return (vehicle->advancedSensing->startFPVCameraH264(cb, userData)) ? OSDK_LIVEVIEW_PASS : OSDK_LIVEVIEW_UNKNOWN;
-      case OSDK_CAMERA_POSITION_NO_1:return(vehicle->advancedSensing->startMainCameraH264(cb, userData)) ? OSDK_LIVEVIEW_PASS : OSDK_LIVEVIEW_UNKNOWN;
-      default:
-        DERROR("M210 V2 series only support FPV and MainCam H264 steam in OSDK.");
-        return OSDK_LIVEVIEW_INDEX_ILLEGAL;
-    }
   } else {
     return OSDK_LIVEVIEW_UNSUPPORT_AIRCRAFT;
   }
@@ -65,21 +57,7 @@ LiveView::LiveViewErrCode LiveView::startH264Stream(LiveViewCameraPosition pos, 
 LiveView::LiveViewErrCode LiveView::stopH264Stream(LiveViewCameraPosition pos) {
   if (vehicle->isM300()) {
     return impl->stopH264Stream(pos);
-  } else if (vehicle->isM210V2()) {
-    switch (pos) {
-      case OSDK_CAMERA_POSITION_FPV:
-        vehicle->advancedSensing->stopFPVCameraH264();
-        return OSDK_LIVEVIEW_PASS;
-      case OSDK_CAMERA_POSITION_NO_1:
-        vehicle->advancedSensing->stopMainCameraH264();
-        return OSDK_LIVEVIEW_PASS;
-      default:
-        DERROR(
-            "M210 V2 series only support FPV and MainCam H264 steam in OSDK.");
-        return OSDK_LIVEVIEW_INDEX_ILLEGAL;
-    }
   } else {
-    DERROR("Only support M210 V2 and M300.");
     return OSDK_LIVEVIEW_UNSUPPORT_AIRCRAFT;
   }
 }

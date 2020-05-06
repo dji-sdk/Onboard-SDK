@@ -162,16 +162,6 @@ public:
   bool startFPVCameraStream(CameraImageCallback cb = NULL, void * cbParam = NULL);
   /*! @brief
    *
-   *  Start theFPV H264 Stream (Only for M210 V2 series)
-   *
-   *  @param cb callback function that is called in a callback thread when a new
-   *            h264 frame is received
-   *  @param cbParam a void pointer that users can manipulate inside the callback
-   *  @return true if successfully started, false otherwise
-   */
-  bool startFPVCameraH264(H264Callback cb = NULL, void * cbParam = NULL);
-  /*! @brief
-   *
    *  Start the Main Camera Stream
    *
    *  @param cb callback function that is called in a callback thread when a new
@@ -180,16 +170,6 @@ public:
    *  @return true if successfully started, false otherwise
    */
   bool startMainCameraStream(CameraImageCallback cb = NULL, void * cbParam = NULL);
-  /*! @brief
-   *
-   *  Start the Main Camera H264 Stream (Only for M210 V2 series)
-   *
-   *  @param cb callback function that is called in a callback thread when a new
-   *            h264 frame is received
-   *  @param cbParam a void pointer that users can manipulate inside the callback
-   *  @return true if successfully started, false otherwise
-   */
-  bool startMainCameraH264(H264Callback cb = NULL, void * cbParam = NULL);
   /*! @brief
    *
    *  Stop the FPV Camera Stream
@@ -205,20 +185,9 @@ public:
 
   /*! @brief
    *
-   *  Stop the FPV H264 Stream (Only for M210 V2 series)
-   */
-  void stopFPVCameraH264();
-  /*! @brief
-   *
    *  Stop the Main Camera RGB Stream
    */
   void stopMainCameraStream();
-
-  /*! @brief
-   *
-   *  Stop the Main Camera H264 Stream (Only for M210 V2 series)
-   */
-  void stopMainCameraH264();
   /*! @brief Check if a new image from the FPV camera is received
    *
    *  @return true if a new image frame is ready, false otherwise
@@ -320,7 +289,37 @@ public:
   void setStereoCamParamsObserver(Perception::PerceptionCamParamCB cb, void *userData);
 
 private:
-void sendCommonCmd(uint8_t *data, uint8_t data_len, uint8_t cmd_id);
+  /*! @brief
+   *
+   *  Start theFPV H264 Stream (Only for M210 V2 series)
+   *
+   *  @param cb callback function that is called in a callback thread when a new
+   *            h264 frame is received
+   *  @param cbParam a void pointer that users can manipulate inside the callback
+   *  @return true if successfully started, false otherwise
+   */
+  bool startFPVCameraH264(H264Callback cb = NULL, void * cbParam = NULL);
+  /*! @brief
+   *
+   *  Start the Main Camera H264 Stream (Only for M210 V2 series)
+   *
+   *  @param cb callback function that is called in a callback thread when a new
+   *            h264 frame is received
+   *  @param cbParam a void pointer that users can manipulate inside the callback
+   *  @return true if successfully started, false otherwise
+   */
+  bool startMainCameraH264(H264Callback cb = NULL, void * cbParam = NULL);
+  /*! @brief
+   *
+   *  Stop the FPV H264 Stream (Only for M210 V2 series)
+   */
+  void stopFPVCameraH264();
+  /*! @brief
+   *
+   *  Stop the Main Camera H264 Stream (Only for M210 V2 series)
+   */
+  void stopMainCameraH264();
+  void sendCommonCmd(uint8_t *data, uint8_t data_len, uint8_t cmd_id);
 
 private:
 AdvancedSensingProtocol* advancedSensingProtocol;
