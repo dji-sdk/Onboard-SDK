@@ -580,8 +580,6 @@ void CUDT::connect(const sockaddr* serv_addr)
    if (m_bConnecting || m_bConnected)
       throw CUDTException(5, 2, 0);
 
-   m_bConnecting = true;
-
    // record peer/server address
    delete m_pPeerAddr;
    m_pPeerAddr = (AF_INET == m_iIPversion) ? (sockaddr*)new sockaddr_in : (sockaddr*)new sockaddr_in6;
@@ -627,6 +625,8 @@ void CUDT::connect(const sockaddr* serv_addr)
    request.setLength(hs_size);
    m_pSndQueue->sendto(serv_addr, request);
    m_llLastReqTime = CTimer::getTime();
+
+   m_bConnecting = true;
 
    // asynchronous connect, return immediately
    if (!m_bSynRecving)
