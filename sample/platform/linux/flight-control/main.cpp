@@ -122,5 +122,7 @@ int main(int argc, char** argv) {
     default:
       break;
   }
+
+  delete flightSample;
   return 0;
 }

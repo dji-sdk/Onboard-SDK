@@ -34,8 +34,6 @@ FILE(GLOB SOURCE_FILES
         ${CMAKE_CURRENT_SOURCE_DIR}/../osal/*.c
         )
 
-add_executable(mop_QA_test ${SOURCE_FILES} mop_QA_test.cpp)
-
 add_executable(op_download_sample ${SOURCE_FILES} op_download_sample.cpp)
 
 add_executable(op_upload_sample ${SOURCE_FILES} op_upload_sample.cpp)

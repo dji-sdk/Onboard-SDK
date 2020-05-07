@@ -325,7 +325,7 @@ ErrorCode::ErrorCodeType WaypointV2MissionSample::resumeWaypointMission(int time
 
 void  WaypointV2MissionSample::getGlobalCruiseSpeed(int timeout)
 {
-  GlobalCruiseSpeed cruiseSpeed;
+  GlobalCruiseSpeed cruiseSpeed = 0;
   ErrorCode::ErrorCodeType ret = vehiclePtr->waypointV2Mission->getGlobalCruiseSpeed(cruiseSpeed, timeout);
   if(ret !=  ErrorCode::SysCommonErr::Success)
   {

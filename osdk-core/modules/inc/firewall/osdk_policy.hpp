@@ -34,10 +34,9 @@
 #define OSDK_POLICY_FILE_VERSION_OFFSET              (256)
 /*!
  * OSDK Policy
- * Creator  : Jinxi.Chen
- * Date     : 2020-03-27
+ * Creator  : DJI
+ * Date     : 2020-05-07
  * OSDK Ver : OSDK 4.0
- * Details  : https://us002.fly-access.com/pages/viewpage.action?pageId=39059904
  * */
 static const uint8_t s_osdkPolicyFileBinaryArray[] = {
     0x5F, 0xE8, 0x80, 0x47, 0x3F, 0xFA, 0xC7, 0xCE, 0xA6, 0xDF, 0x21, 0xDE, 0x14, 0x2E, 0x77, 0x1B, 0xC6, 0x25, 0x3A, 0xA6, 0x6B, 0xD2, 0x36, 0xC5, 0x04, 0xB3,

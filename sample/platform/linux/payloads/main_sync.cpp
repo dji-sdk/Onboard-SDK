@@ -447,5 +447,6 @@ int main(int argc, char **argv) {
     inputChar = 0;
   }
   delete p;
+  delete g;
   return 0;
 }
