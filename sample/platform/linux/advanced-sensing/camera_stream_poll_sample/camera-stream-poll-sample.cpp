@@ -38,10 +38,10 @@
 #ifdef OPEN_CV_INSTALLED
   #include "opencv2/opencv.hpp"
   #include "opencv2/highgui/highgui.hpp"
+using namespace cv;
 #endif
 
 using namespace DJI::OSDK;
-using namespace cv;
 using namespace std;
 
 void show_rgb(CameraRGBImage img, char* name)
