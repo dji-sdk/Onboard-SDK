@@ -91,7 +91,7 @@ vector<Perception::DirectionType> PerceptionImpl::getUpdatingDiretcion() {
   vector<Perception::DirectionType> v;
   v.clear();
   for (int i = 0; i < IMAGE_MAX_DIRECTION_NUM; i++) {
-    uint32_t curMs;
+    uint32_t curMs = 0;
     OsdkOsal_GetTimeMs(&curMs);
     if ((curMs - imageUpdateSysMs[i]) < updateJudgingInMs
         || (curMs - imageUpdateSysMs[i]) > -updateJudgingInMs) {

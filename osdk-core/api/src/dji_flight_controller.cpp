@@ -512,5 +512,6 @@ ErrorCode::ErrorCodeType FlightController::killSwitch(KillSwitch cmd,
     return flightActions->killSwitch(cmd, wait_timeout, debugMsg);
   } else {
     DSTATUS("Kill switch fail, Alloc memory failed");
+    return OSDK_STAT_ERR_ALLOC;
   }
 }

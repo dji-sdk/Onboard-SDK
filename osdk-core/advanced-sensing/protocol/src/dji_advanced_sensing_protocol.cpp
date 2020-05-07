@@ -131,7 +131,7 @@ AdvancedSensingProtocol::send(void *cmd, void *data, uint16_t data_len)
   cmdContainer.data_payload = data;
   cmdContainer.data_size    = data_len;
 
-  sendInterface((void*)&cmdContainer);
+  return sendInterface((void*)&cmdContainer);
 }
 
 int
@@ -208,6 +208,7 @@ AdvancedSensingProtocol::formatProtocol(uint8_t *dst,
   header->check_sum = 0;
   header->length = data_size;
   header->reserved = 0;
+  return 0;
 }
 
 /******************** Receive Pipeline **********************/
@@ -339,10 +340,10 @@ AdvancedSensingProtocol::appHandler(void *protocolHeader)
           }else if (pair_idx == AdvancedSensingProtocol::DOWN){
             if (dir_idx == AdvancedSensingProtocol::LEFT)
               memcpy(stereoImgData->img_vec[stereoImgData->num_imgs].name,
-                     "down_back\0", 12);
+                     "down_back\0", 10);
             if (dir_idx == AdvancedSensingProtocol::RIGHT)
               memcpy(stereoImgData->img_vec[stereoImgData->num_imgs].name,
-                     "down_front\0", 12);
+                     "down_front\0", 11);
           }
 
           memcpy(&stereoImgData->img_vec[stereoImgData->num_imgs++].image,

@@ -22,6 +22,11 @@ bool MmapFileBuffer::init(std::string path, uint64_t fileSize) {
 
   ftruncate(fd, fdAddrSize);
   fdAddr = (char *) mmap(NULL, fdAddrSize, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+
+  if (fdAddr)
+    return true;
+  else
+    return false;
 }
 
 bool MmapFileBuffer::deInit() {
@@ -30,6 +35,7 @@ bool MmapFileBuffer::deInit() {
   fd = -1;
   if (fdAddr) munmap(fdAddr, fdAddrSize);
   fdAddr = NULL;
+  return true;
 }
 
 // flag 代表是否覆盖已有队列缓存

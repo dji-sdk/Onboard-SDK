@@ -271,7 +271,7 @@ ErrorCode::ErrorCodeType FileMgrImpl::SendReqFileListPack() {
 
   T_CmdInfo cmdInfo = {0};
   T_CmdInfo ackInfo = {0};
-  uint8_t ackData[1024];
+  uint8_t ackData[1024] = {0};
 
   cmdInfo.cmdSet = V1ProtocolCMD::Common::downloadFile[0];
   cmdInfo.cmdId = V1ProtocolCMD::Common::downloadFile[1];
@@ -328,7 +328,7 @@ ErrorCode::ErrorCodeType FileMgrImpl::SendReqFileDataPack(int fileIndex) {
 
   T_CmdInfo cmdInfo = {0};
   T_CmdInfo ackInfo = {0};
-  uint8_t ackData[1024];
+  uint8_t ackData[1024] = {0};
 
   cmdInfo.cmdSet = V1ProtocolCMD::Common::downloadFile[0];
   cmdInfo.cmdId = V1ProtocolCMD::Common::downloadFile[1];
@@ -665,7 +665,7 @@ void FileMgrImpl::fileListRawDataCB(dji_general_transfer_msg_ack *rsp) {
     }
 
     /*! refresh the time stamp */
-    uint32_t curMs;
+    uint32_t curMs = 0;
     OsdkOsal_GetTimeMs(&curMs);
     fileListHandler->updateTimeMs = curMs;
 
@@ -697,7 +697,7 @@ void FileMgrImpl::fileDataRawDataCB(dji_general_transfer_msg_ack *rsp) {
   }
 
   /*! refresh the time stamp */
-  uint32_t curMs;
+  uint32_t curMs = 0;
   OsdkOsal_GetTimeMs(&curMs);
   fileDataHandler->updateTimeMs = curMs;
 
@@ -891,7 +891,7 @@ ErrorCode::ErrorCodeType FileMgrImpl::SendMissedAckPack(DJI_GENERAL_DOWNLOAD_FIL
     ack->loss_desc[i].cnt = range.length;
     DSTATUS("[MissPack]---------------loss[%d] range.seq_num = %d, range.length = %d", i, range.seq_num, range.length);
   }
-  SendACKPack(taskId, ack);
+  return SendACKPack(taskId, ack);
 }
 
 DownloadListHandler::DownloadListHandler() : reqCB(nullptr), reqCBUserData(nullptr) {

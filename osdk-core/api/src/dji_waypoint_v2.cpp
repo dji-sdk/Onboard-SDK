@@ -382,7 +382,7 @@ bool ActionsEncode(std::vector<DJIWaypointV2Action> &actions,
 
 T_CmdInfo setCmdInfoDefault(Vehicle *vehicle, const uint8_t cmd[],
                             uint16_t len) {
-  T_CmdInfo cmdInfo;
+  T_CmdInfo cmdInfo = {0};
   cmdInfo.receiver = OSDK_COMMAND_FLIGHT_ID;
   cmdInfo.sender = vehicle->linker->getLocalSenderId();
   cmdInfo.cmdSet = cmd[0];
@@ -420,6 +420,7 @@ E_OsdkStat updateMissionState(T_CmdHandle *cmdHandle, const T_CmdInfo *cmdInfo,
     }
     return OSDK_STAT_OK;
   }
+  return OSDK_STAT_ERR_ALLOC;
 }
 
 E_OsdkStat updateOSDbrodcast(T_CmdHandle *cmdHandle, const T_CmdInfo *cmdInfo,
@@ -436,6 +437,7 @@ E_OsdkStat updateOSDbrodcast(T_CmdHandle *cmdHandle, const T_CmdInfo *cmdInfo,
     }
     return OSDK_STAT_OK;
   }
+  return OSDK_STAT_SYS_ERR;
 }
 /*! 仅仅推送了0x00,0x10,0x11这几个类别的事件*/
 E_OsdkStat updateMissionEvent(T_CmdHandle *cmdHandle, const T_CmdInfo *cmdInfo,
@@ -471,9 +473,10 @@ E_OsdkStat updateMissionEvent(T_CmdHandle *cmdHandle, const T_CmdInfo *cmdInfo,
         DSTATUS("curActuatorState:0x%x\n",MissionEventPushAck->data.ActionExecEvent.curActuatorState);
         DSTATUS("result:%x\n",MissionEventPushAck->data.ActionExecEvent.result);
       }
-
+      return OSDK_STAT_OK;
     }
   }
+  return OSDK_STAT_SYS_ERR;
 }
 //void WaypointV2MissionOperator::RegisterMissionEventCallback() {
 //  static T_RecvCmdHandle handle = {0};
@@ -675,7 +678,7 @@ ErrorCode::ErrorCodeType WaypointV2MissionOperator::downloadMission(
   T_CmdInfo ackInfo = {0};
   RetCodeType ackData[1024];
 
-  GetWaypontStartEndIndexAck startEndIndexAck;
+  GetWaypontStartEndIndexAck startEndIndexAck = {0};
   ErrorCode::ErrorCodeType ret =
       getWaypointIndexInList(startEndIndexAck, timeout);
   if (ret != ErrorCode::SysCommonErr::Success)

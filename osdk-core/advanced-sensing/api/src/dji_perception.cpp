@@ -42,6 +42,7 @@ Perception::Perception(Vehicle *vehiclePtr) : vehicle(vehiclePtr) {
 
 Perception::~Perception() {
   cancelAllSubsciptions();
+  if (impl) delete impl;
 }
 
 Perception::PerceptionErrCode Perception::subscribePerceptionImage(DirectionType direction,

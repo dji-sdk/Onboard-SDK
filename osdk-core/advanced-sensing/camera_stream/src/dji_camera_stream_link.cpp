@@ -78,7 +78,7 @@ bool DJICameraStreamLink::init()
 
   fHandle = -1;
 
-  struct addrinfo *local, *peer;
+  struct addrinfo *local = nullptr, *peer = nullptr;
   struct addrinfo hints;
 
   memset(&hints, 0, sizeof(struct addrinfo));
@@ -107,11 +107,13 @@ bool DJICameraStreamLink::init()
 //  cout << peer->ai_family <<" " << peer->ai_socktype <<" "<< peer->ai_protocol<< endl;
 //#endif
 
+  static int optval = 100;
+
   if(fHandle == -1)
   {
     fHandle = UDT::socket(local->ai_family, local->ai_socktype, local->ai_protocol);
     //UDT_RCVTIMEO 	int 	Receiving call timeout (milliseconds). 	Default -1 (infinite).
-    UDT::setsockopt(fHandle, 0, UDT_RCVTIMEO, new int(100), sizeof(int));
+    UDT::setsockopt(fHandle, 0, UDT_RCVTIMEO, &optval, sizeof(int));
   }
 
   UDTSTATUS status = UDT::getsockstate(fHandle);

@@ -76,6 +76,7 @@ void *LegacyLinker::legacyX5SEnableTask(void *arg) {
            "ptr. Please recheck this task params, or X5S/X7 will not output "
            "vedio stream.");
   }
+  return NULL;
 }
 
 void LegacyLinker::initX5SEnableThread() {

@@ -155,6 +155,8 @@ E_OsdkStat LiveViewImpl::getCameraPushing(struct _CommandHandle *cmdHandle,
       DERROR("cmdInfo is a null value");
     }
     return OSDK_STAT_OK;
+  } else {
+    return OSDK_STAT_SYS_ERR;
   }
 }
 

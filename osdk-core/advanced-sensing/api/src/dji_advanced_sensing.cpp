@@ -45,7 +45,8 @@ void *adv_pthread(void *p){
   DSTATUS("adv pthread created !!!!!!!!!!!!!!!!!!!!!!!");
   if (p) {
     DSTATUS("adv pthread running !!!!!!!!!!!!!!!!!!!!!!!");
-    RecvContainer* recvContainer = new RecvContainer();
+    RecvContainer container = {0};
+    RecvContainer* recvContainer = &container;
     Vehicle*       vehiclePtr    = (Vehicle *)p;
     while (true)
     {

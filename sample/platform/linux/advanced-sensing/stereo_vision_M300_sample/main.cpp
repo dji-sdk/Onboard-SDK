@@ -34,6 +34,13 @@
 #include <dirent.h>
 #include "dji_vehicle.hpp"
 
+using namespace DJI::OSDK;
+
+#define IMAGE_FILE_PATH                "./image"
+#define IMAGE_FILE_PATH_LEN            (64)
+#define IMAGE_INFO_LEN                 (sizeof(DUSS_MSG_OSDK_IMAGE_INFO_t))
+#define IMAGE_MAX_DIRECTION_NUM        (6)
+
 #ifdef OPEN_CV_INSTALLED
 #include "opencv2/opencv.hpp"
 #include "opencv2/highgui/highgui.hpp"
@@ -69,13 +76,6 @@ int writePictureData(const uint8_t *data, uint32_t len) {
   return 0;
 }
 #endif
-
-using namespace DJI::OSDK;
-
-#define IMAGE_FILE_PATH                "./image"
-#define IMAGE_FILE_PATH_LEN            (64)
-#define IMAGE_INFO_LEN                 (sizeof(DUSS_MSG_OSDK_IMAGE_INFO_t))
-#define IMAGE_MAX_DIRECTION_NUM        (6)
 
 void PerceptionImageCB(Perception::ImageInfoType info, uint8_t *imageRawBuffer,
                        int bufferLen, void *userData) {

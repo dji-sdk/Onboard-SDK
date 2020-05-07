@@ -66,7 +66,7 @@ Log::title(int level, const char* prefix, const char* func, int line)
   {
     vaild = true;
     mutex->lock();
-    uint32_t timeMs;
+    uint32_t timeMs = 0;
     OsdkOsal_GetTimeMs(&timeMs);
     printf("[%d.%03d]%s/%d @ %s, L%d: ", timeMs / 1000, timeMs % 1000, prefix, level, func, line);
     mutex->unlock();
