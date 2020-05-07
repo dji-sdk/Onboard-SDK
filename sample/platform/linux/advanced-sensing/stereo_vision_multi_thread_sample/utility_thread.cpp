@@ -131,4 +131,5 @@ UtilityThread::img_process_call(void *param)
   }
 
   DDEBUG("Quit image process function\n");
+  return NULL;
 }

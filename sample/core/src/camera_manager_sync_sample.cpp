@@ -356,11 +356,52 @@ ErrorCode::ErrorCodeType CameraManagerSyncSample::startZoomSyncSample(
   DSTATUS("Start continuous optical zoom parameters : direction=%d, speed=%d",
           direction, speed);
   retCode = pm->startContinuousOpticalZoomSync(index, direction, speed, 1);
+
   if (retCode != ErrorCode::SysCommonErr::Success) {
     DERROR("Start continuous zoom fail. Error code : 0x%lX", retCode);
     ErrorCode::printErrorCodeMsg(retCode);
   }
   return retCode;
+}
+
+ErrorCode::ErrorCodeType CameraManagerSyncSample::setZoomSyncSample(
+    PayloadIndexType index, float factor) {
+  if (!vehicle || !vehicle->cameraManager) {
+    DERROR("vehicle or cameraManager is a null value.");
+    return ErrorCode::SysCommonErr::InstInitParamInvalid;
+  }
+  ErrorCode::ErrorCodeType retCode;
+  CameraManager *pm = vehicle->cameraManager;
+
+  DSTATUS(
+      "Attention : It is only supported by X5, X5R and X5S camera on Osmo with"
+      "lens Olympus M.Zuiko ED 14-42mm f/3.5-5.6 EZ, Z3 camera, Z30 camera.");
+
+  float curFactor = 0;
+  retCode = pm->getOpticalZoomFactorSync(index, curFactor, 1);
+  if (retCode != ErrorCode::SysCommonErr::Success) {
+    DERROR("Get zoom parameter fail. Error code : 0x%lX", retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
+    DSTATUS(
+        "Attention : It is only supported by X5, X5R and X5S camera on Osmo with"
+        "lens Olympus M.Zuiko ED 14-42mm f/3.5-5.6 EZ, Z3 camera, Z30 camera.");
+    return retCode;
+  }
+  DSTATUS("Got the current optical zoom factor : %0.2f", curFactor);
+  if (curFactor != factor) {
+    DSTATUS("Set the current optical zoom factor as %0.2f", factor);
+    retCode = pm->setOpticalZoomFactorSync(index, factor, 1);
+
+    if (retCode != ErrorCode::SysCommonErr::Success) {
+      DERROR("Set zoom parameter fail. Error code : 0x%lX", retCode);
+      ErrorCode::printErrorCodeMsg(retCode);
+    }
+    return retCode;
+  } else {
+    DSTATUS("The current zoom factor is already : %0.2f", factor);
+    return ErrorCode::SysCommonErr::Success;
+  }
+
 }
 
 ErrorCode::ErrorCodeType CameraManagerSyncSample::stopZoomSyncSample(

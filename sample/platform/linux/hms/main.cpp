@@ -86,5 +86,7 @@ int main(int argc, char** argv) {
     //! 4. unsubscribe flight status
     hmsSample->unsubscribeFlightStatus(pkgIndex);
 
+    delete hmsSample;
+
     return 0;
 }

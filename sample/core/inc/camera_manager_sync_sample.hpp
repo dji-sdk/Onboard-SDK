@@ -128,7 +128,7 @@ class CameraManagerSyncSample {
                                                      uint8_t multiplier,
                                                      float x, float y);
 
-  /*! @brief Sample to execute continuous zoom on camera, using async api
+  /*! @brief Sample to execute continuous zoom on camera, using sync api
    *
    *  @note It is only supported by X5, X5R and X5S camera on Osmo with lens
    * Olympus M.Zuiko ED 14-42mm f/3.5-5.6 EZ, Z3 camera, Z30 camera.
@@ -143,6 +143,20 @@ class CameraManagerSyncSample {
   ErrorCode::ErrorCodeType startZoomSyncSample(
       PayloadIndexType index, CameraModule::zoomDirectionData direction,
       CameraModule::zoomSpeedData speed);
+
+  /*! @brief Sample to execute position zoom on camera, using sync api
+   *
+   *  @note It is only supported by X5, X5R and X5S camera on Osmo with lens
+   * Olympus M.Zuiko ED 14-42mm f/3.5-5.6 EZ, Z3 camera, Z30 camera.
+   *  @note In this interface, the zoom will set the zoom factor as the your
+   * target value.
+   *  @param index payload node index, input limit see enum
+   * DJI::OSDK::PayloadIndexType
+   *  @param factor target zoom factor
+   *  @return ErrorCode::ErrorCodeType error code
+   */
+  ErrorCode::ErrorCodeType setZoomSyncSample(
+      PayloadIndexType index, float factor);
 
   /*! @brief Sample to stop continuous zoom on camera, using async api
    *

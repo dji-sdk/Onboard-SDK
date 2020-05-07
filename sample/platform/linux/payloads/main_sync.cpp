@@ -323,17 +323,15 @@ int main(int argc, char **argv) {
         sleep(5);
         break;
       case 'g':
-        p->startZoomSyncSample(PAYLOAD_INDEX_1,
-                               CameraModule::ZoomDirection::ZOOM_IN,
-                               CameraModule::ZoomSpeed::NORMAL);
+        p->setZoomSyncSample(PAYLOAD_INDEX_0, 5);
         sleep(4);
-        p->stopZoomSyncSample(PAYLOAD_INDEX_1);
-        sleep(2);
-        p->startZoomSyncSample(PAYLOAD_INDEX_1,
+        p->setZoomSyncSample(PAYLOAD_INDEX_0, 10);
+        sleep(4);
+        p->startZoomSyncSample(PAYLOAD_INDEX_0,
                                CameraModule::ZoomDirection::ZOOM_OUT,
                                CameraModule::ZoomSpeed::FASTEST);
         sleep(8);
-        p->stopZoomSyncSample(PAYLOAD_INDEX_1);
+        p->stopZoomSyncSample(PAYLOAD_INDEX_0);
         break;
       case 'h':
         p->startShootSinglePhotoSyncSample(PAYLOAD_INDEX_0);
@@ -449,5 +447,6 @@ int main(int argc, char **argv) {
     inputChar = 0;
   }
   delete p;
+  delete g;
   return 0;
 }
