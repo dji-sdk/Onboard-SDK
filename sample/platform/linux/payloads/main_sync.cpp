@@ -274,6 +274,10 @@ int main(int argc, char **argv) {
         << std::endl
         << "| [n] Reset gimbal sample                                        |"
         << std::endl
+        << "| [o] Download camera filelist                                   |"
+        << std::endl
+        << "| [p] Download camera filedata from case o                       |"
+        << std::endl
         << "| [q] Quit                                                       |"
         << std::endl;
 
@@ -389,16 +393,16 @@ int main(int argc, char **argv) {
                 g->getGimbalData(PAYLOAD_INDEX_0).yaw);
         break;
       case 'o': {
-        DSTATUS("回放模式......");
+        DSTATUS("Play back mode setting......");
         vehicle->cameraManager->setModeSync(PAYLOAD_INDEX_0,
                                             CameraModule::WorkMode::PLAYBACK,
                                             2);
-        DSTATUS("获取liveview下载权限......");
+        DSTATUS("Get liveview right......");
         ErrorCode::ErrorCodeType ret =
             vehicle->cameraManager->obtainDownloadRightSync(PAYLOAD_INDEX_0,
                                                             true, 2);
         ErrorCode::printErrorCodeMsg(ret);
-        DSTATUS("尝试下载文件列表 .......");
+        DSTATUS("Try to download file list  .......");
         ret = vehicle->cameraManager->startReqFileList(fileListReqCB, (void *)("Download main camera file list"));
         ErrorCode::printErrorCodeMsg(ret);
         break;
@@ -412,13 +416,13 @@ int main(int argc, char **argv) {
           vehicle->cameraManager->setModeSync(PAYLOAD_INDEX_0,
                                               CameraModule::WorkMode::PLAYBACK,
                                               2);
-          DSTATUS("获取liveview下载权限......");
+          DSTATUS("Get liveview right......");
           ErrorCode::ErrorCodeType ret =
               vehicle->cameraManager->obtainDownloadRightSync(PAYLOAD_INDEX_0,
                                                               true, 2);
           ErrorCode::printErrorCodeMsg(ret);
 
-          DSTATUS("尝试下载文件数据 .......");
+          DSTATUS("Try to download file list  .......");
           char pathBuffer[100] = {0};
           sprintf(pathBuffer, "./DJI0%03d", cur_file_list.media[i].fileIndex - 99900);
           std::string localPath(pathBuffer);
