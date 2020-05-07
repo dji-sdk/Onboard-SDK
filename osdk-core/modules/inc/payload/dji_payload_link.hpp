@@ -60,14 +60,13 @@ class PayloadLink {
   void sendToPSDK(uint8_t *data, uint16_t len);
 
  public:
-  Vehicle *getVehicle() const;
+  Vehicle *getVehicle() const {return vehicle;};
 
-  void setVehicle(Vehicle *value);
+  void setVehicle(Vehicle *value) {vehicle = value;};
 
  private:
   Vehicle *vehicle;
 
-  int setCallback(void *callBack, UserData userData);
 };
 }  // namespace OSDK
 }  // namespace DJI

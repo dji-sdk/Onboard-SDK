@@ -46,17 +46,18 @@ Control::~Control()
 void
 Control::action(const int cmd, VehicleCallBack callback, UserData userData)
 {
-  int cbIndex = vehicle->callbackIdIndex();
+  VehicleCallBack cb = NULL;
+  UserData udata = NULL;
   if (callback)
   {
-    vehicle->nbCallbackFunctions[cbIndex] = (void*)callback;
-    vehicle->nbUserData[cbIndex]          = userData;
+    cb = callback;
+    udata = userData;
   }
   else
   {
     // Support for default callbacks
-    vehicle->nbCallbackFunctions[cbIndex] = (void*)actionCallback;
-    vehicle->nbUserData[cbIndex]          = NULL;
+    cb = actionCallback;
+    udata = NULL;
   }
 
   // Check which version of firmware we are dealing with
@@ -64,82 +65,73 @@ Control::action(const int cmd, VehicleCallBack callback, UserData userData)
   {
     legacyCMDData.cmd = cmd;
     legacyCMDData.sequence++;
-    vehicle->protocolLayer->send(
-        2, vehicle->getEncryption(), OpenProtocolCMD::CMDSet::Control::task,
-        (uint8_t*)&legacyCMDData, sizeof(legacyCMDData), 500, 2, true, cbIndex);
-  }
-  else if (vehicle->isM100())
-  {
+    vehicle->legacyLinker->sendAsync(OpenProtocolCMD::CMDSet::Control::task,
+                                     (uint8_t *) &legacyCMDData,
+                                     sizeof(legacyCMDData), 500, 2, cb, udata);
+  } else if (vehicle->isM100()) {
     legacyCMDData.cmd = cmd;
     legacyCMDData.sequence++;
-    vehicle->protocolLayer->send(
-        2,vehicle->getEncryption(), OpenProtocolCMD::CMDSet::Control::task,
-        (uint8_t*)&legacyCMDData, sizeof(legacyCMDData), 500, 2, true, cbIndex);
+    vehicle->legacyLinker->sendAsync(OpenProtocolCMD::CMDSet::Control::task,
+                                     (uint8_t *) &legacyCMDData,
+                                     sizeof(legacyCMDData), 500, 2, cb, udata);
   }
   else
   {
     uint8_t data = cmd;
-    vehicle->protocolLayer->send(2, vehicle->getEncryption(),
-                                 OpenProtocolCMD::CMDSet::Control::task, &data,
-                                 sizeof(data), 500, 2, true, cbIndex);
+    vehicle->legacyLinker->sendAsync(OpenProtocolCMD::CMDSet::Control::task,
+                                     &data, sizeof(data), 500, 2, cb, udata);
   }
 }
 
 ACK::ErrorCode
-Control::action(const int cmd, int timeout)
-{
-  ACK::ErrorCode ack;
-
-  if (vehicle->isLegacyM600())
-  {
+Control::action(const int cmd, int timeout) {
+  if (vehicle->isLegacyM600()) {
     legacyCMDData.cmd = cmd;
     legacyCMDData.sequence++;
-    vehicle->protocolLayer->send(
-        2,vehicle->getEncryption(), OpenProtocolCMD::CMDSet::Control::task,
-        (uint8_t*)&legacyCMDData, sizeof(legacyCMDData), 500, 2, false, 2);
-  }
-  else if (vehicle->isM100())
-  {
+    return
+        *(ACK::ErrorCode *) vehicle->legacyLinker->sendSync(
+            OpenProtocolCMD::CMDSet::Control::task,
+            (uint8_t *) &legacyCMDData,
+            sizeof(legacyCMDData), 500, 2);
+  } else if (vehicle->isM100()) {
     legacyCMDData.cmd = cmd;
     legacyCMDData.sequence++;
-    vehicle->protocolLayer->send(
-        2, vehicle->getEncryption(), OpenProtocolCMD::CMDSet::Control::task,
-        (uint8_t*)&legacyCMDData, sizeof(legacyCMDData), 100, 3, false, 2);
-  }
-  else
-  {
+    return
+        *(ACK::ErrorCode *) vehicle->legacyLinker->sendSync(
+            OpenProtocolCMD::CMDSet::Control::task,
+            (uint8_t *) &legacyCMDData,
+            sizeof(legacyCMDData), 100, 3);
+  } else {
     uint8_t data = cmd;
-    vehicle->protocolLayer->send(2, vehicle->getEncryption(),
-                                 OpenProtocolCMD::CMDSet::Control::task, &data,
-                                 sizeof(data), 500, 2, false, 2);
+    return
+        *(ACK::ErrorCode *) vehicle->legacyLinker->sendSync(
+            OpenProtocolCMD::CMDSet::Control::task,
+            (uint8_t *) &data, sizeof(data), 500,
+            2);
   }
-
-  ack = *((ACK::ErrorCode*)vehicle->waitForACK(
-    OpenProtocolCMD::CMDSet::Control::task, timeout));
-
-  return ack;
 }
 
 void
 Control::setArm(bool armSetting, VehicleCallBack callback, UserData userData)
 {
   uint8_t data    = armSetting ? 1 : 0;
-  int     cbIndex = vehicle->callbackIdIndex();
+  VehicleCallBack cb = NULL;
+  UserData udata = NULL;
+
   if (callback)
   {
-    vehicle->nbCallbackFunctions[cbIndex] = (void*)callback;
-    vehicle->nbUserData[cbIndex]          = userData;
+    cb = callback;
+    udata = userData;
   }
   else
   {
     // Support for default callbacks
-    vehicle->nbCallbackFunctions[cbIndex] = (void*)actionCallback;
-    vehicle->nbUserData[cbIndex]          = NULL;
+    cb = actionCallback;
+    udata = NULL;
   }
 
-  vehicle->protocolLayer->send(2, vehicle->getEncryption(),
-                               OpenProtocolCMD::CMDSet::Control::setArm, &data,
-                               sizeof(data), 10, 10, true, cbIndex);
+  vehicle->legacyLinker->sendAsync(OpenProtocolCMD::CMDSet::Control::setArm,
+                                   &data, sizeof(data), 10, 10, cb, udata);
 }
 
 ACK::ErrorCode
@@ -148,14 +140,9 @@ Control::setArm(bool armSetting, int timeout)
   ACK::ErrorCode ack;
   uint8_t        data = armSetting ? 1 : 0;
 
-  vehicle->protocolLayer->send(2, vehicle->getEncryption(),
-                               OpenProtocolCMD::CMDSet::Control::setArm, &data,
-                               sizeof(data), 10, 10, false, 2);
-
-  ack = *((ACK::ErrorCode*)vehicle->waitForACK(
-    OpenProtocolCMD::CMDSet::Control::setArm, timeout));
-
-  return ack;
+  return *(ACK::ErrorCode *) vehicle->legacyLinker->sendSync(
+      OpenProtocolCMD::CMDSet::Control::setArm,
+      &data, sizeof(data), timeout * 1000 / 10, 10);
 }
 
 ACK::ErrorCode
@@ -331,9 +318,8 @@ Control::land(VehicleCallBack callback, UserData userData)
 void
 Control::flightCtrl(CtrlData data)
 {
-  vehicle->protocolLayer->send(
-    0, vehicle->getEncryption(), OpenProtocolCMD::CMDSet::Control::control,
-    static_cast<void*>(&data), sizeof(CtrlData), 500, 2, false, 1);
+  vehicle->legacyLinker->send(OpenProtocolCMD::CMDSet::Control::control,
+                              static_cast<void *>(&data), sizeof(CtrlData));
 }
 
 void
@@ -341,9 +327,9 @@ Control::flightCtrl(AdvancedCtrlData data)
 {
   if (vehicle->getFwVersion() > extendedVersionBase)
   {
-    vehicle->protocolLayer->send(
-      0, vehicle->getEncryption(), OpenProtocolCMD::CMDSet::Control::control,
-      static_cast<void*>(&data), sizeof(AdvancedCtrlData), 500, 2, false, 1);
+    vehicle->legacyLinker->send(OpenProtocolCMD::CMDSet::Control::control,
+                                static_cast<void *>(&data),
+                                sizeof(AdvancedCtrlData));
   }
   else
   {
@@ -366,6 +352,7 @@ Control::positionAndYawCtrl(float32_t x, float32_t y, float32_t z,
   uint8_t ctrl_flag = (VERTICAL_POSITION | HORIZONTAL_POSITION | YAW_ANGLE |
                        HORIZONTAL_GROUND | STABLE_ENABLE);
   CtrlData data(ctrl_flag, x, y, z, yaw);
+
 
   this->flightCtrl(data);
 }
@@ -458,9 +445,9 @@ Control::killSwitch(KillSwitch cmd, int wait_timeout, char debugMsg[10])
     data.cmd = cmd;
     data.reserved = 0;
 
-    vehicle->protocolLayer->send(2, vehicle->getEncryption(),
-                                 OpenProtocolCMD::CMDSet::Control::killSwitch, &data,
-                                 sizeof(data), 500, 2, false, 2);
+    return *(ACK::ErrorCode*)vehicle->legacyLinker->sendSync(
+        OpenProtocolCMD::CMDSet::Control::killSwitch, &data, sizeof(data),
+        wait_timeout * 1000 / 2, 2);
   }
   else
   {
@@ -470,28 +457,24 @@ Control::killSwitch(KillSwitch cmd, int wait_timeout, char debugMsg[10])
     ack.data = ACK::FAIL;
     return ack;
   }
-
-  ack = *((ACK::ErrorCode*)vehicle->waitForACK(
-    OpenProtocolCMD::CMDSet::Control::killSwitch, wait_timeout));
-
-  return ack;
 }
 
 void Control::killSwitch(KillSwitch cmd, char debugMsg[10], VehicleCallBack callback, UserData userData)
 {
   if(vehicle->getFwVersion() >= versionBase33)
   {
-    int cbIndex = vehicle->callbackIdIndex();
+    VehicleCallBack cb = NULL;
+    UserData udata = NULL;
     if (callback)
     {
-      vehicle->nbCallbackFunctions[cbIndex] = (void*)callback;
-      vehicle->nbUserData[cbIndex]          = userData;
+      cb = callback;
+      udata = userData;
     }
     else
     {
       // Support for default callbacks
-      vehicle->nbCallbackFunctions[cbIndex] = (void*)actionCallback;
-      vehicle->nbUserData[cbIndex]          = NULL;
+      cb = actionCallback;
+      udata = NULL;
     }
 
     KillSwitchData data;
@@ -500,9 +483,9 @@ void Control::killSwitch(KillSwitch cmd, char debugMsg[10], VehicleCallBack call
     memcpy(data.debug_description, debugMsg, 10);
     data.cmd = cmd;
     data.reserved = 0;
-    vehicle->protocolLayer->send(2, vehicle->getEncryption(),
-                                 OpenProtocolCMD::CMDSet::Control::killSwitch, &data,
-                                 sizeof(data), 500, 2, true, cbIndex);
+    vehicle->legacyLinker->sendAsync(
+        OpenProtocolCMD::CMDSet::Control::killSwitch, &data, sizeof(data), 500,
+        2, callback, userData);
   }
   else
   {
@@ -557,3 +540,126 @@ Control::AdvancedCtrlData::AdvancedCtrlData(uint8_t in_flag, float32_t in_x,
   , advFlag(0x01)
 {
 }
+
+
+void
+Control::obtainCtrlAuthority(VehicleCallBack callback, UserData userData)
+{
+  uint8_t data    = 1;
+  VehicleCallBack cb = NULL;
+  UserData udata = NULL;
+
+  if (callback)
+  {
+    cb = callback;
+    udata = userData;
+  }
+  else
+  {
+    cb = controlAuthorityCallback;
+    udata = NULL;
+  }
+
+  vehicle->legacyLinker->sendAsync(OpenProtocolCMD::CMDSet::Control::setControl, &data,
+                          1, 500, 2, cb, udata);
+}
+
+ACK::ErrorCode
+Control::obtainCtrlAuthority(int timeout)
+{
+  ACK::ErrorCode ack;
+  uint8_t        data = 1;
+
+  ack = *(ACK::ErrorCode *) vehicle->legacyLinker->sendSync(
+      OpenProtocolCMD::CMDSet::Control::setControl, &data, 1,
+      timeout * 1000 / 2, 2);
+
+  if (ack.data == OpenProtocolCMD::ErrorCode::ControlACK::SetControl::
+  OBTAIN_CONTROL_IN_PROGRESS)
+  {
+    ack = this->obtainCtrlAuthority(timeout);
+  }
+
+  return ack;
+}
+
+void
+Control::releaseCtrlAuthority(VehicleCallBack callback, UserData userData)
+{
+  uint8_t data    = 0;
+  VehicleCallBack cb = NULL;
+  UserData udata = NULL;
+
+  if (callback)
+  {
+    cb = callback;
+    udata = userData;
+  }
+  else
+  {
+    // nbCallbackFunctions[cbIndex] = (void*)ReleaseCtrlCallback;
+    userData = NULL;
+  }
+
+  vehicle->legacyLinker->sendAsync(OpenProtocolCMD::CMDSet::Control::setControl, &data,
+                          1, 500, 2, cb, userData);
+}
+
+ACK::ErrorCode
+Control::releaseCtrlAuthority(int timeout)
+{
+  ACK::ErrorCode ack;
+  uint8_t        data = 0;
+
+  ack = *(ACK::ErrorCode *) vehicle->legacyLinker->sendSync(
+      OpenProtocolCMD::CMDSet::Control::setControl, &data, 1,
+      timeout * 1000 / 2, 2);
+  if (ack.data == OpenProtocolCMD::ErrorCode::ControlACK::SetControl::
+  RELEASE_CONTROL_IN_PROGRESS)
+  {
+    ack = this->releaseCtrlAuthority(timeout);
+  }
+
+  return ack;
+}
+
+void
+Control::controlAuthorityCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
+                                  UserData userData)
+{
+  ACK::ErrorCode ack;
+  ack.data = OpenProtocolCMD::ErrorCode::CommonACK::NO_RESPONSE_ERROR;
+
+  uint8_t data = 0x1;
+  VehicleCallBack cb = NULL;
+  UserData udata = NULL;
+
+  if (recvFrame.recvInfo.len - OpenProtocol::PackageMin <= sizeof(uint16_t))
+  {
+    ack.data = recvFrame.recvData.ack;
+    ack.info = recvFrame.recvInfo;
+  }
+  else
+  {
+    DERROR("ACK is exception, sequence %d\n", recvFrame.recvInfo.seqNumber);
+    return;
+  }
+
+  if (ack.data == OpenProtocolCMD::ErrorCode::ControlACK::SetControl::
+  OBTAIN_CONTROL_IN_PROGRESS)
+  {
+    ACK::getErrorCodeMessage(ack, __func__);
+    vehiclePtr->control->obtainCtrlAuthority(controlAuthorityCallback);
+  }
+  else if (ack.data == OpenProtocolCMD::ErrorCode::ControlACK::SetControl::
+  RELEASE_CONTROL_IN_PROGRESS)
+  {
+    ACK::getErrorCodeMessage(ack, __func__);
+    vehiclePtr->control->releaseCtrlAuthority(controlAuthorityCallback);
+  }
+  else
+  {
+    ACK::getErrorCodeMessage(ack, __func__);
+  }
+}
+

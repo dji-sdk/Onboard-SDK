@@ -26,14 +26,6 @@ project(djiosdk-mobile-sample)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread -g -O0")
 
-include_directories(${ONBOARDSDK_SOURCE}/api/inc)
-include_directories(${ONBOARDSDK_SOURCE}/utility/inc)
-include_directories(${ONBOARDSDK_SOURCE}/hal/inc)
-include_directories(${ONBOARDSDK_SOURCE}/protocol/inc)
-include_directories(${ONBOARDSDK_SOURCE}/platform/linux/inc)
-include_directories(${MODULES_HEADER_DIR})
-include_directories(${FLIGHT_MODULES_HEADER_DIR})
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../common)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../flight-control)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../camera-gimbal)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../missions)
@@ -44,9 +36,10 @@ FILE(GLOB SOURCE_FILES *.hpp *.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/../flight-control/flight_control_sample.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/../camera-gimbal/camera_gimbal_sample.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/../missions/mission_sample.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/../hal/*.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/../osal/*.c
         )
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
-target_link_libraries(${PROJECT_NAME} djiosdk-core)
 
 

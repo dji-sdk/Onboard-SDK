@@ -324,7 +324,7 @@
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
             <uC99>0</uC99>
-            <uGnu>0</uGnu>
+            <uGnu>1</uGnu>
             <useXO>0</useXO>
             <v6Lang>1</v6Lang>
             <v6LangP>1</v6LangP>
@@ -335,9 +335,9 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls>--exceptions --cpp11</MiscControls>
-              <Define>USE_STDPERIPH_DRIVER,STM32F40_41xxx,USE_STM324xG_EVAL,STM32,STM32F40x,ARM_MATH_CM4,__FPU_PRESENT</Define>
+              <Define>USE_STDPERIPH_DRIVER,STM32F40_41xxx,USE_STM324xG_EVAL,STM32,STM32F40x,ARM_MATH_CM4,__FPU_PRESENT,USE_USB_OTG_FS</Define>
               <Undefine></Undefine>
-              <IncludePath>..\Lib\CMSIS\inc;..\Lib\STM32F4xx_StdPeriph_Driver\inc;..\User;..\Bsp;..\..\..\..\..\osdk-core\api\inc;..\..\..\..\..\osdk-core\hal\inc;..\..\..\..\..\osdk-core\protocol\inc;..\..\..\..\..\osdk-core\platform\STM32\inc;..\..\..\..\..\osdk-core\utility\inc;..\..\..\..\..\osdk-core\platform\default\inc;..\..\..\..\core\inc;..\..\..\..\..\osdk-core\modules\inc;..\..\..\..\..\osdk-core\modules\inc\payload;..\..\..\..\..\osdk-core\modules\inc\flight</IncludePath>
+              <IncludePath>..\Lib\CMSIS\inc;..\Lib\STM32F4xx_StdPeriph_Driver\inc;..\User;..\Bsp;..\..\..\..\core\inc;..\OS\FreeRTOS\include;..\OS\FreeRTOS\portable\RVDS\ARM_CM4F;..\Linker\hal;..\Linker\osal;..\Lib\USB_Lib\STM32_USB_HOST_Library\Class\CDC\inc;..\Lib\USB_Lib\STM32_USB_HOST_Library\Core\inc;..\Lib\USB_Lib\STM32_USB_OTG_Driver\inc;..\..\..\..\..\osdk-lib\STM32\osdk-core\inc;..\..\..\..\..\osdk-core\api\inc;..\..\..\..\..\osdk-core\linker\STM32\inc;..\..\..\..\..\osdk-core\logger\inc;..\..\..\..\..\osdk-core\modules\inc\payload;..\..\..\..\..\osdk-core\modules\inc\flight;..\..\..\..\..\osdk-core\modules\inc\firewall;..\..\..\..\..\osdk-core\platform\inc;..\..\..\..\..\osdk-core\utility\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -471,11 +471,6 @@
               <FilePath>..\User\MissionSample.cpp</FilePath>
             </File>
             <File>
-              <FileName>CameraGimbalSample.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\User\CameraGimbalSample.cpp</FilePath>
-            </File>
-            <File>
               <FileName>MobileSample.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\User\MobileSample.cpp</FilePath>
@@ -506,14 +501,49 @@
               <FilePath>..\User\PayloadSample.cpp</FilePath>
             </File>
             <File>
-              <FileName>CameraManagerSample.cpp</FileName>
+              <FileName>dji_stm32_helpers.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>..\User\CameraManagerSample.cpp</FilePath>
+              <FilePath>..\User\dji_stm32_helpers.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>gimbal_manager_async_sample.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\core\src\gimbal_manager_async_sample.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>gimbal_manager_sync_sample.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\core\src\gimbal_manager_sync_sample.cpp</FilePath>
             </File>
             <File>
               <FileName>camera_manager_async_sample.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\core\src\camera_manager_async_sample.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>camera_manager_sync_sample.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\core\src\camera_manager_sync_sample.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>GimbalManagerSample.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\User\GimbalManagerSample.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>CameraManagerSample.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\User\CameraManagerSample.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>CameraGimbalSample.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\User\CameraGimbalSample.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>usbh_usr.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\User\usbh_usr.cpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -534,6 +564,11 @@
               <FileName>bsp.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\Bsp\bsp.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>usb_bsp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Bsp\usb_bsp.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -683,17 +718,147 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>DJIlib</GroupName>
+          <GroupName>FreeRTOS_CORE</GroupName>
           <Files>
             <File>
-              <FileName>dji_camera_manager.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\..\..\..\osdk-core\api\src\dji_camera_manager.cpp</FilePath>
+              <FileName>croutine.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\OS\FreeRTOS\croutine.c</FilePath>
             </File>
+            <File>
+              <FileName>event_groups.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\OS\FreeRTOS\event_groups.c</FilePath>
+            </File>
+            <File>
+              <FileName>list.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\OS\FreeRTOS\list.c</FilePath>
+            </File>
+            <File>
+              <FileName>queue.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\OS\FreeRTOS\queue.c</FilePath>
+            </File>
+            <File>
+              <FileName>tasks.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\OS\FreeRTOS\tasks.c</FilePath>
+            </File>
+            <File>
+              <FileName>timers.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\OS\FreeRTOS\timers.c</FilePath>
+            </File>
+            <File>
+              <FileName>stream_buffer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\OS\FreeRTOS\stream_buffer.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>FreeRTOS_PORTABLE</GroupName>
+          <Files>
+            <File>
+              <FileName>port.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\OS\FreeRTOS\portable\RVDS\ARM_CM4F\port.c</FilePath>
+            </File>
+            <File>
+              <FileName>heap_4.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\OS\FreeRTOS\portable\MemMang\heap_4.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Osal</GroupName>
+          <Files>
+            <File>
+              <FileName>osdkosal_stm32.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Linker\osal\osdkosal_stm32.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Hal</GroupName>
+          <Files>
+            <File>
+              <FileName>osdkhal_stm32.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Linker\hal\osdkhal_stm32.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>USBLib</GroupName>
+          <Files>
+            <File>
+              <FileName>usbh_core.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Lib\USB_Lib\STM32_USB_HOST_Library\Core\src\usbh_core.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbh_hcs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Lib\USB_Lib\STM32_USB_HOST_Library\Core\src\usbh_hcs.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbh_ioreq.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Lib\USB_Lib\STM32_USB_HOST_Library\Core\src\usbh_ioreq.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbh_stdreq.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Lib\USB_Lib\STM32_USB_HOST_Library\Core\src\usbh_stdreq.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbh_cdc_core.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Lib\USB_Lib\STM32_USB_HOST_Library\Class\CDC\src\usbh_cdc_core.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbh_cdc_funct.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Lib\USB_Lib\STM32_USB_HOST_Library\Class\CDC\src\usbh_cdc_funct.c</FilePath>
+            </File>
+            <File>
+              <FileName>usb_core.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Lib\USB_Lib\STM32_USB_OTG_Driver\src\usb_core.c</FilePath>
+            </File>
+            <File>
+              <FileName>usb_hcd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Lib\USB_Lib\STM32_USB_OTG_Driver\src\usb_hcd.c</FilePath>
+            </File>
+            <File>
+              <FileName>usb_hcd_int.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Lib\USB_Lib\STM32_USB_OTG_Driver\src\usb_hcd_int.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>OSDK_Core</GroupName>
+          <Files>
             <File>
               <FileName>dji_ack.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\osdk-core\api\src\dji_ack.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>dji_battery.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\osdk-core\api\src\dji_battery.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>dji_battery_impl.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\osdk-core\api\src\dji_battery_impl.cpp</FilePath>
             </File>
             <File>
               <FileName>dji_broadcast.cpp</FileName>
@@ -704,6 +869,11 @@
               <FileName>dji_camera.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\osdk-core\api\src\dji_camera.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>dji_camera_manager.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\osdk-core\api\src\dji_camera_manager.cpp</FilePath>
             </File>
             <File>
               <FileName>dji_command.cpp</FileName>
@@ -721,9 +891,19 @@
               <FilePath>..\..\..\..\..\osdk-core\api\src\dji_error.cpp</FilePath>
             </File>
             <File>
+              <FileName>dji_flight_controller.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\osdk-core\api\src\dji_flight_controller.cpp</FilePath>
+            </File>
+            <File>
               <FileName>dji_gimbal.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\osdk-core\api\src\dji_gimbal.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>dji_gimbal_manager.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\osdk-core\api\src\dji_gimbal_manager.cpp</FilePath>
             </File>
             <File>
               <FileName>dji_hardware_sync.cpp</FileName>
@@ -736,6 +916,11 @@
               <FilePath>..\..\..\..\..\osdk-core\api\src\dji_hotpoint.cpp</FilePath>
             </File>
             <File>
+              <FileName>dji_legacy_linker.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\osdk-core\api\src\dji_legacy_linker.cpp</FilePath>
+            </File>
+            <File>
               <FileName>dji_mfio.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\osdk-core\api\src\dji_mfio.cpp</FilePath>
@@ -746,11 +931,6 @@
               <FilePath>..\..\..\..\..\osdk-core\api\src\dji_mission_manager.cpp</FilePath>
             </File>
             <File>
-              <FileName>dji_mobile_communication.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\..\..\..\osdk-core\api\src\dji_mobile_communication.cpp</FilePath>
-            </File>
-            <File>
               <FileName>dji_mobile_device.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\osdk-core\api\src\dji_mobile_device.cpp</FilePath>
@@ -759,6 +939,11 @@
               <FileName>dji_payload_device.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\osdk-core\api\src\dji_payload_device.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>dji_psdk_manager.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\osdk-core\api\src\dji_psdk_manager.cpp</FilePath>
             </File>
             <File>
               <FileName>dji_subscription.cpp</FileName>
@@ -776,99 +961,14 @@
               <FilePath>..\..\..\..\..\osdk-core\api\src\dji_version.cpp</FilePath>
             </File>
             <File>
-              <FileName>dji_virtual_rc.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\..\..\..\osdk-core\api\src\dji_virtual_rc.cpp</FilePath>
-            </File>
-            <File>
               <FileName>dji_waypoint.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\osdk-core\api\src\dji_waypoint.cpp</FilePath>
             </File>
             <File>
-              <FileName>dji_camera_module.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\..\..\..\osdk-core\modules\src\payload\dji_camera_module.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>dji_psdk_module.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\..\..\..\osdk-core\modules\src\payload\dji_psdk_module.cpp</FilePath>
-            </File>
-            <File>
               <FileName>dji_log.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>..\..\..\..\..\osdk-core\hal\src\dji_log.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>dji_hard_driver.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\..\..\..\osdk-core\hal\src\dji_hard_driver.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>dji_memory.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\..\..\..\osdk-core\hal\src\dji_memory.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>dji_platform_manager.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\..\..\..\osdk-core\hal\src\dji_platform_manager.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>dji_thread_manager.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\..\..\..\osdk-core\hal\src\dji_thread_manager.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>STM32F4DataGuard.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\..\..\..\osdk-core\platform\STM32\src\STM32F4DataGuard.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>STM32F4SerialDriver.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\..\..\..\osdk-core\platform\STM32\src\STM32F4SerialDriver.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>dji_aes.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\..\..\..\osdk-core\protocol\src\dji_aes.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>dji_open_protocol.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\..\..\..\osdk-core\protocol\src\dji_open_protocol.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>dji_protocol_base.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\..\..\..\osdk-core\protocol\src\dji_protocol_base.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>dji_payload_base.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\..\..\..\osdk-core\modules\src\payload\dji_payload_base.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>dji_payload_link.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\..\..\..\osdk-core\modules\src\payload\dji_payload_link.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>dji_circular_buffer.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\..\..\..\osdk-core\utility\src\dji_circular_buffer.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>dji_singleton.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\..\..\..\osdk-core\utility\src\dji_singleton.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>dji_memory_default.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\..\..\..\..\osdk-core\platform\default\src\dji_memory_default.cpp</FilePath>
+              <FilePath>..\..\..\..\..\osdk-core\logger\src\dji_log.cpp</FilePath>
             </File>
             <File>
               <FileName>dji_flight_actions_module.cpp</FileName>
@@ -881,19 +981,74 @@
               <FilePath>..\..\..\..\..\osdk-core\modules\src\flight\dji_flight_assistant_module.cpp</FilePath>
             </File>
             <File>
+              <FileName>dji_flight_joystick_module.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\osdk-core\modules\src\flight\dji_flight_joystick_module.cpp</FilePath>
+            </File>
+            <File>
               <FileName>dji_flight_link.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\..\..\..\osdk-core\modules\src\flight\dji_flight_link.cpp</FilePath>
             </File>
             <File>
-              <FileName>dji_flight_controller.cpp</FileName>
+              <FileName>dji_camera_module.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>..\..\..\..\..\osdk-core\api\src\dji_flight_controller.cpp</FilePath>
+              <FilePath>..\..\..\..\..\osdk-core\modules\src\payload\dji_camera_module.cpp</FilePath>
             </File>
             <File>
-              <FileName>dji_psdk_manager.cpp</FileName>
+              <FileName>dji_gimbal_module.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>..\..\..\..\..\osdk-core\api\src\dji_psdk_manager.cpp</FilePath>
+              <FilePath>..\..\..\..\..\osdk-core\modules\src\payload\dji_gimbal_module.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>dji_payload_base.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\osdk-core\modules\src\payload\dji_payload_base.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>dji_payload_link.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\osdk-core\modules\src\payload\dji_payload_link.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>dji_psdk_module.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\osdk-core\modules\src\payload\dji_psdk_module.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>psdk_md5.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\osdk-core\modules\src\firewall\psdk_md5.c</FilePath>
+            </File>
+            <File>
+              <FileName>osdk_firewall.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\osdk-core\modules\src\firewall\osdk_firewall.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>dji_platform.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\osdk-core\platform\src\dji_platform.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>dji_setup_helpers.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\osdk-core\utility\src\dji_setup_helpers.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>dji_singleton.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\..\..\..\osdk-core\utility\src\dji_singleton.cpp</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>SDK_Linker</GroupName>
+          <Files>
+            <File>
+              <FileName>sdk-linker.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\..\..\..\osdk-core\linker\STM32\lib\sdk-linker.lib</FilePath>
             </File>
           </Files>
         </Group>

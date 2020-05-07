@@ -104,7 +104,8 @@ public:
     A3_HAS_GIMBAL  = 0x0400,
     A3_HAS_STATUS  = 0x0800,
     A3_HAS_BATTERY = 0x1000,
-    A3_HAS_DEVICE  = 0x2000
+    A3_HAS_DEVICE  = 0x2000,
+    A3_HAS_COMPASS = 0x4000,
   };
 
 public:
@@ -279,7 +280,14 @@ public:
    *  @return Telemetry::SDKInfo data structure with the newest value.
    */
   Telemetry::SDKInfo     getSDKInfo()            ;
-  // clang-format on
+
+    /*! Get Compass status info from local cache
+   *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
+   *
+   *  @return Telemetry::Compass data structure with the newest value.
+   */
+  Telemetry::Compass     getCompassData();
+    // clang-format on
 
 public:
   /*! Non-blocking call for Frequency setting
@@ -364,6 +372,7 @@ private:
     FLAG_STATUS         = 0X0800,
     FLAG_BATTERY        = 0X1000,
     FLAG_DEVICE         = 0X2000,
+    FLAG_COMPASS        = 0x4000,
 
     // Following are M100 specific
     FLAG_M100_MAG       = 0x0040,
@@ -419,6 +428,7 @@ private:
   Telemetry::Status              status      ;
   Telemetry::Battery             battery     ;
   Telemetry::SDKInfo             info        ;
+  Telemetry::Compass             compass     ;
   /*
    * @note Broadcast data for Matrice 100/600 older firmware that is fundamentally
    * different from the A3/N3/M600 newer firmware
@@ -433,6 +443,10 @@ private:
   Vehicle* vehicle;
   uint16_t passFlag;
   uint16_t broadcastLength;
+
+  T_OsdkMutexHandle m_msgLock;
+  void lockMSG();
+  void freeMSG();
 
   VehicleCallBackHandler userCbHandler;
 };

@@ -47,6 +47,7 @@ ImageProcessContainer::ImageProcessContainer(Vehicle *vehicle)
 ImageProcessContainer::~ImageProcessContainer()
 {
   this->imgProcessThread->stopThread();
+  delete imgProcessThread;
 }
 
 bool

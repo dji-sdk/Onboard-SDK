@@ -31,9 +31,12 @@
 
 #include <vector>
 #include "dji_camera_module.hpp"
-
+#if defined(__linux__)
+#include "dji_file_mgr.hpp"
+#endif
 namespace DJI {
 namespace OSDK {
+class FileMgr;
 /*! @brief The manager of camera module
  */
 class CameraManager {
@@ -914,6 +917,32 @@ class CameraManager {
       PayloadIndexType index, CameraModule::zoomDirectionData zoomDirection,
       CameraModule::zoomSpeedData zoomSpeed, int timeout);
 
+  /*! @brief set parameters for camera optical zooming, blocking calls
+   *
+   *  @note It is only supported by X5, X5R and X5S camera on Osmo with lens
+   * Olympus M.Zuiko ED 14-42mm f/3.5-5.6 EZ, Z3 camera, Z30 camera.
+   *  @note In this interface, the zoom will set the zoom factor as the your
+   * target value.
+   *  @param index payload node index, input limit see enum
+   * DJI::OSDK::PayloadIndexType
+   *  @param factor target zoom factor
+   *  @return ErrorCode::ErrorCodeType error code
+   */
+  ErrorCode::ErrorCodeType setOpticalZoomFactorSync(PayloadIndexType index, float factor, int timeout);
+
+  /*! @brief get parameters of camera optical zooming, blocking calls
+   *
+   *  @note It is only supported by X5, X5R and X5S camera on Osmo with lens
+   * Olympus M.Zuiko ED 14-42mm f/3.5-5.6 EZ, Z3 camera, Z30 camera.
+   *  @note In this interface, the zoom will set the zoom factor as the your
+   * target value.
+   *  @param index payload node index, input limit see enum
+   * DJI::OSDK::PayloadIndexType
+   *  @param factor target zoom factor
+   *  @return ErrorCode::ErrorCodeType error code
+   */
+  ErrorCode::ErrorCodeType getOpticalZoomFactorSync(PayloadIndexType index, float &factor, int timeout);
+
   /*! @brief stop camera optical zooming, non-blocking calls
    *
    *  @note Called to stop focal length changing, when it currently is from
@@ -1600,8 +1629,16 @@ class CameraManager {
       PayloadIndexType index, CameraModule::ExposureCompensation &ev,
       int timeout);
 
+  ErrorCode::ErrorCodeType obtainDownloadRightSync(PayloadIndexType index,
+                                                   bool enable, int timeout);
+#if defined(__linux__)
+  ErrorCode::ErrorCodeType startReqFileList(FileMgr::FileListReqCBType cb, void *userData);
+  ErrorCode::ErrorCodeType startReqFileData(int fileIndex, std::string localPath, FileMgr::FileDataReqCBType cb, void *userData);
+#endif
  private:
-  PayloadLink *payloadLink;
+#if defined(__linux__)
+  FileMgr *fileMgr;
+#endif
   std::vector<CameraModule *> cameraModuleVector;
 
   CameraModule *getCameraModule(PayloadIndexType index);

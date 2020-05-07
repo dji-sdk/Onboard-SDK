@@ -29,6 +29,8 @@
 #include "dji_flight_actions_module.hpp"
 #include <dji_vehicle.hpp>
 #include "dji_flight_link.hpp"
+#include "osdk_device_id.h"
+#include "dji_linker.hpp"
 
 using namespace DJI;
 using namespace DJI::OSDK;
@@ -103,5 +105,50 @@ void FlightActions::actionAsync(FlightCommand req,
                           retryTime);
   } else {
     if (userCB) userCB(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
+  }
+}
+
+ErrorCode::ErrorCodeType FlightActions::EmergencyBrakeActionSync(uint8_t req,
+                                                                 int timeout) {
+  if (flightLink) {
+    ACK::ErrorCode* rsp = (ACK::ErrorCode*)flightLink->sendSync(
+        OpenProtocolCMD::CMDSet::Control::emergencyBrake, (void*)&req,
+        sizeof(req), timeout);
+    if (rsp->info.buf &&
+        (rsp->info.len - OpenProtocol::PackageMin >= sizeof(CommonAck))) {
+      return ErrorCode::getErrorCode(ErrorCode::FCModule,
+                                     ErrorCode::FCEmergencyBrake, rsp->data);
+
+    } else {
+      return ErrorCode::SysCommonErr::UnpackDataMismatch;
+    }
+  } else
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
+}
+
+ErrorCode::ErrorCodeType FlightActions::killSwitch(KillSwitch cmd,
+                                                   int wait_timeout,
+                                                   char debugMsg[10]) {
+  if (flightLink) {
+    ACK::ErrorCode ack;
+    KillSwitchData data;
+    data.high_version = 0x01;
+    data.low_version = 0x01;
+    memcpy(data.debug_description, debugMsg, 10);
+    data.cmd = cmd;
+    data.reserved = 0;
+    ACK::ErrorCode* rsp = (ACK::ErrorCode*)flightLink->sendSync(
+        OpenProtocolCMD::CMDSet::Control::killSwitch, (void*)&data,
+        sizeof(data), wait_timeout);
+
+    if (rsp->info.buf &&
+        (rsp->info.len - OpenProtocol::PackageMin >= sizeof(CommonAck))) {
+      return ErrorCode::getErrorCode(ErrorCode::FCModule,
+                                     ErrorCode::FCEmergencyBrake, rsp->data);
+    } else {
+      return ErrorCode::SysCommonErr::UnpackDataMismatch;
+    }
+  } else {
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }

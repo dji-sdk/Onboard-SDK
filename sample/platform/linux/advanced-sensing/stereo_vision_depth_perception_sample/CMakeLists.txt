@@ -87,18 +87,16 @@ if (OPEN_CV_3_3_0_INSTALLED AND FOUND_OPENCV_VIZ)
             ${MULTI_THREAD_SAMPLE_DIR}/image_process_container.cpp
             ${MULTI_THREAD_SAMPLE_DIR}/utility_thread.cpp
             stereo_process_container.cpp
+            m300_stereo_param_tool.cpp
             utility/*.cpp
             )
 
     add_executable(${PROJECT_NAME}
+            ${SOURCE_FILES}
             ${DEPTH_PERCEPTION_SAMPLE_SOURCE_FILES}
             )
 
     target_include_directories(${PROJECT_NAME} PRIVATE ${OpenCV_INCLUDE_DIRS})
-
-    target_link_libraries(${PROJECT_NAME}
-            djiosdk-core
-            )
 
     if (OpenCV_FOUND)
         target_link_libraries(${PROJECT_NAME}

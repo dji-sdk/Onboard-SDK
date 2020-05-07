@@ -56,13 +56,13 @@ public:
     uint8_t           cmd_set;
     uint8_t           cmd_id;
     uint16_t          len;
-    uint8_t*          buf;
+    uint8_t*          buf; // ugly design before, now means the recv package data buf
     uint8_t           seqNumber;
     Version::FirmWare version;
   } Entry; // pack(1)
 
   /*
-   * ACK structures not exposed to user
+   * ACK structures exposed to user
    */
 
   typedef struct HotPointStartInternal
@@ -128,6 +128,11 @@ public:
     uint8_t paramValue[8]; /*!< parameter value*/
   } ParamAckInternal;      // pack(1)
 
+  typedef struct SetHomeLocationAckInternal
+  {
+    uint8_t result;       /*!< set result 1:fail,0:success*/
+    uint8_t retCode;      /*!< set fail reason */
+  } SetHomeLocationAckInternal;      // pack(1)
   /*
    * ACK structures exposed to user
    */
@@ -155,6 +160,12 @@ public:
     bool updated = false;
   } ParamAck;  // pack(1)
 
+  typedef struct SetHomeLocationAck
+  {
+    Entry info;
+    SetHomeLocationAckInternal data;
+    bool updated = false;
+  }SetHomeLocationAck;
   /*! @brief This struct is returned from the DJI::OSDK::MFIO::getValue
    * blocking API
    *
@@ -261,6 +272,7 @@ public:
     uint8_t error_notification;
     uint16_t reserved_1;
   } WayPointStatusPushData;
+
   /*!
    * @brief This constant variable defines number of pixels for QVGA images
    */
@@ -271,28 +283,28 @@ public:
    */
   typedef struct ImageMeta
   {
-    Image image;
-    char  name[12];
+      Image image;
+      char  name[12];
   } ImageMeta; // pack(1)
   /*!
    * @brief This struct captures PushData when subscribe to QVGA images
    */
   typedef struct StereoImgData
   {
-    uint32_t frame_index;
-    uint32_t time_stamp;
-    uint8_t  num_imgs;
-    /*
-     * There could be 50 different kinds of images coming from the drone,
-     * 5 camera pairs and 10 images types.
-     * Here we use an uint64_t to describe which image is coming
-     * from the USB line, each bit represents if there's data or not
-     * Please use AdvancedSensing::ReceivedImgDesc to match them
-     * For M210, we support up to 4 images at the same time
-     */
-    uint64_t img_desc;
-    // @note for M210, at most 4 imgs come at the same time.
-    ImageMeta img_vec[4];
+      uint32_t frame_index;
+      uint32_t time_stamp;
+      uint8_t  num_imgs;
+      /*
+       * There could be 50 different kinds of images coming from the drone,
+       * 5 camera pairs and 10 images types.
+       * Here we use an uint64_t to describe which image is coming
+       * from the USB line, each bit represents if there's data or not
+       * Please use AdvancedSensing::ReceivedImgDesc to match them
+       * For M210, we support up to 4 images at the same time
+       */
+      uint64_t img_desc;
+      // @note for M210, at most 4 imgs come at the same time.
+      ImageMeta img_vec[4];
   } StereoImgData; // pack(1)
   /*!
    * @brief This constant variable defines number of pixels for VGA images
@@ -304,12 +316,12 @@ public:
    */
   typedef struct StereoVGAImgData
   {
-    uint32_t frame_index;
-    uint32_t time_stamp;
-    uint8_t  num_imgs;
-    uint8_t  direction;
-    // @note VGA imgs always come in pair
-    VGAImage img_vec[2];
+      uint32_t frame_index;
+      uint32_t time_stamp;
+      uint8_t  num_imgs;
+      uint8_t  direction;
+      // @note VGA imgs always come in pair
+      VGAImage img_vec[2];
   } StereoVGAImgData; // pack(1)
 
   /*!
@@ -321,6 +333,12 @@ public:
     uint32_t utc_yymmdd;
     uint32_t utc_hhmmss;
   } FCTimeInUTC; // pack(1)
+
+  typedef struct HeartBeatAck
+  {
+      Entry             info;
+      HeartBeatPack     data;
+  } HeartBeatAck;  //pack(1)
 
   typedef union TypeUnion {
     uint8_t  raw_ack_array[MAX_INCOMING_DATA_SIZE];
@@ -342,6 +360,7 @@ public:
     WayPointVelocityInternal wpVelocityACK;
     MFIOGetInternal          mfioGetACK;
     ParamAckInternal         paramAckData;
+    SetHomeLocationAckInternal   setHomeLocationACK;
 
     /*
      * Push Data in ground-station mode
@@ -354,12 +373,16 @@ public:
      */
     StereoImgData           *stereoImgData;
     StereoVGAImgData        *stereoVGAImgData;
+
     /*
      * Push Data from GPS or RTK
      */
     FCTimeInUTC             fcTimeInUTC;
     uint8_t                 ppsSourceType;
-
+   /*
+    * Heart Beat Pack between FC and OSDK
+    */
+    HeartBeatPack           heartbeatpack;
   } TypeUnion; // pack(1)
 
 #pragma pack()

@@ -24,28 +24,22 @@ project(djiosdk-payloads-sample)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread -g -O0 -Wall -Werror")
 
-include_directories(${ONBOARDSDK_SOURCE}/api/inc)
-include_directories(${ONBOARDSDK_SOURCE}/utility/inc)
-include_directories(${ONBOARDSDK_SOURCE}/hal/inc)
-include_directories(${ONBOARDSDK_SOURCE}/protocol/inc)
-include_directories(${ONBOARDSDK_SOURCE}/platform/linux/inc)
-include_directories(${MODULES_HEADER_DIR})
-include_directories(${FLIGHT_MODULES_HEADER_DIR})
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../common)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../core/inc)
 
 FILE(GLOB SOURCE_FILES
         ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_environment.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_helpers.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/../../../core/src/*.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/../hal/*.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/../osal/*.c
         )
 
-add_executable(camera_manager_sync_sample
+add_executable(payloads_sync_sample
         main_sync.cpp
         ${SOURCE_FILES})
-target_link_libraries(camera_manager_sync_sample djiosdk-core)
 
-add_executable(camera_manager_async_sample
+
+add_executable(payloads_async_sample
         main_async.cpp
         ${SOURCE_FILES})
-target_link_libraries(camera_manager_async_sample djiosdk-core)
+

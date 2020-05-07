@@ -31,6 +31,7 @@
 #define _BSPUSART_H
 #include "dji_vehicle.hpp"
 #include "stdio.h"
+
 void                      USART2_Config(void);
 void                      USART3_Config(void);
 void                      USARTxNVIC_Config(void);

@@ -30,31 +30,14 @@
 #include "stm32f4xx.h"
 #include "BspUsart.h"
 #include "timer.h"
+#include "FreeRTOS.h"
+#include "queue.h"
 
-extern int Rx_Handle_Flag;
+#define USART_3_BUFFER_SIZE 1024
 
 using namespace DJI::OSDK;
 
-extern Vehicle  vehicle;
-extern Vehicle* v;
-extern Control  control;
-
-extern bool           isFrame;
-bool                  isACKProcessed    = false;
-bool                  ackReceivedByUser = false;
-extern RecvContainer  receivedFramie;
-extern RecvContainer* rFrame;
-
-// extern CoreAPI defaultAPI;
-// extern CoreAPI *coreApi;
-// extern Flight flight;
-// extern FlightData flightData;
-
-extern uint8_t come_data;
-extern uint8_t Rx_length;
-extern int     Rx_adr;
-extern int     Rx_Handle_Flag;
-extern uint8_t Rx_buff[];
+QueueHandle_t UartDataRecvQueue;
 
 void
 USART2_Gpio_Config(void)
@@ -128,12 +111,13 @@ USART2_Config(void)
 void
 USART3_Config(void)
 {
+  UartDataRecvQueue = xQueueCreate(USART_3_BUFFER_SIZE, sizeof(uint8_t));
   USART3_Gpio_Config();
 
   USART_InitTypeDef USART_InitStructure;
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3, ENABLE);
 
-  USART_InitStructure.USART_BaudRate   = 230400;
+  USART_InitStructure.USART_BaudRate   = 921600;
   USART_InitStructure.USART_WordLength = USART_WordLength_8b;
   USART_InitStructure.USART_StopBits   = USART_StopBits_1;
   USART_InitStructure.USART_Parity     = USART_Parity_No;
@@ -152,18 +136,16 @@ USART3_Config(void)
 void
 USARTxNVIC_Config()
 {
-  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
+  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
 
   NVIC_InitTypeDef NVIC_InitStructure_USART3;
-  NVIC_InitStructure_USART3.NVIC_IRQChannelPreemptionPriority = 0x04;
-  NVIC_InitStructure_USART3.NVIC_IRQChannelSubPriority        = 0x03;
+  NVIC_InitStructure_USART3.NVIC_IRQChannelPreemptionPriority = 0x05;
   NVIC_InitStructure_USART3.NVIC_IRQChannel                   = USART3_IRQn;
   NVIC_InitStructure_USART3.NVIC_IRQChannelCmd                = ENABLE;
   NVIC_Init(&NVIC_InitStructure_USART3);
 
   NVIC_InitTypeDef NVIC_InitStructure_USART2;
-  NVIC_InitStructure_USART2.NVIC_IRQChannelPreemptionPriority = 0x03;
-  NVIC_InitStructure_USART2.NVIC_IRQChannelSubPriority        = 0x02;
+  NVIC_InitStructure_USART2.NVIC_IRQChannelPreemptionPriority = 0x06;
   NVIC_InitStructure_USART2.NVIC_IRQChannel                   = USART2_IRQn;
   NVIC_InitStructure_USART2.NVIC_IRQChannelCmd                = ENABLE;
   NVIC_Init(&NVIC_InitStructure_USART2);
@@ -176,86 +158,23 @@ UsartConfig()
   USART3_Config();
   USARTxNVIC_Config();
 }
-/*
-DJI::OSDK::ACK::ErrorCode
-waitForACK()
-{
-  ACK::ErrorCode ack;
-  ack.data = ACK_NO_RESPONSE_ERROR;
-  memset(&(ack.data), 0, sizeof(ack.data));
-  uint32_t next500MilTick;
-	uint8_t cmd[] = {rFrame->recvInfo.cmd_set, rFrame->recvInfo.cmd_id};
 
-  //	next500MilTick = v->protocolLayer->getDriver()->getTimeStamp() + 500;
-
-  //	while(rFrame->dispatchInfo.isCallback != true &&
-  //		v->protocolLayer->getDriver()->getTimeStamp() < next500MilTick)
-  while (true)
-  {
-    if (isACKProcessed == true)
-    {
-      if (rFrame->recvInfo.cmd_set == DJI::OSDK::CMD_SET_ACTIVATION &&
-          rFrame->recvInfo.cmd_id == DJI::OSDK::CMD_ID_ACTIVATE)
-      {
-        ack.data = rFrame->recvData.ack;
-        ack.info = rFrame->recvInfo;
-
-        return ack;
-      }
-      else if (rFrame->recvInfo.cmd_set == DJI::OSDK::CMD_SET_SUBSCRIBE &&
-               rFrame->recvInfo.cmd_id ==
-                 DJI::OSDK::CMD_ID_SUBSCRIBE_VERSION_MATCH)
-      {
-        ack.data = rFrame->recvData.ack;
-        ack.info = rFrame->recvInfo;
-
-        return ack;
-      }
-      else if (rFrame->recvInfo.cmd_set == DJI::OSDK::CMD_SET_SUBSCRIBE &&
-               rFrame->recvInfo.cmd_id ==
-                 DJI::OSDK::CMD_ID_SUBSCRIBE_ADD_PACKAGE)
-      {
-        ack.data = rFrame->recvData.ack;
-        ack.info = rFrame->recvInfo;
-
-        return ack;
-      }
-      else if (rFrame->recvInfo.cmd_set == DJI::OSDK::CMD_SET_CONTROL &&
-               rFrame->recvInfo.cmd_id == DJI::OSDK::CMD_ID_TASK)
-      {
-        ack.data = rFrame->recvData.ack;
-        ack.info = rFrame->recvInfo;
-
-        return ack;
-      }
-    }
-  }
-
-  // return ack;
-}
-*/
 #ifdef __cplusplus
 extern "C" {
 #endif //__cplusplus
+    
+  
+int u3IrqCnt = 0;
 
 void
 USART3_IRQHandler(void)
 {
   if (USART_GetFlagStatus(USART3, USART_FLAG_RXNE) == SET)
   {
-    isACKProcessed = false;
-    isFrame = v->protocolLayer->byteHandler(USART_ReceiveData(USART3));
-    if (isFrame == true)
-    {
-			rFrame = v->protocolLayer->getReceivedFrame();
-			
-      //! Trigger default or user defined callback
-      v->processReceivedData(rFrame);
-
-      //! Reset
-      isFrame        = false;
-      isACKProcessed = true;
-    }
+    BaseType_t xHigherPriorityTaskWoken = false;
+    uint8_t data = USART_ReceiveData(USART3);
+    u3IrqCnt++;
+    xQueueSendFromISR(UartDataRecvQueue, &data, &xHigherPriorityTaskWoken);
   }
 }
 

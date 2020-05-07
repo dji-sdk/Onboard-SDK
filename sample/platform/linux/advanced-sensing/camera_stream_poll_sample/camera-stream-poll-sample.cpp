@@ -38,10 +38,10 @@
 #ifdef OPEN_CV_INSTALLED
   #include "opencv2/opencv.hpp"
   #include "opencv2/highgui/highgui.hpp"
+using namespace cv;
 #endif
 
 using namespace DJI::OSDK;
-using namespace cv;
 using namespace std;
 
 void show_rgb(CameraRGBImage img, char* name)
@@ -60,7 +60,7 @@ int main(int argc, char** argv)
   bool f = false;
   bool m = false;
   char c = 0;
-  cout << "Please enter the type of camera stream you want to view\n"
+  cout << "Please enter the type of camera stream you want to view(M210 V2)n"
        << "m: Main Camera\n"
        << "f: FPV  Camera\n" 
        << "b: both Cameras" << endl;

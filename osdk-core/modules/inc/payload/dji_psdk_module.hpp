@@ -32,6 +32,9 @@
 #include <vector>
 #include "dji_payload_base.hpp"
 #include "dji_payload_link.hpp"
+#if defined(__linux__)
+#include "dji_mop_client.hpp"
+#endif
 
 namespace DJI {
 namespace OSDK {
@@ -115,6 +118,11 @@ class PSDKModule : public PayloadBase {
 
   ~PSDKModule();
 
+ public:
+#if defined(__linux__)
+  /*! @breif Get the object of the mop client of this psdk module */
+  MopClient *getMopClient();
+#endif
   /*! @brief Sample to configure the value, blocking
    *
    *  @param widgetIndex the index of target widget
@@ -200,7 +208,9 @@ class PSDKModule : public PayloadBase {
 
  private:
   static const int maxSize = 32;
-
+#if defined(__linux__)
+  MopClient *mopClient;
+#endif
   PayloadLink *payloadLink;
 
   /*! @brief handler to decoding the widget values raw data from raw data

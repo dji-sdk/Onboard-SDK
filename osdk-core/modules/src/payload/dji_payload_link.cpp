@@ -39,20 +39,16 @@ PayloadLink::~PayloadLink() {}
 void PayloadLink::sendAsync(const uint8_t cmd[], void *pdata, size_t len,
                             void *callBack, UserData userData, int timeout,
                             int retry_time) {
-  int cbIndex = setCallback(callBack, userData);
-  vehicle->protocolLayer->send(2, vehicle->getEncryption(), cmd,
-                               (uint8_t *)pdata, len, timeout, retry_time, true,
-                               cbIndex);
+  vehicle->legacyLinker->sendAsync(cmd, (uint8_t *) pdata, len, timeout,
+                                   retry_time, (VehicleCallBack) callBack,
+                                   userData);
 }
 
 ACK::ExtendedFunctionRsp *PayloadLink::sendSync(const uint8_t cmd[],
                                                 void *pdata, size_t len,
                                                 int timeout) {
-  vehicle->protocolLayer->send(2, vehicle->getEncryption(), cmd,
-                               (uint8_t *)pdata, len, 500, 2, false, 2);
-
-  return ((ACK::ExtendedFunctionRsp *)vehicle->waitForACK({cmd[0], cmd[1]},
-                                                          timeout));
+  return (ACK::ExtendedFunctionRsp *) vehicle->legacyLinker->sendSync(
+      cmd, (uint8_t *)pdata, len, timeout * 1000 / 2, 2);
 }
 
 void PayloadLink::sendToPSDK(uint8_t *data, uint16_t len) {
@@ -60,18 +56,6 @@ void PayloadLink::sendToPSDK(uint8_t *data, uint16_t len) {
     DERROR("The drone has not been activated");
     return;
   }
-  vehicle->protocolLayer->send(0, vehicle->getEncryption(),
-                               OpenProtocolCMD::CMDSet::Activation::toPayload,
-                               data, len, 500, 1, NULL, 0);
-}
-
-int PayloadLink::setCallback(void *callBack, UserData userData) {
-  /*! @TODO The callback and userdata recording work should be implemented in
-   * the protocol layer. It will be improved in OSDK 4.0. So here is the
-   * temporary way.
-   */
-  int cbIndex = vehicle->callbackIdIndex();
-  vehicle->nbCallbackFunctions[cbIndex] = (void *)callBack;
-  vehicle->nbUserData[cbIndex] = userData;
-  return cbIndex;
+  vehicle->legacyLinker->send(OpenProtocolCMD::CMDSet::Activation::toPayload,
+                              data, len);
 }

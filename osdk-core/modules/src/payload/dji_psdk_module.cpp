@@ -27,6 +27,7 @@
  */
 
 #include "dji_psdk_module.hpp"
+#include "dji_legacy_linker.hpp"
 
 #include <vector>
 using namespace DJI;
@@ -82,16 +83,38 @@ void PSDKModule::commonicationDataDecoder(Vehicle *vehicle,
   }
 }
 
+#include "dji_vehicle.hpp"
 PSDKModule::PSDKModule(PayloadLink *payloadLink, PayloadIndexType payloadIndex,
                        std::string name, bool enable)
-    : PayloadBase(payloadIndex, name, enable), payloadLink(payloadLink) {
+    : PayloadBase(NULL, payloadIndex, name, enable), payloadLink(payloadLink)
+#if defined(__linux__)
+											 , mopClient(nullptr)
+#endif
+												 { //@TODO 改过来用linker
+#if defined(__linux__)
+  if (payloadLink->getVehicle()->isM300())
+    mopClient = new MopClient((SlotType) payloadIndex);
+  else {
+    DSTATUS("MOP only support M300, so mop client will not be initialized here.");
+  }
+#endif
   psdkWidgetValuesDecodeHandler.callback = widgetValueDecoder;
   psdkWidgetValuesDecodeHandler.userData = this;
   psdkCommonicationDecodeHandler.callback = commonicationDataDecoder;
   psdkCommonicationDecodeHandler.userData = this;
 }
 
-PSDKModule::~PSDKModule() {}
+PSDKModule::~PSDKModule() {
+#if defined(__linux__)
+  if (mopClient) delete(mopClient);
+#endif
+}
+
+#if defined(__linux__)
+MopClient *PSDKModule::getMopClient() {
+  return this->mopClient;
+}
+#endif
 
 ErrorCode::ErrorCodeType PSDKModule::configureWidgetValueSync(
     uint8_t widgetIndex, PayloadWidgetType widgetType, int widgetValue,

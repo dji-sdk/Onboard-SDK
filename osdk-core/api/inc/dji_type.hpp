@@ -112,7 +112,7 @@ typedef struct OpenHeader {
   uint32_t reserved1 : 24;
   uint32_t sequenceNumber : 16;
   uint32_t crc : 16;
-}                    OpenHeader;
+} OpenHeader;
 
 typedef struct Command {
   uint16_t sessionMode : 2;
@@ -158,6 +158,40 @@ typedef struct ACKSession {
   MMU_Tab *mmu;
 } ACKSession;
 
+const uint8_t MAX_OSDK_VERSION_SIZE = 16;
+const uint8_t MAX_SEND_DATA_BURY_PKG_COUNT = 5;
+#pragma pack(1)
+typedef struct DataBuryPack {
+    char    sdk_version[MAX_OSDK_VERSION_SIZE];
+    uint8_t is_debug      : 2;
+    uint8_t hardware_type : 3;
+    uint8_t operator_type : 3;
+} DataBuryPack;
+#pragma pack()
+
+enum OSDK_HARDWARE_TYPE{
+    UNKNOWN_HARDWARE_TYPE = 0,
+    ARMV7_HARDWARE_TYPE   = 1,
+    ARMV8_HARDWARE_TYPE   = 2,
+    x86_HARDWARE_TYPE     = 3,
+    STM32_HARDWARE_TYPE   = 4,
+};
+
+enum OSDK_OPERATOR_TYPE{
+    UNKNOWN_OPERATOR_TYPE = 0,
+    LINUX_OPERATOR_TYPE   = 1,
+    RTOS_OPERATOR_TYPE    = 2,
+    ROS_OPERATOR_TYPE     = 3,
+};
+
+#pragma pack(1)
+typedef struct HeartBeatPack {
+    uint8_t  deviceID;
+    uint8_t  linkID;
+    uint32_t seqNumber;
+    uint8_t  data[8];
+} HeartBeatPack;
+#pragma pack()
 /*!
  * @brief Virtual RC Settings (supported only on Matrice 100)
  */

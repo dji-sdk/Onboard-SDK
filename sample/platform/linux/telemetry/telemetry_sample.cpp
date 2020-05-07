@@ -50,6 +50,7 @@ getBroadcastData(DJI::OSDK::Vehicle* vehicle, int responseTimeout)
   // 4. Velocity
   // 5. Quaternion
   // 6. Avoid obstacle data
+  // 7. Compass status
 
   // Please make sure your drone is in simulation mode. You can
   // fly the drone with your RC to get different values.
@@ -60,6 +61,7 @@ getBroadcastData(DJI::OSDK::Vehicle* vehicle, int responseTimeout)
   Telemetry::Vector3f       velocity;
   Telemetry::Quaternion     quaternion;
   Telemetry::RelativePosition avoidData;
+  Telemetry::Compass        compassData;
 
   const int TIMEOUT = 20;
 
@@ -76,6 +78,7 @@ getBroadcastData(DJI::OSDK::Vehicle* vehicle, int responseTimeout)
     velocity       = vehicle->broadcast->getVelocity();
     quaternion     = vehicle->broadcast->getQuaternion();
     avoidData      = vehicle->broadcast->getRelativePosition();
+    compassData    = vehicle->broadcast->getCompassData();
 
     std::cout << "Counter = " << elapsedTimeInMs << ":\n";
     std::cout << "-------\n";
@@ -95,6 +98,8 @@ getBroadcastData(DJI::OSDK::Vehicle* vehicle, int responseTimeout)
               << avoidData.down  << ", "<< avoidData.front << ", "
               << avoidData.right << ", "<< avoidData.back  << ", "
               << avoidData.left  << ", "<< avoidData.up    << "\n";
+    std::cout << "Compass status       (normal,need_cali,need_dir_fix,need_restart) ="
+              << compassData.compassStatus   << "\n";
     std::cout << "-------\n\n";
 
     usleep(5000);
@@ -304,9 +309,9 @@ subscribeToData(Vehicle* vehicle, int responseTimeout)
               << quaternion.q3 << "\n";
     if(rtkAvailable) {
       std::cout << "RTK if available   (lat/long/alt/velocity_x/velocity_y/velocity_z/yaw/yaw_info/pos_info) ="
-                << rtk.latitude << "," << rtk.longitude << "," << rtk.HFSL << "," << rtk_velocity.x << ","
-                << rtk_velocity.y
-                << "," << rtk_velocity.z << "," << rtk_yaw << "," << rtk_yaw_info << rtk_pos_info << "\n";
+                << rtk.latitude << "," << rtk.longitude << "," << rtk.HFSL << ","
+                << rtk_velocity.x << ","<< rtk_velocity.y<< "," << rtk_velocity.z
+                << "," << rtk_yaw << "," << (uint16_t)rtk_yaw_info <<","<< (uint16_t)rtk_pos_info<< "\n";
     }
     std::cout << "-------\n\n";
     usleep(5000);
@@ -594,7 +599,7 @@ subscribeToDataAndSaveLogToFile(Vehicle* vehicle, int responseTimeout)
 ///////////////////////////////////////////
     pkgIndex                   = 1;
     freq                       = 1;
-    TopicName topicList1Hz[] = { TOPIC_HEIGHT_HOMEPOINT
+    TopicName topicList1Hz[] = { TOPIC_ALTITUDE_OF_HOMEPOINT
                                  ,TOPIC_GPS_POSITION
                                  ,TOPIC_GPS_VELOCITY};
     numTopic        = sizeof(topicList1Hz) / sizeof(topicList1Hz[0]);
@@ -629,7 +634,7 @@ subscribeToDataAndSaveLogToFile(Vehicle* vehicle, int responseTimeout)
     TypeMap<TOPIC_POSITION_VO>::type        position_vo;
     TypeMap<TOPIC_ALTITUDE_FUSIONED>::type  altitude_fusioned;
     TypeMap<TOPIC_ALTITUDE_BAROMETER>::type altitude_barometer;
-    TypeMap<TOPIC_HEIGHT_HOMEPOINT>::type   height_homepoint;
+    TypeMap<TOPIC_ALTITUDE_OF_HOMEPOINT>::type   height_homepoint;
     TypeMap<TOPIC_HEIGHT_FUSION>::type      height_fusion;
     TypeMap<TOPIC_GPS_FUSED>::type          gps_fused;
     TypeMap<TOPIC_STATUS_DISPLAYMODE>::type status_displaymode;
@@ -683,13 +688,13 @@ subscribeToDataAndSaveLogToFile(Vehicle* vehicle, int responseTimeout)
         position_vo        = vehicle->subscribe->getValue<TOPIC_POSITION_VO>();
         altitude_fusioned  = vehicle->subscribe->getValue<TOPIC_ALTITUDE_FUSIONED>();
         altitude_barometer = vehicle->subscribe->getValue<TOPIC_ALTITUDE_BAROMETER>();
-        height_homepoint   = vehicle->subscribe->getValue<TOPIC_HEIGHT_HOMEPOINT>();
+        height_homepoint   = vehicle->subscribe->getValue<TOPIC_ALTITUDE_OF_HOMEPOINT>();
         height_fusion      = vehicle->subscribe->getValue<TOPIC_HEIGHT_FUSION>();
         gps_fused          = vehicle->subscribe->getValue<TOPIC_GPS_FUSED>();
         gpsPostion         = vehicle->subscribe->getValue<TOPIC_GPS_POSITION>();
         gpsVelocity        = vehicle->subscribe->getValue<TOPIC_GPS_VELOCITY>();
         status_displaymode = vehicle->subscribe->getValue<TOPIC_STATUS_DISPLAYMODE>();
-
+        DSTATUS("height_homepoint%f\n",height_homepoint);
         fprintf ( pFile, "%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%lf,%lf,%f,%d,%d,%d,%f,%f,%f,%d,%d,%d\n"
                  ,velocity.data.x
                  ,velocity.data.y

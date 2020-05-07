@@ -133,6 +133,22 @@ ErrorCode::ErrorCodeType PSDKManager::getPSDKModuleEnable(
   }
 }
 
+#if defined(__linux__)
+ErrorCode::ErrorCodeType PSDKManager::getMopClient(
+    PayloadIndexType index, MopClient *&mopClient) {
+  PSDKModule *psdkMgr = getPSDKModule(index);
+  if (psdkMgr) {
+    mopClient = psdkMgr->getMopClient();
+    if (mopClient)
+      return ErrorCode::SysCommonErr::Success;
+    else
+      return ErrorCode::SysCommonErr::ReqNotSupported;
+  } else {
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
+  }
+}
+#endif
+
 ErrorCode::ErrorCodeType PSDKManager::configureWidgetValueSync(
     PayloadIndexType index, uint8_t widgetIndex,
     PSDKModule::PayloadWidgetType widgetType, int widgetValue, int timeout) {

@@ -42,6 +42,7 @@ const uint16_t DJI::OSDK::ErrorCode::CommonACK::SUCCESS                = 0x0000;
 const uint16_t DJI::OSDK::ErrorCode::CommonACK::KEY_ERROR              = 0xFF00;
 const uint16_t DJI::OSDK::ErrorCode::CommonACK::NO_AUTHORIZATION_ERROR = 0xFF01;
 const uint16_t DJI::OSDK::ErrorCode::CommonACK::NO_RIGHTS_ERROR        = 0xFF02;
+const uint16_t DJI::OSDK::ErrorCode::CommonACK::SYSTEM_ERROR           = 0xFF03;
 const uint16_t DJI::OSDK::ErrorCode::CommonACK::NO_RESPONSE_ERROR      = 0xFFFF;
 const uint8_t  DJI::OSDK::ErrorCode::CommonACK::MOTOR_FAIL_NONE        = 0;
 const uint8_t  DJI::OSDK::ErrorCode::CommonACK::MOTOR_FAIL_COMPASS_ABNORMAL = 1;
@@ -334,14 +335,41 @@ const ErrorCode::ModuleDataType ErrorCode::module[ModuleMaxCnt] = {
     {"Reserve_9",  NULL},           /*!< RESERVE_9 */
     {"Reserve_10", NULL},           /*!< RESERVE_10 */
     {"FC",         NULL},           /*!< FCModule */
-    {"Gimbal",     NULL},           /*!< GimbalModule */
+    {"Gimbal",     GimbalFunction}, /*!< GimbalModule */
     {"Camera",     CameraFunction}, /*!< CameraModule */
     {"PSDK",       PSDKFunction},   /*!< PSDKModule */
     {"RC",         NULL},           /*!< RCModule */
     {"Battery",    NULL},           /*!< BatteryModule */
+    {"WaypointV2", WaypointV2Function},/*! WaypointV2Module*/
 };
 
 /*! camera api error code */
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::InvalidCMD         = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::UNSUPPORTED_COMMAND);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::Timeout            = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::TIMEOUT);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::OutOfMemory        = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::RAM_ALLOCATION_FAILED);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::InvalidParam       = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::INVALID_COMMAND_PARAMETER);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::InvalidState       = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::UNSUPPORTED_COMMAND_IN_CUR_STATE);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::TimeNotSync        = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::CAMERA_TIME_NOT_SYNCHRONIZED);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::ParamSetFailed     = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::PARAMETER_SET_FAILED);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::ParamGetFailed     = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::PARAMETER_GET_FAILED);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::SDCardMISSING      = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::SD_CARD_MISSING);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::SDCardFull         = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::SD_CARD_FULL);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::SDCardError        = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::SD_CARD_ERROR);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::SensorError        = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::SENSOR_ERROR);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::SystemError        = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::SYSTEM_ERROR);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::ParamLenTooLong    = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::PARAMETER_TOTAL_TOO_LONG);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::ModuleInactivated  = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::MODULE_INACTIVATED);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::FWSeqNumNotInOrder = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::FIRMWARE_DATA_NUM_DISCONTINUOUS);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::FWCheckErr         = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::FIRMWARE_VERIFICATION_ERROR);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::FlashWriteError    = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::FLASH_WRITE_ERROR);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::FWInvalidType      = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::FIRMWARE_TYPE_MISMATCH);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::RCDisconnect       = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::REMOTE_CONTROL_UNCONNECTED);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::HardwareErr        = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::HARDWARE_ERROR);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::UAVDisconnect      = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::AIRCRAFT_UNCONNECTED);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::UpgradeErrorNow    = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::CANNOT_UPGRADE_IN_CUR_STATE);
+const ErrorCode::ErrorCodeType ErrorCode::GimbalCommonErr::UndefineError      = ErrorCode::getErrorCode(GimbalModule, GimbalCommon, DJI_CMD_RETURN_CODE::UNDEFINE_ERROR);
+
+/*! gimbal api error code */
 const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::InvalidCMD         = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::UNSUPPORTED_COMMAND);
 const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::Timeout            = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::TIMEOUT);
 const ErrorCode::ErrorCodeType ErrorCode::CameraCommonErr::OutOfMemory        = ErrorCode::getErrorCode(CameraModule, CameraCommon, DJI_CMD_RETURN_CODE::RAM_ALLOCATION_FAILED);
@@ -393,7 +421,251 @@ const ErrorCode::ErrorCodeType ErrorCode::PSDKCommonErr::UAVDisconnect      = Er
 const ErrorCode::ErrorCodeType ErrorCode::PSDKCommonErr::UpgradeErrorNow    = ErrorCode::getErrorCode(PSDKModule, PSDKCommon, DJI_CMD_RETURN_CODE::CANNOT_UPGRADE_IN_CUR_STATE);
 const ErrorCode::ErrorCodeType ErrorCode::PSDKCommonErr::UndefineError      = ErrorCode::getErrorCode(PSDKModule, PSDKCommon, DJI_CMD_RETURN_CODE::UNDEFINE_ERROR);
 
+/*! WaypointV2 Mission api error code */
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::COMMON_SUCCESS                            = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeCommon::GS_ERR_CODE_COMMON_SUCCESS);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::COMMON_INVALID_DATA_LENGTH                = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeCommon::GS_ERR_CODE_COMMON_INVALID_DATA_LENGTH);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::COMMON_INVALD_FLOAT_NUM                   = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeCommon::GS_ERR_CODE_COMMON_INVALD_FLOAT_NUM);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_WP_VERSION_NO_MATCH                  = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeCommon::GS_ERR_CODE_TRAJ_WP_VERSION_NO_MATCH);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::COMMON_UNKNOWN                            = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeCommon::GS_ERR_CODE_COMMON_UNKNOWN);
 
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_RESV                                   = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_RESV);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_INIT_WP_NUM_TOO_MANY                   = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_INIT_WP_NUM_TOO_MANY);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_INIT_WP_NUM_TOO_FEW                    = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_INIT_WP_NUM_TOO_FEW  );
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_INIT_INVALID_END_INDEX                 = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_INIT_INVALID_END_INDEX );
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_UPLOAD_START_ID_GT_END_ID              = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_UPLOAD_START_ID_GT_END_ID);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_UPLOAD_END_ID_GT_TOTAL_NUM             = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_UPLOAD_END_ID_GT_TOTAL_NUM);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_DOWNLOAD_WPS_NOT_IN_STORED_RAGNE       = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_DOWNLOAD_WPS_NOT_IN_STORED_RAGNE);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_CUR_POS_IS_FAR_AWAY_FROM_FIRST_WP      = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_CUR_POS_IS_FAR_AWAY_FROM_FIRST_WP);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_ADJ_WPS_TOO_CLOSE                      = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_ADJ_WPS_TOO_CLOSE );
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_ADJ_WPS_TOO_FAR                        = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_ADJ_WPS_TOO_FAR  );
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_UPLOAD_MAX_VEL_GT_GLOBAL               = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_UPLOAD_MAX_VEL_GT_GLOBAL );
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_UPLOAD_LOCAL_CRUISE_VEL_GT_LOCAL_MAX   = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_UPLOAD_LOCAL_CRUISE_VEL_GT_LOCAL_MAX);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_UPLOAD_LOCAL_CRUISE_VEL_GT_GLOBAL_MAX  = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_UPLOAD_LOCAL_CRUISE_VEL_GT_GLOBAL_MAX);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_INIT_INVALID_GLOBAL_MAX_VEL            = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_INIT_INVALID_GLOBAL_MAX_VEL  );
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_GLOBAL_CRUISE_VEL_GT_MAX_VEL           = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_GLOBAL_CRUISE_VEL_GT_MAX_VEL );
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_INIT_INVALID_GOTO_FIRST_FLAG           = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_INIT_INVALID_GOTO_FIRST_FLAG );
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_INIT_INVALID_FINISHED_ACTION           = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_INIT_INVALID_FINISHED_ACTION );
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_INIT_INVALID_RC_LOST_ACTION            = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_INIT_INVALID_RC_LOST_ACTION);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_UPLOAD_YAW_MODE_INVALID                = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_UPLOAD_YAW_MODE_INVALID);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_UPLOAD_YAW_CMD_NOT_IN_RANGE            = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_UPLOAD_YAW_CMD_NOT_IN_RANGE);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_UPLOAD_YAW_TURN_DIRECTION_INVALID      = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_UPLOAD_YAW_TURN_DIRECTION_INVALID);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_UPLOAD_WP_TYPE_INVALID                 = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_UPLOAD_WP_TYPE_INVALID);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_GO_STOP_CMD_INVALID                    = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_GO_STOP_CMD_INVALID);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_INVALID_PAUSE_RECOVERY_CMD             = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_INVALID_PAUSE_RECOVERY_CMD);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_INVALID_BREAK_RESTORE_CMD              = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_INVALID_BREAK_RESTORE_CMD);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_INIT_INVALID_REF_POINT                 = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_INIT_INVALID_REF_POINT);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_UPLOAD_CANNT_SET_WP_LINE_EXIT_TYPE     = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_UPLOAD_CANNT_SET_WP_LINE_EXIT_TYPE);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_DAMPING_DIS_GE_DIS_OF_ADJ_POINTS       = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_DAMPING_DIS_GE_DIS_OF_ADJ_POINTS);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_INIT_INFO_NOT_UPLOADED                 = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_INIT_INFO_NOT_UPLOADED);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_WP_HAS_NOT_UPLOADED                    = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_WP_HAS_NOT_UPLOADED);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_UPLOADED_WP_NOT_ENOUGH                 = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_UPLOADED_WP_NOT_ENOUGH);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_GS_HAS_STARTED                         = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_GS_HAS_STARTED);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_GS_NOT_RUNNING                         = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_GS_NOT_RUNNING);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_GS_NOT_RUNNING_FOR_PAUSE_RECOVERY      = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_GS_NOT_RUNNING_FOR_PAUSE_RECOVERY);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_GS_NOT_RUNNING_FOR_BREAK_RESTORE       = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_GS_NOT_RUNNING_FOR_BREAK_RESTORE);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_NOT_IN_WP_MIS                          = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_NOT_IN_WP_MIS );
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_MIS_HAS_BEEN_PAUSED                    = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_MIS_HAS_BEEN_PAUSED);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_MIS_NOT_PAUSED                         = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_MIS_NOT_PAUSED);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_MIS_HAS_BEEN_BROKEN                    = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_MIS_HAS_BEEN_BROKEN);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_MIS_NOT_BROKEN                         = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_MIS_NOT_BROKEN);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_PAUSE_RECOVERY_NOT_SUPPORTED           = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_PAUSE_RECOVERY_NOT_SUPPORTED);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_BREAK_RESTORE_NOT_SUPPORTED            = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_BREAK_RESTORE_NOT_SUPPORTED);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_NO_BREAK_POINT                         = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_NO_BREAK_POINT );
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_NO_CUR_TRAJ_PROJECT                    = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_NO_CUR_TRAJ_PROJECT);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_NO_NXT_TRAJ_PROJECT                    = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_NO_NXT_TRAJ_PROJECT);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_NO_NNT_TRAJ_PROJECT                    = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_NO_NNT_TRAJ_PROJECT);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_UPLOAD_WP_ID_NOT_CONTINUE              = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_UPLOAD_WP_ID_NOT_CONTINUE);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_WP_LINE_ENTER_NOT_SET_TO_START_WP      = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_WP_LINE_ENTER_NOT_SET_TO_START_WP );
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_INIT_WP_WHEN_PLAN_HAS_STARTED          = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_INIT_WP_WHEN_PLAN_HAS_STARTED );
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_DAMPING_DIS_EXCEED_RANGE               = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_DAMPING_DIS_EXCEED_RANGE);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_WAYPOINT_COOR_EXCEED_RANGE             = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_WAYPOINT_COOR_EXCEED_RANGE);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_FIRST_WP_TYPE_IS_WP_TURN_NO            = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_FIRST_WP_TYPE_IS_WP_TURN_NO);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_WP_EXCEED_RADIUS_LIMIT                 = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_WP_EXCEED_RADIUS_LIMIT );
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRAJ_WP_EXCEED_HEIGHT_LIMIT                 = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTraj::GS_ERR_CODE_TRAJ_WP_EXCEED_HEIGHT_LIMIT );
+
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::STATUS_RESV                                 = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeStatus::GS_ERR_CODE_STATUS_RESV);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::STATUS_WP_MIS_CHECK_FAIL                    = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeStatus::GS_ERR_CODE_STATUS_WP_MIS_CHECK_FAIL);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::STATUS_HOME_NOT_RECORDED                    = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeStatus::GS_ERR_CODE_STATUS_HOME_NOT_RECORDED);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::STATUS_LOW_LOCATION_ACCURACY                = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeStatus::GS_ERR_CODE_STATUS_LOW_LOCATION_ACCURACY);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::STATUS_RTK_CONDITION_IS_NOT_READY           = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeStatus::GS_ERR_CODE_STATUS_RTK_CONDITION_IS_NOT_READY);
+
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::SECURE_RESV                                 = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeSecure::GS_ERR_CODE_SECURE_RESV);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::SECURE_CROSS_NFZ                            = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeSecure::GS_ERR_CODE_SECURE_CROSS_NFZ);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::SECURE_BAT_LOW                              = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeSecure::GS_ERR_CODE_SECURE_BAT_LOW);
+
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::ACTION_COMMON_RESV                           = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeActionCommon::GS_ERR_CODE_ACTION_COMMON_RESV);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::ACTION_COMMON_ACTION_ID_DUPLICATED           = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeActionCommon::GS_ERR_CODE_ACTION_COMMON_ACTION_ID_DUPLICATED);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::ACTION_COMMON_ACTION_ITEMS_SPACE_NOT_ENOUGH  = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeActionCommon::GS_ERR_CODE_ACTION_COMMON_ACTION_ITEMS_SPACE_NOT_ENOUGH);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::ACTION_COMMON_ACTION_SIZE_GT_BUF_SIZE        = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeActionCommon::GS_ERR_CODE_ACTION_COMMON_ACTION_SIZE_GT_BUF_SIZE);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::ACTION_COMMON_ACTION_ID_NOT_FOUND            = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeActionCommon::GS_ERR_CODE_ACTION_COMMON_ACTION_ID_NOT_FOUND);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::ACTION_COMMON_DOWNLOAD_ACTION_ID_RANGE_ERROR = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeActionCommon::GS_ERR_CODE_ACTION_COMMON_DOWNLOAD_ACTION_ID_RANGE_ERROR);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::ACTION_COMMON_NO_ACTION_ITEMS_STORED         = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeActionCommon::GS_ERR_CODE_ACTION_COMMON_NO_ACTION_ITEMS_STORED);
+
+
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRIGGER_RESV                                  = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTriggerModule::GS_ERR_CODE_TRIGGER_RESV);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRIGGER_TYPE_INVALID                          = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTriggerModule::GS_ERR_CODE_TRIGGER_TYPE_INVALID);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRIGGER_REACH_WP_END_INDEX_LT_START_INDEX     = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTriggerModule::GS_ERR_CODE_TRIGGER_REACH_WP_END_INDEX_LT_START_INDEX);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRIGGER_REACH_WP_INVALID_INTERVAL_WP_NUM      = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTriggerModule::GS_ERR_CODE_TRIGGER_REACH_WP_INVALID_INTERVAL_WP_NUM);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRIGGER_REACH_WP_INVALID_AUTO_TERMINATE_WP_NUM = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTriggerModule::GS_ERR_CODE_TRIGGER_REACH_WP_INVALID_AUTO_TERMINATE_WP_NUM);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRIGGER_ASSOCIATE_INVALID_TYPE                   = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTriggerModule::GS_ERR_CODE_TRIGGER_ASSOCIATE_INVALID_TYPE);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::TRIGGER_SIMPLE_INTERVAL_INVALID_TYPE          = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeTriggerModule::GS_ERR_CODE_TRIGGER_SIMPLE_INTERVAL_INVALID_TYPE);
+
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::ACTUATOR_COMMON_RESV                         = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeActuatorCommon::GS_ERR_CODE_ACTUATOR_COMMON_RESV);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::ACTUATOR_COMMON_ACTUATOR_EXEC_NON_SUPPORTED  = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeActuatorCommon::GS_ERR_CODE_ACTUATOR_COMMON_ACTUATOR_EXEC_NON_SUPPORTED);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::ACTUATOR_COMMON_ACTUATOR_TYPE_INVALID        = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeActuatorCommon::GS_ERR_CODE_ACTUATOR_COMMON_ACTUATOR_TYPE_INVALID);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::ACTUATOR_COMMON_ACTUATOR_FUNC_INVALID        = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeActuatorCommon::GS_ERR_CODE_ACTUATOR_COMMON_ACTUATOR_FUNC_INVALID);
+
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::ACTUATOR_CAMERA_RESV                               = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeActuatorCamera::GS_ERR_CODE_ACTUATOR_CAMERA_RESV);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::ACTUATOR_CAMERA_SEND_SINGLE_SHOT_CMD_TO_CAMERA_FAIL = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeActuatorCamera::GS_ERR_CODE_ACTUATOR_CAMERA_SEND_SINGLE_SHOT_CMD_TO_CAMERA_FAIL);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::ACTUATOR_CAMERA_SEND_VIDEO_START_CMD_TO_CAMERA_FAIL = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeActuatorCamera::GS_ERR_CODE_ACTUATOR_CAMERA_SEND_VIDEO_START_CMD_TO_CAMERA_FAIL);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::ACTUATOR_CAMERA_SEND_VIDEO_STOP_CMD_TO_CAMERA_FAIL  = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeActuatorCamera::GS_ERR_CODE_ACTUATOR_CAMERA_SEND_VIDEO_STOP_CMD_TO_CAMERA_FAIL);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::ACTUATOR_CAMERA_FOCUS_PARAM_XY_INVALID              = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeActuatorCamera::GS_ERR_CODE_ACTUATOR_CAMERA_FOCUS_PARAM_XY_INVALID);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::ACTUATOR_CAMERA_SEND_FOCUS_CMD_TO_CAMERA_FAIL       = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeActuatorCamera::GS_ERR_CODE_ACTUATOR_CAMERA_SEND_FOCUS_CMD_TO_CAMERA_FAIL);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::ACTUATOR_CAMERA_SEND_FOCALIZE_CMD_TO_CAMERA_FAIL    = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeActuatorCamera::GS_ERR_CODE_ACTUATOR_CAMERA_SEND_FOCALIZE_CMD_TO_CAMERA_FAIL);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::ACTUATOR_CAMERA_FOCAL_DISTANCE_INVALID              = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeActuatorCamera::GS_ERR_CODE_ACTUATOR_CAMERA_FOCAL_DISTANCE_INVALID);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::ACTUATOR_CAMERA_EXEC_FAIL                           = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeActuatorCamera::GS_ERR_CODE_ACTUATOR_CAMERA_EXEC_FAIL);
+
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::ACTUATOR_GIMBAL_RESV                                        = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeActuatorGimbal::GS_ERR_CODE_ACTUATOR_GIMBAL_RESV);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::ACTUATOR_GIMBAL_INVALID_RPY_ANGLE_CTRL_CMD                  = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeActuatorGimbal::GS_ERR_CODE_ACTUATOR_GIMBAL_INVALID_RPY_ANGLE_CTRL_CMD);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::ACTUATOR_GIMBAL_INVALID_DURATION_CMD                        = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeActuatorGimbal::GS_ERR_CODE_ACTUATOR_GIMBAL_INVALID_DURATION_CMD);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::ACTUATOR_GIMBAL_FAIL_TO_ARRIVE_TGT_ANGLE                    = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeActuatorGimbal::GS_ERR_CODE_ACTUATOR_GIMBAL_FAIL_TO_ARRIVE_TGT_ANGLE);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::ACTUATOR_GIMBAL_FAIL_TO_SEND_CMD_TO_GIMBAL                  = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeActuatorGimbal::GS_ERR_CODE_ACTUATOR_GIMBAL_FAIL_TO_SEND_CMD_TO_GIMBAL);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::ACTUATOR_GIMBAL_THIS_INDEX_OF_GIMBAL_NOT_DOING_UNIFORM_CTRL = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeActuatorGimbal::GS_ERR_CODE_ACTUATOR_GIMBAL_THIS_INDEX_OF_GIMBAL_NOT_DOING_UNIFORM_CTRL);
+
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::ACTUATOR_FLIGHT_RESV                                        = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeActuatorFlight::GS_ERR_CODE_ACTUATOR_FLIGHT_RESV);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::ACTUATOR_FLIGHT_YAW_INVALID_YAW_ANGLE                       = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeActuatorFlight::GS_ERR_CODE_ACTUATOR_FLIGHT_YAW_INVALID_YAW_ANGLE);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::ACTUATOR_FLIGHT_YAW_TO_TGT_ANGLE_TIMEOUT                    = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeActuatorFlight::GS_ERR_CODE_ACTUATOR_FLIGHT_YAW_TO_TGT_ANGLE_TIMEOUT);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::ACTUATOR_FLIGHT_ACTION_YAW_OCCUPIED                         = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeActuatorFlight::GS_ERR_CODE_ACTUATOR_FLIGHT_ACTION_YAW_OCCUPIED);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::ACTUATOR_FLIGHT_CUR_AND_TGT_VEL_CLE_STATUE_EQUAL            = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeActuatorFlight::GS_ERR_CODE_ACTUATOR_FLIGHT_CUR_AND_TGT_VEL_CLE_STATUE_EQUAL);
+
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::ACTUATOR_PAYLOAD_RESV                        = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeActuatorPayload::GS_ERR_CODE_ACTUATOR_PAYLOAD_RESV);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::ACTUATOR_PAYLOAD_FAIL_TO_SEND_CMD_TO_PAYLOAD = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeActuatorPayload::GS_ERR_CODE_ACTUATOR_PAYLOAD_FAIL_TO_SEND_CMD_TO_PAYLOAD);
+const ErrorCode::ErrorCodeType ErrorCode::WaypointV2MissionErr::ACTUATOR_PAYLOAD_EXEC_FAILED                 = ErrorCode::getErrorCode(MissionV2Module, MissionV2Common, WaypointV2ACK::WaypointV2ErrorCodeActuatorPayload::GS_ERR_CODE_ACTUATOR_PAYLOAD_EXEC_FAILED);
+
+
+const std::pair<const ErrorCode::ErrorCodeType, ErrorCode::ErrorCodeMsg> ErrorCode::WaypointV2CommonErrData[] = {
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_RESV),                               ErrorCodeMsg(module[MissionV2Module].ModuleName,   "reserved", "none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_INIT_WP_NUM_TOO_MANY ),              ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"min_initial_waypoint_num is large than permitted_max_waypoint_num ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_INIT_WP_NUM_TOO_FEW   ),             ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"min_initial_waypoint_num is less than permitted_min_waypoint_num ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_INIT_INVALID_END_INDEX  ),           ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"waypoint_end_index is equal or large than total_waypoint_num ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_UPLOAD_START_ID_GT_END_ID ),         ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"the start index is greater than end index of upload wps ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_UPLOAD_END_ID_GT_TOTAL_NUM ),        ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"the end index of uplod wps is greater than inited total numbers ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_DOWNLOAD_WPS_NOT_IN_STORED_RAGNE ),  ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"the index of first and end waypoint expected to download is not in range of stored in FC ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_CUR_POS_IS_FAR_AWAY_FROM_FIRST_WP ), ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"current position is far away from the first waypoint. ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_ADJ_WPS_TOO_CLOSE  ),                ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"it is too close from two adjacent waypoints","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_ADJ_WPS_TOO_FAR   ),                 ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"the distance betwween two adjacent waypoints is not in[0.5m, 5000m]","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_UPLOAD_MAX_VEL_GT_GLOBAL  ),         ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"the max vel of uplod wp is greater than global max vel ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_UPLOAD_LOCAL_CRUISE_VEL_GT_LOCAL_MAX ), ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"the local cruise vel of upload wp is greater than local max vel ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_UPLOAD_LOCAL_CRUISE_VEL_GT_GLOBAL_MAX), ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"the local cruise vel of upload wp is greater than global max vel ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_INIT_INVALID_GLOBAL_MAX_VEL   ),     ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"global_max_vel is greater than permitted_max_vel or less than permitted_min_vel ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_GLOBAL_CRUISE_VEL_GT_MAX_VEL  ),     ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"global_cruise_vel is greater than global_max_vel ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_INIT_INVALID_GOTO_FIRST_FLAG  ),     ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"goto_first_point_mode is out of range of waypoint_goto_first_flag_t_enum ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_INIT_INVALID_FINISHED_ACTION  ),     ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"finished_action is out of range of wp_plan_finish_action_t_enum ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_INIT_INVALID_RC_LOST_ACTION),        ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"rc_lost_action is out of range of wp_plan_rc_lost_action_t_enum ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_UPLOAD_YAW_MODE_INVALID),            ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"the yaw mode of upload wp is invalid. reference to waypoint2_yaw_mode_t defined in math_waypoint_planner.h ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_UPLOAD_YAW_CMD_NOT_IN_RANGE ),       ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"the yaw command of upload wp is not in range. the range for MR:[-180 180]","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_UPLOAD_YAW_TURN_DIRECTION_INVALID),  ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"the yaw turn direction of upload wp is invalid. it should be 0:clockwise or 1:anti-clockwise ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_UPLOAD_WP_TYPE_INVALID ),            ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"the wp type of upload wp is invalid. reference to waypoint_type_t defined in math_waypoint_planner.h ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_GO_STOP_CMD_INVALID ),               ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"go/stop command is invalid. ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_INVALID_PAUSE_RECOVERY_CMD),         ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"the command of pause/recovery is not equal to any of the command enum ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_INVALID_BREAK_RESTORE_CMD ),         ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"the command of break/restore is not equal to any of the command enum ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_INIT_INVALID_REF_POINT ),            ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"initial reference point position coordinate exceed set range ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_UPLOAD_CANNT_SET_WP_LINE_EXIT_TYPE), ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"cann't set wp_line_exit type to wp ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_DAMPING_DIS_GE_DIS_OF_ADJ_POINTS ),  ErrorCodeMsg(module[MissionV2Module].ModuleName, 	 "the damping dis is greater than or equal the distance of adjacent point ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_INIT_INFO_NOT_UPLOADED ),            ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"the init info of Ground Station is not uploaded yet ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_WP_HAS_NOT_UPLOADED ),               ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"the wp has not uploaded yet ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_UPLOADED_WP_NOT_ENOUGH ),            ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"min_initial_waypoint_num is not uploaded. ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_GS_HAS_STARTED ),                    ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"waypoint plan has started when received go command. ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_GS_NOT_RUNNING ),                    ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"waypoint plan not running when received stop command. ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_GS_NOT_RUNNING_FOR_PAUSE_RECOVERY),  ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"ground station(GS) is not started(used by pause/recovery) ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_GS_NOT_RUNNING_FOR_BREAK_RESTORE),   ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"ground station(GS) is not started(used by break/restore) ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_NOT_IN_WP_MIS  ),                    ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"not in the waypoint mission(MIS)(cannot pause/recovery or break/restore) ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_MIS_HAS_BEEN_PAUSED ),               ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"the current status is paused","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_MIS_NOT_PAUSED ),                    ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"not in paused status","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_MIS_HAS_BEEN_BROKEN ),               ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"the current status is broken","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_MIS_NOT_BROKEN ),                    ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"not in break status","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_PAUSE_RECOVERY_NOT_SUPPORTED),       ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"the configuration forbid using pause/recovery API ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_BREAK_RESTORE_NOT_SUPPORTED ),       ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"the configuration forbid using break/restore API ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_NO_BREAK_POINT  ),                   ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"no break point is recorded for restore ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_NO_CUR_TRAJ_PROJECT ),               ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"no current trajectory project point is recorded for restore ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_NO_NXT_TRAJ_PROJECT ),               ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"no next trajectory project point is recorded for restore ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_NO_NNT_TRAJ_PROJECT ),               ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"no next the next trajectory project point is recorded for restore ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_UPLOAD_WP_ID_NOT_CONTINUE ),         ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"the index of upload wp is not continue after the store wp ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_WP_LINE_ENTER_NOT_SET_TO_START_WP ), ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"the WP_LINE_ENTER wp_type set to a wp which is not the init start waypoint ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_INIT_WP_WHEN_PLAN_HAS_STARTED  ),    ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"the waypoint plan has started when initializing waypoint ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_DAMPING_DIS_EXCEED_RANGE ),          ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"waypoint damping distance exceed set range ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_WAYPOINT_COOR_EXCEED_RANGE ),        ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"waypoint position coordinate exceed rational range ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_FIRST_WP_TYPE_IS_WP_TURN_NO),        ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"first waypoint type error","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_WP_EXCEED_RADIUS_LIMIT  ),           ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"waypoint position exceed radius limit ","none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_WP_EXCEED_HEIGHT_LIMIT  ),           ErrorCodeMsg(module[MissionV2Module].ModuleName, 	"waypoint position exceed height limit ","none")),
+
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::COMMON_SUCCESS                            ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "				", "none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::COMMON_INVALID_DATA_LENGTH                ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "the length of the data is illegal based on the protocol ", "none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::COMMON_INVALD_FLOAT_NUM                   ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "invalid float number (NAN or INF) ", "none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRAJ_WP_VERSION_NO_MATCH                  ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "waypoint mission version can't match with firmware			", "none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::COMMON_UNKNOWN                            ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "Fatal error	 Unexpected result	 	", "none")),
+
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::STATUS_RESV                               ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "				", "none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::STATUS_WP_MIS_CHECK_FAIL                  ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "head_node is null or atti_not_healthy or gyro_not_healthy or horiz_vel_not healthy or horiz_abs_pos_not_healthy. ", "none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::STATUS_HOME_NOT_RECORDED                  ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "the home point is no recorded yet	 which will be executed at the first time of GPS level > 3(MR	FW). 	", "none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::STATUS_LOW_LOCATION_ACCURACY              ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "current location accuracy is low for bad GPS signal. ", "none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::STATUS_RTK_CONDITION_IS_NOT_READY         ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "use rtk_data	 but rtk is not connected or rtk_data is invalid 		", "none")),
+
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::SECURE_RESV                               ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "				", "none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::SECURE_CROSS_NFZ                          ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "the trajectory cross the NFZ ", "none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::SECURE_BAT_LOW                            ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "current capacity of smart battery or voltage of non-smart battery is lower than level 1 or level 2 threshold ", "none")),
+
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::ACTION_COMMON_RESV                           ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "				", "none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::ACTION_COMMON_ACTION_ID_DUPLICATED           ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "the ID of Action is duplicated. ", "none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::ACTION_COMMON_ACTION_ITEMS_SPACE_NOT_ENOUGH  ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "there is no enough memory space for new Action Item ", "none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::ACTION_COMMON_ACTION_SIZE_GT_BUF_SIZE        ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "the size of buffer used to get the info of Action is less than the size of Action. Normally users can not get this. ", "none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::ACTION_COMMON_ACTION_ID_NOT_FOUND            ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "the ID of Action is not found. ", "none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::ACTION_COMMON_DOWNLOAD_ACTION_ID_RANGE_ERROR ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "the download action start id is bigger than the action end id ", "none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::ACTION_COMMON_NO_ACTION_ITEMS_STORED         ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "can not download or get min-max action ID for no action items stored in action kernel ", "none")),
+
+
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRIGGER_RESV                                     ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "				", "none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRIGGER_TYPE_INVALID                             ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "the type ID of Trigger is invalid. It might not defined or the information is empty. ", "none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRIGGER_REACH_WP_END_INDEX_LT_START_INDEX        ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "wp_end_index is less than wp_start_index in reach_waypoint_trigger. ", "none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRIGGER_REACH_WP_INVALID_INTERVAL_WP_NUM         ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "interval_wp_num is large than the difference of wp_start_index and wp_end_index in reach_waypoint_trigger. ", "none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRIGGER_REACH_WP_INVALID_AUTO_TERMINATE_WP_NUM 	), ErrorCodeMsg(module[MissionV2Module].ModuleName, "auto_terminate_wp_num is large than interval_wp_num in reach_waypoint_trigger. ", "none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRIGGER_ASSOCIATE_INVALID_TYPE                   ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "the associate_type is greater than the maximum value. ", "none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::TRIGGER_SIMPLE_INTERVAL_INVALID_TYPE             ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "the interval type is greater than the maximum value. ", "none")),
+
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::ACTUATOR_COMMON_RESV                             ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "				", "none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::ACTUATOR_COMMON_ACTUATOR_EXEC_NON_SUPPORTED      ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "the execution of Actuator is not supported	 e.g.	 try to stop camera shooting. 	", "none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::ACTUATOR_COMMON_ACTUATOR_TYPE_INVALID            ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "the type ID of Actuator is invalid. It might not defined or the information is empty. ", "none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::ACTUATOR_COMMON_ACTUATOR_FUNC_INVALID            ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "the Function ID of Actuator is invalid. It might not defined or the information is empty. ", "none")),
+
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::ACTUATOR_CAMERA_RESV                               ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "				", "none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::ACTUATOR_CAMERA_SEND_SINGLE_SHOT_CMD_TO_CAMERA_FAIL), ErrorCodeMsg(module[MissionV2Module].ModuleName, "fail to send shot cmd to camera for no camera or camera is busy. ", "none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::ACTUATOR_CAMERA_SEND_VIDEO_START_CMD_TO_CAMERA_FAIL), ErrorCodeMsg(module[MissionV2Module].ModuleName, "fail to send video start cmd to camera for no camera or camera is busy. ", "none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::ACTUATOR_CAMERA_SEND_VIDEO_STOP_CMD_TO_CAMERA_FAIL  ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "fail to send video stop cmd to camera for no camera or camera is not busy. ", "none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::ACTUATOR_CAMERA_FOCUS_PARAM_XY_INVALID              ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "camera focus param xy exceed valid range (0	 1). 		", "none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::ACTUATOR_CAMERA_SEND_FOCUS_CMD_TO_CAMERA_FAIL       ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "fail to send focus cmd to camera for no camera or camera is busy. ", "none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::ACTUATOR_CAMERA_SEND_FOCALIZE_CMD_TO_CAMERA_FAIL    ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "fail to send focalize cmd to camera for no camera or camera is busy. ", "none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::ACTUATOR_CAMERA_FOCAL_DISTANCE_INVALID              ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "focal distance of camera focalize function exceed valid range. ", "none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::ACTUATOR_CAMERA_EXEC_FAIL                           ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "this err code indicate camera fail to exec coressponding cmd	 and the low 8 bit", "none")),
+
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::ACTUATOR_GIMBAL_RESV                           ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "				", "none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::ACTUATOR_GIMBAL_INVALID_RPY_ANGLE_CTRL_CMD     ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "gimbal roll	pitch	yaw angle ctrl cmd param invalid	", "none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::ACTUATOR_GIMBAL_INVALID_DURATION_CMD           ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "gimbal duration param invalid	 unable to exec. 		", "none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::ACTUATOR_GIMBAL_FAIL_TO_ARRIVE_TGT_ANGLE       ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "gimbal fail to arrive target angle . ", "none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::ACTUATOR_GIMBAL_FAIL_TO_SEND_CMD_TO_GIMBAL     ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "fail to send cmd to gimbal for gimbal is busy or no gimbal. ", "none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::ACTUATOR_GIMBAL_THIS_INDEX_OF_GIMBAL_NOT_DOING_UNIFORM_CTRL 	), ErrorCodeMsg(module[MissionV2Module].ModuleName, "fail to stop gimbal uniform ctrl because index error.			", "none")),
+
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::ACTUATOR_FLIGHT_RESV                           ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "				", "none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::ACTUATOR_FLIGHT_YAW_INVALID_YAW_ANGLE          ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "yaw angle is lager max yaw angle. ", "none")),
+  std::make_pair(getRawRetCode(WaypointV2MissionErr::ACTUATOR_FLIGHT_YAW_TO_TGT_ANGLE_TIMEOUT       ), ErrorCodeMsg(module[MissionV2Module].ModuleName, "faile to target yaw angle	 because of timeout.		", "none")),
+  };
+
+const ErrorCode::ErrorCodeMapType ErrorCode::getWaypointV2CommonErrorMap() {
+  const ErrorCodeMapType WaypointV2CommonErrorMap(WaypointV2CommonErrData,
+                                              WaypointV2CommonErrData
+                                              + sizeof WaypointV2CommonErrData
+                                                / sizeof WaypointV2CommonErrData[0]);
+  return WaypointV2CommonErrorMap;
+}
 /*! system releated error code */
 const ErrorCode::ErrorCodeType ErrorCode::SysCommonErr::Success              = ErrorCode::getErrorCode(SysModule, SystemCommon, SYSTEM_ERROR_RAW_CODE::Success);
 const ErrorCode::ErrorCodeType ErrorCode::SysCommonErr::AllocMemoryFailed    = ErrorCode::getErrorCode(SysModule, SystemCommon, SYSTEM_ERROR_RAW_CODE::AllocMemoryFailed);
@@ -402,6 +674,7 @@ const ErrorCode::ErrorCodeType ErrorCode::SysCommonErr::ReqTimeout           = E
 const ErrorCode::ErrorCodeType ErrorCode::SysCommonErr::UnpackDataMismatch   = ErrorCode::getErrorCode(SysModule, SystemCommon, SYSTEM_ERROR_RAW_CODE::UnpackDataMismatch);
 const ErrorCode::ErrorCodeType ErrorCode::SysCommonErr::InstInitParamInvalid = ErrorCode::getErrorCode(SysModule, SystemCommon, SYSTEM_ERROR_RAW_CODE::InstInitParamInvalid);
 const ErrorCode::ErrorCodeType ErrorCode::SysCommonErr::UserCallbackInvalid  = ErrorCode::getErrorCode(SysModule, SystemCommon, SYSTEM_ERROR_RAW_CODE::UserCallbackInvalid);
+const ErrorCode::ErrorCodeType ErrorCode::SysCommonErr::UndefinedError       = ErrorCode::getErrorCode(SysModule, SystemCommon, SYSTEM_ERROR_RAW_CODE::UndefinedError);
 
 const std::pair<const ErrorCode::ErrorCodeType, ErrorCode::ErrorCodeMsg> ErrorCode::CameraCommonErrData[] = {
     std::make_pair(getRawRetCode(CameraCommonErr::InvalidCMD),
@@ -460,6 +733,66 @@ const ErrorCode::ErrorCodeMapType ErrorCode::getCameraCommonErrorMap() {
                                                 + sizeof CameraCommonErrData
                                                   / sizeof CameraCommonErrData[0]);
   return CameraCommonErrorMap;
+}
+
+
+const std::pair<const ErrorCode::ErrorCodeType, ErrorCode::ErrorCodeMsg> ErrorCode::GimbalCommonErrData[] = {
+    std::make_pair(getRawRetCode(GimbalCommonErr::InvalidCMD),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "Command not supported", "Check the firmware or command validity")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::Timeout),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "Gimbal's execution of this action has timed out", "Try again or check the firmware or command")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::OutOfMemory),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "Gimbal's execution of this action is out of memory", "Please contact <dev@dji.com> for help.")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::InvalidParam),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "Gimbal received invalid parameters", "Check the validity of the parameter")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::InvalidState),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "Gimbal is busy or the command is not supported in the Gimbal's current state", "Check current Gimbal state is if appropriate fot the CMD")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::TimeNotSync),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "The time stamp of the Gimbal is not sync", "Please contact <dev@dji.com> for help.")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::ParamSetFailed),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "Gimbal failed to set the parameters it received", "Please check the parameter to set is if supported in your devices.")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::ParamGetFailed),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "Gimbal param get failed", "Please check the parameter to get is if supported in your devices.")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::SDCardMISSING),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "Gimbal has no SD Card", "Please install SD card.")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::SDCardFull),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "The Gimbal's SD Card is full", "Please make sure the SD card has enough space.")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::SDCardError),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "Error accessing the SD Card", "Please check the validity of the SD card.")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::SensorError),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "Gimbal sensor error", "Please contact <dev@dji.com> for help.")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::SystemError),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "Gimbal system error", "Please recheck all the running conditions or contact <dev@dji.com> for help.")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::ParamLenTooLong),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "Gimbal param get failed", "Please check the validity of the parameter length")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::ModuleInactivated),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "Gimbal module is not activated", "Please activate the module first.")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::FWSeqNumNotInOrder),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "The seq number of Firmware data is invalid", "Please contact <dev@dji.com> for help.")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::FWCheckErr),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "Firmware check error", "Please contact <dev@dji.com> for help.")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::FlashWriteError),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "Gimbal flash write error", "Please contact <dev@dji.com> for help.")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::FWInvalidType),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "Firmware type is invalid", "Please contact <dev@dji.com> for help.")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::RCDisconnect),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "Remote Control is disconnected now", "Please check the connection with remote control is if OK.")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::HardwareErr),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "Gimbal hardware error", "Please contact <dev@dji.com> for help.")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::UAVDisconnect),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "Disconnect with aircraft", "Please check the connection with aircraft is if OK.")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::UpgradeErrorNow),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "Gimbal cannot not upgrade in current status", "Please contact <dev@dji.com> for help.")),
+    std::make_pair(getRawRetCode(GimbalCommonErr::UndefineError),
+                   ErrorCodeMsg(module[GimbalModule].ModuleName, "Undefined error", "Please contact <dev@dji.com> for help.")),
+};
+
+const ErrorCode::ErrorCodeMapType ErrorCode::getGimbalCommonErrorMap() {
+  const ErrorCodeMapType GimbalCommonErrorMap(GimbalCommonErrData,
+                                              GimbalCommonErrData
+                                                  + sizeof GimbalCommonErrData
+                                                      / sizeof GimbalCommonErrData[0]);
+  return GimbalCommonErrorMap;
 }
 
 const std::pair<const ErrorCode::ErrorCodeType, ErrorCode::ErrorCodeMsg> ErrorCode::PSDKCommonErrData[] = {
@@ -536,6 +869,8 @@ const std::pair<const ErrorCode::ErrorCodeType, ErrorCode::ErrorCodeMsg> ErrorCo
                    ErrorCodeMsg(module[SysModule].ModuleName, "Instance init parameter invalid", "Please make sure the parameter used in instance initializing is valid.")),
     std::make_pair(getRawRetCode(SysCommonErr::UserCallbackInvalid),
                    ErrorCodeMsg(module[SysModule].ModuleName, "The callback set by user is a invalid", "Please make sure the validity of the callback you requesting.")),
+    std::make_pair(getRawRetCode(SysCommonErr::UndefinedError),
+                   ErrorCodeMsg(module[SysModule].ModuleName, "Undefined error", "Unknown error code : 0X%lX, please contact <dev@dji.com> for help.")),
 };
 
 const ErrorCode::ErrorCodeMapType ErrorCode::getSystemCommonErrorMap() {
@@ -550,6 +885,11 @@ const ErrorCode::FunctionDataType ErrorCode::SystemFunction[functionMaxCnt] = {
     {"SystemCommon", getSystemCommonErrorMap},   /*!< SystemCommon */
 };
 
+const ErrorCode::FunctionDataType ErrorCode::GimbalFunction[functionMaxCnt] = {
+    {"GimbalCommon", getGimbalCommonErrorMap},   /*!< GimbalCommon */
+};
+
+
 const ErrorCode::FunctionDataType ErrorCode::CameraFunction[functionMaxCnt] = {
     {"CameraCommon", getCameraCommonErrorMap},   /*!< CameraCommon */
 };
@@ -558,6 +898,9 @@ const ErrorCode::FunctionDataType ErrorCode::PSDKFunction[functionMaxCnt] = {
     {"PSDKCommon", getPSDKCommonErrorMap},   /*!< PSDKCommon */
 };
 
+const ErrorCode::FunctionDataType ErrorCode::WaypointV2Function[functionMaxCnt] = {
+  {"WaypointV2Common", getWaypointV2CommonErrorMap},   /*!< WaypointV2Common */
+};
 // clang-format on
 
 ErrorCode::ErrorCodeMsg ErrorCode::getErrorCodeMsg(int64_t errCode) {
@@ -610,4 +953,18 @@ ErrorCode::FunctionIDType ErrorCode::getFunctionID(ErrorCodeType errCode) {
 
 ErrorCode::RawRetCodeType ErrorCode::getRawRetCode(ErrorCodeType errCode) {
   return (RawRetCodeType)(errCode & 0xFFFFFFFF);
+}
+
+ErrorCode::ErrorCodeType ErrorCode::getLinkerErrorCode(E_OsdkStat cb_type) {
+  switch (cb_type)
+  {
+    case OSDK_STAT_OK:
+      return ErrorCode::SysCommonErr::Success;
+    case OSDK_STAT_ERR_ALLOC:
+      return ErrorCode::SysCommonErr::AllocMemoryFailed;
+    case OSDK_STAT_ERR_TIMEOUT:
+      return ErrorCode::SysCommonErr::ReqTimeout;
+    default:
+      return ErrorCode::SysCommonErr::UndefinedError;
+  }
 }

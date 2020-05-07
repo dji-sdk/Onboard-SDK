@@ -30,7 +30,6 @@
 
 #include "dji_ack.hpp"
 #include "dji_log.hpp"
-#include "dji_control.hpp"
 #include <string.h>
 
 const bool DJI::OSDK::ACK::SUCCESS = 0;
@@ -40,8 +39,12 @@ namespace DJI
 {
 namespace OSDK
 {
-
 const std::pair<const uint32_t, const char*> commonData[] = {
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::KEY_ERROR, (const char*)"KEY_ERROR\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::NO_AUTHORIZATION_ERROR, (const char*)"NO_AUTHORIZATION_ERROR\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::NO_RIGHTS_ERROR, (const char*)"NO_RIGHTS_ERROR\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::SYSTEM_ERROR, (const char*)"SYSTEM_ERROR\n"),
+  std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::NO_RESPONSE_ERROR, (const char*)"NO_RESPONSE_ERROR\n"),
   std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_NONE, (const char*)"MOTOR_FAIL_NONE\n"),
   std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_COMPASS_ABNORMAL, (const char*)"MOTOR_FAIL_COMPASS_ABNORMAL\n"),
   std::make_pair(OpenProtocolCMD::ErrorCode::CommonACK::MOTOR_FAIL_ASSISTANT_PROTECTED, (const char*)"MOTOR_FAIL_ASSISTANT_PROTECTED\n"),
@@ -626,22 +629,11 @@ ACK::getError(ACK::ErrorCode ack)
   else if (memcmp(cmd, OpenProtocolCMD::CMDSet::Control::setControl,
                   sizeof(cmd)) == 0)
   {
-    if (ack.info.buf[2] == ACK::RELEASE_CONTROL)
-    { //! Data is set at buf + SET_CMD_SIZE which is buf + 2;
-      // Release control was called
-      return (ack.data == OpenProtocolCMD::ErrorCode::ControlACK::SetControl::
-                            RELEASE_CONTROL_SUCCESS)
-               ? ACK::SUCCESS
-               : ACK::FAIL;
-    }
-    else if (ack.info.buf[2] == ACK::OBTAIN_CONTROL)
-    {
-      // Obtain control was called
-      return (ack.data == OpenProtocolCMD::ErrorCode::ControlACK::SetControl::
-                            OBTAIN_CONTROL_SUCCESS)
-               ? ACK::SUCCESS
-               : ACK::FAIL;
-    }
+      return ((ack.data
+          == OpenProtocolCMD::ErrorCode::ControlACK::SetControl::RELEASE_CONTROL_SUCCESS)
+          || (OpenProtocolCMD::ErrorCode::ControlACK::SetControl::OBTAIN_CONTROL_SUCCESS))
+             ? ACK::SUCCESS
+             : ACK::FAIL;
   }
   else if (memcmp(cmd, OpenProtocolCMD::CMDSet::Control::setArm, sizeof(cmd)) ==
            0)
@@ -750,6 +742,7 @@ void
 ACK::getErrorCodeMessage(ACK::ErrorCode ack, const char* func)
 {
   DSTATUS("%s", func);
+
   switch (ack.info.cmd_set)
   {
     case OpenProtocolCMD::CMDSet::activation:
@@ -910,39 +903,7 @@ ACK::getCMDIDControlMSG(ACK::ErrorCode ack)
 void
 ACK::getCMDIDTaskMSG(ACK::ErrorCode ack)
 {
-  std::map<const uint32_t, const char*> taskErrorCodeMap;
-
-  if (ack.info.version == Version::FW(3,2,15,62))
-  {
-    taskErrorCodeMap = static_cast<std::map<const uint32_t, const char*>>(ACK::createLegacyTaskErrorCodeMap());
-  }
-  else if (ack.info.version == Version::M100_31)
-  {
-    taskErrorCodeMap = static_cast<std::map<const uint32_t, const char*>>(ACK::createLegacyTaskErrorCodeMap());
-  }
-  else
-  {
-    taskErrorCodeMap = static_cast<std::map<const uint32_t, const char*>>(ACK::createTaskErrorCodeMap());
-  }
-
-  auto msg = taskErrorCodeMap.find(ack.data);
-
-  if (ack.info.buf != nullptr)
-  {
-    uint8_t taskCmd = *ack.info.buf;
-    if ((taskCmd != (uint8_t)Control::FlightCommand::takeOff) && msg != taskErrorCodeMap.end())
-    {
-      DSTATUS(msg->second);
-    }
-    else
-    {
-      getCommonErrorCodeMessage(ack);
-    }
-  }
-  else
-  {
-    DERROR("ACK INFO BUF IS NULL\n");
-  }
+  
 }
 
 /*
@@ -951,18 +912,6 @@ ACK::getCMDIDTaskMSG(ACK::ErrorCode ack)
 void
 ACK::getCMDIDSetArmMSG(ACK::ErrorCode ack)
 {
-  const std::map<const uint32_t, const char*> setArmErrorCodeMap =
-    ACK::createSetArmErrorCodeMap();
-  auto msg = setArmErrorCodeMap.find(ack.data);
-
-  if (msg != setArmErrorCodeMap.end())
-  {
-    DSTATUS(msg->second);
-  }
-  else
-  {
-    getCommonErrorCodeMessage(ack);
-  }
 }
 
 void

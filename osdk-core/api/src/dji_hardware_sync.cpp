@@ -43,6 +43,7 @@ HardwareSync::HardwareSync(Vehicle* vehiclePtr)
   ppsUTCFCTimeHandler.userData = 0;
   ppsUTCTimeHandler.callback = 0;
   ppsUTCTimeHandler.userData = 0;
+  subscribeNMEAMsgs(pollNemaDatacallback, nullptr);
 }
 
 void
@@ -57,18 +58,32 @@ HardwareSync::setSyncFreq(uint32_t freqInHz, uint16_t tag)
 void
 HardwareSync::startSync(SyncSettings& data)
 {
-  vehicle->protocolLayer->send(0, vehicle->getEncryption(),
-                               OpenProtocolCMD::CMDSet::HardwareSync::broadcast,
-                               &data, sizeof(data));
+  vehicle->legacyLinker->send(OpenProtocolCMD::CMDSet::HardwareSync::broadcast,
+                              &data, sizeof(data));
 }
 
 void
 HardwareSync::subscribeNMEAMsgs(VehicleCallBack cb, void *userData)
 {
-  if(cb)
-  {
+  if (cb) {
     this->ppsNMEAHandler.callback = cb;
     this->ppsNMEAHandler.userData = userData;
+    vehicle->legacyLinker->registerCMDCallback(
+        OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEAGPSGSA[0],
+        OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEAGPSGSA[1],
+        ppsNMEAHandler.callback, ppsNMEAHandler.userData);
+    vehicle->legacyLinker->registerCMDCallback(
+        OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEAGPSRMC[0],
+        OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEAGPSRMC[1],
+        ppsNMEAHandler.callback, ppsNMEAHandler.userData);
+    vehicle->legacyLinker->registerCMDCallback(
+        OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEARTKGSA[0],
+        OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEARTKGSA[1],
+        ppsNMEAHandler.callback, ppsNMEAHandler.userData);
+    vehicle->legacyLinker->registerCMDCallback(
+        OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEARTKRMC[0],
+        OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEARTKRMC[1],
+        ppsNMEAHandler.callback, ppsNMEAHandler.userData);
   }
 }
 
@@ -77,6 +92,22 @@ HardwareSync::unsubscribeNMEAMsgs()
 {
   this->ppsNMEAHandler.callback = 0;
   this->ppsNMEAHandler.userData = 0;
+  vehicle->legacyLinker->registerCMDCallback(
+      OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEAGPSGSA[0],
+      OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEAGPSGSA[1],
+      ppsNMEAHandler.callback, ppsNMEAHandler.userData);
+  vehicle->legacyLinker->registerCMDCallback(
+      OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEAGPSRMC[0],
+      OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEAGPSRMC[1],
+      ppsNMEAHandler.callback, ppsNMEAHandler.userData);
+  vehicle->legacyLinker->registerCMDCallback(
+      OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEARTKGSA[0],
+      OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEARTKGSA[1],
+      ppsNMEAHandler.callback, ppsNMEAHandler.userData);
+  vehicle->legacyLinker->registerCMDCallback(
+      OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEARTKRMC[0],
+      OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEARTKRMC[1],
+      ppsNMEAHandler.callback, ppsNMEAHandler.userData);
 }
 
 void
@@ -86,6 +117,10 @@ HardwareSync::subscribeUTCTime(VehicleCallBack cb, void *userData)
   {
     this->ppsUTCTimeHandler.callback = cb;
     this->ppsUTCTimeHandler.userData = userData;
+    vehicle->legacyLinker->registerCMDCallback(
+        OpenProtocolCMD::CMDSet::HardwareSync::ppsUTCTime[0],
+        OpenProtocolCMD::CMDSet::HardwareSync::ppsUTCTime[1],
+        ppsUTCTimeHandler.callback, ppsUTCTimeHandler.userData);
   }
 }
 
@@ -94,6 +129,10 @@ HardwareSync::unsubscribeUTCTime()
 {
   this->ppsUTCTimeHandler.callback = 0;
   this->ppsUTCTimeHandler.userData = 0;
+  vehicle->legacyLinker->registerCMDCallback(
+      OpenProtocolCMD::CMDSet::HardwareSync::ppsUTCTime[0],
+      OpenProtocolCMD::CMDSet::HardwareSync::ppsUTCTime[1],
+      ppsUTCTimeHandler.callback, ppsUTCTimeHandler.userData);
 }
 
 void
@@ -103,6 +142,10 @@ HardwareSync::subscribeFCTimeInUTCRef(VehicleCallBack cb, void *userData)
   {
     this->ppsUTCFCTimeHandler.callback = cb;
     this->ppsUTCFCTimeHandler.userData = userData;
+    vehicle->legacyLinker->registerCMDCallback(
+        OpenProtocolCMD::CMDSet::HardwareSync::ppsUTCFCTimeRef[0],
+        OpenProtocolCMD::CMDSet::HardwareSync::ppsUTCFCTimeRef[1],
+        ppsUTCFCTimeHandler.callback, ppsUTCFCTimeHandler.userData);
   }
 }
 
@@ -111,6 +154,10 @@ HardwareSync::unsubscribeFCTimeInUTCRef()
 {
   this->ppsUTCFCTimeHandler.callback = 0;
   this->ppsUTCFCTimeHandler.userData = 0;
+  vehicle->legacyLinker->registerCMDCallback(
+      OpenProtocolCMD::CMDSet::HardwareSync::ppsUTCFCTimeRef[0],
+      OpenProtocolCMD::CMDSet::HardwareSync::ppsUTCFCTimeRef[1],
+      ppsUTCFCTimeHandler.callback, ppsUTCFCTimeHandler.userData);
 }
 
 void
@@ -120,6 +167,10 @@ HardwareSync::subscribePPSSource(VehicleCallBack cb, void *userData)
   {
     this->ppsSourceHandler.callback = cb;
     this->ppsSourceHandler.userData = userData;
+    vehicle->legacyLinker->registerCMDCallback(
+        OpenProtocolCMD::CMDSet::HardwareSync::ppsSource[0],
+        OpenProtocolCMD::CMDSet::HardwareSync::ppsSource[1],
+        ppsSourceHandler.callback, ppsSourceHandler.userData);
   }
 }
 
@@ -128,6 +179,10 @@ HardwareSync::unsubscribePPSSource()
 {
   this->ppsSourceHandler.callback = 0;
   this->ppsSourceHandler.userData = 0;
+  vehicle->legacyLinker->registerCMDCallback(
+      OpenProtocolCMD::CMDSet::HardwareSync::ppsSource[0],
+      OpenProtocolCMD::CMDSet::HardwareSync::ppsSource[1],
+      ppsSourceHandler.callback, ppsSourceHandler.userData);
 }
 
 void
@@ -136,32 +191,13 @@ HardwareSync::writeNMEA(const std::string &nmea)
   std::string head = nmea.substr(0,6);
   if(head == "$GPGSA")
   {
-    GPGSAData.sentence = nmea;
-    ++GPGSAData.seq;
-    recordRecvTimeMsg(GPGSAData.timestamp);
-    setDataFlag(GPGSAFlag, true);
+      GPGSAData.sentence = nmea;
+      ++GPGSAData.seq;
+      recordRecvTimeMsg(GPGSAData.timestamp);
+      setDataFlag(GPGSAFlag, true);
+
   }
-  else if(head == "$GLGSA")
-  {
-    GLGSAData.sentence = nmea;
-    ++GLGSAData.seq;
-    recordRecvTimeMsg(GLGSAData.timestamp);
-    setDataFlag(GLGSAFlag, true);
-  }
-  else if(head == "$GAGSA")
-  {
-    GAGSAData.sentence = nmea;
-    ++GAGSAData.seq;
-    recordRecvTimeMsg(GAGSAData.timestamp);
-    setDataFlag(GAGSAFlag, true);
-  }
-  else if(head == "$BDGSA")
-  {
-    BDGSAData.sentence = nmea;
-    ++BDGSAData.seq;
-    recordRecvTimeMsg(BDGSAData.timestamp);
-    setDataFlag(BDGSAFlag, true);
-  }
+
   else if(head == "$GPRMC")
   {
     GPRMCData.sentence = nmea;
@@ -169,6 +205,28 @@ HardwareSync::writeNMEA(const std::string &nmea)
     recordRecvTimeMsg(GPRMCData.timestamp);
     setDataFlag(GPRMCFlag, true);
   }
+
+  else if(head == "$GNGSA") {
+    /*! Transform alphanumeric to num*/
+    SatelliteIndex satellite_index = (SatelliteIndex)((nmea[nmea.size() - 4] - '0') - 1);
+    if (satellite_index  < MAX_INDEX_CNT) {
+      GNGSAData.Satellite[satellite_index].sentence = nmea;
+      ++GNGSAData.Satellite[satellite_index].seq;
+      recordRecvTimeMsg(GNGSAData.Satellite[satellite_index].timestamp);
+    }
+    if (satellite_index == MAX_INDEX_CNT-1)
+    {
+      setDataFlag(GNGSAFlag, true);
+    }
+  }
+  else if(head == "$GNRMC")
+  {
+    GNRMCData.sentence = nmea;
+    ++GNRMCData.seq;
+    recordRecvTimeMsg(GNRMCData.timestamp);
+    setDataFlag(GNRMCFlag, true);
+  }
+
   else if(head.substr(0,3) == "UTC")
   {
     UTCData.sentence = nmea;
@@ -178,7 +236,7 @@ HardwareSync::writeNMEA(const std::string &nmea)
   }
   else
   {
-    DERROR("Cannot recognize the NMEA msg received\n");
+    //DERROR("Cannot recognize the NMEA msg received\n");
   }
 }
 
@@ -193,6 +251,7 @@ HardwareSync::writeData(const uint8_t cmdID, const RecvContainer *recvContainer)
     memcpy(rawBuf, recvContainer->recvData.raw_ack_array, length);
     writeNMEA(std::string((char*)rawBuf, length));
     free(rawBuf);
+
   }
   else if (cmdID == OpenProtocolCMD::CMDSet::HardwareSync::ppsUTCFCTimeRef[1])
   {
@@ -229,37 +288,29 @@ HardwareSync::getPPSSource(PPSSource &source)
 }
 
 bool
-HardwareSync::getNMEAMsg(NMEAType type, NMEAData &nmea)
+HardwareSync::getGNRMCMsg(NMEAData &nmea)
 {
-  bool result = false;
-  switch(type)
-  {
-    case GPGSA:{
-      result = writeDataHelper<NMEAData>(GPGSAFlag, GPGSAData, nmea);
-    }
-      break;
-    case GLGSA:{
-      result = writeDataHelper<NMEAData>(GLGSAFlag, GLGSAData, nmea);
-    }
-      break;
-    case GAGSA:{
-      result = writeDataHelper<NMEAData>(GAGSAFlag, GAGSAData, nmea);
-    }
-      break;
-    case BDGSA:{
-      result = writeDataHelper<NMEAData>(BDGSAFlag, BDGSAData, nmea);
-    }
-      break;
-    case GPRMC:{
-      result = writeDataHelper<NMEAData>(GPRMCFlag, GPRMCData, nmea);
-    }
-      break;
-    default:
-      break;
-  }
-  return result;
+  return writeDataHelper<NMEAData>(GNRMCFlag, GNRMCData, nmea);
 }
 
+bool
+HardwareSync::getGNGSAMsg(GNGSAPackage &GNGSA)
+{
+  if (GNGSAFlag == true)
+  {
+    GNGSA = GNGSAData;
+    setDataFlag(GNGSAFlag, false);
+    return true;
+  }
+  else
+    return false;
+}
+
+void HardwareSync::pollNemaDatacallback(Vehicle *vehicle, RecvContainer recvFrame, UserData userData)
+{
+  uint8_t cmdID = recvFrame.recvInfo.cmd_id;
+  vehicle->hardSync->writeData(cmdID, &recvFrame);
+}
 #if STM32
 void
 HardwareSync::setDataFlag(HWSyncDataFlag &flag, bool val)
@@ -276,7 +327,11 @@ HardwareSync::getDataFlag(HWSyncDataFlag &flag)
 void
 HardwareSync::recordRecvTimeMsg(RecvTimeMsg &recvTime)
 {
-  recvTime = vehicle->protocolLayer->getDriver()->getTimeStamp();
+  uint32_t msTimeStamp = 0;
+  if (OsdkOsal_GetTimeMs(&msTimeStamp) != OSDK_STAT_OK) {
+    DERROR("get system time error");
+  }
+  recvTime = msTimeStamp;
 }
 #elif defined(__linux__)
 void

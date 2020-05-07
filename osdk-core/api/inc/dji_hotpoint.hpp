@@ -163,16 +163,7 @@ public:
    *  @param callback callback function
    *  @param userData user data (void ptr)
    */
-  void updateYawRate(YawRate& Data, VehicleCallBack callback = 0,
-                     UserData userData = 0);
-  /*! @brief
-   *
-   *  update yaw rate and orientation of hotpoint mission
-   *
-   *  @param Data specified yaw rate and orientation
-   *  @param timer timeout to wait for ACK
-   */
-  ACK::ErrorCode updateYawRate(YawRate& Data, int timer);
+  void updateYawRate(YawRate& Data);
   /*! @brief
    *
    *  update yaw rate and orientation of hotpoint mission
@@ -181,26 +172,14 @@ public:
    *  @param isClockwise specified orientation
    *  @param timer timeout to wait for ACK
    */
-  void updateYawRate(float32_t yawRate, bool isClockwise,
-                     VehicleCallBack callback = 0, UserData userData = 0);
+  void updateYawRate(float32_t yawRate, bool isClockwise);
   /*! @brief
    *
    *  update radius of hotpoint mission
    *
    *  @param meter radius
-   *  @param callback callback function
-   *  @param userData user data (void ptr)
    */
-  void updateRadius(float32_t meter, VehicleCallBack callback = 0,
-                    UserData userData = 0);
-  /*! @brief
-   *
-   *  update radius of hotpoint mission
-   *
-   *  @param meter radius
-   *  @param timer timeout to wait for ACK
-   */
-  ACK::ErrorCode updateRadius(float32_t meter, int timer);
+  void updateRadius(float32_t meter);
   /*! @brief
    *
    *  reset yaw of hotpoint mission

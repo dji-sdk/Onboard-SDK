@@ -33,7 +33,32 @@ using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
 
 CameraManagerSyncSample::CameraManagerSyncSample(Vehicle *vehiclePtr)
-    : vehicle(vehiclePtr) {}
+    : vehicle(vehiclePtr) {
+  /*! init camera modules for cameraManager */
+  /*! main camera init */
+  ErrorCode::ErrorCodeType ret = vehicle->cameraManager->initCameraModule(
+      PAYLOAD_INDEX_0, "Sample_main_camera");
+  if (ret != ErrorCode::SysCommonErr::Success) {
+    DERROR("Init Camera module Sample_main_camera failed.");
+    ErrorCode::printErrorCodeMsg(ret);
+  }
+  /*! vice camera init */
+  ret = vehicle->cameraManager->initCameraModule(PAYLOAD_INDEX_1,
+                                                 "Sample_vice_camera");
+  if (ret != ErrorCode::SysCommonErr::Success) {
+    DERROR("Init Camera module Sample_vice_camera failed.");
+    ErrorCode::printErrorCodeMsg(ret);
+  }
+  /*! top camera init for M300 */
+  if (vehiclePtr->isM300()) {
+    ret = vehicle->cameraManager->initCameraModule(PAYLOAD_INDEX_2,
+                                                   "Sample_top_camera");
+    if (ret != ErrorCode::SysCommonErr::Success) {
+      DERROR("Init Camera module Sample_top_camera failed.");
+      ErrorCode::printErrorCodeMsg(ret);
+    }
+  }
+}
 
 CameraManagerSyncSample::~CameraManagerSyncSample() {}
 
@@ -331,11 +356,52 @@ ErrorCode::ErrorCodeType CameraManagerSyncSample::startZoomSyncSample(
   DSTATUS("Start continuous optical zoom parameters : direction=%d, speed=%d",
           direction, speed);
   retCode = pm->startContinuousOpticalZoomSync(index, direction, speed, 1);
+
   if (retCode != ErrorCode::SysCommonErr::Success) {
     DERROR("Start continuous zoom fail. Error code : 0x%lX", retCode);
     ErrorCode::printErrorCodeMsg(retCode);
   }
   return retCode;
+}
+
+ErrorCode::ErrorCodeType CameraManagerSyncSample::setZoomSyncSample(
+    PayloadIndexType index, float factor) {
+  if (!vehicle || !vehicle->cameraManager) {
+    DERROR("vehicle or cameraManager is a null value.");
+    return ErrorCode::SysCommonErr::InstInitParamInvalid;
+  }
+  ErrorCode::ErrorCodeType retCode;
+  CameraManager *pm = vehicle->cameraManager;
+
+  DSTATUS(
+      "Attention : It is only supported by X5, X5R and X5S camera on Osmo with"
+      "lens Olympus M.Zuiko ED 14-42mm f/3.5-5.6 EZ, Z3 camera, Z30 camera.");
+
+  float curFactor = 0;
+  retCode = pm->getOpticalZoomFactorSync(index, curFactor, 1);
+  if (retCode != ErrorCode::SysCommonErr::Success) {
+    DERROR("Get zoom parameter fail. Error code : 0x%lX", retCode);
+    ErrorCode::printErrorCodeMsg(retCode);
+    DSTATUS(
+        "Attention : It is only supported by X5, X5R and X5S camera on Osmo with"
+        "lens Olympus M.Zuiko ED 14-42mm f/3.5-5.6 EZ, Z3 camera, Z30 camera.");
+    return retCode;
+  }
+  DSTATUS("Got the current optical zoom factor : %0.2f", curFactor);
+  if (curFactor != factor) {
+    DSTATUS("Set the current optical zoom factor as %0.2f", factor);
+    retCode = pm->setOpticalZoomFactorSync(index, factor, 1);
+
+    if (retCode != ErrorCode::SysCommonErr::Success) {
+      DERROR("Set zoom parameter fail. Error code : 0x%lX", retCode);
+      ErrorCode::printErrorCodeMsg(retCode);
+    }
+    return retCode;
+  } else {
+    DSTATUS("The current zoom factor is already : %0.2f", factor);
+    return ErrorCode::SysCommonErr::Success;
+  }
+
 }
 
 ErrorCode::ErrorCodeType CameraManagerSyncSample::stopZoomSyncSample(
@@ -368,7 +434,7 @@ CameraManagerSyncSample::startShootSinglePhotoSyncSample(
 
   /*!< set camera work mode as shoot photo */
   DSTATUS("set camera work mode as SHOOT_PHOTO");
-  retCode = pm->setModeSync(index, CameraModule::WorkMode::SHOOT_PHOTO, 1);
+  retCode = pm->setModeSync(index, CameraModule::WorkMode::SHOOT_PHOTO, 3);
   if (retCode != ErrorCode::SysCommonErr::Success) {
     DERROR("Camera take photo fail. Error code : 0x%lX", retCode);
     ErrorCode::printErrorCodeMsg(retCode);
@@ -391,7 +457,7 @@ CameraManagerSyncSample::startShootSinglePhotoSyncSample(
   */
 
   /*! wait the APP change the shoot-photo mode display */
-  vehicle->getPlatformManager()->millisecSleep(500);
+  Platform::instance().taskSleepMs(500);
 
   /*!< start to shoot single photo */
   DSTATUS("start to shoot SINGLE photo");
@@ -418,7 +484,7 @@ CameraManagerSyncSample::startShootBurstPhotoSyncSample(
 
   /*!< set camera work mode as SHOOT_PHOTO */
   DSTATUS("set camera work mode as SHOOT_PHOTO");
-  retCode = pm->setModeSync(index, CameraModule::WorkMode::SHOOT_PHOTO, 1);
+  retCode = pm->setModeSync(index, CameraModule::WorkMode::SHOOT_PHOTO, 3);
   if (retCode != ErrorCode::SysCommonErr::Success) {
     DERROR("Set camera as SHOOT_PHOTO fail. Error code : 0x%lX", retCode);
     ErrorCode::printErrorCodeMsg(retCode);
@@ -436,7 +502,7 @@ CameraManagerSyncSample::startShootBurstPhotoSyncSample(
   }
 
   /*! wait the APP change the shoot-photo mode display */
-  vehicle->getPlatformManager()->millisecSleep(500);
+  Platform::instance().taskSleepMs(500);
 
   /*!< set shoot-photo mode parameter */
   DSTATUS("set count = %d", count);
@@ -471,7 +537,7 @@ ErrorCode::ErrorCodeType CameraManagerSyncSample::startShootAEBPhotoSyncSample(
 
   /*!< set camera work mode as SHOOT_PHOTO */
   DSTATUS("set camera work mode as SHOOT_PHOTO");
-  retCode = pm->setModeSync(index, CameraModule::WorkMode::SHOOT_PHOTO, 1);
+  retCode = pm->setModeSync(index, CameraModule::WorkMode::SHOOT_PHOTO, 3);
   if (retCode != ErrorCode::SysCommonErr::Success) {
     DERROR("Set camera as SHOOT_PHOTO fail. Error code : 0x%lX", retCode);
     ErrorCode::printErrorCodeMsg(retCode);
@@ -489,7 +555,7 @@ ErrorCode::ErrorCodeType CameraManagerSyncSample::startShootAEBPhotoSyncSample(
   }
 
   /*! wait the APP change the shoot-photo mode display */
-  vehicle->getPlatformManager()->millisecSleep(500);
+  Platform::instance().taskSleepMs(500);
 
   /*!< set shoot-photo mode parameter */
   DSTATUS("set AEB photo number = %d", photoNum);
@@ -525,7 +591,7 @@ CameraManagerSyncSample::startShootIntervalPhotoSyncSample(
 
   /*!< set camera work mode as SHOOT_PHOTO */
   DSTATUS("set camera work mode as SHOOT_PHOTO");
-  retCode = pm->setModeSync(index, CameraModule::WorkMode::SHOOT_PHOTO, 2);
+  retCode = pm->setModeSync(index, CameraModule::WorkMode::SHOOT_PHOTO, 3);
   if (retCode != ErrorCode::SysCommonErr::Success) {
     DERROR("Set camera as SHOOT_PHOTO fail. Error code : 0x%lX", retCode);
     ErrorCode::printErrorCodeMsg(retCode);
@@ -544,7 +610,7 @@ CameraManagerSyncSample::startShootIntervalPhotoSyncSample(
   }
 
   /*! wait the APP change the shoot-photo mode display */
-  vehicle->getPlatformManager()->millisecSleep(500);
+  Platform::instance().taskSleepMs(500);
 
   /*!< set shoot-photo mode parameter */
   DSTATUS("set intervalData : photoNumConticap = %d ,timeInterval = %d",
@@ -602,7 +668,7 @@ ErrorCode::ErrorCodeType CameraManagerSyncSample::startRecordVideoSyncSample(
 
   /*!< set camera work mode as RECORD_VIDEO */
   DSTATUS("Set camera mode to RECORD_VIDEO");
-  retCode = pm->setModeSync(index, CameraModule::WorkMode::RECORD_VIDEO, 2);
+  retCode = pm->setModeSync(index, CameraModule::WorkMode::RECORD_VIDEO, 3);
   if (retCode != ErrorCode::SysCommonErr::Success) {
     DERROR("Set camera as RECORD_VIDEO mode fail. Error code : 0x%lX", retCode);
     ErrorCode::printErrorCodeMsg(retCode);

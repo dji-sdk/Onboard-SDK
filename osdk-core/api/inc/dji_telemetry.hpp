@@ -67,7 +67,7 @@ typedef enum
   TOPIC_ANGULAR_RATE_RAW,
   TOPIC_ALTITUDE_FUSIONED,
   TOPIC_ALTITUDE_BAROMETER,
-  TOPIC_HEIGHT_HOMEPOINT,
+  TOPIC_ALTITUDE_OF_HOMEPOINT,
   TOPIC_HEIGHT_FUSION,
   TOPIC_GPS_FUSED,
   TOPIC_GPS_DATE,
@@ -103,6 +103,8 @@ typedef enum
   TOPIC_AVOID_DATA,
   TOPIC_HOME_POINT_SET_STATUS,
   TOPIC_HOME_POINT_INFO,
+  TOPIC_DUAL_GIMBAL_DATA,
+  TOPIC_THREE_GIMBAL_DATA,
   TOTAL_TOPIC_NUMBER              // Always put this line in the end
 } TopicName;
 // clang-format on
@@ -122,7 +124,7 @@ typedef enum
   UID_ANGULAR_RATE_RAW         = 0x700389ee,
   UID_ALTITUDE_FUSIONED        = 0x11e9c81a,
   UID_ALTITUDE_BAROMETER       = 0x27396a39,
-  UID_HEIGHT_HOMEPOINT         = 0x252c164b,
+  UID_ALTITUDE_OF_HOMEPOINT    = 0x252c164b,
   UID_HEIGHT_FUSION            = 0x87cf419d,
   UID_GPS_FUSED                = 0x4b19a8c7,
   UID_GPS_DATE                 = 0x598f79bc,
@@ -157,7 +159,9 @@ typedef enum
   UID_GIMBAL_CONTROL_MODE      = 0x326a446d,
   UID_FLIGHT_ANOMALY           = 0x0a624b4b,
   UID_POSITION_VO              = 0xd3462697,
-  UID_AVOID_DATA               = 0xf6405daa
+  UID_AVOID_DATA               = 0xf6405daa,
+  UID_DUAL_GIMBAL_FULL_DATA    = 0xcfeea4fa,
+  UID_THREE_GIMBAL_FULL_DATA   = 0x19d374a0,
 } TOPIC_UID;
 
 // clang-format on
@@ -433,6 +437,20 @@ typedef struct Mag
 } Mag; // pack(1)
 
 /*!
+ * @brief struct for data broadcast, return compass reading
+ *
+ * @note returned value is compass status,
+ * 0: compass is normal;
+ * 1: compass need calibrate;
+ * 2: compass need dir fix;
+ * 3: compass need restart.
+ */
+typedef struct Compass
+{
+    uint8_t compassStatus;
+} Compass;
+
+/*!
  * @brief struct for data broadcast and data subscription, return RC reading
  */
 typedef struct RC
@@ -661,24 +679,46 @@ typedef union
 
 typedef uint8_t GimbalControlMode;
 
+typedef struct GimbalSingleData
+{
+  float32_t pitch;
+  float32_t roll;
+  float32_t yaw;
+  uint32_t status;
+  uint8_t mode;
+} GimbalSingleData;
+
+#define SDK_M210_GIMBAL_MAX_NUM 2
+#define SDK_M300_GIMBAL_MAX_NUM 3
+
+typedef struct GimbalDualData
+{
+  GimbalSingleData gbData[SDK_M210_GIMBAL_MAX_NUM];
+} GimbalDualData;
+
+typedef struct GimbalThreeData
+{
+  GimbalSingleData gbData[SDK_M300_GIMBAL_MAX_NUM];
+} GimbalThreeData;
+
 /*!
  * @brief struct for TOPIC_FLIGHT_ANOMALY
  */
 typedef struct FlightAnomaly
 {
-  uint32_t impactInAir               : 1;  /*!< Impact happens in Air */
-  uint32_t randomFly                 : 1;  /*!< Randomly fly in GPS mode without stick input*/
-  uint32_t heightCtrlFail            : 1;  /*!< Height control failed */
-  uint32_t rollPitchCtrlFail         : 1;  /*!< Tilt control failed */
-  uint32_t yawCtrlFail               : 1;  /*!< Yaw control failed */
-  uint32_t aircraftIsFalling         : 1;  /*!< Aircraft is falling */
-  uint32_t strongWindLevel1          : 1;  /*!< There is wind that FC views as strong level 1*/
-  uint32_t strongWindLevel2          : 1;  /*!< There is wind that FC views as strong level 2*/
-  uint32_t compassInstallationError  : 1;  /*!< Compass installation error */
-  uint32_t imuInstallationError      : 1;  /*!< IMU installation error */
-  uint32_t escTemperatureHigh        : 1;  /*!< ESC temperature is high */
-  uint32_t atLeastOneEscDisconnected : 1;  /*!< At least one ESC is disconnected */
-  uint32_t gpsYawError               : 1;  /*!< GPS yaw error */
+  uint32_t impactInAir               : 1;  /*!< 0: No impact,                      1: Impact happens in Air */
+  uint32_t randomFly                 : 1;  /*!< 0: Normal,                         1: Randomly fly in GPS mode without stick input*/
+  uint32_t heightCtrlFail            : 1;  /*!< 0: Height control normal,          1: Height control failed */
+  uint32_t rollPitchCtrlFail         : 1;  /*!< 0: Tilt control normal,            1: Tilt control failed */
+  uint32_t yawCtrlFail               : 1;  /*!< 0: Yaw control normal,             1: Yaw control failed */
+  uint32_t aircraftIsFalling         : 1;  /*!< 0: Aircraft is not falling,        1: Aircraft is falling */
+  uint32_t strongWindLevel1          : 1;  /*!< 0: Wind is under big wind level 1, 1: wind is stronger than  big wind level 1*/
+  uint32_t strongWindLevel2          : 1;  /*!< 0: Wind is under big wind level 2, 1: wind is stronger than  big wind level 2*/
+  uint32_t compassInstallationError  : 1;  /*!< 0: Compass install right,          1: Compass install error */
+  uint32_t imuInstallationError      : 1;  /*!< 0: IMU install right,              1: IMU install error */
+  uint32_t escTemperatureHigh        : 1;  /*!< 0: ESC temperature is normal,      1: ESC temperature is high */
+  uint32_t atLeastOneEscDisconnected : 1;  /*!< 0: No ESC disconnected,            1: At least one ESC is disconnected */
+  uint32_t gpsYawError               : 1;  /*!< 0: No GPS yaw error,               1: GPS yaw error */
   uint32_t reserved                  : 19;
 } FlightAnomaly;
 
@@ -777,7 +817,7 @@ template <> struct TypeMap<TOPIC_ANGULAR_RATE_FUSIONED    > { typedef Vector3f  
 template <> struct TypeMap<TOPIC_ANGULAR_RATE_RAW         > { typedef Vector3f        type;};
 template <> struct TypeMap<TOPIC_ALTITUDE_FUSIONED        > { typedef float32_t       type;};
 template <> struct TypeMap<TOPIC_ALTITUDE_BAROMETER       > { typedef float32_t       type;};
-template <> struct TypeMap<TOPIC_HEIGHT_HOMEPOINT         > { typedef float32_t       type;};
+template <> struct TypeMap<TOPIC_ALTITUDE_OF_HOMEPOINT    > { typedef float32_t       type;};
 template <> struct TypeMap<TOPIC_HEIGHT_FUSION            > { typedef float32_t       type;};
 template <> struct TypeMap<TOPIC_GPS_FUSED                > { typedef GPSFused        type;};
 template <> struct TypeMap<TOPIC_GPS_DATE                 > { typedef uint32_t        type;};
@@ -812,7 +852,9 @@ template <> struct TypeMap<TOPIC_FLIGHT_ANOMALY           > { typedef FlightAnom
 template <> struct TypeMap<TOPIC_POSITION_VO              > { typedef LocalPositionVO type;};
 template <> struct TypeMap<TOPIC_AVOID_DATA               > { typedef RelativePosition type;};
 template <> struct TypeMap<TOPIC_HOME_POINT_SET_STATUS    > { typedef HomeLocationSetStatus type;};
-template <> struct TypeMap<TOPIC_HOME_POINT_INFO          > { typedef HomeLocationData    type;};
+template <> struct TypeMap<TOPIC_HOME_POINT_INFO          > { typedef HomeLocationData type;};
+template <> struct TypeMap<TOPIC_DUAL_GIMBAL_DATA         > { typedef GimbalDualData   type;};
+template <> struct TypeMap<TOPIC_THREE_GIMBAL_DATA        > { typedef GimbalThreeData  type;};
 // clang-format on
 }
 }

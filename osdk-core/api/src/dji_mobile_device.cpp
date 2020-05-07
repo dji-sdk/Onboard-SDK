@@ -14,15 +14,12 @@
 MobileDevice::MobileDevice(Vehicle* vehicle)
   : vehicle(vehicle)
 {
-
-  this->fromMSDKHandler.callback = getDataFromMSDKCallback;
-  this->fromMSDKHandler.userData = 0;
+  setFromMSDKCallback(getDataFromMSDKCallback, NULL);
 }
 
 MobileDevice::~MobileDevice()
 {
-  this->fromMSDKHandler.callback = 0;
-  this->fromMSDKHandler.userData = 0;
+  setFromMSDKCallback(NULL, NULL);
 }
 
 Vehicle*
@@ -50,9 +47,8 @@ MobileDevice::sendDataToMSDK(uint8_t* data, uint8_t len)
     DERROR("The drone has not been activated");
     return;
   }
-  vehicle->protocolLayer->send(0, vehicle->getEncryption(),
-                               OpenProtocolCMD::CMDSet::Activation::toMobile,
-                               data, len, 500, 1, NULL, 0);
+  vehicle->legacyLinker->send(OpenProtocolCMD::CMDSet::Activation::toMobile,
+                              data, len);
 }
 
 void
@@ -71,4 +67,8 @@ MobileDevice::setFromMSDKCallback(VehicleCallBack callback, UserData userData)
 {
   this->fromMSDKHandler.callback = callback;
   this->fromMSDKHandler.userData = userData;
+  vehicle->legacyLinker->registerCMDCallback(
+      OpenProtocolCMD::CMDSet::Broadcast::fromMobile[0],
+      OpenProtocolCMD::CMDSet::Broadcast::fromMobile[1],
+      fromMSDKHandler.callback, fromMSDKHandler.userData);
 }

@@ -2,332 +2,1383 @@ The following portions of the DJI’s Onboard SDK (“Software” referred to in
 
 Onboard-SDK
 ├── CMakeLists.txt
-├── contrib
-│   └── DJIConfig.cmake
+├── doc
+│   └── README.txt
+├── Doxyfile
+├── EULA.txt
+├── License.txt
 ├── osdk-core
+│   ├── advanced-sensing
+│   │   ├── api
+│   │   │   ├── inc
+│   │   │   │   ├── dji_advanced_sensing.hpp
+│   │   │   │   ├── dji_liveview.hpp
+│   │   │   │   ├── dji_liveview_impl.hpp
+│   │   │   │   ├── dji_perception.hpp
+│   │   │   │   └── dji_perception_impl.hpp
+│   │   │   └── src
+│   │   │       ├── dji_advanced_sensing.cpp
+│   │   │       ├── dji_liveview.cpp
+│   │   │       ├── dji_liveview_impl.cpp
+│   │   │       ├── dji_perception.cpp
+│   │   │       └── dji_perception_impl.cpp
+│   │   ├── build
+│   │   │   ├── CMakeCache.txt
+│   │   │   ├── CMakeFiles
+│   │   │   │   ├── 3.10.2
+│   │   │   │   │   ├── CMakeCCompiler.cmake
+│   │   │   │   │   ├── CMakeCXXCompiler.cmake
+│   │   │   │   │   ├── CMakeDetermineCompilerABI_C.bin
+│   │   │   │   │   ├── CMakeDetermineCompilerABI_CXX.bin
+│   │   │   │   │   ├── CMakeSystem.cmake
+│   │   │   │   │   ├── CompilerIdC
+│   │   │   │   │   │   ├── a.out
+│   │   │   │   │   │   ├── CMakeCCompilerId.c
+│   │   │   │   │   │   └── tmp
+│   │   │   │   │   └── CompilerIdCXX
+│   │   │   │   │       ├── a.out
+│   │   │   │   │       ├── CMakeCXXCompilerId.cpp
+│   │   │   │   │       └── tmp
+│   │   │   │   ├── advanced-sensing.dir
+│   │   │   │   │   ├── api
+│   │   │   │   │   │   └── src
+│   │   │   │   │   │       ├── dji_advanced_sensing.cpp.o
+│   │   │   │   │   │       ├── dji_liveview.cpp.o
+│   │   │   │   │   │       ├── dji_liveview_impl.cpp.o
+│   │   │   │   │   │       ├── dji_perception.cpp.o
+│   │   │   │   │   │       └── dji_perception_impl.cpp.o
+│   │   │   │   │   ├── build.make
+│   │   │   │   │   ├── camera_stream
+│   │   │   │   │   │   ├── src
+│   │   │   │   │   │   │   ├── dji_camera_image_handler.cpp.o
+│   │   │   │   │   │   │   ├── dji_camera_stream.cpp.o
+│   │   │   │   │   │   │   ├── dji_camera_stream_decoder.cpp.o
+│   │   │   │   │   │   │   └── dji_camera_stream_link.cpp.o
+│   │   │   │   │   │   └── udt
+│   │   │   │   │   │       └── src
+│   │   │   │   │   │           ├── api.cpp.o
+│   │   │   │   │   │           ├── buffer.cpp.o
+│   │   │   │   │   │           ├── cache.cpp.o
+│   │   │   │   │   │           ├── ccc.cpp.o
+│   │   │   │   │   │           ├── channel.cpp.o
+│   │   │   │   │   │           ├── common.cpp.o
+│   │   │   │   │   │           ├── core.cpp.o
+│   │   │   │   │   │           ├── epoll.cpp.o
+│   │   │   │   │   │           ├── list.cpp.o
+│   │   │   │   │   │           ├── md5.cpp.o
+│   │   │   │   │   │           ├── packet.cpp.o
+│   │   │   │   │   │           ├── queue.cpp.o
+│   │   │   │   │   │           └── window.cpp.o
+│   │   │   │   │   ├── cmake_clean.cmake
+│   │   │   │   │   ├── cmake_clean_target.cmake
+│   │   │   │   │   ├── CXX.includecache
+│   │   │   │   │   ├── DependInfo.cmake
+│   │   │   │   │   ├── depend.internal
+│   │   │   │   │   ├── depend.make
+│   │   │   │   │   ├── flags.make
+│   │   │   │   │   ├── home
+│   │   │   │   │   │   └── dji
+│   │   │   │   │   │       └── osdk_work_space
+│   │   │   │   │   │           └── resources
+│   │   │   │   │   │               └── src
+│   │   │   │   │   │                   └── v1
+│   │   │   │   │   │                       ├── api
+│   │   │   │   │   │                       │   └── src
+│   │   │   │   │   │                       │       └── dji_v1_command.cpp.o
+│   │   │   │   │   │                       └── protocol
+│   │   │   │   │   │                           └── src
+│   │   │   │   │   │                               └── dji_v1_protocol.cpp.o
+│   │   │   │   │   ├── link.txt
+│   │   │   │   │   ├── ori-osdk-core
+│   │   │   │   │   │   ├── hal
+│   │   │   │   │   │   │   └── src
+│   │   │   │   │   │   │       ├── dji_hard_driver.cpp.o
+│   │   │   │   │   │   │       ├── dji_memory.cpp.o
+│   │   │   │   │   │   │       ├── dji_platform_manager.cpp.o
+│   │   │   │   │   │   │       └── dji_thread_manager.cpp.o
+│   │   │   │   │   │   ├── platform
+│   │   │   │   │   │   │   ├── default
+│   │   │   │   │   │   │   │   └── src
+│   │   │   │   │   │   │   │       └── dji_memory_default.cpp.o
+│   │   │   │   │   │   │   └── linux
+│   │   │   │   │   │   │       └── src
+│   │   │   │   │   │   │           ├── linux_serial_device.cpp.o
+│   │   │   │   │   │   │           └── posix_thread_manager.cpp.o
+│   │   │   │   │   │   ├── protocol
+│   │   │   │   │   │   │   └── src
+│   │   │   │   │   │   │       ├── dji_aes.cpp.o
+│   │   │   │   │   │   │       ├── dji_open_protocol.cpp.o
+│   │   │   │   │   │   │       └── dji_protocol_base.cpp.o
+│   │   │   │   │   │   └── utility
+│   │   │   │   │   │       └── src
+│   │   │   │   │   │           ├── dji_circular_buffer.cpp.o
+│   │   │   │   │   │           └── dji_singleton.cpp.o
+│   │   │   │   │   ├── platform
+│   │   │   │   │   │   └── src
+│   │   │   │   │   │       └── linux_usb_device.cpp.o
+│   │   │   │   │   ├── progress.make
+│   │   │   │   │   └── protocol
+│   │   │   │   │       └── src
+│   │   │   │   │           └── dji_advanced_sensing_protocol.cpp.o
+│   │   │   │   ├── cmake.check_cache
+│   │   │   │   ├── CMakeDirectoryInformation.cmake
+│   │   │   │   ├── CMakeOutput.log
+│   │   │   │   ├── CMakeTmp
+│   │   │   │   ├── feature_tests.bin
+│   │   │   │   ├── feature_tests.c
+│   │   │   │   ├── feature_tests.cxx
+│   │   │   │   ├── Makefile2
+│   │   │   │   ├── Makefile.cmake
+│   │   │   │   ├── progress.marks
+│   │   │   │   └── TargetDirectories.txt
+│   │   │   ├── cmake_install.cmake
+│   │   │   ├── install_manifest.txt
+│   │   │   ├── libadvanced-sensing.a
+│   │   │   └── Makefile
+│   │   ├── camera_stream
+│   │   │   ├── src
+│   │   │   │   ├── dji_camera_image_handler.cpp
+│   │   │   │   ├── dji_camera_image_handler.hpp
+│   │   │   │   ├── dji_camera_image.hpp
+│   │   │   │   ├── dji_camera_stream.cpp
+│   │   │   │   ├── dji_camera_stream_decoder.cpp
+│   │   │   │   ├── dji_camera_stream_decoder.hpp
+│   │   │   │   ├── dji_camera_stream.hpp
+│   │   │   │   ├── dji_camera_stream_link.cpp
+│   │   │   │   └── dji_camera_stream_link.hpp
+│   │   │   └── udt
+│   │   │       └── src
+│   │   │           ├── api.cpp
+│   │   │           ├── api.h
+│   │   │           ├── buffer.cpp
+│   │   │           ├── buffer.h
+│   │   │           ├── cache.cpp
+│   │   │           ├── cache.h
+│   │   │           ├── ccc.cpp
+│   │   │           ├── ccc.h
+│   │   │           ├── channel.cpp
+│   │   │           ├── channel.h
+│   │   │           ├── common.cpp
+│   │   │           ├── common.h
+│   │   │           ├── core.cpp
+│   │   │           ├── core.h
+│   │   │           ├── epoll.cpp
+│   │   │           ├── epoll.h
+│   │   │           ├── list.cpp
+│   │   │           ├── list.h
+│   │   │           ├── md5.cpp
+│   │   │           ├── md5.h
+│   │   │           ├── packet.cpp
+│   │   │           ├── packet.h
+│   │   │           ├── queue.cpp
+│   │   │           ├── queue.h
+│   │   │           ├── udt.h
+│   │   │           ├── window.cpp
+│   │   │           └── window.h
+│   │   ├── cmake-build-debug
+│   │   │   ├── advanced-sensing.cbp
+│   │   │   ├── CMakeCache.txt
+│   │   │   ├── CMakeFiles
+│   │   │   │   ├── 3.10.2
+│   │   │   │   │   ├── CMakeCCompiler.cmake
+│   │   │   │   │   ├── CMakeCXXCompiler.cmake
+│   │   │   │   │   ├── CMakeDetermineCompilerABI_C.bin
+│   │   │   │   │   ├── CMakeDetermineCompilerABI_CXX.bin
+│   │   │   │   │   ├── CMakeSystem.cmake
+│   │   │   │   │   ├── CompilerIdC
+│   │   │   │   │   │   ├── a.out
+│   │   │   │   │   │   ├── CMakeCCompilerId.c
+│   │   │   │   │   │   └── tmp
+│   │   │   │   │   └── CompilerIdCXX
+│   │   │   │   │       ├── a.out
+│   │   │   │   │       ├── CMakeCXXCompilerId.cpp
+│   │   │   │   │       └── tmp
+│   │   │   │   ├── advanced-sensing.dir
+│   │   │   │   │   ├── api
+│   │   │   │   │   │   └── src
+│   │   │   │   │   ├── build.make
+│   │   │   │   │   ├── camera_stream
+│   │   │   │   │   │   ├── src
+│   │   │   │   │   │   │   └── link
+│   │   │   │   │   │   │       └── udt
+│   │   │   │   │   │   │           └── src
+│   │   │   │   │   │   └── udt
+│   │   │   │   │   │       └── src
+│   │   │   │   │   ├── cmake_clean.cmake
+│   │   │   │   │   ├── cmake_clean_target.cmake
+│   │   │   │   │   ├── DependInfo.cmake
+│   │   │   │   │   ├── depend.make
+│   │   │   │   │   ├── flags.make
+│   │   │   │   │   ├── home
+│   │   │   │   │   │   └── dji
+│   │   │   │   │   │       └── osdk_work_space
+│   │   │   │   │   │           └── resources
+│   │   │   │   │   │               └── src
+│   │   │   │   │   │                   └── v1
+│   │   │   │   │   │                       ├── api
+│   │   │   │   │   │                       │   └── src
+│   │   │   │   │   │                       └── protocol
+│   │   │   │   │   │                           └── src
+│   │   │   │   │   ├── link.txt
+│   │   │   │   │   ├── ori-osdk-core
+│   │   │   │   │   │   ├── hal
+│   │   │   │   │   │   │   └── src
+│   │   │   │   │   │   ├── platform
+│   │   │   │   │   │   │   ├── default
+│   │   │   │   │   │   │   │   └── src
+│   │   │   │   │   │   │   └── linux
+│   │   │   │   │   │   │       └── src
+│   │   │   │   │   │   ├── protocol
+│   │   │   │   │   │   │   └── src
+│   │   │   │   │   │   └── utility
+│   │   │   │   │   │       └── src
+│   │   │   │   │   ├── platform
+│   │   │   │   │   │   └── src
+│   │   │   │   │   ├── progress.make
+│   │   │   │   │   └── protocol
+│   │   │   │   │       └── src
+│   │   │   │   ├── clion-environment.txt
+│   │   │   │   ├── clion-log.txt
+│   │   │   │   ├── cmake.check_cache
+│   │   │   │   ├── CMakeDirectoryInformation.cmake
+│   │   │   │   ├── CMakeOutput.log
+│   │   │   │   ├── CMakeTmp
+│   │   │   │   ├── feature_tests.bin
+│   │   │   │   ├── feature_tests.c
+│   │   │   │   ├── feature_tests.cxx
+│   │   │   │   ├── Makefile2
+│   │   │   │   ├── Makefile.cmake
+│   │   │   │   ├── progress.marks
+│   │   │   │   └── TargetDirectories.txt
+│   │   │   ├── cmake_install.cmake
+│   │   │   └── Makefile
+│   │   ├── CMakeLists.txt
+│   │   ├── ori-osdk-core
+│   │   │   ├── cmake-modules
+│   │   │   │   ├── DJIOSDKConfig.cmake
+│   │   │   │   ├── DJIOSDKConfig.cmake.in
+│   │   │   │   ├── DJIOSDKConfigVersion.cmake
+│   │   │   │   ├── DJIOSDKConfigVersion.cmake.in
+│   │   │   │   ├── DownloadProject
+│   │   │   │   │   ├── DownloadProject.cmake
+│   │   │   │   │   └── DownloadProject.CMakeLists.cmake.in
+│   │   │   │   ├── External_AdvancedSensing.cmake
+│   │   │   │   ├── External_WaypointV2Core.cmake
+│   │   │   │   ├── FindAdvancedSensing.cmake
+│   │   │   │   ├── FindFFMPEG.cmake
+│   │   │   │   ├── FindLibUSB.cmake
+│   │   │   │   └── FindWaypt2Core.cmake
+│   │   │   ├── hal
+│   │   │   │   ├── inc
+│   │   │   │   │   ├── dji_hard_driver.hpp
+│   │   │   │   │   ├── dji_memory.hpp
+│   │   │   │   │   ├── dji_platform_manager.hpp
+│   │   │   │   │   └── dji_thread_manager.hpp
+│   │   │   │   └── src
+│   │   │   │       ├── dji_hard_driver.cpp
+│   │   │   │       ├── dji_memory.cpp
+│   │   │   │       ├── dji_platform_manager.cpp
+│   │   │   │       └── dji_thread_manager.cpp
+│   │   │   ├── platform
+│   │   │   │   ├── default
+│   │   │   │   │   ├── inc
+│   │   │   │   │   │   └── dji_memory_default.hpp
+│   │   │   │   │   ├── readme.md
+│   │   │   │   │   └── src
+│   │   │   │   │       └── dji_memory_default.cpp
+│   │   │   │   ├── linux
+│   │   │   │   │   ├── inc
+│   │   │   │   │   │   ├── linux_serial_device.hpp
+│   │   │   │   │   │   ├── posix_thread.hpp
+│   │   │   │   │   │   └── posix_thread_manager.hpp
+│   │   │   │   │   └── src
+│   │   │   │   │       ├── linux_serial_device.cpp
+│   │   │   │   │       ├── posix_thread.cpp
+│   │   │   │   │       └── posix_thread_manager.cpp
+│   │   │   │   ├── manifold
+│   │   │   │   │   ├── inc
+│   │   │   │   │   │   ├── DJI_HardDriver_Manifold.h
+│   │   │   │   │   │   └── DJIHardDriverManifold.h
+│   │   │   │   │   └── src
+│   │   │   │   │       └── DJIHardDriverManifold.cpp
+│   │   │   │   ├── qt
+│   │   │   │   │   ├── inc
+│   │   │   │   │   │   ├── qt_serial_device.hpp
+│   │   │   │   │   │   └── qt_thread.hpp
+│   │   │   │   │   └── src
+│   │   │   │   │       ├── qt_serial_device.cpp
+│   │   │   │   │       └── qt_thread.cpp
+│   │   │   │   ├── Readme.md
+│   │   │   │   └── STM32
+│   │   │   │       ├── inc
+│   │   │   │       │   ├── STM32F4DataGuard.h
+│   │   │   │       │   ├── STM32F4SerialDriver.h
+│   │   │   │       │   └── stm32f4xx.h
+│   │   │   │       └── src
+│   │   │   │           ├── STM32F4DataGuard.cpp
+│   │   │   │           └── STM32F4SerialDriver.cpp
+│   │   │   ├── protocol
+│   │   │   │   ├── inc
+│   │   │   │   │   ├── dji_aes.hpp
+│   │   │   │   │   ├── dji_crc.hpp
+│   │   │   │   │   ├── dji_open_protocol.hpp
+│   │   │   │   │   └── dji_protocol_base.hpp
+│   │   │   │   └── src
+│   │   │   │       ├── dji_aes.cpp
+│   │   │   │       ├── dji_open_protocol.cpp
+│   │   │   │       └── dji_protocol_base.cpp
+│   │   │   └── utility
+│   │   │       ├── inc
+│   │   │       │   ├── dji_circular_buffer.hpp
+│   │   │       │   ├── dji_macros.hpp
+│   │   │       │   └── dji_singleton.hpp
+│   │   │       └── src
+│   │   │           ├── dji_circular_buffer.cpp
+│   │   │           └── dji_singleton.cpp
+│   │   ├── platform
+│   │   │   ├── inc
+│   │   │   │   └── linux_usb_device.hpp
+│   │   │   └── src
+│   │   │       └── linux_usb_device.cpp
+│   │   └── protocol
+│   │       ├── inc
+│   │       │   └── dji_advanced_sensing_protocol.hpp
+│   │       └── src
+│   │           └── dji_advanced_sensing_protocol.cpp
 │   ├── api
 │   │   ├── inc
 │   │   │   ├── dji_ack.hpp
+│   │   │   ├── dji_battery.hpp
+│   │   │   ├── dji_battery_impl.hpp
 │   │   │   ├── dji_broadcast.hpp
 │   │   │   ├── dji_camera.hpp
+│   │   │   ├── dji_camera_manager.hpp
 │   │   │   ├── dji_command.hpp
 │   │   │   ├── dji_control.hpp
 │   │   │   ├── dji_error.hpp
+│   │   │   ├── dji_flight_controller.hpp
 │   │   │   ├── dji_gimbal.hpp
+│   │   │   ├── dji_gimbal_manager.hpp
 │   │   │   ├── dji_hardware_sync.hpp
+│   │   │   ├── dji_hms.hpp
+│   │   │   ├── dji_hms_impl.hpp
+│   │   │   ├── dji_hms_internal.hpp
 │   │   │   ├── dji_hotpoint.hpp
+│   │   │   ├── dji_legacy_linker.hpp
 │   │   │   ├── dji_mfio.hpp
 │   │   │   ├── dji_mission_base.hpp
 │   │   │   ├── dji_mission_manager.hpp
 │   │   │   ├── dji_mission_type.hpp
-│   │   │   ├── dji_mobile_communication.hpp
 │   │   │   ├── dji_mobile_device.hpp
 │   │   │   ├── dji_payload_device.hpp
+│   │   │   ├── dji_psdk_manager.hpp
 │   │   │   ├── dji_status.hpp
 │   │   │   ├── dji_subscription.hpp
-│   │   │   ├── dji_telemetry.hpp
 │   │   │   ├── dji_telemetry_doc.hpp
+│   │   │   ├── dji_telemetry.hpp
 │   │   │   ├── dji_type.hpp
 │   │   │   ├── dji_vehicle_callback.hpp
 │   │   │   ├── dji_vehicle.hpp
 │   │   │   ├── dji_version.hpp
-│   │   │   ├── dji_virtual_rc.hpp
-│   │   │   └── dji_waypoint.hpp
+│   │   │   ├── dji_waypoint.hpp
+│   │   │   ├── dji_waypoint_v2_action.hpp
+│   │   │   └── dji_waypoint_v2.hpp
 │   │   └── src
 │   │       ├── dji_ack.cpp
+│   │       ├── dji_battery.cpp
+│   │       ├── dji_battery_impl.cpp
 │   │       ├── dji_broadcast.cpp
 │   │       ├── dji_camera.cpp
+│   │       ├── dji_camera_manager.cpp
 │   │       ├── dji_command.cpp
 │   │       ├── dji_control.cpp
 │   │       ├── dji_error.cpp
+│   │       ├── dji_flight_controller.cpp
 │   │       ├── dji_gimbal.cpp
+│   │       ├── dji_gimbal_manager.cpp
 │   │       ├── dji_hardware_sync.cpp
+│   │       ├── dji_hms.cpp
+│   │       ├── dji_hms_impl.cpp
+│   │       ├── dji_hms_internal.cpp
 │   │       ├── dji_hotpoint.cpp
+│   │       ├── dji_legacy_linker.cpp
 │   │       ├── dji_mfio.cpp
 │   │       ├── dji_mission_manager.cpp
-│   │       ├── dji_mobile_communication.cpp
 │   │       ├── dji_mobile_device.cpp
 │   │       ├── dji_payload_device.cpp
+│   │       ├── dji_psdk_manager.cpp
 │   │       ├── dji_subscription.cpp
 │   │       ├── dji_vehicle.cpp
 │   │       ├── dji_version.cpp
-│   │       ├── dji_virtual_rc.cpp
-│   │       └── dji_waypoint.cpp
+│   │       ├── dji_waypoint.cpp
+│   │       └── dji_waypoint_v2.cpp
+│   ├── build
+│   │   ├── advanced-sensing
+│   │   │   ├── CMakeFiles
+│   │   │   │   ├── advanced-sensing.dir
+│   │   │   │   │   ├── api
+│   │   │   │   │   │   └── src
+│   │   │   │   │   │       ├── dji_advanced_sensing.cpp.o
+│   │   │   │   │   │       ├── dji_liveview.cpp.o
+│   │   │   │   │   │       ├── dji_liveview_impl.cpp.o
+│   │   │   │   │   │       ├── dji_perception.cpp.o
+│   │   │   │   │   │       └── dji_perception_impl.cpp.o
+│   │   │   │   │   ├── build.make
+│   │   │   │   │   ├── camera_stream
+│   │   │   │   │   │   ├── src
+│   │   │   │   │   │   │   ├── dji_camera_image_handler.cpp.o
+│   │   │   │   │   │   │   ├── dji_camera_stream.cpp.o
+│   │   │   │   │   │   │   ├── dji_camera_stream_decoder.cpp.o
+│   │   │   │   │   │   │   └── dji_camera_stream_link.cpp.o
+│   │   │   │   │   │   └── udt
+│   │   │   │   │   │       └── src
+│   │   │   │   │   │           ├── api.cpp.o
+│   │   │   │   │   │           ├── buffer.cpp.o
+│   │   │   │   │   │           ├── cache.cpp.o
+│   │   │   │   │   │           ├── ccc.cpp.o
+│   │   │   │   │   │           ├── channel.cpp.o
+│   │   │   │   │   │           ├── common.cpp.o
+│   │   │   │   │   │           ├── core.cpp.o
+│   │   │   │   │   │           ├── epoll.cpp.o
+│   │   │   │   │   │           ├── list.cpp.o
+│   │   │   │   │   │           ├── md5.cpp.o
+│   │   │   │   │   │           ├── packet.cpp.o
+│   │   │   │   │   │           ├── queue.cpp.o
+│   │   │   │   │   │           └── window.cpp.o
+│   │   │   │   │   ├── cmake_clean.cmake
+│   │   │   │   │   ├── cmake_clean_target.cmake
+│   │   │   │   │   ├── CXX.includecache
+│   │   │   │   │   ├── DependInfo.cmake
+│   │   │   │   │   ├── depend.internal
+│   │   │   │   │   ├── depend.make
+│   │   │   │   │   ├── flags.make
+│   │   │   │   │   ├── link.txt
+│   │   │   │   │   ├── ori-osdk-core
+│   │   │   │   │   │   ├── hal
+│   │   │   │   │   │   │   └── src
+│   │   │   │   │   │   │       ├── dji_hard_driver.cpp.o
+│   │   │   │   │   │   │       ├── dji_memory.cpp.o
+│   │   │   │   │   │   │       ├── dji_platform_manager.cpp.o
+│   │   │   │   │   │   │       └── dji_thread_manager.cpp.o
+│   │   │   │   │   │   ├── platform
+│   │   │   │   │   │   │   ├── default
+│   │   │   │   │   │   │   │   └── src
+│   │   │   │   │   │   │   │       └── dji_memory_default.cpp.o
+│   │   │   │   │   │   │   └── linux
+│   │   │   │   │   │   │       └── src
+│   │   │   │   │   │   │           ├── linux_serial_device.cpp.o
+│   │   │   │   │   │   │           └── posix_thread_manager.cpp.o
+│   │   │   │   │   │   ├── protocol
+│   │   │   │   │   │   │   └── src
+│   │   │   │   │   │   │       ├── dji_aes.cpp.o
+│   │   │   │   │   │   │       ├── dji_open_protocol.cpp.o
+│   │   │   │   │   │   │       └── dji_protocol_base.cpp.o
+│   │   │   │   │   │   └── utility
+│   │   │   │   │   │       └── src
+│   │   │   │   │   │           ├── dji_circular_buffer.cpp.o
+│   │   │   │   │   │           └── dji_singleton.cpp.o
+│   │   │   │   │   ├── platform
+│   │   │   │   │   │   └── src
+│   │   │   │   │   │       └── linux_usb_device.cpp.o
+│   │   │   │   │   ├── progress.make
+│   │   │   │   │   └── protocol
+│   │   │   │   │       └── src
+│   │   │   │   │           └── dji_advanced_sensing_protocol.cpp.o
+│   │   │   │   ├── CMakeDirectoryInformation.cmake
+│   │   │   │   └── progress.marks
+│   │   │   ├── cmake_install.cmake
+│   │   │   ├── libadvanced-sensing.a
+│   │   │   └── Makefile
+│   │   ├── CMakeCache.txt
+│   │   ├── CMakeFiles
+│   │   │   ├── 3.10.2
+│   │   │   │   ├── CMakeCCompiler.cmake
+│   │   │   │   ├── CMakeCXXCompiler.cmake
+│   │   │   │   ├── CMakeDetermineCompilerABI_C.bin
+│   │   │   │   ├── CMakeDetermineCompilerABI_CXX.bin
+│   │   │   │   ├── CMakeSystem.cmake
+│   │   │   │   ├── CompilerIdC
+│   │   │   │   │   ├── a.out
+│   │   │   │   │   ├── CMakeCCompilerId.c
+│   │   │   │   │   └── tmp
+│   │   │   │   └── CompilerIdCXX
+│   │   │   │       ├── a.out
+│   │   │   │       ├── CMakeCXXCompilerId.cpp
+│   │   │   │       └── tmp
+│   │   │   ├── cmake.check_cache
+│   │   │   ├── CMakeDirectoryInformation.cmake
+│   │   │   ├── CMakeOutput.log
+│   │   │   ├── CMakeTmp
+│   │   │   ├── djiosdk-core.dir
+│   │   │   │   ├── api
+│   │   │   │   │   └── src
+│   │   │   │   │       ├── dji_ack.cpp.o
+│   │   │   │   │       ├── dji_battery.cpp.o
+│   │   │   │   │       ├── dji_battery_impl.cpp.o
+│   │   │   │   │       ├── dji_broadcast.cpp.o
+│   │   │   │   │       ├── dji_camera.cpp.o
+│   │   │   │   │       ├── dji_camera_manager.cpp.o
+│   │   │   │   │       ├── dji_command.cpp.o
+│   │   │   │   │       ├── dji_control.cpp.o
+│   │   │   │   │       ├── dji_error.cpp.o
+│   │   │   │   │       ├── dji_flight_controller.cpp.o
+│   │   │   │   │       ├── dji_gimbal.cpp.o
+│   │   │   │   │       ├── dji_gimbal_manager.cpp.o
+│   │   │   │   │       ├── dji_hardware_sync.cpp.o
+│   │   │   │   │       ├── dji_hms.cpp.o
+│   │   │   │   │       ├── dji_hms_impl.cpp.o
+│   │   │   │   │       ├── dji_hms_internal.cpp.o
+│   │   │   │   │       ├── dji_hotpoint.cpp.o
+│   │   │   │   │       ├── dji_legacy_linker.cpp.o
+│   │   │   │   │       ├── dji_mfio.cpp.o
+│   │   │   │   │       ├── dji_mission_manager.cpp.o
+│   │   │   │   │       ├── dji_mobile_device.cpp.o
+│   │   │   │   │       ├── dji_payload_device.cpp.o
+│   │   │   │   │       ├── dji_psdk_manager.cpp.o
+│   │   │   │   │       ├── dji_subscription.cpp.o
+│   │   │   │   │       ├── dji_vehicle.cpp.o
+│   │   │   │   │       ├── dji_version.cpp.o
+│   │   │   │   │       ├── dji_waypoint.cpp.o
+│   │   │   │   │       └── dji_waypoint_v2.cpp.o
+│   │   │   │   ├── build.make
+│   │   │   │   ├── cmake_clean.cmake
+│   │   │   │   ├── cmake_clean_target.cmake
+│   │   │   │   ├── CXX.includecache
+│   │   │   │   ├── DependInfo.cmake
+│   │   │   │   ├── depend.internal
+│   │   │   │   ├── depend.make
+│   │   │   │   ├── flags.make
+│   │   │   │   ├── link.txt
+│   │   │   │   ├── logger
+│   │   │   │   │   └── src
+│   │   │   │   │       └── dji_log.cpp.o
+│   │   │   │   ├── modules
+│   │   │   │   │   └── src
+│   │   │   │   │       ├── filemgr
+│   │   │   │   │       │   ├── dji_file_mgr.cpp.o
+│   │   │   │   │       │   └── impl
+│   │   │   │   │       │       ├── commondatarangehandler.cpp.o
+│   │   │   │   │       │       ├── dji_file_mgr_impl.cpp.o
+│   │   │   │   │       │       ├── downloadbufferqueue.cpp.o
+│   │   │   │   │       │       └── mmap_file_buffer.cpp.o
+│   │   │   │   │       ├── firewall
+│   │   │   │   │       │   └── osdk_firewall.cpp.o
+│   │   │   │   │       ├── flight
+│   │   │   │   │       │   ├── dji_flight_actions_module.cpp.o
+│   │   │   │   │       │   ├── dji_flight_assistant_module.cpp.o
+│   │   │   │   │       │   ├── dji_flight_joystick_module.cpp.o
+│   │   │   │   │       │   └── dji_flight_link.cpp.o
+│   │   │   │   │       ├── mop
+│   │   │   │   │       │   ├── dji_mop_client.cpp.o
+│   │   │   │   │       │   ├── dji_mop_define.cpp.o
+│   │   │   │   │       │   ├── dji_mop_pipeline.cpp.o
+│   │   │   │   │       │   ├── dji_mop_pipeline_manager_base.cpp.o
+│   │   │   │   │       │   └── dji_mop_server.cpp.o
+│   │   │   │   │       └── payload
+│   │   │   │   │           ├── dji_camera_module.cpp.o
+│   │   │   │   │           ├── dji_gimbal_module.cpp.o
+│   │   │   │   │           ├── dji_payload_base.cpp.o
+│   │   │   │   │           ├── dji_payload_link.cpp.o
+│   │   │   │   │           └── dji_psdk_module.cpp.o
+│   │   │   │   ├── platform
+│   │   │   │   │   └── src
+│   │   │   │   │       └── dji_platform.cpp.o
+│   │   │   │   ├── progress.make
+│   │   │   │   └── utility
+│   │   │   │       └── src
+│   │   │   │           ├── dji_setup_helpers.cpp.o
+│   │   │   │           └── dji_singleton.cpp.o
+│   │   │   ├── feature_tests.bin
+│   │   │   ├── feature_tests.c
+│   │   │   ├── feature_tests.cxx
+│   │   │   ├── Makefile2
+│   │   │   ├── Makefile.cmake
+│   │   │   ├── Progress
+│   │   │   │   ├── 1
+│   │   │   │   ├── 10
+│   │   │   │   ├── 11
+│   │   │   │   ├── 12
+│   │   │   │   ├── 13
+│   │   │   │   ├── 14
+│   │   │   │   ├── 15
+│   │   │   │   ├── 16
+│   │   │   │   ├── 17
+│   │   │   │   ├── 18
+│   │   │   │   ├── 19
+│   │   │   │   ├── 2
+│   │   │   │   ├── 20
+│   │   │   │   ├── 21
+│   │   │   │   ├── 22
+│   │   │   │   ├── 23
+│   │   │   │   ├── 24
+│   │   │   │   ├── 25
+│   │   │   │   ├── 26
+│   │   │   │   ├── 27
+│   │   │   │   ├── 28
+│   │   │   │   ├── 29
+│   │   │   │   ├── 3
+│   │   │   │   ├── 30
+│   │   │   │   ├── 31
+│   │   │   │   ├── 32
+│   │   │   │   ├── 33
+│   │   │   │   ├── 34
+│   │   │   │   ├── 35
+│   │   │   │   ├── 36
+│   │   │   │   ├── 37
+│   │   │   │   ├── 4
+│   │   │   │   ├── 5
+│   │   │   │   ├── 6
+│   │   │   │   ├── 7
+│   │   │   │   ├── 8
+│   │   │   │   ├── 9
+│   │   │   │   ├── 90
+│   │   │   │   └── count.txt
+│   │   │   ├── progress.marks
+│   │   │   └── TargetDirectories.txt
+│   │   ├── cmake_install.cmake
+│   │   ├── commondatarangehandler.cpp.o
+│   │   ├── dji_ack.cpp.o
+│   │   ├── dji_aes.c.o
+│   │   ├── dji_battery.cpp.o
+│   │   ├── dji_battery_impl.cpp.o
+│   │   ├── dji_broadcast.cpp.o
+│   │   ├── dji_camera.cpp.o
+│   │   ├── dji_camera_manager.cpp.o
+│   │   ├── dji_camera_module.cpp.o
+│   │   ├── dji_command.cpp.o
+│   │   ├── dji_control.cpp.o
+│   │   ├── dji_error.cpp.o
+│   │   ├── dji_file_mgr.cpp.o
+│   │   ├── dji_file_mgr_impl.cpp.o
+│   │   ├── dji_flight_actions_module.cpp.o
+│   │   ├── dji_flight_assistant_module.cpp.o
+│   │   ├── dji_flight_controller.cpp.o
+│   │   ├── dji_flight_joystick_module.cpp.o
+│   │   ├── dji_flight_link.cpp.o
+│   │   ├── dji_gimbal.cpp.o
+│   │   ├── dji_gimbal_manager.cpp.o
+│   │   ├── dji_gimbal_module.cpp.o
+│   │   ├── dji_hardware_sync.cpp.o
+│   │   ├── dji_hms.cpp.o
+│   │   ├── dji_hms_impl.cpp.o
+│   │   ├── dji_hms_internal.cpp.o
+│   │   ├── dji_hotpoint.cpp.o
+│   │   ├── dji_internal_command.cpp.o
+│   │   ├── dji_legacy_linker.cpp.o
+│   │   ├── dji_linker.cpp.o
+│   │   ├── dji_log.cpp.o
+│   │   ├── dji_mfio.cpp.o
+│   │   ├── dji_mission_manager.cpp.o
+│   │   ├── dji_mobile_device.cpp.o
+│   │   ├── dji_mop_client.cpp.o
+│   │   ├── dji_mop_define.cpp.o
+│   │   ├── dji_mop_pipeline.cpp.o
+│   │   ├── dji_mop_pipeline_manager_base.cpp.o
+│   │   ├── dji_mop_server.cpp.o
+│   │   ├── dji_payload_base.cpp.o
+│   │   ├── dji_payload_device.cpp.o
+│   │   ├── dji_payload_link.cpp.o
+│   │   ├── dji_platform.cpp.o
+│   │   ├── dji_psdk_manager.cpp.o
+│   │   ├── dji_psdk_module.cpp.o
+│   │   ├── dji_setup_helpers.cpp.o
+│   │   ├── dji_singleton.cpp.o
+│   │   ├── dji_subscription.cpp.o
+│   │   ├── dji_vehicle.cpp.o
+│   │   ├── dji_version.cpp.o
+│   │   ├── dji_waypoint.cpp.o
+│   │   ├── dji_waypoint_v2.cpp.o
+│   │   ├── downloadbufferqueue.cpp.o
+│   │   ├── libmydjiosdk-core2.a
+│   │   ├── libmydjiosdk-core.a
+│   │   ├── Makefile
+│   │   ├── mmap_file_buffer.cpp.o
+│   │   ├── mop_buffer.c.o
+│   │   ├── mop.c.o
+│   │   ├── mop_entry_osdk.c.o
+│   │   ├── mop_link_layer.c.o
+│   │   ├── mop_net_layer.c.o
+│   │   ├── mop_osal_osdk.c.o
+│   │   ├── mop_trans_layer.c.o
+│   │   ├── osdk_buffer.c.o
+│   │   ├── osdk_channel.c.o
+│   │   ├── osdk_command.c.o
+│   │   ├── osdk_command_instance.c.o
+│   │   ├── osdk_crc.c.o
+│   │   ├── osdk_firewall.cpp.o
+│   │   ├── osdk_hal.c.o
+│   │   ├── osdk_list.c.o
+│   │   ├── osdk_logger.c.o
+│   │   ├── osdk_md5.c.o
+│   │   ├── osdk_msgq.c.o
+│   │   ├── osdk_osal.c.o
+│   │   ├── osdk_protocol.c.o
+│   │   ├── osdk_protocol_sdk.c.o
+│   │   ├── osdk_protocol_usbmc.c.o
+│   │   ├── osdk_protocol_v1.c.o
+│   │   ├── osdk_root_task.c.o
+│   │   ├── osdk_str.c.o
+│   │   ├── osdk_unit.c.o
+│   │   └── osdk_work.c.o
+│   ├── cmake-build-debug
+│   │   ├── advanced-sensing
+│   │   │   ├── advanced-sensing.cbp
+│   │   │   ├── CMakeFiles
+│   │   │   │   ├── advanced-sensing.dir
+│   │   │   │   │   ├── api
+│   │   │   │   │   │   └── src
+│   │   │   │   │   ├── build.make
+│   │   │   │   │   ├── camera_stream
+│   │   │   │   │   │   ├── src
+│   │   │   │   │   │   └── udt
+│   │   │   │   │   │       └── src
+│   │   │   │   │   ├── cmake_clean.cmake
+│   │   │   │   │   ├── cmake_clean_target.cmake
+│   │   │   │   │   ├── DependInfo.cmake
+│   │   │   │   │   ├── depend.make
+│   │   │   │   │   ├── flags.make
+│   │   │   │   │   ├── link.txt
+│   │   │   │   │   ├── ori-osdk-core
+│   │   │   │   │   │   ├── hal
+│   │   │   │   │   │   │   └── src
+│   │   │   │   │   │   ├── platform
+│   │   │   │   │   │   │   ├── default
+│   │   │   │   │   │   │   │   └── src
+│   │   │   │   │   │   │   └── linux
+│   │   │   │   │   │   │       └── src
+│   │   │   │   │   │   ├── protocol
+│   │   │   │   │   │   │   └── src
+│   │   │   │   │   │   └── utility
+│   │   │   │   │   │       └── src
+│   │   │   │   │   ├── platform
+│   │   │   │   │   │   └── src
+│   │   │   │   │   ├── progress.make
+│   │   │   │   │   └── protocol
+│   │   │   │   │       └── src
+│   │   │   │   ├── CMakeDirectoryInformation.cmake
+│   │   │   │   └── progress.marks
+│   │   │   ├── cmake_install.cmake
+│   │   │   └── Makefile
+│   │   ├── CMakeCache.txt
+│   │   ├── CMakeFiles
+│   │   │   ├── 3.10.2
+│   │   │   │   ├── CMakeCCompiler.cmake
+│   │   │   │   ├── CMakeCXXCompiler.cmake
+│   │   │   │   ├── CMakeDetermineCompilerABI_C.bin
+│   │   │   │   ├── CMakeDetermineCompilerABI_CXX.bin
+│   │   │   │   ├── CMakeSystem.cmake
+│   │   │   │   ├── CompilerIdC
+│   │   │   │   │   ├── a.out
+│   │   │   │   │   ├── CMakeCCompilerId.c
+│   │   │   │   │   └── tmp
+│   │   │   │   └── CompilerIdCXX
+│   │   │   │       ├── a.out
+│   │   │   │       ├── CMakeCXXCompilerId.cpp
+│   │   │   │       └── tmp
+│   │   │   ├── clion-environment.txt
+│   │   │   ├── clion-log.txt
+│   │   │   ├── cmake.check_cache
+│   │   │   ├── CMakeDirectoryInformation.cmake
+│   │   │   ├── CMakeOutput.log
+│   │   │   ├── CMakeTmp
+│   │   │   ├── djiosdk-core.dir
+│   │   │   │   ├── api
+│   │   │   │   │   └── src
+│   │   │   │   ├── build.make
+│   │   │   │   ├── cmake_clean.cmake
+│   │   │   │   ├── cmake_clean_target.cmake
+│   │   │   │   ├── DependInfo.cmake
+│   │   │   │   ├── depend.make
+│   │   │   │   ├── flags.make
+│   │   │   │   ├── linker
+│   │   │   │   │   └── core
+│   │   │   │   │       ├── channel
+│   │   │   │   │       ├── command
+│   │   │   │   │       ├── logger
+│   │   │   │   │       ├── mop
+│   │   │   │   │       │   └── mop_core
+│   │   │   │   │       │       └── src
+│   │   │   │   │       ├── platform
+│   │   │   │   │       ├── protocol
+│   │   │   │   │       ├── root_task
+│   │   │   │   │       └── utils
+│   │   │   │   │           └── src
+│   │   │   │   ├── link.txt
+│   │   │   │   ├── logger
+│   │   │   │   │   └── src
+│   │   │   │   ├── modules
+│   │   │   │   │   └── src
+│   │   │   │   │       ├── filemgr
+│   │   │   │   │       │   └── impl
+│   │   │   │   │       ├── firewall
+│   │   │   │   │       ├── flight
+│   │   │   │   │       ├── liveview
+│   │   │   │   │       ├── mop
+│   │   │   │   │       ├── payload
+│   │   │   │   │       └── perception
+│   │   │   │   ├── platform
+│   │   │   │   │   └── src
+│   │   │   │   ├── progress.make
+│   │   │   │   └── utility
+│   │   │   │       └── src
+│   │   │   ├── feature_tests.bin
+│   │   │   ├── feature_tests.c
+│   │   │   ├── feature_tests.cxx
+│   │   │   ├── Makefile2
+│   │   │   ├── Makefile.cmake
+│   │   │   ├── progress.marks
+│   │   │   └── TargetDirectories.txt
+│   │   ├── cmake_install.cmake
+│   │   ├── djiosdk-core.cbp
+│   │   └── Makefile
 │   ├── CMakeLists.txt
 │   ├── cmake-modules
 │   │   ├── DJIOSDKConfig.cmake
 │   │   ├── DJIOSDKConfig.cmake.in
 │   │   ├── DJIOSDKConfigVersion.cmake
 │   │   ├── DJIOSDKConfigVersion.cmake.in
+│   │   ├── DownloadProject
+│   │   │   ├── DownloadProject.cmake
+│   │   │   └── DownloadProject.CMakeLists.cmake.in
 │   │   ├── External_AdvancedSensing.cmake
+│   │   ├── External_WaypointV2Core.cmake
 │   │   ├── FindAdvancedSensing.cmake
 │   │   ├── FindFFMPEG.cmake
-│   │   └── FindLibUSB.cmake
+│   │   ├── FindLibUSB.cmake
+│   │   └── FindWaypt2Core.cmake
 │   ├── config_example.json
-│   ├── hal
-│   │   ├── inc
-│   │   │   ├── dji_hard_driver.hpp
-│   │   │   ├── dji_log.hpp
-│   │   │   ├── dji_memory.hpp
-│   │   │   ├── dji_platform_manager.hpp
-│   │   │   └── dji_thread_manager.hpp
-│   │   └── src
-│   │       ├── dji_hard_driver.cpp
-│   │       ├── dji_log.cpp
-│   │       ├── dji_memory.cpp
-│   │       ├── dji_platform_manager.cpp
-│   │       └── dji_thread_manager.cpp
-│   ├── platform
-│   │   ├── default
+│   ├── contrib
+│   │   └── DJIConfig.cmake
+│   ├── linker
+│   │   ├── armv8
 │   │   │   ├── inc
-│   │   │   │   └── dji_memory_default.hpp
-│   │   │   ├── readme.md
-│   │   │   └── src
-│   │   │       └── dji_memory_default.cpp
-│   │   ├── linux
+│   │   │   │   ├── dji_internal_command.hpp
+│   │   │   │   ├── dji_linker.hpp
+│   │   │   │   ├── mop_entry_osdk.h
+│   │   │   │   ├── mop.h
+│   │   │   │   ├── mop_osal.h
+│   │   │   │   ├── mop_platform.h
+│   │   │   │   ├── osdk_channel.h
+│   │   │   │   ├── osdk_command.h
+│   │   │   │   ├── osdk_command_instance.h
+│   │   │   │   ├── osdk_console_color.h
+│   │   │   │   ├── osdk_device_id.h
+│   │   │   │   ├── osdk_list.h
+│   │   │   │   ├── osdk_logger.h
+│   │   │   │   ├── osdk_logger_internal.h
+│   │   │   │   ├── osdk_md5.h
+│   │   │   │   ├── osdk_module_name.h
+│   │   │   │   ├── osdk_osal.h
+│   │   │   │   ├── osdk_platform.h
+│   │   │   │   ├── osdk_protocol_common.h
+│   │   │   │   ├── osdk_protocol.h
+│   │   │   │   ├── osdk_root_task.h
+│   │   │   │   ├── osdk_routetable.h
+│   │   │   │   ├── osdk_typedef.h
+│   │   │   │   └── osdk_work.h
+│   │   │   └── lib
+│   │   │       └── libdji-linker.a
+│   │   ├── STM32
 │   │   │   ├── inc
-│   │   │   │   ├── linux_serial_device.hpp
-│   │   │   │   ├── posix_thread.hpp
-│   │   │   │   └── posix_thread_manager.hpp
-│   │   │   └── src
-│   │   │       ├── linux_serial_device.cpp
-│   │   │       ├── posix_thread.cpp
-│   │   │       └── posix_thread_manager.cpp
-│   │   ├── manifold
-│   │   │   ├── inc
-│   │   │   │   ├── DJI_HardDriver_Manifold.h
-│   │   │   │   └── DJIHardDriverManifold.h
-│   │   │   └── src
-│   │   │       └── DJIHardDriverManifold.cpp
-│   │   ├── qt
-│   │   │   ├── inc
-│   │   │   │   ├── qt_serial_device.hpp
-│   │   │   │   └── qt_thread.hpp
-│   │   │   └── src
-│   │   │       ├── qt_serial_device.cpp
-│   │   │       └── qt_thread.cpp
-│   │   ├── Readme.md
-│   │   └── STM32
+│   │   │   │   ├── dji_internal_command.hpp
+│   │   │   │   ├── dji_linker.hpp
+│   │   │   │   ├── mop_entry_osdk.h
+│   │   │   │   ├── mop.h
+│   │   │   │   ├── mop_osal.h
+│   │   │   │   ├── mop_platform.h
+│   │   │   │   ├── osdk_channel.h
+│   │   │   │   ├── osdk_command.h
+│   │   │   │   ├── osdk_command_instance.h
+│   │   │   │   ├── osdk_console_color.h
+│   │   │   │   ├── osdk_device_id.h
+│   │   │   │   ├── osdk_list.h
+│   │   │   │   ├── osdk_logger.h
+│   │   │   │   ├── osdk_logger_internal.h
+│   │   │   │   ├── osdk_md5.h
+│   │   │   │   ├── osdk_module_name.h
+│   │   │   │   ├── osdk_osal.h
+│   │   │   │   ├── osdk_platform.h
+│   │   │   │   ├── osdk_protocol_common.h
+│   │   │   │   ├── osdk_protocol.h
+│   │   │   │   ├── osdk_root_task.h
+│   │   │   │   ├── osdk_routetable.h
+│   │   │   │   ├── osdk_typedef.h
+│   │   │   │   └── osdk_work.h
+│   │   │   └── lib
+│   │   │       └── sdk-linker.lib
+│   │   └── x86
 │   │       ├── inc
-│   │       │   ├── STM32F4DataGuard.h
-│   │       │   ├── STM32F4SerialDriver.h
-│   │       └── src
-│   │           ├── STM32F4DataGuard.cpp
-│   │           └── STM32F4SerialDriver.cpp
-│   ├── protocol
+│   │       │   ├── dji_internal_command.hpp
+│   │       │   ├── dji_linker.hpp
+│   │       │   ├── mop_entry_osdk.h
+│   │       │   ├── mop.h
+│   │       │   ├── mop_osal.h
+│   │       │   ├── mop_platform.h
+│   │       │   ├── osdk_channel.h
+│   │       │   ├── osdk_command.h
+│   │       │   ├── osdk_command_instance.h
+│   │       │   ├── osdk_console_color.h
+│   │       │   ├── osdk_device_id.h
+│   │       │   ├── osdk_list.h
+│   │       │   ├── osdk_logger.h
+│   │       │   ├── osdk_logger_internal.h
+│   │       │   ├── osdk_md5.h
+│   │       │   ├── osdk_module_name.h
+│   │       │   ├── osdk_osal.h
+│   │       │   ├── osdk_platform.h
+│   │       │   ├── osdk_protocol_common.h
+│   │       │   ├── osdk_protocol.h
+│   │       │   ├── osdk_root_task.h
+│   │       │   ├── osdk_routetable.h
+│   │       │   ├── osdk_typedef.h
+│   │       │   └── osdk_work.h
+│   │       └── lib
+│   │           └── libdji-linker.a
+│   ├── logger
 │   │   ├── inc
-│   │   │   ├── dji_aes.hpp
-│   │   │   ├── dji_crc.hpp
-│   │   │   ├── dji_open_protocol.hpp
-│   │   │   └── dji_protocol_base.hpp
+│   │   │   └── dji_log.hpp
 │   │   └── src
-│   │       ├── dji_aes.cpp
-│   │       ├── dji_open_protocol.cpp
-│   │       └── dji_protocol_base.cpp
+│   │       └── dji_log.cpp
+│   ├── modules
+│   │   ├── inc
+│   │   │   ├── filemgr
+│   │   │   │   ├── dji_file_mgr_define.hpp
+│   │   │   │   ├── dji_file_mgr.hpp
+│   │   │   │   └── impl
+│   │   │   │       ├── commondatarangehandler.h
+│   │   │   │       ├── dji_file_mgr_impl.hpp
+│   │   │   │       ├── dji_file_mgr_internal_define.hpp
+│   │   │   │       ├── downloadbufferqueue.h
+│   │   │   │       ├── mmap_file_buffer.hpp
+│   │   │   │       └── TODO
+│   │   │   │           ├── csdkErrorCode.hpp
+│   │   │   │           ├── datatransferrequest.h
+│   │   │   │           ├── filetransferprotocoldef.h
+│   │   │   │           ├── listtransferrequest.h
+│   │   │   │           └── transferrequest.h
+│   │   │   ├── firewall
+│   │   │   │   ├── osdk_firewall.hpp
+│   │   │   │   └── osdk_policy.hpp
+│   │   │   ├── flight
+│   │   │   │   ├── dji_flight_actions_module.hpp
+│   │   │   │   ├── dji_flight_assistant_module.hpp
+│   │   │   │   ├── dji_flight_joystick_module.hpp
+│   │   │   │   └── dji_flight_link.hpp
+│   │   │   ├── mop
+│   │   │   │   ├── dji_mop_client.hpp
+│   │   │   │   ├── dji_mop_define.hpp
+│   │   │   │   ├── dji_mop_pipeline.hpp
+│   │   │   │   ├── dji_mop_pipeline_manager_base.hpp
+│   │   │   │   └── dji_mop_server.hpp
+│   │   │   └── payload
+│   │   │       ├── dji_camera_module.hpp
+│   │   │       ├── dji_gimbal_module.hpp
+│   │   │       ├── dji_payload_base.hpp
+│   │   │       ├── dji_payload_link.hpp
+│   │   │       └── dji_psdk_module.hpp
+│   │   └── src
+│   │       ├── filemgr
+│   │       │   ├── dji_file_mgr.cpp
+│   │       │   └── impl
+│   │       │       ├── commondatarangehandler.cpp
+│   │       │       ├── dji_file_mgr_impl.cpp
+│   │       │       ├── downloadbufferqueue.cpp
+│   │       │       ├── mmap_file_buffer.cpp
+│   │       │       └── TODO
+│   │       │           ├── datatransferrequest.cpp
+│   │       │           ├── listtransferrequest.cpp
+│   │       │           └── transferrequest.cpp
+│   │       ├── firewall
+│   │       │   ├── osdk_firewall.cpp
+│   │       │   ├── psdk_md5.c
+│   │       │   └── psdk_md5.h
+│   │       ├── flight
+│   │       │   ├── dji_flight_actions_module.cpp
+│   │       │   ├── dji_flight_assistant_module.cpp
+│   │       │   ├── dji_flight_joystick_module.cpp
+│   │       │   └── dji_flight_link.cpp
+│   │       ├── mop
+│   │       │   ├── dji_mop_client.cpp
+│   │       │   ├── dji_mop_define.cpp
+│   │       │   ├── dji_mop_pipeline.cpp
+│   │       │   ├── dji_mop_pipeline_manager_base.cpp
+│   │       │   └── dji_mop_server.cpp
+│   │       └── payload
+│   │           ├── dji_camera_module.cpp
+│   │           ├── dji_gimbal_module.cpp
+│   │           ├── dji_payload_base.cpp
+│   │           ├── dji_payload_link.cpp
+│   │           └── dji_psdk_module.cpp
+│   ├── platform
+│   │   ├── inc
+│   │   │   └── dji_platform.hpp
+│   │   └── src
+│   │       └── dji_platform.cpp
 │   ├── README.md
 │   └── utility
 │       ├── inc
-│       │   ├── dji_circular_buffer.hpp
 │       │   ├── dji_macros.hpp
+│       │   ├── dji_setup_helpers.hpp
 │       │   └── dji_singleton.hpp
 │       └── src
-│           ├── dji_circular_buffer.cpp
+│           ├── dji_setup_helpers.cpp
 │           └── dji_singleton.cpp
-└── sample
-    ├── linux
-    │   ├── advanced-sensing
-    │   │   ├── camera_stream_callback_sample
-    │   │   │   ├── camera-stream-callback-sample.cpp
-    │   │   │   └── CMakeLists.txt
-    │   │   ├── camera_stream_poll_sample
-    │   │   │   ├── camera-stream-poll-sample.cpp
-    │   │   │   └── CMakeLists.txt
-    │   │   ├── camera_stream_target_tracking_sample
-    │   │   │   ├── CMakeLists.txt
-    │   │   │   ├── target_tracking.cpp
-    │   │   │   ├── tracking_utility.cpp
-    │   │   │   └── tracking_utility.hpp
-    │   │   ├── CMakeLists.txt
-    │   │   ├── stereo_vision_depth_perception_sample
-    │   │   │   ├── utility
-    │   │   │   │   ├── camera_param.cpp
-    │   │   │   │   ├── camera_param.hpp
-    │   │   │   │   ├── config.cpp
-    │   │   │   │   ├── config.hpp
-    │   │   │   │   ├── frame.hpp
-    │   │   │   │   ├── point_cloud_viewer.cpp
-    │   │   │   │   ├── point_cloud_viewer.hpp
-    │   │   │   │   ├── stereo_frame.cpp
-    │   │   │   │   └── stereo_frame.hpp
-    │   │   │   ├── stereo_vision_depth_perception_sample.cpp
-    │   │   │   ├── stereo_vision_depth_perception_sample.hpp
-    │   │   │   ├── CMakeLists.txt
-    │   │   │   ├── stereo_process_container.cpp
-    │   │   │   └── stereo_process_container.hpp
-    │   │   ├── stereo_vision_multi_thread_sample
-    │   │   │   ├── stereo_vision_multi_thread_sample.cpp
-    │   │   │   ├── stereo_vision_multi_thread_sample.hpp
-    │   │   │   ├── CMakeLists.txt
-    │   │   │   ├── image_process_container.cpp
-    │   │   │   ├── image_process_container.hpp
-    │   │   │   ├── utility_thread.cpp
-    │   │   │   └── utility_thread.hpp
-    │   │   └── stereo_vision_single_thread_sample
-    │   │       ├── stereo_vision_single_thread_sample.cpp
-    │   │       ├── stereo_vision_single_thread_sample.hpp
-    │   │       └── CMakeLists.txt
-    │   ├── camera-gimbal
-    │   │   ├── camera_gimbal_sample.cpp
-    │   │   ├── camera_gimbal_sample.hpp
-    │   │   ├── CMakeLists.txt
-    │   │   └── main.cpp
-    │   ├── CMakeLists.txt
-    │   ├── common
-    │   │   ├── dji_linux_environment.cpp
-    │   │   ├── dji_linux_environment.hpp
-    │   │   ├── dji_linux_helpers.cpp
-    │   │   ├── dji_linux_helpers.hpp
-    │   │   └── UserConfig.txt
-    │   ├── flight-control
-    │   │   ├── CMakeLists.txt
-    │   │   ├── flight_control_sample.cpp
-    │   │   ├── flight_control_sample.hpp
-    │   │   └── main.cpp
-    │   ├── logging
-    │   │   ├── CMakeLists.txt
-    │   │   ├── logging_sample.cpp
-    │   │   ├── logging_sample.hpp
-    │   │   └── main.cpp
-    │   ├── mfio
-    │   │   ├── CMakeLists.txt
-    │   │   ├── main.cpp
-    │   │   ├── mfio_sample.cpp
-    │   │   └── mfio_sample.hpp
-    │   ├── missions
-    │   │   ├── CMakeLists.txt
-    │   │   ├── main.cpp
-    │   │   ├── mission_sample.cpp
-    │   │   └── mission_sample.hpp
-    │   ├── mobile
-    │   │   ├── CMakeLists.txt
-    │   │   ├── main.cpp
-    │   │   ├── mobile_sample.cpp
-    │   │   └── mobile_sample.hpp
-    │   ├── payload-3rd-party
-    │   │   ├── CMakeLists.txt
-    │   │   ├── main.cpp
-    │   │   ├── payload-control-sample.cpp
-    │   │   └── payload-control-sample.hpp
-    │   ├── telemetry
-    │   │   ├── CMakeLists.txt
-    │   │   ├── main.cpp
-    │   │   ├── telemetry_sample.cpp
-    │   │   ├── telemetry_sample.hpp
-    │   ├── time-sync
-    │   │   ├── CMakeLists.txt
-    │   │   ├── time_sync_callback_sample.cpp
-    │   │   └── time_sync_poll_sample.cpp
-    ├── Qt
-    │   ├── djiosdk-qt-sample
-    │   │   ├── Broadcast
-    │   │   │   ├── broadcast.cpp
-    │   │   │   ├── broadcast.hpp
-    │   │   │   ├── broadcast.pri
-    │   │   │   └── broadcast.ui
-    │   │   ├── CameraGimbalControl
-    │   │   │   ├── camera_gimbal_control_panel.cpp
-    │   │   │   ├── camera_gimbal_control_panel.hpp
-    │   │   │   ├── camera_gimbal_control_panel.pri
-    │   │   │   └── camera_gimbal_control_panel.ui
-    │   │   ├── CMakeLists.txt
-    │   │   ├── djiosdk-qt-sample.pro
-    │   │   ├── FlightControl
-    │   │   │   ├── flight_control_panel.cpp
-    │   │   │   ├── flight_control_panel.hpp
-    │   │   │   ├── flight_control_panel.pri
-    │   │   │   └── flight_control_panel.ui
-    │   │   ├── images
-    │   │   │   ├── caret-down.png
-    │   │   │   ├── check-square.png
-    │   │   │   └── dji_logo_gray.png
-    │   │   ├── main.cpp
-    │   │   ├── MFIO
-    │   │   │   ├── mfio_panel.cpp
-    │   │   │   ├── mfio_panel.hpp
-    │   │   │   ├── mfio_panel.pri
-    │   │   │   └── mfio_panel.ui
-    │   │   ├── Missions
-    │   │   │   ├── hotpoint_panel.cpp
-    │   │   │   ├── hotpoint_panel.hpp
-    │   │   │   ├── hotpoint_panel.ui
-    │   │   │   ├── Missions.pri
-    │   │   │   ├── qwaypoints.cpp
-    │   │   │   ├── qwaypoints.hpp
-    │   │   │   ├── qwaypoints.ui
-    │   │   │   └── sdk_widgets.hpp
-    │   │   ├── qtosdk.cpp
-    │   │   ├── qtosdk.hpp
-    │   │   ├── qtosdk.ui
-    │   │   ├── resources.qrc
-    │   │   ├── stylesheets
-    │   │   │   └── material-blue.qss
-    │   │   ├── Subscribe
-    │   │   │   ├── subscribe_panel.cpp
-    │   │   │   ├── subscribe_panel.hpp
-    │   │   │   ├── SubscribePanel.pri
-    │   │   │   └── subscribe_panel.ui
-    │   │   └── UserConfig.txt
-    │   └── README.md
-    └── STM32
-        ├── OnBoardSDK_STM32
-        │   ├── Bsp
-        │   │   ├── bsp.cpp
-        │   │   ├── bsp.h
-        │   │   ├── BspUsart.cpp
-        │   │   ├── BspUsart.h
-        │   │   ├── timer.cpp
-        │   │   └── timer.h
-        │   ├── doc
-        │   │   └── readme.txt
-        │   ├── keilkilll.bat
-        │   ├── Project
-        │   │   ├── OnBoardSDK_STM32.uvprojx
-        │   │   └── RTE
-        │   │       └── _DJI_LIB
-        │   │           └── RTE_Components.h
-        │   ├── Project_Gcc
-        │   │   ├── Makefile
-        │   │   ├── setup_and_build.sh
-        │   │   ├── startup_stm32f40xx.s
-        │   │   ├── stm32_flash.ld
-        │   │   └── syscalls.c
-        │   ├── RTE
-        │   │   └── RTE_Components.h
-        │   └── User
-        │       ├── Activate.cpp
-        │       ├── Activate.h
-        │       ├── CameraGimbalSample.cpp
-        │       ├── CameraGimbalSample.h
-        │       ├── cppforstm32.cpp
-        │       ├── cppforstm32.h
-        │       ├── FlightControlSample.cpp
-        │       ├── FlightControlSample.h
-        │       ├── main.cpp
-        │       ├── main.h
-        │       ├── MissionSample.cpp
-        │       ├── MissionSample.h
-        │       ├── MobileSample.cpp
-        │       ├── MobileSample.h
-        │       ├── PayloadSample.cpp
-        │       ├── PayloadSample.h
-        │       ├── Receive.cpp
-        │       ├── Receive.h
-        │       ├── stm32f4xx_conf.h
-        │       ├── TelemetrySample.cpp
-        │       ├── TelemetrySample.h
-        │       ├── TimeSyncSample.cpp
-        │       └── TimeSyncSample.h
-        └── README.md
+├── README.md
+├── sample
+│   ├── core
+│   │   ├── inc
+│   │   │   ├── camera_manager_async_sample.hpp
+│   │   │   ├── camera_manager_sync_sample.hpp
+│   │   │   ├── flight_sample.hpp
+│   │   │   ├── gimbal_manager_async_sample.hpp
+│   │   │   ├── gimbal_manager_sync_sample.hpp
+│   │   │   ├── hms_sample.hpp
+│   │   │   └── waypoint_v2_sample.hpp
+│   │   └── src
+│   │       ├── camera_manager_async_sample.cpp
+│   │       ├── camera_manager_sync_sample.cpp
+│   │       ├── flight_sample.cpp
+│   │       ├── gimbal_manager_async_sample.cpp
+│   │       ├── gimbal_manager_sync_sample.cpp
+│   │       ├── hms_sample.cpp
+│   │       └── waypoint_v2_sample.cpp
+│   └── platform
+│       ├── linux
+│       │   ├── advanced-sensing
+│       │   │   ├── camera_h264_callback_sample
+│       │   │   │   ├── CMakeLists.txt
+│       │   │   │   └── main.cpp
+│       │   │   ├── camera_stream_callback_sample
+│       │   │   │   ├── camera-stream-callback-sample.cpp
+│       │   │   │   └── CMakeLists.txt
+│       │   │   ├── camera_stream_poll_sample
+│       │   │   │   ├── camera-stream-poll-sample.cpp
+│       │   │   │   └── CMakeLists.txt
+│       │   │   ├── camera_stream_target_tracking_sample
+│       │   │   │   ├── CMakeLists.txt
+│       │   │   │   ├── target_tracking.cpp
+│       │   │   │   ├── tracking_utility.cpp
+│       │   │   │   └── tracking_utility.hpp
+│       │   │   ├── CMakeLists.txt
+│       │   │   ├── stereo_vision_depth_perception_sample
+│       │   │   │   ├── CMakeLists.txt
+│       │   │   │   ├── m210_stereo_param.yaml
+│       │   │   │   ├── m300_front_stereo_param.yaml
+│       │   │   │   ├── m300_stereo_param_tool.cpp
+│       │   │   │   ├── m300_stereo_param_tool.hpp
+│       │   │   │   ├── stereo_process_container.cpp
+│       │   │   │   ├── stereo_process_container.hpp
+│       │   │   │   ├── stereo_vision_depth_perception_sample.cpp
+│       │   │   │   ├── stereo_vision_depth_perception_sample.hpp
+│       │   │   │   └── utility
+│       │   │   │       ├── camera_param.cpp
+│       │   │   │       ├── camera_param.hpp
+│       │   │   │       ├── config.cpp
+│       │   │   │       ├── config.hpp
+│       │   │   │       ├── frame.hpp
+│       │   │   │       ├── point_cloud_viewer.cpp
+│       │   │   │       ├── point_cloud_viewer.hpp
+│       │   │   │       ├── stereo_frame.cpp
+│       │   │   │       └── stereo_frame.hpp
+│       │   │   ├── stereo_vision_M300_sample
+│       │   │   │   ├── CMakeLists.txt
+│       │   │   │   └── main.cpp
+│       │   │   ├── stereo_vision_multi_thread_sample
+│       │   │   │   ├── CMakeLists.txt
+│       │   │   │   ├── image_process_container.cpp
+│       │   │   │   ├── image_process_container.hpp
+│       │   │   │   ├── stereo_vision_multi_thread_sample.cpp
+│       │   │   │   ├── stereo_vision_multi_thread_sample.hpp
+│       │   │   │   ├── utility_thread.cpp
+│       │   │   │   └── utility_thread.hpp
+│       │   │   └── stereo_vision_single_thread_sample
+│       │   │       ├── CMakeLists.txt
+│       │   │       ├── stereo_vision_single_thread_sample.cpp
+│       │   │       └── stereo_vision_single_thread_sample.hpp
+│       │   ├── battery
+│       │   │   ├── CMakeLists.txt
+│       │   │   └── main.cpp
+│       │   ├── CMakeLists.txt
+│       │   ├── common
+│       │   │   ├── dji_linux_environment.cpp
+│       │   │   ├── dji_linux_environment.hpp
+│       │   │   ├── dji_linux_helpers.cpp
+│       │   │   ├── dji_linux_helpers.hpp
+│       │   │   └── UserConfig.txt
+│       │   ├── flight-control
+│       │   │   ├── CMakeLists.txt
+│       │   │   ├── flight_control_sample.cpp
+│       │   │   ├── flight_control_sample.hpp
+│       │   │   └── main.cpp
+│       │   ├── hal
+│       │   │   ├── osdkhal_linux.c
+│       │   │   └── osdkhal_linux.h
+│       │   ├── hms
+│       │   │   ├── CMakeLists.txt
+│       │   │   └── main.cpp
+│       │   ├── logging
+│       │   │   ├── CMakeLists.txt
+│       │   │   ├── logging_sample.cpp
+│       │   │   ├── logging_sample.hpp
+│       │   │   └── main.cpp
+│       │   ├── mfio
+│       │   │   ├── CMakeLists.txt
+│       │   │   ├── main.cpp
+│       │   │   ├── mfio_sample.cpp
+│       │   │   └── mfio_sample.hpp
+│       │   ├── missions
+│       │   │   ├── CMakeLists.txt
+│       │   │   ├── main.cpp
+│       │   │   ├── mission_sample.cpp
+│       │   │   ├── mission_sample.hpp
+│       │   │   └── waypoint_v2_main.cpp
+│       │   ├── mobile
+│       │   │   ├── CMakeLists.txt
+│       │   │   ├── main.cpp
+│       │   │   ├── mobile_sample.cpp
+│       │   │   └── mobile_sample.hpp
+│       │   ├── mop
+│       │   │   ├── CMakeLists.txt
+│       │   │   ├── mop_sample_simple_protocol.hpp
+│       │   │   ├── op_download_sample.cpp
+│       │   │   ├── op_upload_sample.cpp
+│       │   │   └── telemetryLogFile.txt
+│       │   ├── osal
+│       │   │   ├── osdkosal_linux.c
+│       │   │   └── osdkosal_linux.h
+│       │   ├── payload-3rd-party
+│       │   │   ├── CMakeLists.txt
+│       │   │   ├── main.cpp
+│       │   │   ├── payload-control-sample.cpp
+│       │   │   └── payload-control-sample.hpp
+│       │   ├── payloads
+│       │   │   ├── CMakeLists.txt
+│       │   │   ├── main_async.cpp
+│       │   │   └── main_sync.cpp
+│       │   ├── telemetry
+│       │   │   ├── CMakeLists.txt
+│       │   │   ├── main.cpp
+│       │   │   ├── telemetry_sample.cpp
+│       │   │   └── telemetry_sample.hpp
+│       │   └── time-sync
+│       │       ├── CMakeLists.txt
+│       │       ├── time_sync_callback_sample.cpp
+│       │       └── time_sync_poll_sample.cpp
+│       └── STM32
+│           ├── OnBoardSDK_STM32
+│           │   ├── Bsp
+│           │   │   ├── bsp.cpp
+│           │   │   ├── bsp.h
+│           │   │   ├── BspUsart.cpp
+│           │   │   ├── BspUsart.h
+│           │   │   ├── timer.cpp
+│           │   │   ├── timer.h
+│           │   │   ├── usb_bsp.c
+│           │   │   ├── usb_conf.h
+│           │   │   └── usbh_conf.h
+│           │   ├── doc
+│           │   │   └── readme.txt
+│           │   ├── keilkilll.bat
+│           │   ├── Lib
+│           │   │   ├── CMSIS
+│           │   │   │   ├── inc
+│           │   │   │   │   ├── arm_common_tables.h
+│           │   │   │   │   ├── arm_math.h
+│           │   │   │   │   ├── core_cm4.h
+│           │   │   │   │   ├── core_cm4_simd.h
+│           │   │   │   │   ├── core_cmFunc.h
+│           │   │   │   │   ├── core_cmInstr.h
+│           │   │   │   │   ├── core_sc000.h
+│           │   │   │   │   ├── core_sc300.h
+│           │   │   │   │   ├── stm32f4xx.h
+│           │   │   │   │   └── system_stm32f4xx.h
+│           │   │   │   ├── libarm_cortexM4lf_math.a
+│           │   │   │   └── src
+│           │   │   │       ├── startup_stm32f40_41xxx.s
+│           │   │   │       ├── startup_stm32f40xx.s
+│           │   │   │       └── system_stm32f4xx.c
+│           │   │   ├── STM32F4xx_StdPeriph_Driver
+│           │   │   │   ├── inc
+│           │   │   │   │   ├── misc.h
+│           │   │   │   │   ├── stm32f4xx_adc.h
+│           │   │   │   │   ├── stm32f4xx_can.h
+│           │   │   │   │   ├── stm32f4xx_crc.h
+│           │   │   │   │   ├── stm32f4xx_cryp.h
+│           │   │   │   │   ├── stm32f4xx_dac.h
+│           │   │   │   │   ├── stm32f4xx_dbgmcu.h
+│           │   │   │   │   ├── stm32f4xx_dcmi.h
+│           │   │   │   │   ├── stm32f4xx_dma.h
+│           │   │   │   │   ├── stm32f4xx_exti.h
+│           │   │   │   │   ├── stm32f4xx_flash.h
+│           │   │   │   │   ├── stm32f4xx_fsmc.h
+│           │   │   │   │   ├── stm32f4xx_gpio.h
+│           │   │   │   │   ├── stm32f4xx_hash.h
+│           │   │   │   │   ├── stm32f4xx_i2c.h
+│           │   │   │   │   ├── stm32f4xx_iwdg.h
+│           │   │   │   │   ├── stm32f4xx_pwr.h
+│           │   │   │   │   ├── stm32f4xx_rcc.h
+│           │   │   │   │   ├── stm32f4xx_rng.h
+│           │   │   │   │   ├── stm32f4xx_rtc.h
+│           │   │   │   │   ├── stm32f4xx_sdio.h
+│           │   │   │   │   ├── stm32f4xx_spi.h
+│           │   │   │   │   ├── stm32f4xx_syscfg.h
+│           │   │   │   │   ├── stm32f4xx_tim.h
+│           │   │   │   │   ├── stm32f4xx_usart.h
+│           │   │   │   │   └── stm32f4xx_wwdg.h
+│           │   │   │   └── src
+│           │   │   │       ├── misc.c
+│           │   │   │       ├── stm32f4xx_adc.c
+│           │   │   │       ├── stm32f4xx_can.c
+│           │   │   │       ├── stm32f4xx_crc.c
+│           │   │   │       ├── stm32f4xx_dac.c
+│           │   │   │       ├── stm32f4xx_dcmi.c
+│           │   │   │       ├── stm32f4xx_dma.c
+│           │   │   │       ├── stm32f4xx_exti.c
+│           │   │   │       ├── stm32f4xx_flash.c
+│           │   │   │       ├── stm32f4xx_fsmc.c
+│           │   │   │       ├── stm32f4xx_gpio.c
+│           │   │   │       ├── stm32f4xx_i2c.c
+│           │   │   │       ├── stm32f4xx_iwdg.c
+│           │   │   │       ├── stm32f4xx_pwr.c
+│           │   │   │       ├── stm32f4xx_rcc.c
+│           │   │   │       ├── stm32f4xx_rng.c
+│           │   │   │       ├── stm32f4xx_rtc.c
+│           │   │   │       ├── stm32f4xx_sdio.c
+│           │   │   │       ├── stm32f4xx_spi.c
+│           │   │   │       ├── stm32f4xx_syscfg.c
+│           │   │   │       ├── stm32f4xx_tim.c
+│           │   │   │       ├── stm32f4xx_usart.c
+│           │   │   │       └── stm32f4xx_wwdg.c
+│           │   │   └── USB_Lib
+│           │   │       ├── STM32_USB_HOST_Library
+│           │   │       │   ├── Class
+│           │   │       │   │   ├── CDC
+│           │   │       │   │   │   ├── inc
+│           │   │       │   │   │   │   ├── usbh_cdc_core.h
+│           │   │       │   │   │   │   └── usbh_cdc_funct.h
+│           │   │       │   │   │   └── src
+│           │   │       │   │   │       ├── usbh_cdc_core.c
+│           │   │       │   │   │       └── usbh_cdc_funct.c
+│           │   │       │   │   ├── HID
+│           │   │       │   │   │   ├── inc
+│           │   │       │   │   │   │   ├── usbh_hid_core.h
+│           │   │       │   │   │   │   ├── usbh_hid_keybd.h
+│           │   │       │   │   │   │   └── usbh_hid_mouse.h
+│           │   │       │   │   │   └── src
+│           │   │       │   │   │       ├── usbh_hid_core.c
+│           │   │       │   │   │       ├── usbh_hid_keybd.c
+│           │   │       │   │   │       └── usbh_hid_mouse.c
+│           │   │       │   │   └── MSC
+│           │   │       │   │       ├── inc
+│           │   │       │   │       │   ├── usbh_msc_bot.h
+│           │   │       │   │       │   ├── usbh_msc_core.h
+│           │   │       │   │       │   └── usbh_msc_scsi.h
+│           │   │       │   │       └── src
+│           │   │       │   │           ├── usbh_msc_bot.c
+│           │   │       │   │           ├── usbh_msc_core.c
+│           │   │       │   │           ├── usbh_msc_fatfs.c
+│           │   │       │   │           └── usbh_msc_scsi.c
+│           │   │       │   └── Core
+│           │   │       │       ├── inc
+│           │   │       │       │   ├── usbh_conf_template.h
+│           │   │       │       │   ├── usbh_core.h
+│           │   │       │       │   ├── usbh_def.h
+│           │   │       │       │   ├── usbh_hcs.h
+│           │   │       │       │   ├── usbh_ioreq.h
+│           │   │       │       │   └── usbh_stdreq.h
+│           │   │       │       └── src
+│           │   │       │           ├── usbh_core.c
+│           │   │       │           ├── usbh_hcs.c
+│           │   │       │           ├── usbh_ioreq.c
+│           │   │       │           └── usbh_stdreq.c
+│           │   │       └── STM32_USB_OTG_Driver
+│           │   │           ├── inc
+│           │   │           │   ├── usb_bsp.h
+│           │   │           │   ├── usb_conf_template.h
+│           │   │           │   ├── usb_core.h
+│           │   │           │   ├── usb_dcd.h
+│           │   │           │   ├── usb_dcd_int.h
+│           │   │           │   ├── usb_defines.h
+│           │   │           │   ├── usb_hcd.h
+│           │   │           │   ├── usb_hcd_int.h
+│           │   │           │   ├── usb_otg.h
+│           │   │           │   └── usb_regs.h
+│           │   │           └── src
+│           │   │               ├── usb_bsp_template.c
+│           │   │               ├── usb_core.c
+│           │   │               ├── usb_dcd.c
+│           │   │               ├── usb_dcd_int.c
+│           │   │               ├── usb_hcd.c
+│           │   │               ├── usb_hcd_int.c
+│           │   │               └── usb_otg.c
+│           │   ├── Linker
+│           │   │   ├── hal
+│           │   │   │   ├── osdkhal_stm32.c
+│           │   │   │   └── osdkhal_stm32.h
+│           │   │   └── osal
+│           │   │       ├── osdkosal_stm32.c
+│           │   │       └── osdkosal_stm32.h
+│           │   ├── OS
+│           │   │   └── FreeRTOS
+│           │   │       └── readme.txt
+│           │   ├── osdk-core.lib
+│           │   ├── Project
+│           │   │   ├── OnBoardSDK_STM32.uvprojx
+│           │   │   └── RTE
+│           │   │       └── _DJI_LIB
+│           │   │           └── RTE_Components.h
+│           │   ├── Project_Gcc
+│           │   │   ├── setup_and_build.sh
+│           │   │   ├── startup_stm32f40xx.s
+│           │   │   ├── stm32_flash.ld
+│           │   │   └── syscalls.c
+│           │   ├── RTE
+│           │   │   └── RTE_Components.h
+│           │   └── User
+│           │       ├── Activate.cpp
+│           │       ├── Activate.h
+│           │       ├── CameraGimbalSample.cpp
+│           │       ├── CameraGimbalSample.h
+│           │       ├── CameraManagerSample.cpp
+│           │       ├── CameraManagerSample.hpp
+│           │       ├── cppforstm32.cpp
+│           │       ├── cppforstm32.h
+│           │       ├── dji_stm32_helpers.cpp
+│           │       ├── dji_stm32_helpers.hpp
+│           │       ├── FlightControlSample.cpp
+│           │       ├── FlightControlSample.h
+│           │       ├── GimbalManagerSample.cpp
+│           │       ├── GimbalManagerSample.hpp
+│           │       ├── main.cpp
+│           │       ├── main.h
+│           │       ├── MissionSample.cpp
+│           │       ├── MissionSample.h
+│           │       ├── MobileSample.cpp
+│           │       ├── MobileSample.h
+│           │       ├── PayloadSample.cpp
+│           │       ├── PayloadSample.h
+│           │       ├── Receive.cpp
+│           │       ├── Receive.h
+│           │       ├── stm32f4xx_conf.h
+│           │       ├── TelemetrySample.cpp
+│           │       ├── TelemetrySample.h
+│           │       ├── TimeSyncSample.cpp
+│           │       ├── TimeSyncSample.h
+│           │       ├── usbh_usr.cpp
+│           │       └── usbh_usr.h
+│           └── README.md
+├── tree.txt
+└── utility
+    └── bin
+        ├── armv7
+        │   └── 32-bit
+        │       └── M210ConfigTool
+        ├── armv8
+        │   └── 64-bit
+        │       └── M210ConfigTool
+        └── linux
+            └── x86-64
+                └── M210ConfigTool
 
 Unless otherwise agreed, all other portions of DJI’s Onboard SDK are and will be made available under the SDK End User License Agreement (EULA). A copy of the SDK EULA is distributed with this software and is available at https://developer.dji.com/policies/eula/.
 -------------------------------------------------------------

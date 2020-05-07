@@ -44,15 +44,14 @@ DJI::OSDK::Gimbal::~Gimbal()
 void
 DJI::OSDK::Gimbal::setAngle(Gimbal::AngleData* data)
 {
-  vehicle->protocolLayer->send(0, vehicle->getEncryption(),
-                               OpenProtocolCMD::CMDSet::Control::gimbalAngle,
+  vehicle->legacyLinker->send(OpenProtocolCMD::CMDSet::Control::gimbalAngle,
                                (unsigned char*)data, sizeof(Gimbal::AngleData));
 }
 
 void
 DJI::OSDK::Gimbal::setSpeed(Gimbal::SpeedData* data)
 {
-  vehicle->protocolLayer->send(0, vehicle->getEncryption(),
-                               OpenProtocolCMD::CMDSet::Control::gimbalSpeed,
-                               (unsigned char*)data, sizeof(Gimbal::SpeedData));
+  vehicle->legacyLinker->send(OpenProtocolCMD::CMDSet::Control::gimbalSpeed,
+                              (unsigned char *) data,
+                              sizeof(Gimbal::SpeedData));
 }

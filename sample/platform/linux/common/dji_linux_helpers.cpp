@@ -27,18 +27,24 @@
  *
  */
 
-#include <dji_linux_helpers.hpp>
+#include "dji_linux_helpers.hpp"
+#include "osdkhal_linux.h"
+#include "osdkosal_linux.h"
+
+static E_OsdkStat OsdkUser_Console(const uint8_t *data, uint16_t dataLen)
+{
+  return OSDK_STAT_OK;
+  printf("%s", data);
+
+  return OSDK_STAT_OK;
+}
 
 using namespace DJI::OSDK;
 
-LinuxSetup::LinuxSetup(int argc, char** argv, bool enableAdvancedSensing)
+LinuxSetup::LinuxSetup(int argc, char **argv, bool enableAdvancedSensing)
+    : Setup(enableAdvancedSensing)
 {
-  this->functionTimeout     = 1; // second
-  this->vehicle             = nullptr;
-  this->environment         = nullptr;
-  this->testSerialDevice    = nullptr;
-  this->useAdvancedSensing  = enableAdvancedSensing;
-
+  functionTimeout = 1; //second
   setupEnvironment(argc, argv);
   initVehicle();
 }
@@ -53,15 +59,70 @@ LinuxSetup::~LinuxSetup()
     delete (environment);
     environment = nullptr;
   }
-  if (testSerialDevice){
-    delete (testSerialDevice);
-    testSerialDevice = nullptr;
-  }
 }
 
 void
 LinuxSetup::setupEnvironment(int argc, char** argv)
 {
+  static T_OsdkLoggerConsole printConsole = {
+      .consoleLevel = OSDK_LOGGER_CONSOLE_LOG_LEVEL_INFO,
+      .func = OsdkUser_Console,
+  };
+
+  static T_OsdkHalUartHandler halUartHandler = {
+      .UartInit = OsdkLinux_UartInit,
+      .UartWriteData = OsdkLinux_UartSendData,
+      .UartReadData = OsdkLinux_UartReadData,
+      .UartClose = OsdkLinux_UartClose,
+  };
+
+#ifdef ADVANCED_SENSING
+  static T_OsdkHalUSBBulkHandler halUSBBulkHandler = {
+      .USBBulkInit = OsdkLinux_USBBulkInit,
+      .USBBulkWriteData = OsdkLinux_USBBulkSendData,
+      .USBBulkReadData = OsdkLinux_USBBulkReadData,
+      .USBBulkClose = OsdkLinux_USBBulkClose,
+  };
+#endif
+
+  static T_OsdkOsalHandler osalHandler = {
+      .TaskCreate = OsdkLinux_TaskCreate,
+      .TaskDestroy = OsdkLinux_TaskDestroy,
+      .TaskSleepMs = OsdkLinux_TaskSleepMs,
+      .MutexCreate = OsdkLinux_MutexCreate,
+      .MutexDestroy = OsdkLinux_MutexDestroy,
+      .MutexLock = OsdkLinux_MutexLock,
+      .MutexUnlock = OsdkLinux_MutexUnlock,
+      .SemaphoreCreate = OsdkLinux_SemaphoreCreate,
+      .SemaphoreDestroy = OsdkLinux_SemaphoreDestroy,
+      .SemaphoreWait = OsdkLinux_SemaphoreWait,
+      .SemaphoreTimedWait = OsdkLinux_SemaphoreTimedWait,
+      .SemaphorePost = OsdkLinux_SemaphorePost,
+      .GetTimeMs = OsdkLinux_GetTimeMs,
+#ifdef OS_DEBUG
+      .GetTimeUs = OsdkLinux_GetTimeUs,
+#endif
+      .Malloc = OsdkLinux_Malloc,
+      .Free = OsdkLinux_Free,
+  };
+
+  if(DJI_REG_LOGGER_CONSOLE(&printConsole) != true) {
+    throw std::runtime_error("logger console register fail");
+  }
+
+  if(DJI_REG_UART_HANDLER(&halUartHandler) != true) {
+    throw std::runtime_error("Uart handler register fail");
+  }
+
+#ifdef ADVANCED_SENSING
+  if(DJI_REG_USB_BULK_HANDLER(&halUSBBulkHandler) != true) {
+    throw std::runtime_error("USB Bulk handler register fail");
+  };
+#endif
+
+  if(DJI_REG_OSAL_HANDLER(&osalHandler) != true) {
+    throw std::runtime_error("Osal handler register fail");
+  }
 
   // Config file loading
   const char* acm_dev_prefix = "/dev/ttyACM";
@@ -101,8 +162,6 @@ LinuxSetup::setupEnvironment(int argc, char** argv)
     }
   }
 
-
-
   if (!config_file_path.empty())
   {
     std::ifstream fStream(config_file_path.c_str());
@@ -122,7 +181,7 @@ LinuxSetup::setupEnvironment(int argc, char** argv)
   {
     // We were unable to read the config file. Exit.
     throw std::runtime_error(
-      "User configuration file is not correctly formatted.");
+        "User configuration file is not correctly formatted.");
   }
 
   /* set ttyACM device */
@@ -137,42 +196,44 @@ LinuxSetup::setupEnvironment(int argc, char** argv)
     std::cout << "Set sample case:" << sample_case_name.c_str() << std::endl;
     this->environment->setSampleCase(sample_case_name);
   }
-
-  /*  this->testSerialDevice = new LinuxSerialDevice(
-      environment->getDevice().c_str(), environment->getBaudrate());
-    testSerialDevice->init();
-    bool setupStatus = validateSerialPort();
-
-    if (!setupStatus)
-    {
-      delete (testSerialDevice);
-      delete (environment);
-      return NULL;
-    }
-    else
-    {
-      delete (testSerialDevice);
-    }
-  */
 }
 
-void
+bool
 LinuxSetup::initVehicle()
 {
-  bool threadSupport = true;
-  this->vehicle      = new Vehicle(environment->getDevice().c_str(),
-                                   environment->getBaudrate(),
-                                   threadSupport,
-                                   this->useAdvancedSensing);
+  ACK::ErrorCode ack;
 
-  // Check if the communication is working fine
-  if (!vehicle->protocolLayer->getDriver()->getDeviceStatus())
+  /*! Linker initialization */
+  if (!initLinker()) {
+    DERROR("Failed to initialize Linker");
+    return false;
+  }
+
+  /*! Linker add uart channel */
+  if (!addFCUartChannel(environment->getDevice().c_str(),
+                        environment->getBaudrate())) {
+    DERROR("Failed to initialize Linker channel");
+    return false;
+  }
+
+  /*! Linker add USB acm channel */
+  if (!addUSBACMChannel(environment->getDeviceAcm().c_str(),
+                        environment->getACMDefaultBaudrate())) {
+    DERROR("Failed to initialize ACM Linker channel!");
+  }
+
+  /*! Vehicle initialization */
+  if (!linker)
   {
-    std::cout << "Comms appear to be incorrectly set up. Exiting." << std::endl;
-    delete (vehicle);
-    delete (environment);
-    this->vehicle     = nullptr;
-    this->environment = nullptr;
+    DERROR("Linker get failed.");
+    goto err;
+  }
+
+  vehicle = new Vehicle(linker);
+  if (!vehicle)
+  {
+    DERROR("Vehicle create failed.");
+    goto err;
   }
 
   // Activate
@@ -181,58 +242,24 @@ LinuxSetup::initVehicle()
   activateData.encKey = app_key;
   strcpy(activateData.encKey, environment->getEnc_key().c_str());
   activateData.version = vehicle->getFwVersion();
-  ACK::ErrorCode ack   = vehicle->activate(&activateData, functionTimeout);
 
+  ack = vehicle->activate(&activateData, functionTimeout);
   if (ACK::getError(ack))
   {
     ACK::getErrorCodeMessage(ack, __func__);
-    delete (vehicle);
-    delete (environment);
-    this->environment = nullptr;
-    this->vehicle     = nullptr;
+    goto err;
   }
 
-}
-
-bool
-LinuxSetup::validateSerialPort()
-{
-  static const int BUFFER_SIZE = 2048;
-
-  //! Check the serial channel for data
-  uint8_t buf[BUFFER_SIZE];
-  if (!testSerialDevice->setSerialPureTimedRead())
-  {
-    DERROR("Failed to set up port for timed read.\n");
-    return (false);
-  };
-  usleep(100000);
-  if (testSerialDevice->serialRead(buf, BUFFER_SIZE))
-  {
-    DERROR("Succeeded to read from serial device\n");
-  }
-  else
-  {
-    DERROR("\"Failed to read from serial device. The Onboard SDK is not "
-             "communicating with your drone. \n");
-    // serialDevice->unsetSerialPureTimedRead();
-    return (false);
+  if (!vehicle->isM300()) {
+    vehicle->setUSBFlightOn(true);
   }
 
-  // If we reach here, _serialRead succeeded.
-  int baudCheckStatus = testSerialDevice->checkBaudRate(buf);
-  if (baudCheckStatus == -1)
-  {
-    DERROR("No data on the line. Is your drone powered on?\n");
-    return false;
-  }
-  if (baudCheckStatus == -2)
-  {
-    DERROR("Baud rate mismatch found. Make sure DJI Assistant 2 has the same "
-             "baud setting as the one in User_Config.h\n");
-    return (false);
-  }
-  // All the tests passed and the serial device is properly set up
-  testSerialDevice->unsetSerialPureTimedRead();
-  return (true);
+  return true;
+
+  err:
+  if (vehicle) delete (vehicle);
+  if (environment) delete (environment);
+  this->environment = nullptr;
+  this->vehicle     = nullptr;
+  return false;
 }

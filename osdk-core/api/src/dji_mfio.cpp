@@ -47,7 +47,10 @@ void
 MFIO::config(MFIO::MODE mode, CHANNEL channel, uint32_t defaultValue,
              uint16_t freq, VehicleCallBack callback, UserData userData)
 {
+  VehicleCallBack cb = NULL;
+  UserData udata = NULL;
   InitData data;
+
   if ((channelUsage & (1 << channel)) == 0)
   {
     // channelUsage |= (1 << channel);
@@ -56,20 +59,19 @@ MFIO::config(MFIO::MODE mode, CHANNEL channel, uint32_t defaultValue,
     data.value   = defaultValue;
     data.freq    = freq;
 
-    int cbIndex = vehicle->callbackIdIndex();
     if (callback)
     {
-      vehicle->nbCallbackFunctions[cbIndex] = (void*)callback;
-      vehicle->nbUserData[cbIndex]          = userData;
+      cb = callback;
+      udata = userData;
     }
     else
     {
-      vehicle->nbCallbackFunctions[cbIndex] = (void*)&MFIO::initCallback;
-      vehicle->nbUserData[cbIndex]          = NULL;
+      cb = initCallback;
+      udata = NULL;
     }
 
-    vehicle->protocolLayer->send(2, 0, OpenProtocolCMD::CMDSet::MFIO::init,
-                                 &data, sizeof(data), 500, 2, true, cbIndex);
+    vehicle->legacyLinker->sendAsync(OpenProtocolCMD::CMDSet::MFIO::init,
+                                     &data, sizeof(data), 500, 2, cb, udata);
   }
   else
   {
@@ -92,13 +94,9 @@ MFIO::config(MFIO::MODE mode, CHANNEL channel, uint32_t defaultValue,
     data.value   = defaultValue;
     data.freq    = freq;
     DSTATUS("sent");
-    vehicle->protocolLayer->send(2, 0, OpenProtocolCMD::CMDSet::MFIO::init,
-                                 &data, sizeof(data), 500, 2, false, 0);
-
-    ack = *((ACK::ErrorCode*)vehicle->waitForACK(
-      OpenProtocolCMD::CMDSet::MFIO::init, wait_timeout));
-
-    return ack;
+    return *(ACK::ErrorCode *) vehicle->legacyLinker->sendSync(
+        OpenProtocolCMD::CMDSet::MFIO::init, &data, sizeof(data),
+        wait_timeout * 1000 / 2, 2);
   }
   else
   {
@@ -110,7 +108,7 @@ MFIO::config(MFIO::MODE mode, CHANNEL channel, uint32_t defaultValue,
 }
 
 void
-MFIO::initCallback(RecvContainer recvFrame, UserData data)
+MFIO::initCallback(Vehicle* vehicle, RecvContainer recvFrame, UserData data)
 {
   /* Comment out API_LOG until we have a nicer solution, or we update calback
    * prototype
@@ -133,21 +131,22 @@ MFIO::setValue(MFIO::CHANNEL channel, uint32_t value, VehicleCallBack callback,
   SetData data;
   data.channel = channel;
   data.value   = value;
+  VehicleCallBack cb = NULL;
+  UserData udata = NULL;
 
-  int cbIndex = vehicle->callbackIdIndex();
   if (callback)
   {
-    vehicle->nbCallbackFunctions[cbIndex] = (void*)callback;
-    vehicle->nbUserData[cbIndex]          = userData;
+    cb = callback;
+    udata = userData;
   }
   else
   {
-    vehicle->nbCallbackFunctions[cbIndex] = (void*)&MFIO::setValueCallback;
-    vehicle->nbUserData[cbIndex]          = NULL;
+    cb = setValueCallback;
+    udata = NULL;
   }
 
-  vehicle->protocolLayer->send(2, 0, OpenProtocolCMD::CMDSet::MFIO::set, &data,
-                               sizeof(data), 500, 2, true, cbIndex);
+  vehicle->legacyLinker->sendAsync(OpenProtocolCMD::CMDSet::MFIO::set, &data,
+                                   sizeof(data), 500, 2, cb, udata);
 }
 
 ACK::ErrorCode
@@ -159,17 +158,13 @@ MFIO::setValue(CHANNEL channel, uint32_t value, int wait_timeout)
   data.channel = channel;
   data.value   = value;
 
-  vehicle->protocolLayer->send(2, 0, OpenProtocolCMD::CMDSet::MFIO::set, &data,
-                               sizeof(data), 500, 2, false, 0);
-
-  ack = *((ACK::ErrorCode*)vehicle->waitForACK(
-    OpenProtocolCMD::CMDSet::MFIO::set, wait_timeout));
-
-  return ack;
+  return *(ACK::ErrorCode *) vehicle->legacyLinker->sendSync(
+      OpenProtocolCMD::CMDSet::MFIO::set, &data, sizeof(data),
+      wait_timeout * 1000 / 2, 2);
 }
 
 void
-MFIO::setValueCallback(RecvContainer recvFrame, UserData data)
+MFIO::setValueCallback(Vehicle* vehicle, RecvContainer recvFrame, UserData data)
 {
 
   uint16_t ack_length =
@@ -188,21 +183,22 @@ MFIO::getValue(MFIO::CHANNEL channel, VehicleCallBack callback,
 
   GetData data;
   data = channel;
+  VehicleCallBack cb = NULL;
+  UserData udata = NULL;
 
-  int cbIndex = vehicle->callbackIdIndex();
   if (callback)
   {
-    vehicle->nbCallbackFunctions[cbIndex] = (void*)callback;
-    vehicle->nbUserData[cbIndex]          = userData;
+    cb = callback;
+    udata = userData;
   }
   else
   {
-    vehicle->nbCallbackFunctions[cbIndex] = (void*)&MFIO::getValueCallback;
-    vehicle->nbUserData[cbIndex]          = NULL;
+    cb = getValueCallback;
+    udata = NULL;
   }
 
-  vehicle->protocolLayer->send(2, 0, OpenProtocolCMD::CMDSet::MFIO::get, &data,
-                               sizeof(data), 500, 3, true, cbIndex);
+  vehicle->legacyLinker->sendAsync(OpenProtocolCMD::CMDSet::MFIO::get, &data,
+                                   sizeof(data), 500, 3, cb, udata);
 }
 
 ACK::MFIOGet
@@ -213,16 +209,13 @@ MFIO::getValue(CHANNEL channel, int wait_timeout)
   GetData data;
   data = channel;
 
-  vehicle->protocolLayer->send(2, 0, OpenProtocolCMD::CMDSet::MFIO::get, &data,
-                               sizeof(data), 500, 3, false, 0);
-
-  ack = *((ACK::MFIOGet*)vehicle->waitForACK(OpenProtocolCMD::CMDSet::MFIO::get,
-                                             wait_timeout));
-  return ack;
+  return *(ACK::MFIOGet *) vehicle->legacyLinker->sendSync(
+      OpenProtocolCMD::CMDSet::MFIO::get, &data, sizeof(data),
+      wait_timeout * 1000 / 3, 3);
 }
 
 void
-MFIO::getValueCallback(RecvContainer recvFrame, UserData data)
+MFIO::getValueCallback(Vehicle* vehicle, RecvContainer recvFrame, UserData data)
 {
   uint16_t ack_length =
     recvFrame.recvInfo.len - static_cast<uint16_t>(OpenProtocol::PackageMin);

@@ -27,15 +27,20 @@
  */
 
 #include "dji_camera_manager.hpp"
+#include "dji_vehicle.hpp"
 
 using namespace DJI;
 using namespace DJI::OSDK;
 
+#define OSDK_COMMAND_DEVICE_TYPE_CAMERA 1
 CameraManager::CameraManager(Vehicle* vehiclePtr) {
-  payloadLink = new PayloadLink(vehiclePtr);
+  /* fileMgr test for main camera only */
+#if defined(__linux__)
+  fileMgr = new FileMgr(vehiclePtr->linker, OSDK_COMMAND_DEVICE_TYPE_CAMERA, 0);
+#endif
   for (int index = PAYLOAD_INDEX_0; index < PAYLOAD_INDEX_CNT; index++) {
     CameraModule* module = new CameraModule(
-        payloadLink, (PayloadIndexType)index, defaultCameraName, false);
+        vehiclePtr->linker, (PayloadIndexType)index, defaultCameraName, false);
     cameraModuleVector.push_back(module);
   }
 }
@@ -46,7 +51,9 @@ CameraManager::~CameraManager() {
       delete cameraModuleVector[i];
     }
   }
-  delete payloadLink;
+#if defined(__linux__)
+  delete fileMgr;
+#endif
 }
 
 CameraModule* CameraManager::getCameraModule(PayloadIndexType index) {
@@ -654,6 +661,24 @@ ErrorCode::ErrorCodeType CameraManager::startContinuousOpticalZoomSync(
   }
 }
 
+ErrorCode::ErrorCodeType CameraManager::setOpticalZoomFactorSync(PayloadIndexType index, float factor, int timeout) {
+  CameraModule* cameraMgr = getCameraModule(index);
+  if (cameraMgr) {
+    return cameraMgr->setOpticalZoomFactorSync(factor, timeout);
+  } else {
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
+  }
+}
+
+ErrorCode::ErrorCodeType CameraManager::getOpticalZoomFactorSync(PayloadIndexType index, float &factor, int timeout) {
+  CameraModule* cameraMgr = getCameraModule(index);
+  if (cameraMgr) {
+    return cameraMgr->getOpticalZoomFactorSync(factor, timeout);
+  } else {
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
+  }
+}
+
 void CameraManager::stopContinuousOpticalZoomAsync(
     PayloadIndexType index,
     void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
@@ -998,3 +1023,32 @@ ErrorCode::ErrorCodeType CameraManager::getExposureCompensationSync(
     return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
 }
+
+ErrorCode::ErrorCodeType CameraManager::obtainDownloadRightSync(
+    PayloadIndexType index, bool enable, int timeout) {
+  CameraModule *cameraMgr = getCameraModule(index);
+  if (cameraMgr) {
+    return cameraMgr->obtainDownloadRightSync(enable, timeout);
+  } else {
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
+  }
+}
+#if defined(__linux__)
+ErrorCode::ErrorCodeType CameraManager::startReqFileList(FileMgr::FileListReqCBType cb, void *userData) {
+  ErrorCode::ErrorCodeType ret;
+  ret = fileMgr->startReqFileList(cb, userData);
+  //OsdkOsal_TaskSleepMs(1000);
+  //fileMgr->SendAbortPack(DJI_GENERAL_DOWNLOAD_FILE_TASK_TYPE_LIST);
+  //fileMgr->SendACKPack(DJI_GENERAL_DOWNLOAD_FILE_TASK_TYPE_LIST);
+  return ret;
+}
+
+ErrorCode::ErrorCodeType CameraManager::startReqFileData(int fileIndex, std::string localPath, FileMgr::FileDataReqCBType cb, void *userData) {
+  ErrorCode::ErrorCodeType ret;
+  ret = fileMgr->startReqFileData(fileIndex, localPath, cb, userData);
+  //OsdkOsal_TaskSleepMs(1000);
+  //fileMgr->SendAbortPack(DJI_GENERAL_DOWNLOAD_FILE_TASK_TYPE_LIST);
+  //fileMgr->SendACKPack(DJI_GENERAL_DOWNLOAD_FILE_TASK_TYPE_LIST);
+  return ret;
+}
+#endif

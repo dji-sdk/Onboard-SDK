@@ -16,6 +16,7 @@ endif ()
 
 set(HELPER_FUNCTIONS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../common)
 add_executable(${PROJECT_NAME}
+        ${SOURCE_FILES}
         ${HELPER_FUNCTIONS_DIR}/dji_linux_environment.cpp
         ${HELPER_FUNCTIONS_DIR}/dji_linux_helpers.cpp
         stereo_vision_multi_thread_sample.cpp
@@ -24,10 +25,6 @@ add_executable(${PROJECT_NAME}
         )
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${OpenCV_INCLUDE_DIRS})
-
-target_link_libraries(${PROJECT_NAME}
-        djiosdk-core
-        )
 
 if (OpenCV_FOUND)
     target_link_libraries(${PROJECT_NAME}

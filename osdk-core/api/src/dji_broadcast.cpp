@@ -61,15 +61,17 @@ DataBroadcast::unpackCallback(Vehicle* vehicle, RecvContainer recvFrame,
 
 DataBroadcast::DataBroadcast(Vehicle* vehiclePtr)
 {
-  if (vehiclePtr)
-  {
-    setVehicle(vehiclePtr);
-  }
   unpackHandler.callback = unpackCallback;
   unpackHandler.userData = this;
 
   userCbHandler.callback = 0;
   userCbHandler.userData = 0;
+
+  Platform::instance().mutexCreate(&m_msgLock);
+  if (vehiclePtr)
+  {
+    setVehicle(vehiclePtr);
+  }
 }
 
 DataBroadcast::~DataBroadcast()
@@ -84,7 +86,7 @@ Telemetry::TimeStamp
 DataBroadcast::getTimeStamp()
 {
   Telemetry::TimeStamp  data;
-  vehicle->protocolLayer->getThreadHandle()->lockMSG();
+  lockMSG();
   if (vehicle->isLegacyM600())
   {
     // Supported Broadcast data in Matrice 600 old firmware
@@ -101,7 +103,7 @@ DataBroadcast::getTimeStamp()
   {
     data = timeStamp;
   }
-  vehicle->protocolLayer->getThreadHandle()->freeMSG();
+  freeMSG();
   return data;
 }
 
@@ -109,7 +111,7 @@ Telemetry::SyncStamp
 DataBroadcast::getSyncStamp()
 {
   Telemetry::SyncStamp data = {0};
-  vehicle->protocolLayer->getThreadHandle()->lockMSG();
+  lockMSG();
   if (vehicle->isLegacyM600())
   {
     // Supported Broadcast data in Matrice 600 old firmware
@@ -124,7 +126,7 @@ DataBroadcast::getSyncStamp()
   {
     data = syncStamp;
   }
-  vehicle->protocolLayer->getThreadHandle()->freeMSG();
+  freeMSG();
   return data;
 }
 
@@ -132,9 +134,9 @@ Telemetry::Quaternion
 DataBroadcast::getQuaternion()
 {
   Telemetry::Quaternion data;
-  vehicle->protocolLayer->getThreadHandle()->lockMSG();
+  lockMSG();
   data = q;
-  vehicle->protocolLayer->getThreadHandle()->freeMSG();
+  freeMSG();
   return data;
 }
 
@@ -142,9 +144,9 @@ Telemetry::Vector3f
 DataBroadcast::getAcceleration()
 {
   Telemetry::Vector3f data;
-  vehicle->protocolLayer->getThreadHandle()->lockMSG();
+  lockMSG();
   data = a;
-  vehicle->protocolLayer->getThreadHandle()->freeMSG();
+  freeMSG();
   return data;
 }
 
@@ -152,7 +154,7 @@ Telemetry::Vector3f
 DataBroadcast::getVelocity()
 {
   Telemetry::Vector3f data;
-  vehicle->protocolLayer->getThreadHandle()->lockMSG();
+  lockMSG();
   if (vehicle->isLegacyM600())
   {
     // Supported Broadcast data in Matrice 600 old firmware
@@ -171,7 +173,7 @@ DataBroadcast::getVelocity()
   {
     data = v;
   }
-  vehicle->protocolLayer->getThreadHandle()->freeMSG();
+  freeMSG();
   return data;
 }
 
@@ -179,7 +181,7 @@ Telemetry::VelocityInfo
 DataBroadcast::getVelocityInfo()
 {
   Telemetry::VelocityInfo data;
-  vehicle->protocolLayer->getThreadHandle()->lockMSG();
+  lockMSG();
   if (vehicle->isLegacyM600())
   {
     // Supported Broadcast data in Matrice 600 old firmware
@@ -197,7 +199,7 @@ DataBroadcast::getVelocityInfo()
   {
     data = vi;
   }
-  vehicle->protocolLayer->getThreadHandle()->freeMSG();
+  freeMSG();
   return data;
 }
 
@@ -205,9 +207,9 @@ Telemetry::Vector3f
 DataBroadcast::getAngularRate()
 {
   Telemetry::Vector3f data;
-  vehicle->protocolLayer->getThreadHandle()->lockMSG();
+  lockMSG();
   data = w;
-  vehicle->protocolLayer->getThreadHandle()->freeMSG();
+  freeMSG();
   return data;
 }
 
@@ -215,9 +217,9 @@ Telemetry::GlobalPosition
 DataBroadcast::getGlobalPosition()
 {
   Telemetry::GlobalPosition data;
-  vehicle->protocolLayer->getThreadHandle()->lockMSG();
+  lockMSG();
   data = gp;
-  vehicle->protocolLayer->getThreadHandle()->freeMSG();
+  freeMSG();
   return data;
 }
 
@@ -226,9 +228,9 @@ Telemetry::RelativePosition
 DataBroadcast::getRelativePosition()
 {
   Telemetry::RelativePosition data;
-  vehicle->protocolLayer->getThreadHandle()->lockMSG();
+  lockMSG();
   data = rp;
-  vehicle->protocolLayer->getThreadHandle()->freeMSG();
+  freeMSG();
   return data;
 }
 
@@ -237,7 +239,7 @@ Telemetry::GPSInfo
 DataBroadcast::getGPSInfo()
 {
   Telemetry::GPSInfo data;
-  vehicle->protocolLayer->getThreadHandle()->lockMSG();
+  lockMSG();
   if (vehicle->isLegacyM600())
   {
     // Supported Broadcast data in Matrice 600 old firmware
@@ -252,7 +254,7 @@ DataBroadcast::getGPSInfo()
   {
     data = gps;
   }
-  vehicle->protocolLayer->getThreadHandle()->freeMSG();
+  freeMSG();
   return data;
 }
 
@@ -261,9 +263,9 @@ Telemetry::RTK
 DataBroadcast::getRTKInfo()
 {
   Telemetry::RTK data;
-  vehicle->protocolLayer->getThreadHandle()->lockMSG();
+  lockMSG();
   data = rtk;
-  vehicle->protocolLayer->getThreadHandle()->freeMSG();
+  freeMSG();
   return data;
 }
 
@@ -271,9 +273,9 @@ Telemetry::Mag
 DataBroadcast::getMag()
 {
   Telemetry::Mag data;
-  vehicle->protocolLayer->getThreadHandle()->lockMSG();
+  lockMSG();
   data = mag;
-  vehicle->protocolLayer->getThreadHandle()->freeMSG();
+  freeMSG();
   return data;
 }
 
@@ -281,9 +283,9 @@ Telemetry::RC
 DataBroadcast::getRC()
 {
   Telemetry::RC data;
-  vehicle->protocolLayer->getThreadHandle()->lockMSG();
+  lockMSG();
   data = rc;
-  vehicle->protocolLayer->getThreadHandle()->freeMSG();
+  freeMSG();
   return data;
 }
 
@@ -291,9 +293,9 @@ Telemetry::Gimbal
 DataBroadcast::getGimbal()
 {
   Telemetry::Gimbal data;
-  vehicle->protocolLayer->getThreadHandle()->lockMSG();
+  lockMSG();
   data = gimbal;
-  vehicle->protocolLayer->getThreadHandle()->freeMSG();
+  freeMSG();
   return data;
 }
 
@@ -301,7 +303,7 @@ Telemetry::Status
 DataBroadcast::getStatus()
 {
   Telemetry::Status data = {0};
-  vehicle->protocolLayer->getThreadHandle()->lockMSG();
+  lockMSG();
   if (vehicle->isLegacyM600())
   {
     // Broadcast data on M600 old firmware. Only flight status is available.
@@ -316,7 +318,7 @@ DataBroadcast::getStatus()
   {
     data = status;
   }
-  vehicle->protocolLayer->getThreadHandle()->freeMSG();
+  freeMSG();
   return data;
 }
 
@@ -324,7 +326,7 @@ Telemetry::Battery
 DataBroadcast::getBatteryInfo()
 {
   Telemetry::Battery data = {0};
-  vehicle->protocolLayer->getThreadHandle()->lockMSG();
+  lockMSG();
   if (vehicle->isLegacyM600())
   {
     // Only capacity is supported on old M600 FW
@@ -339,7 +341,7 @@ DataBroadcast::getBatteryInfo()
   {
     data = battery;
   }
-  vehicle->protocolLayer->getThreadHandle()->freeMSG();
+  freeMSG();
   return data;
 }
 
@@ -347,10 +349,20 @@ Telemetry::SDKInfo
 DataBroadcast::getSDKInfo()
 {
   Telemetry::SDKInfo data;
-  vehicle->protocolLayer->getThreadHandle()->lockMSG();
+  lockMSG();
   data = info;
-  vehicle->protocolLayer->getThreadHandle()->freeMSG();
+  freeMSG();
   return data;
+}
+
+Telemetry::Compass
+DataBroadcast::getCompassData()
+{
+    Telemetry::Compass data;
+    lockMSG();
+    data = compass;
+    freeMSG();
+    return data;
 }
 // clang-format on
 
@@ -377,22 +389,22 @@ DataBroadcast::setBroadcastFreq(uint8_t* dataLenIs16, VehicleCallBack callback,
 
   uint32_t cmd_timeout = 100; // unit is ms
   uint32_t retry_time  = 1;
+  VehicleCallBack cb = NULL;
+  UserData udata = NULL;
 
-  int cbIndex = vehicle->callbackIdIndex();
   if (callback)
   {
-    vehicle->nbCallbackFunctions[cbIndex] = (void*)callback;
-    vehicle->nbUserData[cbIndex]          = userData;
+    cb = callback;
+    udata = userData;
   }
   else
   {
-    vehicle->nbCallbackFunctions[cbIndex] = (void*)setFrequencyCallback;
-    vehicle->nbUserData[cbIndex]          = NULL;
+    cb = setFrequencyCallback;
+    udata = NULL;
   }
-
-  vehicle->protocolLayer->send(
-    2, vehicle->getEncryption(), OpenProtocolCMD::CMDSet::Activation::frequency, dataLenIs16, 16,
-    cmd_timeout, retry_time, true, cbIndex);
+  vehicle->legacyLinker->sendAsync(
+      OpenProtocolCMD::CMDSet::Activation::frequency, (uint8_t *) dataLenIs16,
+      16, cmd_timeout, retry_time, cb, udata);
 }
 
 ACK::ErrorCode
@@ -405,21 +417,15 @@ DataBroadcast::setBroadcastFreq(uint8_t* dataLenIs16, int timeout)
     dataLenIs16[i] = (dataLenIs16[i] > 7 ? 5 : dataLenIs16[i]);
   }
 
-  vehicle->protocolLayer->send(2, vehicle->getEncryption(),
-                               OpenProtocolCMD::CMDSet::Activation::frequency,
-                               dataLenIs16, 16, 100, 1, 0, 0);
-
-  ack = *((ACK::ErrorCode*)getVehicle()->waitForACK(
-    OpenProtocolCMD::CMDSet::Activation::frequency, timeout));
-
-  return ack;
+  return *(ACK::ErrorCode*)vehicle->legacyLinker->sendSync(
+      OpenProtocolCMD::CMDSet::Activation::frequency, dataLenIs16, 16, 100, 1);
 }
 
 void
 DataBroadcast::unpackData(RecvContainer* pRecvFrame)
 {
   uint8_t* pdata = pRecvFrame->recvData.raw_ack_array;
-  vehicle->protocolLayer->getThreadHandle()->lockMSG();
+  lockMSG();
   passFlag = *(uint16_t*)pdata;
   pdata += sizeof(uint16_t);
   // clang-format off
@@ -440,15 +446,16 @@ DataBroadcast::unpackData(RecvContainer* pRecvFrame)
   unpackOne(FLAG_STATUS      ,&status    ,pdata,sizeof(status    ));
   unpackOne(FLAG_BATTERY     ,&battery   ,pdata,sizeof(battery   ));
   unpackOne(FLAG_DEVICE      ,&info      ,pdata,sizeof(info      ));
+  unpackOne(FLAG_COMPASS     ,&compass   ,pdata,sizeof(compass   ));
   // clang-format on
-  vehicle->protocolLayer->getThreadHandle()->freeMSG();
+  freeMSG();
 }
 
 void
 DataBroadcast::unpackM100Data(RecvContainer* pRecvFrame)
 {
   uint8_t* pdata = pRecvFrame->recvData.raw_ack_array;
-  vehicle->protocolLayer->getThreadHandle()->lockMSG();
+  lockMSG();
   passFlag = *(uint16_t*)pdata;
   pdata += sizeof(uint16_t);
   // clang-format off
@@ -465,14 +472,14 @@ DataBroadcast::unpackM100Data(RecvContainer* pRecvFrame)
   unpackOne(FLAG_M100_BATTERY,&legacyBattery     ,pdata,sizeof(legacyBattery   ));
   unpackOne(FLAG_M100_DEVICE ,&info              ,pdata,sizeof(info            ));
   // clang-format on
-  vehicle->protocolLayer->getThreadHandle()->freeMSG();
+  freeMSG();
 }
 
 void
 DataBroadcast::unpackOldM600Data(RecvContainer* pRecvFrame)
 {
   uint8_t* pdata = pRecvFrame->recvData.raw_ack_array;
-  vehicle->protocolLayer->getThreadHandle()->lockMSG();
+  lockMSG();
   passFlag = *(uint16_t*)pdata;
   pdata += sizeof(uint16_t);
   // clang-format off
@@ -491,7 +498,7 @@ DataBroadcast::unpackOldM600Data(RecvContainer* pRecvFrame)
   unpackOne(FLAG_BATTERY     ,&legacyBattery     ,pdata,sizeof(legacyBattery   ));
   unpackOne(FLAG_DEVICE      ,&info              ,pdata,sizeof(info            ));
   // clang-format on
-  vehicle->protocolLayer->getThreadHandle()->freeMSG();
+  freeMSG();
 }
 
 void
@@ -583,6 +590,7 @@ DataBroadcast::setFreqDefaults(uint8_t* freq)
    * 11 - Flight Statusack
    * 12 - Battery Level
    * 13 - Control Information
+   * 14 - Compass Data
    */
   freq[0]  = FREQ_50HZ;
   freq[1]  = FREQ_50HZ;
@@ -598,6 +606,7 @@ DataBroadcast::setFreqDefaults(uint8_t* freq)
   freq[11] = FREQ_10HZ;
   freq[12] = FREQ_1HZ;
   freq[13] = FREQ_1HZ;
+  freq[14] = FREQ_1HZ;
 }
 
 void
@@ -619,6 +628,7 @@ DataBroadcast::setBroadcastFreqToZero()
   freq[11] = FREQ_0HZ;
   freq[12] = FREQ_0HZ;
   freq[13] = FREQ_0HZ;
+  freq[14] = FREQ_0HZ;
   setBroadcastFreq(freq);
 }
 
@@ -668,3 +678,14 @@ DataBroadcast::setBroadcastLength(uint16_t length)
 {
   this->broadcastLength = length;
 }
+
+void
+DataBroadcast::lockMSG() {
+  Platform::instance().mutexLock(m_msgLock);
+}
+
+void
+DataBroadcast::freeMSG() {
+  Platform::instance().mutexUnlock(m_msgLock);
+}
+

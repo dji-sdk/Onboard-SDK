@@ -61,8 +61,7 @@ Camera::videoStop()
 }
 
 void
-Camera::action(const uint8_t cmd[])
-{
+Camera::action(const uint8_t cmd[]) {
   uint8_t sendData = 0;
-  vehicle->protocolLayer->send(0, vehicle->getEncryption(), cmd, &sendData, 1);
+  vehicle->legacyLinker->send(cmd, &sendData, 1);
 }

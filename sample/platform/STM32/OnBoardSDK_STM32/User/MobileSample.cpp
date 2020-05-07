@@ -48,10 +48,10 @@ parseFromMobileCallback(DJI::OSDK::Vehicle*      vehicle,
   switch (mobile_data_id)
   {
     case 2:
-      v->obtainCtrlAuthority(controlAuthorityMobileCallback);
+      v->control->obtainCtrlAuthority(controlAuthorityMobileCallback);
       break;
     case 3:
-      v->releaseCtrlAuthority(controlAuthorityMobileCallback);
+      v->control->releaseCtrlAuthority(controlAuthorityMobileCallback);
       break;
     case 5:
       if(v->getFwVersion() != Version::M100_31)
@@ -88,7 +88,6 @@ controlAuthorityMobileCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
   ack.data = OpenProtocolCMD::ErrorCode::CommonACK::NO_RESPONSE_ERROR;
 
   unsigned char data    = 0x1;
-  int           cbIndex = vehiclePtr->callbackIdIndex();
 
   if (recvFrame.recvInfo.len - OpenProtocol::PackageMin <= sizeof(uint16_t))
   {
@@ -103,12 +102,12 @@ controlAuthorityMobileCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
   if (ack.data == OpenProtocolCMD::ErrorCode::ControlACK::SetControl::
                     OBTAIN_CONTROL_IN_PROGRESS)
   {
-    vehiclePtr->obtainCtrlAuthority(controlAuthorityMobileCallback);
+    vehiclePtr->control->obtainCtrlAuthority(controlAuthorityMobileCallback);
   }
   else if (ack.data == OpenProtocolCMD::ErrorCode::ControlACK::SetControl::
                          RELEASE_CONTROL_IN_PROGRESS)
   {
-    vehiclePtr->releaseCtrlAuthority(controlAuthorityMobileCallback);
+    vehiclePtr->control->releaseCtrlAuthority(controlAuthorityMobileCallback);
   }
   else
   {
@@ -125,7 +124,7 @@ controlAuthorityMobileCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
       mobileAck.cmdID = 0x03;
     }
     mobileAck.ack = static_cast<uint16_t>(ack.data);
-    vehiclePtr->moc->sendDataToMSDK(reinterpret_cast<uint8_t*>(&mobileAck),
+    vehiclePtr->mobileDevice->sendDataToMSDK(reinterpret_cast<uint8_t*>(&mobileAck),
                                     sizeof(mobileAck));
   }
 }
@@ -161,7 +160,7 @@ actionMobileCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
     {
       mobileAck.cmdID = 0x05;
       mobileAck.ack   = static_cast<uint16_t>(ack.data);
-      vehiclePtr->moc->sendDataToMSDK(reinterpret_cast<uint8_t*>(&mobileAck),
+      vehiclePtr->mobileDevice->sendDataToMSDK(reinterpret_cast<uint8_t*>(&mobileAck),
                                       sizeof(mobileAck));
     }
     else if (recvFrame.recvInfo.buf[2] == Control::FlightCommand::stopMotor ||
@@ -170,7 +169,7 @@ actionMobileCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
     {
 			mobileAck.cmdID = 0x06;
       mobileAck.ack   = static_cast<uint16_t>(ack.data);
-      vehiclePtr->moc->sendDataToMSDK(reinterpret_cast<uint8_t*>(&mobileAck),
+      vehiclePtr->mobileDevice->sendDataToMSDK(reinterpret_cast<uint8_t*>(&mobileAck),
                                       sizeof(mobileAck));
     }
   }

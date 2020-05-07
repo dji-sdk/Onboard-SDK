@@ -30,9 +30,17 @@
 #ifndef DJI_DATASUBSCRIPTION_H
 #define DJI_DATASUBSCRIPTION_H
 
-#include "dji_open_protocol.hpp"
+#include "dji_log.hpp"
 #include "dji_telemetry.hpp"
 #include "dji_vehicle_callback.hpp"
+
+#ifdef __linux__
+#include <cstring>
+#elif STM32
+//! handle array of characters
+#include <stdlib.h>
+#include <string.h>
+#endif
 
 namespace DJI
 {
@@ -303,18 +311,18 @@ public: // public methods
 
     void* p = Telemetry::TopicDataBase[topic].latest;
 
-    protocol->getThreadHandle()->lockMSG();
+    lockMSG();
     if (p)
     {
       ans = *reinterpret_cast<typename Telemetry::TypeMap<topic>::type*>(p);
-      protocol->getThreadHandle()->freeMSG();
+      freeMSG();
       return ans;
     }
     else
     {
       DERROR("Topic 0x%X value memory not initialized, return default", topic);
     }
-    protocol->getThreadHandle()->freeMSG();
+    freeMSG();
 
     memset(&ans, 0xFF, sizeof(ans));
     return ans;
@@ -326,12 +334,14 @@ public: // public variables
 
 private: // private variables
   Vehicle*            vehicle;
-  OpenProtocol*       protocol;
   SubscriptionPackage package[MAX_NUMBER_OF_PACKAGE];
 
 private: // private methods
   void extractOnePackage(RecvContainer*       pRcvContainer,
                          SubscriptionPackage* pkg);
+  T_OsdkMutexHandle m_msgLock;
+  void lockMSG();
+  void freeMSG();
 };
 }
 }

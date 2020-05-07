@@ -50,7 +50,7 @@ TopicInfo Telemetry::TopicDataBase[] =
   {TOPIC_ANGULAR_RATE_RAW          , UID_ANGULAR_RATE_RAW         , sizeof(TypeMap<TOPIC_ANGULAR_RATE_RAW        >::type), 400,   0,  255,  0},
   {TOPIC_ALTITUDE_FUSIONED         , UID_ALTITUDE_FUSIONED        , sizeof(TypeMap<TOPIC_ALTITUDE_FUSIONED       >::type), 200,   0,  255,  0},
   {TOPIC_ALTITUDE_BAROMETER        , UID_ALTITUDE_BAROMETER       , sizeof(TypeMap<TOPIC_ALTITUDE_BAROMETER      >::type), 200,   0,  255,  0},
-  {TOPIC_HEIGHT_HOMEPOINT          , UID_HEIGHT_HOMEPOINT         , sizeof(TypeMap<TOPIC_HEIGHT_HOMEPOINT        >::type), 1  ,   0,  255,  0},
+  {TOPIC_ALTITUDE_OF_HOMEPOINT     , UID_ALTITUDE_OF_HOMEPOINT    , sizeof(TypeMap<TOPIC_ALTITUDE_OF_HOMEPOINT   >::type), 1  ,   0,  255,  0},
   {TOPIC_HEIGHT_FUSION             , UID_HEIGHT_FUSION            , sizeof(TypeMap<TOPIC_HEIGHT_FUSION           >::type), 100,   0,  255,  0},
   {TOPIC_GPS_FUSED                 , UID_GPS_FUSED                , sizeof(TypeMap<TOPIC_GPS_FUSED               >::type), 50 ,   0,  255,  0}, //todo: check frequency
   {TOPIC_GPS_DATE                  , UID_GPS_DATE                 , sizeof(TypeMap<TOPIC_GPS_DATE                >::type), 5  ,   0,  255,  0}, //todo: check frequency
@@ -86,6 +86,8 @@ TopicInfo Telemetry::TopicDataBase[] =
   {TOPIC_AVOID_DATA                , UID_AVOID_DATA               , sizeof(TypeMap<TOPIC_AVOID_DATA              >::type), 100,   0,  255,  0},
   {TOPIC_HOME_POINT_SET_STATUS     , UID_HOME_POINT_SET_STATUS    , sizeof(TypeMap<TOPIC_HOME_POINT_SET_STATUS   >::type), 50  ,  0,  255,  0},
   {TOPIC_HOME_POINT_INFO           , UID_HOME_POINT_INFO          , sizeof(TypeMap<TOPIC_HOME_POINT_INFO         >::type), 50  ,  0,  255,  0},
+  {TOPIC_DUAL_GIMBAL_DATA          , UID_DUAL_GIMBAL_FULL_DATA    , sizeof(TypeMap<TOPIC_DUAL_GIMBAL_DATA        >::type), 50  ,  0,  255,  0},
+  {TOPIC_THREE_GIMBAL_DATA         , UID_THREE_GIMBAL_FULL_DATA   , sizeof(TypeMap<TOPIC_THREE_GIMBAL_DATA       >::type), 50  ,  0,  255,  0},
 };
 // clang-format on
 
@@ -96,7 +98,6 @@ TopicInfo Telemetry::TopicDataBase[] =
  */
 DataSubscription::DataSubscription(Vehicle* vehiclePtr)
   : vehicle(vehiclePtr)
-  , protocol(vehicle->protocolLayer)
 {
   for (int i = 0; i < MAX_NUMBER_OF_PACKAGE; i++)
   {
@@ -105,6 +106,7 @@ DataSubscription::DataSubscription(Vehicle* vehiclePtr)
 
   subscriptionDataDecodeHandler.callback = decodeCallback;
   subscriptionDataDecodeHandler.userData = this;
+  Platform::instance().mutexCreate(&m_msgLock);
 }
 
 DataSubscription::~DataSubscription()
@@ -200,14 +202,12 @@ void
 DataSubscription::verify()
 {
   uint32_t data = DBVersion;
+  VehicleCallBack cb = verifyCallback;
+  UserData udata = NULL;
 
-  int cbIndex                           = vehicle->callbackIdIndex();
-  vehicle->nbCallbackFunctions[cbIndex] = (void*)verifyCallback;
-  vehicle->nbUserData[cbIndex]          = NULL;
-
-  protocol->send(2, vehicle->getEncryption(),
-                 OpenProtocolCMD::CMDSet::Subscribe::versionMatch, &data,
-                 sizeof(data), 500, 2, true, cbIndex);
+  vehicle->legacyLinker->sendAsync(
+      OpenProtocolCMD::CMDSet::Subscribe::versionMatch, &data, sizeof(data),
+      500, 2, cb, udata);
 }
 
 void
@@ -235,12 +235,9 @@ DataSubscription::verify(int timeout)
   ACK::ErrorCode ack;
   uint32_t       data = DBVersion;
 
-  protocol->send(2, vehicle->getEncryption(),
-                 OpenProtocolCMD::CMDSet::Subscribe::versionMatch, &data,
-                 sizeof(data), 500, 2, NULL, 0);
-
-  ack = *((ACK::ErrorCode*)getVehicle()->waitForACK(
-    OpenProtocolCMD::CMDSet::Subscribe::versionMatch, timeout));
+  ack = *(ACK::ErrorCode *) vehicle->legacyLinker->sendSync(
+      OpenProtocolCMD::CMDSet::Subscribe::versionMatch, &data, sizeof(data),
+      timeout * 1000 / 2, 2);
 
   if (!ACK::getError(ack))
   {
@@ -276,14 +273,12 @@ DataSubscription::startPackage(int packageID)
   package[packageID].allocateDataBuffer();
 
   // Register Callback
-  int cbIndex = vehicle->callbackIdIndex();
-  vehicle->nbCallbackFunctions[cbIndex] =
-    (void*)DataSubscription::addPackageCallback;
-  vehicle->nbUserData[cbIndex] = &package[packageID];
+  VehicleCallBack cb = DataSubscription::addPackageCallback;
+  UserData udata = &package[packageID];
 
-  protocol->send(2, vehicle->getEncryption(),
-                 OpenProtocolCMD::CMDSet::Subscribe::addPackage, buffer,
-                 bufferLength, 500, 1, true, cbIndex);
+  vehicle->legacyLinker->sendAsync(
+      OpenProtocolCMD::CMDSet::Subscribe::addPackage, buffer, bufferLength, 500,
+      1, cb, udata);
 }
 
 void
@@ -343,12 +338,9 @@ DataSubscription::startPackage(int packageID, int timeout)
   int bufferLength = package[packageID].serializePackageInfo(buffer);
   package[packageID].allocateDataBuffer();
 
-  protocol->send(2, vehicle->getEncryption(),
-                 OpenProtocolCMD::CMDSet::Subscribe::addPackage, buffer,
-                 bufferLength, 500, 1, NULL, 0);
-
-  ack = *((ACK::ErrorCode*)getVehicle()->waitForACK(
-    OpenProtocolCMD::CMDSet::Subscribe::addPackage, timeout));
+  ack = *(ACK::ErrorCode *) vehicle->legacyLinker->sendSync(
+      OpenProtocolCMD::CMDSet::Subscribe::addPackage, buffer, bufferLength,
+      timeout * 1000 / 2, 2);
 
   DSTATUS("Start package %d result: %d.",
           package[packageID].getInfo().packageID, ack.data);
@@ -389,7 +381,7 @@ DataSubscription::extractOnePackage(RecvContainer*       pRcvContainer,
    * TODO: Handle the time stamp field if it exists
    */
 
-  protocol->getThreadHandle()->lockMSG();
+  lockMSG();
   if (pkg->getDataBuffer())
   {
     // TODO: the length needs to come from the header, not package
@@ -407,22 +399,19 @@ DataSubscription::extractOnePackage(RecvContainer*       pRcvContainer,
       DDEBUG("This was due to unclean quit of the program without restarting the drone.\n");
     }
   }
-  protocol->getThreadHandle()->freeMSG();
+  freeMSG();
 }
 
 void
 DataSubscription::removePackage(int packageID)
 {
   uint8_t data = packageID;
+  VehicleCallBack cb = DataSubscription::removePackageCallback;
+  UserData udata = &package[packageID];
 
-  int cbIndex = vehicle->callbackIdIndex();
-  vehicle->nbCallbackFunctions[cbIndex] =
-    (void*)DataSubscription::removePackageCallback;
-  vehicle->nbUserData[cbIndex] = &package[packageID];
-
-  protocol->send(2, vehicle->getEncryption(),
-                 OpenProtocolCMD::CMDSet::Subscribe::removePackage, &data,
-                 sizeof(data), 500, 1, true, cbIndex);
+  vehicle->legacyLinker->sendAsync(
+      OpenProtocolCMD::CMDSet::Subscribe::removePackage, &data, sizeof(data),
+      500, 1, cb, udata);
 }
 
 void
@@ -459,12 +448,9 @@ DataSubscription::removePackage(int packageID, int timeout)
   ACK::ErrorCode ack;
   uint8_t        data = packageID;
 
-  protocol->send(2, vehicle->getEncryption(),
-                 OpenProtocolCMD::CMDSet::Subscribe::removePackage, &data,
-                 sizeof(data), 500, 1, NULL, 0);
-
-  ack = *((ACK::ErrorCode*)getVehicle()->waitForACK(
-    OpenProtocolCMD::CMDSet::Subscribe::removePackage, timeout));
+  ack = *(ACK::ErrorCode *) vehicle->legacyLinker->sendSync(
+      OpenProtocolCMD::CMDSet::Subscribe::removePackage, &data, sizeof(data),
+      timeout * 1000 / 2, 2);
 
   if (!ACK::getError(ack))
   {
@@ -497,7 +483,7 @@ void DataSubscription::removeLeftOverPackages()
           DERROR("Package %d was not properly removed due to unclean quit. Please power cycle the drone...", packageID);
         }
         ack = removePackage(packageID, 1);
-        if(!ACK::getError(ack))
+        if(ACK::getError(ack) != ACK::SUCCESS)
         {
           DERROR("failed to remove package %d", packageID);
         }
@@ -525,14 +511,11 @@ void DataSubscription::removeAllExistingPackages()
 void DataSubscription::reset()
 {
   uint8_t data = 0;
-  int cbIndex = vehicle->callbackIdIndex();
-  vehicle->nbCallbackFunctions[cbIndex] =
-          (void*)DataSubscription::resetCallback;
-  vehicle->nbUserData[cbIndex] = NULL;
+  VehicleCallBack cb = DataSubscription::resetCallback;
+  UserData udata = NULL;
 
-  protocol->send(2, vehicle->getEncryption(),
-                 OpenProtocolCMD::CMDSet::Subscribe::reset, &data,
-                 sizeof(data), 500, 1, true, cbIndex);
+  vehicle->legacyLinker->sendAsync(OpenProtocolCMD::CMDSet::Subscribe::reset,
+                                   &data, sizeof(data), 500, 1, cb, udata);
 }
 
 void
@@ -557,13 +540,11 @@ ACK::ErrorCode
 DataSubscription::reset(int timeout)
 {
   uint8_t data = 0;
-  protocol->send(2, vehicle->getEncryption(),
-                 OpenProtocolCMD::CMDSet::Subscribe::reset, &data,
-                 sizeof(data), 500, 1, NULL, 0);
   ACK::ErrorCode ack;
 
-  ack = *((ACK::ErrorCode*)getVehicle()->waitForACK(
-          OpenProtocolCMD::CMDSet::Subscribe::reset, timeout));
+  ack = *(ACK::ErrorCode *) vehicle->legacyLinker->sendSync(
+      OpenProtocolCMD::CMDSet::Subscribe::reset, &data, sizeof(data),
+      timeout * 1000, 1);
 
   if (!ACK::getError(ack))
   {
@@ -575,6 +556,16 @@ DataSubscription::reset(int timeout)
   }
 
   return ack;
+}
+
+void
+DataSubscription::lockMSG() {
+  Platform::instance().mutexLock(m_msgLock);
+}
+
+void
+DataSubscription::freeMSG() {
+  Platform::instance().mutexUnlock(m_msgLock);
 }
 
 //////////////////////
@@ -815,4 +806,3 @@ SubscriptionPackage::packageRemoveSuccessHandler()
 
   setOccupied(false);
 }
-

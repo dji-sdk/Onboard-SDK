@@ -47,12 +47,13 @@ class Version
 public:
   typedef uint32_t FirmWare;
 
-  constexpr static const char* M100   = "M100";
-  constexpr static const char* N3     = "N3";
-  constexpr static const char* A3     = "A3";
-  constexpr static const char* M210   = "PM410";
-  constexpr static const char* M210V2 = "PM420";
-  constexpr static const char* M600   = "PM820";
+  static const char M100[];
+  static const char N3[];
+  static const char A3[];
+  static const char M210[];
+  static const char M210V2[];
+  static const char M300[];
+  static const char M600[];
 
   typedef struct VersionData
   {
@@ -114,6 +115,7 @@ typedef struct CMD_SETSupportMatrix
   uint8_t           cmdSet;
   Version::FirmWare fwVersion;
 } CMD_SETSupportMatrix;
+
 } // namespace DJI
 } // namespace OSDK
 

@@ -30,10 +30,6 @@
 
 #include "mobile_sample.hpp"
 
-#define TEST_MOC 1
-#define TEST_MOBILE_DEVICE 2
-#define TEST_BOTH_MOC_MD 3
-
 using namespace DJI;
 using namespace DJI::OSDK;
 
@@ -43,18 +39,6 @@ uint16_t mobileDataID_glob = 0;
 // command state
 bool keepLoopRunning = true;
 
-// GLOBAL: In 3.7 release, to compatible with users existing code, we have moc
-// and mobielDevice both object exists in vehicle class.
-// 1 means testing moc, 2 means testing mobileDevice, and 3 means testing both
-// of them.
-int test_moc_mobileDevice = 0;
-
-void
-setTestSuite(int testSuiteNumber)
-{
-  test_moc_mobileDevice = testSuiteNumber;
-}
-
 void
 parseFromMobileCallback(Vehicle* vehicle, RecvContainer recvFrame,
                         UserData userData)
@@ -63,8 +47,9 @@ parseFromMobileCallback(Vehicle* vehicle, RecvContainer recvFrame,
   LinuxSetup* linuxEnvironment = (LinuxSetup*)userData;
   uint16_t    mobile_data_id;
   mobile_data_id =
-    *(reinterpret_cast<uint16_t*>(&recvFrame.recvData.raw_ack_array));
+      *(reinterpret_cast<uint16_t*>(&recvFrame.recvData.raw_ack_array));
 
+  DSTATUS("receive mobile_data_id = %d\n", mobile_data_id);
   // Now, let's set up some variables that don't cross case initializations
   bool    coreMissionStatus;
   uint8_t wayptPolygonSides;
@@ -77,29 +62,29 @@ parseFromMobileCallback(Vehicle* vehicle, RecvContainer recvFrame,
       sendDroneVersionFromCache(vehicle);
       break;
     case 2:
-      vehicle->obtainCtrlAuthority(controlAuthorityMobileCallback);
+      vehicle->control->obtainCtrlAuthority(controlAuthorityMobileCallback, &mobile_data_id);
       break;
     case 3:
-      vehicle->releaseCtrlAuthority(controlAuthorityMobileCallback);
+      vehicle->control->releaseCtrlAuthority(controlAuthorityMobileCallback, &mobile_data_id);
       break;
     case 4:
       vehicle->activate(linuxEnvironment->getActivateData(),
                         activateMobileCallback);
       break;
     case 5:
-      vehicle->control->armMotors(actionMobileCallback);
+      vehicle->control->armMotors(actionMobileCallback, &mobile_data_id);
       break;
     case 6:
-      vehicle->control->disArmMotors(actionMobileCallback);
+      vehicle->control->disArmMotors(actionMobileCallback, &mobile_data_id);
       break;
     case 7:
-      vehicle->control->takeoff(actionMobileCallback);
+      vehicle->control->takeoff(actionMobileCallback, &mobile_data_id);
       break;
     case 8:
-      vehicle->control->land(actionMobileCallback);
+      vehicle->control->land(actionMobileCallback, &mobile_data_id);
       break;
     case 9:
-      vehicle->control->goHome(actionMobileCallback);
+      vehicle->control->goHome(actionMobileCallback, &mobile_data_id);
       break;
     case 10:
       vehicle->camera->shootPhoto();
@@ -151,7 +136,7 @@ parseFromMobileCallback2(Vehicle* vehicle, RecvContainer recvFrame,
   LinuxSetup* linuxEnvironment = (LinuxSetup*)userData;
   uint16_t    mobile_data_id;
   mobile_data_id =
-    *(reinterpret_cast<uint16_t*>(&recvFrame.recvData.raw_ack_array));
+      *(reinterpret_cast<uint16_t*>(&recvFrame.recvData.raw_ack_array));
 
   std::cout << "Received the mobile data ID is " << mobile_data_id << std::endl;
 }
@@ -161,42 +146,14 @@ parseFromMobileCallback2(Vehicle* vehicle, RecvContainer recvFrame,
 void
 setFromMSDKCallback(Vehicle* vehicle, LinuxSetup* linuxEnvironment)
 {
-  if (test_moc_mobileDevice == TEST_MOC)
-  {
-    vehicle->moc->setFromMSDKCallback(parseFromMobileCallback,
-                                      linuxEnvironment);
-  }
-  else if (test_moc_mobileDevice == TEST_MOBILE_DEVICE)
-  {
-    vehicle->mobileDevice->setFromMSDKCallback(parseFromMobileCallback,
-                                               linuxEnvironment);
-  }
-  else if (test_moc_mobileDevice == TEST_BOTH_MOC_MD)
-  {
-    vehicle->mobileDevice->setFromMSDKCallback(parseFromMobileCallback,
-                                               linuxEnvironment);
-    vehicle->moc->setFromMSDKCallback(parseFromMobileCallback2,
-                                      linuxEnvironment);
-  }
+  vehicle->mobileDevice->setFromMSDKCallback(parseFromMobileCallback,
+                                             linuxEnvironment);
 }
 
 void
 sendDataToMSDK(Vehicle* vehicle, uint8_t* data, uint8_t len)
 {
-  if (test_moc_mobileDevice == TEST_MOC)
-  {
-    vehicle->moc->sendDataToMSDK(data, len);
-  }
-  else if (test_moc_mobileDevice == TEST_MOBILE_DEVICE)
-  {
-    vehicle->mobileDevice->sendDataToMSDK(data, len);
-  }
-  else if (test_moc_mobileDevice == TEST_BOTH_MOC_MD)
-  {
-    vehicle->mobileDevice->sendDataToMSDK(data, len);
-    sleep(0.5);
-    vehicle->moc->sendDataToMSDK(data, len);
-  }
+  vehicle->mobileDevice->sendDataToMSDK(data, len);
 }
 
 bool
@@ -225,11 +182,11 @@ void
 controlAuthorityMobileCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
                                UserData userData)
 {
+  if (!userData) return;
+
+  uint16_t mobileCMD = *(uint16_t *)userData;
   ACK::ErrorCode ack;
   ack.data = OpenProtocolCMD::ErrorCode::CommonACK::NO_RESPONSE_ERROR;
-
-  unsigned char data    = 0x1;
-  int           cbIndex = vehiclePtr->callbackIdIndex();
 
   if (recvFrame.recvInfo.len - OpenProtocol::PackageMin <= sizeof(uint16_t))
   {
@@ -247,13 +204,13 @@ controlAuthorityMobileCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
         OpenProtocolCMD::ControlACK::SetControl::OBTAIN_CONTROL_IN_PROGRESS)
     {
       ACK::getErrorCodeMessage(ack, __func__);
-      vehiclePtr->obtainCtrlAuthority(controlAuthorityMobileCallback);
+      vehiclePtr->control->obtainCtrlAuthority(controlAuthorityMobileCallback);
     }
     else if (ack.data == OpenProtocolCMD::ControlACK::SetControl::
-                           RELEASE_CONTROL_IN_PROGRESS)
+    RELEASE_CONTROL_IN_PROGRESS)
     {
       ACK::getErrorCodeMessage(ack, __func__);
-      vehiclePtr->releaseCtrlAuthority(controlAuthorityMobileCallback);
+      vehiclePtr->control->releaseCtrlAuthority(controlAuthorityMobileCallback);
     }
     else
     {
@@ -265,15 +222,7 @@ controlAuthorityMobileCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
     // We have a success case.
     // Send this data to mobile
     AckReturnToMobile mobileAck;
-    // Find out which was called: obtain or release
-    if (recvFrame.recvInfo.buf[2] == ACK::OBTAIN_CONTROL)
-    {
-      mobileAck.cmdID = 0x02;
-    }
-    else if (recvFrame.recvInfo.buf[2] == ACK::RELEASE_CONTROL)
-    {
-      mobileAck.cmdID = 0x03;
-    }
+    mobileAck.cmdID = mobileCMD;
     mobileAck.ack = static_cast<uint16_t>(ack.data);
     sendDataToMSDK(vehiclePtr, reinterpret_cast<uint8_t*>(&mobileAck),
                    sizeof(mobileAck));
@@ -286,6 +235,9 @@ void
 actionMobileCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
                      UserData userData)
 {
+  if (!userData) return;
+
+  uint16_t mobileCMD = *(uint16_t *)userData;
   ACK::ErrorCode ack;
 
   if (recvFrame.recvInfo.len - OpenProtocol::PackageMin <= sizeof(uint16_t))
@@ -305,92 +257,12 @@ actionMobileCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
 
     AckReturnToMobile mobileAck;
     const uint8_t     cmd[] = { recvFrame.recvInfo.cmd_set,
-                            recvFrame.recvInfo.cmd_id };
+                                recvFrame.recvInfo.cmd_id };
 
-    // startMotor supported in FW version >= 3.3
-    // setArm supported only on Matrice 100 && M600 old FW
-    if (vehiclePtr->isM100() || vehiclePtr->isLegacyM600())
-    {
-      if ((memcmp(cmd, OpenProtocolCMD::CMDSet::Control::setArm, sizeof(cmd)) &&
-           recvFrame.recvInfo.buf[2] == true))
-      {
-        mobileAck.cmdID = 0x05;
-        mobileAck.ack   = static_cast<uint16_t>(ack.data);
-        sendDataToMSDK(vehiclePtr, reinterpret_cast<uint8_t*>(&mobileAck),
-                       sizeof(mobileAck));
-      }
-      else if ((memcmp(cmd, OpenProtocolCMD::CMDSet::Control::setArm,
-                       sizeof(cmd)) &&
-                recvFrame.recvInfo.buf[2] == false))
-      {
-        mobileAck.cmdID = 0x06;
-        mobileAck.ack   = static_cast<uint16_t>(ack.data);
-        sendDataToMSDK(vehiclePtr, reinterpret_cast<uint8_t*>(&mobileAck),
-                       sizeof(mobileAck));
-      }
-      else if (recvFrame.recvInfo.buf[2] ==
-               Control::FlightCommand::LegacyCMD::takeOff)
-      {
-        mobileAck.cmdID = 0x07;
-        mobileAck.ack   = static_cast<uint16_t>(ack.data);
-        sendDataToMSDK(vehiclePtr, reinterpret_cast<uint8_t*>(&mobileAck),
-                       sizeof(mobileAck));
-      }
-      else if (recvFrame.recvInfo.buf[2] ==
-               Control::FlightCommand::LegacyCMD::landing)
-      {
-        mobileAck.cmdID = 0x08;
-        mobileAck.ack   = static_cast<uint16_t>(ack.data);
-        sendDataToMSDK(vehiclePtr, reinterpret_cast<uint8_t*>(&mobileAck),
-                       sizeof(mobileAck));
-      }
-      else if (recvFrame.recvInfo.buf[2] ==
-               Control::FlightCommand::LegacyCMD::goHome)
-      {
-        mobileAck.cmdID = 0x09;
-        mobileAck.ack   = static_cast<uint16_t>(ack.data);
-        sendDataToMSDK(vehiclePtr, reinterpret_cast<uint8_t*>(&mobileAck),
-                       sizeof(mobileAck));
-      }
-    }
-    else // Newer firmware
-    {
-      if (recvFrame.recvInfo.buf[2] == Control::FlightCommand::startMotor)
-      {
-        mobileAck.cmdID = 0x05;
-        mobileAck.ack   = static_cast<uint16_t>(ack.data);
-        sendDataToMSDK(vehiclePtr, reinterpret_cast<uint8_t*>(&mobileAck),
-                       sizeof(mobileAck));
-      }
-      else if (recvFrame.recvInfo.buf[2] == Control::FlightCommand::stopMotor)
-      {
-        mobileAck.cmdID = 0x06;
-        mobileAck.ack   = static_cast<uint16_t>(ack.data);
-        sendDataToMSDK(vehiclePtr, reinterpret_cast<uint8_t*>(&mobileAck),
-                       sizeof(mobileAck));
-      }
-      else if (recvFrame.recvInfo.buf[2] == Control::FlightCommand::takeOff)
-      {
-        mobileAck.cmdID = 0x07;
-        mobileAck.ack   = static_cast<uint16_t>(ack.data);
-        sendDataToMSDK(vehiclePtr, reinterpret_cast<uint8_t*>(&mobileAck),
-                       sizeof(mobileAck));
-      }
-      else if (recvFrame.recvInfo.buf[2] == Control::FlightCommand::landing)
-      {
-        mobileAck.cmdID = 0x08;
-        mobileAck.ack   = static_cast<uint16_t>(ack.data);
-        sendDataToMSDK(vehiclePtr, reinterpret_cast<uint8_t*>(&mobileAck),
-                       sizeof(mobileAck));
-      }
-      else if (recvFrame.recvInfo.buf[2] == Control::FlightCommand::goHome)
-      {
-        mobileAck.cmdID = 0x09;
-        mobileAck.ack   = static_cast<uint16_t>(ack.data);
-        sendDataToMSDK(vehiclePtr, reinterpret_cast<uint8_t*>(&mobileAck),
-                       sizeof(mobileAck));
-      }
-    }
+    mobileAck.cmdID = mobileCMD;
+    mobileAck.ack   = static_cast<uint16_t>(ack.data);
+    sendDataToMSDK(vehiclePtr, reinterpret_cast<uint8_t*>(&mobileAck),
+                   sizeof(mobileAck));
   }
   else
   {
@@ -416,7 +288,7 @@ sendDroneVersionFromCache(DJI::OSDK::Vehicle* vehiclePtr)
 }
 
 VersionMobilePacket::VersionMobilePacket(uint16_t cmdID, char* versionPack)
-  : version{ 0 }
+    : version{ 0 }
 {
   this->cmdID = cmdID;
   memcpy(this->version, versionPack, sizeof(version) / sizeof(version[0]));
@@ -444,7 +316,7 @@ activateMobileCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
 
     if (ACK::getError(ack) &&
         ack_data ==
-          OpenProtocolCMD::ErrorCode::ActivationACK::OSDK_VERSION_ERROR)
+            OpenProtocolCMD::ErrorCode::ActivationACK::OSDK_VERSION_ERROR)
     {
       DERROR("SDK version did not match\n");
       vehiclePtr->getDroneVersion();
@@ -458,13 +330,13 @@ activateMobileCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
     DERROR("ACK is exception, sequence %d\n", recvFrame.recvInfo.seqNumber);
     return;
   }
-
+/*
   if (ack_data == OpenProtocolCMD::ErrorCode::ActivationACK::SUCCESS &&
       vehiclePtr->getAccountData().encKey)
   {
-    vehiclePtr->protocolLayer->setKey(vehiclePtr->getAccountData().encKey);
+    vehiclePtr->linker->setKey(vehiclePtr->getAccountData().encKey);
   }
-
+*/
   // Now, we have to send the ACK back to mobile
   AckReturnToMobile mobileAck;
 
@@ -497,7 +369,7 @@ runPositionControlSample(Vehicle* vehicle)
   positionControlError &= monitoredLanding(vehicle);
 
   return (!positionControlError); // We want to return success status, not error
-                                  // status
+  // status
 }
 
 pthread_t
@@ -550,22 +422,17 @@ mobileSamplePoll(void* vehiclePtr)
         sendAckToMobile(vehicle, 0x3E, coreMissionStatus);
         mobileDataID_glob = 0;
         break;
-      case 0x40:
-        coreMissionStatus = gimbalCameraControl(vehicle);
-        sendAckToMobile(vehicle, 0x40, coreMissionStatus);
-        mobileDataID_glob = 0;
-        break;
       case 0x41:
         wayptPolygonSides = 6;
         coreMissionStatus =
-          runWaypointMission(vehicle, wayptPolygonSides, responseTimeout);
+            runWaypointMission(vehicle, wayptPolygonSides, responseTimeout);
         sendAckToMobile(vehicle, 0x41, coreMissionStatus);
         mobileDataID_glob = 0;
         break;
       case 0x42:
         hotptInitRadius = 10;
         coreMissionStatus =
-          runHotpointMission(vehicle, hotptInitRadius, responseTimeout);
+            runHotpointMission(vehicle, hotptInitRadius, responseTimeout);
         sendAckToMobile(vehicle, 0x42, coreMissionStatus);
         mobileDataID_glob = 0;
         break;

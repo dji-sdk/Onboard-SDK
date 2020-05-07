@@ -38,7 +38,6 @@
 #include <dji_linux_helpers.hpp>
 
 // Other samples for missions implementation
-#include <camera_gimbal_sample.hpp>
 #include <flight_control_sample.hpp>
 #include <mission_sample.hpp>
 
@@ -99,7 +98,5 @@ void sendAckToMobile(DJI::OSDK::Vehicle* vehicle, uint16_t cmdID,
 
 pthread_t setupSamplePollingThread(DJI::OSDK::Vehicle* vehicle);
 void* mobileSamplePoll(void* vehiclePtr);
-
-void setTestSuite(int testSuiteNumber);
 
 #endif // DJIOSDK_MOBILESAMPLE_HPP

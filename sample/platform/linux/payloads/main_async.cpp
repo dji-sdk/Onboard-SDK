@@ -30,6 +30,7 @@
 
 #include <dji_linux_helpers.hpp>
 #include "camera_manager_async_sample.hpp"
+#include "gimbal_manager_async_sample.hpp"
 
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
@@ -104,34 +105,24 @@ void callbackToSetExposureCompensation(ErrorCode::ErrorCodeType retCode,
 }
 
 int main(int argc, char **argv) {
+  /*! Setup the OSDK: Read config file, create vehicle, activate. */
   LinuxSetup linuxEnvironment(argc, argv);
   Vehicle *vehicle = linuxEnvironment.getVehicle();
   if (vehicle == NULL) {
     std::cout << "Vehicle not initialized, exiting. \n";
     return -1;
   }
-  std::string sampleCase = linuxEnvironment.getEnvironment()->getSampleCase();
 
-  /*! init camera modules for cameraManager */
-  ErrorCode::ErrorCodeType ret = vehicle->cameraManager->initCameraModule(
-      PAYLOAD_INDEX_0, "Sample_camera_1");
-  if (ret != ErrorCode::SysCommonErr::Success) {
-    DERROR("Init Camera module Sample_camera_1 failed.");
-    ErrorCode::printErrorCodeMsg(ret);
-  }
-
-  ret = vehicle->cameraManager->initCameraModule(PAYLOAD_INDEX_1,
-                                                 "Sample_camera_2");
-  if (ret != ErrorCode::SysCommonErr::Success) {
-    DERROR("Init Camera module Sample_camera_2 failed.");
-    ErrorCode::printErrorCodeMsg(ret);
-  }
-
+  /*! Create an example object, which users can modify according to their own needs */
   CameraManagerAsyncSample *p = new CameraManagerAsyncSample(vehicle);
+  GimbalManagerAsyncSample *g = new GimbalManagerAsyncSample(vehicle);
+
+  /*! check whether enviroment passing valid running parameter or not */
   bool sampleCaseValidFlag = false;
   char inputChar = 0;
+  std::string sampleCase = linuxEnvironment.getEnvironment()->getSampleCase();
   if (sampleCase.size() == 1) {
-    if ((sampleCase <= "l") && (sampleCase >= "a")) {
+    if ((sampleCase <= "n") && (sampleCase >= "a")) {
       inputChar = sampleCase[0];
     } else {
       inputChar = 0;
@@ -169,6 +160,10 @@ int main(int argc, char **argv) {
         << "| [k] Shoot Interval photo Sample                                |"
         << std::endl
         << "| [l] Record video Sample                                        |"
+        << std::endl
+        << "| [m] Rotate gimbal sample                                       |"
+        << std::endl
+        << "| [n] Reset gimbal sample                                        |"
         << std::endl
         << "| [q] Quit                                                       |"
         << std::endl;
@@ -273,6 +268,38 @@ int main(int argc, char **argv) {
         p->stopRecordVideoAsyncSample(PAYLOAD_INDEX_0, asyncSampleCallBack,
                                       (UserData) "stop recording video");
         break;
+      case 'm':
+        DSTATUS("Current gimbal %d angle (p,r,y) = (%0.2f°, %0.2f°, %0.2f°)", PAYLOAD_INDEX_0,
+                g->getGimbalData(PAYLOAD_INDEX_0).pitch,
+                g->getGimbalData(PAYLOAD_INDEX_0).roll,
+                g->getGimbalData(PAYLOAD_INDEX_0).yaw);
+        GimbalModule::Rotation rotation;
+        rotation.roll = 0.0f;
+        rotation.pitch = 25.0f;
+        rotation.yaw = 90.0f;
+        rotation.rotationMode = 0;
+        rotation.time = 0.5;
+        g->rotateAsyncSample(PAYLOAD_INDEX_0, rotation, asyncSampleCallBack,
+                             (UserData) "start to rotate Gimbal");
+        sleep(2);
+        DSTATUS("Current gimbal %d angle (p,r,y) = (%0.2f°, %0.2f°, %0.2f°)", PAYLOAD_INDEX_0,
+                g->getGimbalData(PAYLOAD_INDEX_0).pitch,
+                g->getGimbalData(PAYLOAD_INDEX_0).roll,
+                g->getGimbalData(PAYLOAD_INDEX_0).yaw);
+        break;
+      case 'n':
+        DSTATUS("Current gimbal %d angle (p,r,y) = (%0.2f°, %0.2f°, %0.2f°)", PAYLOAD_INDEX_0,
+                g->getGimbalData(PAYLOAD_INDEX_0).pitch,
+                g->getGimbalData(PAYLOAD_INDEX_0).roll,
+                g->getGimbalData(PAYLOAD_INDEX_0).yaw);
+        g->resetAsyncSample(PAYLOAD_INDEX_0, asyncSampleCallBack,
+                            (UserData) "start to reset Gimbal");
+        sleep(2);
+        DSTATUS("Current gimbal %d angle (p,r,y) = (%0.2f°, %0.2f°, %0.2f°)", PAYLOAD_INDEX_0,
+                g->getGimbalData(PAYLOAD_INDEX_0).pitch,
+                g->getGimbalData(PAYLOAD_INDEX_0).roll,
+                g->getGimbalData(PAYLOAD_INDEX_0).yaw);
+        break;
       case 'q':
         DSTATUS("Quit now ...");
         delete p;
@@ -287,5 +314,6 @@ int main(int argc, char **argv) {
     inputChar = 0;
   }
   delete p;
+  delete g;
   return 0;
 }

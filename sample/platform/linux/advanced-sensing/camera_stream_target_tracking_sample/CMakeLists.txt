@@ -51,14 +51,13 @@ target_link_libraries(kcf_tracker ${OpenCV_LIBRARIES})
 
 set(HELPER_FUNCTIONS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../common)
 add_executable(${PROJECT_NAME}
+  ${SOURCE_FILES}
   ${HELPER_FUNCTIONS_DIR}/dji_linux_environment.cpp
   ${HELPER_FUNCTIONS_DIR}/dji_linux_helpers.cpp
   target_tracking.cpp
   tracking_utility.cpp
   )
 target_link_libraries(${PROJECT_NAME}
-  djiosdk-core
   kcf_tracker
   ${OpenCV_LIBRARIES}
   )
-

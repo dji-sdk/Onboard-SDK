@@ -110,21 +110,25 @@ time_sync_poll_test()
   const int waitTimeMs = 100;
   int timeSoFar = 0;
   int totalTimeMs = 30*1000; // 30 secs
-  while(timeSoFar < totalTimeMs)
-  {
-    for (int i = 0; i < HardwareSync::NMEAType::TYPENUM; ++i) {
-      DJI::OSDK::HardwareSync::NMEAData nmea;
-      if(v->hardSync->getNMEAMsg((HardwareSync::NMEAType) i, nmea))
-      {
-        DSTATUS("%s\n", nmea.sentence.c_str());
+
+  DJI::OSDK::HardwareSync::GNGSAPackage GNGSA;
+  DJI::OSDK::HardwareSync::NMEAData GPRMC;
+
+  while (timeSoFar < totalTimeMs) {
+    if (v->hardSync->getGNGSAMsg(GNGSA)) {
+      for (int j = 0; j < HardwareSync::SatelliteIndex::MAX_INDEX_CNT; j++) {
+        DSTATUS("%s\n", GNGSA.Satellite[j].sentence.c_str());
       }
-      else
-      {
-        DSTATUS("Did not get msg\n");
-      }
-      delay_nms(waitTimeMs);
-      timeSoFar += waitTimeMs;
+    } else {
+      DSTATUS("Did not get GNGSA msg\n");
     }
+    if (v->hardSync->getGNRMCMsg(GPRMC)) {
+      DSTATUS("%s\n", GPRMC.sentence.c_str());
+    } else {
+      DSTATUS("Did not get GNRMC msg\n");
+    }
+    delay_nms(waitTimeMs);
+    timeSoFar += waitTimeMs;
   }
 
   return 0;

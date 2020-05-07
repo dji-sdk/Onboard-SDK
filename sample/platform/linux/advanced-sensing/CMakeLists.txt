@@ -25,25 +25,19 @@ project(djiosdk-advanced-sensing-sample)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fPIC -pthread -g -O0")
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${ONBOARDSDK_SOURCE}/cmake-modules/")
-
-find_package(LibUSB REQUIRED)
-include_directories(${LIBUSB_1_INCLUDE_DIRS})
-
-set(HELPER_FUNCTIONS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../common)
-
-include_directories(${ONBOARDSDK_SOURCE}/api/inc)
-include_directories(${ONBOARDSDK_SOURCE}/utility/inc)
-include_directories(${ONBOARDSDK_SOURCE}/hal/inc)
-include_directories(${ONBOARDSDK_SOURCE}/protocol/inc)
-include_directories(${ONBOARDSDK_SOURCE}/platform/linux/inc)
-include_directories(${HELPER_FUNCTIONS_DIR})
-include_directories(${MODULES_HEADER_DIR})
-include_directories(${FLIGHT_MODULES_HEADER_DIR})
+FILE(GLOB SOURCE_FILES *.hpp *.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_environment.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_helpers.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/../hal/*.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/../osal/*.c
+        ${LINKER_HEADER_SRC}
+        )
+add_subdirectory(stereo_vision_M300_sample)
 add_subdirectory(stereo_vision_single_thread_sample)
 add_subdirectory(stereo_vision_multi_thread_sample)
 add_subdirectory(camera_stream_poll_sample)
 add_subdirectory(camera_stream_callback_sample)
+add_subdirectory(camera_h264_callback_sample)
 add_subdirectory(stereo_vision_depth_perception_sample)
 
 if (TARGET_TRACKING_SAMPLE)

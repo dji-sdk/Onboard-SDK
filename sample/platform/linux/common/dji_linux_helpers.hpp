@@ -31,43 +31,41 @@
 #ifndef ONBOARDSDK_HELPERS_H
 #define ONBOARDSDK_HELPERS_H
 
+#include <iostream>
 #include <fstream>
 #include <dji_linux_environment.hpp>
 #include <dji_vehicle.hpp>
+#include <dji_platform.hpp>
+#include <dji_setup_helpers.hpp>
 
-class LinuxSetup
-{
-public:
+using namespace std;
+
+class LinuxSetup : private Setup {
+ public:
   LinuxSetup(int argc, char **argv, bool enableAdvancedSensing = false);
   ~LinuxSetup();
 
-public:
+ public:
   void setupEnvironment(int argc, char** argv);
-  void initVehicle();
-  bool validateSerialPort();
+  bool initVehicle();
 
-public:
-  void setTestSerialDevice(DJI::OSDK::LinuxSerialDevice* serialDevice);
-  DJI_Environment* getEnvironment()
-  {
+ public:
+  DJI_Environment *getEnvironment() {
     return this->environment;
   }
-  DJI::OSDK::Vehicle* getVehicle()
-  {
-    return this->vehicle;
-  }
-  DJI::OSDK::Vehicle::ActivateData* getActivateData()
-  {
-    return &activateData;
+
+  Vehicle::ActivateData *getActivateData() {
+    return &this->activateData;
   }
 
-private:
-  DJI::OSDK::Vehicle*              vehicle;
-  DJI::OSDK::LinuxSerialDevice*    testSerialDevice;
-  DJI_Environment*                 environment;
-  DJI::OSDK::Vehicle::ActivateData activateData;
-  int                              functionTimeout; // seconds
-  bool                             useAdvancedSensing;
+  Vehicle *getVehicle() {
+    return vehicle;
+  }
+
+ private:
+  uint32_t functionTimeout;
+  Vehicle::ActivateData activateData;
+  DJI_Environment* environment;
 };
 
 #endif // ONBOARDSDK_HELPERS_H

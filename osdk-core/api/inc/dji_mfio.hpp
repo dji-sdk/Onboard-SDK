@@ -146,9 +146,12 @@ public:
   ACK::MFIOGet getValue(CHANNEL channel, int wait_timeout);
 
 private:
-  static void initCallback(RecvContainer recvFrame, UserData data);
-  static void setValueCallback(RecvContainer recvFrame, UserData data);
-  static void getValueCallback(RecvContainer recvFrame, UserData data);
+  static void initCallback(Vehicle *vehicle, RecvContainer recvFrame,
+                           UserData data);
+  static void setValueCallback(Vehicle *vehicle, RecvContainer recvFrame,
+                               UserData data);
+  static void getValueCallback(Vehicle *vehicle, RecvContainer recvFrame,
+                               UserData data);
 
 private:
   Vehicle* vehicle;

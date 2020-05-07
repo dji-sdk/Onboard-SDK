@@ -1,10 +1,5 @@
 # Once done this will be defined
 #
-#  WAYPT2_CORE_FOUND - system has Waypt2 core installed relative to the DJI OSDK Core
-#  WAYPT2_CORE_INCLUDE_DIRS - the Waypt2 core include directory
-#  WAYPT2_CORE_LIBRARY - Waypt2 core library
-#  WAYPT2_CORE_DEFINITIONS - Compiler switches required for using Waypt2 core
-#
 
 if (WAYPT2_CORE_LIBRARY AND WAYPT2_CORE_INCLUDE_DIRS)
   set(WAYPT2_CORE_FOUND TRUE)

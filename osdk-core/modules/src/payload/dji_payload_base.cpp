@@ -27,12 +27,13 @@
  */
 
 #include "dji_payload_base.hpp"
+#include "dji_linker.hpp"
 
 using namespace DJI;
 using namespace DJI::OSDK;
 
-PayloadBase::PayloadBase(PayloadIndexType index, std::string name, bool enable)
-    : index(index), name(name), enable(enable) {}
+PayloadBase::PayloadBase(Linker *linker, PayloadIndexType index, std::string name, bool enable)
+    : linker(linker), index(index), name(name), enable(enable) {}
 
 PayloadBase::~PayloadBase() {}
 

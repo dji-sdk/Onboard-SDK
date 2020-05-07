@@ -31,8 +31,8 @@
 
 #include "dji_flight_actions_module.hpp"
 #include "dji_flight_assistant_module.hpp"
+#include "dji_flight_joystick_module.hpp"
 #include "dji_telemetry.hpp"
-
 namespace DJI {
 namespace OSDK {
 
@@ -44,11 +44,28 @@ class FlightController {
   FlightController(Vehicle *vehicle);
   ~FlightController();
 
-  typedef struct Telemetry::HomeLocationData HomeLocation;
+  typedef Telemetry::HomeLocationData HomeLocation;
   typedef FlightAssistant::RtkEnableData
       RtkEnabled; /*!< 0: disable, 1: enable*/
+  typedef FlightAssistant::AvoidEnable AvoidEnable;
+  typedef FlightAssistant::UpwardsAvoidEnable UpwardsAvoidEnable;
   typedef FlightAssistant::GoHomeAltitude
       GoHomeHeight; /*!< unit:meter, range 20~500*/
+  typedef FlightJoystick::ControlCommand JoystickCommand;
+  typedef enum FlightJoystick::HorizontalLogic HorizontalLogic;
+  typedef enum FlightJoystick::VerticalLogic VerticalLogic;
+  typedef enum FlightJoystick::YawLogic YawLogic;
+  typedef enum FlightJoystick::HorizontalCoordinate HorizontalCoordinate;
+  typedef enum FlightJoystick::StableMode StableMode;
+  typedef enum FlightActions::KillSwitch KillSwitch;
+
+  typedef struct JoystickMode {
+    HorizontalLogic horizontalLogic;
+    VerticalLogic verticalLogic;
+    YawLogic yawLogic;
+    HorizontalCoordinate horizontalCoordinate;
+    StableMode stableMode;
+  } JoystickMode;
 
   /*! @brief Set RTK enable or disable, blocking calls
    *
@@ -89,8 +106,8 @@ class FlightController {
    *  @arg @b retCode ErrorCode::ErrorCodeType error code
    *  @arg @b rtkEnable reference in RtkEnabled, RTK_DISABLE: disable,
    * RTK_ENABLE: enable
-   *  @arg @b userData the interface to transfer userData in when the callback is
-   *  called
+   *  @arg @b userData the interface to transfer userData in when the callback
+   * is called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
   void getRtkEnableAsync(void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
@@ -124,8 +141,8 @@ class FlightController {
    * @param altitude go home altitude settings, unit: meter
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode ErrorCode::ErrorCodeType error code
-   *  @arg @b userData the interface to transfer userData in when the callback is
-   * called
+   *  @arg @b userData the interface to transfer userData in when the callback
+   * is called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
   void setGoHomeAltitudeAsync(
@@ -147,14 +164,112 @@ class FlightController {
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode ErrorCode::ErrorCodeType error code
    *  @arg @b altitude go home altitude
-   *  @arg @b userData the interface to transfer userData in when the callback is
-   *  called
+   *  @arg @b userData the interface to transfer userData in when the callback
+   * is called
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
   void getGoHomeAltitudeAsync(
       void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
                            GoHomeHeight altitude, UserData userData),
       UserData userData);
+
+  /*! @brief Set collision avoidance enable or disable, blocking calls
+   *
+   *  @param avoidEnable AvoidEnable, AVOID_DISABLE: disable, AVOID_ENABLE: enable
+   *  @param timeout blocking timeout in seconds
+   *  @return ErrorCode::ErrorCodeType error code
+   */
+  ErrorCode::ErrorCodeType setCollisionAvoidanceEnabledSync(
+      AvoidEnable avoidEnable, int timeout);
+
+  /*! @brief Set collision avoidance enable or disable, non-blocking calls
+   *
+   *  @param avoidEnable AvoidEnable, AVOID_DISABLE: disable, AVOID_ENABLE: enable
+   *  @param UserCallBack callback function defined by user
+   *  @arg @b retCode  OSDK ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to transfer userData in when the callback
+   *  is called
+   *  @param userData when UserCallBack is called, used in UserCallBack
+   */
+  void setCollisionAvoidanceEnabledAsync(
+    AvoidEnable avoidEnable,
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
+    UserData userData);
+
+  /*! @brief Get collision avoidance enable or disable, blocking calls
+   *
+   *  @param avoidEnable AvoidEnable, AVOID_DISABLE: disable, AVOID_ENABLE: enable
+   *  @param timeout blocking timeout in seconds
+   *  @return OSDK ErrorCode::ErrorCodeType error code
+   */
+  ErrorCode::ErrorCodeType getCollisionAvoidanceEnabledSync(
+    AvoidEnable &avoidEnable, int timeout);
+
+  /*! @brief Get collision avoidance enable or disable, non-blocking calls
+   *
+   *  @param UserCallBack callback function defined by user
+   *  @arg @b retCode the OSDK ErrorCode::ErrorCodeType error code
+   *  @arg @b avoidEnable AvoidEnable, AVOID_DISABLE: disable, AVOID_ENABLE: enable
+   *  @arg @b userData the interface to pass userData in when the callback is
+   *  called
+   *  @param userData when UserCallBack is called, used in UserCallBack
+   */
+  void getCollisionAvoidanceEnabledAsync(
+    void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
+                         AvoidEnable avoidEnable, UserData userData),
+    UserData userData);
+
+
+  /*! @brief Set upwards avoidance enable or disable, blocking calls
+   *
+   *  @param UpwardsAvoidEnable UpwardsAvoidEnable  UPWARDS_AVOID_DISABLE: disable,
+   *  UPWARDS_AVOID_ENABLE: enable
+   *  @param timeout blocking timeout in seconds
+   *  @return ErrorCode::ErrorCodeType error code
+   */
+  ErrorCode::ErrorCodeType setUpwardsAvoidanceEnabledSync(UpwardsAvoidEnable upwardsAvoidEnable,
+                                                          int timeout);
+
+  /*! @brief Set upwards avoidance enable or disable, non-blocking calls
+   *
+   *  @param upwardsAvoidEnable UpwardsAvoidEnable  UPWARDS_AVOID_DISABLE: disable,
+   *  UPWARDS_AVOID_ENABLE: enable
+   *  @param UserCallBack callback function defined by user
+   *  @arg @b retCode  OSDK ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to transfer userData in when the callback
+   *  is called
+   *  @param userData when UserCallBack is called, used in UserCallBack
+   */
+  void setUpwardsAvoidanceEnabledAsync(UpwardsAvoidEnable upwardsAvoidEnable,
+                                       void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
+                                                            UserData userData),
+                                       UserData userData);
+
+  /*! @brief Get upwards avoidance enable or disable, blocking calls
+   *
+   *  @param upwardsAvoidEnable UpwardsAvoidEnable  UPWARDS_AVOID_DISABLE: disable,
+   *  UPWARDS_AVOID_ENABLE: enable
+   *  @param timeout blocking timeout in seconds
+   *  @return OSDK ErrorCode::ErrorCodeType error code
+   */
+  ErrorCode::ErrorCodeType getUpwardsAvoidanceEnabledSync(UpwardsAvoidEnable &upwardsAvoidEnable,
+                                                          int timeout);
+
+  /*! @brief Get upwards avoidance enable or disable, non-blocking calls
+   *
+   *  @param UserCallBack callback function defined by user
+   *  @arg @b retCode the OSDK ErrorCode::ErrorCodeType error code
+   *  @arg @b upwardsEnable UpwardsAvoidEnable, UPWARDS_AVOID_DISABLE: disable,
+   *  UPWARDS_AVOID_ENABLE: enable
+   *  @arg @b userData the interface to pass userData in when the callback is
+   *  called
+   *  @param userData when UserCallBack is called, used in UserCallBack
+   */
+  void getUpwardsAvoidanceEnabledAsync(void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
+                                                            UpwardsAvoidEnable upwardsEnable,
+                                                            UserData userData),
+                                       UserData userData);
+
 
   /*! @brief Set customized GPS(not RTK) home location, blocking calls.
    *
@@ -216,6 +331,45 @@ class FlightController {
       void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
       UserData userData);
 
+  /*! @brief Wrapper function for turn on motors, blocking calls.
+   *
+   *  @param timeout blocking timeout in seconds
+   *  @return ErrorCode::ErrorCodeType error code
+   */
+  ErrorCode::ErrorCodeType turnOnMotorsSync(int timeout);
+
+  /*! @brief Wrapper function for turn on motors, non-blocking calls.
+   *
+   *  @param UserCallBack callback function defined by user
+   *  @arg @b retCode ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to transfer userData in when the callback
+   *  is called
+   *  @param userData when UserCallBack is called, used in UserCallBack
+   */
+  void turnOnMotorsAsync(void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
+                                              UserData userData),
+                         UserData userData);
+
+  /*! @brief Wrapper function for turn off motors, blocking calls.
+   *
+   *  @param timeout blocking timeout in seconds
+   *  @return ErrorCode::ErrorCodeType error code
+   */
+  ErrorCode::ErrorCodeType turnOffMotorsSync(int timeout);
+
+  /*! @brief Wrapper function for turn off motors, non-blocking calls.
+   *
+   *  @param UserCallBack callback function defined by user
+   *  @arg @b retCode ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to transfer userData in when the callback
+   *  is called
+   *  @param userData when UserCallBack is called, used in UserCallBack
+   */
+  void turnOffMotorsAsync(void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
+                                              UserData userData),
+                         UserData userData);
+
+
   /*! @brief Wrapper function for aircraft takeoff, blocking calls.
    *
    *  @param timeout blocking timeout in seconds
@@ -232,6 +386,44 @@ class FlightController {
    *  @param userData when UserCallBack is called, used in UserCallBack
    */
   void startTakeoffAsync(void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
+                                              UserData userData),
+                         UserData userData);
+
+  /*! @brief Wrapper function for aircraft landing, blocking calls.
+   *
+   *  @param timeout blocking timeout in seconds
+   *  @return ErrorCode::ErrorCodeType error code
+   */
+  ErrorCode::ErrorCodeType startLandingSync(int timeout);
+
+  /*! @brief Wrapper function for aircraft landing, non-blocking calls.
+   *
+   *  @param UserCallBack callback function defined by user
+   *  @arg @b retCode ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to transfer userData in when the callback
+   *  is called
+   *  @param userData when UserCallBack is called, used in UserCallBack
+   */
+  void startLandingAsync(void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
+                                              UserData userData),
+                         UserData userData);
+
+  /*! @brief Wrapper function for cancel aircraft landing, blocking calls.
+   *
+   *  @param timeout blocking timeout in seconds
+   *  @return ErrorCode::ErrorCodeType error code
+   */
+  ErrorCode::ErrorCodeType cancelLandingSync(int timeout);
+
+  /*! @brief Wrapper function for cancel aircraft landing, non-blocking calls.
+   *
+   *  @param UserCallBack callback function defined by user
+   *  @arg @b retCode ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to transfer userData in when the callback
+   *  is called
+   *  @param userData when UserCallBack is called, used in UserCallBack
+   */
+  void cancelLandingAsync(void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
                                               UserData userData),
                          UserData userData);
 
@@ -309,9 +501,68 @@ class FlightController {
                                              UserData userData),
                         UserData userData);
 
+  /*! @brief Wrapper function for stop go home action, blocking calls.
+   *
+   *  @param timeout blocking timeout in seconds
+   *  @return  ErrorCode::ErrorCodeType error code
+   */
+  ErrorCode::ErrorCodeType cancelGoHomeSync(int timeout);
+
+  /*! @brief Wrapper function for stop go home action, non-blocking calls.
+   *
+   *  @param UserCallBack callback function defined by user
+   *  @arg @b retCode ErrorCode::ErrorCodeType error code
+   *  @arg @b userData the interface to transfer userData in when the callback
+   * is called
+   *  @param userData when UserCallBack is called, used in UserCallBack
+   */
+  void cancelGoHomeAsync(void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
+                                             UserData userData),
+                        UserData userData);
+
+  /*! @brief Wrapper function for set joystick mode, non-blocking calls.
+   *
+   *  @param JoystickMode FlightController::JoystickMode include  horizontal
+   *  logic,vertical logic,yaw logic, horizontal coordinate, stable mode.
+   */
+  void setJoystickMode(const JoystickMode &joystickMode);
+
+  /*! @brief Wrapper function for set joystick command, non-blocking calls.
+   *
+   *  @param JoystickCommand FlightController::JoystickCommand  include
+   *  x, y, z and yaw's command.
+   */
+  void setJoystickCommand(const JoystickCommand &JoystickCommand);
+
+  /*! @brief Wrapper function for set joystick action, non-blocking calls.
+   *
+   *  @note User must set the joystick mode and command before using
+   *  this function to execute the command.
+   */
+  void joystickAction();
+
+  /*! @brief Wrapper function for get joystick mode, non-blocking calls.
+   *
+   *  @param JoystickMode FlightController::JoystickMode include  horizontal
+   *  logic,vertical logic,yaw logic, horizontal coordinate, stable mode.
+   */
+  void getJoystickMode(FlightJoystick::ControlMode &joystickMode);
+
+  /*! @brief Wrapper function for get joystick command, non-blocking calls.
+   *
+   *  @param JoystickCommand FlightController::JoystickCommand  include
+   *  x, y, z and yaw's command.
+   */
+  void getJoystickCommand(JoystickCommand &joystickCommand);
+
+
+  ErrorCode::ErrorCodeType killSwitch(KillSwitch cmd,int wait_timeout,
+                                                     char debugMsg[10]);
+
  private:
   FlightAssistant *flightAssistant;
   FlightActions *flightActions;
+  FlightJoystick *flightJoystick;
 };
 }  // namespace OSDK
 }  // namespace DJI

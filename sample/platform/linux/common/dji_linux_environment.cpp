@@ -111,6 +111,12 @@ DJI_Environment::getBaudrate() const
   return baudrate;
 }
 
+unsigned int
+DJI_Environment::getACMDefaultBaudrate() const
+{
+  return default_acm_baudrate;
+}
+
 bool
 DJI_Environment::getConfigResult() const
 {
@@ -123,7 +129,9 @@ DJI_Environment::parse(std::string config_file_path)
   char        line[1024];
   static char key[70];
   char        devName[20];
+  char        acmName[20];
 
+  bool setACM = false;
   bool setID = false, setKey = false, setBaud = false, setSerialDevice = false;
   bool result = false;
 
@@ -155,6 +163,11 @@ DJI_Environment::parse(std::string config_file_path)
         {
           setBaud = true;
         }
+        if (sscanf(line, "acm_port : %s", acmName))
+        {
+          this->device_acm = std::string(acmName);
+          setACM = true;
+        }
       }
     }
     if (setBaud && setID && setKey && setSerialDevice)
@@ -165,7 +178,29 @@ DJI_Environment::parse(std::string config_file_path)
     else
     {
       std::cout << "There's an error with your UserConfig.txt file.\n";
+      std::cout << "Recommended format of UserConfig.txt :\n"
+                   "app_id : 123456\n"
+                   "app_key : 0123456789abcdefghijklmnopqrstuvwxyz\n"
+                   "device : /dev/ttyUSBx\n"
+                   "baudrate : 921600\n"
+                   "acm_port : /dev/ttyACMx\n\n";
       result = false;
+
+    }
+
+    if (!setACM)
+    {
+      std::cout << "Cannot get ACM device name !!! Some of these OSDK APIs will"
+                   " be not supported :\n"
+                   "   GimbalManager APIs\n"
+                   "   CameraManager APIs\n"
+                   "   Advance sensing APIs\n";
+      std::cout << "Recommended format of UserConfig.txt :\n"
+                   "app_id : 123456\n"
+                   "app_key : 0123456789abcdefghijklmnopqrstuvwxyz\n"
+                   "device : /dev/ttyUSBx\n"
+                   "baudrate : 921600\n"
+                   "acm_port : /dev/ttyACMx\n\n";
     }
 
     read.close();

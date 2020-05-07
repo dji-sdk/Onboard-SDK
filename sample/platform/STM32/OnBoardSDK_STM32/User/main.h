@@ -41,6 +41,7 @@
 #include "TelemetrySample.h"
 #include "TimeSyncSample.h"
 #include "CameraManagerSample.hpp"
+#include "GimbalManagerSample.hpp"
 #include "bsp.h"
 #include "cppforstm32.h"
 #include "dji_vehicle.hpp"

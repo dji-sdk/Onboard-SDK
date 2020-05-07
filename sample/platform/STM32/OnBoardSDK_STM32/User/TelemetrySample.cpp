@@ -253,7 +253,8 @@ subscribeToData()
   uint32_t nextRetryTick = 0;    // millisesonds
   uint32_t timeoutTick;
 
-  timeoutTick = v->protocolLayer->getDriver()->getTimeStamp() + PRINT_TIMEOUT;
+  Platform::instance().getTimeMs(&timeoutTick);
+  timeoutTick += PRINT_TIMEOUT;
   do
   {
     flightStatus = v->subscribe->getValue<TOPIC_STATUS_FLIGHT>();
@@ -276,7 +277,8 @@ subscribeToData()
     printf("-------\n\n");
 
     delay_nms(500);
-    nextRetryTick = v->protocolLayer->getDriver()->getTimeStamp() + RETRY_TICK;
+    Platform::instance().getTimeMs(&nextRetryTick);
+    nextRetryTick += RETRY_TICK;
   } while (nextRetryTick < timeoutTick);
 
   printf("Done printing!\n");
