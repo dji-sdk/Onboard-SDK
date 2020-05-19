@@ -415,40 +415,28 @@ bool AdvancedSensing::startFPVCameraStream(CameraImageCallback cb, void * cbPara
   return fpvCam_ptr->startCameraStream(cb, cbParam);
 }
 
-bool AdvancedSensing::startFPVCameraH264(H264Callback cb, void * cbParam)
-{
-  return fpvCam_ptr->startCameraH264(cb, cbParam);
-}
-
 bool AdvancedSensing::startMainCameraStream(CameraImageCallback cb, void * cbParam)
 {
   // Use the keep_camera_x5s_state to prevent x5s become a storage device, otherwise could not get the stream
   return mainCam_ptr->startCameraStream(cb, cbParam);
 }
 
-bool AdvancedSensing::startMainCameraH264(H264Callback cb, void * cbParam)
-{
-  return mainCam_ptr->startCameraH264(cb, cbParam);
-}
-
 void AdvancedSensing::stopFPVCameraStream()
 {
-  fpvCam_ptr->stopCameraStream();
-}
-
-void AdvancedSensing::stopFPVCameraH264()
-{
-  fpvCam_ptr->stopCameraH264();
+  if (vehicle_ptr->isM300()) {
+    stopH264Stream(LiveView::OSDK_CAMERA_POSITION_FPV);
+  } else {
+    fpvCam_ptr->stopCameraStream();
+  }
 }
 
 void AdvancedSensing::stopMainCameraStream()
 {
-  mainCam_ptr->stopCameraStream();
-}
-
-void AdvancedSensing::stopMainCameraH264()
-{
-  mainCam_ptr->stopCameraH264();
+  if (vehicle_ptr->isM300()) {
+    stopH264Stream(LiveView::OSDK_CAMERA_POSITION_NO_1);
+  } else {
+    mainCam_ptr->stopCameraStream();
+  }
 }
 
 bool AdvancedSensing::newFPVCameraImageIsReady()
@@ -500,9 +488,11 @@ LiveView::LiveViewErrCode AdvancedSensing::stopH264Stream(
     return liveview->stopH264Stream(pos);
   else if (vehicle_ptr->isM210V2()) {
     switch (pos) {
-      case LiveView::OSDK_CAMERA_POSITION_FPV:vehicle_ptr->advancedSensing->stopFPVCameraH264();
+      case LiveView::OSDK_CAMERA_POSITION_FPV:
+        fpvCam_ptr->stopCameraH264();
         return LiveView::OSDK_LIVEVIEW_PASS;
-      case LiveView::OSDK_CAMERA_POSITION_NO_1:vehicle_ptr->advancedSensing->stopMainCameraH264();
+      case LiveView::OSDK_CAMERA_POSITION_NO_1:
+        mainCam_ptr->stopCameraH264();
         return LiveView::OSDK_LIVEVIEW_PASS;
       default:
         DERROR(
