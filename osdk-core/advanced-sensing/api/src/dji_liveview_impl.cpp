@@ -119,7 +119,7 @@ E_OsdkStat LiveViewImpl::RecordStreamHandler(struct _CommandHandle *cmdHandle,
   if((handlerMap.find(pos) != handlerMap.end()) && (handlerMap[pos].cb != NULL)) {
     handlerMap[pos].cb((uint8_t *)cmdData, cmdInfo->dataLen, handlerMap[pos].userData);
   } else {
-    DERROR("Can't find valid cb in handlerMap");
+    //DERROR("Can't find valid cb in handlerMap, pos = %d", pos);
   }
 
   return OSDK_STAT_OK;

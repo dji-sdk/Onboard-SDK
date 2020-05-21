@@ -299,6 +299,7 @@ DJICameraStream* fpvCam_ptr;
 LiveView *liveview;
 Perception *perception;
 const char* acm_dev;
+map<LiveView::LiveViewCameraPosition, DJICameraStreamDecoder*> streamDecoder;
 
 public:
 AdvancedSensingProtocol* getAdvancedSensingProtocol();
