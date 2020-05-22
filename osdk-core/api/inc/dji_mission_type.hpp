@@ -142,9 +142,19 @@ typedef struct WayPointSettings
   uint16_t actionTimeLimit;      /*!< Action time limit */
   uint8_t  actionNumber : 4;     /*!< Total number of actions */
   uint8_t  actionRepeat : 4;     /*!< Total running times */
-  uint8_t  commandList[16];      /*!< Command list */
-  uint16_t commandParameter[16]; /*!< Command parameters */
+  uint8_t  commandList[16];      /*!< action list.Take value from enum WaypointActionTypeFormat.*/
+  int16_t  commandParameter[16]; /*!< action parameters.Details Please see notes of enum WaypointActionTypeFormat's action*/
 } WayPointSettings;              // pack(1)
+
+typedef enum WaypointActionTypeFormat
+{
+  WP_ACTION_STAY                 = 0,  /*!< no action.uint of action parameter:ms*/
+  WP_ACTION_SIMPLE_SHOT          = 1,  /*!< take picture action.action parameters Action parameter have no effect.limit time:6s*/
+  WP_ACTION_VIDEO_START          = 2,  /*!< start take video action.action parameters Action parameter have no effect.limit time:6s*/
+  WP_ACTION_VIDEO_STOP           = 3,  /*!< stop video action.action parameters Action parameter have no effect.limit time:6s*/
+  WP_ACTION_CRAFT_YAW            = 4,  /*!< craft control yaw action.uint of action parameter:degree. range:-180 ~ 180*/
+  WP_ACTION_GIMBAL_PITCH         = 5,  /*!< gimbal control pitch action.uint of action parameter:degree. range:-90 ~ 0*/
+} WaypointActionTypeFormat;
 
 /**
  * @brief WayPoint Reached Data Incident Type enumerator
