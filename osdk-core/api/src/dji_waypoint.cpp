@@ -590,6 +590,11 @@ WaypointMission::setWaypointEventCallback(VehicleCallBack callback,
 {
   wayPointEventCallback.callback = callback;
   wayPointEventCallback.userData = userData;
+  vehicle->legacyLinker->registerCMDCallback(
+    OpenProtocolCMD::CMDSet::Broadcast::waypoint[0],
+     OpenProtocolCMD::CMDSet::Broadcast::waypoint[1],
+         wayPointEventCallback.callback,
+         wayPointEventCallback.userData);
 }
 
 void

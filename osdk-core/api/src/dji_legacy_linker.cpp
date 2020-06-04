@@ -95,6 +95,7 @@ CmdListData cmdListData[] = {
     {{0}, {0, 0, OpenProtocolCMD::CMDSet::Broadcast::broadcast[0],          OpenProtocolCMD::CMDSet::Broadcast::broadcast[1],           MASK_HOST_XXXXXX_SET_ID, malloc(sizeof(legacyAdaptingData)), NULL}},
     {{0}, {0, 0, OpenProtocolCMD::CMDSet::Broadcast::fromMobile[0],         OpenProtocolCMD::CMDSet::Broadcast::fromMobile[1],          MASK_HOST_XXXXXX_SET_ID, malloc(sizeof(legacyAdaptingData)), NULL}},
     {{0}, {0, 0, OpenProtocolCMD::CMDSet::Broadcast::fromPayload[0],        OpenProtocolCMD::CMDSet::Broadcast::fromPayload[1],         MASK_HOST_XXXXXX_SET_ID, malloc(sizeof(legacyAdaptingData)), NULL}},
+    {{0}, {0, 0, OpenProtocolCMD::CMDSet::Broadcast::waypoint[0],           OpenProtocolCMD::CMDSet::Broadcast::waypoint[1],            MASK_HOST_XXXXXX_SET_ID, malloc(sizeof(legacyAdaptingData)), NULL}},
     {{0}, {0, 0, OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEAGPSGSA[0],   OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEAGPSGSA[1],    MASK_HOST_XXXXXX_SET_ID, malloc(sizeof(legacyAdaptingData)), NULL}},
     {{0}, {0, 0, OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEAGPSRMC[0],   OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEAGPSRMC[1],    MASK_HOST_XXXXXX_SET_ID, malloc(sizeof(legacyAdaptingData)), NULL}},
     {{0}, {0, 0, OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEARTKGSA[0],   OpenProtocolCMD::CMDSet::HardwareSync::ppsNMEARTKGSA[1],    MASK_HOST_XXXXXX_SET_ID, malloc(sizeof(legacyAdaptingData)), NULL}},
