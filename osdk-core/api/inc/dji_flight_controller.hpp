@@ -69,6 +69,7 @@ class FlightController {
 
   /*! @brief Set RTK enable or disable, blocking calls
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param rtkEnable reference in RtkEnabled, RTK_DISABLE: disable,
    * RTK_ENABLE: enable
    *  @param timeout blocking timeout in seconds
@@ -78,6 +79,7 @@ class FlightController {
 
   /*! @brief Set RTK enable or disable, non-blocking calls.
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param rtkEnable reference in RtkEnabled, RTK_DISABLE: disable,
    * RTK_ENABLE: enable
    *  @param UserCallBack callback function defined by user
@@ -93,6 +95,7 @@ class FlightController {
 
   /*! @brief Get rtk enable or disable, blocking calls.
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param rtkEnable reference in RtkEnabled, RTK_DISABLE: disable,
    * RTK_ENABLE: enable
    *  @param timeout blocking timeout in seconds
@@ -102,6 +105,7 @@ class FlightController {
 
   /*! @brief Get RTK enable or disable, non-blocking calls.
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode ErrorCode::ErrorCodeType error code
    *  @arg @b rtkEnable reference in RtkEnabled, RTK_DISABLE: disable,
@@ -117,6 +121,7 @@ class FlightController {
 
   /*! @brief Set go home altitude, blocking calls.
    *
+   *  @note Supported drone type : M210V2, M300
    *  @note If aircraft's current altitude is higher than the setting value of
    * go home altitude, aircraft will go home using current altitude. Otherwise,
    * it will climb to setting of go home altitude ,and then execute go home
@@ -132,6 +137,7 @@ class FlightController {
 
   /*! @brief Set go home altitude, non-blocking calls.
    *
+   *  @note Supported drone type : M210V2, M300
    *  @note If aircraft's current altitude is higher than the setting value of
    * go home altitude, aircraft will go home using current altitude. Otherwise,
    * it will climb to setting of go home altitude ,and then execute go home
@@ -152,6 +158,7 @@ class FlightController {
 
   /*! @brief Get go home altitude, blocking calls.
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param altitude go home altitude
    *  @param timeout blocking timeout in seconds
    *  @return ErrorCode::ErrorCodeType error code
@@ -161,6 +168,7 @@ class FlightController {
 
   /*! @brief Get go home altitude, non-blocking calls.
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode ErrorCode::ErrorCodeType error code
    *  @arg @b altitude go home altitude
@@ -175,6 +183,7 @@ class FlightController {
 
   /*! @brief Set collision avoidance enable or disable, blocking calls
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param avoidEnable AvoidEnable, AVOID_DISABLE: disable, AVOID_ENABLE: enable
    *  @param timeout blocking timeout in seconds
    *  @return ErrorCode::ErrorCodeType error code
@@ -184,6 +193,7 @@ class FlightController {
 
   /*! @brief Set collision avoidance enable or disable, non-blocking calls
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param avoidEnable AvoidEnable, AVOID_DISABLE: disable, AVOID_ENABLE: enable
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode  OSDK ErrorCode::ErrorCodeType error code
@@ -198,6 +208,7 @@ class FlightController {
 
   /*! @brief Get collision avoidance enable or disable, blocking calls
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param avoidEnable AvoidEnable, AVOID_DISABLE: disable, AVOID_ENABLE: enable
    *  @param timeout blocking timeout in seconds
    *  @return OSDK ErrorCode::ErrorCodeType error code
@@ -207,6 +218,7 @@ class FlightController {
 
   /*! @brief Get collision avoidance enable or disable, non-blocking calls
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode the OSDK ErrorCode::ErrorCodeType error code
    *  @arg @b avoidEnable AvoidEnable, AVOID_DISABLE: disable, AVOID_ENABLE: enable
@@ -222,6 +234,7 @@ class FlightController {
 
   /*! @brief Set upwards avoidance enable or disable, blocking calls
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param UpwardsAvoidEnable UpwardsAvoidEnable  UPWARDS_AVOID_DISABLE: disable,
    *  UPWARDS_AVOID_ENABLE: enable
    *  @param timeout blocking timeout in seconds
@@ -232,6 +245,7 @@ class FlightController {
 
   /*! @brief Set upwards avoidance enable or disable, non-blocking calls
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param upwardsAvoidEnable UpwardsAvoidEnable  UPWARDS_AVOID_DISABLE: disable,
    *  UPWARDS_AVOID_ENABLE: enable
    *  @param UserCallBack callback function defined by user
@@ -247,6 +261,7 @@ class FlightController {
 
   /*! @brief Get upwards avoidance enable or disable, blocking calls
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param upwardsAvoidEnable UpwardsAvoidEnable  UPWARDS_AVOID_DISABLE: disable,
    *  UPWARDS_AVOID_ENABLE: enable
    *  @param timeout blocking timeout in seconds
@@ -257,6 +272,7 @@ class FlightController {
 
   /*! @brief Get upwards avoidance enable or disable, non-blocking calls
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode the OSDK ErrorCode::ErrorCodeType error code
    *  @arg @b upwardsEnable UpwardsAvoidEnable, UPWARDS_AVOID_DISABLE: disable,
@@ -273,6 +289,7 @@ class FlightController {
 
   /*! @brief Set customized GPS(not RTK) home location, blocking calls.
    *
+   *  @note Supported drone type : M210V2, M300
    *  @note  Set customized home location failed reason may as follows:
    *  1. The distance between new home location and last home location is larger
    * than MAX_FLY_RADIUS(20km).
@@ -286,6 +303,7 @@ class FlightController {
 
   /*! @brief Set customized GPS(not RTK) home location, non-blocking calls.
    *
+   *  @note Supported drone type : M210V2, M300
    *  @note  Set customized home location failed reasons may as follows:
    *  1. The distance between new home location and last home location is larger
    * than MAX_FLY_RADIUS(20km)
@@ -305,6 +323,7 @@ class FlightController {
   /*! @brief Set home location using current aircraft GPS(not RTK) location,
    * blocking calls.
    *
+   *  @note Supported drone type : M210V2, M300
    *  @note  Set home location failed reasons may as follows:
    *  1. Aircraft's gps level can't reach the condition of recording home
    * location.
@@ -317,6 +336,7 @@ class FlightController {
   /*! @brief Set home location using current aircraft GPS(not RTK) location,
    * non-blocking calls.
    *
+   *  @note Supported drone type : M210V2, M300
    *  @note  Set home location failed reasons may as follows:
    *  1. Aircraft's gps level can't reach the condition of recording home
    * location.
@@ -333,6 +353,7 @@ class FlightController {
 
   /*! @brief Wrapper function for turn on motors, blocking calls.
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param timeout blocking timeout in seconds
    *  @return ErrorCode::ErrorCodeType error code
    */
@@ -340,6 +361,7 @@ class FlightController {
 
   /*! @brief Wrapper function for turn on motors, non-blocking calls.
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode ErrorCode::ErrorCodeType error code
    *  @arg @b userData the interface to transfer userData in when the callback
@@ -352,6 +374,7 @@ class FlightController {
 
   /*! @brief Wrapper function for turn off motors, blocking calls.
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param timeout blocking timeout in seconds
    *  @return ErrorCode::ErrorCodeType error code
    */
@@ -359,6 +382,7 @@ class FlightController {
 
   /*! @brief Wrapper function for turn off motors, non-blocking calls.
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode ErrorCode::ErrorCodeType error code
    *  @arg @b userData the interface to transfer userData in when the callback
@@ -372,6 +396,7 @@ class FlightController {
 
   /*! @brief Wrapper function for aircraft takeoff, blocking calls.
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param timeout blocking timeout in seconds
    *  @return ErrorCode::ErrorCodeType error code
    */
@@ -379,6 +404,7 @@ class FlightController {
 
   /*! @brief Wrapper function for aircraft takeoff, non-blocking calls.
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode ErrorCode::ErrorCodeType error code
    *  @arg @b userData the interface to transfer userData in when the callback
@@ -391,6 +417,7 @@ class FlightController {
 
   /*! @brief Wrapper function for aircraft landing, blocking calls.
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param timeout blocking timeout in seconds
    *  @return ErrorCode::ErrorCodeType error code
    */
@@ -398,6 +425,7 @@ class FlightController {
 
   /*! @brief Wrapper function for aircraft landing, non-blocking calls.
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode ErrorCode::ErrorCodeType error code
    *  @arg @b userData the interface to transfer userData in when the callback
@@ -410,6 +438,7 @@ class FlightController {
 
   /*! @brief Wrapper function for cancel aircraft landing, blocking calls.
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param timeout blocking timeout in seconds
    *  @return ErrorCode::ErrorCodeType error code
    */
@@ -417,6 +446,7 @@ class FlightController {
 
   /*! @brief Wrapper function for cancel aircraft landing, non-blocking calls.
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode ErrorCode::ErrorCodeType error code
    *  @arg @b userData the interface to transfer userData in when the callback
@@ -429,6 +459,7 @@ class FlightController {
 
   /*! @brief Wrapper function for aircraft force landing, blocking calls.
    *
+   *  @note Supported drone type : M210V2, M300
    *  @note This api will ignore the smart landing function, when use this
    *  api, it will landing directly (would not stop at 0.7m and wait
    * user's  command),it may make the aircraft crash.
@@ -439,6 +470,7 @@ class FlightController {
 
   /*! @brief Wrapper function for aircraft force landing, non-blocking calls.
    *
+   *  @note Supported drone type : M210V2, M300
    *  @note This api will ignore the smart landing function, when use this
    * api, it will landing directly (would not stop at 0.7m and wait
    * user's  command),it may make the aircraft crash.
@@ -455,6 +487,7 @@ class FlightController {
   /*! @brief Wrapper function for  aircraft confirm landing and avoid ground,
    * blocking calls.
    *
+   *  @note Supported drone type : M210V2, M300
    *  @note When the clearance between the aircraft and the ground is less than
    * 0.7m, the aircraft will pause landing and wait for user's confirmation.This
    * api use for confirm landing. If the ground is not suitable for landing
@@ -467,7 +500,7 @@ class FlightController {
   /*! @brief Wrapper function for  aircraft confirm landing and avoid ground,
    * non-blocking calls.
    *
-   *
+   *  @note Supported drone type : M210V2, M300
    *  @note When the clearance between the aircraft and the ground is less than
    * 0.7m, the aircraft will pause landing and wait for user's confirmation.This
    * api use for confirm landing. If the ground is not suitable for landing
@@ -484,6 +517,7 @@ class FlightController {
 
   /*! @brief Wrapper function for  go home action, blocking calls.
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param timeout blocking timeout in seconds
    *  @return  ErrorCode::ErrorCodeType error code
    */
@@ -491,6 +525,7 @@ class FlightController {
 
   /*! @brief Wrapper function for  go home action, non-blocking calls.
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode ErrorCode::ErrorCodeType error code
    *  @arg @b userData the interface to transfer userData in when the callback
@@ -503,6 +538,7 @@ class FlightController {
 
   /*! @brief Wrapper function for stop go home action, blocking calls.
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param timeout blocking timeout in seconds
    *  @return  ErrorCode::ErrorCodeType error code
    */
@@ -510,6 +546,7 @@ class FlightController {
 
   /*! @brief Wrapper function for stop go home action, non-blocking calls.
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param UserCallBack callback function defined by user
    *  @arg @b retCode ErrorCode::ErrorCodeType error code
    *  @arg @b userData the interface to transfer userData in when the callback
@@ -522,6 +559,7 @@ class FlightController {
 
   /*! @brief Wrapper function for set joystick mode, non-blocking calls.
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param JoystickMode FlightController::JoystickMode include  horizontal
    *  logic,vertical logic,yaw logic, horizontal coordinate, stable mode.
    */
@@ -529,6 +567,7 @@ class FlightController {
 
   /*! @brief Wrapper function for set joystick command, non-blocking calls.
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param JoystickCommand FlightController::JoystickCommand  include
    *  x, y, z and yaw's command.
    */
@@ -536,6 +575,7 @@ class FlightController {
 
   /*! @brief Wrapper function for set joystick action, non-blocking calls.
    *
+   *  @note Supported drone type : M210V2, M300
    *  @note User must set the joystick mode and command before using
    *  this function to execute the command.
    */
@@ -543,6 +583,7 @@ class FlightController {
 
   /*! @brief Wrapper function for get joystick mode, non-blocking calls.
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param JoystickMode FlightController::JoystickMode include  horizontal
    *  logic,vertical logic,yaw logic, horizontal coordinate, stable mode.
    */
@@ -550,12 +591,21 @@ class FlightController {
 
   /*! @brief Wrapper function for get joystick command, non-blocking calls.
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param JoystickCommand FlightController::JoystickCommand  include
    *  x, y, z and yaw's command.
    */
   void getJoystickCommand(JoystickCommand &joystickCommand);
 
-
+  /*! @brief Turn on or off the kill switch
+   *
+   *  @note Supported drone type : M210V2, M300
+   *  @param cmd enable or disable the kill switch
+   *  @param wait_timeout timeout for blocking call
+   *  @param debugMsg inject debug message to flight control FW for logging, size limit: 10 bytes
+   *
+   *  @return ACK::ErrorCode struct with the acknowledgement from the FC
+   */
   ErrorCode::ErrorCodeType killSwitch(KillSwitch cmd,int wait_timeout,
                                                      char debugMsg[10]);
 

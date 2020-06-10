@@ -87,18 +87,21 @@ public:
    *
    *  init hotpoint default data
    *
+   *  @note Supported drone type : M210V2, M300
    */
   void initData();
   /*! @brief
    *
    *  getting hotpoint data
    *
+   *  @note Supported drone type : M210V2, M300
    */
   HotPointSettings getData() const;
   /*! @brief
    *
    *  start the hotpoint mission
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param callback callback function
    *  @param userData user data (void ptr)
    */
@@ -107,6 +110,7 @@ public:
    *
    *  start the hotpoint mission
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param timer timeout to wait for ACK
    */
   ACK::ErrorCode start(int timer);
@@ -114,6 +118,7 @@ public:
    *
    *  stop the hotpoint mission
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param callback callback function
    *  @param userData user data (void ptr)
    */
@@ -122,6 +127,7 @@ public:
    *
    *  stop the hotpoint mission
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param timer timeout to wait for ACK
    */
   ACK::ErrorCode stop(int timer);
@@ -129,6 +135,7 @@ public:
    *
    *  pause the hotpoint mission
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param callback callback function
    *  @param userData user data (void ptr)
    */
@@ -137,6 +144,7 @@ public:
    *
    *  pause the hotpoint mission
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param timer timeout to wait for ACK
    */
   ACK::ErrorCode pause(int timer);
@@ -144,6 +152,7 @@ public:
    *
    *  resume the hotpoint mission
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param callback callback function
    *  @param userData user data (void ptr)
    */
@@ -152,6 +161,7 @@ public:
    *
    *  resume the hotpoint mission
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param timer timeout to wait for ACK
    */
   ACK::ErrorCode resume(int timer);
@@ -159,6 +169,7 @@ public:
    *
    *  update yaw rate and orientation of hotpoint mission
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param Data specified yaw rate and orientation
    *  @param callback callback function
    *  @param userData user data (void ptr)
@@ -168,6 +179,7 @@ public:
    *
    *  update yaw rate and orientation of hotpoint mission
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param yawRate specified yaw rate
    *  @param isClockwise specified orientation
    *  @param timer timeout to wait for ACK
@@ -177,6 +189,7 @@ public:
    *
    *  update radius of hotpoint mission
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param meter radius
    */
   void updateRadius(float32_t meter);
@@ -184,6 +197,7 @@ public:
    *
    *  reset yaw of hotpoint mission
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param callback callback function
    *  @param userData user data (void ptr)
    */
@@ -192,6 +206,7 @@ public:
    *
    *  reset yaw of hotpoint mission
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param timer timeout to wait for ACK
    */
   ACK::ErrorCode resetYaw(int timer);
@@ -199,6 +214,7 @@ public:
    *
    *  Read hotpoint mission information from flight controller
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param callback callback function
    *  @param userData user data (void ptr)
    */
@@ -207,6 +223,7 @@ public:
    *
    *  Read hotpoint mission information from flight controller
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param timer timeout to wait for ACK
    */
   ACK::HotPointRead getHotpointSettings(int timer);
@@ -232,6 +249,7 @@ public:
    *
    *  Set hotpoint callback
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param callback callback function
    *  @param userData a void ptr that user can manipulate inside the callback
    */
@@ -240,6 +258,7 @@ public:
    *
    *  Set hotpoint data for initialization purpose
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param data HotPointSettings
    */
   void setData(HotPointSettings* data);
@@ -247,6 +266,7 @@ public:
    *
    *  Set hotpoint data for initialization purpose
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param longitude longitude
    *  @param latitude latitude
    *  @param altitude altitude
@@ -256,6 +276,7 @@ public:
    *
    *  Set hotpoint data for initialization purpose
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param gps gps
    */
   void setHotPoint(Telemetry::GlobalPosition gps);
@@ -263,6 +284,7 @@ public:
    *
    *  Set hotpoint data for initialization purpose
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param meter radius in meter
    */
   void setRadius(float64_t meter);
@@ -270,6 +292,7 @@ public:
    *
    *  Set hotpoint data for initialization purpose
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param degree yawrate in degree/sec
    */
   void setYawRate(float32_t degree);
@@ -277,6 +300,7 @@ public:
    *
    *  Set hotpoint data for initialization purpose
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param isClockwise isClockwise
    */
   void setClockwise(bool isClockwise);
@@ -284,6 +308,7 @@ public:
    *
    *  Set hotpoint data for initialization purpose
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param view check View struct
    */
   void setCameraView(View view);
@@ -291,6 +316,7 @@ public:
    *
    *  Set hotpoint data for initialization purpose
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param mode check YawMode struct
    */
   void setYawMode(YawMode mode);

@@ -127,6 +127,7 @@ class Perception {
   /*! @brief subscribe the raw images of both stereo cameras in the same
    * direction. Default frequency at 20 Hz.
    *
+   *  @note Supported drone type : M300
    *  @param direction to specifly the direction of the subscription. Ref to
    * DJI::OSDK::Perception::DirectionType
    *  @param cb callback to observer the stereo camera image and info.
@@ -138,6 +139,7 @@ class Perception {
   /*! @brief unsubscribe the raw image of both stereo cameras in the same
    * direction.
    *
+   *  @note Supported drone type : M300
    *  @param direction to specifly the direction of the subscription. Ref to
    * DJI::OSDK::Perception::DirectionType
    *  @return error code. Ref to DJI::OSDK::Perception::PerceptionErrCode
@@ -146,6 +148,7 @@ class Perception {
 
   /*! @brief trigger stereo cameras parameters pushing once.
    *
+   *  @note Supported drone type : M300
    *  @param direction to specifly the direction of the subscription. Ref to
    * DJI::OSDK::Perception::DirectionType
    *  @return error code. Ref to DJI::OSDK::Perception::PerceptionErrCode
@@ -155,6 +158,7 @@ class Perception {
   /*! @brief set callback to get stereo camera parameters after trigger stereo
    * camera parameters pushing.
    *
+   *  @note Supported drone type : M300
    *  @param cb callback to observer the parameters of stereo cameras. Ref to
    * DJI::OSDK:Perception::PerceptionCamParamCB
    *  @param userData when cb is called, used in cb.
@@ -162,6 +166,8 @@ class Perception {
   void setStereoCamParamsObserver(PerceptionCamParamCB cb, void *userData);
 
   /*! @brief unsubscribe all the stereo camera parameters pushing.
+   *
+   *  @note Supported drone type : M300
    */
   void cancelAllSubsciptions();
 

@@ -203,6 +203,7 @@ public:
    *  @brief Send subscribe request to your flight controller
    *         to get whole battery's information, blocking calls
    *
+   *  @note Supported drone type : M210V2
    *  @param enable whether subscribe battery Info
    *     true:subscribe
    *    false:unsubscribe
@@ -215,6 +216,7 @@ public:
 
   /*! @brief The interface of getting whole battery information
    *
+   *  @note Supported drone type : M210V2
    * @param batteryWholeInfo the whole information of battery
    * @return bool true:success;false:fail
    */
@@ -222,6 +224,7 @@ public:
 
   /*! @brief The interface of getting single battery's dynamic information
    *
+   *  @note Supported drone type : M210V2
    *  @param batteryIndex the index of battery.enum-type:RequestSmartBatteryIndex
    *  @param batteryDynamicInfo
    *  @return bool true:success;false:fail

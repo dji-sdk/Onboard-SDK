@@ -51,12 +51,14 @@ public:
 
   /*! @brief The interface of getting hms version
    *
+   *  @note Supported drone type : M300
    *  @return std::string hms version.(for example,HMS1.0.0)
    */
     std::string getHMSVersion();
 
   /*! @brief The interface of getting HMS's pushing data which has a timestamp
    *
+   *  @note Supported drone type : M300
    *  @return HMSPushPacket the private parameter hmsPushPacket which
    *  represents HMS's pushing data with a time stamp.
    *
@@ -67,6 +69,7 @@ public:
 
   /*! @brief The interface of getting device(camera or gimbal) index
    *
+   *  @note Supported drone type : M300
    *  @return uint8_t the private parameter deviceIndex which
    *  represents camera's or gimbal's index.
    *
@@ -92,6 +95,7 @@ private:
 
     /*! @brief get camera(payload)'s or gimbal's index(same with deviceindex) by sender
      *
+     *  @note Supported drone type : M300
      * @return uint8_t component index.(cameral index or gimbal index)
      *
      */
