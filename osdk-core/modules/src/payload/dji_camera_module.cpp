@@ -1463,16 +1463,16 @@ void CameraModule::callbackToSetShootPhotoMode(ErrorCode::ErrorCodeType retCode,
   if (!userData) return;
   shootPhotoParamHandler handler = *(shootPhotoParamHandler*)userData;
   if (retCode != ErrorCode::SysCommonErr::Success) {
-    if (handler.UserCallBack) handler.UserCallBack(retCode, handler.userData);
-  } else {
-    CaptureParamReq req = {};
-    req.captureParam = captureParam;
-    req.captureParam.captureMode = handler.paramData.captureMode;
-
-    handler.cameraModule->setInterfaceAsync(
-        V1ProtocolCMD::Camera::setShotMode, (uint8_t *) &req,
-        sizeof(req), handler.UserCallBack, handler.userData, 1000 / 3, 3);
+    captureParam = handler.cameraModule->CreateDefCaptureParamData();
   }
+
+  CaptureParamReq req = {};
+  req.captureParam = captureParam;
+  req.captureParam.captureMode = handler.paramData.captureMode;
+
+  handler.cameraModule->setInterfaceAsync(
+      V1ProtocolCMD::Camera::setShotMode, (uint8_t *) &req,
+      sizeof(req), handler.UserCallBack, handler.userData, 1000 / 3, 3);
 }
 
 void CameraModule::setShootPhotoModeAsync(
@@ -1493,24 +1493,24 @@ ErrorCode::ErrorCodeType CameraModule::setShootPhotoModeSync(
   ErrorCode::ErrorCodeType errCode =
       getCaptureParamDataSync(captureParamData, 1);
   if (errCode != ErrorCode::SysCommonErr::Success) {
-    return errCode;
-  } else {
-    CaptureParamReq req = {};
-    /*! @TODO Here strange code is to deal with issue that the AEB and BURST
-     * share the same setting and getting CMD and the same byte in the
-     * protocol. After the camera info pushing is supported by OSDK, here will
-     * be fixed. */
-    if (takePhotoMode == ShootPhotoMode::AEB) {
-      if (captureParamData.photoNumBurst > AEB_COUNT_5)
-      captureParamData.photoNumBurst = AEB_COUNT_5;
-      else if (captureParamData.photoNumBurst < AEB_COUNT_3)
-        captureParamData.photoNumBurst = AEB_COUNT_3;
-    }
-    req.captureParam = captureParamData;
-    req.captureParam.captureMode = takePhotoMode;
-    return setInterfaceSync(V1ProtocolCMD::Camera::setShotMode,
-                            (uint8_t *) &req, sizeof(req), timeout * 1000 / 3, 3);
+    captureParamData = CreateDefCaptureParamData();
   }
+  CaptureParamReq req = {};
+  /*! @TODO Here strange code is to deal with issue that the AEB and BURST
+   * share the same setting and getting CMD and the same byte in the
+   * protocol. After the camera info pushing is supported by OSDK, here will
+   * be fixed. */
+  if (takePhotoMode == ShootPhotoMode::AEB) {
+    if (captureParamData.photoNumBurst > AEB_COUNT_5)
+    captureParamData.photoNumBurst = AEB_COUNT_5;
+    else if (captureParamData.photoNumBurst < AEB_COUNT_3)
+      captureParamData.photoNumBurst = AEB_COUNT_3;
+  }
+  req.captureParam = captureParamData;
+  req.captureParam.captureMode = takePhotoMode;
+  return setInterfaceSync(V1ProtocolCMD::Camera::setShotMode,
+                          (uint8_t *) &req, sizeof(req), timeout * 1000 / 3, 3);
+
 }
 
 void CameraModule::getShootPhotoModeAsync(
@@ -1539,16 +1539,16 @@ void CameraModule::callbackToSetPhotoBurstCount(
   if (!userData) return;
   shootPhotoParamHandler handler = *(shootPhotoParamHandler*)userData;
   if (retCode != ErrorCode::SysCommonErr::Success) {
-    if (handler.UserCallBack) handler.UserCallBack(retCode, handler.userData);
-  } else {
-    CaptureParamReq req = {};
-    req.captureParam = captureParam;
-    req.captureParam.photoNumBurst = handler.paramData.photoNumBurst;
-
-    handler.cameraModule->setInterfaceAsync(
-        V1ProtocolCMD::Camera::setShotMode, (uint8_t *) &req,
-        sizeof(req), handler.UserCallBack, handler.userData, 1000 / 3, 3);
+    captureParam = handler.cameraModule->CreateDefCaptureParamData(BURST);
   }
+  CaptureParamReq req = {};
+  req.captureParam = captureParam;
+  req.captureParam.photoNumBurst = handler.paramData.photoNumBurst;
+
+  handler.cameraModule->setInterfaceAsync(
+      V1ProtocolCMD::Camera::setShotMode, (uint8_t *) &req,
+      sizeof(req), handler.UserCallBack, handler.userData, 1000 / 3, 3);
+
 }
 
 void CameraModule::setPhotoBurstCountAsync(
@@ -1569,14 +1569,13 @@ ErrorCode::ErrorCodeType CameraModule::setPhotoBurstCountSync(
   ErrorCode::ErrorCodeType errCode =
       getCaptureParamDataSync(captureParamData, 1);
   if (errCode != ErrorCode::SysCommonErr::Success) {
-    return errCode;
-  } else {
-    CaptureParamReq req = {};
-    req.captureParam = captureParamData;
-    req.captureParam.photoNumBurst = count;
-    return setInterfaceSync(V1ProtocolCMD::Camera::setShotMode,
-                            (uint8_t *) &req, sizeof(req), timeout * 1000 / 3, 3);
+    captureParamData = CreateDefCaptureParamData(RAW_BURST);
   }
+  CaptureParamReq req = {};
+  req.captureParam = captureParamData;
+  req.captureParam.photoNumBurst = count;
+  return setInterfaceSync(V1ProtocolCMD::Camera::setShotMode,
+                          (uint8_t *) &req, sizeof(req), timeout * 1000 / 3, 3);
 }
 
 void CameraModule::getPhotoBurstCountAsync(
@@ -1637,16 +1636,15 @@ void CameraModule::callbackToSetPhotoTimeIntervalSettings(
   if (!userData) return;
   shootPhotoParamHandler handler = *(shootPhotoParamHandler*)userData;
   if (retCode != ErrorCode::SysCommonErr::Success) {
-    if (handler.UserCallBack) handler.UserCallBack(retCode, handler.userData);
-  } else {
-    CaptureParamReq req = {};
-    req.captureParam = captureParam;
-    req.captureParam.intervalSetting = handler.paramData.intervalSetting;
-
-    handler.cameraModule->setInterfaceAsync(
-        V1ProtocolCMD::Camera::setShotMode, (uint8_t *) &req,
-        sizeof(req), handler.UserCallBack, handler.userData, 1000 / 3, 3);
+    captureParam = handler.cameraModule->CreateDefCaptureParamData(INTERVAL);
   }
+  CaptureParamReq req = {};
+  req.captureParam = captureParam;
+  req.captureParam.intervalSetting = handler.paramData.intervalSetting;
+
+  handler.cameraModule->setInterfaceAsync(
+      V1ProtocolCMD::Camera::setShotMode, (uint8_t *) &req,
+      sizeof(req), handler.UserCallBack, handler.userData, 1000 / 3, 3);
 }
 
 void CameraModule::setPhotoTimeIntervalSettingsAsync(
@@ -1667,14 +1665,13 @@ ErrorCode::ErrorCodeType CameraModule::setPhotoTimeIntervalSettingsSync(
   ErrorCode::ErrorCodeType errCode =
       getCaptureParamDataSync(captureParamData, 1);
   if (errCode != ErrorCode::SysCommonErr::Success) {
-    return errCode;
-  } else {
-    CaptureParamReq req = {};
-    req.captureParam = captureParamData;
-    req.captureParam.intervalSetting = intervalSetting;
-    return setInterfaceSync(V1ProtocolCMD::Camera::setShotMode,
-                            (uint8_t *) &req, sizeof(req), timeout * 1000 / 3, 3);
+    captureParamData = CreateDefCaptureParamData(INTERVAL);
   }
+  CaptureParamReq req = {};
+  req.captureParam = captureParamData;
+  req.captureParam.intervalSetting = intervalSetting;
+  return setInterfaceSync(V1ProtocolCMD::Camera::setShotMode,
+                          (uint8_t *) &req, sizeof(req), timeout * 1000 / 3, 3);
 }
 
 void CameraModule::getPhotoIntervalDatasAsync(
@@ -1744,4 +1741,14 @@ ErrorCode::ErrorCodeType CameraModule::obtainDownloadRightSync(bool enable,
   if (ret != ErrorCode::SysCommonErr::Success) return ret;
   return ErrorCode::getErrorCode(ErrorCode::CameraModule,
                                  ErrorCode::CameraCommon, ackData[0]);
+}
+
+CameraModule::CaptureParamData CameraModule::CreateDefCaptureParamData(ShootPhotoMode mode) {
+  CameraModule::CaptureParamData data = {0};
+  data.captureMode = mode;
+  data.photoNumBurst = 0;
+  data.conticapType = 0;
+  data.intervalSetting.photoNumConticap = 255;
+  data.intervalSetting.timeInterval = 10;
+  return data;
 }

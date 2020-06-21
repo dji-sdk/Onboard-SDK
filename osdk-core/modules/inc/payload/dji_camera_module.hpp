@@ -1953,6 +1953,8 @@ class CameraModule : public PayloadBase {
   ErrorCode::ErrorCodeType getCaptureParamDataSync(
       CaptureParamData& captureParam, int timeout);
 
+  CaptureParamData CreateDefCaptureParamData(ShootPhotoMode mode = SINGLE);
+
 }; /* CameraModule camera */
 }  // namespace OSDK
 }  // namespace DJI
