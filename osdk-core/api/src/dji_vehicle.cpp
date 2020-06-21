@@ -352,6 +352,7 @@ Vehicle::~Vehicle()
 
   if (this->subscribe)
   {
+    subscribe->verify(1);
     subscribe->reset(1);
   }
   if(this->camera)
