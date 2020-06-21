@@ -83,6 +83,7 @@ public:
 
   /*! @brief Non-blocking call for initializing an MFIO channel
    *
+   * @note Supported drone type : A3, N3
    * @param mode The mode (PWM, GPIO, ADC) to initialize to
    * @param channel The channel (0-7) to initialize
    * @param defaultValue The starting value [for output]
@@ -96,6 +97,7 @@ public:
 
   /*! @brief Non-blocking call for setting an MFIO value to a channel
    *
+   * @note Supported drone type : A3, N3
    * @param channel The channel (0-7) to set the value to
    * @param value The value you want to set
    * @param fn Callback function you want called upon ACK
@@ -107,6 +109,7 @@ public:
 
   /*! @brief Non-blocking call for getting data from an MFIO channel
    *
+   * @note Supported drone type : A3, N3
    * @param channel The channel (0-7) to get the value from
    * @param fn Callback function you want called upon ACK
    * @param data Additional data you want the callback function to have access
@@ -118,6 +121,7 @@ public:
 
   /*! @brief Blocking call for initializing an MFIO channel
    *
+   * @note Supported drone type : A3, N3
    * @param mode The mode (PWM, GPIO, ADC) to initialize to
    * @param channel The channel (0-7) to initialize
    * @param defaultValue The starting value [for output]
@@ -130,6 +134,7 @@ public:
 
   /*! Blocking call for setting an MFIO value to a channel
    *
+   * @note Supported drone type : A3, N3
    * @param channel The channel (0-7) to set the value to
    * @param value The value you want to set
    * @param wait_timeout Time(in s) you want the function to wait for an ACK
@@ -139,6 +144,7 @@ public:
 
   /*! Blocking call for getting data from an MFIO channel
    *
+   * @note Supported drone type : A3, N3
    * @param channel The channel (0-7) to get the value from
    * @param wait_timeout Time(in s) you want the function to wait for an ACK
    * @return ACK::ErrorCode struct containing the ACK and metadata

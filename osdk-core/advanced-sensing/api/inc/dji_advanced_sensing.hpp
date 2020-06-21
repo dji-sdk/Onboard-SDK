@@ -109,10 +109,18 @@ public:
   void init();
 
   void deinit();
-
+  /*! @brief subscribe to 240p stereo images at 20 fps
+   *
+   *  @note Supported drone type : M210V2
+   *  @param select the choice of the image direction, ref to
+   *  AdvancedSensing::ImageSelection
+   *  @param callback callback function
+   *  @param userData user data (void ptr)
+   */
   void subscribeStereoImages(const ImageSelection *select, VehicleCallBack callback = 0, UserData userData = 0);
   /*! @brief subscribe to VGA (480x640) front stereo images at 10 or 20 fps
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param frequency of images using enum from AdvancedSensingProtocol::FREQ
    *  @param callback callback function
    *  @param userData user data (void ptr)
@@ -120,16 +128,21 @@ public:
   void subscribeFrontStereoVGA(const uint8_t freq, VehicleCallBack callback = 0, UserData userData = 0);
   /*! @brief subscribe to QVGA (240x320) stereo depth map at 10 fps
    *
+   *  @note Supported drone type : M210V2
    *  @param callback callback function
    *  @param userData user data (void ptr)
    */
   void subscribeFrontStereoDisparity(VehicleCallBack callback = 0, UserData userData = 0);
   /*!
-   * @brief unsubscribe to QVGA (240x320) stereo depth map or images
+   *  @brief unsubscribe to QVGA (240x320) stereo depth map or images
+   *
+   *  @note Supported drone type : M210V2, M300
    */
   void unsubscribeStereoImages();
   /*!
-   * @brief unsubscribe to VGA (480x640) stereo images
+   *  @brief unsubscribe to VGA (480x640) stereo images
+   *
+   *  @note Supported drone type : M210V2, M300
    */
   void unsubscribeVGAImages();
   /*! @brief
@@ -154,6 +167,7 @@ public:
    *
    *  Start the FPV Camera Stream
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param cb callback function that is called in a callback thread when a new
    *            image is received and decoded
    *  @param cbParam a void pointer that users can manipulate inside the callback
@@ -164,6 +178,7 @@ public:
    *
    *  Start the Main Camera Stream
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param cb callback function that is called in a callback thread when a new
    *            image is received and decoded
    *  @param cbParam a void pointer that users can manipulate inside the callback
@@ -172,34 +187,44 @@ public:
   bool startMainCameraStream(CameraImageCallback cb = NULL, void * cbParam = NULL);
   /*! @brief
    *
-   *  Stop the FPV Camera Stream
+   *  Set the ACM device path, mainly for M210V2
+   *
+   *  @note Supported drone type : M210V2
    */
-
   void setAcmDevicePath(const char *acm_path);
 
   /*! @brief
    *
    *  Stop the FPV RGB Stream
+   *
+   *  @note Supported drone type : M210V2, M300
    */
   void stopFPVCameraStream();
 
   /*! @brief
    *
    *  Stop the Main Camera RGB Stream
+   *
+   *  @note Supported drone type : M210V2, M300
    */
   void stopMainCameraStream();
   /*! @brief Check if a new image from the FPV camera is received
+   *
+   *  @note Supported drone type : M210V2, M300
    *
    *  @return true if a new image frame is ready, false otherwise
    */
   bool newFPVCameraImageIsReady();
   /*! @brief Check if a new image from the main camera is received
    *
+   *  @note Supported drone type : M210V2, M300
+   *
    *  @return true if a new image frame is ready, false otherwise
    */
   bool newMainCameraImageReady();
   /*! @brief Get a copy of the new image from the FPV camera
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param A copy of the new available image will be put here.
    *         It is safe for user to manipulate this image.
    *  @note If a new image is not ready upon calling this function,
@@ -210,6 +235,7 @@ public:
   bool getFPVCameraImage(CameraRGBImage& copyOfImage);
   /*! @brief Get a copy of the new image from the main camera
    *
+   *  @note Supported drone type : M210V2, M300
    *  @param A copy of the new available image will be put here.
    *         It is safe for user to manipulate this image.
    *  @note If a new image is not ready upon calling this function,
@@ -223,7 +249,8 @@ public:
    *
    *  Start the FPV or Camera H264 Stream
    *
-   *  @note  For M210 V2 series, only OSDK_CAMERA_POSITION_NO_1 and
+   *  @note Supported drone type : M210V2, M300
+   *  @note For M210 V2 series, only OSDK_CAMERA_POSITION_NO_1 and
    *  OSDK_CAMERA_POSITION_FPV are supported.
    *  @note  For M300, all the poss are supported.
    *  @param pos point out which camera to output the H264 stream
@@ -237,6 +264,8 @@ public:
   /*! @brief
    *
    *  Stop the FPV or Camera H264 Stream
+   *
+   *  @note Supported drone type : M210V2, M300
    *  @note  For M210 V2 series, only OSDK_CAMERA_POSITION_NO_1 and
    *  OSDK_CAMERA_POSITION_FPV are supported.
    *  @note  For M300, all the poss are supported.
@@ -249,6 +278,7 @@ public:
    *
    *  Subscribe the perception camera image stream (Only for M300 series)
    *
+   *  @note Supported drone type : M300
    *  @param direction point out which direction's stream need to be subscribed
    *  @param cb callback function that is called in a callback thread when a
    *            perception image frame is received
@@ -261,6 +291,7 @@ public:
    *
    *  Unsubscribe the perception camera image stream (Only for M300 series)
    *
+   *  @note Supported drone type : M300
    *  @param direction point out which direction's stream need to be unsubscribed
    *  @return Errorcode of liveivew, ref to DJI::OSDK::LiveView::LiveViewErrCode
    */
@@ -271,6 +302,7 @@ public:
    *  Trigger the perception parameters to be passed to the callback which is
    *  registered by DJI::OSDK::Perception::setStereoCamParamsObserver. (Only for M300 series)
    *
+   *  @note Supported drone type : M300
    *  @return Errorcode of liveivew, ref to DJI::OSDK::LiveView::LiveViewErrCode
    */
   Perception::PerceptionErrCode triggerStereoCamParamsPushing();
@@ -279,6 +311,7 @@ public:
    *
    *  Set the callback to catch the perception camera parameters. (Only for M300 series)
    *
+   *  @note Supported drone type : M300
    *  @note  The callback will be triggered by calling
    *  DJI::OSDK::Perception::triggerStereoCamParamsPushing() or when the parameters of
    *  perception cameras are refreshed.

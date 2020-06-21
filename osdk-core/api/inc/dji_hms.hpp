@@ -106,6 +106,7 @@ public:
    *         to get HMS(Health Management System)'s information,
    *         blocking calls
    *
+   *  @note Supported drone type : M300
    *  @param enable whether subscribe HMS Info
    *       false:reset aLL subcriber except APP
    *       true:subscribe all HMS's information
@@ -122,12 +123,14 @@ public:
 
   /*! @brief The interface of getting hms version
    *
+   *  @note Supported drone type : M300
    *  @return std::string hms version.(for example,HMS1.0.0)
    */
     std::string getHMSVersion();
 
   /*! @brief The interface of getting HMS's pushing data which has a timestamp
    *
+   *  @note Supported drone type : M300
    *  @return HMSPushPacket the private parameter hmsPushPacket which
    *  represents HMS's pushing data with a time stamp.
    *
@@ -138,6 +141,7 @@ public:
 
   /*! @brief The interface of getting device(camera or gimbal) index
    *
+   *  @note Supported drone type : M300
    *  @return uint8_t the private parameter deviceIndex which
    *  represents camera's or gimbal's index.
    *
@@ -152,6 +156,7 @@ private:
 
   /*! @brief A register callback function for getting HMS(Health Management System)'s push data
    *
+   *  @note Supported drone type : M300
    *  @details After successful subscribing, this function would be used to register link's
    *  information for getting HMS's pushing data.(1HZ)
    *

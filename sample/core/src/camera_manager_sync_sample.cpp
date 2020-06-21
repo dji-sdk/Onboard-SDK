@@ -443,7 +443,7 @@ CameraManagerSyncSample::startShootSinglePhotoSyncSample(
 
   /*! @TODO XT* and Z30 don't support set shoot-photo mode. To fix it in the
    * future */
-  /*!< set shoot-photo mode
+  /*!< set shoot-photo mode */
   DSTATUS("set shoot-photo mode as SINGLE");
   retCode =
       pm->setShootPhotoModeSync(index, CameraModule::ShootPhotoMode::SINGLE, 1);
@@ -454,7 +454,6 @@ CameraManagerSyncSample::startShootSinglePhotoSyncSample(
            "temporarily not supported.");
     return retCode;
   }
-  */
 
   /*! wait the APP change the shoot-photo mode display */
   Platform::instance().taskSleepMs(500);
@@ -606,7 +605,7 @@ CameraManagerSyncSample::startShootIntervalPhotoSyncSample(
     DERROR("Set shoot-photo mode as INTERVAL fail. Error code : 0x%lX",
            retCode);
     ErrorCode::printErrorCodeMsg(retCode);
-    return retCode;
+    //return retCode;
   }
 
   /*! wait the APP change the shoot-photo mode display */
@@ -620,7 +619,7 @@ CameraManagerSyncSample::startShootIntervalPhotoSyncSample(
     DERROR("Set the parameter of INTERVAL mode fail. Error code : 0x%lX",
            retCode);
     ErrorCode::printErrorCodeMsg(retCode);
-    return retCode;
+    //return retCode;
   }
 
   /*!< start to shoot INTERVAL photo */
@@ -630,7 +629,7 @@ CameraManagerSyncSample::startShootIntervalPhotoSyncSample(
   if (retCode != ErrorCode::SysCommonErr::Success) {
     DERROR("Take INTERVAL photo fail. Error code : 0x%lX", retCode);
     ErrorCode::printErrorCodeMsg(retCode);
-    return retCode;
+    //return retCode;
   }
 
   return retCode;

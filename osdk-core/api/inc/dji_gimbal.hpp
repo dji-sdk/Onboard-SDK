@@ -116,6 +116,7 @@ public:
    *  Define the mode and the angles for the gimbal angle control in the
    * AngleData struct and pass it to setAngle().
    *
+   *  @deprecated This API is deprecated, please use APIs of CameraManager
    *  @param data AngleData struct containing all the angle values, mode
    *  and duration
    *  @return void
@@ -127,6 +128,7 @@ public:
    *  Define the rate of change for the gimbal angle in SpeedData struct and
    * pass it to setSpeed();
    *
+   *  @deprecated This API is deprecated, please use APIs of CameraManager
    *  @param data SpeedData struct containing the roll, pitch and yaw
    *  rates
    *  @return void

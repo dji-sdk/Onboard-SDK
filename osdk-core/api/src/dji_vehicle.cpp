@@ -246,42 +246,6 @@ Vehicle::init()
   if (!linker->isUSBPlugged()) {
     DSTATUS( "USB is not plugged or initialized successfully. "
              "Advacned-Sensing will not run.");
-  } else if (isM300()) {
-    /*! Linker add liveview USB Bulk channel */
-    if (!linker->addUSBBulkChannel(0x001F, 0x2CA3, 3, 0x84, 0x03,
-                                   USB_BULK_LIVEVIEW_CHANNEL_ID)) {
-      DERROR("Failed to initialize USB Bulk Linker channel for liveview!");
-    } else {
-      DSTATUS("Start bulk channel for M300's liveview!");
-    }
-
-    /*! Linker create liveview handle task */
-    if (!linker->createLiveViewTask()) {
-      DERROR("Failed to create task for liveview!");
-    } else {
-      DSTATUS("Create task for M300's liveview!");
-    }
-
-    /*! Linker add perception USB Bulk channel */
-    if (!linker->addUSBBulkChannel(0x001F, 0x2CA3, 6, 0x87, 0x05,
-                                   USB_BULK_ADVANCED_SENSING_CHANNEL_ID)) {
-      DERROR("Failed to initialize USB Bulk Linker channel for perception!");
-    } else {
-      DSTATUS("Start bulk channel for M300's perception");
-    }
-
-    /*! Linker create advanced sensing handle task */
-    if (!linker->createAdvancedSensingTask()) {
-      DERROR("Failed to create task for advanced sensing!");
-    } else {
-      DSTATUS("Create task for M300's advanced sensing!");
-    }
-    if (!initAdvancedSensing()) {
-      DERROR("Failed to initialize AdvancedSensing!\n");
-      return false;
-    } else {
-      DSTATUS("Start advanced sensing initalization");
-    }
   } else {
     if (!initAdvancedSensing()) {
       DERROR("Failed to initialize AdvancedSensing!\n");
@@ -352,6 +316,7 @@ Vehicle::~Vehicle()
 
   if (this->subscribe)
   {
+    subscribe->verify(1);
     subscribe->reset(1);
   }
   if(this->camera)
@@ -1241,7 +1206,9 @@ Vehicle::activate(ActivateData* data, uint32_t timeoutMs)
 #if 1
   /*! M300 drone do the firewall logic */
   uint8_t retryTimes = 0;
-  if (this->isM300() && this->linker->isUSBPlugged()) {
+  if (this->isM300()
+      && this->linker->isUSBPlugged()
+      && !firewall->isPolicyUpdated()) {
     firewall->setAppKey((uint8_t *) data->encKey, strlen(data->encKey) - 1);
     do {
       retryTimes ++;
@@ -1342,7 +1309,9 @@ Vehicle::activate(ActivateData* data, VehicleCallBack callback,
 #if 1
   /*! M300 drone do the firewall logic */
   uint8_t retryTimes = 0;
-  if (this->isM300() && this->linker->isUSBPlugged()) {
+  if (this->isM300()
+      && this->linker->isUSBPlugged()
+      && !firewall->isPolicyUpdated()) {
     firewall->setAppKey((uint8_t *) data->encKey, strlen(data->encKey) - 1);
     do {
       retryTimes ++;

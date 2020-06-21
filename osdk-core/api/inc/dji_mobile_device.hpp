@@ -54,6 +54,7 @@ public:
   /*!
    * @brief sending data from OSDK to MSDK
    *
+   * @note Supported drone type : M210V2, M300
    * @param data sent data
    * @param len length of data
    */
@@ -64,6 +65,13 @@ public:
 
 public:
   VehicleCallBackHandler fromMSDKHandler;
+  /*!
+   * @brief set callback to receive data from MSDK
+   *
+   * @note Supported drone type : M210V2, M300
+   * @param callback callback to receive data
+   * @param userData user data to be passed in callback
+   */
   void setFromMSDKCallback(VehicleCallBack callback, UserData userData = 0);
 };
 
