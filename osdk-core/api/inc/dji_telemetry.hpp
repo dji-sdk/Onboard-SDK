@@ -93,7 +93,7 @@ typedef enum
   TOPIC_HARD_SYNC,
   TOPIC_GPS_SIGNAL_LEVEL,
   TOPIC_GPS_CONTROL_LEVEL,
-  TOPIC_RC_FULL_RAW_DATA,
+  TOPIC_RC_FULL_RAW_DATA, //deprecated
   TOPIC_RC_WITH_FLAG_DATA,
   TOPIC_ESC_DATA,
   TOPIC_RTK_CONNECT_STATUS,
@@ -670,6 +670,7 @@ typedef struct SBUSFullRawData
 
 /*!
  * @brief union for TOPIC_RC_FULL_RAW_DATA
+ * Only support A3/N3/M600
  */
 typedef union
 {
