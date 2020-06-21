@@ -1242,7 +1242,9 @@ Vehicle::activate(ActivateData* data, uint32_t timeoutMs)
 #if 1
   /*! M300 drone do the firewall logic */
   uint8_t retryTimes = 0;
-  if (this->isM300() && this->linker->isUSBPlugged()) {
+  if (this->isM300()
+      && this->linker->isUSBPlugged()
+      && !firewall->isPolicyUpdated()) {
     firewall->setAppKey((uint8_t *) data->encKey, strlen(data->encKey) - 1);
     do {
       retryTimes ++;
@@ -1343,7 +1345,9 @@ Vehicle::activate(ActivateData* data, VehicleCallBack callback,
 #if 1
   /*! M300 drone do the firewall logic */
   uint8_t retryTimes = 0;
-  if (this->isM300() && this->linker->isUSBPlugged()) {
+  if (this->isM300()
+      && this->linker->isUSBPlugged()
+      && !firewall->isPolicyUpdated()) {
     firewall->setAppKey((uint8_t *) data->encKey, strlen(data->encKey) - 1);
     do {
       retryTimes ++;
