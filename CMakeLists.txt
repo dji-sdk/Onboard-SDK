@@ -28,6 +28,7 @@ if( ${CMAKE_SYSTEM_PROCESSOR} STREQUAL "aarch64" )
   message( STATUS " - System Processor : aarch64")
 elseif ( ${CMAKE_SYSTEM_PROCESSOR} STREQUAL "x64" )
   #set(OpenCV_DIR "~/work/soft/opencv-2.4.9/build")
+  #set(OpenCV_DIR "~/work/soft/opencv-2.4.9/build")
   message( STATUS " - System Processor : x86_64")
 endif()
 
@@ -41,6 +42,8 @@ set(DJIOSDK_VERSION
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/libs)
+
+set(ADVANCED_SENSING ON)
 
 if (ADVANCED_SENSING)
   message("Enable advanced sensing function...")

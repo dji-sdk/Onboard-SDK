@@ -18,7 +18,7 @@ set(HELPER_FUNCTIONS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../common)
 add_executable(${PROJECT_NAME}
   ${HELPER_FUNCTIONS_DIR}/dji_linux_environment.cpp
   ${HELPER_FUNCTIONS_DIR}/dji_linux_helpers.cpp
-  camera-stream-poll-sample.cpp
+  camera_stream_poll_sample.cpp
   )
 target_include_directories(${PROJECT_NAME} PRIVATE ${OpenCV_INCLUDE_DIRS})
 

@@ -89,7 +89,8 @@ LinuxSetup::setupEnvironment(int argc, char** argv)
   }
   else
   {
-    config_file_path = DJI_Environment::findFile("UserConfig.txt");
+    //config_file_path = DJI_Environment::findFile("/home/tao/jav_config/UserConfig.txt");
+    config_file_path = "/home/tao/jav_config/UserConfig.txt";
 
     if (config_file_path.empty())
       throw std::runtime_error("User configuration file not found");
