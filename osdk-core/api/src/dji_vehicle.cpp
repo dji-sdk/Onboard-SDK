@@ -1459,7 +1459,7 @@ Vehicle::sendHeartbeatToFCTask(void *arg) {
           OsdkOsal_GetTimeMs(&curHeartBeatTimeStamp);
           if (curHeartBeatTimeStamp - preHeartBeatTimeStamp >=  kHeartBeatPackSendTimeInterval)
           {
-            if (linker->isUSBPlugged()) {
+            if (linker->isUartPlugged()) {
               DJI::OSDK::Vehicle::sendHeartbeatToFCFunc(linker);
             }
               preHeartBeatTimeStamp = curHeartBeatTimeStamp;
