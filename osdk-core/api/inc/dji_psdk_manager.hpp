@@ -47,7 +47,7 @@ class PSDKManager {
  public:
   /*! @brief init the psdk module
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @note It should be paid attention that only one PSDK device
    * is supported in OSDK 3.9 version. It will support more PSDK
    * devices in the same time in the future
@@ -63,7 +63,7 @@ class PSDKManager {
    *  In the deinit, the psdk module will set name to be
    *  defaultPSDKName and set enable to be false.
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @param index psdk module index, input limit see enum
    * DJI::OSDK::PayloadIndexType
    *  @return ErrorCode::ErrorCodeType error code
@@ -76,7 +76,7 @@ class PSDKManager {
 
   /*! @brief get the name of psdk module, searched by index
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @param index psdk module index, input limit see enum
    * DJI::OSDK::PayloadIndexType
    *  @param name name of the psdk module, it's a output parameter. If get
@@ -88,7 +88,7 @@ class PSDKManager {
 
   /*! @brief get the index of psdk module, searched by name
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @param name name of psdk module
    *  @param index psdk module index, see enum DJI::OSDK::PayloadIndexType. If
    * get fail, this parameter will not do any assignment
@@ -98,7 +98,7 @@ class PSDKManager {
 
   /*! @brief get the enable status of psdk module, searched by index
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @param index psdk module index, input limit see enum
    * DJI::OSDK::PayloadIndexType
    *  @param enable get the enable status of PSDKModule. If get fail, this
@@ -112,7 +112,7 @@ class PSDKManager {
 #if defined(__linux__)
   /*! @brief Get the mop client object of the target psdk module.
    *
-   *  @note Supported drone type : M300
+   *  @platforms M300
    *  @param index payload node index, input limit see enum
    * DJI::OSDK::PayloadIndexType
    *  @param mopClient If this api called successfully, this pointer will point
@@ -124,7 +124,7 @@ class PSDKManager {
 #endif
   /*! @brief Sample to configure the value, blocking
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @param index payload node index, input limit see enum
    * DJI::OSDK::PayloadIndexType
    *  @param widgetIndex the index of target widget
@@ -140,7 +140,7 @@ class PSDKManager {
 
   /*! @brief Sample to configure the value, non-blocking
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @param index payload node index, input limit see enum
    * DJI::OSDK::PayloadIndexType
    *  @param widgetIndex the index of target widget
@@ -158,7 +158,7 @@ class PSDKManager {
 
   /*! @brief Sample to set the callback for widget values, non-blocking
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @note When the widget values of target PSDK device is pushing to OSDK,
    *  the callback will be called and catch the widget values.
    *  @param index payload node index, input limit see enum
@@ -173,7 +173,7 @@ class PSDKManager {
 
   /*! @brief Sample to disable the callback for widget values, non-blocking
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @param index payload node index, input limit see enum
    * DJI::OSDK::PayloadIndexType
    *  @return ErrorCode::ErrorCodeType error code
@@ -193,7 +193,7 @@ class PSDKManager {
   /*! @brief Sample to set the callback for PSDK commonication data,
    * non-blocking
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @param index payload node index, input limit see enum
    * DJI::OSDK::PayloadIndexType
    *  @param cb the callback to catch the communication data from PSDK.
@@ -207,7 +207,7 @@ class PSDKManager {
   /*! @brief Sample to disable the callback for PSDK commonication data,
    * non-blocking
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @param index payload node index, input limit see enum
    * DJI::OSDK::PayloadIndexType
    *  @return ErrorCode::ErrorCodeType error code
@@ -225,7 +225,7 @@ class PSDKManager {
 
   /*! @brief sending data from OSDK to PSDK
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @param index payload node index, input limit see enum
    * DJI::OSDK::PayloadIndexType
    *  @param data sent data

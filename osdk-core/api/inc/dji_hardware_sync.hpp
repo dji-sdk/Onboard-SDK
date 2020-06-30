@@ -121,7 +121,7 @@ public:
    *  To receive the software packet that accompanies this pulse,
    *  you will need to subscribe to TOPIC_HARD_SYNC.
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @param freqInHz The frequency at which you want this pulse to be output.
    *  @param tag Identification to match pulse with the corresponding software
    *  packet
@@ -130,32 +130,32 @@ public:
   /*! @brief Internal setter function that is called by setSyncFreq function
    *  @details Use setSyncFreq instead of this direct interface.
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @param data Struct of type SyncCmdData.
    */
   void startSync(SyncSettings& data);
   /*! @brief Subscribe to NMEA messages with a callback function
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @param callback callback function
    *  @param userData user data (void ptr)
    */
   void subscribeNMEAMsgs(VehicleCallBack cb, void *userData);
   /*! @brief Unsubscribe to NMEA messages
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    */
   void unsubscribeNMEAMsgs();
   /*! @brief Poll NMEA messages
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @param which NMEA message to poll
    *  @param data struct to fill
    */
   bool getGNRMCMsg(NMEAData &nmea);
   /*! @brief Poll NMEA messages
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @param which NMEA message to poll
    *  @param data struct to fill
    */
@@ -163,25 +163,25 @@ public:
 
   /*! @brief Subscribe to UTC Time tag with a callback function
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @param callback callback function
    *  @param userData user data (void ptr)
    */
   void subscribeUTCTime(VehicleCallBack cb, void *userData);
   /*! @brief Unsubscribe to UTC time tag
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    */
   void unsubscribeUTCTime();
   /*! @brief Poll UTC time tag
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @param data struct to fill
    */
   bool getUTCTime(NMEAData &utc);
   /*! @brief Subscribe to FC Time in UTC referece with a callback function
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @param callback callback function
    *  @param userData user data (void ptr)
    */
@@ -191,31 +191,31 @@ public:
   void unsubscribeFCTimeInUTCRef();
   /*! @brief Poll FC Time in UTC referece
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @param data struct to fill
    */
   bool getFCTimeInUTCRef(DJI::OSDK::ACK::FCTimeInUTC &fcTimeInUTC);
   /*! @brief Subscribe to PPS source info with a callback function
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @param callback callback function
    *  @param userData user data (void ptr)
    */
   void subscribePPSSource(VehicleCallBack cb, void *userData);
   /*! @brief Unsubscribe to PPS source info
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    */
   void unsubscribePPSSource();
   /*! @brief Poll PPS source info
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @param data struct to fill
    */
   bool getPPSSource(PPSSource &source);
   /*! @brief Write data when received from UART
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @param cmd id
    *  @param received data
    */

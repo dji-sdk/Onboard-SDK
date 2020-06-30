@@ -138,7 +138,7 @@ public:
    * account \n b) API Control enabled in the Assistant software\n\n
    * Proceed to programming if activation successful.
    *
-   * @note Supported drone type : M210V2, M300
+   * @platforms M210V2, M300
    */
   void activate(ActivateData* data, VehicleCallBack callback = 0,
                 UserData userData = 0);
@@ -153,7 +153,7 @@ public:
   * account \n b) API Control enabled in the Assistant software\n\n
   * Proceed to programming if activation successful.
   *
-  * @note Supported drone type : M210V2, M300
+  * @platforms M210V2, M300
   * @return ACK from flight controller
   *
   * @todo
@@ -164,7 +164,7 @@ public:
   /*! @brief Set up take-off permission when the aircraft is connected with
     * a USB cable
     *
-    * @note Supported drone type : M210V2
+    * @platforms M210V2
     *  @note This api is meaningless to M300. Only for M210 V1/V2 series
     *  @param en enable or disable take-off permission
     *  @return ErrorCode::ErrorCodeType error code
@@ -188,7 +188,7 @@ public:
    * @brief
    * Send get version control to the vehicle.
    *
-   * @note Supported drone type : M210V2, M300
+   * @platforms M210V2, M300
    * @return type ACK::DroneVersion containing:
    * ACKErrorCode: data (ack value)
    * VersionData:  hardware version
@@ -202,7 +202,7 @@ public:
   /**
    * Get aircraft version.
    *
-   * @note Supported drone type : M210V2, M300
+   * @platforms M210V2, M300
    * @note
    * You can query your flight controller prior to activation.
    */
@@ -213,21 +213,21 @@ public:
   /**
    * Get Activation information
    *
-   * @note Supported drone type : M210V2, M300
+   * @platforms M210V2, M300
    */
   ActivateData getAccountData() const;
 
   /**
    * Activation Control
    *
-   * @note Supported drone type : M210V2, M300
+   * @platforms M210V2, M300
    */
   void setAccountData(const ActivateData& value);
 
   /**
    * Set SDK version.
    *
-   * @note Supported drone type : M210V2, M300
+   * @platforms M210V2, M300
    */
   void setVersion(const Version::FirmWare& value);
 

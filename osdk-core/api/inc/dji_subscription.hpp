@@ -80,7 +80,7 @@ public:
   /*!
    * @brief Fill in necessary information for ADD_PACKAGE call
    *
-   * @note Supported drone type : M210V2, M300
+   * @platforms M210V2, M300
    * @param topics: List of TopicName
    * @param numberOfTopics: Number of topics to subscribe for this package
    * @param freq: Frequency of this package
@@ -96,7 +96,7 @@ public:
   /*!
    * @brief Serialize the info and uidList to a buffer to send to FC
    *
-   * @note Supported drone type : M210V2, M300
+   * @platforms M210V2, M300
    * @param buffer
    */
   int serializePackageInfo(uint8_t* buffer);
@@ -123,7 +123,7 @@ public:
   * @brief Helper function to do post processing when adding package is
   * successful.
   *
-  * @note Supported drone type : M210V2, M300
+  * @platforms M210V2, M300
   */
   void packageAddSuccessHandler();
 
@@ -131,7 +131,7 @@ public:
   * @brief Helper function to do post processing when removing package is
   * successful.
   *
-  * @note Supported drone type : M210V2, M300
+  * @platforms M210V2, M300
   */
   void packageRemoveSuccessHandler();
 
@@ -188,7 +188,7 @@ public: // public methods
    * @brief This is the interface for the end user to generate a package for
    * subscription.
    *
-   * @note Supported drone type : M210V2, M300
+   * @platforms M210V2, M300
    * @param packageID: The ID of package it'll generate
    * @param numberOfTopics:
    * @param topicList: List of Topic Names to subscribe in the package
@@ -203,14 +203,14 @@ public: // public methods
   /*!
    * @brief Non-blocking call for version match
    *
-   * @note Supported drone type : M210V2, M300
+   * @platforms M210V2, M300
    */
   void verify();
 
   /*!
    * @brief Blocking call for version match.
    *
-   * @note Supported drone type : M210V2, M300
+   * @platforms M210V2, M300
    * @param timeout
    * @return
    */
@@ -219,7 +219,7 @@ public: // public methods
   /*!
   * @brief Non-blocking call for starting a package
   *
-  * @note Supported drone type : M210V2, M300
+  * @platforms M210V2, M300
   * @param packageID
   */
   void startPackage(int packageID);
@@ -227,7 +227,7 @@ public: // public methods
   /*!
    * @brief Blocking call for start package
    *
-   * @note Supported drone type : M210V2, M300
+   * @platforms M210V2, M300
    * @param packageID
    * @param timeout
    * @return
@@ -237,7 +237,7 @@ public: // public methods
   /*!
    * @brief Non-blocking call for start package
    *
-   * @note Supported drone type : M210V2, M300
+   * @platforms M210V2, M300
    * @param packageID
    * @return
    */
@@ -246,7 +246,7 @@ public: // public methods
   /*!
    * @brief Non-blocking call for start package
    *
-   * @note Supported drone type : M210V2, M300
+   * @platforms M210V2, M300
    * @param packageID
    * @param timeout
    * @return
@@ -256,7 +256,7 @@ public: // public methods
   /*!
    * @brief Remove leftover incoming telemetry data due to unclean quit
    *
-   * @note Supported drone type : M210V2, M300
+   * @platforms M210V2, M300
    * @return
    */
   void removeLeftOverPackages();
@@ -264,7 +264,7 @@ public: // public methods
   /*!
    * @brief Remove all occupied packages
    *
-   * @note Supported drone type : M210V2, M300
+   * @platforms M210V2, M300
    * @return
    */
   void removeAllExistingPackages();
@@ -272,7 +272,7 @@ public: // public methods
   /*!
    * @brief Non-blocking call for resetting all packages.
    *
-   * @note Supported drone type : M210V2, M300
+   * @platforms M210V2, M300
    * @return
    */
   void reset();
@@ -280,7 +280,7 @@ public: // public methods
   /*!
    * @brief Blocking call for resetting all packages.
    *
-   * @note Supported drone type : M210V2, M300
+   * @platforms M210V2, M300
    * @param timeout
    */
   ACK::ErrorCode reset(int timeout);
@@ -288,7 +288,7 @@ public: // public methods
   /*!
    * @brief Register a callback function after package[packageID] is received
    *
-   * @note Supported drone type : M210V2, M300
+   * @platforms M210V2, M300
    * @param packageID
    * @param userFunctionAfterPackageExtraction
    */
