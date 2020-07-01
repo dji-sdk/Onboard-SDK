@@ -628,24 +628,109 @@ LiveView::LiveViewErrCode AdvancedSensing::stopH264Stream(
   }
 }
 
+void stereoImg240pHandlerCB(Vehicle *vehiclePtr, RecvContainer recvFrame, UserData userData)
+{
+  char *m210FLName = "front_left";
+  char *m210FRName = "front_right";
+  char *m210DBName = "down_back";
+  char *m210DFName = "down_front";
+  if (!userData) {
+    DERROR("Invalid parameters.");
+    return;
+  }
+  DSTATUS("sample stereoCallback receive an image at frame: %d and time stamp: %d",
+          recvFrame.recvData.stereoImgData->frame_index,
+          recvFrame.recvData.stereoImgData->time_stamp);
+  CommonCallBackHandler *handler = (CommonCallBackHandler *)userData;
+  Perception::PerceptionImageCB
+      cb = (Perception::PerceptionImageCB) handler->callback;
+  for (int i = 0; i < recvFrame.recvData.stereoImgData->num_imgs; i++)
+  {
+    Perception::ImageInfoType type = {0};
+    type.rawInfo.height = 240;
+    type.rawInfo.width = 320;
+    type.sequence = recvFrame.recvData.stereoImgData->frame_index;
+    type.timeStamp = recvFrame.recvData.stereoImgData->time_stamp;
+    type.rawInfo.index = recvFrame.recvData.stereoImgData->frame_index;
+    if (!strncmp(recvFrame.recvData.stereoImgData->img_vec[i].name, m210FLName, strlen(m210FLName))) {
+      type.dataType = Perception::RAW_FRONT_LEFT;
+      type.rawInfo.direction = Perception::RECTIFY_FRONT;
+    } else if (!strncmp(recvFrame.recvData.stereoImgData->img_vec[i].name, m210FRName, strlen(m210FRName))) {
+      type.dataType = Perception::RAW_FRONT_RIGHT;
+      type.rawInfo.direction = Perception::RECTIFY_FRONT;
+    } else if (!strncmp(recvFrame.recvData.stereoImgData->img_vec[i].name, m210DBName, strlen(m210DBName))) {
+      type.dataType = Perception::RAW_DOWN_BACK;
+      type.rawInfo.direction = Perception::RECTIFY_DOWN;
+    } else if (!strncmp(recvFrame.recvData.stereoImgData->img_vec[i].name, m210DFName, strlen(m210DFName))) {
+      type.dataType = Perception::RAW_DOWN_FRONT;
+      type.rawInfo.direction = Perception::RECTIFY_DOWN;
+    } else {
+      DSTATUS("Get unknown stereo images flow");
+      continue;
+    }
+    cb(type, recvFrame.recvData.stereoImgData->img_vec[i].image, ACK::IMG_240P_SIZE, handler->userData);
+  }
+}
+
 Perception::PerceptionErrCode AdvancedSensing::subscribePerceptionImage(
     Perception::DirectionType direction, Perception::PerceptionImageCB cb,
     void *userData) {
-  return perception->subscribePerceptionImage(direction, cb, userData);
+  if (vehicle_ptr->isM210V2()) {
+    AdvancedSensing::ImageSelection image_select;
+    memset(&image_select, 0, sizeof(AdvancedSensing::ImageSelection));
+    if (direction == Perception::RECTIFY_FRONT) {
+      image_select.front_left = 1;
+      image_select.front_right = 1;
+    } else if (direction == Perception::RECTIFY_DOWN) {
+      image_select.down_front = 1;
+      image_select.down_back = 1;
+    } else {
+      DERROR("The M210V2 Only support front and down stereo images subscription");
+      return Perception::OSDK_PERCEPTION_REQ_UNSUPPORT;
+    }
+
+    static CommonCallBackHandler handler;
+    handler.callback = (void *)cb;
+    handler.userData = userData;
+
+    subscribeStereoImages(&image_select, &stereoImg240pHandlerCB, &handler);
+    return Perception::OSDK_PERCEPTION_PASS;
+  } else if (vehicle_ptr->isM300()) {
+    return perception->subscribePerceptionImage(direction, cb, userData);
+  } else {
+    DERROR("Only support M210V2 and M300");
+    return Perception::OSDK_PERCEPTION_REQ_UNSUPPORT;
+  }
 }
 
 Perception::PerceptionErrCode AdvancedSensing::unsubscribePerceptionImage(
     Perception::DirectionType direction) {
-  return perception->unsubscribePerceptionImage(direction);
+  if (vehicle_ptr->isM210V2()) {
+    unsubscribeStereoImages();
+    return Perception::OSDK_PERCEPTION_PASS;
+  } else if (vehicle_ptr->isM300()) {
+    return perception->unsubscribePerceptionImage(direction);
+  } else {
+    return Perception::OSDK_PERCEPTION_REQ_UNSUPPORT;
+  }
 }
 
 Perception::PerceptionErrCode AdvancedSensing::triggerStereoCamParamsPushing() {
-  return perception->triggerStereoCamParamsPushing();
+  if (vehicle_ptr->isM300())
+    return perception->triggerStereoCamParamsPushing();
+  else {
+    DERROR("Only support M300");
+    return Perception::OSDK_PERCEPTION_REQ_UNSUPPORT;
+  }
 }
 
 void AdvancedSensing::setStereoCamParamsObserver(Perception::PerceptionCamParamCB cb,
                                         void *userData) {
-  return perception->setStereoCamParamsObserver(cb, userData);
+  if (vehicle_ptr->isM300())
+    perception->setStereoCamParamsObserver(cb, userData);
+  else {
+    DERROR("Only support M300");
+  }
 }
 
 void parseVersion(uint8_t* ackPtr)
