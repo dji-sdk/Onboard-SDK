@@ -118,7 +118,7 @@ public:
 
   /*! Get timestamp from local cache
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *  @return Telemetry::TimeStamp data structure with the newest value.
    */
@@ -126,7 +126,7 @@ public:
 
   /*! Get software sync timestamp from local cache
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *  @details Note that this is unrelated to the hardware sync subscription.
    *  @return Telemetry::SyncStamp data structure with the newest value.
@@ -135,7 +135,7 @@ public:
 
   /*! Get quaternion data from local cache
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *  @return Telemetry::Quaternion data structure with the newest value.
    *  @details Data accuracy:
@@ -149,7 +149,7 @@ public:
 
   /*! Get acceleration from local cache
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *  @details The acceleration may be in body or ground frame, fused or raw,
    *           based on settings on DJI Assistant 2's SDK page.
@@ -159,7 +159,7 @@ public:
 
   /*! Get velocity from local cache
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *  @details Data accuracy:
    * | Axis     | Unit | Accuracy                                                                                    |
@@ -175,7 +175,7 @@ public:
 
   /*! Get Angular Rates from local cache
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *  @details The angular rates may be in body or ground frame, fused or raw,
    *           based on settings on DJI Assistant 2's SDK page.
@@ -185,7 +185,7 @@ public:
 
   /*! Get Velocity Info (health) from local cache
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *  @details This data is received along with velocity.
    *  @return Telemetry::VelocityInfo data structure with the newest value.
@@ -194,7 +194,7 @@ public:
 
   /*! Get Globalc Position (LLA and metadata) from local cache
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *  @details Data accuracy:
    *  | Axis | Unit | Position Sensor | Accuracy                                         |
@@ -211,7 +211,7 @@ public:
 
   /*! Get Obstacle info around the vehicle from local cache
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *  @details The returned value is relative to your home location.
    *  @return Telemetry::RelativePosition data structure with the newest value.
@@ -220,7 +220,7 @@ public:
 
   /*! Get GPS Info from local cache
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *  @details This feature provides detailed GPS info. Available on A3/N3/M600.
    *           You need to enable it separately on DJI Assistant 2's SDK page.
@@ -230,7 +230,7 @@ public:
 
   /*! Get RTK data from local cache
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *  @details This feature provides detailed RTK info. Available on A3/M600.
    *           You need to enable it separately on DJI Assistant 2's SDK page.
@@ -262,7 +262,7 @@ public:
 
   /*! Get Magnetometer data from local cache
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *  @details The returned value is calibrated mag data,
    *           1000 < |mag| < 2000 for normal operation
@@ -272,7 +272,7 @@ public:
 
   /*! Get RC channel data from local cache
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *  @return Telemetry::RC data structure with the newest value.
    */
@@ -280,7 +280,7 @@ public:
 
   /*! Get Gimbal data from local cache
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *  @details Data Accuracy: 0.1 deg in all axes
    *
@@ -290,7 +290,7 @@ public:
 
   /*! Get Status (flight status, mode, gear and error) from local cache
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *
    *  @return Telemetry::Status data structure with the newest value.
@@ -299,7 +299,7 @@ public:
 
   /*! Get Battery Info from local cache
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *
    *  @return Telemetry::Battery data structure with the newest value.
@@ -308,7 +308,7 @@ public:
 
   /*! Get SDK Control Mode/Authority info from local cache
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *
    *  @return Telemetry::SDKInfo data structure with the newest value.
@@ -317,7 +317,7 @@ public:
 
   /*! Get Compass status info from local cache
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *
    *  @return Telemetry::Compass data structure with the newest value.
@@ -328,7 +328,7 @@ public:
 public:
   /*! Non-blocking call for Frequency setting
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @param dataLenIs16 Array of length 16 that has frequency values for each
    *  topic
    *  @param callback Callback function you want called upon ACK
@@ -339,7 +339,7 @@ public:
                         UserData userData = 0);
   /*! Blocking call for Frequency setting
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @param dataLenIs16 Array of length 16 that has frequency values for each
    *  topic
    *  @param wait_timeout Time(in s) you want the function to wait for an ACK
@@ -349,13 +349,13 @@ public:
 
   /*! Non-Blocking call for setting default frequencies
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    */
   void setBroadcastFreqDefaults();
 
   /*! Blocking call for setting default frequencies
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @param wait_timeout Time(in s) you want the function to wait for an ACK
    *  @return ACK::ErrorCode struct containing the ACK and metadata
    */
@@ -363,13 +363,13 @@ public:
 
   /*! Non-Blocking call for setting all frequencies to zero
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    */
   void setBroadcastFreqToZero();
 
   /*! getter function for passFlag
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @return uint16_t passFlag
    */
   uint16_t getPassFlag();

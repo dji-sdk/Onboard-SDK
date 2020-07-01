@@ -46,6 +46,8 @@ class MopClient : MopPipelineManagerBase {
   ~MopClient();
   /*! @brief Connect the target device by a pipelineid with properties of
    * pipeline type. If success, a pipeline object will be created.
+   *
+   *  @platforms M300
    *  @note This is a blocking api
    *  @param id The pipeline id which to be connected, ref to
    * DJI::OSDK::MOP::PipelineID
@@ -59,6 +61,8 @@ class MopClient : MopPipelineManagerBase {
 
   /*! @brief Connect the target device by a pipelineid with properties of
    * pipeline type. If success, a pipeline object will be created.
+   *
+   *  @platforms M300
    *  @note This is a non-blocking api.
    *  @todo This api is not implemented yet, it will be implemented in the
    *  future.
@@ -80,6 +84,8 @@ class MopClient : MopPipelineManagerBase {
                void *userData);
 
   /*! @brief Disonnect the target device by a pipelineid.
+   *
+   *  @platforms M300
    *  @note This is a blocking api
    *  @param id The pipeline id which to be connected, ref to
    * DJI::OSDK::MOP::PipelineID
@@ -88,6 +94,8 @@ class MopClient : MopPipelineManagerBase {
   MopErrCode disconnect(PipelineID id);
 
   /*! @brief Disonnect the target device by a pipelineid.
+   * 
+   *  @platforms M300
    *  @note This is a non-blocking api
    *  @todo This api is not implemented yet, it will be implemented in the
    *  future.

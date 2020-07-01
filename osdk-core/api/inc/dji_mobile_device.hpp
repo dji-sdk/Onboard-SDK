@@ -54,7 +54,7 @@ public:
   /*!
    * @brief sending data from OSDK to MSDK
    *
-   * @note Supported drone type : M210V2, M300
+   * @platforms M210V2, M300
    * @param data sent data
    * @param len length of data
    */
@@ -68,7 +68,7 @@ public:
   /*!
    * @brief set callback to receive data from MSDK
    *
-   * @note Supported drone type : M210V2, M300
+   * @platforms M210V2, M300
    * @param callback callback to receive data
    * @param userData user data to be passed in callback
    */

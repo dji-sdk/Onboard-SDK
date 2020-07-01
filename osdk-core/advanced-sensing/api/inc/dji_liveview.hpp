@@ -66,7 +66,7 @@ class LiveView {
    *
    *  Start the FPV or Camera H264 Stream
    *
-   *  @note Supported drone type : M300
+   *  @platforms M300
    *  @param pos point out which camera to output the H264 stream
    *  @param cb callback function that is called in a callback thread when a new
    *            h264 frame is received
@@ -79,7 +79,7 @@ class LiveView {
    *
    *  Stop the FPV or Camera H264 Stream
    *
-   *  @note Supported drone type : M300
+   *  @platforms M300
    *  @param pos point out which camera to output the H264 stream
    *  @return Errorcode of liveivew, ref to DJI::OSDK::LiveView::LiveViewErrCode
    */

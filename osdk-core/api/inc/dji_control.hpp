@@ -313,7 +313,7 @@ public:
   *
   *  Obtain the control authority of the api (non-blocking call)
   *
-  *  @note Supported drone type : M210V2, M300
+  *  @platforms M210V2, M300
   *  @param callback callback function
   *  @param userData user data (void ptr)
   */
@@ -322,7 +322,7 @@ public:
   *
   *  Obtain the control authority of the api (blocking call)
   *
-  *  @note Supported drone type : M210V2, M300
+  *  @platforms M210V2, M300
   *  @param timeout time to wait for ACK
   */
   ACK::ErrorCode obtainCtrlAuthority(int timeout);
@@ -330,7 +330,7 @@ public:
   *
   *  Release the control authority of the api (non-blocking call)
   *
-  *  @note Supported drone type : M210V2, M300
+  *  @platforms M210V2, M300
   *  @param callback callback function
   *  @param userData user data (void ptr)
   */
@@ -340,7 +340,7 @@ public:
   *
   *  Release the control authority of the api (blocking call)
   *
-  *  @note Supported drone type : M210V2, M300
+  *  @platforms M210V2, M300
   *  @param timeout time to wait for ACK
   */
   ACK::ErrorCode releaseCtrlAuthority(int timeout);
@@ -348,7 +348,7 @@ public:
   /*! @brief Basic action command for the vehicle, see FlightCommand for cmd
    * choices
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @param cmd action command from FlightCommand
    *  @param callback callback function
    *  @param userData user data (void ptr)
@@ -358,7 +358,7 @@ public:
   /*! @brief Control the vehicle using user-specified mode, see FlightCommand
    * for cmd choices
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @param cmd action command from FlightCommand
    *  @param timeout timeout to wait for ACK
    *  @return ErrorCode
@@ -367,13 +367,13 @@ public:
 
   /*! @brief Wrapper function for arming the motors
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @return ACK::ErrorCode struct with the acknowledgement from the FC
    */
   ACK::ErrorCode armMotors(int wait_timeout);
   /*! @brief Wrapper function for arming the motors
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @note If user does not provide his/her own callback, default callback
    *  will be executed
    */
@@ -381,13 +381,13 @@ public:
 
   /*! @brief Wrapper function for disarming the motors
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @return ACK::ErrorCode struct with the acknowledgement from the FC
    */
   ACK::ErrorCode disArmMotors(int wait_timeout);
   /*! @brief Wrapper function for disarming the motors
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @note If user does not provide his/her own callback, default callback
    *  will be executed
    */
@@ -395,13 +395,13 @@ public:
 
   /*! @brief Wrapper function for take off
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @return ACK::ErrorCode struct with the acknowledgement from the FC
    */
   ACK::ErrorCode takeoff(int wait_timeout);
   /*! @brief Wrapper function for take off
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @note If user does not provide his/her own callback, default callback
    *  will be executed
    */
@@ -409,13 +409,13 @@ public:
 
   /*! @brief Wrapper function for go Home
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @return ACK::ErrorCode struct with the acknowledgement from the FC
    */
   ACK::ErrorCode goHome(int wait_timeout);
   /*! @brief Wrapper function for go Home
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @note If user does not provide his/her own callback, default callback
    *  will be executed
    */
@@ -423,13 +423,13 @@ public:
 
   /*! @brief Wrapper function for landing
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @return ACK::ErrorCode struct with the acknowledgement from the FC
    */
   ACK::ErrorCode land(int wait_timeout);
   /*! @brief Wrapper function for landing
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @note If user does not provide his/her own callback, default callback
    *  will be executed
    */
@@ -437,7 +437,7 @@ public:
 
   /*! @brief Control the vehicle using user-specified mode
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @param data control set-points and flags
    *
    * @details Control Mode Byte
@@ -471,7 +471,7 @@ public:
 
   /*! @brief Control the vehicle using user-specified mode (overloaded)
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @note this mode only works in HORIZONTAL_VELOCITY and the unit of
    *  feedforward term is m/s^2
    *
@@ -495,7 +495,7 @@ public:
   /*! @brief Control the position and yaw angle of the vehicle.
    *  The reference frame is the DJI::OSDK::Control::HORIZONTAL_GROUND (NEU).
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @param x position set-point in x axis of ground frame (m)
    *  @param y position set-point in y axis of ground frame (m)
    *  @param z position set-point in z axis of ground frame (m), input limit see
@@ -508,7 +508,7 @@ public:
   /*! @brief Control the velocity and yaw rate of the vehicle.
    *  The reference frame is the DJI::OSDK::Control::HORIZONTAL_GROUND (NEU).
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @param Vx velocity set-point in x axis of ground frame (m/s), input limit
    * see DJI::OSDK::Control::HORIZONTAL_VELOCITY
    *  @param Vy velocity set-point in y axis of ground frame (m/s), input limit
@@ -522,7 +522,7 @@ public:
 
   /*! @brief Control the attitude and vertical position of the vehicle
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @param roll   attitude set-point in x axis of body frame (FRU) (deg),
    * input limit see DJI::OSDK::Control::HORIZONTAL_ANGLE
    *  @param pitch  attitude set-point in y axis of body frame (FRU) (deg),
@@ -536,7 +536,7 @@ public:
 
   /*! @brief Control the attitude rate and vertical position of the vehicle
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @param rollRate   attitude rate set-point in x axis of body frame (FRU)
    * (deg/s)
    *  @param pitchRate  attitude rate set-point in y axis of body frame (FRU)
@@ -552,7 +552,7 @@ public:
   /*! @brief Stop the vehicle in horiz velocity, vert velocity, yaw rate mode
    * (body frame)
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    */
   void emergencyBrake();
 
@@ -567,7 +567,7 @@ public:
 
   /*! @brief Turn on or off the kill switch
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @param cmd enable or disable the kill switch
    *  @param wait_timeout timeout for blocking call
    *  @param debugMsg inject debug message to flight control FW for logging, size limit: 10 bytes
@@ -577,7 +577,7 @@ public:
   ACK::ErrorCode killSwitch(KillSwitch cmd, int wait_timeout = 10, char debugMsg[10] = (char *)"OSDK_API");
   /*! @brief Turn on or off the kill switch
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @param cmd enable or disable the kill switch
    *  @param debugMsg inject debug message to flight control FW for logging, size limit: 10 bytes
    *  @param callback callback function you want called upon ACK
@@ -591,13 +591,13 @@ public:
 private:
   /*! @brief Wrapper function for arming/disarming the motors
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @return ACK::ErrorCode struct with the acknowledgment from the FC
    */
   ACK::ErrorCode setArm(bool armSetting, int timeout);
   /*! @brief Wrapper function for arming/disarming the motors
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  own callback, default callback will be executed.
    */
   void setArm(bool armSetting, VehicleCallBack callback = 0,

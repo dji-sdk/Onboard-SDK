@@ -69,7 +69,7 @@ public:
    *
    *  init missions, could be hotpt or waypt, blocking calls
    *
-   *  @note Supported drone type : M210V2, M300(HOTPOINT Only)
+   *  @platforms M210V2, M300(HOTPOINT Only)
    *  @param type mission type enum
    *  @param timeout timeout
    *  @param missionData initData for the mission (void ptr)
@@ -80,7 +80,7 @@ public:
    *
    *  init missions, could be hotpt or waypt, non-blocking calls
    *
-   *  @note Supported drone type : M210V2, M300(HOTPOINT Only)
+   *  @platforms M210V2, M300(HOTPOINT Only)
    *  @param type mission type enum
    *  @param callback user specified callback
    *  @param missionData initData for the mission (void ptr)
@@ -102,7 +102,7 @@ private:
    *
    *  init waypt mission, blocking calls
    *
-   *  @note Supported drone type : M210V2
+   *  @platforms M210V2
    *  @param timeout timeout
    *  @param wayptData initData for the waypt (void ptr)
    */
@@ -111,7 +111,7 @@ private:
    *
    *  init waypt mission, non-blocking calls
    *
-   *  @note Supported drone type : M210V2
+   *  @platforms M210V2
    *  @param timeout timeout
    *  @param wayptData initData for the waypt (void ptr)
    */
@@ -122,7 +122,7 @@ private:
    *
    *  init hot pt mission, blocking calls
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @param timeout timeout
    *  @param wayptData initData for hotpt (void ptr)
    */
@@ -131,7 +131,7 @@ private:
    *
    *  init hot pt mission, non-blocking calls
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @param timeout timeout
    *  @param wayptData initData for hotpt (void ptr)
    */
@@ -142,7 +142,7 @@ public:
    *
    *  get waypt ptr from waypt container
    *
-   *  @note Supported drone type : M210V2
+   *  @platforms M210V2
    *  @param index index of waypt container
    */
   WaypointMission* getWaypt(int index);
@@ -150,13 +150,13 @@ public:
    *
    *  get hotpt ptr from hotpt container
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  @param index index of hotpt container
    */
   HotpointMission* getHotpt(int index);
   /*! @brief
    *
-   *  @note Supported drone type : M210V2, M300
+   *  @platforms M210V2, M300
    *  print the status of the mission manager
    *
    */

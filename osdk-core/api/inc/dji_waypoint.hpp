@@ -56,7 +56,7 @@ public:
    *
    *  init waypoint mission settings
    *
-   *  @note Supported drone type : M210V2
+   *  @platforms M210V2
    *  @param Info action command from DJI_ControllerCMD.h
    *  @param callback callback function
    *  @param userData user data (void ptr)
@@ -67,7 +67,7 @@ public:
    *
    *  init waypoint mission settings
    *
-   *  @note Supported drone type : M210V2
+   *  @platforms M210V2
    *  @param Info action command from DJI_ControllerCMD.h
    *  @param timeout timeout to wait for ACK
    */
@@ -76,7 +76,7 @@ public:
    *
    *  start the waypt mission
    *
-   *  @note Supported drone type : M210V2
+   *  @platforms M210V2
    *  @param callback callback function
    *  @param userData user data (void ptr)
    */
@@ -85,7 +85,7 @@ public:
    *
    *  start the waypt mission
    *
-   *  @note Supported drone type : M210V2
+   *  @platforms M210V2
    *  @param timer timeout to wait for ACK
    */
   ACK::ErrorCode start(int timer);
@@ -93,7 +93,7 @@ public:
    *
    *  stop the waypt mission
    *
-   *  @note Supported drone type : M210V2
+   *  @platforms M210V2
    *  @param callback callback function
    *  @param userData user data (void ptr)
    */
@@ -102,7 +102,7 @@ public:
    *
    *  stop the waypt mission
    *
-   *  @note Supported drone type : M210V2
+   *  @platforms M210V2
    *  @param timer timeout to wait for ACK
    */
   ACK::ErrorCode stop(int timer);
@@ -110,7 +110,7 @@ public:
    *
    *  pause the waypt mission
    *
-   *  @note Supported drone type : M210V2
+   *  @platforms M210V2
    *  @param callback callback function
    *  @param userData user data (void ptr)
    */
@@ -119,7 +119,7 @@ public:
    *
    *  pause the waypt mission
    *
-   *  @note Supported drone type : M210V2
+   *  @platforms M210V2
    *  @param timer timeout to wait for ACK
    */
   ACK::ErrorCode pause(int timer);
@@ -127,7 +127,7 @@ public:
    *
    *  resume the waypt mission
    *
-   *  @note Supported drone type : M210V2
+   *  @platforms M210V2
    *  @param callback callback function
    *  @param userData user data (void ptr)
    */
@@ -136,7 +136,7 @@ public:
    *
    *  resume the waypt mission
    *
-   *  @note Supported drone type : M210V2
+   *  @platforms M210V2
    *  @param timer timeout to wait for ACK
    */
   ACK::ErrorCode resume(int timer);
@@ -144,14 +144,14 @@ public:
    *
    *  setting waypt init data
    *
-   *  @note Supported drone type : M210V2
+   *  @platforms M210V2
    *  @param value user specified WayPointInitData
    */
   void setInfo(const WayPointInitSettings& value);
   /*!
    * @brief Read WayPoint mission settings from the flight controller
    *
-   * @note Supported drone type : M210V2
+   * @platforms M210V2
    * @return Information about uploaded WayPoint mission, error if
    * mission settings not uploaded.
    *
@@ -160,7 +160,7 @@ public:
   /*!
    * @brief Read WayPoint mission settings from the flight controller
    *
-   * @note Supported drone type : M210V2
+   * @platforms M210V2
    * Information about uploaded WayPoint mission, error if
    * mission settings not uploaded will be handled in a user defined or
    * default callback.
@@ -169,7 +169,7 @@ public:
   /*!
    * @brief Read WayPoint index settings from the flight controller
    *
-   * @note Supported drone type : M210V2
+   * @platforms M210V2
    * @return Information about uploaded WayPoint index, error if
    * index not uploaded.
    */
@@ -177,7 +177,7 @@ public:
   /*!
    * @brief Read WayPoint index settings from the flight controller
    *
-   * @note Supported drone type : M210V2
+   * @platforms M210V2
    * Information about uploaded WayPoint index, error if
    * index not uploaded will be handled in a user defined or
    * default callback.
@@ -185,7 +185,7 @@ public:
   void getIndex(uint8_t index, VehicleCallBack callback, UserData userData);
   /*! @brief
    *
-   *  @note Supported drone type : M210V2
+   *  @platforms M210V2
    *  setting waypt data to the waypt container with specified idx
    *
    *  @param value user specified WayPointData
@@ -196,7 +196,7 @@ public:
    *
    *  setting waypt init data
    *
-   *  @note Supported drone type : M210V2
+   *  @platforms M210V2
    *  @param value user specified WayPointInitData
    */
   bool uploadIndexData(WayPointSettings* data, VehicleCallBack callback = 0,
@@ -205,7 +205,7 @@ public:
    *
    *  setting waypt init data
    *
-   *  @note Supported drone type : M210V2
+   *  @platforms M210V2
    *  @param value user specified WayPointInitData
    *  @param timer timeout to wait for ACK
    */
@@ -214,7 +214,7 @@ public:
    *
    *  getting waypt idle velocity
    *
-   *  @note Supported drone type : M210V2
+   *  @platforms M210V2
    *  @param callback callback function
    *  @param userData user data (void ptr)
    */
@@ -223,7 +223,7 @@ public:
    *
    *  getting waypt idle velocity
    *
-   *  @note Supported drone type : M210V2
+   *  @platforms M210V2
    *  @param timer timeout to wait for ACK
    */
   ACK::ErrorCode readIdleVelocity(int timeout);
@@ -231,7 +231,7 @@ public:
    *
    *  setting waypt idle velocity
    *
-   *  @note Supported drone type : M210V2
+   *  @platforms M210V2
    *  @param meterPreSecond specified velocity
    *  @param callback callback function
    *  @param userData user data (void ptr)
@@ -242,7 +242,7 @@ public:
    *
    *  setting waypt idle velocity
    *
-   *  @note Supported drone type : M210V2
+   *  @platforms M210V2
    *  @param meterPreSecond specified velocity
    *  @param timer timeout to wait for ACK
    */
@@ -290,7 +290,7 @@ public:
    *
    *  Set waypoint push data callback
    *
-   *  @note Supported drone type : M210V2
+   *  @platforms M210V2
    *  @param callback callback function
    *  @param userData a void ptr that user can manipulate inside the callback
    */
@@ -299,7 +299,7 @@ public:
    *
    *  Set waypoint callback
    *
-   *  @note Supported drone type : M210V2
+   *  @platforms M210V2
    *  @param callback callback function
    *  @param userData a void ptr that user can manipulate inside the callback
    */
