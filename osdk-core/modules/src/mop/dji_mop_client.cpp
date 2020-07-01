@@ -51,6 +51,8 @@ MopErrCode MopClient::connect(PipelineID id, PipelineType type,
     } else {
       pipelineMap[id] = p;
     }
+  } else {
+    p = pipelineMap[id];
   }
 
   /*! 2.Do creating */

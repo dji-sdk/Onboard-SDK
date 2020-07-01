@@ -47,6 +47,7 @@ E_OsdkStat OsdkSTM32_TaskCreate(T_OsdkTaskHandle *task, void *(*taskFunc)(void *
   char taskName[100] = {0};
   
   snprintf(taskName, sizeof(taskName), "Task_%d", taskCnt);
+  *task = malloc(sizeof(TaskHandle_t));
   result = xTaskCreate((TaskFunction_t)taskFunc, taskName, stackSize, arg, 0, *task);
   taskCnt++;
   if (result != pdTRUE) {
