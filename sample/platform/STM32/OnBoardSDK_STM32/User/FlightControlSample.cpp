@@ -689,23 +689,23 @@ moveByPositionOffset(float xOffsetDesired, float yOffsetDesired,
     zOffsetRemaining = zOffsetDesired - localOffset.z;
 
     //! See if we need to modify the setpoint
-    if (std::abs(xOffsetRemaining) < speedFactor)
+    if (abs(xOffsetRemaining) < speedFactor)
       xCmd = xOffsetRemaining;
-    if (std::abs(yOffsetRemaining) < speedFactor)
+    if (abs(yOffsetRemaining) < speedFactor)
       yCmd = yOffsetRemaining;
 
     if(v->getFwVersion() == Version::M100_31 &&
-       std::abs(xOffsetRemaining) < posThresholdInM &&
-       std::abs(yOffsetRemaining) < posThresholdInM &&
-       std::abs(yawInRad - yawDesiredRad) < yawThresholdInRad)
+       abs(xOffsetRemaining) < posThresholdInM &&
+       abs(yOffsetRemaining) < posThresholdInM &&
+       abs(yawInRad - yawDesiredRad) < yawThresholdInRad)
     {
       //! 1. We are within bounds; start incrementing our in-bound counter
       withinBoundsCounter += cycleTimeInMs;
     }
-    else if(std::abs(xOffsetRemaining) < posThresholdInM &&
-	   std::abs(yOffsetRemaining) < posThresholdInM &&
-	   std::abs(zOffsetRemaining) < posThresholdInM &&
-	   std::abs(yawInRad - yawDesiredRad) < yawThresholdInRad)
+    else if(abs(xOffsetRemaining) < posThresholdInM &&
+	   abs(yOffsetRemaining) < posThresholdInM &&
+	   abs(zOffsetRemaining) < posThresholdInM &&
+	   abs(yawInRad - yawDesiredRad) < yawThresholdInRad)
     {
       //! 1. We are within bounds; start incrementing our in-bound counter
       withinBoundsCounter += cycleTimeInMs;
