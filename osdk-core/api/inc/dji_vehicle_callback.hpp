@@ -86,6 +86,17 @@ typedef struct VehicleCallBackHandler
   UserData        userData;
 } VehicleCallBackHandler;
 
+/*! @brief The CallBackHandler struct allows users to encapsulate callbacks and
+ * data in one struct. This is a more common method.
+ *
+ */
+typedef struct CommonCallBackHandler
+{
+  void*    callback;
+  UserData userData;
+} CommonCallBackHandler;
+
+
 } // namespace OSDK
 } // namespace DJI
 #endif /* DJI_VEHICLECALLBACK_H */

@@ -65,9 +65,11 @@
 
 using namespace DJI::OSDK;
 
-#define TEST_OP_PIPELINE_ID 49153
-#define READ_ONCE_BUFFER_SIZE 100*1024
-#define SEND_ONCE_BUFFER_SIZE 100*1024
+#define TEST_OP_RELIABLE_PIPELINE_ID 49153
+#define TEST_OP_UNRELIABLE_PIPELINE_ID 49152
+#define RELIABLE_READ_ONCE_BUFFER_SIZE (2 * 1024 * 1024)
+#define UNRELIABLE_READ_ONCE_BUFFER_SIZE (100 * 1024)
+#define SEND_ONCE_BUFFER_SIZE (100 * 1024)
 #define TEST_RECV_FILE_NAME "test.mp4"
 
 #define ASSERT_MOP_RET(ret) \
@@ -86,7 +88,12 @@ typedef enum OPDownloadSampleState {
   MD5_RESULT_CHECK,
   DOWNLOAD_TASK_FINISH,
 } OPUploadSampleState;
-bool sampleFinish = false;
+
+static bool isReliable = false;
+static bool sampleFinish = false;
+static bool isConnect = false;
+static uint32_t total_len = 0;
+static uint32_t lostCnt = 0;
 
 static uint32_t get_file_size(const char *path)
 {
@@ -127,7 +134,7 @@ static void OPDownloadFileTask(MopPipeline *OP_Pipeline) {
   fileInfo downloadFileInfo = {0};
   MopErrCode mopRet;
   OPUploadSampleState uploadState = REQUEST_FILE_DOWNLOAD;
-  uint8_t recvBuf[READ_ONCE_BUFFER_SIZE] = {0};
+  uint8_t recvBuf[RELIABLE_READ_ONCE_BUFFER_SIZE] = {0};
 
   /*! MD5 prepare*/
   MD5_CTX ctx;
@@ -148,7 +155,7 @@ static void OPDownloadFileTask(MopPipeline *OP_Pipeline) {
       }
       case RECV_FILE_DOWNLOAD_ACK: {
         /*! Step 2 : receive the ack of the file download request */
-        MopPipeline::DataPackType readPack = {(uint8_t *) recvBuf, READ_ONCE_BUFFER_SIZE};
+        MopPipeline::DataPackType readPack = {(uint8_t *) recvBuf, RELIABLE_READ_ONCE_BUFFER_SIZE};
         mopRet = OP_Pipeline->recvData(readPack, &readPack.length);
         ASSERT_MOP_RET(mopRet)
         sampleProtocolStruct *ackData = (sampleProtocolStruct *)readPack.data;
@@ -180,8 +187,10 @@ static void OPDownloadFileTask(MopPipeline *OP_Pipeline) {
       }
       case RECV_FILE_INFO_DATA: {
         /*! Step 4 : receive the info of the target download file */
-        MopPipeline::DataPackType readPack = {(uint8_t *) recvBuf, READ_ONCE_BUFFER_SIZE};
-        mopRet = OP_Pipeline->recvData(readPack, &readPack.length);
+        MopPipeline::DataPackType readPack = {(uint8_t *) recvBuf, RELIABLE_READ_ONCE_BUFFER_SIZE};
+        do {
+            mopRet = OP_Pipeline->recvData(readPack, &readPack.length);
+        } while (mopRet == MOP_TIMEOUT);
         ASSERT_MOP_RET(mopRet)
         DSTATUS("Step 4 : recv data length : %d", readPack.length);
         sampleProtocolStruct *ackData = (sampleProtocolStruct *)readPack.data;
@@ -211,8 +220,8 @@ static void OPDownloadFileTask(MopPipeline *OP_Pipeline) {
         if (fp == NULL) throw std::runtime_error("open file error");
 
         while (1) {
-          memset(recvBuf, 0, READ_ONCE_BUFFER_SIZE);
-          MopPipeline::DataPackType readPacket = {(uint8_t *)recvBuf, READ_ONCE_BUFFER_SIZE};
+          memset(recvBuf, 0, RELIABLE_READ_ONCE_BUFFER_SIZE);
+          MopPipeline::DataPackType readPacket = {(uint8_t *)recvBuf, RELIABLE_READ_ONCE_BUFFER_SIZE};
           mopRet = OP_Pipeline->recvData(readPacket, &readPacket.length);
           if (mopRet != MOP_PASSED) {
             DERROR("recv whole file data failed!, realLen = %d\n", readPacket.length);
@@ -221,6 +230,7 @@ static void OPDownloadFileTask(MopPipeline *OP_Pipeline) {
             DSTATUS("recv whole file data success!, realLen = %d\n", readPacket.length);
             sampleProtocolStruct *fileData = (sampleProtocolStruct *)readPacket.data;
             DSTATUS("fileData->dataLen = %d", fileData->dataLen);
+            total_len += fileData->dataLen;
             fwrite(fileData->data.fileData, 1, fileData->dataLen, fp);
             MD5_Update(&ctx, fileData->data.fileData, fileData->dataLen);
             cnt++;
@@ -265,9 +275,35 @@ static void OPDownloadFileTask(MopPipeline *OP_Pipeline) {
   }
 }
 
+static void OPUnreliableTransTask(MopPipeline *OP_Pipeline) {
+  uint8_t recvBuf[UNRELIABLE_READ_ONCE_BUFFER_SIZE] = {0};
+  MopErrCode mopRet;
+  uint8_t cur_seq = 1;
+  uint8_t rcv_seq = 1;
+
+  while(1) {
+    memset(recvBuf, 0, UNRELIABLE_READ_ONCE_BUFFER_SIZE);
+    MopPipeline::DataPackType readPack = {(uint8_t *) recvBuf, UNRELIABLE_READ_ONCE_BUFFER_SIZE};
+    mopRet = OP_Pipeline->recvData(readPack, &readPack.length);
+    ASSERT_MOP_RET(mopRet)
+    if (readPack.length > sizeof(uint32_t)) {
+      rcv_seq = *recvBuf;
+      if (rcv_seq != cur_seq) {
+        DERROR("readPack.length: %d recv seq: %d, cur seq: %d", readPack.length, rcv_seq, cur_seq);
+        lostCnt += (uint8_t)(rcv_seq - cur_seq);
+        cur_seq = rcv_seq;
+      }
+      cur_seq++;
+      total_len += readPack.length;
+    }
+  }
+}
+
 static void* MopClientTask(void *arg)
 {
   Vehicle *vehicle = (Vehicle *)arg;
+  PipelineType type = UNRELIABLE;
+  PipelineID id = TEST_OP_UNRELIABLE_PIPELINE_ID;
 
   /*! main psdk device init */
   ErrorCode::ErrorCodeType ret = vehicle->psdkManager->initPSDKModule(
@@ -293,22 +329,31 @@ static void* MopClientTask(void *arg)
 
   /*! connect pipeline */
   MopPipeline *OP_Pipeline = NULL;
-  if ((mopClient->connect(TEST_OP_PIPELINE_ID, RELIABLE, OP_Pipeline)
+  if (isReliable) {
+    type = RELIABLE;
+    id = TEST_OP_RELIABLE_PIPELINE_ID;
+  }
+  if ((mopClient->connect(id, type, OP_Pipeline)
       != MOP_PASSED) || (OP_Pipeline == NULL)) {
     DERROR("MOP Pipeline connect failed");
     return NULL;
   } else {
-    DSTATUS("Connect to mop pipeline id(%d) successfully", TEST_OP_PIPELINE_ID);
+    DSTATUS("Connect to mop pipeline id(%d) successfully", id);
+  }
+  isConnect = true;
+
+  /*! OSDK download file from PSDK */
+  if (isReliable) {
+    OPDownloadFileTask(OP_Pipeline);
+  } else {
+    OPUnreliableTransTask(OP_Pipeline);
   }
 
-  /*! OSDK upload file to PSDK */
-  OPDownloadFileTask(OP_Pipeline);
-
   /*! Disconnect pipeline */
-  if (mopClient->disconnect(TEST_OP_PIPELINE_ID) != MOP_PASSED) {
-    DERROR("MOP Pipeline disconnect pipeline(%d) failed", TEST_OP_PIPELINE_ID);
+  if (mopClient->disconnect(id) != MOP_PASSED) {
+    DERROR("MOP Pipeline disconnect pipeline(%d) failed", id);
   } else {
-    DSTATUS("Disconnect mop pipeline id(%d) successfully", TEST_OP_PIPELINE_ID);
+    DSTATUS("Disconnect mop pipeline id(%d) successfully", id);
   }
   sampleFinish = true;
 }
@@ -317,7 +362,8 @@ int main(int argc, char** argv)
 {
   int result;
   pthread_t clientTask;
-  pthread_t serverTask;
+  char input = 0;
+  uint32_t time = 0;
 
   LinuxSetup linuxEnvironment(argc, argv);
   Vehicle *vehicle = linuxEnvironment.getVehicle();
@@ -325,6 +371,23 @@ int main(int argc, char** argv)
   if (vehicle == NULL) {
     DERROR("Vehicle not initialized, exiting.");
     return -1;
+  }
+
+  cout << "OSDK<--->PSDK MOP Sample!\n"
+       << "please choose connection type!\n"
+       << "a: reliable connection\n"
+       << "b: unreliable connection" << endl;
+  cin >> input;
+
+  switch(input)
+  {
+    case 'a':
+      isReliable = true; break;
+    case 'b':
+      isReliable = false; break;
+    default:
+      cout << "invalid input!";
+      return 1;
   }
 
   result = pthread_create(&clientTask, NULL, MopClientTask, vehicle);
@@ -336,6 +399,14 @@ int main(int argc, char** argv)
 
   //press q to exit
   while(!sampleFinish) {
+
+    if(isConnect && !isReliable) {
+        time++;
+        DSTATUS("total recv len: %d\n", total_len);
+        DSTATUS("total time: %d s\n", time);
+        DSTATUS("average speed: %d KBps\n", (total_len/1024)/time);
+        DSTATUS("lostCnt: %d\n", lostCnt);
+    }
     OsdkOsal_TaskSleepMs(1000);
   }
   DSTATUS("Sample exit.");

@@ -38,4 +38,10 @@ add_executable(op_download_sample ${SOURCE_FILES} op_download_sample.cpp)
 
 add_executable(op_upload_sample ${SOURCE_FILES} op_upload_sample.cpp)
 
+add_executable(om_download_sample ${SOURCE_FILES} om_download_sample.cpp)
+
 target_link_libraries(op_download_sample crypto)
+
+target_link_libraries(op_upload_sample crypto)
+
+target_link_libraries(om_download_sample crypto)

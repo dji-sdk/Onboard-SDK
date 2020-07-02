@@ -32,7 +32,7 @@ FILE(GLOB SOURCE_FILES *.hpp *.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/../osal/*.c
         ${LINKER_HEADER_SRC}
         )
-add_subdirectory(stereo_vision_M300_sample)
+add_subdirectory(stereo_vision_new_sample)
 add_subdirectory(stereo_vision_single_thread_sample)
 add_subdirectory(stereo_vision_multi_thread_sample)
 add_subdirectory(camera_stream_poll_sample)
