@@ -37,6 +37,7 @@ typedef void * mop_channel_handle_t;
 #define MOP_WAIT_FOREVER        (uint32_t)(-1)
 #define MOP_WAIT_POLLING        (uint32_t)(0)
 
+#define ONCE_READ_WRITE_SIZE (64 * 1024 * 1024)
 typedef enum {
     MOP_DEVICE_ROUTER = 0,
     MOP_DEVICE_MSDK,
