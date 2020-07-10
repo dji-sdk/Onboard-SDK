@@ -49,6 +49,7 @@ extern CDC_Usercb_TypeDef            UserCb;
 CDC_Demo_State 						           CDCUsrState;
 
 extern QueueHandle_t ACMDataSendQueue;
+bool USBConnected = false;
 
 USBH_Usr_cb_TypeDef USR_Callbacks =
 {
@@ -85,11 +86,13 @@ void USBH_USR_Init(void)
 
 void USBH_USR_DeviceAttached(void)
 {
+	USBConnected = true;
 	USB_DEBUG("USBH_USR_DeviceAttached!");
 }
 
 void USBH_USR_DeviceDisconnected (void)
 {
+	USBConnected = false;
 	USB_DEBUG("USBH_USR_DeviceDisconnected!");
 }
 
