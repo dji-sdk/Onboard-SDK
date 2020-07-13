@@ -669,22 +669,17 @@ void CameraManagerAsyncSample::setShootPhotoModeForSingleShootCb(
   }
   if (retCode == ErrorCode::SysCommonErr::Success) {
     DSTATUS("Set shoot photo mode as Single successfully ");
-    if (uData->pm) {
-      /*! start to shoot SINGLE photo */
-      uData->pm->startShootPhotoAsync(
-          uData->index, CameraModule::ShootPhotoMode::SINGLE,
-          (void (*)(ErrorCode::ErrorCodeType retCode,
-                    UserData userData))uData->userCallBack,
-          uData->userData);
-    }
   } else {
-    DERROR("Set shoot photo mode error. Error code : 0x%lX", retCode);
-    ErrorCode::printErrorCodeMsg(retCode);
-    if (uData->userCallBack) {
-      void (*cb)(ErrorCode::ErrorCodeType, UserData);
-      cb = (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack;
-      cb(retCode, uData->userData);
-    }
+    DSTATUS("Set shoot photo mode error. Error code : 0x%lX. "
+            "trying to shoot photo", retCode);
+  }
+  if (uData->pm) {
+    /*! start to shoot SINGLE photo */
+    uData->pm->startShootPhotoAsync(
+      uData->index, CameraModule::ShootPhotoMode::SINGLE,
+      (void (*)(ErrorCode::ErrorCodeType retCode,
+                UserData userData))uData->userCallBack,
+      uData->userData);
   }
 }
 
@@ -698,29 +693,6 @@ void CameraManagerAsyncSample::setCameraModeForSingleShootCb(
     return;
   }
 
-  if (retCode == ErrorCode::SysCommonErr::Success) {
-    DSTATUS("Set camera work mode successfully ");
-    if (uData->pm) {
-      /*! start to shoot SINGLE photo */
-      uData->pm->startShootPhotoAsync(
-        uData->index, CameraModule::ShootPhotoMode::SINGLE,
-        (void (*)(ErrorCode::ErrorCodeType retCode,
-                  UserData userData))uData->userCallBack,
-        uData->userData);
-    }
-  } else {
-    DERROR("Set camera mode error. Error code : 0x%lX", retCode);
-    ErrorCode::printErrorCodeMsg(retCode);
-    if (uData->userCallBack) {
-      void (*cb)(ErrorCode::ErrorCodeType, UserData);
-      cb = (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack;
-      cb(retCode, uData->userData);
-    }
-  }
-
-  /*! @TODO XT* and Z30 don't support set shoot-photo mode. To fix it in the
-   * future */
-  /*
   if (retCode == ErrorCode::SysCommonErr::Success) {
     DSTATUS("Set camera work mode successfully ");
     if (uData->pm) {
@@ -741,7 +713,6 @@ void CameraManagerAsyncSample::setCameraModeForSingleShootCb(
       cb(retCode, uData->userData);
     }
   }
-  */
 }
 
 void CameraManagerAsyncSample::startShootSinglePhotoAsyncSample(
