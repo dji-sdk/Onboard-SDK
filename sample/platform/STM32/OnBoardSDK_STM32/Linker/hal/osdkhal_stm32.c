@@ -29,10 +29,12 @@
 #include "stm32f4xx.h"
 #include "FreeRTOS.h"
 #include "queue.h"
+#include "stdbool.h"
 
 extern QueueHandle_t UartDataRecvQueue;
 extern QueueHandle_t ACMDataRecvQueue;
 extern QueueHandle_t ACMDataSendQueue;
+extern bool USBConnected;
 
 enum STM32_LINK_FD
 {
@@ -98,6 +100,7 @@ E_OsdkStat OsdkSTM32_UartInit(const char *port, const int baudrate,
     obj->uartObject.fd = UART_FD;
   } else if (strcmp(port, ACM_PORT) == 0) {
     obj->uartObject.fd = ACM_FD;
+    if (USBConnected == false) return OSDK_STAT_ERR;
   } else {
     obj->uartObject.fd = INVALID_FD;
   }
