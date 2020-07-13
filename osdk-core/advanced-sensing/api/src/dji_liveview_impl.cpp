@@ -270,7 +270,7 @@ int LiveViewImpl::subscribeLiveViewData(E_OSDKCameraType type, LiveView::LiveVie
   subCtx->source.uuid.version = 1;
   if(type == OSDK_CAMERA_TYPE_PSDK)   subCtx->source.uuid.major = UUID_MAJOR_TYPE_PSDK;
   else subCtx->source.uuid.major = UUID_MAJOR_TYPE_CAMERA;
-  subCtx->source.uuid.minor = ((type == OSDK_CAMERA_TYPE_PSDK) ? 0 : type);
+  subCtx->source.uuid.minor = ((type == OSDK_CAMERA_TYPE_PSDK) ? 1 : type); //hardcore
   subCtx->source.uuid.reserved = 0;
   if ((type == OSDK_CAMERA_TYPE_GD610_DOUBLE_CAM)
       || (type == OSDK_CAMERA_TYPE_GD610_TIRPLE_CAM))
