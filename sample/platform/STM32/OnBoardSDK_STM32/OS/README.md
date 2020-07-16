@@ -1,0 +1,2 @@
+Please refer to https://developer.dji.com/document/99628471-a892-4a90-ac75-fdc52d33a74f to finish the porting work from FreeRTOS.
+By the way, we have prepared a quick set-up script for you in Windows system. Before running it, you should check whether you install git and gitbash or not. You can run ./quick_setup to finish the porting work in gitbash or shell.
