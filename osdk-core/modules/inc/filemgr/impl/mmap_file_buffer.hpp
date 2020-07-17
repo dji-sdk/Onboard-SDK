@@ -24,6 +24,7 @@ class MmapFileBuffer {
   int fd;
   char *fdAddr;
   uint64_t fdAddrSize;
+  uint64_t curFilePos;
 
   bool init(std::string path, uint64_t fileSize);
 

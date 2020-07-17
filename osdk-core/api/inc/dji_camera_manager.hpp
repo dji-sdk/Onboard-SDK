@@ -1712,8 +1712,8 @@ class CameraManager {
   ErrorCode::ErrorCodeType obtainDownloadRightSync(PayloadIndexType index,
                                                    bool enable, int timeout);
 #if defined(__linux__)
-  ErrorCode::ErrorCodeType startReqFileList(FileMgr::FileListReqCBType cb, void *userData);
-  ErrorCode::ErrorCodeType startReqFileData(int fileIndex, std::string localPath, FileMgr::FileDataReqCBType cb, void *userData);
+  ErrorCode::ErrorCodeType startReqFileList(PayloadIndexType index, FileMgr::FileListReqCBType cb, void *userData);
+  ErrorCode::ErrorCodeType startReqFileData(PayloadIndexType index, int fileIndex, std::string localPath, FileMgr::FileDataReqCBType cb, void *userData);
 #endif
  private:
 #if defined(__linux__)

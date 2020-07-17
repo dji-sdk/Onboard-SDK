@@ -98,15 +98,39 @@ E_OsdkStat downloadFileAckCB(struct _CommandHandle *cmdHandle,
 }
 
 void FileMgrImpl::printFileDownloadStatus() {
-    uint32_t lossPackCnt = 0;
-    uint32_t recvPackCnt = 0;
-    for (auto &msg : fileDataHandler->range_handler_->GetNoAckRanges()) {
-      lossPackCnt += msg.length;
-    }
-    recvPackCnt = fileDataHandler->range_handler_->GetLastNotReceiveSeq() - lossPackCnt;
-    DSTATUS("\033[0;32m[Complete rate : %0.1f%%] (recv:%dpacks loss:%dpacks) \033[0m",
-            (recvPackCnt * 800 * 100.0f / fileDataHandler->mmap_file_buffer_->fdAddrSize),
-            recvPackCnt, lossPackCnt);
+
+  uint32_t lossPackCnt = 0;
+  uint32_t recvPackCnt = 0;
+
+  static uint64_t curFilePos = 0;
+  static uint64_t lastFilePos = 0;
+  static uint32_t curPrintMs = 0;
+  static uint32_t lastPrintMs = 0;
+  char speedMsg[20] = {0};
+
+  curFilePos = fileDataHandler->mmap_file_buffer_->curFilePos;
+  OsdkOsal_GetTimeMs(&curPrintMs);
+  if ((curPrintMs > lastPrintMs) && ((curPrintMs - lastPrintMs) < 600) &&
+      (curFilePos > lastFilePos) &&
+      curFilePos && lastFilePos && curPrintMs && lastPrintMs)
+    snprintf(speedMsg, sizeof(speedMsg), "%d\tkB/s", (curFilePos - lastFilePos) / (curPrintMs - lastPrintMs));
+  else
+    snprintf(speedMsg, sizeof(speedMsg), "--\tkB/s");
+  lastFilePos = curFilePos;
+  lastPrintMs = curPrintMs;
+
+
+  for (auto &msg : fileDataHandler->range_handler_->GetNoAckRanges()) {
+    lossPackCnt += msg.length;
+  }
+  recvPackCnt = fileDataHandler->range_handler_->GetLastNotReceiveSeq() - lossPackCnt;
+  float finishPercent =
+    fileDataHandler->mmap_file_buffer_->fdAddrSize == 0
+      ? 0
+      : (fileDataHandler->mmap_file_buffer_->curFilePos * 100.0f /
+         fileDataHandler->mmap_file_buffer_->fdAddrSize);
+  DSTATUS("\033[0;32m[Complete rate : %0.1f%%] (%s\t recv:\t%d packs\t loss:\t%d packs) \033[0m",
+          speedMsg, finishPercent, recvPackCnt, lossPackCnt);
 }
 
 void FileMgrImpl::fileListMonitorTask(void *arg) {
@@ -159,13 +183,16 @@ void FileMgrImpl::fileDataMonitorTask(void *arg) {
     uint32_t curTimeMs = 0;
     uint32_t preTimeMs = 0;
     uint32_t pollTimeMsInterval = 500;
-    uint32_t taskTimeOutMs = 6000;
+    uint32_t taskTimeOutMs = 3000;
     FileMgrImpl *impl = (FileMgrImpl *)arg;
     OsdkOsal_GetTimeMs(&curTimeMs);
     impl->fileDataHandler->updateTimeMs = curTimeMs;
     for (;;)
     {
-
+      if (impl->fileDataHandler->downloadState == DOWNLOAD_IDLE) {
+        impl->printFileDownloadStatus();
+        return;
+      }
       uint32_t refreshTimeMs = impl->fileDataHandler->updateTimeMs;
       OsdkOsal_GetTimeMs(&curTimeMs);
 
@@ -182,15 +209,7 @@ void FileMgrImpl::fileDataMonitorTask(void *arg) {
           DSTATUS("Finish req filedata task cause of timeout, reset downloadState to be DOWNLOAD_IDLE");
           impl->fileDataHandler->downloadState = DOWNLOAD_IDLE;
         }
-      } else if (curTimeMs - refreshTimeMs >= (taskTimeOutMs * 2 / 3)) {
-        DSTATUS("The second time to wake up the pushing");
-        impl->SendReqFileDataPack(impl->fileDataHandler->curTargetFileIndex);
-      } else if (curTimeMs - refreshTimeMs >= (taskTimeOutMs * 1 / 3)) {
-        DSTATUS("The first time to wake up the pushing");
-        impl->SendReqFileDataPack(impl->fileDataHandler->curTargetFileIndex);
       }
-
-      if (impl->fileDataHandler->downloadState == DOWNLOAD_IDLE) return;
 
       if (curTimeMs - preTimeMs >=  pollTimeMsInterval)
       {
@@ -211,10 +230,9 @@ void FileMgrImpl::fileDataMonitorTask(void *arg) {
   }
 }
 
-FileMgrImpl::FileMgrImpl(Linker *linker, E_OSDKCommandDeiveType type,
-                         uint8_t index) : linker(linker),
-                                          type(type),
-                                          index(index) {
+FileMgrImpl::FileMgrImpl(Linker *linker) : linker(linker) {
+  type = OSDK_COMMAND_DEVICE_TYPE_NONE;
+  index = 0;
   fileListHandler = new DownloadListHandler();
   fileDataHandler = new DownloadDataHandler();
   localSenderId = OSDK_COMMAND_DEVICE_ID(OSDK_COMMAND_DEVICE_TYPE_APP, 0);
@@ -255,7 +273,7 @@ ErrorCode::ErrorCodeType FileMgrImpl::SendReqFileListPack() {
   setting->task_id = DJI_GENERAL_DOWNLOAD_FILE_TASK_TYPE_LIST;
   setting->func_id = DJI_GENERAL_DOWNLOAD_FILE_FUNC_TYPE_REQ;
   setting->msg_flag = 0;
-  setting->session_id = 0;
+  setting->session_id = 999;
   setting->seq = 0;
 
   dji_file_list_download_req reqData = {0};
@@ -290,7 +308,7 @@ ErrorCode::ErrorCodeType FileMgrImpl::SendReqFileListPack() {
 
   E_OsdkStat linkAck =
       linker->sendSync(&cmdInfo, (uint8_t *) setting, &ackInfo, ackData,
-                       2 * 1000 / 4, 4);
+                       2000, 0);
 
   /*! @TODO fix H20T route */
   if (localSenderId != linker->getLocalSenderId()) return ErrorCode::SysCommonErr::Success;
@@ -310,7 +328,7 @@ ErrorCode::ErrorCodeType FileMgrImpl::SendReqFileDataPack(int fileIndex) {
   setting->task_id = DJI_GENERAL_DOWNLOAD_FILE_TASK_TYPE_FILE;
   setting->func_id = DJI_GENERAL_DOWNLOAD_FILE_FUNC_TYPE_REQ;
   setting->msg_flag = 0;
-  setting->session_id = 0;
+  setting->session_id = 999;
   setting->seq = 0;
 
   dji_file_download_req reqData = {0};
@@ -339,15 +357,9 @@ ErrorCode::ErrorCodeType FileMgrImpl::SendReqFileDataPack(int fileIndex) {
   cmdInfo.receiver = OSDK_COMMAND_DEVICE_ID(type, index);
   cmdInfo.sender = localSenderId; //linker->getLocalSenderId();
 
-//    printf("-------------->request data :\n");
-//    for (int i = 0; i < cmdInfo.dataLen; i++) {
-//      printf("%02X ", ((uint8_t *) setting)[i]);
-//    }
-//    printf("\n");
-
   E_OsdkStat linkAck =
       linker->sendSync(&cmdInfo, (uint8_t *) setting, &ackInfo, ackData,
-                       1000, 1);
+                       2000, 0);
 
   /*! @TODO fix H20T route */
   if (localSenderId != linker->getLocalSenderId()) return ErrorCode::SysCommonErr::Success;
@@ -358,9 +370,15 @@ ErrorCode::ErrorCodeType FileMgrImpl::SendReqFileDataPack(int fileIndex) {
                                  ErrorCode::CameraCommon, ackData[0]);
 }
 
+void FileMgrImpl::setTargetDevice(E_OSDKCommandDeiveType type, uint8_t index) {
+  this->type = type;
+  this->index = index;
+}
+
 ErrorCode::ErrorCodeType FileMgrImpl::startReqFileList(FileMgr::FileListReqCBType cb, void* userData) {
   //SendAbortPack(DJI_GENERAL_DOWNLOAD_FILE_TASK_TYPE_LIST);
-  if (fileListHandler->downloadState == DOWNLOAD_IDLE) {
+  if ((fileListHandler->downloadState == DOWNLOAD_IDLE) &&
+      (fileDataHandler->downloadState == DOWNLOAD_IDLE)) {
     fileListHandler->downloadState = RECVING_FILE_LIST;
     if (fileListHandler->download_buffer_) {
       fileListHandler->download_buffer_->Clear();
@@ -386,7 +404,8 @@ ErrorCode::ErrorCodeType FileMgrImpl::startReqFileList(FileMgr::FileListReqCBTyp
 }
 
 ErrorCode::ErrorCodeType FileMgrImpl::startReqFileData(int fileIndex, std::string localPath, FileMgr::FileDataReqCBType cb, void* userData) {
-  if (fileDataHandler->downloadState == DOWNLOAD_IDLE) {
+  if ((fileListHandler->downloadState == DOWNLOAD_IDLE) &&
+    (fileDataHandler->downloadState == DOWNLOAD_IDLE)) {
     fileDataHandler->downloadState = RECVING_FILE_DATA;
 
     fileDataHandler->downloadPath = localPath;
@@ -401,7 +420,7 @@ ErrorCode::ErrorCodeType FileMgrImpl::startReqFileData(int fileIndex, std::strin
     fileDataHandler->range_handler_ = new CommonDataRangeHandler();
     if (!fileDataHandler->range_handler_) return ErrorCode::SysCommonErr::AllocMemoryFailed;
 
-    /*! Create file data req task*/
+    /*! Create file data req task */
     OsdkOsal_TaskCreate(&reqFileDataHandle,
                         (void *(*)(void *)) (&fileDataMonitorTask),
                         OSDK_TASK_STACK_SIZE_DEFAULT, this);
@@ -419,20 +438,9 @@ ErrorCode::ErrorCodeType FileMgrImpl::startReqFileData(int fileIndex, std::strin
 * 直接从4重发
 */
 void FileMgrImpl::OnReceiveUrgePack(dji_general_transfer_msg_ack *rsp) {
-  DSTATUS("[FileTransferHandler] OnReceiveUrgePack");
+  //DSTATUS("[FileTransferHandler] OnReceiveUrgePack");
   if (rsp) {
-    CommonDataRangeHandler *range_handler_;
-    if (rsp->task_id == DJI_GENERAL_DOWNLOAD_FILE_TASK_TYPE_LIST)
-      range_handler_ = fileListHandler->range_handler_;
-    else if (rsp->task_id == DJI_GENERAL_DOWNLOAD_FILE_TASK_TYPE_FILE)
-      range_handler_ = fileDataHandler->range_handler_;
-    else return;
-
-    if (range_handler_->GetNoAckRanges().size() == 0)
-      SendAbortPack((DJI_GENERAL_DOWNLOAD_FILE_TASK_TYPE) rsp->task_id);
-    else
-      DSTATUS("range_handler_->GetNoAckRanges().size() = %d", range_handler_->GetNoAckRanges().size());
-      SendMissedAckPack((DJI_GENERAL_DOWNLOAD_FILE_TASK_TYPE) rsp->task_id);
+    //SendAbortPack((DJI_GENERAL_DOWNLOAD_FILE_TASK_TYPE) rsp->task_id);
   }
 }
 
@@ -557,22 +565,27 @@ FilePackage FileMgrImpl::parseFileList(std::list<DataPointer> fullDataList) {
 
 #define SIZE_LIMIT 0
 bool FileMgrImpl::parseFileData(dji_general_transfer_msg_ack *rsp) {
+  MmapFileBuffer *mfile = fileDataHandler->mmap_file_buffer_;
   if (rsp->seq == 0) {
     /*! 1. 是第一包,parse文件大小 */
     auto resp = (dji_file_data_download_resp *) (rsp->data);
     /*! 2. 文件总大小计算 */
     uint32_t file_size = resp->size - (sizeof(dji_file_data_download_resp) - sizeof(uint8_t));
-    fileDataHandler->mmap_file_buffer_->init(fileDataHandler->downloadPath, file_size);
+    mfile->init(fileDataHandler->downloadPath, file_size);
     /*! 3. 本包数据总大小计算 */
     uint32_t data_size = rsp->msg_length;
     data_size -= sizeof(dji_general_transfer_msg_ack) - sizeof(uint8_t);
     data_size -= sizeof(dji_file_data_download_resp) - sizeof(uint8_t);
-    fileDataHandler->mmap_file_buffer_->InsertBlock(resp->file_data, data_size, rsp->seq);
-  } else {
+    if (mfile->InsertBlock(resp->file_data, data_size, mfile->curFilePos))
+      mfile->curFilePos += data_size;
+  }
+  else
+  {
     /*! 1. 本包数据总大小计算 */
     uint32_t data_size = rsp->msg_length;
     data_size -= sizeof(dji_general_transfer_msg_ack) - sizeof(uint8_t);
-    fileDataHandler->mmap_file_buffer_->InsertBlock(rsp->data, data_size, rsp->seq);
+    if (mfile->InsertBlock(rsp->data, data_size, mfile->curFilePos))
+      mfile->curFilePos += data_size;
   }
 
 #if 0
@@ -656,6 +669,7 @@ bool FileMgrImpl::parseFileData(dji_general_transfer_msg_ack *rsp) {
 }
 
 void FileMgrImpl::fileListRawDataCB(dji_general_transfer_msg_ack *rsp) {
+  int temp = fileListHandler->downloadState;
   if (fileListHandler->downloadState == DOWNLOAD_IDLE) return;
     auto download_buffer_ = fileListHandler->download_buffer_;
     auto range_handler_ = fileListHandler->range_handler_;
@@ -704,14 +718,25 @@ void FileMgrImpl::fileDataRawDataCB(dji_general_transfer_msg_ack *rsp) {
   /*! do data parsing, 边收边解包 */
   parseFileData(rsp);
 
-  /*! 看看是否拿到了最后一个包 */
-  if ((rsp->msg_flag & 0x01)
-      && (range_handler_->GetLastNotReceiveSeq() == rsp->seq + 1)
-      && (range_handler_->GetNoAckRanges().size() == 0)){
-    mmap_file_buffer_->deInit();
+  /*! 看看是否拿到了最后一个包 或者丢包了 */
+  bool packFinishFlag = false;
+  bool packLossFlag = false;
+  if ((rsp->msg_flag & 0x01) &&
+      (range_handler_->GetLastNotReceiveSeq() == rsp->seq + 1)) {
+    DSTATUS("Got the last one pack .");
+    packFinishFlag = true;
+  }
+  if (range_handler_->GetNoAckRanges().size() != 0) {
+    DERROR("pack loss !!!");
+    packLossFlag = true;
+  }
+
+  if (packLossFlag || packFinishFlag) {
+    E_OsdkStat ret =
+      (packFinishFlag && !packLossFlag) ? OSDK_STAT_OK : OSDK_STAT_SYS_ERR;
     SendAbortPack(DJI_GENERAL_DOWNLOAD_FILE_TASK_TYPE_FILE);
     if (fileDataHandler->reqCB) {
-      fileDataHandler->reqCB(OSDK_STAT_OK, fileDataHandler->reqCBUserData);
+      fileDataHandler->reqCB(ret, fileDataHandler->reqCBUserData);
       fileDataHandler->reqCB = NULL;
     }
     DSTATUS("Finish req filedata task, reset downloadState to be DOWNLOAD_IDLE");
@@ -724,6 +749,7 @@ void FileMgrImpl::OnReceiveDataPack(dji_general_transfer_msg_ack *rsp) {
   if (rsp->func_id != DJI_GENERAL_DOWNLOAD_FILE_FUNC_TYPE_DATA) return;
 
   static uint32_t lastSeq = 0;
+  //DSTATUS("\033[1;32;40m##[seq] = %d \033[0m", rsp->seq);
   if (rsp->seq == 0) DSTATUS("[First pack] get the first pack");
   else if (rsp->seq != lastSeq + 1) DSTATUS("[Skip packs]------------------->skip seq : lastSeq = %d, rsp->seq = %d", lastSeq, rsp->seq);
   lastSeq = rsp->seq;
@@ -782,8 +808,8 @@ ErrorCode::ErrorCodeType FileMgrImpl::SendAbortPack(
   setting->header_length = 10;
   setting->task_id = taskId;
   setting->func_id = DJI_GENERAL_DOWNLOAD_FILE_FUNC_TYPE_ABORT;
-  setting->msg_flag = 0;
-  setting->session_id = 0;
+  setting->msg_flag = 1;
+  setting->session_id = 999;
   setting->seq = 0;
 /*
   uint32_t abortReason = TransAbortReasonForce;
@@ -824,7 +850,7 @@ ErrorCode::ErrorCodeType FileMgrImpl::SendACKPack(DJI_GENERAL_DOWNLOAD_FILE_TASK
   setting->task_id = taskId;
   setting->func_id = DJI_GENERAL_DOWNLOAD_FILE_FUNC_TYPE_ACK;
   setting->msg_flag = 0;
-  setting->session_id = 0;
+  setting->session_id = 999;
   setting->seq = 0;
 
   uint32_t reqDataLen = sizeof(dji_download_ack) - sizeof(dji_loss_desc) + ack->loss_nr * sizeof(dji_loss_desc);
@@ -874,7 +900,7 @@ ErrorCode::ErrorCodeType FileMgrImpl::SendMissedAckPack(DJI_GENERAL_DOWNLOAD_FIL
     dji_download_ack *ack = (dji_download_ack *)buf;
     ack->expect_seq = range_handler_->GetLastNotReceiveSeq();
     ack->loss_nr = 0;
-    DSTATUS("[Confirming ...]---------------ack->expect_seq = %d ack->loss_nr = %d", ack->expect_seq, ack->loss_nr);
+    //DSTATUS("[Confirming ...]---------------ack->expect_seq = %d ack->loss_nr = %d", ack->expect_seq, ack->loss_nr);
     SendACKPack(taskId, ack);
     return OSDK_STAT_OK;
   }
