@@ -31,7 +31,7 @@
 
 #include "dji_error.hpp"
 #include "dji_file_mgr_define.hpp"
-
+#include "osdk_command.h"
 
 namespace DJI {
 namespace OSDK {
@@ -42,19 +42,18 @@ class FileMgrImpl;
 
 class FileMgr {
  public:
-  FileMgr(Linker *linker, uint8_t type, uint8_t index);
+  FileMgr(Linker *linker);
   ~FileMgr();
+
 
   typedef void (*FileListReqCBType)(E_OsdkStat ret_code, const FilePackage file_list, void* userData);
   typedef void (*FileDataReqCBType)(E_OsdkStat ret_code, void* userData);
 
-  ErrorCode::ErrorCodeType startReqFileList(FileListReqCBType cb, void* userData);
-  ErrorCode::ErrorCodeType startReqFileData(int fileIndex, std::string localPath, FileDataReqCBType cb, void* userData);
+  ErrorCode::ErrorCodeType startReqFileList(E_OSDKCommandDeiveType type, uint8_t index, FileListReqCBType cb, void* userData);
+  ErrorCode::ErrorCodeType startReqFileData(E_OSDKCommandDeiveType type, uint8_t index, int fileIndex, std::string localPath, FileDataReqCBType cb, void* userData);
 
  private:
   FileMgrImpl *impl;
-  uint8_t type;
-  uint8_t index;
 };
 }
 }

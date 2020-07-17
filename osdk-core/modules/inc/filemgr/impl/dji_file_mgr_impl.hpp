@@ -93,8 +93,10 @@ class DownloadDataHandler {
 
 class FileMgrImpl {
  public:
-  FileMgrImpl(Linker *linker, E_OSDKCommandDeiveType type, uint8_t index);
+  FileMgrImpl(Linker *linker);
   ~FileMgrImpl();
+
+  void setTargetDevice(E_OSDKCommandDeiveType type, uint8_t index);
 
   ErrorCode::ErrorCodeType startReqFileList(FileMgr::FileListReqCBType cb, void* userData);
   ErrorCode::ErrorCodeType startReqFileData(int fileIndex, std::string localPath, FileMgr::FileDataReqCBType cb, void* userData);
@@ -152,6 +154,7 @@ class FileMgrImpl {
   uint64_t fdAddrSize;
   uint64_t fdAddrIndex;
   uint64_t tempSize = 0;
+  T_RecvCmdItem bulkCmdItem;
 
 };
 
