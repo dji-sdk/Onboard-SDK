@@ -1188,6 +1188,100 @@ retryUSBFlight:
   }
 }
 
+bool Vehicle::setSimulationOn(bool en, float64_t latitude, float64_t longitude) {
+#pragma pack(1)
+  typedef struct SimulationData
+  {
+    uint8_t	cmd;
+    uint8_t	rc : 1;
+    uint8_t	model : 1;
+    uint8_t	resv : 6;
+    uint8_t	freq;
+    uint8_t	gps;
+    double	lon;
+    double	lat;
+    double	height;
+    uint8_t	roll : 1;
+    uint8_t	pitch : 1;
+    uint8_t	yaw : 1;
+    uint8_t	x : 1;
+    uint8_t	y : 1;
+    uint8_t	z : 1;
+    uint8_t	lati : 1;
+    uint8_t	longti : 1;
+    uint8_t	speed_x : 1;
+    uint8_t	speed_y : 1;
+    uint8_t	speed_z : 1;
+    uint8_t	acc_x : 1;
+    uint8_t	acc_y : 1;
+    uint8_t	acc_z : 1;
+    uint8_t	p : 1;
+    uint8_t	q : 1;
+    uint8_t	r : 1;
+    uint8_t	rpm1 : 1;
+    uint8_t	rpm2 : 1;
+    uint8_t	rpm3 : 1;
+    uint8_t	rpm4 : 1;
+    uint8_t	rpm5 : 1;
+    uint8_t	rpm6 : 1;
+    uint8_t	rpm7 : 1;
+    uint8_t	rpm8 : 1;
+    uint8_t	duration : 1;
+    uint8_t	led_color : 1;
+    uint8_t	transform_state : 1;
+    uint32_t	resv1 : 4;
+    uint32_t	reserve;
+  } SimulationData; 
+#pragma pack()
+#define M_PI 3.14159265358979323846
+  SimulationData data = {0};
+
+  data.cmd = en ? 0:2;
+  data.rc = 1;
+  data.freq = 20;
+  data.gps = 20;
+
+  data.lat = latitude * M_PI / 180;
+  data.lon = longitude * M_PI / 180;
+
+  data.height = 0.1;
+  data.roll = data.pitch = data.yaw = data.x = data.y = data.z = 1;
+  data.lati = data.longti = 1;
+  data.speed_x = data.speed_y = data.speed_z = 1;
+  data.duration = 1;
+  data.led_color = data.transform_state = 1;
+
+  T_CmdInfo cmdInfo = {0};
+  T_CmdInfo ackInfo = {0};
+  uint8_t cbData[1024] = {0};
+
+  cmdInfo.cmdSet = 0x0B;
+  cmdInfo.cmdId = 0x04;
+  cmdInfo.dataLen = sizeof(data);
+  cmdInfo.needAck = OSDK_COMMAND_NEED_ACK_FINISH_ACK;
+  cmdInfo.packetType = OSDK_COMMAND_PACKET_TYPE_REQUEST;
+  cmdInfo.addr = GEN_ADDR(0, ADDR_V1_COMMAND_INDEX);
+  cmdInfo.receiver = OSDK_COMMAND_FC_DEVICE_ID;
+  cmdInfo.sender = linker->getLocalSenderId();
+  E_OsdkStat ret =
+      linker->sendSync(&cmdInfo, (uint8_t*)&data, &ackInfo, cbData, 1000, 3);
+  if (ret != OSDK_STAT_OK) {
+    DERROR("Caution !!! Simulation setting error!");
+    return false;
+  } else {
+    if (en && (cbData[0] == 3)) {  // 3 means agree to start simulation
+      DSTATUS("Start simulation successfully.");
+      return true;
+    } else if (!en && (cbData[0] == 5)) {  // 5 means agree to stop simulation
+      DSTATUS("Stop simulation successfully.");
+      return true;
+    } else {
+       DERROR("%s simulation failed.", en ? "start" : "stop");
+      return false;
+    }
+  }
+}
+
 ACK::ErrorCode
 Vehicle::activate(ActivateData* data, uint32_t timeoutMs)
 {
