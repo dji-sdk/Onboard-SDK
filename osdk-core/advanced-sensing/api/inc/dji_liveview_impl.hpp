@@ -50,6 +50,8 @@ class LiveViewImpl {
 
   LiveView::LiveViewErrCode stopH264Stream(LiveView::LiveViewCameraPosition pos);
 
+  LiveView::LiveViewErrCode changeH264Source(LiveView::LiveViewCameraPosition pos, LiveView::LiveViewCameraSource source);
+
   typedef struct H264CallbackHandler {
     H264Callback cb;
     void *userData;

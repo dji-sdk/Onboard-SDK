@@ -476,3 +476,34 @@ LiveView::LiveViewErrCode LiveViewImpl::stopH264Stream(LiveView::LiveViewCameraP
   return LiveView::OSDK_LIVEVIEW_PASS;
   //vehicle->linker->destroyLiveViewTask();
 }
+#define CAM_POS_TO_LINKER_ID(pos) (pos * 2)
+LiveView::LiveViewErrCode LiveViewImpl::changeH264Source(LiveView::LiveViewCameraPosition pos,
+                                           LiveView::LiveViewCameraSource source) {
+  if (pos > LiveView::OSDK_CAMERA_POSITION_NO_3)
+    return LiveView::OSDK_LIVEVIEW_INDEX_ILLEGAL;
+  DSTATUS("Change liveview source to be %d", source);
+  uint8_t data = source;
+  
+  T_CmdInfo cmdInfo = {0};
+  T_CmdInfo ackInfo = {0};
+  uint8_t cbData[1024] = {0};
+
+  cmdInfo.cmdSet = 0x02;
+  cmdInfo.cmdId = 0x09;
+  cmdInfo.dataLen = sizeof(data);
+  cmdInfo.needAck = OSDK_COMMAND_NEED_ACK_FINISH_ACK;
+  cmdInfo.packetType = OSDK_COMMAND_PACKET_TYPE_REQUEST;
+  cmdInfo.addr = GEN_ADDR(0, ADDR_V1_COMMAND_INDEX);
+  cmdInfo.receiver = OSDK_COMMAND_DEVICE_ID(OSDK_COMMAND_DEVICE_TYPE_CAMERA,
+                                            CAM_POS_TO_LINKER_ID(pos));
+  cmdInfo.sender = vehicle->linker->getLocalSenderId();
+  E_OsdkStat ret =
+      vehicle->linker->sendSync(&cmdInfo, (uint8_t*)&data, &ackInfo, cbData, 1000, 3);
+  if (ret == OSDK_STAT_OK) {
+    return LiveView::OSDK_LIVEVIEW_PASS;
+  } else if (ret == OSDK_STAT_ERR_TIMEOUT) {
+    return LiveView::OSDK_LIVEVIEW_TIMEOUT;
+  } else {
+    return LiveView::OSDK_LIVEVIEW_UNSUPPORT_CAMERA;
+  }
+}

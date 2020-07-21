@@ -225,7 +225,7 @@ public:
   /*! @brief Get a copy of the new image from the FPV camera
    *
    *  @platforms M210V2, M300
-   *  @param A copy of the new available image will be put here.
+   *  @param copyOfImage A copy of the new available image will be put here.
    *         It is safe for user to manipulate this image.
    *  @note If a new image is not ready upon calling this function,
    *        it will wait for 30ms till timeout.
@@ -244,6 +244,19 @@ public:
    *  @return true if a new image frame is ready, false if timeout
    */
   bool getMainCameraImage(CameraRGBImage& copyOfImage);
+
+  /*! @brief
+   *  Change the camera stream source from one payload device. (Beta API)
+   *
+   *  @platforms M300
+   *  @note Only support for payload device : H20/H20T
+   *  @param pos point out which camera to output the H264 stream
+   *  @param source change to be the target camera of the payload, ref to
+   *         LiveView::LiveViewCameraSource
+   *  @return Errorcode of liveivew, ref to DJI::OSDK::LiveView::LiveViewErrCode
+   */
+  LiveView::LiveViewErrCode changeH264Source(LiveView::LiveViewCameraPosition pos,
+                                             LiveView::LiveViewCameraSource source);
 
   /*! @brief
    *
