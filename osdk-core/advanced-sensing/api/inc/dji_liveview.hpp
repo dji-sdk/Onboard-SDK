@@ -47,6 +47,15 @@ class LiveView {
     OSDK_CAMERA_POSITION_FPV = 7
   } LiveViewCameraPosition;
 
+    typedef enum {
+    OSDK_CAMERA_SOURCE_DEF = 0,
+    OSDK_CAMERA_SOURCE_H20_WIDE = 1,
+    OSDK_CAMERA_SOURCE_H20T_WIDE = 1,
+    OSDK_CAMERA_SOURCE_H20_ZOOM = 2,
+    OSDK_CAMERA_SOURCE_H20T_ZOOM = 2,
+    OSDK_CAMERA_SOURCE_H20T_IR = 3
+  } LiveViewCameraSource;
+
   typedef enum {
     OSDK_LIVEVIEW_PASS = 0,
     OSDK_LIVEVIEW_TIMEOUT = 1,
@@ -55,6 +64,7 @@ class LiveView {
     OSDK_LIVEVIEW_HEART_BEAT_START_FAIL = 4,
     OSDK_LIVEVIEW_CAM_NOT_MOUNTED = 5,
     OSDK_LIVEVIEW_UNSUPPORT_AIRCRAFT = 6,
+    OSDK_LIVEVIEW_UNSUPPORT_CAMERA = 7,
     OSDK_LIVEVIEW_UNKNOWN = 0xFF,
   } LiveViewErrCode;
 
@@ -84,6 +94,18 @@ class LiveView {
    *  @return Errorcode of liveivew, ref to DJI::OSDK::LiveView::LiveViewErrCode
    */
   LiveViewErrCode stopH264Stream(LiveViewCameraPosition pos);
+
+  /*! @brief
+   *  Change the camera stream source from one payload device. (Beta API)
+   *
+   *  @platforms M300
+   *  @note Only support for payload device : H20/H20T
+   *  @param pos point out which camera to output the H264 stream
+   *  @param source change to be the target camera of the payload, ref to
+   *         LiveView::LiveViewCameraSource
+   *  @return Errorcode of liveivew, ref to DJI::OSDK::LiveView::LiveViewErrCode
+   */
+  LiveViewErrCode changeH264Source(LiveViewCameraPosition pos, LiveViewCameraSource source);
 
  private:
   Vehicle *vehicle;

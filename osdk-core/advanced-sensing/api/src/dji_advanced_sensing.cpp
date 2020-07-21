@@ -586,6 +586,11 @@ void AdvancedSensing::setAcmDevicePath(const char *acm_path)
     this->acm_dev=acm_path;
 }
 
+LiveView::LiveViewErrCode AdvancedSensing::changeH264Source(LiveView::LiveViewCameraPosition pos,
+                                                            LiveView::LiveViewCameraSource source) {
+  return liveview->changeH264Source(pos, source);
+}
+
 LiveView::LiveViewErrCode AdvancedSensing::startH264Stream(
     LiveView::LiveViewCameraPosition pos, H264Callback cb, void *userData) {
   if (vehicle_ptr->isM300())

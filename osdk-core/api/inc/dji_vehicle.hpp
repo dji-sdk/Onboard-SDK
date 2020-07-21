@@ -167,9 +167,20 @@ public:
     * @platforms M210V2
     *  @note This api is meaningless to M300. Only for M210 V1/V2 series
     *  @param en enable or disable take-off permission
-    *  @return ErrorCode::ErrorCodeType error code
+    *  @return true or false
     */
   bool setUSBFlightOn(bool en);
+
+  /*! @brief Set the simulation status on or off for the drone.
+    * (Beta API, Use for debug only)
+    *
+    * @platforms M210V2 M300
+    *  @param en enable or disable simulation status
+    *  @param latitude the latitude in degree of simulation position
+    *  @param longitude the longitude in degree of simulation position
+    *  @return true or false
+    */
+  bool setSimulationOn(bool en, float64_t latitude, float64_t longitude);
 
   /*! @brief A callback function for activate non-blocking calls
    *  @param receivedFrame: RecvContainer populated by the protocolLayer
