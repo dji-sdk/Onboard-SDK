@@ -114,7 +114,7 @@ int main(int argc, char** argv)
 
   // main thread just sleep
   // callback function will be called whenever a new image is ready
-  sleep(3000);
+  sleep(30);
 
   if(f)
   {
