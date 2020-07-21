@@ -534,7 +534,8 @@ typedef struct Battery
 typedef struct SDKInfo
 {
   uint8_t controlMode;      /*!< See CtlrMode in dji_status.hpp*/
-  uint8_t deviceStatus : 3; /*!< 0->rc  1->app  2->serial*/
+  uint8_t deviceStatus : 3; /*!< For M300 and M210V2(firmware version V01.00.0690 and later):0->rc  1->app  4->serial; 
+                                 Other: 0->rc  1->app  2->serial*/
   uint8_t flightStatus : 1; /*!< 1->opensd  0->close */
   uint8_t vrcStatus : 1;
   uint8_t reserved : 3;
