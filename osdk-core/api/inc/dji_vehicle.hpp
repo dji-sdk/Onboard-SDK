@@ -172,7 +172,7 @@ public:
   bool setUSBFlightOn(bool en);
 
   /*! @brief Set the simulation status on or off for the drone.
-    * Use for debug only.
+    * (Beta API, Use for debug only)
     *
     * @platforms M210V2 M300
     *  @param en enable or disable simulation status
