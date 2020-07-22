@@ -41,7 +41,7 @@ bool MmapFileBuffer::deInit() {
 
 
 // flag 代表是否覆盖已有队列缓存
-bool MmapFileBuffer::InsertBlock(const uint8_t *pack, uint32_t data_length, int index) {
+bool MmapFileBuffer::InsertBlock(const uint8_t *pack, uint32_t data_length, uint64_t index) {
 #if 0
   static uint32_t tempAdaptingBufferCnt = 0;
   if (index == 1) tempAdaptingBufferCnt = data_length;
