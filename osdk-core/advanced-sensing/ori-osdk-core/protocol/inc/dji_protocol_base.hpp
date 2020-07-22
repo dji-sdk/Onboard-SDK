@@ -85,7 +85,6 @@ public:
                     bool userCallbackThread = false) = 0;
 
   /************************** Send Pipeline *********************************/
-  // @todo is there any benefit to have an unified send function?
   // public:
   //  //! highest level interface
   //  virtual void send(cmdContainer *cmd_container);

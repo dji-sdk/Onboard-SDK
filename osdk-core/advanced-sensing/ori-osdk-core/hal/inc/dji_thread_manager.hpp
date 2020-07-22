@@ -37,7 +37,6 @@ namespace OSDK
 //! Forward Declaration of vehicle
 class Vehicle;
 
-//! @todo start use this class
 class Mutex
 {
 public:

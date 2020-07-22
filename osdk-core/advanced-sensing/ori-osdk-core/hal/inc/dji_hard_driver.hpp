@@ -102,7 +102,6 @@ public:
   }
 
 public:
-  //! @todo move to Logging class
   virtual void displayLog(const char* buf = 0);
 
 public:

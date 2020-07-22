@@ -71,7 +71,6 @@ public:
   static const FirmWare FW(uint8_t a, uint8_t b, uint8_t c, uint8_t d);
 
 public:
-  //! @todo clean up
   // clang-format off
 
   // Matrice 100 Firmware version supported by DJI OSDK Core library
