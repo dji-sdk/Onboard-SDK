@@ -44,7 +44,6 @@ using namespace DJI::OSDK::Telemetry;
 bool
 monitoredTakeoff(Vehicle* vehicle, int timeout)
 {
-  //@todo: remove this once the getErrorCode function signature changes
   char func[50];
   int  pkgIndex;
 
@@ -307,7 +306,6 @@ moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired,
   int withinControlBoundsTimeReqmt = 50 * cycleTimeInMs; // 50 cycles
   int pkgIndex;
 
-  //@todo: remove this once the getErrorCode function signature changes
   char func[50];
 
   if (!vehicle->isM100() && !vehicle->isLegacyM600())
@@ -590,7 +588,6 @@ moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired,
 bool
 monitoredLanding(Vehicle* vehicle, int timeout)
 {
-  //@todo: remove this once the getErrorCode function signature changes
   char func[50];
   int  pkgIndex;
 

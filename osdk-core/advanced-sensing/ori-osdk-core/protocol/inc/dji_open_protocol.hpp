@@ -98,7 +98,6 @@ typedef struct
 // Codec Management
 //----------------------------------------------------------------------
 
-// @todo replace this
 #define _SDK_U32_SET(_addr, _val) (*((uint32_t*)(_addr)) = (_val))
 #define _SDK_U16_SET(_addr, _val) (*((uint16_t*)(_addr)) = (_val))
 

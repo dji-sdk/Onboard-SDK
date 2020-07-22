@@ -922,7 +922,6 @@ ACK::getSetBroadcastMSG(ACK::ErrorCode ack)
 /*
  * @note CMD_ID agnostic
  *
- * @todo Check DJI_ERROR_CODE for comments
  */
 void
 ACK::getCMDSetMissionMSG(ACK::ErrorCode ack)

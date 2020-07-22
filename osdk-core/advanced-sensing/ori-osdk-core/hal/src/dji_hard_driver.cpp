@@ -32,7 +32,6 @@
 
 using namespace DJI::OSDK;
 
-//! @todo change to dji_logging method
 char DJI::OSDK::buffer[DJI::OSDK::HardDriver::bufsize];
 
 HardDriver::HardDriver()
