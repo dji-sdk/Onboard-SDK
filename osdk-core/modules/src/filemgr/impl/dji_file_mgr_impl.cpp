@@ -186,6 +186,7 @@ void FileMgrImpl::fileDataMonitorTask(void *arg) {
     uint32_t taskTimeOutMs = 3000;
     FileMgrImpl *impl = (FileMgrImpl *)arg;
     OsdkOsal_GetTimeMs(&curTimeMs);
+    OsdkOsal_GetTimeMs(&preTimeMs);
     impl->fileDataHandler->updateTimeMs = curTimeMs;
     for (;;)
     {
