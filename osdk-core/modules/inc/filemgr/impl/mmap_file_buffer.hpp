@@ -30,7 +30,7 @@ class MmapFileBuffer {
 
   bool deInit();
 
-  bool InsertBlock(const uint8_t *pack, uint32_t data_length, int index);
+  bool InsertBlock(const uint8_t *pack, uint32_t data_length, uint64_t index);
 
 };
 }
