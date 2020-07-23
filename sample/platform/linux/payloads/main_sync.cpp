@@ -139,21 +139,21 @@ int main(int argc, char **argv) {
         p->setFocusPointSyncSample(PAYLOAD_INDEX_0, 0.8, 0.8);
         break;
       case 'f':
-        p->setTapZoomPointSyncSample(PAYLOAD_INDEX_1, 5, 0.3, 0.3);
-        sleep(5);
-        p->setTapZoomPointSyncSample(PAYLOAD_INDEX_1, 5, 0.8, 0.7);
+        p->setTapZoomPointSyncSample(PAYLOAD_INDEX_0, 5, 0.3, 0.3);
+        sleep(15);
+        p->setTapZoomPointSyncSample(PAYLOAD_INDEX_0, 5, 0.8, 0.7);
         sleep(5);
         break;
       case 'g':
-        p->setZoomSyncSample(PAYLOAD_INDEX_1, 5);
+        p->setZoomSyncSample(PAYLOAD_INDEX_0, 5);
         sleep(4);
-        p->setZoomSyncSample(PAYLOAD_INDEX_1, 10);
+        p->setZoomSyncSample(PAYLOAD_INDEX_0, 10);
         sleep(4);
-        p->startZoomSyncSample(PAYLOAD_INDEX_1,
+        p->startZoomSyncSample(PAYLOAD_INDEX_0,
                                CameraModule::ZoomDirection::ZOOM_OUT,
                                CameraModule::ZoomSpeed::FASTEST);
         sleep(8);
-        p->stopZoomSyncSample(PAYLOAD_INDEX_1);
+        p->stopZoomSyncSample(PAYLOAD_INDEX_0);
         break;
       case 'h':
         p->startShootSinglePhotoSyncSample(PAYLOAD_INDEX_0);
