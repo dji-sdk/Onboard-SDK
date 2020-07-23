@@ -500,7 +500,7 @@ void DataSubscription::removeAllExistingPackages()
     if(package[packageID].hasLeftOverData() || package[packageID].isOccupied())
     {
       ack = removePackage(packageID, 1);
-      if(!ACK::getError(ack))
+      if(ACK::FAIL == ACK::getError(ack))
       {
         DERROR("failed to remove package %d", packageID);
       }
