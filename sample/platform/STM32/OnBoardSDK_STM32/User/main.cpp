@@ -134,6 +134,8 @@ void *mainLoopTask(void *p){
   char func[50];
   uint32_t runOnce = 1;
 
+  delay_nms(1500); //wait for usb acm detected
+
   /*! init the vehicle */
   env->initVehicle();
   v = env->getVehicle();
