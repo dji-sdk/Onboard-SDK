@@ -41,7 +41,8 @@ MopClient::~MopClient() {
 MopErrCode MopClient::connect(PipelineID id, PipelineType type,
                               MopPipeline *&p) {
   int32_t ret;
-
+  /*! 0.Check the entry env */
+  checkEntry();
   /*! 1.Find whether the pipeline object created or not */
   if (pipelineMap.find(id) == pipelineMap.end()) {
     MopErrCode createRet;
@@ -91,6 +92,8 @@ void MopClient::connect(PipelineID id, PipelineType type,
 }
 
 MopErrCode MopClient::disconnect(PipelineID id) {
+  /*! Check the entry env */
+  checkEntry();
   int32_t ret;
   if (pipelineMap.find(id) == pipelineMap.end()) {
     return MOP_PARM;

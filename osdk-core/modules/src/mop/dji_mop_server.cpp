@@ -41,6 +41,9 @@ MopErrCode MopServer::accept(PipelineID id, PipelineType type, MopPipeline *&p) 
   int32_t ret;
   mop_channel_handle_t bind_handle;
 
+  /*! Check the entry env */
+  checkEntry();
+
   /*! 0.Find whether the pipeline object is existed or not */
   DSTATUS("/*! 0.Find whether the pipeline object is existed or not */");
   if (pipelineMap.find(id) != pipelineMap.end()) {
@@ -89,9 +92,13 @@ MopErrCode MopServer::close(PipelineID id) {
   if (pipelineMap.find(id) == pipelineMap.end()) {
     return MOP_PARM;
   }
+
   MopPipeline *pipeline = pipelineMap[id];
   if (!pipeline)
     return MOP_UNKNOWN_ERR;
+
+  /*! Check the entry env */
+  checkEntry();
 
   mop_channel_handle_t handler = pipeline->channelHandle;
 

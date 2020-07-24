@@ -35,41 +35,24 @@
 #include <atomic>
 
 map<PipelineID, MopPipeline*> pipelineMap;
-static T_OsdkMutexHandle mopObjectCntMutex;
 static std::atomic<uint16_t> mopObjectCnt(0);
 
 MopPipelineManagerBase::MopPipelineManagerBase() {
-  if (!mopObjectCntMutex) {
-    E_OsdkStat ret = OsdkOsal_MutexCreate(&mopObjectCntMutex);
-    if(ret != OSDK_STAT_OK) DERROR("mutex create failed !");
-  }
-  OsdkOsal_MutexLock(mopObjectCntMutex);
-  if (!mopObjectCnt) {
-    DSTATUS("MOP background task now is created .");
-    OsdkCommand_CreateMopTask();
-  } else {
-    DSTATUS("MOP background task is already created .");
-  }
-  mopObjectCnt++;
-  OsdkOsal_MutexUnlock(mopObjectCntMutex);
   pipelineMap.clear();
 }
 
 MopPipelineManagerBase::~MopPipelineManagerBase() {
-  OsdkOsal_MutexLock(mopObjectCntMutex);
-  if (mopObjectCnt)
+  if (mopObjectCnt) {
     mopObjectCnt--;
-  if (!mopObjectCnt) {
-    DSTATUS("MOP background task now is delete .");
     OsdkCommand_DestroyMopTask();
+    DSTATUS("MOP background task now is deleted.");
   }
-  OsdkOsal_MutexUnlock(mopObjectCntMutex);
-  if (!mopObjectCnt && mopObjectCntMutex)
-    OsdkOsal_MutexDestroy(mopObjectCntMutex);
   pipelineMap.clear();
 }
 
 MopErrCode MopPipelineManagerBase::create(PipelineID id, MopPipeline *&p) {
+  /*! Check the entry env */
+  checkEntry();
   p = new MopPipeline(id, UNRELIABLE);
   if (p) {
     pipelineMap.insert(map<PipelineID, MopPipeline *>::value_type(id, p));
@@ -80,10 +63,20 @@ MopErrCode MopPipelineManagerBase::create(PipelineID id, MopPipeline *&p) {
 }
 
 MopErrCode MopPipelineManagerBase::destroy(PipelineID id) {
+  /*! Check the entry env */
+  checkEntry();
   if (pipelineMap.find(id)!=pipelineMap.end()) {
     delete pipelineMap[id];
     pipelineMap.erase(id);
   }
 
   return MOP_PASSED;
+}
+
+void MopPipelineManagerBase::checkEntry() {
+  if (!mopObjectCnt) {
+    mopObjectCnt++;
+    OsdkCommand_CreateMopTask();
+    DSTATUS("MOP background task now is created .");
+  }
 }
