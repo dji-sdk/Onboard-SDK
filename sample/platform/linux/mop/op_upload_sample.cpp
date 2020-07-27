@@ -143,6 +143,7 @@ static void OPUploadFileTask(MopPipeline *OP_Pipeline) {
                 }
             }
         }
+        fclose(uploadFile);
         MD5_Final(md5_out, &uploadFileMd5Ctx);
         memcpy(req.data.info.md5Buf, md5_out, sizeof(md5_out));
 

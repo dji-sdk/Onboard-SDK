@@ -89,11 +89,16 @@ MopErrCode MopServer::close(PipelineID id) {
   if (pipelineMap.find(id) == pipelineMap.end()) {
     return MOP_PARM;
   }
-  mop_channel_handle_t handler = pipelineMap[id];
+  MopPipeline *pipeline = pipelineMap[id];
+  if (!pipeline)
+    return MOP_UNKNOWN_ERR;
+
+  mop_channel_handle_t handler = pipeline->channelHandle;
 
   DSTATUS("Trying to close pipeline channel_id : %d", id);
   ret = mop_close_channel(handler);
   DSTATUS("Result of close pipeline channel_id:%d : %d", id, ret);
+  delete pipeline;
 
   return getMopErrCode(ret);
 }

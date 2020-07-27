@@ -116,9 +116,9 @@ static void* MopChannelFileServiceSendTask(void *arg)
 
     MopPipeline::DataPackType fileInfoPack = {.data = (uint8_t *) &ack, .length = UTIL_OFFSETOF(sampleProtocolStruct, data)};
 
-    sendBuf = (uint8_t *)malloc(RELIABLE_SEND_ONCE_BUFFER_SIZE);
+    sendBuf = (uint8_t *)OsdkOsal_Malloc(RELIABLE_SEND_ONCE_BUFFER_SIZE);
     if (sendBuf == NULL) {
-        DERROR("[File-Service] malloc send buffer error");
+        DERROR("[File-Service] OsdkOsal_Malloc send buffer error");
         sampleFinish = true;
         return NULL;
     }
@@ -291,7 +291,7 @@ static void* MopChannelFileServiceSendTask(void *arg)
                         "[File-Service]  download read data from file success, len = %d count:%d",
                         
                         downloadWriteLen, downloadPackCount);
-                    sampleProtocolStruct fileData;
+                    sampleProtocolStruct fileData = {0};
 
                     fileData.cmd = FILE_TRANSFOR_CMD_FILE_DATA;
                     fileData.dataLen = downloadWriteLen;
@@ -349,6 +349,8 @@ RESEND:
         }
     }
     sampleFinish = true;
+
+    return NULL;
 }
 
 static void* MopChannelFileServiceRecvTask(void *arg)
@@ -370,9 +372,9 @@ static void* MopChannelFileServiceRecvTask(void *arg)
     uint32_t uploadEndMs = 0;
     float uploadRate = 0;
 
-    recvBuf = (uint8_t *)malloc(RELIABLE_RECV_ONCE_BUFFER_SIZE);
+    recvBuf = (uint8_t *)OsdkOsal_Malloc(RELIABLE_RECV_ONCE_BUFFER_SIZE);
     if (recvBuf == NULL) {
-        DERROR("[File-Service]  malloc recv buffer error");
+        DERROR("[File-Service]  OsdkOsal_Malloc recv buffer error");
         return NULL;
     }
 
@@ -440,6 +442,7 @@ static void* MopChannelFileServiceRecvTask(void *arg)
                         memcpy(uploadFileInfo.md5Buf, fileTransfor->data.info.md5Buf,
                                sizeof(uploadFileInfo.md5Buf));
 
+                        if (uploadFile) fclose(uploadFile);
                         uploadFile = fopen(fileTransfor->data.info.fileName, "wb");
                         if (uploadFile == NULL) {
                             DERROR("[File-Service]  open file error");
@@ -507,6 +510,7 @@ static void* MopChannelFileServiceRecvTask(void *arg)
                                     "[File-Service]  upload file finished, totalTime:%d ms rate:%.2f Byte/s",
                                      (uploadEndMs - uploadStartMs), uploadRate);
                                 fclose(uploadFile);
+                                uploadFile = NULL;
                                 if (uploadFileInfo.fileLength == uploadFileTotalSize) {
                                     if (memcmp(uploadFileInfo.md5Buf, uploadFileMd5, sizeof(uploadFileMd5)) == 0) {
                                         DERROR(
@@ -546,7 +550,10 @@ static void* MopChannelFileServiceRecvTask(void *arg)
             }
         }
     }
+    OsdkOsal_Free(recvBuf);
     sampleFinish = true;
+
+    return NULL;
 }
 
 static void OMDownloadFileTask(MopPipeline *OM_Pipeline)
@@ -583,9 +590,9 @@ static void OMUnreliableTransTask(MopPipeline *OM_Pipeline)
     uint32_t sendDataCount = 0;
     MopErrCode mopRet;
 
-    sendBuf = (uint8_t *)malloc(UNRELIABLE_SEND_ONCE_BUFFER_SIZE);
+    sendBuf = (uint8_t *)OsdkOsal_Malloc(UNRELIABLE_SEND_ONCE_BUFFER_SIZE);
     if (sendBuf == NULL) {
-        DERROR("malloc send buffer error");
+        DERROR("OsdkOsal_Malloc send buffer error");
         sampleFinish = true;
         return;
     }
@@ -601,6 +608,7 @@ static void OMUnreliableTransTask(MopPipeline *OM_Pipeline)
         total_len += reqPack.length;
         OsdkOsal_TaskSleepMs(1000 / TEST_OM_UNRELIABLE_TRANSFOR_FREQ);
     }
+    OsdkOsal_Free(sendBuf);
 }
 
 static void* MopServerTask(void *arg)
@@ -641,6 +649,9 @@ static void* MopServerTask(void *arg)
     DSTATUS("Disconnect mop pipeline id(%d) successfully", id);
   }
   sampleFinish = true;
+  delete server;
+
+  return NULL;
 }
 
 int main(int argc, char** argv)
