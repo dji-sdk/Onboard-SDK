@@ -1,5 +1,5 @@
 /** @file dji_telemetry_doc.hpp
- *  @version 3.7
+ *  @version 4.0.0
  *  @date Jul 2018
  *
  *  @brief Enumeration of all telemetry data types, structures and maps.

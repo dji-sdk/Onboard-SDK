@@ -1,5 +1,5 @@
 /** @file dji_camera_image.cpp
- *  @version 3.5
+ *  @version 4.0.0
  *  @date Dec 2017
  *
  *  @copyright 2017 DJI. All rights reserved.

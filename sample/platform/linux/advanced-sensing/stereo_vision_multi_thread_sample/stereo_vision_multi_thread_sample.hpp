@@ -1,5 +1,5 @@
 /*! @file advanced_sensing_multi_thread_sample.cpp
- *  @version 3.4
+ *  @version 4.0.0
  *  @date Oct 10 2017
  *
  *  @brief

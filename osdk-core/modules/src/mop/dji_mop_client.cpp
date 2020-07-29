@@ -1,5 +1,5 @@
 /** @file dji_mop_client.cpp
- *  @version 4.0
+ *  @version 4.0.0
  *  @date Jan 2020
  *
  *  @brief Implementation of the mop client

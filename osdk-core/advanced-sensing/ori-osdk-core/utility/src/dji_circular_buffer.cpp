@@ -1,5 +1,5 @@
 /** @file dji_circular_buffer.cpp
- *  @version 3.3
+ *  @version 4.0.0
  *  @date Jun 2017
  *
  *  @brief Circular buffer class for the DJI OSDK

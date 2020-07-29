@@ -1,5 +1,5 @@
 /** @file qt_serial_device.cpp
- *  @version 3.4
+ *  @version 4.0.0
  *  @date Dec 2017
  *
  *  @brief Serial driver implementation using Qt constructs

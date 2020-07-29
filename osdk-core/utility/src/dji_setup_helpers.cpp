@@ -1,5 +1,5 @@
 /*! @file dji_setup_helpers.cpp
- *  @version 4.0
+ *  @version 4.0.0
  *  @date Feb 19 2020
  *
  *  @brief

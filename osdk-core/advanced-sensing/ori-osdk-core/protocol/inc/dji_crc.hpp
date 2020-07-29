@@ -1,5 +1,5 @@
 /** @file dji_crc.hpp
- *  @version 3.3
+ *  @version 4.0.0
  *  @date April 12th, 2017
  *
  *  @Copyright (c) 2016-2017 DJI

@@ -1,5 +1,5 @@
 /*! @file gimbal_manager_sync_sample.cpp
- *  @version 4.0 Beta
+ *  @version 4.0.0
  *  @date December 12 2019
  *
  *  @brief

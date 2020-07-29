@@ -1,5 +1,5 @@
 /*! @file om_download_sample.cpp
- *  @version 4.0
+ *  @version 4.0.0
  *  @date June 16 2020
  *
  *  @brief Sample to show how MSDK downloads files from OSDK

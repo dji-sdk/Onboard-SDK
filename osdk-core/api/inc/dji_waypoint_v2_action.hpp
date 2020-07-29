@@ -1,5 +1,5 @@
 /** @file dji_waypoint_v2_action.hpp
- *  @version 4.0
+ *  @version 4.0.0
  *  @date March 2019
  *
  *  @brief Implementation of Waypoint V2 action.

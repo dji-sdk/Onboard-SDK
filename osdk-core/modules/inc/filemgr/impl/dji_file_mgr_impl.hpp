@@ -1,5 +1,5 @@
 /** @file dji_file_mgr_impl.hpp
- *  @version 4.0
+ *  @version 4.0.0
  *  @date July 2020
  *
  *  @brief Implementation for file manager

@@ -1,5 +1,5 @@
 /** @file dji_internal_command.hpp
- *  @version 4.0
+ *  @version 4.0.0
  *  @date April 2020
  *
  *  @brief All DJI OSDK internal Command IDs

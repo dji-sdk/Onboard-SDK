@@ -1,5 +1,5 @@
 /*! @file FlightControlSample.cpp
- *  @version 3.3
+ *  @version 4.0.0
  *  @date May 2017
  *
  *  @brief

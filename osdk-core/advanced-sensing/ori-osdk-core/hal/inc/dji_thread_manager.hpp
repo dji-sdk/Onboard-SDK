@@ -1,5 +1,5 @@
 /*! @file dji_thread_manager.hpp
- *  @version 3.3
+ *  @version 4.0.0
  *  @date Jun 2017
  *
  *  @brief Data protection and thread management abstract classes.

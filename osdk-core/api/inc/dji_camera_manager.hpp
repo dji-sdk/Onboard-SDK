@@ -1,5 +1,5 @@
 /** @file dji_camera_manager.hpp
- *  @version 3.9
+ *  @version 4.0.0
  *  @date July 2019
  *
  *  @brief Implementation of the manager for camera module

@@ -1,6 +1,6 @@
 
 /** @file dji_mop_pipeline_manager_base.hpp
- *  @version 4.0
+ *  @version 4.0.0
  *  @date January 2020
  *
  *  @brief Implementation of mop pipeline manager base
