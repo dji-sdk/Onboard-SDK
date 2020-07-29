@@ -77,6 +77,6 @@ void MopPipelineManagerBase::checkEntry() {
   if (!mopObjectCnt) {
     mopObjectCnt++;
     OsdkCommand_CreateMopTask();
-    DSTATUS("MOP background task now is created .");
+    //DSTATUS("MOP background task now is created .");
   }
 }
