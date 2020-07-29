@@ -1,5 +1,5 @@
 /*! @file dji_type.hpp
- *  @version 3.3
+ *  @version 4.0.0
  *  @date April 2017
  *
  *  @brief Data type and Data Structure definitions for use throughout DJI OSDK

@@ -1,6 +1,6 @@
 
 /** @file dji_mop_pipeline_manager_base.hpp
- *  @version 4.0
+ *  @version 4.0.0
  *  @date January 2020
  *
  *  @brief Implementation of mop pipeline manager base
@@ -56,6 +56,8 @@ class MopPipelineManagerBase {
   /*! TODO:MSDK 单单create的这种写法指代不明,在这个接口加上了"Pipeline"后缀 */
   MopErrCode destroy(PipelineID id);
 
+  protected:
+  void checkEntry();
 };
 }  // namespace OSDK
 }  // namespace DJI

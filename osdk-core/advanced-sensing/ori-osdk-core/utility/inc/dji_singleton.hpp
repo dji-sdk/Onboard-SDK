@@ -1,5 +1,5 @@
 /** @file dji_singleton.hpp
- *  @version 3.3
+ *  @version 4.0.0
  *  @date Jun 2017
  *
  *  @brief Singleton Template Class implementation for use with the DJI OSDK

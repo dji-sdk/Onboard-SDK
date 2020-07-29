@@ -1,5 +1,5 @@
 /*! @file cppforstm32.h
- *  @version 3.1.8
+ *  @version 4.0.0
  *  @date Aug 05 2016
  *
  *  @brief Support for printf to USART2 on STM32 platform

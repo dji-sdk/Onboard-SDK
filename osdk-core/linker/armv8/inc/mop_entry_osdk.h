@@ -1,5 +1,5 @@
 /** @file mop_entry_osdk.h
- *  @version 4.0
+ *  @version 4.0.0
  *  @date April 2020
  *
  *  @brief

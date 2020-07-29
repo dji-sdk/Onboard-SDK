@@ -1,5 +1,5 @@
 /** @file dji_gimbal_manager.hpp
- *  @version 4.0
+ *  @version 4.0.0
  *  @date November 2019
  *
  *  @brief Implementation of the manager for gimbal module

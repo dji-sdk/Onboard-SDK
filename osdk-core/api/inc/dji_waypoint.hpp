@@ -1,5 +1,5 @@
 /** @file dji_waypoint.hpp
- *  @version 3.8
+ *  @version 4.0.0
  *  @date April 2019
  *
  *  @brief Implementation of GPS Waypoint Missions for DJI OSDK

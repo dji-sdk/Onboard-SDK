@@ -1,5 +1,5 @@
 /** @file osdk_firewall.cpp
- *  @version 4.0
+ *  @version 4.0.0
  *  @date March 2020
  *
  *  @brief Implementation for osdk firewall

@@ -1,5 +1,5 @@
 /*! @file dji_stm32_helpers.cpp
- *  @version 3.3
+ *  @version 4.0.0
  *  @date Sep 12 2017
  *
  *  @brief

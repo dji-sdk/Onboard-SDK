@@ -1,5 +1,5 @@
 /** @file dji_payload_device.cpp
- *  @version 3.8.1
+ *  @version 4.0.0
  *  @date  May 2019
  *
  *  @brief Implementation of DJI Payload-3-thirty Device Abstraction

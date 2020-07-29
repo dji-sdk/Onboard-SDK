@@ -536,51 +536,60 @@ void AdvancedSensing::stopMainCameraStream()
 
 bool AdvancedSensing::newFPVCameraImageIsReady()
 {
+  bool ret = false;
   if (vehicle_ptr->isM300()) {
     auto deocderPair = streamDecoder.find(LiveView::OSDK_CAMERA_POSITION_FPV);
     if ((deocderPair != streamDecoder.end()) && deocderPair->second) {
-      deocderPair->second->decodedImageHandler.newImageIsReady();
+      ret = deocderPair->second->decodedImageHandler.newImageIsReady();
     }
   } else {
-    return fpvCam_ptr->newImageIsReady();
+    ret = fpvCam_ptr->newImageIsReady();
   }
+  return ret;
 }
 
 bool AdvancedSensing::newMainCameraImageReady()
 {
+  bool ret = false;
   if (vehicle_ptr->isM300()) {
     auto deocderPair = streamDecoder.find(LiveView::OSDK_CAMERA_POSITION_NO_1);
     if ((deocderPair != streamDecoder.end()) && deocderPair->second) {
-      deocderPair->second->decodedImageHandler.newImageIsReady();
+      ret = deocderPair->second->decodedImageHandler.newImageIsReady();
     }
   } else {
-    return mainCam_ptr->newImageIsReady();
+    ret = mainCam_ptr->newImageIsReady();
   }
+  return ret;
 }
 
 bool AdvancedSensing::getMainCameraImage(CameraRGBImage& copyOfImage)
 {
+  bool ret = false;
   if (vehicle_ptr->isM300()) {
     auto deocderPair = streamDecoder.find(LiveView::OSDK_CAMERA_POSITION_NO_1);
     if ((deocderPair != streamDecoder.end()) && deocderPair->second) {
-      deocderPair->second->decodedImageHandler.getNewImageWithLock(copyOfImage, 20);
+      ret = deocderPair->second->decodedImageHandler.getNewImageWithLock(copyOfImage, 20);
     }
   } else {
-    return mainCam_ptr->getCurrentImage(copyOfImage);
+    ret = mainCam_ptr->getCurrentImage(copyOfImage);
   }
+  return ret;
 }
 
 bool AdvancedSensing::getFPVCameraImage(CameraRGBImage& copyOfImage)
 {
+  bool ret = false;
   if (vehicle_ptr->isM300()) {
     auto deocderPair = streamDecoder.find(LiveView::OSDK_CAMERA_POSITION_FPV);
     if ((deocderPair != streamDecoder.end()) && deocderPair->second) {
-      deocderPair->second->decodedImageHandler.getNewImageWithLock(copyOfImage, 20);
+      ret = deocderPair->second->decodedImageHandler.getNewImageWithLock(copyOfImage, 20);
     }
   } else {
-    return fpvCam_ptr->getCurrentImage(copyOfImage);
+    ret = fpvCam_ptr->getCurrentImage(copyOfImage);
   }
+  return ret;
 }
+
 void AdvancedSensing::setAcmDevicePath(const char *acm_path)
 {
     this->acm_dev=acm_path;

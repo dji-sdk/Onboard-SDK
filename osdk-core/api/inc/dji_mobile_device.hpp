@@ -1,5 +1,5 @@
 /** @file dji_mobile_device.hpp
- *  @version 3.7
+ *  @version 4.0.0
  *  @date July 2018
  *
  *  @brief Implementation of DJI Mobile Device Abstraction

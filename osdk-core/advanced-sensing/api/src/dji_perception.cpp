@@ -1,5 +1,5 @@
 /** @file dji_perception.cpp
- *  @version 4.0
+ *  @version 4.0.0
  *  @date Jan 2020
  *
  *  @brief DJI perception API of OSDK

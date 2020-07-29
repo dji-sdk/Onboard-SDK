@@ -1,5 +1,5 @@
 /** @file dji_gimbal_module.hpp
- *  @version 4.0
+ *  @version 4.0.0
  *  @date November 2019
  *
  *  @brief Implementation of gimbal module for payload node

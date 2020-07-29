@@ -1,5 +1,5 @@
 /** @file dji_camera_module.cpp
- *  @version 3.9
+ *  @version 4.0.0
  *  @date July 2019
  *
  *  @brief Implementation of camera module for payload node

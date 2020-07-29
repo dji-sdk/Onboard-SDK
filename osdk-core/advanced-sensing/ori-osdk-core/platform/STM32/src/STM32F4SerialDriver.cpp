@@ -1,5 +1,5 @@
 /*! @file STM32F4SerialDriver.cpp
- *  @version 3.3
+ *  @version 4.0.0
  *  @date Jun 2017
  *
  *  @brief

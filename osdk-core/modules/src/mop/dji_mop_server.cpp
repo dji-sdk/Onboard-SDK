@@ -1,5 +1,5 @@
 /** @file dji_mop_server.cpp
- *  @version 4.0
+ *  @version 4.0.0
  *  @date March 2020
  *
  *  @brief Implementation of the mop client
@@ -40,6 +40,9 @@ MopServer::~MopServer() {
 MopErrCode MopServer::accept(PipelineID id, PipelineType type, MopPipeline *&p) {
   int32_t ret;
   mop_channel_handle_t bind_handle;
+
+  /*! Check the entry env */
+  checkEntry();
 
   /*! 0.Find whether the pipeline object is existed or not */
   DSTATUS("/*! 0.Find whether the pipeline object is existed or not */");
@@ -89,11 +92,20 @@ MopErrCode MopServer::close(PipelineID id) {
   if (pipelineMap.find(id) == pipelineMap.end()) {
     return MOP_PARM;
   }
-  mop_channel_handle_t handler = pipelineMap[id];
+
+  MopPipeline *pipeline = pipelineMap[id];
+  if (!pipeline)
+    return MOP_UNKNOWN_ERR;
+
+  /*! Check the entry env */
+  checkEntry();
+
+  mop_channel_handle_t handler = pipeline->channelHandle;
 
   DSTATUS("Trying to close pipeline channel_id : %d", id);
   ret = mop_close_channel(handler);
   DSTATUS("Result of close pipeline channel_id:%d : %d", id, ret);
+  delete pipeline;
 
   return getMopErrCode(ret);
 }

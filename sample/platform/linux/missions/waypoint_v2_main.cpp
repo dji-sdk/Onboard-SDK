@@ -1,5 +1,5 @@
 /*! @file missions/waypoint_v2_main.cpp
- *  @version 3.8
+ *  @version 4.0.0
  *  @date Mar 07 2019
  *
  *  @brief
