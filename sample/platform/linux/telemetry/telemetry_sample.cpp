@@ -299,7 +299,7 @@ subscribeToData(Vehicle* vehicle, int responseTimeout)
     std::cout << "Flight Status                         = " << (int)flightStatus
               << "\n";
     std::cout << "Position              (LLA)           = " << latLon.latitude
-              << ", " << latLon.longitude << ", " << altitude << "\n";
+              << ", " << latLon.longitude << ", " << latLon.altitude << "\n";
     std::cout << "RC Commands           (r/p/y/thr)     = " << rc.roll << ", "
               << rc.pitch << ", " << rc.yaw << ", " << rc.throttle << "\n";
     std::cout << "Velocity              (vx,vy,vz)      = " << velocity.data.x

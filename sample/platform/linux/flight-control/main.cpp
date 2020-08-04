@@ -52,7 +52,7 @@ int main(int argc, char** argv) {
 
   // Obtain Control Authority
   // TODO: move this to flight controlller
-  vehicle->control->obtainCtrlAuthority(functionTimeout);
+  //vehicle->control->obtainCtrlAuthority(functionTimeout);
   FlightSample* flightSample = new FlightSample(vehicle);
   // Display interactive prompt
   std::cout
@@ -73,8 +73,9 @@ int main(int argc, char** argv) {
 
   switch (inputChar) {
     case 'a':
-      monitoredTakeoff(vehicle);
-      monitoredLanding(vehicle);
+      vehicle->control->obtainCtrlAuthority(functionTimeout);
+      // monitoredTakeoff(vehicle);
+      // monitoredLanding(vehicle);
       break;
     case 'b':
       monitoredTakeoff(vehicle);
