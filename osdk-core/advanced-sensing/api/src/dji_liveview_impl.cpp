@@ -55,11 +55,17 @@ using namespace DJI::OSDK;
 #define LIVEVIEW_VICE_CAM_TEMP_CMD_ID           (0x56)
 #define LIVEVIEW_TOP_CAM_TEMP_CMD_ID            (0x57)
 
+uint8_t defUserData[LiveView::OSDK_CAMERA_POSITION_FPV + 1] = {0};
+
+void defaultH264CB(uint8_t* buf, int bufLen, void* userData) {
+  *(uint8_t *)userData = 1;
+}
+
 std::map<LiveView::LiveViewCameraPosition, LiveViewImpl::H264CallbackHandler> LiveViewImpl::h264CbHandlerMap = {
-        {LiveView::OSDK_CAMERA_POSITION_NO_1, {NULL, NULL}},
-        {LiveView::OSDK_CAMERA_POSITION_NO_2, {NULL, NULL}},
-        {LiveView::OSDK_CAMERA_POSITION_NO_3, {NULL, NULL}},
-        {LiveView::OSDK_CAMERA_POSITION_FPV,  {NULL, NULL}},
+        {LiveView::OSDK_CAMERA_POSITION_NO_1, {defaultH264CB, (void *)&(defUserData[LiveView::OSDK_CAMERA_POSITION_NO_1])}},
+        {LiveView::OSDK_CAMERA_POSITION_NO_2, {defaultH264CB, (void *)&(defUserData[LiveView::OSDK_CAMERA_POSITION_NO_2])}},
+        {LiveView::OSDK_CAMERA_POSITION_NO_3, {defaultH264CB, (void *)&(defUserData[LiveView::OSDK_CAMERA_POSITION_NO_3])}},
+        {LiveView::OSDK_CAMERA_POSITION_FPV,  {defaultH264CB, (void *)&(defUserData[LiveView::OSDK_CAMERA_POSITION_FPV])}},
     };
 
 T_RecvCmdItem LiveViewImpl::bulkCmdList[] = {
@@ -79,6 +85,15 @@ LiveViewImpl::LiveViewImpl(Vehicle* vehiclePtr) :
 
   if(!vehicle->linker->registerCmdHandler(&recvCmdHandle)) {
     DERROR("register h264 cmd callback handler failed, exiting.");
+  } else {
+    DSTATUS("Finding if liveview stream is available now.");
+    OsdkOsal_TaskSleepMs(500);
+    for (int i = 0; i < sizeof(defUserData); i++) {
+        if (defUserData[i]) {
+          DSTATUS("Found liveview stream at pos [%d], cancel it now ...", i);
+          unsubscribeLiveViewData((LiveView::LiveViewCameraPosition)i);
+      }
+    }
   }
 }
 
