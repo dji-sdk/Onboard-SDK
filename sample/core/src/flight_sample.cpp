@@ -39,7 +39,7 @@ static const double EarthCenter = 6378137.0;
 static const double DEG2RAD = 0.01745329252;
 
 FlightSample::FlightSample(Vehicle* vehicle) { this->vehicle = vehicle; }
-FlightSample::~FlightSample() { delete (this->vehicle); }
+FlightSample::~FlightSample() {}
 
 bool FlightSample::monitoredTakeoff(int timeout) {
   int pkgIndex = 0;

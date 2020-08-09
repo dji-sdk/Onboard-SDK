@@ -15,9 +15,9 @@
 #define MOP_LOGI(...)    PSDK_LOG_INFO(MODULE_NAME_MOP, __VA_ARGS__)
 #define MOP_LOGT(...)    PSDK_LOG_DEBUG(MODULE_NAME_MOP, __VA_ARGS__)
 #define MOP_LOGV(...)    PSDK_LOG_DEBUG(MODULE_NAME_MOP, __VA_ARGS__)
-#endif
 
-#ifdef PLATFORM_OSDK
+#elif defined(PLATFORM_OSDK)
+
 #include <stdbool.h>
 #include <string.h>
 #include <assert.h>
@@ -32,9 +32,8 @@
 #define MOP_LOGT(...) OSDK_LOG_DEBUG(MODULE_NAME_MOP, __VA_ARGS__)
 #define MOP_LOGV(...) OSDK_LOG_DEBUG(MODULE_NAME_MOP, __VA_ARGS__)
 
-#endif
+#elif defined(PLATFORM_DUSS)
 
-#ifdef PLATFORM_DUSS
 #include <string.h>
 #include "duml_log.h"
 #include "duml_sketch.h"
@@ -42,16 +41,14 @@
 #include "duml_mb_pack.h"
 #include "usb_bulk_raw_multich_v2.h"
 
-#define MOP_LOGF(...) DUSS_LOGF(DUSS_MODULE_SYSTEM, __VA_ARGS__)
-#define MOP_LOGE(...) DUSS_LOGE(DUSS_MODULE_SYSTEM, __VA_ARGS__)
-#define MOP_LOGW(...) DUSS_LOGW(DUSS_MODULE_SYSTEM, __VA_ARGS__)
-#define MOP_LOGI(...) DUSS_LOGI(DUSS_MODULE_SYSTEM, __VA_ARGS__)
-#define MOP_LOGT(...) DUSS_LOGT(DUSS_MODULE_SYSTEM, __VA_ARGS__)
-#define MOP_LOGV(...) DUSS_LOGV(DUSS_MODULE_SYSTEM, __VA_ARGS__)
+#define MOP_LOGF(...) DUSS_LOGF(DUSS_MODULE_LIVEVIEW, __VA_ARGS__)
+#define MOP_LOGE(...) DUSS_LOGE(DUSS_MODULE_LIVEVIEW, __VA_ARGS__)
+#define MOP_LOGW(...) DUSS_LOGW(DUSS_MODULE_LIVEVIEW, __VA_ARGS__)
+#define MOP_LOGI(...) DUSS_LOGI(DUSS_MODULE_LIVEVIEW, __VA_ARGS__)
+#define MOP_LOGT(...) DUSS_LOGT(DUSS_MODULE_LIVEVIEW, __VA_ARGS__)
+#define MOP_LOGV(...) DUSS_LOGV(DUSS_MODULE_LIVEVIEW, __VA_ARGS__)
 
-#endif
-
-#ifdef __APPLE__
+#elif defined(__APPLE__)
 
 #include "stdbool.h"
 #include <assert.h>
@@ -96,14 +93,8 @@ void set_mop_log_center_print_pointer(DJIMOPLogCenterPrintPointer pointer);
 #define MOP_LOGT(...) mop_log_center_print(__FILE__, __LINE__, MOPLogTagTypeT, __VA_ARGS__)
 #define MOP_LOGV(...) mop_log_center_print(__FILE__, __LINE__, MOPLogTagTypeVerbose, __VA_ARGS__)
 
-#else
+#elif defined(__ANDROID__)
 
-#include <semaphore.h>
-
-#endif
-
-
-#ifdef __ANDROID__
 #include <stdbool.h>
 #include <assert.h>
 #include <android/log.h>
@@ -127,13 +118,14 @@ void set_mop_log_handle(const MopLog mopLog);
 #define MSDK_USE_LOG            true
 
 #if MSDK_USE_LOG
+#define __FILENAME__ (strrchr(__FILE__, '/') ? (strrchr(__FILE__, '/') + 1):__FILE__)
 
-#define MOP_LOGF(fmt, ...) mopLog( ANDROID_LOG_FATAL, LOG_TAG, "[Fatal]-[%s:%d]" fmt, __FILE__, __LINE__ , ##__VA_ARGS__)
-#define MOP_LOGE(fmt, ...) mopLog( ANDROID_LOG_ERROR, LOG_TAG, "[Error]-[%s:%d]" fmt, __FILE__, __LINE__ ,##__VA_ARGS__)
-#define MOP_LOGW(fmt, ...) mopLog( ANDROID_LOG_WARN, LOG_TAG, "[Warn]-[%s:%d]" fmt, __FILE__, __LINE__ ,##__VA_ARGS__)
-#define MOP_LOGI(fmt, ...) mopLog( ANDROID_LOG_INFO, LOG_TAG, "[Info]-[%s:%d]" fmt, __FILE__, __LINE__ ,##__VA_ARGS__)
-#define MOP_LOGT(fmt, ...) mopLog( ANDROID_LOG_INFO, LOG_TAG, "[T]-[%s:%d]" fmt, __FILE__, __LINE__ ,##__VA_ARGS__)
-#define MOP_LOGV(fmt, ...) mopLog( ANDROID_LOG_VERBOSE, LOG_TAG, "[Verbose]-[%s:%d]" fmt, __FILE__, __LINE__ ,##__VA_ARGS__)
+#define MOP_LOGF(fmt, ...) mopLog( ANDROID_LOG_FATAL, LOG_TAG, "[Fatal]-[%s:%d]" fmt, __FILENAME__, __LINE__ , ##__VA_ARGS__)
+#define MOP_LOGE(fmt, ...) mopLog( ANDROID_LOG_ERROR, LOG_TAG, "[Error]-[%s:%d]" fmt, __FILENAME__, __LINE__ ,##__VA_ARGS__)
+#define MOP_LOGW(fmt, ...) mopLog( ANDROID_LOG_WARN, LOG_TAG, "[Warn]-[%s:%d]" fmt, __FILENAME__, __LINE__ ,##__VA_ARGS__)
+#define MOP_LOGI(fmt, ...) mopLog( ANDROID_LOG_INFO, LOG_TAG, "[Info]-[%s:%d]" fmt, __FILENAME__, __LINE__ ,##__VA_ARGS__)
+#define MOP_LOGT(fmt, ...) mopLog( ANDROID_LOG_INFO, LOG_TAG, "[T]-[%s:%d]" fmt, __FILENAME__, __LINE__ ,##__VA_ARGS__)
+#define MOP_LOGV(fmt, ...) mopLog( ANDROID_LOG_VERBOSE, LOG_TAG, "[Verbose]-[%s:%d]" fmt, __FILENAME__, __LINE__ ,##__VA_ARGS__)
 
 #else
 #define MOP_LOGF(...) mopLog( ANDROID_LOG_FATAL, LOG_TAG, ##__VA_ARGS__)
@@ -145,4 +137,9 @@ void set_mop_log_handle(const MopLog mopLog);
 #endif
 
 #endif
+
+#ifndef __APPLE__
+#include <semaphore.h>
+#endif
+
 #endif

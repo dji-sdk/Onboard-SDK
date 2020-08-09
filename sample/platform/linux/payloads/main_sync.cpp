@@ -31,6 +31,7 @@
 #include <dji_linux_helpers.hpp>
 #include "camera_manager_sync_sample.hpp"
 #include "gimbal_manager_sync_sample.hpp"
+#include "dji_linker.hpp"
 
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
