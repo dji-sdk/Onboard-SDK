@@ -33,7 +33,7 @@
 #include "dji_payload_base.hpp"
 #include "dji_type.hpp"
 #include "dji_vehicle_callback.hpp"
-#include <atomic>
+
 namespace DJI {
 namespace OSDK {
 /*! @brief CameraModule of PayloadNode
