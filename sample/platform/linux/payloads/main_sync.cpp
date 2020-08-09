@@ -31,6 +31,7 @@
 #include <dji_linux_helpers.hpp>
 #include "camera_manager_sync_sample.hpp"
 #include "gimbal_manager_sync_sample.hpp"
+#include "dji_linker.hpp"
 
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
@@ -209,6 +210,32 @@ int main(int argc, char **argv) {
                 g->getGimbalData(PAYLOAD_INDEX_0).pitch,
                 g->getGimbalData(PAYLOAD_INDEX_0).roll,
                 g->getGimbalData(PAYLOAD_INDEX_0).yaw);
+        break;
+      case 't':
+      {
+        uint8_t   temp = 0;
+        T_CmdInfo cmdInfo        = { 0 };
+        T_CmdInfo ackInfo        = { 0 };
+        uint8_t   ackData[1024];
+
+        cmdInfo.cmdSet     = 0x00;
+        cmdInfo.cmdId      = 0x01;
+        cmdInfo.dataLen    = 0;
+        cmdInfo.needAck    = OSDK_COMMAND_NEED_ACK_FINISH_ACK;
+        cmdInfo.packetType = OSDK_COMMAND_PACKET_TYPE_REQUEST;
+        cmdInfo.addr       = GEN_ADDR(0, ADDR_V1_COMMAND_INDEX);
+        cmdInfo.receiver =
+          OSDK_COMMAND_DEVICE_ID(OSDK_COMMAND_DEVICE_TYPE_CAMERA, 0);
+        cmdInfo.sender     = vehicle->linker->getLocalSenderId();
+        E_OsdkStat linkAck = vehicle->linker->sendSync(&cmdInfo, &temp, &ackInfo, ackData,
+                                                       1000 / 4, 4);
+        DSTATUS("Request start pushing camera info ack = %d\n", linkAck);
+        cmdInfo.receiver =
+          OSDK_COMMAND_DEVICE_ID(OSDK_COMMAND_DEVICE_TYPE_CAMERA, 2);
+        linkAck = vehicle->linker->sendSync(&cmdInfo, &temp, &ackInfo, ackData,
+                                                       1000 / 4, 4);
+        DSTATUS("Request start pushing camera info ack = %d\n", linkAck);
+      }
         break;
       case 'q':
         DSTATUS("Quit now ...");

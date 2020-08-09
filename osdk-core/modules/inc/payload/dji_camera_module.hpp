@@ -33,7 +33,7 @@
 #include "dji_payload_base.hpp"
 #include "dji_type.hpp"
 #include "dji_vehicle_callback.hpp"
-
+#include <atomic>
 namespace DJI {
 namespace OSDK {
 /*! @brief CameraModule of PayloadNode
@@ -122,6 +122,10 @@ class CameraModule : public PayloadBase {
      Zoom and Mavic 2 Pro.
      */
     EHDR = DJI_CAMERA_TAKE_PHOTO_TYPE_EHDR,
+    /*!
+     - 	Sets the camera to take an regional photos. It is supported by H20/H20T.
+     */
+    REGIONAL_SR = 0x16,
     /*!
      - The shoot photo mode is unknown.
      */
@@ -576,6 +580,27 @@ class CameraModule : public PayloadBase {
     uint8_t conticapType; /*!< ref to DJI::OSDK::CameraModule::ContiCapMode */
     PhotoIntervalData intervalSetting; /*!< time interval setting */
   } CaptureParamData;                  // pack(1)
+
+  typedef enum :uint8_t
+  {
+    DJI_CAMERA_CONTI_CAP_TYPE_SINGLE = 0, // 单拍
+    DJI_CAMERA_CONTI_CAP_TYPE_MULTIPLE = 1, // 多拍
+    DJI_CAMERA_CONTI_CAP_TYPE_TIMELAPSE = 2, // 延时
+  } DJI_CAMERA_CONTI_CAP_TYPE;
+
+  typedef struct dji_camera_timelapse_capture_with_ms
+  {
+    /*! Type of timing shot (0 = single shot 1 = continuous shot 2 = timelapse) */
+    DJI_CAMERA_CONTI_CAP_TYPE timelapse_type;	// enum-type: DJI_CAMERA_CONTI_CAP_TYPE
+    /*!< 0:reserve 1~254:number 255:keep capturing till stop */
+    uint8_t timelapse_count;
+    /*! Time interval of timing (LSB in front, MSB in back) 0 = reserved 1 ~
+     * 65535 = time interval between two shots (in seconds) */
+    uint16_t timelapse_interval;
+    /*! Timing interval, Ms part (LSB in front, MSB behind) 0 ~ 999 = time
+     * interval between two shots, Ms part (unit: ms) */
+    uint16_t timelapse_interval_ms;
+  } dji_camera_timelapse_capture_with_ms;
 
   /*! @brief Request data to take photo mode
    */
@@ -1903,8 +1928,8 @@ class CameraModule : public PayloadBase {
                                            CaptureParamData captureParam,
                                            UserData userData);
   static void callbackToSetPhotoTimeIntervalSettings(
-      ErrorCode::ErrorCodeType retCode, CaptureParamData captureParam,
-      UserData userData);
+    ErrorCode::ErrorCodeType retCode, CaptureParamData captureParam,
+    UserData userData);
 
   template <typename DataT>
   void getInterfaceAsync(const uint8_t cmd[2],
@@ -1940,7 +1965,9 @@ class CameraModule : public PayloadBase {
                                                uint8_t rtyTimes);
 
  private:
-
+  std::string cameraVersion;
+  std::string getCameraVersion();
+  void requestCameraVersion();
   void getCaptureParamDataAsync(
       void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,
                            CaptureParamData captureParam, UserData userData),
@@ -1954,7 +1981,8 @@ class CameraModule : public PayloadBase {
       CaptureParamData& captureParam, int timeout);
 
   CaptureParamData CreateDefCaptureParamData(ShootPhotoMode mode = SINGLE);
-
+  T_OsdkTaskHandle camModuleHandle;
+  static void camHWInfoTask(void *arg);
 }; /* CameraModule camera */
 }  // namespace OSDK
 }  // namespace DJI
