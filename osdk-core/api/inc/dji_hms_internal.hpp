@@ -1,5 +1,5 @@
 /** @file dji_hms_internal.hpp
- *  @version 4.0
+ *  @version 4.0.0
  *  @date Dec 2019
  *
  *  @brief HMS((Health Management System) error code table and some basic func for HMS API

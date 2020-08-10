@@ -1,5 +1,5 @@
 /** @file dji_flight_controller.cpp
- *  @version 3.9
+ *  @version 4.0.0
  *  @date August 2019
  *
  *  @brief

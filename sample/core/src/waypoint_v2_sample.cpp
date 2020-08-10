@@ -1,5 +1,5 @@
 /*! @file waypoint_v2_sample.cpp
- *  @version 4.0
+ *  @version 4.0.0
  *  @date Mar 07 2019
  *
  *  @brief

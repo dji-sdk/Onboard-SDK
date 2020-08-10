@@ -1,5 +1,5 @@
 /*! @file flight_sample.hpp
- *  @version 4.0
+ *  @version 4.0.0
  *  @date Dec 2019
  *
  *  @brief

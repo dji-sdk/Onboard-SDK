@@ -1,5 +1,5 @@
 /*! @file TimeSyncSample.h
- *  @version 3.8.1
+ *  @version 4.0.0
  *  @date May 2019
  *
  *  @brief

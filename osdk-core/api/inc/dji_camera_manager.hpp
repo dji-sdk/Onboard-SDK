@@ -1,5 +1,5 @@
 /** @file dji_camera_manager.hpp
- *  @version 3.9
+ *  @version 4.0.0
  *  @date July 2019
  *
  *  @brief Implementation of the manager for camera module
@@ -1709,11 +1709,44 @@ class CameraManager {
       PayloadIndexType index, CameraModule::ExposureCompensation &ev,
       int timeout);
 
+  /*! @brief obtain the download right from camera, blocking calls
+   *
+   *  @platforms M300
+   *  @param index camera module index, input limit see enum
+   * DJI::OSDK::PayloadIndexType
+   *  @param enable enable or disable the right of download
+   *  @param timeout blocking timeout in seconds
+   *  @return ErrorCode::ErrorCodeType error code
+   */
   ErrorCode::ErrorCodeType obtainDownloadRightSync(PayloadIndexType index,
                                                    bool enable, int timeout);
 #if defined(__linux__)
-  ErrorCode::ErrorCodeType startReqFileList(FileMgr::FileListReqCBType cb, void *userData);
-  ErrorCode::ErrorCodeType startReqFileData(int fileIndex, std::string localPath, FileMgr::FileDataReqCBType cb, void *userData);
+  /*! @brief start to requeset the filelist data of camera, non-blocking calls
+   *
+   *  @platforms M300
+   *  @param index Camera module index, input limit see enum
+   * DJI::OSDK::PayloadIndexType
+   *  @param cb The download result will be called by this cb. The detail
+   * of the callback ref to the DJI::OSDK::FileMgr::FileListReqCBType
+   *  @param userData The parameter to pass user data into the cb
+   *  @return ErrorCode::ErrorCodeType error code
+   */
+  ErrorCode::ErrorCodeType startReqFileList(PayloadIndexType index, FileMgr::FileListReqCBType cb, void *userData);
+
+  /*! @brief start to requeset the files of camera, non-blocking calls
+   *
+   *  @platforms M300
+   *  @param index Camera module index, input limit see enum
+   * DJI::OSDK::PayloadIndexType
+   *  @param fileIndex The file index of the target file. The file index can be
+   * got from the file list.
+   *  @param localPath The target path to save the file to be downloaded.
+   *  @param cb The download result will be called by this cb. The detail
+   * of the callback ref to the DJI::OSDK::FileMgr::FileDataReqCBType
+   *  @param userData The parameter to pass user data into the cb
+   *  @return ErrorCode::ErrorCodeType error code
+   */
+  ErrorCode::ErrorCodeType startReqFileData(PayloadIndexType index, int fileIndex, std::string localPath, FileMgr::FileDataReqCBType cb, void *userData);
 #endif
  private:
 #if defined(__linux__)

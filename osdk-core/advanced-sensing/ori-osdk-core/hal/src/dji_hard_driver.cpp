@@ -1,5 +1,5 @@
 /*! @file dji_hard_driver.cpp
- *  @version 3.3
+ *  @version 4.0.0
  *  @date Jun 15 2017
  *
  *  @brief
@@ -32,7 +32,6 @@
 
 using namespace DJI::OSDK;
 
-//! @todo change to dji_logging method
 char DJI::OSDK::buffer[DJI::OSDK::HardDriver::bufsize];
 
 HardDriver::HardDriver()

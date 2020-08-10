@@ -1,5 +1,5 @@
 /** @file dji_flight_assistant_module.hpp
- *  @version 3.9
+ *  @version 4.0.0
  *  @date August 2019
  *
  *  @brief Implementation of flight assistant module

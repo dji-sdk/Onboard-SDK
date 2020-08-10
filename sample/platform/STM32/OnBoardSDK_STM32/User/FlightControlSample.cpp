@@ -1,5 +1,5 @@
 /*! @file FlightControlSample.cpp
- *  @version 3.3
+ *  @version 4.0.0
  *  @date May 2017
  *
  *  @brief
@@ -35,7 +35,6 @@ extern Vehicle* v;
 bool
 monitoredTakeOff()
 {
-  //@todo: remove this once the getErrorCode function signature changes
   char           func[50];
   ACK::ErrorCode ack;
   int            pkgIndex;
@@ -312,7 +311,6 @@ monitoredTakeOff()
 bool
 monitoredLanding()
 {
-  //@todo: remove this once the getErrorCode function signature changes
   char           func[50];
   ACK::ErrorCode ack;
   uint32_t       SUBSCRIBE_TIMOUT = 30000; // milliseconds
@@ -511,7 +509,6 @@ moveByPositionOffset(float xOffsetDesired, float yOffsetDesired,
   int outOfControlBoundsTimeLimit  = 10 * cycleTimeInMs; // 10 cycles
   int withinControlBoundsTimeReqmt = 50 * cycleTimeInMs; // 50 cycles
 
-  //@todo: remove this once the getErrorCode function signature changes
   char           func[50];
   ACK::ErrorCode ack;
 

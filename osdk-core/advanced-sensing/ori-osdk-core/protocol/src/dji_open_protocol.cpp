@@ -1,5 +1,5 @@
 /** @file dji_open_protocol.cpp
- *  @version 3.3
+ *  @version 4.0.0
  *  @date April 2017
  *
  *  @brief

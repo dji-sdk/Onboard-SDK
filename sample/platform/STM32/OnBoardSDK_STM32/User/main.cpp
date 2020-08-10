@@ -1,5 +1,5 @@
 /*! @file main.cpp
- *  @version 3.3
+ *  @version 4.0.0
  *  @date May 2017
  *
  *  @brief
@@ -133,6 +133,8 @@ void *USBProcessTask(void *p){
 void *mainLoopTask(void *p){
   char func[50];
   uint32_t runOnce = 1;
+
+  delay_nms(1500); //wait for usb acm detected
 
   /*! init the vehicle */
   env->initVehicle();

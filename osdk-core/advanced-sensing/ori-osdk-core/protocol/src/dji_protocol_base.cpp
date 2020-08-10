@@ -1,5 +1,5 @@
 /** @file dji_protocol_base.cpp
- *  @version 3.4
+ *  @version 4.0.0
  *  @date Dec 2017
  *
  *  @brief

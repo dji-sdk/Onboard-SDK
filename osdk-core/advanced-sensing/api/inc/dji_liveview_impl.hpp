@@ -1,5 +1,5 @@
 /** @file dji_liveview_impl.hpp
- *  @version 4.0
+ *  @version 4.0.0
  *  @date Jan 2020
  *
  *  @brief Camera liveview API code implement
@@ -49,6 +49,8 @@ class LiveViewImpl {
   LiveView::LiveViewErrCode startH264Stream(LiveView::LiveViewCameraPosition pos, H264Callback cb, void *userData);
 
   LiveView::LiveViewErrCode stopH264Stream(LiveView::LiveViewCameraPosition pos);
+
+  LiveView::LiveViewErrCode changeH264Source(LiveView::LiveViewCameraPosition pos, LiveView::LiveViewCameraSource source);
 
   typedef struct H264CallbackHandler {
     H264Callback cb;

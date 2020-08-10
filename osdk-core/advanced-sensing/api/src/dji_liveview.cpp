@@ -1,5 +1,5 @@
 /** @file dji_liveview.cpp
- *  @version 4.0
+ *  @version 4.0.0
  *  @date Jan 2020
  *
  *  @brief Camera liveview API of OSDK
@@ -46,7 +46,8 @@ LiveView::~LiveView()
   if(impl) delete(impl);
 }
 
-LiveView::LiveViewErrCode LiveView::startH264Stream(LiveViewCameraPosition pos, H264Callback cb, void *userData) {
+LiveView::LiveViewErrCode LiveView::startH264Stream(LiveViewCameraPosition pos,
+                                                    H264Callback cb, void *userData) {
   if(vehicle->isM300()) {
     return impl->startH264Stream(pos, cb, userData);
   } else {
@@ -60,4 +61,9 @@ LiveView::LiveViewErrCode LiveView::stopH264Stream(LiveViewCameraPosition pos) {
   } else {
     return OSDK_LIVEVIEW_UNSUPPORT_AIRCRAFT;
   }
+}
+
+LiveView::LiveViewErrCode LiveView::changeH264Source(LiveView::LiveViewCameraPosition pos,
+                                                     LiveView::LiveViewCameraSource source) {
+  return impl->changeH264Source(pos, source);
 }

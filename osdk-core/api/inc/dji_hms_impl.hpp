@@ -1,5 +1,5 @@
 /** @file dji_hms_impl.hpp
- *  @version 4.0
+ *  @version 4.0.0
  *  @date Dec 2019
  *
  *  @brief HMS(Health Management System) API for DJI OSDK implement

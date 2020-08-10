@@ -1,5 +1,5 @@
 /*! @file advanced_sensing_sample.cpp
- *  @version 3.3.2
+ *  @version 4.0.0
  *  @date Aug 25 2017
  *
  *  @brief

@@ -1,5 +1,5 @@
 /** @file dji_hms.cpp
- *  @version 4.0
+ *  @version 4.0.0
  *  @date APRIL 2020
  *
  *  @brief Battery API for DJI OSDK

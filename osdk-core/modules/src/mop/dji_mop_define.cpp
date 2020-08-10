@@ -1,5 +1,5 @@
 /** @file dji_mop_define.cpp
- *  @version 4.0
+ *  @version 4.0.0
  *  @date Jan 2020
  *
  *  @brief Enumeration of all mop data types, structures.

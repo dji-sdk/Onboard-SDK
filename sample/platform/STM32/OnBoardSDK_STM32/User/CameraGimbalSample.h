@@ -1,5 +1,5 @@
 /** @file CameraGimbalSample.h
- *  @version 3.3
+ *  @version 4.0.0
  *  @date Jun 2017
  *
  *  @Copyright (c) 2016-2017 DJI

@@ -1,5 +1,5 @@
 /*! @file STM32F4DataGuard.h
- *  @version 3.3
+ *  @version 4.0.0
  *  @date Apr 12th, 2017
  *
  *  @brief

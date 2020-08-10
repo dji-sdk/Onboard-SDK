@@ -1,5 +1,5 @@
 /** @file dji_file_mgr.cpp
- *  @version 4.0
+ *  @version 4.0.0
  *  @date July 2020
  *
  *  @brief Implementation for file manager
@@ -39,19 +39,23 @@
 using namespace DJI;
 using namespace DJI::OSDK;
 
-FileMgr::FileMgr(Linker *linker, uint8_t type, uint8_t index)
-    : type(type), index(index) {
-  impl = new FileMgrImpl(linker, (E_OSDKCommandDeiveType)type, index);
+FileMgr::FileMgr(Linker *linker) {
+  impl = new FileMgrImpl(linker);
 }
 
 FileMgr::~FileMgr(){
   if (impl)delete impl;
 }
 
-ErrorCode::ErrorCodeType FileMgr::startReqFileList(FileListReqCBType cb, void* userData) {
+ErrorCode::ErrorCodeType FileMgr::startReqFileList(E_OSDKCommandDeiveType type,
+                          uint8_t index, FileListReqCBType cb, void* userData) {
+  impl->setTargetDevice(type, index);
   return impl->startReqFileList(cb, userData);
 }
 
-ErrorCode::ErrorCodeType FileMgr::startReqFileData(int fileIndex, std::string localPath, FileDataReqCBType cb, void* userData) {
+ErrorCode::ErrorCodeType FileMgr::startReqFileData(E_OSDKCommandDeiveType type,
+                          uint8_t index, int fileIndex, std::string localPath,
+                          FileDataReqCBType cb, void* userData) {
+  impl->setTargetDevice(type, index);
   return impl->startReqFileData(fileIndex, localPath, cb, userData);
 }

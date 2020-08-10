@@ -1,5 +1,5 @@
 /*! @file op_upload_sample.cpp
- *  @version 4.0
+ *  @version 4.0.0
  *  @date March 6 2020
  *
  *  @brief Sample to show how to upload file from OSDK to PSDK
@@ -143,6 +143,7 @@ static void OPUploadFileTask(MopPipeline *OP_Pipeline) {
                 }
             }
         }
+        fclose(uploadFile);
         MD5_Final(md5_out, &uploadFileMd5Ctx);
         memcpy(req.data.info.md5Buf, md5_out, sizeof(md5_out));
 

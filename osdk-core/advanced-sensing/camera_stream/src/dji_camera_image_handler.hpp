@@ -1,5 +1,5 @@
 /** @file dji_camera_image_handler.hpp
- *  @version 3.5
+ *  @version 4.0.0
  *  @date Dec 2017
  *
  *  @brief Handle the writing and reading of decoded image
