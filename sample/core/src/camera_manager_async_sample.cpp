@@ -68,39 +68,29 @@ void CameraManagerAsyncSample::getExposureModeCb(
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
   DSTATUS("retCode : 0x%lX", retCode);
-  if (!uData) {
+  if ((!uData) || (!uData->pm)) {
     DERROR("User data is a null value.");
     return;
   }
   if (retCode == ErrorCode::SysCommonErr::Success) {
     DSTATUS("Get exposure mode = %d", exposureModeGet);
-    if (uData->pm) {
-      /*! compare the exposure mode set and get */
-      if (*(CameraModule::ExposureMode *)uData->dataTarget == exposureModeGet) {
-        DSTATUS("The exposure mode is already %d.", exposureModeGet);
-        if (uData->userCallBack) {
-          void (*cb)(ErrorCode::ErrorCodeType, UserData);
-          cb =
-              (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack;
-          cb(ErrorCode::SysCommonErr::Success, uData->userData);
-        }
-      } else {
-        uData->pm->setExposureModeAsync(
-            uData->index, *(CameraModule::ExposureMode *)uData->dataTarget,
-            (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack,
-            uData->userData);
+    /*! compare the exposure mode set and get */
+    if (*(CameraModule::ExposureMode *)uData->dataTarget == exposureModeGet) {
+      DSTATUS("The exposure mode is already %d.", exposureModeGet);
+      if (uData->userCallBack) {
+        void (*cb)(ErrorCode::ErrorCodeType, UserData);
+        cb =
+            (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack;
+        cb(ErrorCode::SysCommonErr::Success, uData->userData);
+        return;
       }
     }
-
-  } else {
-    DERROR("Get exposure mode error. Error code : 0x%lX", retCode);
-    ErrorCode::printErrorCodeMsg(retCode);
-    if (uData->userCallBack) {
-      void (*cb)(ErrorCode::ErrorCodeType, UserData);
-      cb = (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack;
-      cb(retCode, uData->userData);
-    }
   }
+
+  uData->pm->setExposureModeAsync(
+    uData->index, *(CameraModule::ExposureMode *)uData->dataTarget,
+    (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack,
+    uData->userData);
 }
 
 void CameraManagerAsyncSample::getISOCb(ErrorCode::ErrorCodeType retCode,
@@ -150,39 +140,29 @@ void CameraManagerAsyncSample::getShutterSpeedCb(
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
   DSTATUS("retCode : 0x%lX", retCode);
-  if (!uData) {
+  if ((!uData) || (!uData->pm)) {
     DERROR("User data is a null value.");
     return;
   }
   if (retCode == ErrorCode::SysCommonErr::Success) {
     DSTATUS("Get shutter speed = %d", shutterSpeedGet);
-    if (uData->pm) {
-      /*! compare the shutter speed set and get */
-      if (*(CameraModule::ShutterSpeed *)uData->dataTarget == shutterSpeedGet) {
-        DSTATUS("The shutter speed  value is already %d.", shutterSpeedGet);
-        if (uData->userCallBack) {
-          void (*cb)(ErrorCode::ErrorCodeType, UserData);
-          cb =
-              (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack;
-          cb(ErrorCode::SysCommonErr::Success, uData->userData);
-        }
-      } else {
-        uData->pm->setShutterSpeedAsync(
-            uData->index, *(CameraModule::ShutterSpeed *)uData->dataTarget,
-            (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack,
-            uData->userData);
+    /*! compare the shutter speed set and get */
+    if (*(CameraModule::ShutterSpeed *)uData->dataTarget == shutterSpeedGet) {
+      DSTATUS("The shutter speed  value is already %d.", shutterSpeedGet);
+      if (uData->userCallBack) {
+        void (*cb)(ErrorCode::ErrorCodeType, UserData);
+        cb =
+            (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack;
+        cb(ErrorCode::SysCommonErr::Success, uData->userData);
+        return;
       }
     }
-
-  } else {
-    DERROR("Get shutter speed error. Error code : 0x%lX", retCode);
-    ErrorCode::printErrorCodeMsg(retCode);
-    if (uData->userCallBack) {
-      void (*cb)(ErrorCode::ErrorCodeType, UserData);
-      cb = (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack;
-      cb(retCode, uData->userData);
-    }
   }
+
+  uData->pm->setShutterSpeedAsync(
+    uData->index, *(CameraModule::ShutterSpeed *)uData->dataTarget,
+    (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack,
+    uData->userData);
 }
 
 void CameraManagerAsyncSample::getApertureCb(ErrorCode::ErrorCodeType retCode,

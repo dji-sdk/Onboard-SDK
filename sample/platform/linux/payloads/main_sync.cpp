@@ -113,14 +113,14 @@ int main(int argc, char **argv) {
         p->setExposureModeSyncSample(
             PAYLOAD_INDEX_0, CameraModule::ExposureMode::SHUTTER_PRIORITY);
         p->setShutterSpeedSyncSample(
-            PAYLOAD_INDEX_0, CameraModule::ShutterSpeed::SHUTTER_SPEED_1_50);
+            PAYLOAD_INDEX_0, CameraModule::ShutterSpeed::SHUTTER_SPEED_1_100);
         sleep(2);
         break;
       case 'b':
         p->setExposureModeSyncSample(
             PAYLOAD_INDEX_0, CameraModule::ExposureMode::APERTURE_PRIORITY);
         p->setApertureSyncSample(PAYLOAD_INDEX_0,
-                                 CameraModule::Aperture::F_3_DOT_5);
+                                 CameraModule::Aperture::F_4);
         sleep(2);
         break;
       case 'c':
