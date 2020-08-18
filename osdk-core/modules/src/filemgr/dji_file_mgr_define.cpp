@@ -166,7 +166,7 @@ void DJI::OSDK::printMediaFileMsg(DJI::OSDK::MediaFile file) {
     else
       sprintf(logBuf + strlen(logBuf),"Index-%d; %ldB; ", file.fileIndex, file.fileSize);
     /*! file time */
-    sprintf(logBuf + strlen(logBuf), "%d-%d-%d_%d-%d-%d; ", file.date.year + 1980,
+    sprintf(logBuf + strlen(logBuf), "%d-%d-%d_%d-%d-%d; ", file.date.year,
             file.date.month, file.date.day, file.date.hour, file.date.minute,
             file.date.second);
     if ((file.fileType == MediaFileType::MOV)

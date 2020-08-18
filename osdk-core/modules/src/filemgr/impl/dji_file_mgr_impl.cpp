@@ -113,7 +113,7 @@ void FileMgrImpl::printFileDownloadStatus() {
   if ((curPrintMs > lastPrintMs) && ((curPrintMs - lastPrintMs) < 600) &&
       (curFilePos > lastFilePos) &&
       curFilePos && lastFilePos && curPrintMs && lastPrintMs)
-    snprintf(speedMsg, sizeof(speedMsg), "%d\tkB/s", (curFilePos - lastFilePos) / (curPrintMs - lastPrintMs));
+    snprintf(speedMsg, sizeof(speedMsg), "%lu\tkB/s", (curFilePos - lastFilePos) / (curPrintMs - lastPrintMs));
   else
     snprintf(speedMsg, sizeof(speedMsg), "--\tkB/s");
   lastFilePos = curFilePos;
@@ -376,10 +376,41 @@ void FileMgrImpl::setTargetDevice(E_OSDKCommandDeiveType type, uint8_t index) {
   this->index = index;
 }
 
+FileMgrImpl::FileNameRule FileMgrImpl::getNameRule() {
+  uint8_t   temp = 0;
+  T_CmdInfo cmdInfo        = { 0 };
+  T_CmdInfo ackInfo        = { 0 };
+  uint8_t   ackData[1024];
+
+  cmdInfo.cmdSet     = 0x00;
+  cmdInfo.cmdId      = 0x01;
+  cmdInfo.dataLen    = 0;
+  cmdInfo.needAck    = OSDK_COMMAND_NEED_ACK_FINISH_ACK;
+  cmdInfo.packetType = OSDK_COMMAND_PACKET_TYPE_REQUEST;
+  cmdInfo.addr       = GEN_ADDR(0, ADDR_V1_COMMAND_INDEX);
+  cmdInfo.receiver =
+    OSDK_COMMAND_DEVICE_ID(this->type, this->index * 2);
+  cmdInfo.sender     = linker->getLocalSenderId();
+  E_OsdkStat linkAck = linker->sendSync(&cmdInfo, &temp, &ackInfo, ackData,
+                                        250, 2);
+
+  if ((linkAck == OSDK_STAT_OK) && (ackInfo.dataLen >= 18)) {
+    //3~18 : hardware version
+    if (strstr((char *)(ackData + 2), "gd610") != NULL) return H20_RULE;
+    else return ORIGIN_RULE;
+  } else {
+    return UNKNOWN_RULE;
+  }
+}
+
 ErrorCode::ErrorCodeType FileMgrImpl::startReqFileList(FileMgr::FileListReqCBType cb, void* userData) {
-  //SendAbortPack(DJI_GENERAL_DOWNLOAD_FILE_TASK_TYPE_LIST);
   if ((fileListHandler->downloadState == DOWNLOAD_IDLE) &&
       (fileDataHandler->downloadState == DOWNLOAD_IDLE)) {
+    nameRule = getNameRule();
+    if(nameRule == UNKNOWN_RULE)  {
+      DERROR("Cannot get camera status .");
+      return ErrorCode::CameraCommonErr::UndefineError;
+    }
     fileListHandler->downloadState = RECVING_FILE_LIST;
     if (fileListHandler->download_buffer_) {
       fileListHandler->download_buffer_->Clear();
@@ -476,18 +507,43 @@ FileMgrImpl::ConsumeDataBuffer FileMgrImpl::ConsumeChunk(DataPointer data_pointe
 #include <iostream>
 #include <iomanip>
 #include <sstream>
-std::string FileMgrImpl::GetFileName(const int file_index, const int file_sub_index, const MediaFileType type) {
-  //auto index = (file_index & 0x0000FFFF) % 9999;
-  auto index = file_index % 99900;
-  if (file_sub_index) {
-    std::ostringstream sub_index_str;
-    sub_index_str << std::setfill('0') << std::setw(3) << file_sub_index;
-    return std::string("DJI_" + std::to_string(index) + "_" + sub_index_str.str() + GetSuffixByFileType(type));
+std::string FileMgrImpl::GetFileName(MediaFile fileInfo) {
+  if (nameRule == H20_RULE) {
+    //int DirNo = (fileInfo.fileIndex & 0xFFFC0000) >> 18;
+    int FileNo = (fileInfo.fileIndex & 0x0003FFF0) >> 4;
+    //int CameraType = fileInfo.fileIndex & 0x0000000F;
+    char fileName[100] = {0};
+
+    sprintf(fileName,
+            "DJI_%04d%02d%02d%02d%02d%02d_%04d_%s%s",
+            fileInfo.date.year,
+            fileInfo.date.month,
+            fileInfo.date.day,
+            fileInfo.date.hour,
+            fileInfo.date.minute,
+            fileInfo.date.second,
+            FileNo,
+            GetFileCameraType(fileInfo.fileIndex).c_str(),
+            GetSuffixByFileType(fileInfo.fileType).c_str());
+    return std::string(fileName);
   } else {
-    return std::string("DJI_" + std::to_string(index) + GetSuffixByFileType(type));
+    auto index = fileInfo.fileIndex % 99900;
+    return std::string("DJI_" + std::to_string(index) + GetSuffixByFileType(fileInfo.fileType));
   }
 }
-
+std::string FileMgrImpl::GetFileCameraType(int fileIndex) {
+  std::string cameraTypeChar = unsupportFileCameraType;
+  int CameraType = fileIndex & 0x0000000F;
+  switch (CameraType) {
+    case 1: cameraTypeChar = "THRM"; break;
+    case 2: cameraTypeChar = "ZOOM"; break;
+    case 3: cameraTypeChar = "WIDE"; break;
+      //case 4: cameraTypeChar = "HYBD"; break;
+    case 4: cameraTypeChar = "SCRN"; break; // the same to app
+    case 5: cameraTypeChar = "SUPR"; break;
+  }
+  return cameraTypeChar;
+}
 std::string FileMgrImpl::GetSuffixByFileType(MediaFileType type) {
   switch (type) {
     case MediaFileType::JPEG:
@@ -519,8 +575,8 @@ std::string FileMgrImpl::GetSuffixByFileType(MediaFileType type) {
     case MediaFileType::UNKNOWN:
       break;
   }
-  DERROR("[FileMgr] Wrong file type: ", (int)type);
-  return std::string(".???(Unsupport)");
+  //DERROR("[FileMgr] Wrong file type: %d", (int)type);
+  return unsupportFileName;
 }
 
 FilePackage FileMgrImpl::parseFileList(std::list<DataPointer> fullDataList) {
@@ -541,7 +597,7 @@ FilePackage FileMgrImpl::parseFileList(std::list<DataPointer> fullDataList) {
         auto buffer = ConsumeChunk(dataPtr, chunk_index, consumeBytes);
         if (buffer.index == consumeBytes) {
           auto data = (dji_general_transfer_msg_ack *)(buffer.data);
-          DSTATUS("Unpack datapack seq(%d)", data->seq);
+          //DSTATUS("Unpack datapack seq(%d)", data->seq);
           parsingState = (data->seq == 0) ? PARSING_DATA_HEADER : PARSING_FILEINFO;
         } else {
           parsingState = PARSE_FINISH;
@@ -570,12 +626,12 @@ FilePackage FileMgrImpl::parseFileList(std::list<DataPointer> fullDataList) {
           /*! 构建file信息,装入容器 */
           MediaFile file;
           file.valid = true;
-          file.date.year = data->create_time.year;
+          file.date.year = data->create_time.year + 1980;
           file.date.month = data->create_time.month;
           file.date.day = data->create_time.day;
           file.date.hour = data->create_time.hour;
           file.date.minute = data->create_time.minute;
-          file.date.second = data->create_time.second;
+          file.date.second = data->create_time.second * 2;
           file.fileIndex = data->index;
           file.fileSize = data->size;
           file.fileType = (MediaFileType)data->type;
@@ -591,14 +647,31 @@ FilePackage FileMgrImpl::parseFileList(std::list<DataPointer> fullDataList) {
             file.orientation = (CameraOrientation)data->attribute.photo_attribute.attribute_photo_rotation;
             file.photoRatio = (PhotoRatio)data->attribute.photo_attribute.attribute_photo_ratio;
           }
-          file.fileName = GetFileName(file.fileIndex, 0, file.fileType);
+          file.fileName = GetFileName(file);
 
-          pack.media.push_back(file);
+          bool validFlagBasic = true;
+          bool validFlagNew = true;
+          if (nameRule == H20_RULE) {
+            if ((GetSuffixByFileType(file.fileType) != unsupportFileName) &&
+                (GetFileCameraType(file.fileIndex) != unsupportFileCameraType))
+              validFlagNew = true;
+            else
+              validFlagNew = false;
+          }
+
+          if ((file.valid) && (file.fileSize > 0) && (file.date.year != 1980))
+            validFlagBasic = true;
+          else
+            validFlagBasic = false;
+
+          if (validFlagNew && validFlagBasic)
+            pack.media.push_back(file);
+
           /*! 这部分消耗了就算了,目前不解析 */
           if (data->ext_size) {
             auto extBuffer = ConsumeChunk(dataPtr, chunk_index, data->ext_size);
             auto extData = (dji_ext_info_descriptor *) (extBuffer.data);
-            DSTATUS("extData->id = %d, %s", extData->id, extData->data);
+            //DSTATUS("extData->id = %d, %s", extData->id, extData->data);
           }
           parsingState = PARSING_FILEINFO;
         } else {
