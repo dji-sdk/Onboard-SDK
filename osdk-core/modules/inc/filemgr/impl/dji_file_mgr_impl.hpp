@@ -137,6 +137,9 @@ class FileMgrImpl {
   void fileListRawDataCB(dji_general_transfer_msg_ack *rsp);
   void fileDataRawDataCB(dji_general_transfer_msg_ack *rsp);
 
+  std::string GetFileName(const int file_index, const int file_sub_index, const MediaFileType type);
+  std::string GetSuffixByFileType(MediaFileType type);
+
   uint16_t createNextReqSessionId() {return reqSessionId++;};
   uint16_t getCurReqSessionId() {return reqSessionId;};
   static std::atomic<uint16_t> reqSessionId;

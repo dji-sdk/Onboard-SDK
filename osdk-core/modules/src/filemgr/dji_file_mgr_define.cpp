@@ -150,22 +150,12 @@ const std::map<const int, const char*> DJI::OSDK::videoFrameRateMap(videoFrameRa
 const std::map<const int, const char*> DJI::OSDK::photoRatioMap(photoRatioPairs, photoRatioPairs + sizeof photoRatioPairs / sizeof photoRatioPairs[0]);
 const std::map<const int, const char*> DJI::OSDK::fileTypeMap(fileTypePairs, fileTypePairs + sizeof fileTypePairs / sizeof fileTypePairs[0]);
 
-const char* DJI::OSDK::getMediaFileName(MediaFile file) {
-  static char logBuf[2048] = {0};
-
-  memset(logBuf, 0, sizeof(logBuf));
-  /*! file name */
-  sprintf(logBuf + strlen(logBuf), "DJI_00%02d%s%s", file.fileIndex % 100, ".",
-          (fileTypeMap.find((int) file.fileType) == fileTypeMap.end() ? "???" : (fileTypeMap.find((int) file.fileType)->second)));
-  return logBuf;
-}
-
 void DJI::OSDK::printMediaFileMsg(DJI::OSDK::MediaFile file) {
 
   if (file.valid) {
     char logBuf[2048] = {0};
     /*! file name */
-    sprintf(logBuf + strlen(logBuf), "##File [%s]", getMediaFileName(file));
+    sprintf(logBuf + strlen(logBuf), "##File [%s]", file.fileName.c_str());
     /*! file index and size */
     if (file.fileSize > 1024 * 1024 * 1024)
       sprintf(logBuf + strlen(logBuf),"Index-%d; %0.2fGB; ", file.fileIndex, file.fileSize *1.0f / 1024 / 1024 / 1024);
