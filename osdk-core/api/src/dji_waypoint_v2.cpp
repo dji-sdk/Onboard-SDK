@@ -131,6 +131,8 @@ bool missionEncode(const std::vector<WaypointV2Internal> &mission, uint8_t *push
   startIndex = endIndex + 1;
   memcpy(tempTempPtr, &endIndex, sizeof(endIndex));
   if (endIndex >= mission.size() - 1) {
+    startIndex = 0;
+    endIndex = 0;
     finished = true;
   }
   return finished;
