@@ -332,7 +332,6 @@ extern const std::map<const int, const char*> videoFrameRateMap;
 extern const std::map<const int, const char*> photoRatioMap;
 extern const std::map<const int, const char*> fileTypeMap;
 
-const char *getMediaFileName(DJI::OSDK::MediaFile file);
 void printMediaFileMsg(DJI::OSDK::MediaFile file);
 
 }

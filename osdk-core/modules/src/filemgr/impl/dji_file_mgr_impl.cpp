@@ -473,6 +473,56 @@ FileMgrImpl::ConsumeDataBuffer FileMgrImpl::ConsumeChunk(DataPointer data_pointe
   return ret;
 }
 
+#include <iostream>
+#include <iomanip>
+#include <sstream>
+std::string FileMgrImpl::GetFileName(const int file_index, const int file_sub_index, const MediaFileType type) {
+  //auto index = (file_index & 0x0000FFFF) % 9999;
+  auto index = file_index % 99900;
+  if (file_sub_index) {
+    std::ostringstream sub_index_str;
+    sub_index_str << std::setfill('0') << std::setw(3) << file_sub_index;
+    return std::string("DJI_" + std::to_string(index) + "_" + sub_index_str.str() + GetSuffixByFileType(type));
+  } else {
+    return std::string("DJI_" + std::to_string(index) + GetSuffixByFileType(type));
+  }
+}
+
+std::string FileMgrImpl::GetSuffixByFileType(MediaFileType type) {
+  switch (type) {
+    case MediaFileType::JPEG:
+      return std::string(".jpg");
+      break;
+    case MediaFileType::DNG:
+      return std::string(".dng");
+      break;
+    case MediaFileType::MOV:
+      return std::string(".mov");
+      break;
+    case MediaFileType::MP4:
+      return std::string(".mp4");
+      break;
+#if 0
+    case MediaFileType::PANORAMA:
+      return std::string(".pano");
+      break;
+    case MediaFileType::TIFF:
+      return std::string(".tiff");
+      break;
+    case MediaFileType::UL_CTRL_INFO:
+      return std::string(".log");
+      break;
+    case MediaFileType::UL_CTRL_INFO_LZ4:
+      return std::string(".log.lz4");
+      break;
+#endif
+    case MediaFileType::UNKNOWN:
+      break;
+  }
+  DERROR("[FileMgr] Wrong file type: ", (int)type);
+  return std::string(".???(Unsupport)");
+}
+
 FilePackage FileMgrImpl::parseFileList(std::list<DataPointer> fullDataList) {
   static size_t chunk_index = 0;
   FilePackage pack;
@@ -541,6 +591,8 @@ FilePackage FileMgrImpl::parseFileList(std::list<DataPointer> fullDataList) {
             file.orientation = (CameraOrientation)data->attribute.photo_attribute.attribute_photo_rotation;
             file.photoRatio = (PhotoRatio)data->attribute.photo_attribute.attribute_photo_ratio;
           }
+          file.fileName = GetFileName(file.fileIndex, 0, file.fileType);
+
           pack.media.push_back(file);
           /*! 这部分消耗了就算了,目前不解析 */
           if (data->ext_size) {

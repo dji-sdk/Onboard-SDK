@@ -101,7 +101,10 @@ int main(int argc, char **argv) {
       case 'b': {
         ErrorCode::ErrorCodeType ret;
         DSTATUS("Download file number : %d", cur_file_list.media.size());
-        for (uint32_t i = 0; i < cur_file_list.media.size(); i++) {
+        uint32_t downloadCnt = cur_file_list.media.size();
+        if (downloadCnt > 4) downloadCnt = 4;
+        DSTATUS("Now try to download %d media files from main camera.", downloadCnt);
+        for (uint32_t i = 0; i < downloadCnt; i++) {
           fileDataDownloadFinished = false;
           DSTATUS("playback mode......");
           vehicle->cameraManager->setModeSync(PAYLOAD_INDEX_0,
@@ -115,7 +118,7 @@ int main(int argc, char **argv) {
           DSTATUS("Try to download file list  .......");
           char pathBuffer[100] = {0};
           MediaFile targetFile = cur_file_list.media[i];
-          sprintf(pathBuffer, "./%s", getMediaFileName(targetFile));
+          sprintf(pathBuffer, "./%s", targetFile.fileName.c_str());
           std::string localPath(pathBuffer);
 
           DSTATUS("targetFile.fileIndex = %d, localPath = %s", targetFile.fileIndex, localPath.c_str());
