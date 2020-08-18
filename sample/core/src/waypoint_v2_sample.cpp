@@ -99,7 +99,7 @@ bool WaypointV2MissionSample::teardownSubscription(const int pkgIndex,
 ErrorCode::ErrorCodeType WaypointV2MissionSample::runWaypointV2Mission()
 {
   if (!vehiclePtr->isM300()) {
-    DSTATUS("This sample only supports M300 V3!\n");
+    DSTATUS("This sample only supports M300!\n");
     return false;
   }
 
