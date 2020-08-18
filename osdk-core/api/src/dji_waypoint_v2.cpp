@@ -643,7 +643,7 @@ ErrorCode::ErrorCodeType WaypointV2MissionOperator::uploadMission(
 
     E_OsdkStat linkAck =
       vehiclePtr->linker->sendSync(&cmdInfo, (uint8_t *)waypointPushPtr, &ackInfo,
-                                   ackData, timeout * 1000 / 4, 4);
+                                   ackData, timeout * 1000, 4);
     ErrorCode::ErrorCodeType ret = getWP2LinkerErrorCode(linkAck);
     free(waypointPushPtr);
 
