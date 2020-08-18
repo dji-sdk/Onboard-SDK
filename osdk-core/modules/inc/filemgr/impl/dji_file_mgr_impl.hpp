@@ -110,6 +110,13 @@ class FileMgrImpl {
   ErrorCode::ErrorCodeType SendACKPack(DJI_GENERAL_DOWNLOAD_FILE_TASK_TYPE taskId, dji_download_ack *ack);
   ErrorCode::ErrorCodeType SendMissedAckPack(DJI_GENERAL_DOWNLOAD_FILE_TASK_TYPE taskId);
 
+  private:
+  enum FileNameRule {
+    ORIGIN_RULE,
+    H20_RULE,
+    UNKNOWN_RULE,
+  };
+
  private:
   DownloadListHandler *fileListHandler;
   DownloadDataHandler *fileDataHandler;
@@ -117,6 +124,8 @@ class FileMgrImpl {
   Linker *linker;
   E_OSDKCommandDeiveType type;
   uint8_t index;
+  FileNameRule nameRule;
+  FileNameRule getNameRule();
 
  private:
   //typedef void (*FileDataReqCBType)(E_OsdkStat ret_code, dji_general_transfer_msg_ack* ackData);
@@ -137,8 +146,9 @@ class FileMgrImpl {
   void fileListRawDataCB(dji_general_transfer_msg_ack *rsp);
   void fileDataRawDataCB(dji_general_transfer_msg_ack *rsp);
 
-  std::string GetFileName(const int file_index, const int file_sub_index, const MediaFileType type);
+  std::string GetFileName(MediaFile fileInfo);
   std::string GetSuffixByFileType(MediaFileType type);
+  std::string GetFileCameraType(int fileIndex);
 
   uint16_t createNextReqSessionId() {return reqSessionId++;};
   uint16_t getCurReqSessionId() {return reqSessionId;};
@@ -158,6 +168,8 @@ class FileMgrImpl {
   uint64_t fdAddrIndex;
   uint64_t tempSize = 0;
   T_RecvCmdItem bulkCmdItem;
+  const std::string unsupportFileName = std::string(".???");
+  const std::string unsupportFileCameraType = std::string("???");
 
 };
 
