@@ -274,12 +274,12 @@ void *mainLoopTask(void *p){
           break;
         case 10:
           DSTATUS("Starting executing camera manager sample 1:\r\n");
-          DSTATUS("Please make sure X5S camera is at the payload 0 site\r\n");
+          DSTATUS("Please make sure X5S camera is at the main payload 0 site\r\n");
           cameraManagerTest(v, X5S_AT_PAYLOAD_0);
           break;
         case 11:
           DSTATUS("Starting executing camera manager sample 1:\r\n");
-          DSTATUS("Please make sure Z30 camera is at the payload 0 site\r\n");
+          DSTATUS("Please make sure Z30 camera is at the vice payload site\r\n");
           cameraManagerTest(v, Z30_AT_PAYLOAD_1);
           break;
         case 12:
