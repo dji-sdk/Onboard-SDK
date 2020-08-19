@@ -186,11 +186,13 @@ AdvancedSensing::~AdvancedSensing()
     DSTATUS("Destroy task for M300's liveview!");
   }
 
-  /*! Linker destroy advanced sensing handle task */
-  if (!vehicle_ptr->linker->destroyAdvancedSensingTask()) {
-    DERROR("Failed to destroy task for advanced sensing!");
-  } else {
-    DSTATUS("Destroy task for M300's advanced sensing!");
+  if (vehicle_ptr->isM300()) {
+    /*! Linker destroy advanced sensing handle task */
+    if (!vehicle_ptr->linker->destroyAdvancedSensingTask()) {
+      DERROR("Failed to destroy task for advanced sensing!");
+    } else {
+      DSTATUS("Destroy task for M300's advanced sensing!");
+    }
   }
 
 }

@@ -897,7 +897,7 @@ Vehicle::initDJIHms() {
     }
     else
     {
-        DERROR("DJI HMS is not supported on this platform!\n");
+        DSTATUS("DJI HMS is not supported on this platform!\n");
     }
 
     return true;
