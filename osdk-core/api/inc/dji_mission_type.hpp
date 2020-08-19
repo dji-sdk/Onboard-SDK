@@ -792,12 +792,14 @@ typedef struct GetWaypontStartEndIndexAck
  */
 typedef struct MissionStateCommanData
 {
-
   uint16_t curWaypointIndex;
-  uint8_t  stateDetail:4;
-  uint8_t  state:4;
-  uint16_t velocity;
-  uint8_t  config;
+  uint8_t  reserved1:4;
+  uint8_t  state:4;  //0x0:ground station not start. 0x1:mission prepared. 0x2:enter mission.
+                     //0x3:execute flying route mission.
+                     //0x4:pause state. 0x5:enter mission after ending pause.
+                     //0x6:exit mission.
+  uint16_t velocity; //uint:0.01m/s
+  uint8_t  reserved2;   
 }MissionStateCommanData;
 
 /*! Mission's state push ack data
@@ -814,13 +816,13 @@ typedef struct MissionStatePushAck
 typedef union Eventdata
 {
   /*ID:0x01*/
-  uint8_t interruptReason;
+  uint8_t interruptReason; //0x00:rc triggered interrupt
 
   /*ID:0x02*/
-  uint8_t recoverProcess;
+  uint8_t recoverProcess; //0x00:finished pause recover
 
   /*ID:0x03*/
-  uint8_t finishReason;
+  uint8_t finishReason; //0x00:finished normally; 0x10:External user trigger ended successfully
 
   /*ID:0x10*/
   uint16_t waypointIndex;
@@ -828,26 +830,26 @@ typedef union Eventdata
   /*ID:0x11*/
   struct MissionExecEvent{
     uint8_t currentMissionExecNum;
-    uint8_t finishedAllExecNum:1;
+    uint8_t finishedAllExecNum:1; //0:not finished; 1:finished all exec num
     uint8_t reserved:7;
   }MissionExecEvent;
 
-  /*ID:0x12*/
-  uint8_t avoidState;
+  // /*ID:0x12*/
+  // uint8_t avoidState;
 
   /*ID:0x20*/
-  struct MissionValidityEvent {
-    uint8_t misValidityFlag;
-    float32_t estimateRunTime;
-  }MissionValidityEvent;
+  // struct MissionValidityEvent {
+  //   uint8_t misValidityFlag;
+  //   float32_t estimateRunTime;
+  // }MissionValidityEvent;
 
   /*ID:0x30*/
-  struct ActionExecEvent{
-    uint16_t actionId;
-    uint8_t preActuatorState;
-    uint8_t curActuatorState;
-    uint32_t result;
-  }ActionExecEvent;
+  // struct ActionExecEvent{
+  //   uint16_t actionId;
+  //   uint8_t preActuatorState;
+  //   uint8_t curActuatorState;
+  //   uint32_t result;
+  // }ActionExecEvent;
 }Eventdata;
 
 /*! Mission's event push ack data

@@ -216,7 +216,9 @@ namespace OSDK
     Vehicle *vehiclePtr;
 
     float32_t takeoffAltitude;
+
     void RegisterOSDInfoCallback(Vehicle *vehiclePtr);
+    void RegisterMissionEventCallback();
 
   };
 

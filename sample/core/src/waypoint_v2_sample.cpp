@@ -171,7 +171,7 @@ ErrorCode::ErrorCodeType WaypointV2MissionSample::runWaypointV2Mission()
   resumeWaypointMission(timeout);
   if(ret != ErrorCode::SysCommonErr::Success)
     return ret;
-  sleep(20);
+  sleep(50);
   /*! Set up telemetry subscription*/
   if(!teardownSubscription(DEFAULT_PACKAGE_INDEX, timeout))
   {

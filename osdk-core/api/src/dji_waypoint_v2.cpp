@@ -398,6 +398,7 @@ T_CmdInfo setCmdInfoDefault(Vehicle *vehicle, const uint8_t cmd[],
   return cmdInfo;
 }
 
+//10HZ push ;1HZ print
 E_OsdkStat updateMissionState(T_CmdHandle *cmdHandle, const T_CmdInfo *cmdInfo,
                               const uint8_t *cmdData, void *userData) {
 
@@ -408,15 +409,19 @@ E_OsdkStat updateMissionState(T_CmdHandle *cmdHandle, const T_CmdInfo *cmdInfo,
         (DJI::OSDK::MissionStatePushAck *)cmdData;
 
       wp2Ptr->setCurrentState(wp2Ptr->getCurrentState());
-      wp2Ptr->setCurrentState(
-        (DJI::OSDK::DJIWaypointV2MissionState)
-          missionStatePushAck->data.state);
-      //     DSTATUS("missionStatePushAck->commonDataVersion%d\n",missionStatePushAck->commonDataVersion);
-      //     DSTATUS("missionStatePushAck->commonDataLen%d\n",missionStatePushAck->commonDataLen);
-      //     DSTATUS("missionStatePushAck->data%d\n",missionStatePushAck->data);
-           DSTATUS("missionStatePushAck->data.state%x\n",missionStatePushAck->data.state);
-      //     DSTATUS("missionStatePushAck->data.stateDetail%x\n",missionStatePushAck->data.stateDetail);
-      //     DSTATUS("missionStatePushAck->data.curWaypointIndex%d\n",missionStatePushAck->data.curWaypointIndex);
+      wp2Ptr->setCurrentState((DJI::OSDK::DJIWaypointV2MissionState)missionStatePushAck->data.state);
+      static uint32_t curMs = 0;
+      static uint32_t preMs = 0;
+      OsdkOsal_GetTimeMs(&curMs);
+      if (curMs - preMs >= 1000)
+      {
+        preMs = curMs;
+        DSTATUS("missionStatePushAck->commonDataVersion:%d\n",missionStatePushAck->commonDataVersion);
+        DSTATUS("missionStatePushAck->commonDataLen:%d\n",missionStatePushAck->commonDataLen);
+        DSTATUS("missionStatePushAck->data.state:0x%x\n",missionStatePushAck->data.state);
+        DSTATUS("missionStatePushAck->data.curWaypointIndex:%d\n",missionStatePushAck->data.curWaypointIndex);
+        DSTATUS("missionStatePushAck->data.velocity:%d\n",missionStatePushAck->data.velocity);
+      }
     } else {
       DERROR("cmdInfo is a null value");
     }
@@ -468,56 +473,57 @@ E_OsdkStat updateMissionEvent(T_CmdHandle *cmdHandle, const T_CmdInfo *cmdInfo,
       {
         DSTATUS("currentMissionExecNum:%d\n",MissionEventPushAck->data.MissionExecEvent.currentMissionExecNum);
       }
-      if(MissionEventPushAck->event == 0x30)
-      {
-        DSTATUS("currentActionId:0x%x\n",MissionEventPushAck->data.ActionExecEvent.actionId);
-        DSTATUS("preActuatorState:0x%x\n",MissionEventPushAck->data.ActionExecEvent.preActuatorState);
-        DSTATUS("curActuatorState:0x%x\n",MissionEventPushAck->data.ActionExecEvent.curActuatorState);
-        DSTATUS("result:%x\n",MissionEventPushAck->data.ActionExecEvent.result);
-      }
+      // if(MissionEventPushAck->event == 0x30)
+      // {
+      //   DSTATUS("currentActionId:%d\n",MissionEventPushAck->data.ActionExecEvent.actionId);
+      //   DSTATUS("preActuatorState:0x%x\n",MissionEventPushAck->data.ActionExecEvent.preActuatorState);
+      //   DSTATUS("curActuatorState:0x%x\n",MissionEventPushAck->data.ActionExecEvent.curActuatorState);
+      //   DSTATUS("result:%x\n",MissionEventPushAck->data.ActionExecEvent.result);
+      // }
       return OSDK_STAT_OK;
     }
   }
   return OSDK_STAT_SYS_ERR;
 }
-//void WaypointV2MissionOperator::RegisterMissionEventCallback() {
-//  static T_RecvCmdHandle handle = {0};
-//  static T_RecvCmdItem item = {0};
-//  handle.protoType = PROTOCOL_V1;
-//  handle.cmdCount = 1;
-//  handle.cmdList = &item;
-//  item.device = OSDK_COMMAND_FC_2_DEVICE_ID;
-//  item.cmdSet = V1ProtocolCMD::waypointV2::waypointGetEventPushDataV2[0];
-//  item.cmdId = V1ProtocolCMD::waypointV2::waypointGetEventPushDataV2[1];
-//  item.mask = MASK_HOST_DEVICE_SET_ID;
-//  item.host = 0;
-//  item.device = 0;
-//  item.pFunc = updateMissionEvent;
-//  item.userData = this;
-//  bool registerRet = vehiclePtr->linker->registerCmdHandler(&handle);
-//  DSTATUS("register result of geting mission event pushing : %d\n",
-//          registerRet);
-//}
+
+void WaypointV2MissionOperator::RegisterMissionEventCallback() {
+ static T_RecvCmdHandle handle = {0};
+ static T_RecvCmdItem item = {0};
+ handle.protoType = PROTOCOL_V1;
+ handle.cmdCount = 1;
+ handle.cmdList = &item;
+ item.device = OSDK_COMMAND_FC_2_DEVICE_ID;
+ item.cmdSet = V1ProtocolCMD::waypointV2::waypointGetEventPushDataV2[0];
+ item.cmdId = V1ProtocolCMD::waypointV2::waypointGetEventPushDataV2[1];
+ item.mask = MASK_HOST_DEVICE_SET_ID;
+ item.host = 0;
+ item.device = 0;
+ item.pFunc = updateMissionEvent;
+ item.userData = this;
+ bool registerRet = vehiclePtr->linker->registerCmdHandler(&handle);
+ DSTATUS("register result of geting mission event pushing : %d\n",
+         registerRet);
+}
 
 
-//void RegisterMissionStateCallback(Vehicle *vehiclePtr, WaypointV2MissionOperator *missionOperator) {
-//  static T_RecvCmdHandle handle = {0};
-//  static T_RecvCmdItem item = {0};
-//  handle.protoType = PROTOCOL_V1;
-//  handle.cmdCount = 1;
-//  handle.cmdList = &item;
-//  item.device = OSDK_COMMAND_FC_2_DEVICE_ID;
-//  item.cmdSet = V1ProtocolCMD::waypointV2::waypointGetStatePushDataV2[0];
-//  item.cmdId = V1ProtocolCMD::waypointV2::waypointGetStatePushDataV2[1];
-//  item.mask = MASK_HOST_DEVICE_SET_ID;
-//  item.host = 0;
-//  item.device = 0;
-//  item.pFunc = updateMissionState;
-//  item.userData = &missionOperator;
-//  bool registerRet = vehiclePtr->linker->registerCmdHandler(&handle);
-//  DSTATUS("register result of geting mission state pushing : %d\n",
-//          registerRet);
-//}
+void RegisterMissionStateCallback(Vehicle *vehiclePtr, WaypointV2MissionOperator *missionOperator) {
+ static T_RecvCmdHandle handle = {0};
+ static T_RecvCmdItem item = {0};
+ handle.protoType = PROTOCOL_V1;
+ handle.cmdCount = 1;
+ handle.cmdList = &item;
+ item.device = OSDK_COMMAND_FC_2_DEVICE_ID;
+ item.cmdSet = V1ProtocolCMD::waypointV2::waypointGetStatePushDataV2[0];
+ item.cmdId = V1ProtocolCMD::waypointV2::waypointGetStatePushDataV2[1];
+ item.mask = MASK_HOST_DEVICE_SET_ID;
+ item.host = 0;
+ item.device = 0;
+ item.pFunc = updateMissionState;
+ item.userData = &missionOperator;
+ bool registerRet = vehiclePtr->linker->registerCmdHandler(&handle);
+ DSTATUS("register result of geting mission state pushing : %d\n",
+         registerRet);
+}
 
 void WaypointV2MissionOperator::RegisterOSDInfoCallback(Vehicle *vehiclePtr) {
   static T_RecvCmdHandle handle = {0};
@@ -542,8 +548,8 @@ WaypointV2MissionOperator::WaypointV2MissionOperator(Vehicle *vehiclePtr) {
   this->vehiclePtr = vehiclePtr;
   currentState = DJIWaypointV2MissionStateUnWaypointActionActuatorknown;
   prevState = DJIWaypointV2MissionStateUnWaypointActionActuatorknown;
-//  RegisterMissionStateCallback(vehiclePtr, this);
-//  RegisterMissionEventCallback();
+  RegisterMissionStateCallback(vehiclePtr, this);
+  RegisterMissionEventCallback();
   RegisterOSDInfoCallback(vehiclePtr);
 }
 
