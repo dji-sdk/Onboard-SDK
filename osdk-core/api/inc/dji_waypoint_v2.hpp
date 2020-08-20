@@ -210,19 +210,27 @@ namespace OSDK
      */
     void setTakeoffAltitude(float32_t altitude){ takeoffAltitude =  altitude;};
 
+    /*! @brief callback type to get the pushing data from waypoint 2.0
+     *
+     *  @platforms M300
+     */
+    typedef E_OsdkStat (*PushCallback)(struct _CommandHandle *cmdHandle,
+                                       const T_CmdInfo *cmdInfo,
+                                       const uint8_t *cmdData, void *userData);
+
     /*! @brief Subscribe to waypointV2 event with a callback function
     *
     *  @platforms M300
     *  @param cb callback function.default:null
     */
-    void RegisterMissionEventCallback(void *userData, PushCallback cb = nullptr);
+    void RegisterMissionEventCallback(void *userData, PushCallback cb = NULL);
 
     /*! @brief Subscribe to waypointV2 mission state with a callback function
     *
     *  @platforms M300
     *  @param cb callback function.default:null
     */
-    void RegisterMissionStateCallback(void *userData, PushCallback cb = nullptr) ;
+    void RegisterMissionStateCallback(void *userData, PushCallback cb = NULL) ;
 
   private:
     std::vector<WaypointV2> missionV2;

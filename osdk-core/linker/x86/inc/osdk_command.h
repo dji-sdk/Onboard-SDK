@@ -68,10 +68,6 @@ typedef enum {
 
 struct _CommandHandle;
 
-typedef E_OsdkStat (*PushCallback)(struct _CommandHandle *cmdHandle,
-                      const T_CmdInfo *cmdInfo,
-                      const uint8_t *cmdData, void *userData);
-
 typedef struct _ProtCmdItem {
   uint8_t host;
   uint8_t device;
