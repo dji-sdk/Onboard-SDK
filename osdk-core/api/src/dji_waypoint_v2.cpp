@@ -398,38 +398,6 @@ T_CmdInfo setCmdInfoDefault(Vehicle *vehicle, const uint8_t cmd[],
   return cmdInfo;
 }
 
-//10HZ push ;1HZ print
-E_OsdkStat updateMissionState(T_CmdHandle *cmdHandle, const T_CmdInfo *cmdInfo,
-                              const uint8_t *cmdData, void *userData) {
-
-  if (cmdInfo) {
-    if (userData) {
-      auto *wp2Ptr = (WaypointV2MissionOperator *)userData;
-      auto *missionStatePushAck =
-        (DJI::OSDK::MissionStatePushAck *)cmdData;
-
-      wp2Ptr->setCurrentState(wp2Ptr->getCurrentState());
-      wp2Ptr->setCurrentState((DJI::OSDK::DJIWaypointV2MissionState)missionStatePushAck->data.state);
-      static uint32_t curMs = 0;
-      static uint32_t preMs = 0;
-      OsdkOsal_GetTimeMs(&curMs);
-      if (curMs - preMs >= 1000)
-      {
-        preMs = curMs;
-        DSTATUS("missionStatePushAck->commonDataVersion:%d\n",missionStatePushAck->commonDataVersion);
-        DSTATUS("missionStatePushAck->commonDataLen:%d\n",missionStatePushAck->commonDataLen);
-        DSTATUS("missionStatePushAck->data.state:0x%x\n",missionStatePushAck->data.state);
-        DSTATUS("missionStatePushAck->data.curWaypointIndex:%d\n",missionStatePushAck->data.curWaypointIndex);
-        DSTATUS("missionStatePushAck->data.velocity:%d\n",missionStatePushAck->data.velocity);
-      }
-    } else {
-      DERROR("cmdInfo is a null value");
-    }
-    return OSDK_STAT_OK;
-  }
-  return OSDK_STAT_ERR_ALLOC;
-}
-
 E_OsdkStat updateOSDbrodcast(T_CmdHandle *cmdHandle, const T_CmdInfo *cmdInfo,
                              const uint8_t *cmdData, void *userData)
 {
@@ -446,47 +414,8 @@ E_OsdkStat updateOSDbrodcast(T_CmdHandle *cmdHandle, const T_CmdInfo *cmdInfo,
   }
   return OSDK_STAT_SYS_ERR;
 }
-/*! 仅仅推送了0x00,0x10,0x11这几个类别的事件*/
-E_OsdkStat updateMissionEvent(T_CmdHandle *cmdHandle, const T_CmdInfo *cmdInfo,
-                              const uint8_t *cmdData, void *userData) {
 
-  if (cmdInfo) {
-    if (userData) {
-
-      auto *wp2Ptr = (WaypointV2MissionOperator *)userData;
-      auto *MissionEventPushAck =
-        (DJI::OSDK::MissionEventPushAck *)cmdData;
-
-      DSTATUS("MissionEventPushAck->event ID :0x%x\n", MissionEventPushAck->event);
-
-      if(MissionEventPushAck->event == 0x01)
-        DSTATUS("interruptReason:0x%x\n",MissionEventPushAck->data.interruptReason);
-      if(MissionEventPushAck->event == 0x02)
-        DSTATUS("recoverProcess:0x%x\n",MissionEventPushAck->data.recoverProcess);
-      if(MissionEventPushAck->event == 0x03)
-        DSTATUS("finishReason:0x%x\n",MissionEventPushAck->data.finishReason);
-
-      if(MissionEventPushAck->event == 0x10)
-        DSTATUS("current waypointIndex:%d\n",MissionEventPushAck->data.waypointIndex);
-
-      if(MissionEventPushAck->event == 0x11)
-      {
-        DSTATUS("currentMissionExecNum:%d\n",MissionEventPushAck->data.MissionExecEvent.currentMissionExecNum);
-      }
-      // if(MissionEventPushAck->event == 0x30)
-      // {
-      //   DSTATUS("currentActionId:%d\n",MissionEventPushAck->data.ActionExecEvent.actionId);
-      //   DSTATUS("preActuatorState:0x%x\n",MissionEventPushAck->data.ActionExecEvent.preActuatorState);
-      //   DSTATUS("curActuatorState:0x%x\n",MissionEventPushAck->data.ActionExecEvent.curActuatorState);
-      //   DSTATUS("result:%x\n",MissionEventPushAck->data.ActionExecEvent.result);
-      // }
-      return OSDK_STAT_OK;
-    }
-  }
-  return OSDK_STAT_SYS_ERR;
-}
-
-void WaypointV2MissionOperator::RegisterMissionEventCallback() {
+void WaypointV2MissionOperator::RegisterMissionEventCallback(void *userData, PushCallback cb) {
  static T_RecvCmdHandle handle = {0};
  static T_RecvCmdItem item = {0};
  handle.protoType = PROTOCOL_V1;
@@ -498,15 +427,14 @@ void WaypointV2MissionOperator::RegisterMissionEventCallback() {
  item.mask = MASK_HOST_DEVICE_SET_ID;
  item.host = 0;
  item.device = 0;
- item.pFunc = updateMissionEvent;
- item.userData = this;
+ item.pFunc = cb;
+ item.userData = userData;
  bool registerRet = vehiclePtr->linker->registerCmdHandler(&handle);
  DSTATUS("register result of geting mission event pushing : %d\n",
          registerRet);
 }
 
-
-void RegisterMissionStateCallback(Vehicle *vehiclePtr, WaypointV2MissionOperator *missionOperator) {
+void WaypointV2MissionOperator::RegisterMissionStateCallback(void *userData, PushCallback cb) {
  static T_RecvCmdHandle handle = {0};
  static T_RecvCmdItem item = {0};
  handle.protoType = PROTOCOL_V1;
@@ -518,8 +446,8 @@ void RegisterMissionStateCallback(Vehicle *vehiclePtr, WaypointV2MissionOperator
  item.mask = MASK_HOST_DEVICE_SET_ID;
  item.host = 0;
  item.device = 0;
- item.pFunc = updateMissionState;
- item.userData = &missionOperator;
+ item.pFunc = cb;
+ item.userData = userData;
  bool registerRet = vehiclePtr->linker->registerCmdHandler(&handle);
  DSTATUS("register result of geting mission state pushing : %d\n",
          registerRet);
@@ -548,8 +476,6 @@ WaypointV2MissionOperator::WaypointV2MissionOperator(Vehicle *vehiclePtr) {
   this->vehiclePtr = vehiclePtr;
   currentState = DJIWaypointV2MissionStateUnWaypointActionActuatorknown;
   prevState = DJIWaypointV2MissionStateUnWaypointActionActuatorknown;
-  RegisterMissionStateCallback(vehiclePtr, this);
-  RegisterMissionEventCallback();
   RegisterOSDInfoCallback(vehiclePtr);
 }
 
@@ -558,7 +484,7 @@ WaypointV2MissionOperator::~WaypointV2MissionOperator() {
 
 ErrorCode::ErrorCodeType WaypointV2MissionOperator::init(WayPointV2InitSettings *info, int timeout)
 {
-  T_CmdInfo ackInfo = {0};
+  T_CmdInfo ackInfo = {0}; 
   RetCodeType ackData[1024];
 
   WayPointV2InitSettingsInternal initSettingsInternal;
