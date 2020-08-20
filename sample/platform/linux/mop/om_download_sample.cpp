@@ -629,6 +629,7 @@ static void* MopServerTask(void *arg)
   if ((server->accept(id, type, OM_Pipeline)
       != MOP_PASSED) || (OM_Pipeline == NULL)) {
     DERROR("MOP server accept failed");
+    delete server;
     return NULL;
   } else {
     DSTATUS("accept successfully");

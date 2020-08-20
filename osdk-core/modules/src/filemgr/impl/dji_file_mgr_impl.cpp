@@ -624,7 +624,7 @@ FilePackage FileMgrImpl::parseFileList(std::list<DataPointer> fullDataList) {
           auto data = (dji_list_info_descriptor *)(buffer.data);
           //DSTATUS("data->index = %d, data->size = %d", data->index, data->size);
           /*! 构建file信息,装入容器 */
-          MediaFile file;
+          MediaFile file = {0};
           file.valid = true;
           file.date.year = data->create_time.year + 1980;
           file.date.month = data->create_time.month;
