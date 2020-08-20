@@ -37,7 +37,74 @@
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
 
-WaypointV2MissionSample::WaypointV2MissionSample(Vehicle *vehicle):vehiclePtr(vehicle){}
+//10HZ push ;1HZ print
+E_OsdkStat updateMissionState(T_CmdHandle *cmdHandle, const T_CmdInfo *cmdInfo,
+                              const uint8_t *cmdData, void *userData) {
+
+  if (cmdInfo) {
+    if (userData) {
+      auto *wp2Ptr = (WaypointV2MissionOperator *)userData;
+      auto *missionStatePushAck =
+        (DJI::OSDK::MissionStatePushAck *)cmdData;
+
+      wp2Ptr->setCurrentState(wp2Ptr->getCurrentState());
+      wp2Ptr->setCurrentState((DJI::OSDK::DJIWaypointV2MissionState)missionStatePushAck->data.state);
+      static uint32_t curMs = 0;
+      static uint32_t preMs = 0;
+      OsdkOsal_GetTimeMs(&curMs);
+      if (curMs - preMs >= 1000)
+      {
+        preMs = curMs;
+        DSTATUS("missionStatePushAck->commonDataVersion:%d\n",missionStatePushAck->commonDataVersion);
+        DSTATUS("missionStatePushAck->commonDataLen:%d\n",missionStatePushAck->commonDataLen);
+        DSTATUS("missionStatePushAck->data.state:0x%x\n",missionStatePushAck->data.state);
+        DSTATUS("missionStatePushAck->data.curWaypointIndex:%d\n",missionStatePushAck->data.curWaypointIndex);
+        DSTATUS("missionStatePushAck->data.velocity:%d\n",missionStatePushAck->data.velocity);
+      }
+    } else {
+      DERROR("cmdInfo is a null value");
+    }
+    return OSDK_STAT_OK;
+  }
+  return OSDK_STAT_ERR_ALLOC;
+}
+
+/*! only push 0x00,0x10,0x11 event*/
+E_OsdkStat updateMissionEvent(T_CmdHandle *cmdHandle, const T_CmdInfo *cmdInfo,
+                              const uint8_t *cmdData, void *userData) {
+
+  if (cmdInfo) {
+    if (userData) {
+      auto *MissionEventPushAck =
+        (DJI::OSDK::MissionEventPushAck *)cmdData;
+
+      DSTATUS("MissionEventPushAck->event ID :0x%x\n", MissionEventPushAck->event);
+
+      if(MissionEventPushAck->event == 0x01)
+        DSTATUS("interruptReason:0x%x\n",MissionEventPushAck->data.interruptReason);
+      if(MissionEventPushAck->event == 0x02)
+        DSTATUS("recoverProcess:0x%x\n",MissionEventPushAck->data.recoverProcess);
+      if(MissionEventPushAck->event == 0x03)
+        DSTATUS("finishReason:0x%x\n",MissionEventPushAck->data.finishReason);
+
+      if(MissionEventPushAck->event == 0x10)
+        DSTATUS("current waypointIndex:%d\n",MissionEventPushAck->data.waypointIndex);
+
+      if(MissionEventPushAck->event == 0x11)
+      {
+        DSTATUS("currentMissionExecNum:%d\n",MissionEventPushAck->data.MissionExecEvent.currentMissionExecNum);
+      }
+
+      return OSDK_STAT_OK;
+    }
+  }
+  return OSDK_STAT_SYS_ERR;
+}
+
+WaypointV2MissionSample::WaypointV2MissionSample(Vehicle *vehicle):vehiclePtr(vehicle){
+  vehiclePtr->waypointV2Mission->RegisterMissionEventCallback(vehicle->waypointV2Mission, updateMissionEvent);
+  vehiclePtr->waypointV2Mission->RegisterMissionStateCallback(vehicle->waypointV2Mission, updateMissionState);
+}
 
 WaypointV2MissionSample::~WaypointV2MissionSample() {
 }

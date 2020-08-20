@@ -30,6 +30,7 @@
 #define DJI_WAYPOINT_MISSION_V2_HPP
 
 #include <vector>
+#include "osdk_command.h"
 #include "dji_mission_base.hpp"
 #include "dji_waypoint_v2_action.hpp"
 
@@ -209,6 +210,20 @@ namespace OSDK
      */
     void setTakeoffAltitude(float32_t altitude){ takeoffAltitude =  altitude;};
 
+    /*! @brief Subscribe to waypointV2 event with a callback function
+    *
+    *  @platforms M300
+    *  @param cb callback function.default:null
+    */
+    void RegisterMissionEventCallback(void *userData, PushCallback cb = nullptr);
+
+    /*! @brief Subscribe to waypointV2 mission state with a callback function
+    *
+    *  @platforms M300
+    *  @param cb callback function.default:null
+    */
+    void RegisterMissionStateCallback(void *userData, PushCallback cb = nullptr) ;
+
   private:
     std::vector<WaypointV2> missionV2;
     DJIWaypointV2MissionState currentState;
@@ -218,7 +233,6 @@ namespace OSDK
     float32_t takeoffAltitude;
 
     void RegisterOSDInfoCallback(Vehicle *vehiclePtr);
-    void RegisterMissionEventCallback();
 
   };
 
