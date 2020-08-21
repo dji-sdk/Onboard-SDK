@@ -38,6 +38,14 @@ namespace DJI
 {
 namespace OSDK
 {
+  /*! @brief callback type to get the pushing data from waypoint 2.0
+   *
+   *  @platforms M300
+   */
+  typedef E_OsdkStat (*PushCallback)(struct _CommandHandle *cmdHandle,
+                                     const T_CmdInfo *cmdInfo,
+                                     const uint8_t *cmdData, void *userData);
+
  /*! The waypoint operator is the only object that controls, runs and monitors
   *  Waypoint v2 Missions.
   */
@@ -209,14 +217,6 @@ namespace OSDK
      *  @platforms M300
      */
     void setTakeoffAltitude(float32_t altitude){ takeoffAltitude =  altitude;};
-
-    /*! @brief callback type to get the pushing data from waypoint 2.0
-     *
-     *  @platforms M300
-     */
-    typedef E_OsdkStat (*PushCallback)(struct _CommandHandle *cmdHandle,
-                                       const T_CmdInfo *cmdInfo,
-                                       const uint8_t *cmdData, void *userData);
 
     /*! @brief Subscribe to waypointV2 event with a callback function
     *
