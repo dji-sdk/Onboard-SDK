@@ -79,11 +79,11 @@ int main(int argc, char** argv) {
     case 'b':
       monitoredTakeoff(vehicle);
       DSTATUS("Take off over!\n");
-      moveByPositionOffset(vehicle, 0, 6, 6, 30);
+      moveByPositionOffset(vehicle, 0, 6, 6, 30, 0.8, 1);
       DSTATUS("Step 1 over!\n");
-      moveByPositionOffset(vehicle, 6, 0, -3, -30);
+      moveByPositionOffset(vehicle, 6, 0, -3, -30, 0.8, 1);
       DSTATUS("Step 2 over!\n");
-      moveByPositionOffset(vehicle, -6, -6, 0, 0);
+      moveByPositionOffset(vehicle, -6, -6, 0, 0, 0.8, 1);
       DSTATUS("Step 3 over!\n");
       monitoredLanding(vehicle);
       break;
@@ -97,10 +97,10 @@ int main(int argc, char** argv) {
           FlightController::AvoidEnable::AVOID_ENABLE, 1);
 
       /*! Move to higher altitude */
-      flightSample->moveByPositionOffset((FlightSample::Vector3f){0, 0, 30}, 0);
+      flightSample->moveByPositionOffset((FlightSample::Vector3f){0, 0, 30}, 0, 0.8, 1);
 
       /*! Move a short distance*/
-      flightSample->moveByPositionOffset((FlightSample::Vector3f){10, 0, 0}, 0);
+      flightSample->moveByPositionOffset((FlightSample::Vector3f){10, 0, 0}, 0, 0.8, 1);
 
       /*! Set aircraft current position as new home location */
       flightSample->setNewHomeLocation();
@@ -109,7 +109,7 @@ int main(int argc, char** argv) {
       flightSample->setGoHomeAltitude(50);
 
       /*! Move to another position */
-      flightSample->moveByPositionOffset((FlightSample::Vector3f){20, 0, 0}, 0);
+      flightSample->moveByPositionOffset((FlightSample::Vector3f){20, 0, 0}, 0, 0.8, 1);
 
       vehicle->flightController->setCollisionAvoidanceEnabledSync(
         FlightController::AvoidEnable::AVOID_DISABLE, 1);

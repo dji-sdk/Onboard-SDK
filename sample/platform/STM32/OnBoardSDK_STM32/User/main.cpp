@@ -196,9 +196,9 @@ void *mainLoopTask(void *p){
             zPosition = 1.2;
           }
 
-          moveByPositionOffset(0, 6, zPosition, 0);
-          moveByPositionOffset(6, 0, zPosition, 0);
-          moveByPositionOffset(-6, -6, zPosition, 0);
+          moveByPositionOffset(0, 6, zPosition, 0, 0.8, 1);
+          moveByPositionOffset(6, 0, zPosition, 0, 0.8, 1);
+          moveByPositionOffset(-6, -6, zPosition, 0, 0.8, 1);
           // Run monitored landing sample
           monitoredLanding();
           break;
