@@ -363,9 +363,9 @@ runPositionControlSample(Vehicle* vehicle)
 {
   bool positionControlError = false;
   positionControlError      = monitoredTakeoff(vehicle);
-  positionControlError &= moveByPositionOffset(vehicle, 0, 6, 6, 30);
-  positionControlError &= moveByPositionOffset(vehicle, 6, 0, -3, -30);
-  positionControlError &= moveByPositionOffset(vehicle, -6, -6, 0, 0);
+  positionControlError &= moveByPositionOffset(vehicle, 0, 6, 6, 30, 0.8, 1);
+  positionControlError &= moveByPositionOffset(vehicle, 6, 0, -3, -30, 0.8, 1);
+  positionControlError &= moveByPositionOffset(vehicle, -6, -6, 0, 0, 0.8, 1);
   positionControlError &= monitoredLanding(vehicle);
 
   return (!positionControlError); // We want to return success status, not error

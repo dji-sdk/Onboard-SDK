@@ -123,7 +123,7 @@ class FlightSample {
 
   bool moveByPositionOffset(const Vector3f &offsetDesired,
                             float yawDesiredInDeg,
-                            float posThresholdInM = 0.5,
+                            float posThresholdInM = 0.8,
                             float yawThresholdInDeg = 1.0);
 
  private:
