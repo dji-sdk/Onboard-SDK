@@ -1,5 +1,5 @@
 /*! @file camera_stream_poll_sample.cpp
- *  @version 3.6
+ *  @version 4.0.0
  *  @date Feb 1st 2018
  *
  *  @brief
@@ -114,7 +114,7 @@ int main(int argc, char** argv)
 
   // main thread just sleep
   // callback function will be called whenever a new image is ready
-  sleep(3000);
+  sleep(30);
 
   if(f)
   {

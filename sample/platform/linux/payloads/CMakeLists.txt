@@ -43,3 +43,6 @@ add_executable(payloads_async_sample
         main_async.cpp
         ${SOURCE_FILES})
 
+add_executable(payloads_download_sample
+        download_sample.cpp
+        ${SOURCE_FILES})

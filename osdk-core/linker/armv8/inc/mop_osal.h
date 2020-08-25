@@ -18,7 +18,9 @@ typedef void *mop_osal_sema_t;
 typedef void *mop_osal_mutex_t;
 typedef void *mop_osal_timer_t;
 
+#ifndef UNUSED
 #define UNUSED(x) (x = x)
+#endif
 
 #ifdef __cplusplus
 extern "C" {

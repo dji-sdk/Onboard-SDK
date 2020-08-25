@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-project(stereo-vision-m300-sample)
+project(stereo-vision-new-sample)
 
 # Try to see if user has OpenCV installed
 # if yes, default callback will display the image

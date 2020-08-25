@@ -1,5 +1,5 @@
 /** @file dji_payload_manager.cpp
- *  @version 3.9
+ *  @version 4.0.0
  *  @date July 2019
  *
  *  @brief Implementation of the manager for payload nodes
@@ -32,11 +32,10 @@
 using namespace DJI;
 using namespace DJI::OSDK;
 
-#define OSDK_COMMAND_DEVICE_TYPE_CAMERA 1
 CameraManager::CameraManager(Vehicle* vehiclePtr) {
   /* fileMgr test for main camera only */
 #if defined(__linux__)
-  fileMgr = new FileMgr(vehiclePtr->linker, OSDK_COMMAND_DEVICE_TYPE_CAMERA, 0);
+  fileMgr = new FileMgr(vehiclePtr->linker);
 #endif
   for (int index = PAYLOAD_INDEX_0; index < PAYLOAD_INDEX_CNT; index++) {
     CameraModule* module = new CameraModule(
@@ -1034,21 +1033,19 @@ ErrorCode::ErrorCodeType CameraManager::obtainDownloadRightSync(
   }
 }
 #if defined(__linux__)
-ErrorCode::ErrorCodeType CameraManager::startReqFileList(FileMgr::FileListReqCBType cb, void *userData) {
+#define PAYLOAD_INDEX_TO_DEVICE_ID(id) (id * 2)
+ErrorCode::ErrorCodeType CameraManager::startReqFileList(PayloadIndexType index, FileMgr::FileListReqCBType cb, void *userData) {
   ErrorCode::ErrorCodeType ret;
-  ret = fileMgr->startReqFileList(cb, userData);
-  //OsdkOsal_TaskSleepMs(1000);
-  //fileMgr->SendAbortPack(DJI_GENERAL_DOWNLOAD_FILE_TASK_TYPE_LIST);
-  //fileMgr->SendACKPack(DJI_GENERAL_DOWNLOAD_FILE_TASK_TYPE_LIST);
+  ret = fileMgr->startReqFileList(OSDK_COMMAND_DEVICE_TYPE_CAMERA,
+                                  PAYLOAD_INDEX_TO_DEVICE_ID(index), cb, userData);
   return ret;
 }
 
-ErrorCode::ErrorCodeType CameraManager::startReqFileData(int fileIndex, std::string localPath, FileMgr::FileDataReqCBType cb, void *userData) {
+ErrorCode::ErrorCodeType CameraManager::startReqFileData(PayloadIndexType index, int fileIndex, std::string localPath, FileMgr::FileDataReqCBType cb, void *userData) {
   ErrorCode::ErrorCodeType ret;
-  ret = fileMgr->startReqFileData(fileIndex, localPath, cb, userData);
-  //OsdkOsal_TaskSleepMs(1000);
-  //fileMgr->SendAbortPack(DJI_GENERAL_DOWNLOAD_FILE_TASK_TYPE_LIST);
-  //fileMgr->SendACKPack(DJI_GENERAL_DOWNLOAD_FILE_TASK_TYPE_LIST);
+  ret = fileMgr->startReqFileData(OSDK_COMMAND_DEVICE_TYPE_CAMERA,
+                                  PAYLOAD_INDEX_TO_DEVICE_ID(index),
+                                  fileIndex, localPath, cb, userData);
   return ret;
 }
 #endif

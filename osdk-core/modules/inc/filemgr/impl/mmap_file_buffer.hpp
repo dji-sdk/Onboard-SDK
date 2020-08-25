@@ -24,12 +24,13 @@ class MmapFileBuffer {
   int fd;
   char *fdAddr;
   uint64_t fdAddrSize;
+  uint64_t curFilePos;
 
   bool init(std::string path, uint64_t fileSize);
 
   bool deInit();
 
-  bool InsertBlock(const uint8_t *pack, uint32_t data_length, int index);
+  bool InsertBlock(const uint8_t *pack, uint32_t data_length, uint64_t index);
 
 };
 }

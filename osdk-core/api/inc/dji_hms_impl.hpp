@@ -1,5 +1,5 @@
 /** @file dji_hms_impl.hpp
- *  @version 4.0
+ *  @version 4.0.0
  *  @date Dec 2019
  *
  *  @brief HMS(Health Management System) API for DJI OSDK implement
@@ -51,12 +51,14 @@ public:
 
   /*! @brief The interface of getting hms version
    *
+   *  @platforms M300
    *  @return std::string hms version.(for example,HMS1.0.0)
    */
     std::string getHMSVersion();
 
   /*! @brief The interface of getting HMS's pushing data which has a timestamp
    *
+   *  @platforms M300
    *  @return HMSPushPacket the private parameter hmsPushPacket which
    *  represents HMS's pushing data with a time stamp.
    *
@@ -67,6 +69,7 @@ public:
 
   /*! @brief The interface of getting device(camera or gimbal) index
    *
+   *  @platforms M300
    *  @return uint8_t the private parameter deviceIndex which
    *  represents camera's or gimbal's index.
    *
@@ -92,6 +95,7 @@ private:
 
     /*! @brief get camera(payload)'s or gimbal's index(same with deviceindex) by sender
      *
+     *  @platforms M300
      * @return uint8_t component index.(cameral index or gimbal index)
      *
      */

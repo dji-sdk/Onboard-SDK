@@ -1,5 +1,5 @@
 /*! @file op_upload_sample.cpp
- *  @version 4.0
+ *  @version 4.0.0
  *  @date March 6 2020
  *
  *  @brief Sample to show how to upload file from OSDK to PSDK
@@ -35,13 +35,13 @@
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include "mop_sample_simple_protocol.hpp"
-
+#include <openssl/md5.h>
 using namespace DJI::OSDK;
 
 #define TEST_OP_PIPELINE_ID 49153
-#define READ_ONCE_BUFFER_SIZE 100*1024
-#define SEND_ONCE_BUFFER_SIZE 100*1024
-#define TEST_SEND_FILE_NAME "/home/dji/telemetryLogFile.txt"
+#define READ_ONCE_BUFFER_SIZE (2 * 1024 * 1024)
+#define SEND_ONCE_BUFFER_SIZE (100 * 1024)
+#define TEST_SEND_FILE_NAME "../../sample/platform/linux/mop/telemetryLogFile.txt"
 #define EXPORT_SHORT_FILE_NAME "telemetryLogFile.txt"
 #define TEST_FILE_MD5_ARRAY {0xa1, 0xd0, 0xc4, 0x50, 0xe7, 0x49, 0xd0, 0x99, \
                              0xb6, 0x95, 0x69, 0x0a, 0x46, 0xa5, 0x76, 0xbb}
@@ -109,6 +109,15 @@ static void OPUploadFileTask(MopPipeline *OP_Pipeline) {
       }
       case SEND_FILE_INFOMATION: {
         /*! Step 3 : send file information */
+        MD5_CTX uploadFileMd5Ctx;
+        FILE *uploadFile = NULL;
+        MD5_Init(&uploadFileMd5Ctx);
+        int returnCode = 0;
+        uploadFile = fopen(TEST_SEND_FILE_NAME, "rb");
+        uint32_t uploadFileTotalSize = 0;
+        uint32_t uploadWriteLen = 0;
+        uint8_t sendBuf[SEND_ONCE_BUFFER_SIZE] = {0};
+        unsigned char md5_out[16];
         DSTATUS("Step 3 : Send file information ...");
         sampleProtocolStruct req = {
             .cmd = CMD_FILEINFO,
@@ -119,8 +128,24 @@ static void OPUploadFileTask(MopPipeline *OP_Pipeline) {
         req.data.info.isExist = true;
         req.data.info.fileLength = get_file_size(TEST_SEND_FILE_NAME);
         sprintf(req.data.info.fileName, EXPORT_SHORT_FILE_NAME);
-        uint8_t fileMd5[] = TEST_FILE_MD5_ARRAY;
-        memcpy(req.data.info.md5Buf, fileMd5, sizeof(req.data.info.md5Buf));
+
+        while (1) {
+            returnCode = fseek(uploadFile, uploadFileTotalSize, SEEK_SET);
+            if (returnCode != 0) {
+                DSTATUS("mop channel fseek file data fail.");
+            }
+            uploadWriteLen = fread(sendBuf, 1, SEND_ONCE_BUFFER_SIZE, uploadFile);
+            if (uploadWriteLen > 0) {
+                uploadFileTotalSize += uploadWriteLen;
+                MD5_Update(&uploadFileMd5Ctx, sendBuf, uploadWriteLen);
+                if (uploadWriteLen < SEND_ONCE_BUFFER_SIZE) {
+                    break;
+                }
+            }
+        }
+        fclose(uploadFile);
+        MD5_Final(md5_out, &uploadFileMd5Ctx);
+        memcpy(req.data.info.md5Buf, md5_out, sizeof(md5_out));
 
         MopPipeline::DataPackType fileInfoPack = {.data = (uint8_t *) &req, .length = RAW_DATA_HEADER_LEN + req.dataLen};
         mopRet = OP_Pipeline->sendData(fileInfoPack, &fileInfoPack.length);
@@ -181,9 +206,12 @@ static void OPUploadFileTask(MopPipeline *OP_Pipeline) {
 
         /*! Step 6 : get result */
         MopPipeline::DataPackType readPack = {(uint8_t *) recvBuf, READ_ONCE_BUFFER_SIZE};
-        mopRet = OP_Pipeline->recvData(readPack, &readPack.length);
+        do {
+            mopRet = OP_Pipeline->recvData(readPack, &readPack.length);
+        } while(mopRet == MOP_TIMEOUT);
         ASSERT_MOP_RET(mopRet)
         sampleProtocolStruct *ackData = (sampleProtocolStruct *)readPack.data;
+        DSTATUS("readPack.length %d ,cmd: %d, ackData->subcmd: %d",readPack.length, ackData->cmd, ackData->subcmd);
         if ((readPack.length >= SIMPLE_CMD_PACK_LEN) && (ackData->cmd == CMD_RESULT) && (ackData->subcmd == RET_OK)) {
           DSTATUS("Step 6 : File upload Successfully");
         } else {

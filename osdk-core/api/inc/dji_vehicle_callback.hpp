@@ -1,5 +1,5 @@
 /** @file dji_vehicle_callback.hpp
- *  @version 3.3
+ *  @version 4.0.0
  *  @date April 2017
  *
  *  @brief Type definition for new Vehicle-style callbacks
@@ -85,6 +85,17 @@ typedef struct VehicleCallBackHandler
   VehicleCallBack callback;
   UserData        userData;
 } VehicleCallBackHandler;
+
+/*! @brief The CallBackHandler struct allows users to encapsulate callbacks and
+ * data in one struct. This is a more common method.
+ *
+ */
+typedef struct CommonCallBackHandler
+{
+  void*    callback;
+  UserData userData;
+} CommonCallBackHandler;
+
 
 } // namespace OSDK
 } // namespace DJI

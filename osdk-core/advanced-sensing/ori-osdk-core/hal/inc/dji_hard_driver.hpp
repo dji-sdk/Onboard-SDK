@@ -1,5 +1,5 @@
 /*! @file dji_hard_driver.hpp
- *  @version 3.3
+ *  @version 4.0.0
  *  @date Jun 15 2017
  *
  *  @brief
@@ -102,7 +102,6 @@ public:
   }
 
 public:
-  //! @todo move to Logging class
   virtual void displayLog(const char* buf = 0);
 
 public:

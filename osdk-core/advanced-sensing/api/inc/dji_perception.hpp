@@ -1,5 +1,5 @@
 /** @file dji_perception.hpp
- *  @version 4.0
+ *  @version 4.0.0
  *  @date Jan 2020
  *
  *  @brief Camera dji perception API of OSDK
@@ -55,14 +55,19 @@ class Perception {
     OSDK_PERCEPTION_SUBSCRIBE_FAIL = 2,
     OSDK_PERCEPTION_PARAM_ERR = 3,
     OSDK_PERCEPTION_REQ_REFUSED = 4,
+    OSDK_PERCEPTION_REQ_UNSUPPORT = 5,
     OSDK_LIVEVIEW_UNKNOWN = 0xFF,
   } PerceptionErrCode;
 
   typedef enum CamPositionType : uint32_t {
     RECTIFY_DOWN_LEFT = 1,
+    RAW_DOWN_FRONT = RECTIFY_DOWN_LEFT, //only for M210V2
     RECTIFY_DOWN_RIGHT = 2,
+    RAW_DOWN_BACK = RECTIFY_DOWN_RIGHT, //only for M210V2
     RECTIFY_FRONT_LEFT = 3,
+    RAW_FRONT_LEFT = RECTIFY_FRONT_LEFT, //only for M210V2
     RECTIFY_FRONT_RIGHT = 4,
+    RAW_FRONT_RIGHT = RECTIFY_FRONT_RIGHT, //only for M210V2
     RECTIFY_REAR_LEFT = 5,
     RECTIFY_REAR_RIGHT = 6,
     RECTIFY_UP_LEFT = 21,
@@ -127,6 +132,7 @@ class Perception {
   /*! @brief subscribe the raw images of both stereo cameras in the same
    * direction. Default frequency at 20 Hz.
    *
+   *  @platforms M300
    *  @param direction to specifly the direction of the subscription. Ref to
    * DJI::OSDK::Perception::DirectionType
    *  @param cb callback to observer the stereo camera image and info.
@@ -138,6 +144,7 @@ class Perception {
   /*! @brief unsubscribe the raw image of both stereo cameras in the same
    * direction.
    *
+   *  @platforms M300
    *  @param direction to specifly the direction of the subscription. Ref to
    * DJI::OSDK::Perception::DirectionType
    *  @return error code. Ref to DJI::OSDK::Perception::PerceptionErrCode
@@ -146,6 +153,7 @@ class Perception {
 
   /*! @brief trigger stereo cameras parameters pushing once.
    *
+   *  @platforms M300
    *  @param direction to specifly the direction of the subscription. Ref to
    * DJI::OSDK::Perception::DirectionType
    *  @return error code. Ref to DJI::OSDK::Perception::PerceptionErrCode
@@ -155,6 +163,7 @@ class Perception {
   /*! @brief set callback to get stereo camera parameters after trigger stereo
    * camera parameters pushing.
    *
+   *  @platforms M300
    *  @param cb callback to observer the parameters of stereo cameras. Ref to
    * DJI::OSDK:Perception::PerceptionCamParamCB
    *  @param userData when cb is called, used in cb.
@@ -162,6 +171,8 @@ class Perception {
   void setStereoCamParamsObserver(PerceptionCamParamCB cb, void *userData);
 
   /*! @brief unsubscribe all the stereo camera parameters pushing.
+   *
+   *  @platforms M300
    */
   void cancelAllSubsciptions();
 

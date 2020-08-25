@@ -1,5 +1,5 @@
 /*! @file logging_sample.cpp
- *  @version 3.4
+ *  @version 4.0.0
  *  @date Sep 15 2017
  *
  *  @brief

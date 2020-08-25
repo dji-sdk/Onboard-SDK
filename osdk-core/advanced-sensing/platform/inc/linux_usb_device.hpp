@@ -1,5 +1,5 @@
 /*! @file linux_usb_device.hpp
- *  @version 3.4.0
+ *  @version 4.0.0
  *  @date Dec 2017
  *
  *

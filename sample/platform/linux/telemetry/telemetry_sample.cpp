@@ -1,5 +1,5 @@
 /*! @file telemetry_sample.cpp
- *  @version 3.3
+ *  @version 4.0.0
  *  @date Jun 05 2017
  *
  *  @brief
@@ -393,7 +393,7 @@ subscribeToDataForInteractivePrint(Vehicle* vehicle, int responseTimeout)
     int userInput;
 
     std::cout << "Select variable you are interested in printing:\n"
-              << "1. rcFuncFull\n"
+              << "1. rcFuncFull (A3/N3/M600 only)\n"
               << "2. rcWithFlag\n"
               << "3. escData\n"
               << "4. rtkConnect\n"
@@ -435,7 +435,7 @@ subscribeToDataForInteractivePrint(Vehicle* vehicle, int responseTimeout)
     {
       switch(userInput)
       {
-        case 1: //rcFuncFull
+        case 1: //rcFuncFull (Only support A3/N3/M600 , deprecated)
           rcFuncFull = vehicle->subscribe->getValue<TOPIC_RC_FULL_RAW_DATA>();
           printf("%d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d\n",
                  rcFuncFull.lb2.roll,

@@ -1,5 +1,5 @@
 /*! @file dji_type.hpp
- *  @version 3.3
+ *  @version 4.0.0
  *  @date April 2017
  *
  *  @brief Data type and Data Structure definitions for use throughout DJI OSDK
@@ -238,6 +238,12 @@ enum DJI_CAMERA_TAKE_PHOTO_TYPE {
   DJI_CAMERA_TAKE_PHOTO_TYPE_TRACKING   = 8,
   DJI_CAMERA_TAKE_PHOTO_TYPE_RAW_BURST  = 9,
   DJI_CAMERA_TAKE_PHOTO_TYPE_EHDR       = 10,
+};
+
+enum DJI_CAMERA_TAKE_PHOTO_PROFILE {
+  DJI_CAMERA_MODE_PROFILE_PHOTO_NORMAL = 5, // Simple
+  DJI_CAMERA_MODE_PROFILE_PHOTO_INTERVAL = 8, // Timing mode
+  DJI_CAMERA_MODE_PROFILE_PHOTO_REGIONAL_SR = 22, //Regional super resolution photographing
 };
 
 enum DJI_CAMERA_ISO_PARAMETER {

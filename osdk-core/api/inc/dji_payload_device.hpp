@@ -1,5 +1,5 @@
 /** @file dji_payload_device.hpp
- *  @version 3.8.1
+ *  @version 4.0.0
  *  @date  May 2019
  *
  *  @brief Implementation of DJI Payload Device Abstraction
@@ -53,6 +53,7 @@ namespace DJI
       /*!
        * @brief sending data from OSDK to PSDK
        *
+       * @platforms M210V2, M300
        * @param data sent data
        * @param len length of data
        */
@@ -63,6 +64,13 @@ namespace DJI
 
     public:
       VehicleCallBackHandler fromPSDKHandler;
+      /*!
+       * @brief set callback to receive data from PSDK
+       *
+       * @platforms M210V2, M300
+       * @param callback callback to receive data
+       * @param userData user data to be passed in callback
+       */
       void setFromPSDKCallback(VehicleCallBack callback, UserData userData = 0);
     };
 

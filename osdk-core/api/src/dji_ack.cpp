@@ -1,5 +1,5 @@
 /** @file dji_ack.cpp
- *  @version 3.3
+ *  @version 4.0.0
  *  @date April 2017
  *
  *  @brief All DJI OSDK ACK parsing
@@ -922,7 +922,6 @@ ACK::getSetBroadcastMSG(ACK::ErrorCode ack)
 /*
  * @note CMD_ID agnostic
  *
- * @todo Check DJI_ERROR_CODE for comments
  */
 void
 ACK::getCMDSetMissionMSG(ACK::ErrorCode ack)

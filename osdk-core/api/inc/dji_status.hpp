@@ -1,5 +1,5 @@
 /** @file dji_status.hpp
- *  @version 3.3
+ *  @version 4.0.0
  *  @date June 2017
  *
  *  @brief

@@ -1,5 +1,5 @@
 /*! @file time-sync/time_sync_poll_sample.cpp
- *  @version 3.8
+ *  @version 4.0.0
  *  @date Mar 11 2019
  *
  *  @brief

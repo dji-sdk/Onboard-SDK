@@ -1,5 +1,5 @@
 /*! @file flight_sample.hpp
- *  @version 4.0
+ *  @version 4.0.0
  *  @date Dec 2019
  *
  *  @brief
@@ -123,7 +123,7 @@ class FlightSample {
 
   bool moveByPositionOffset(const Vector3f &offsetDesired,
                             float yawDesiredInDeg,
-                            float posThresholdInM = 0.5,
+                            float posThresholdInM = 0.8,
                             float yawThresholdInDeg = 1.0);
 
  private:

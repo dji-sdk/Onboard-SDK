@@ -1,5 +1,5 @@
 /** @file dji_subscription.hpp
- *  @version 3.3
+ *  @version 4.0.0
  *  @date April 2017
  *
  *  @brief
@@ -79,6 +79,8 @@ public:
 
   /*!
    * @brief Fill in necessary information for ADD_PACKAGE call
+   *
+   * @platforms M210V2, M300
    * @param topics: List of TopicName
    * @param numberOfTopics: Number of topics to subscribe for this package
    * @param freq: Frequency of this package
@@ -93,6 +95,8 @@ public:
 
   /*!
    * @brief Serialize the info and uidList to a buffer to send to FC
+   *
+   * @platforms M210V2, M300
    * @param buffer
    */
   int serializePackageInfo(uint8_t* buffer);
@@ -119,6 +123,7 @@ public:
   * @brief Helper function to do post processing when adding package is
   * successful.
   *
+  * @platforms M210V2, M300
   */
   void packageAddSuccessHandler();
 
@@ -126,6 +131,7 @@ public:
   * @brief Helper function to do post processing when removing package is
   * successful.
   *
+  * @platforms M210V2, M300
   */
   void packageRemoveSuccessHandler();
 
@@ -182,6 +188,7 @@ public: // public methods
    * @brief This is the interface for the end user to generate a package for
    * subscription.
    *
+   * @platforms M210V2, M300
    * @param packageID: The ID of package it'll generate
    * @param numberOfTopics:
    * @param topicList: List of Topic Names to subscribe in the package
@@ -195,11 +202,15 @@ public: // public methods
 
   /*!
    * @brief Non-blocking call for version match
+   *
+   * @platforms M210V2, M300
    */
   void verify();
 
   /*!
    * @brief Blocking call for version match.
+   *
+   * @platforms M210V2, M300
    * @param timeout
    * @return
    */
@@ -207,12 +218,16 @@ public: // public methods
 
   /*!
   * @brief Non-blocking call for starting a package
+  *
+  * @platforms M210V2, M300
   * @param packageID
   */
   void startPackage(int packageID);
 
   /*!
    * @brief Blocking call for start package
+   *
+   * @platforms M210V2, M300
    * @param packageID
    * @param timeout
    * @return
@@ -221,6 +236,8 @@ public: // public methods
 
   /*!
    * @brief Non-blocking call for start package
+   *
+   * @platforms M210V2, M300
    * @param packageID
    * @return
    */
@@ -228,6 +245,8 @@ public: // public methods
 
   /*!
    * @brief Non-blocking call for start package
+   *
+   * @platforms M210V2, M300
    * @param packageID
    * @param timeout
    * @return
@@ -236,30 +255,40 @@ public: // public methods
 
   /*!
    * @brief Remove leftover incoming telemetry data due to unclean quit
+   *
+   * @platforms M210V2, M300
    * @return
    */
   void removeLeftOverPackages();
 
   /*!
    * @brief Remove all occupied packages
+   *
+   * @platforms M210V2, M300
    * @return
    */
   void removeAllExistingPackages();
 
   /*!
    * @brief Non-blocking call for resetting all packages.
+   *
+   * @platforms M210V2, M300
    * @return
    */
   void reset();
 
   /*!
    * @brief Blocking call for resetting all packages.
+   *
+   * @platforms M210V2, M300
    * @param timeout
    */
   ACK::ErrorCode reset(int timeout);
 
   /*!
    * @brief Register a callback function after package[packageID] is received
+   *
+   * @platforms M210V2, M300
    * @param packageID
    * @param userFunctionAfterPackageExtraction
    */
@@ -329,7 +358,7 @@ public: // public methods
   }
 
 public: // public variables
-  const static uint8_t   MAX_NUMBER_OF_PACKAGE = 5;
+  const static uint8_t   MAX_NUMBER_OF_PACKAGE = 7;
   VehicleCallBackHandler subscriptionDataDecodeHandler;
 
 private: // private variables

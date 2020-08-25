@@ -1,11 +1,11 @@
 /** @file mop_entry_osdk.h
- *  @version 4.0
+ *  @version 4.0.0
  *  @date April 2020
  *
  *  @brief
  *  Initialization and deinitialization implementation of MOP.
  *
- *  @Copyright (c) 2017 DJI
+ *  @Copyright (c) 2020 DJI
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal

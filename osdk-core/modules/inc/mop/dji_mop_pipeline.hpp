@@ -1,6 +1,6 @@
 
 /** @file dji_mop_pipeline.hpp
- *  @version 4.0
+ *  @version 4.0.0
  *  @date January 2020
  *
  *  @brief Implementation of mop pipeline
@@ -52,15 +52,44 @@ class MopPipeline {
   } DataPackType;
 
  public:
-
+  /*! @brief Send data packet to the pipeline
+   *
+   *  @platforms M300
+   *  @note This is a blocking api
+   *  @param dataPacket The data packet id which to be sent, ref to
+   * DJI::OSDK::MopPipeline::DataPackType
+   *  @param len Target len of data packet to be sent. The result of sent-byte
+   *  counts will be returned by this parameter
+   *  @return ref to the enum DJI::OSDK::MOP::MopErrCode
+   */
   MopErrCode sendData(DataPackType dataPacket, uint32_t *len);
 
+  /*! @brief Receive data packet to the pipeline
+   *
+   *  @platforms M300
+   *  @note This is a blocking api
+   *  @param dataPacket The data packet id which to be sent, ref to
+   * DJI::OSDK::MopPipeline::DataPackType
+   *  @param len Target len of data packet to be reveived. The result of
+   *  reveived-byte counts will be returned by this parameter
+   *  @return ref to the enum DJI::OSDK::MOP::MopErrCode
+   */
   MopErrCode recvData(DataPackType dataPacket, uint32_t *len);
 
   void *channelHandle;
 
+  /*! @brief Get the pipeline id of the pipeline
+   *
+   *  @platforms M300
+   *  @return ref to the enum DJI::OSDK::MOP::PipelineID
+   */
   PipelineID getId();
 
+  /*! @brief Get the pipeline type of the pipeline
+   *
+   *  @platforms M300
+   *  @return ref to the enum DJI::OSDK::MOP::PipelineType
+   */
   PipelineType getType();
  private:
   PipelineID id;

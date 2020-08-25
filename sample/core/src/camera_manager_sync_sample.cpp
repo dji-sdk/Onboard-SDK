@@ -1,5 +1,5 @@
 /*! @file camera_manager_sync_sample.cpp
- *  @version 3.9
+ *  @version 4.0.0
  *  @date July 29 2019
  *
  *  @brief
@@ -75,25 +75,23 @@ ErrorCode::ErrorCodeType CameraManagerSyncSample::setEVSyncSample(
   retCode = pm->getExposureCompensationSync(index, evGet, 1);
   if (retCode == ErrorCode::SysCommonErr::Success) {
     DSTATUS("Get ev = %d", evGet);
-    if (dataTarget != evGet) {
-      DSTATUS("Set evTarget = %d", dataTarget);
-      retCode = pm->setExposureCompensationSync(index, dataTarget, 1);
-      if (retCode == ErrorCode::SysCommonErr::Success) {
-        DSTATUS("Set ev value successfully.");
-      } else {
-        DERROR("Set ev parameter error. Error code : 0x%lX", retCode);
-        ErrorCode::printErrorCodeMsg(retCode);
-        DERROR(
-            "In order to use this function, the camera exposure mode should be "
-            "set to be PROGRAM_AUTO, SHUTTER_PRIORITY or APERTURE_PRIORITY "
-            "first");
-      }
-    } else {
+    if (dataTarget == evGet) {
       DSTATUS("The ev value is already %d.", dataTarget);
+      return ErrorCode::SysCommonErr::Success;
     }
+  }
+
+  DSTATUS("Set evTarget = %d", dataTarget);
+  retCode = pm->setExposureCompensationSync(index, dataTarget, 1);
+  if (retCode == ErrorCode::SysCommonErr::Success) {
+    DSTATUS("Set ev value successfully.");
   } else {
-    DERROR("Get ev error. Error code : 0x%lX", retCode);
+    DERROR("Set ev parameter error. Error code : 0x%lX", retCode);
     ErrorCode::printErrorCodeMsg(retCode);
+    DERROR(
+      "In order to use this function, the camera exposure mode should be "
+      "set to be PROGRAM_AUTO, SHUTTER_PRIORITY or APERTURE_PRIORITY "
+      "first");
   }
 
   return retCode;
@@ -112,20 +110,18 @@ ErrorCode::ErrorCodeType CameraManagerSyncSample::setExposureModeSyncSample(
   retCode = pm->getExposureModeSync(index, exposureModeGet, 1);
   if (retCode == ErrorCode::SysCommonErr::Success) {
     DSTATUS("Get exposure mode = %d", exposureModeGet);
-    if (dataTarget != exposureModeGet) {
-      DSTATUS("Set exposure mode = %d", dataTarget);
-      retCode = pm->setExposureModeSync(index, dataTarget, 1);
-      if (retCode == ErrorCode::SysCommonErr::Success) {
-        DSTATUS("Set exposure mode successfully.");
-      } else {
-        DERROR("Set exposure mode error. Error code : 0x%lX", retCode);
-        ErrorCode::printErrorCodeMsg(retCode);
-      }
-    } else {
+    if (dataTarget == exposureModeGet)  {
       DSTATUS("The exposure mode is already %d.", dataTarget);
+      return ErrorCode::SysCommonErr::Success;
     }
+  }
+
+  DSTATUS("Set exposure mode = %d", dataTarget);
+  retCode = pm->setExposureModeSync(index, dataTarget, 1);
+  if (retCode == ErrorCode::SysCommonErr::Success) {
+    DSTATUS("Set exposure mode successfully.");
   } else {
-    DERROR("Get exposure mode error. Error code : 0x%lX", retCode);
+    DERROR("Set exposure mode error. Error code : 0x%lX", retCode);
     ErrorCode::printErrorCodeMsg(retCode);
   }
 
@@ -145,25 +141,23 @@ ErrorCode::ErrorCodeType CameraManagerSyncSample::setISOSyncSample(
   retCode = pm->getISOSync(index, isoGet, 1);
   if (retCode == ErrorCode::SysCommonErr::Success) {
     DSTATUS("Get iso = %d", isoGet);
-    if (dataTarget != isoGet) {
-      DSTATUS("Set iso = %d", dataTarget);
-      retCode = pm->setISOSync(index, dataTarget, 1);
-      if (retCode == ErrorCode::SysCommonErr::Success) {
-        DSTATUS("Set iso successfully");
-      } else {
-        DERROR("Set ISO parameter error. Error code : 0x%lX", retCode);
-        ErrorCode::printErrorCodeMsg(retCode);
-        DERROR(
-            "For the X5, X5R, X4S and X5S, the ISO value can be set for all "
-            "modes. For the other cameras, the ISO value can only be set when "
-            "the camera exposure mode is in Manual mode.");
-      }
-    } else {
+    if (dataTarget == isoGet) {
       DSTATUS("The iso parameter is already %d.", dataTarget);
+      return ErrorCode::SysCommonErr::Success;
     }
+  }
+
+  DSTATUS("Set iso = %d", dataTarget);
+  retCode = pm->setISOSync(index, dataTarget, 1);
+  if (retCode == ErrorCode::SysCommonErr::Success) {
+    DSTATUS("Set iso successfully");
   } else {
-    DERROR("Get iso error. Error code : 0x%lX", retCode);
+    DERROR("Set ISO parameter error. Error code : 0x%lX", retCode);
     ErrorCode::printErrorCodeMsg(retCode);
+    DERROR(
+      "For the X5, X5R, X4S and X5S, the ISO value can be set for all "
+      "modes. For the other cameras, the ISO value can only be set when "
+      "the camera exposure mode is in Manual mode.");
   }
 
   return retCode;
@@ -182,26 +176,24 @@ ErrorCode::ErrorCodeType CameraManagerSyncSample::setShutterSpeedSyncSample(
   retCode = pm->getShutterSpeedSync(index, shutterSpeedGet, 1);
   if (retCode == ErrorCode::SysCommonErr::Success) {
     DSTATUS("Get shutterSpeed = %d", shutterSpeedGet);
-    if (dataTarget != shutterSpeedGet) {
-      DSTATUS("Set shutterSpeed = %d", dataTarget);
-      retCode = pm->setShutterSpeedSync(index, dataTarget, 1);
-      if (retCode == ErrorCode::SysCommonErr::Success) {
-        DSTATUS("Set iso successfully");
-      } else {
-        DERROR("Set shutterSpeed parameter error. Error code : 0x%lX", retCode);
-        ErrorCode::printErrorCodeMsg(retCode);
-        DERROR(
-            "The shutter speed can be set only when the camera exposure mode "
-            "is Shutter mode or Manual mode. The shutter speed should not be "
-            "set slower than the video frame rate when the camera's mode is "
-            "RECORD_VIDEO.");
-      }
-    } else {
+    if (dataTarget == shutterSpeedGet) {
       DSTATUS("The shutterSpeed is already %d.", dataTarget);
+      return ErrorCode::SysCommonErr::Success;
     }
+  }
+
+  DSTATUS("Set shutterSpeed = %d", dataTarget);
+  retCode = pm->setShutterSpeedSync(index, dataTarget, 1);
+  if (retCode == ErrorCode::SysCommonErr::Success) {
+    DSTATUS("Set iso successfully");
   } else {
-    DERROR("Get shutterSpeed error. Error code : 0x%lX", retCode);
+    DERROR("Set shutterSpeed parameter error. Error code : 0x%lX", retCode);
     ErrorCode::printErrorCodeMsg(retCode);
+    DERROR(
+      "The shutter speed can be set only when the camera exposure mode "
+      "is Shutter mode or Manual mode. The shutter speed should not be "
+      "set slower than the video frame rate when the camera's mode is "
+      "RECORD_VIDEO.");
   }
 
   return retCode;
@@ -220,25 +212,23 @@ ErrorCode::ErrorCodeType CameraManagerSyncSample::setApertureSyncSample(
   retCode = pm->getApertureSync(index, apertureGet, 1);
   if (retCode == ErrorCode::SysCommonErr::Success) {
     DSTATUS("Get aperture = %d", apertureGet);
-    if (dataTarget != apertureGet) {
-      DSTATUS("Set aperture = %d", dataTarget);
-      retCode = pm->setApertureSync(index, dataTarget, 1);
-      if (retCode == ErrorCode::SysCommonErr::Success) {
-        DSTATUS("Set aperture successfully");
-      } else {
-        DERROR("Set aperture parameter error. Error code : 0x%lX", retCode);
-        ErrorCode::printErrorCodeMsg(retCode);
-        DERROR(
-            "In order to use this function, the exposure mode ExposureMode "
-            "must be in MANUAL or APERTURE_PRIORITY. Supported only by the X5, "
-            "X5R, X4S, X5S camera.");
-      }
-    } else {
+    if (dataTarget == apertureGet) {
       DSTATUS("The aperture is already %d.", dataTarget);
+      return ErrorCode::SysCommonErr::Success;
     }
+  }
+
+  DSTATUS("Set aperture = %d", dataTarget);
+  retCode = pm->setApertureSync(index, dataTarget, 1);
+  if (retCode == ErrorCode::SysCommonErr::Success) {
+    DSTATUS("Set aperture successfully");
   } else {
-    DERROR("Get aperture error. Error code : 0x%lX", retCode);
+    DERROR("Set aperture parameter error. Error code : 0x%lX", retCode);
     ErrorCode::printErrorCodeMsg(retCode);
+    DERROR(
+      "In order to use this function, the exposure mode ExposureMode "
+      "must be in MANUAL or APERTURE_PRIORITY. Supported only by the X5, "
+      "X5R, X4S, X5S camera.");
   }
 
   return retCode;
@@ -443,7 +433,7 @@ CameraManagerSyncSample::startShootSinglePhotoSyncSample(
 
   /*! @TODO XT* and Z30 don't support set shoot-photo mode. To fix it in the
    * future */
-  /*!< set shoot-photo mode
+  /*!< set shoot-photo mode */
   DSTATUS("set shoot-photo mode as SINGLE");
   retCode =
       pm->setShootPhotoModeSync(index, CameraModule::ShootPhotoMode::SINGLE, 1);
@@ -454,7 +444,6 @@ CameraManagerSyncSample::startShootSinglePhotoSyncSample(
            "temporarily not supported.");
     return retCode;
   }
-  */
 
   /*! wait the APP change the shoot-photo mode display */
   Platform::instance().taskSleepMs(500);
@@ -606,7 +595,7 @@ CameraManagerSyncSample::startShootIntervalPhotoSyncSample(
     DERROR("Set shoot-photo mode as INTERVAL fail. Error code : 0x%lX",
            retCode);
     ErrorCode::printErrorCodeMsg(retCode);
-    return retCode;
+    //return retCode;
   }
 
   /*! wait the APP change the shoot-photo mode display */
@@ -620,7 +609,7 @@ CameraManagerSyncSample::startShootIntervalPhotoSyncSample(
     DERROR("Set the parameter of INTERVAL mode fail. Error code : 0x%lX",
            retCode);
     ErrorCode::printErrorCodeMsg(retCode);
-    return retCode;
+    //return retCode;
   }
 
   /*!< start to shoot INTERVAL photo */
@@ -630,7 +619,7 @@ CameraManagerSyncSample::startShootIntervalPhotoSyncSample(
   if (retCode != ErrorCode::SysCommonErr::Success) {
     DERROR("Take INTERVAL photo fail. Error code : 0x%lX", retCode);
     ErrorCode::printErrorCodeMsg(retCode);
-    return retCode;
+    //return retCode;
   }
 
   return retCode;

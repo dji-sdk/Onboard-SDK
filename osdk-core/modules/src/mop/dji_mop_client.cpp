@@ -1,5 +1,5 @@
 /** @file dji_mop_client.cpp
- *  @version 4.0
+ *  @version 4.0.0
  *  @date Jan 2020
  *
  *  @brief Implementation of the mop client
@@ -41,7 +41,8 @@ MopClient::~MopClient() {
 MopErrCode MopClient::connect(PipelineID id, PipelineType type,
                               MopPipeline *&p) {
   int32_t ret;
-
+  /*! 0.Check the entry env */
+  checkEntry();
   /*! 1.Find whether the pipeline object created or not */
   if (pipelineMap.find(id) == pipelineMap.end()) {
     MopErrCode createRet;
@@ -51,6 +52,8 @@ MopErrCode MopClient::connect(PipelineID id, PipelineType type,
     } else {
       pipelineMap[id] = p;
     }
+  } else {
+    p = pipelineMap[id];
   }
 
   /*! 2.Do creating */
@@ -89,6 +92,8 @@ void MopClient::connect(PipelineID id, PipelineType type,
 }
 
 MopErrCode MopClient::disconnect(PipelineID id) {
+  /*! Check the entry env */
+  checkEntry();
   int32_t ret;
   if (pipelineMap.find(id) == pipelineMap.end()) {
     return MOP_PARM;

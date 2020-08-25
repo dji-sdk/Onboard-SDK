@@ -1,5 +1,5 @@
 /*! @file payloads/main_async.cpp
- *  @version 3.9
+ *  @version 4.0.0
  *  @date July 29 2019
  *
  *  @brief
@@ -52,7 +52,7 @@ void callbackToSetShutterSpeed(ErrorCode::ErrorCodeType retCode,
     CameraManagerAsyncSample *p = (CameraManagerAsyncSample *)userData;
     if (p)
       p->setShutterSpeedAsyncSample(
-          PAYLOAD_INDEX_0, CameraModule::ShutterSpeed::SHUTTER_SPEED_1_50,
+          PAYLOAD_INDEX_0, CameraModule::ShutterSpeed::SHUTTER_SPEED_1_100,
           asyncSampleCallBack, (UserData) "Set exposure mode");
   } else {
     DERROR("Set exposure mode failure, Error code : 0x%lX", retCode);
@@ -67,7 +67,7 @@ void callbackToSetAperture(ErrorCode::ErrorCodeType retCode,
     CameraManagerAsyncSample *p = (CameraManagerAsyncSample *)userData;
     if (p)
       p->setApertureAsyncSample(
-          PAYLOAD_INDEX_0, CameraModule::Aperture::F_3_DOT_5,
+          PAYLOAD_INDEX_0, CameraModule::Aperture::F_4,
           asyncSampleCallBack, (UserData) "Set camera aperture");
   } else {
     DERROR("Set exposure mode failure, Error code : 0x%lX", retCode);

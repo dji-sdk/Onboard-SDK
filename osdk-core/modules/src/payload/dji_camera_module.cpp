@@ -1,5 +1,5 @@
 /** @file dji_camera_module.cpp
- *  @version 3.9
+ *  @version 4.0.0
  *  @date July 2019
  *
  *  @brief Implementation of camera module for payload node
@@ -51,9 +51,24 @@ CameraModule::ShutterSpeed ShutterSpeedTypeToShutterSpeedEnum(int reciprocal,
 CameraModule::CameraModule(Linker* linker,
                            PayloadIndexType payloadIndex, std::string name,
                            bool enable)
-    : PayloadBase(linker, payloadIndex, name, enable) {}
+    : PayloadBase(linker, payloadIndex, name, enable) {
 
-CameraModule::~CameraModule() {}
+  OsdkOsal_TaskCreate(&camModuleHandle,
+                      (void *(*)(void *)) (&camHWInfoTask),
+                      OSDK_TASK_STACK_SIZE_DEFAULT, this);
+}
+
+void CameraModule::camHWInfoTask(void *arg) {
+  while (arg != NULL) {
+    CameraModule *module = (CameraModule *)arg;
+    module->requestCameraVersion();
+    OsdkOsal_TaskSleepMs(3000);
+  }
+}
+CameraModule::~CameraModule() {
+  OsdkOsal_TaskDestroy(camModuleHandle);
+  OsdkOsal_TaskSleepMs(100);
+}
 
 typedef struct handlerType {
   void * cb;
@@ -1463,54 +1478,100 @@ void CameraModule::callbackToSetShootPhotoMode(ErrorCode::ErrorCodeType retCode,
   if (!userData) return;
   shootPhotoParamHandler handler = *(shootPhotoParamHandler*)userData;
   if (retCode != ErrorCode::SysCommonErr::Success) {
-    if (handler.UserCallBack) handler.UserCallBack(retCode, handler.userData);
-  } else {
-    CaptureParamReq req = {};
-    req.captureParam = captureParam;
-    req.captureParam.captureMode = handler.paramData.captureMode;
-
-    handler.cameraModule->setInterfaceAsync(
-        V1ProtocolCMD::Camera::setShotMode, (uint8_t *) &req,
-        sizeof(req), handler.UserCallBack, handler.userData, 1000 / 3, 3);
+    captureParam = handler.cameraModule->CreateDefCaptureParamData();
   }
+
+  CaptureParamReq req = {};
+  req.captureParam = captureParam;
+  req.captureParam.captureMode = handler.paramData.captureMode;
+
+  handler.cameraModule->setInterfaceAsync(
+      V1ProtocolCMD::Camera::setShotMode, (uint8_t *) &req,
+      sizeof(req), handler.UserCallBack, handler.userData, 1000 / 3, 3);
 }
 
 void CameraModule::setShootPhotoModeAsync(
     ShootPhotoMode takePhotoMode,
     void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
-  auto handler = (shootPhotoParamHandler*)malloc(sizeof(shootPhotoParamHandler));
-  handler->cameraModule = this;
-  handler->paramData.captureMode = takePhotoMode;
-  handler->UserCallBack = UserCallBack;
-  handler->userData = userData;
-  getCaptureParamDataAsync(callbackToSetShootPhotoMode, handler);
+  if (getCameraVersion() == "H20") {
+    uint8_t req;
+    switch (takePhotoMode) {
+      case SINGLE:
+        req = DJI_CAMERA_MODE_PROFILE_PHOTO_NORMAL;
+        break;
+      case INTERVAL:
+        req = DJI_CAMERA_MODE_PROFILE_PHOTO_INTERVAL;
+        break;
+      case REGIONAL_SR:
+        req = DJI_CAMERA_MODE_PROFILE_PHOTO_REGIONAL_SR;
+        break;
+      default:
+        req = 0xFF;
+        break;
+    }
+    setInterfaceAsync(V1ProtocolCMD::Camera::setModeProfile, (uint8_t *) &req,
+                      sizeof(req), UserCallBack, userData, 1000 / 3, 3);
+  } else {
+    auto handler =
+      (shootPhotoParamHandler*)malloc(sizeof(shootPhotoParamHandler));
+    handler->cameraModule          = this;
+    handler->paramData.captureMode = takePhotoMode;
+    handler->UserCallBack          = UserCallBack;
+    handler->userData              = userData;
+    getCaptureParamDataAsync(callbackToSetShootPhotoMode, handler);
+  }
 }
 
 ErrorCode::ErrorCodeType CameraModule::setShootPhotoModeSync(
     ShootPhotoMode takePhotoMode, int timeout) {
-  CaptureParamData captureParamData;
-  ErrorCode::ErrorCodeType errCode =
-      getCaptureParamDataSync(captureParamData, 1);
-  if (errCode != ErrorCode::SysCommonErr::Success) {
-    return errCode;
+  if (getCameraVersion() == "H20") {
+    uint8_t req;
+    switch (takePhotoMode) {
+      case SINGLE:
+        req = DJI_CAMERA_MODE_PROFILE_PHOTO_NORMAL;
+        break;
+      case INTERVAL:
+        req = DJI_CAMERA_MODE_PROFILE_PHOTO_INTERVAL;
+        break;
+      case REGIONAL_SR:
+        req = DJI_CAMERA_MODE_PROFILE_PHOTO_REGIONAL_SR;
+        break;
+      default:
+        return ErrorCode::SysCommonErr::ReqNotSupported;
+    }
+    return setInterfaceSync(V1ProtocolCMD::Camera::setModeProfile,
+                            (uint8_t*)&req, sizeof(req),
+                            timeout * 1000 / 3, 3);
   } else {
+    CaptureParamData         captureParamData;
+    ErrorCode::ErrorCodeType errCode =
+      getCaptureParamDataSync(captureParamData, 1);
+    if (errCode != ErrorCode::SysCommonErr::Success)
+    {
+      captureParamData = CreateDefCaptureParamData();
+    }
     CaptureParamReq req = {};
     /*! @TODO Here strange code is to deal with issue that the AEB and BURST
-     * share the same setting and getting CMD and the same byte in the
-     * protocol. After the camera info pushing is supported by OSDK, here will
-     * be fixed. */
-    if (takePhotoMode == ShootPhotoMode::AEB) {
+   * share the same setting and getting CMD and the same byte in the
+   * protocol. After the camera info pushing is supported by OSDK, here will
+   * be fixed. */
+    if (takePhotoMode == ShootPhotoMode::AEB)
+    {
       if (captureParamData.photoNumBurst > AEB_COUNT_5)
-      captureParamData.photoNumBurst = AEB_COUNT_5;
+        captureParamData.photoNumBurst = AEB_COUNT_5;
       else if (captureParamData.photoNumBurst < AEB_COUNT_3)
         captureParamData.photoNumBurst = AEB_COUNT_3;
     }
-    req.captureParam = captureParamData;
+    req.captureParam             = captureParamData;
     req.captureParam.captureMode = takePhotoMode;
     return setInterfaceSync(V1ProtocolCMD::Camera::setShotMode,
-                            (uint8_t *) &req, sizeof(req), timeout * 1000 / 3, 3);
+                            (uint8_t*)&req,
+                            sizeof(req),
+                            timeout * 1000 / 3,
+                            3);
   }
+
 }
 
 void CameraModule::getShootPhotoModeAsync(
@@ -1539,16 +1600,16 @@ void CameraModule::callbackToSetPhotoBurstCount(
   if (!userData) return;
   shootPhotoParamHandler handler = *(shootPhotoParamHandler*)userData;
   if (retCode != ErrorCode::SysCommonErr::Success) {
-    if (handler.UserCallBack) handler.UserCallBack(retCode, handler.userData);
-  } else {
-    CaptureParamReq req = {};
-    req.captureParam = captureParam;
-    req.captureParam.photoNumBurst = handler.paramData.photoNumBurst;
-
-    handler.cameraModule->setInterfaceAsync(
-        V1ProtocolCMD::Camera::setShotMode, (uint8_t *) &req,
-        sizeof(req), handler.UserCallBack, handler.userData, 1000 / 3, 3);
+    captureParam = handler.cameraModule->CreateDefCaptureParamData(BURST);
   }
+  CaptureParamReq req = {};
+  req.captureParam = captureParam;
+  req.captureParam.photoNumBurst = handler.paramData.photoNumBurst;
+
+  handler.cameraModule->setInterfaceAsync(
+      V1ProtocolCMD::Camera::setShotMode, (uint8_t *) &req,
+      sizeof(req), handler.UserCallBack, handler.userData, 1000 / 3, 3);
+
 }
 
 void CameraModule::setPhotoBurstCountAsync(
@@ -1569,14 +1630,13 @@ ErrorCode::ErrorCodeType CameraModule::setPhotoBurstCountSync(
   ErrorCode::ErrorCodeType errCode =
       getCaptureParamDataSync(captureParamData, 1);
   if (errCode != ErrorCode::SysCommonErr::Success) {
-    return errCode;
-  } else {
-    CaptureParamReq req = {};
-    req.captureParam = captureParamData;
-    req.captureParam.photoNumBurst = count;
-    return setInterfaceSync(V1ProtocolCMD::Camera::setShotMode,
-                            (uint8_t *) &req, sizeof(req), timeout * 1000 / 3, 3);
+    captureParamData = CreateDefCaptureParamData(RAW_BURST);
   }
+  CaptureParamReq req = {};
+  req.captureParam = captureParamData;
+  req.captureParam.photoNumBurst = count;
+  return setInterfaceSync(V1ProtocolCMD::Camera::setShotMode,
+                          (uint8_t *) &req, sizeof(req), timeout * 1000 / 3, 3);
 }
 
 void CameraModule::getPhotoBurstCountAsync(
@@ -1637,43 +1697,67 @@ void CameraModule::callbackToSetPhotoTimeIntervalSettings(
   if (!userData) return;
   shootPhotoParamHandler handler = *(shootPhotoParamHandler*)userData;
   if (retCode != ErrorCode::SysCommonErr::Success) {
-    if (handler.UserCallBack) handler.UserCallBack(retCode, handler.userData);
-  } else {
-    CaptureParamReq req = {};
-    req.captureParam = captureParam;
-    req.captureParam.intervalSetting = handler.paramData.intervalSetting;
-
-    handler.cameraModule->setInterfaceAsync(
-        V1ProtocolCMD::Camera::setShotMode, (uint8_t *) &req,
-        sizeof(req), handler.UserCallBack, handler.userData, 1000 / 3, 3);
+    captureParam = handler.cameraModule->CreateDefCaptureParamData(INTERVAL);
   }
+  CaptureParamReq req = {};
+  req.captureParam = captureParam;
+  req.captureParam.intervalSetting = handler.paramData.intervalSetting;
+
+  handler.cameraModule->setInterfaceAsync(
+      V1ProtocolCMD::Camera::setShotMode, (uint8_t *) &req,
+      sizeof(req), handler.UserCallBack, handler.userData, 1000 / 3, 3);
 }
 
 void CameraModule::setPhotoTimeIntervalSettingsAsync(
     PhotoIntervalData intervalSetting,
     void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
-  auto handler = (shootPhotoParamHandler*)malloc(sizeof(shootPhotoParamHandler));
-  handler->cameraModule = this;
-  handler->paramData.intervalSetting = intervalSetting;
-  handler->UserCallBack = UserCallBack;
-  handler->userData = userData;
-  getCaptureParamDataAsync(callbackToSetPhotoTimeIntervalSettings, handler);
+  if (getCameraVersion() == "H20") {
+    dji_camera_timelapse_capture_with_ms req;
+    req.timelapse_count = intervalSetting.photoNumConticap;
+    req.timelapse_type = DJI_CAMERA_CONTI_CAP_TYPE_SINGLE;
+    req.timelapse_interval = intervalSetting.timeInterval;
+    req.timelapse_interval_ms = 0;
+    setInterfaceAsync(V1ProtocolCMD::Camera::setTimeLapsePara, (uint8_t *) &req,
+      sizeof(req), UserCallBack, userData, 1000 / 3, 3);
+  } else {
+    auto handler =
+      (shootPhotoParamHandler*)malloc(sizeof(shootPhotoParamHandler));
+    handler->cameraModule              = this;
+    handler->paramData.intervalSetting = intervalSetting;
+    handler->UserCallBack              = UserCallBack;
+    handler->userData                  = userData;
+    getCaptureParamDataAsync(callbackToSetPhotoTimeIntervalSettings, handler);
+  }
 }
 
 ErrorCode::ErrorCodeType CameraModule::setPhotoTimeIntervalSettingsSync(
     PhotoIntervalData intervalSetting, int timeout) {
-  CaptureParamData captureParamData;
-  ErrorCode::ErrorCodeType errCode =
-      getCaptureParamDataSync(captureParamData, 1);
-  if (errCode != ErrorCode::SysCommonErr::Success) {
-    return errCode;
+  if (getCameraVersion() == "H20") {
+    dji_camera_timelapse_capture_with_ms req;
+    req.timelapse_count = intervalSetting.photoNumConticap;
+    req.timelapse_type = DJI_CAMERA_CONTI_CAP_TYPE_SINGLE;
+    req.timelapse_interval = intervalSetting.timeInterval;
+    req.timelapse_interval_ms = 0;
+    return setInterfaceSync(V1ProtocolCMD::Camera::setTimeLapsePara,
+                            (uint8_t*)&req, sizeof(req),
+                            timeout * 1000 / 3, 3);
   } else {
-    CaptureParamReq req = {};
-    req.captureParam = captureParamData;
+    CaptureParamData         captureParamData;
+    ErrorCode::ErrorCodeType errCode =
+      getCaptureParamDataSync(captureParamData, 1);
+    if (errCode != ErrorCode::SysCommonErr::Success)
+    {
+      captureParamData = CreateDefCaptureParamData(INTERVAL);
+    }
+    CaptureParamReq req              = {};
+    req.captureParam                 = captureParamData;
     req.captureParam.intervalSetting = intervalSetting;
     return setInterfaceSync(V1ProtocolCMD::Camera::setShotMode,
-                            (uint8_t *) &req, sizeof(req), timeout * 1000 / 3, 3);
+                            (uint8_t*)&req,
+                            sizeof(req),
+                            timeout * 1000 / 3,
+                            3);
   }
 }
 
@@ -1744,4 +1828,50 @@ ErrorCode::ErrorCodeType CameraModule::obtainDownloadRightSync(bool enable,
   if (ret != ErrorCode::SysCommonErr::Success) return ret;
   return ErrorCode::getErrorCode(ErrorCode::CameraModule,
                                  ErrorCode::CameraCommon, ackData[0]);
+}
+
+CameraModule::CaptureParamData CameraModule::CreateDefCaptureParamData(ShootPhotoMode mode) {
+  CameraModule::CaptureParamData data = {0};
+  data.captureMode = mode;
+  data.photoNumBurst = 0;
+  data.conticapType = 0;
+  data.intervalSetting.photoNumConticap = 255;
+  data.intervalSetting.timeInterval = 10;
+  return data;
+}
+
+#include <string.h>
+std::string CameraModule::getCameraVersion() {
+  return cameraVersion;
+}
+
+void CameraModule::requestCameraVersion() {
+  uint8_t   temp = 0;
+  T_CmdInfo cmdInfo        = { 0 };
+  T_CmdInfo ackInfo        = { 0 };
+  uint8_t   ackData[1024];
+
+  cmdInfo.cmdSet     = 0x00;
+  cmdInfo.cmdId      = 0x01;
+  cmdInfo.dataLen    = 0;
+  cmdInfo.needAck    = OSDK_COMMAND_NEED_ACK_FINISH_ACK;
+  cmdInfo.packetType = OSDK_COMMAND_PACKET_TYPE_REQUEST;
+  cmdInfo.addr       = GEN_ADDR(0, ADDR_V1_COMMAND_INDEX);
+  cmdInfo.receiver =
+    OSDK_COMMAND_DEVICE_ID(OSDK_COMMAND_DEVICE_TYPE_CAMERA, getIndex() * 2);
+  cmdInfo.sender     = this->getLinker()->getLocalSenderId();
+  E_OsdkStat linkAck = this->getLinker()->sendSync(&cmdInfo, &temp, &ackInfo, ackData,
+                                                   500, 2);
+
+  if (linkAck == OSDK_STAT_ERR_TIMEOUT) {
+    cameraVersion = "Unmounted";
+  } else if ((linkAck == OSDK_STAT_OK) && (ackInfo.dataLen >= 18)) {
+    //3~18 : hardware version
+    if (strstr((char *)(ackData + 2), "gd610") != NULL) cameraVersion = "H20";
+    else if (strstr((char *)(ackData + 2), "CA02") != NULL) cameraVersion = "Z30";
+    else cameraVersion = "OtherCameras";
+  } else {
+    cameraVersion = "Unknown";
+  }
+  //DSTATUS("------------- cam[%d] cameraVersion = %s", getIndex(), cameraVersion.c_str());
 }

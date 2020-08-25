@@ -1,5 +1,5 @@
 /** @file dji_linker.hpp
- *  @version 3.3
+ *  @version 4.0
  *  @date April 2017
  *
  *  @brief

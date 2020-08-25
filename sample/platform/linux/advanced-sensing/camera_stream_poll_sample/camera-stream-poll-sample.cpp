@@ -1,5 +1,5 @@
 /*! @file camera_stream_poll_sample.cpp
- *  @version 3.6
+ *  @version 4.0.0
  *  @date Feb 1st 2018
  *
  *  @brief
@@ -60,7 +60,7 @@ int main(int argc, char** argv)
   bool f = false;
   bool m = false;
   char c = 0;
-  cout << "Please enter the type of camera stream you want to view(M210 V2)n"
+  cout << "Please enter the type of camera stream you want to view(M210 V2)\n"
        << "m: Main Camera\n"
        << "f: FPV  Camera\n" 
        << "b: both Cameras" << endl;

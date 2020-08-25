@@ -1,5 +1,5 @@
 /*! @file missions/main.cpp
- *  @version 3.3
+ *  @version 4.0.0
  *  @date Jun 05 2017
  *
  *  @brief
@@ -63,7 +63,7 @@ main(int argc, char** argv)
     << "| Available commands:                                            |"
     << std::endl;
   std::cout
-    << "| [a] Waypoint Mission                                           |"
+    << "| [a] Waypoint Mission(only for M210V2)                          |"
     << std::endl;
   std::cout
     << "| [b] Hotpoint Mission                                           |"

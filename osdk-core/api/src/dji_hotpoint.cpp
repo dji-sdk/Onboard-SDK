@@ -1,5 +1,5 @@
 /** @file dji_hotpoint.cpp
- *  @version 3.3
+ *  @version 4.0.0
  *  @date April 2017
  *
  *  @brief Implementation of HotPoint (Point of Interest) Missions for DJI OSDK

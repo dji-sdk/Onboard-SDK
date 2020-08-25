@@ -212,14 +212,15 @@ E_OsdkStat OsdkLinux_USBBulkSendData(const T_HalObj *obj, const uint8_t *pBuf,
   }
 
   handle = (struct libusb_device_handle *)obj->bulkObject.handle;
-  ret = libusb_bulk_transfer(handle, obj->bulkObject.epOut,
-                             (uint8_t *)pBuf, bufLen,
-                             &sent_len, 50);
-  if (0 != ret){
-    OsdkLinux_USBBulkSendData(obj, pBuf, bufLen);
-    return OSDK_STAT_ERR;
+
+  for(int try = 0; try < 3; try++) {
+    ret = libusb_bulk_transfer(handle, obj->bulkObject.epOut,
+                               (uint8_t *)pBuf, bufLen,
+                               &sent_len, 50);
+    if (!ret) return OSDK_STAT_OK;
+
   }
-  return OSDK_STAT_OK;
+  return OSDK_STAT_ERR;
 }
 
 

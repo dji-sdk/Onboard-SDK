@@ -1,5 +1,5 @@
 /** @file dji_open_protocol.hpp
- *  @version 3.3
+ *  @version 4.0.0
  *  @date April 2017
  *
  *  @brief
@@ -98,7 +98,6 @@ typedef struct
 // Codec Management
 //----------------------------------------------------------------------
 
-// @todo replace this
 #define _SDK_U32_SET(_addr, _val) (*((uint32_t*)(_addr)) = (_val))
 #define _SDK_U16_SET(_addr, _val) (*((uint16_t*)(_addr)) = (_val))
 

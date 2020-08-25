@@ -1,5 +1,5 @@
 /** @file dji_gimbal_manager.hpp
- *  @version 4.0
+ *  @version 4.0.0
  *  @date November 2019
  *
  *  @brief Implementation of the manager for gimbal module
@@ -45,6 +45,7 @@ class GimbalManager {
  public:
   /*! @brief init the gimbal module
    *
+   *  @platforms M210V2, M300
    *  @param index gimbal module index, input limit see enum
    * DJI::OSDK::PayloadIndexType
    *  @param name gimbal module name used in initialization
@@ -57,6 +58,8 @@ class GimbalManager {
    *  to initGimbalModule. It means this gimbal will disable.
    *  In the deinit, the gimbal module will set name to be
    *  defaultGimbalName and set enable to be false.
+   *
+   *  @platforms M210V2, M300
    *  @param index gimbal module index, input limit see enum
    * DJI::OSDK::PayloadIndexType
    *  @return ErrorCode::ErrorCodeType error code
@@ -64,11 +67,14 @@ class GimbalManager {
   ErrorCode::ErrorCodeType deinitGimbalModule(PayloadIndexType index);
 
   /*! @brief deinit all the gimbal modules
+   *
+   *  @platforms M210V2, M300
    */
   void deinitAllGimbalModule(void);
 
   /*! @brief get the name of gimbal module, searched by index
    *
+   *  @platforms M210V2, M300
    *  @param index gimbal module index, input limit see enum
    * DJI::OSDK::PayloadIndexType
    *  @param name name of the gimbal module, it's a output parameter. If get
@@ -80,6 +86,7 @@ class GimbalManager {
 
   /*! @brief get the index of gimbal module, searched by name
    *
+   *  @platforms M210V2, M300
    *  @param name name of gimbal module
    *  @param index gimbal module index, see enum DJI::OSDK::PayloadIndexType. If
    * get fail, this parameter will not do any assignment
@@ -89,6 +96,7 @@ class GimbalManager {
 
   /*! @brief get the enable status of gimbal module, searched by index
    *
+   *  @platforms M210V2, M300
    *  @param index gimbal module index, input limit see enum
    * DJI::OSDK::PayloadIndexType
    *  @param enable get the enable status of GimbalModule. If get fail, this
@@ -100,6 +108,7 @@ class GimbalManager {
 
   /*! @brief reset the pitch and yaw of the gimbal, non-blocking calls
    *
+   *  @platforms M210V2, M300
    *  @param index gimbal module index, input limit see enum
    * DJI::OSDK::PayloadIndexType
    *  @param UserCallBack callback function defined by user
@@ -115,6 +124,7 @@ class GimbalManager {
 
   /*! @brief reset the pitch and yaw of the gimbal, blocking calls
    *
+   *  @platforms M210V2, M300
    *  @param index gimbal module index, input limit see enum
    * DJI::OSDK::PayloadIndexType
    *  @param timeout blocking timeout in seconds.
@@ -125,6 +135,7 @@ class GimbalManager {
 
   /*! @brief rotate the angle of the gimbal, non-blocking calls
    *
+   *  @platforms M210V2, M300
    *  @param index gimbal module index, input limit see enum
    * DJI::OSDK::PayloadIndexType
    *  @param rotation the rotation parameters to be executed on the target
@@ -143,6 +154,7 @@ class GimbalManager {
 
   /*! @brief rotate the angle of the gimbal, blocking calls
    *
+   *  @platforms M210V2, M300
    *  @param index gimbal module index, input limit see enum
    * DJI::OSDK::PayloadIndexType
    *  @param rotation the rotation parameters to be executed on the target

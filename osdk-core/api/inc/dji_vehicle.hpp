@@ -1,5 +1,5 @@
 /** @file dji_vehicle.hpp
- *  @version 3.3
+ *  @version 4.0.0
  *  @date April 2017
  *
  *  @brief
@@ -137,6 +137,8 @@ public:
    * to check if: \n a) your application registered in your developer
    * account \n b) API Control enabled in the Assistant software\n\n
    * Proceed to programming if activation successful.
+   *
+   * @platforms M210V2, M300
    */
   void activate(ActivateData* data, VehicleCallBack callback = 0,
                 UserData userData = 0);
@@ -151,6 +153,7 @@ public:
   * account \n b) API Control enabled in the Assistant software\n\n
   * Proceed to programming if activation successful.
   *
+  * @platforms M210V2, M300
   * @return ACK from flight controller
   *
   * @todo
@@ -160,11 +163,24 @@ public:
 
   /*! @brief Set up take-off permission when the aircraft is connected with
     * a USB cable
+    *
+    * @platforms M210V2
     *  @note This api is meaningless to M300. Only for M210 V1/V2 series
     *  @param en enable or disable take-off permission
-    *  @return ErrorCode::ErrorCodeType error code
+    *  @return true or false
     */
   bool setUSBFlightOn(bool en);
+
+  /*! @brief Set the simulation status on or off for the drone.
+    * (Beta API, Use for debug only)
+    *
+    * @platforms M210V2 M300
+    *  @param en enable or disable simulation status
+    *  @param latitude the latitude in degree of simulation position
+    *  @param longitude the longitude in degree of simulation position
+    *  @return true or false
+    */
+  bool setSimulationOn(bool en, float64_t latitude, float64_t longitude);
 
   /*! @brief A callback function for activate non-blocking calls
    *  @param receivedFrame: RecvContainer populated by the protocolLayer
@@ -183,6 +199,7 @@ public:
    * @brief
    * Send get version control to the vehicle.
    *
+   * @platforms M210V2, M300
    * @return type ACK::DroneVersion containing:
    * ACKErrorCode: data (ack value)
    * VersionData:  hardware version
@@ -196,6 +213,7 @@ public:
   /**
    * Get aircraft version.
    *
+   * @platforms M210V2, M300
    * @note
    * You can query your flight controller prior to activation.
    */
@@ -205,16 +223,22 @@ public:
 
   /**
    * Get Activation information
+   *
+   * @platforms M210V2, M300
    */
   ActivateData getAccountData() const;
 
-  /*
+  /**
    * Activation Control
+   *
+   * @platforms M210V2, M300
    */
   void setAccountData(const ActivateData& value);
 
   /**
    * Set SDK version.
+   *
+   * @platforms M210V2, M300
    */
   void setVersion(const Version::FirmWare& value);
 

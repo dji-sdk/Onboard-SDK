@@ -1,5 +1,5 @@
 /** @file dji_waypoint.cpp
- *  @version 3.3
+ *  @version 4.0.0
  *  @date April 2017
  *
  *  @brief Implementation of GPS Waypoint Missions for DJI OSDK
@@ -590,6 +590,11 @@ WaypointMission::setWaypointEventCallback(VehicleCallBack callback,
 {
   wayPointEventCallback.callback = callback;
   wayPointEventCallback.userData = userData;
+  vehicle->legacyLinker->registerCMDCallback(
+    OpenProtocolCMD::CMDSet::Broadcast::waypoint[0],
+     OpenProtocolCMD::CMDSet::Broadcast::waypoint[1],
+         wayPointEventCallback.callback,
+         wayPointEventCallback.userData);
 }
 
 void

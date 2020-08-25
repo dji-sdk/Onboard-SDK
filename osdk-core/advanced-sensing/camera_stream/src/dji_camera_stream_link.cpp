@@ -18,7 +18,7 @@
  * failure to do so.
  *
  * @file dji_camera_stream_link.cpp
- *  @version 3.5
+ *  @version 4.0.0
  *  @date Dec 2017
  *
  */

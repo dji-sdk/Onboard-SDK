@@ -1,5 +1,5 @@
 /*! @file flight_control_sample.hpp
- *  @version 3.3
+ *  @version 4.0.0
  *  @date Jun 05 2017
  *
  *  @brief
@@ -69,7 +69,7 @@ bool monitoredTakeoff(DJI::OSDK::Vehicle* vehiclePtr, int timeout = 1);
 !*/
 bool moveByPositionOffset(DJI::OSDK::Vehicle *vehicle, float xOffsetDesired,
                           float yOffsetDesired, float zOffsetDesired,
-                          float yawDesired, float posThresholdInM = 0.5,
+                          float yawDesired, float posThresholdInM = 0.8,
                           float yawThresholdInDeg = 1.0);
 
 /*! Monitored Landing (Blocking API call). Return status as well as ack.

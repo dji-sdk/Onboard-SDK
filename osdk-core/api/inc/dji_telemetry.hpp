@@ -1,5 +1,5 @@
 /** @file dji_telemetry.hpp
- *  @version 3.7
+ *  @version 4.0.0
  *  @date Jul 2018
  *
  *  @brief Enumeration of all telemetry data types, structures and maps.
@@ -93,7 +93,7 @@ typedef enum
   TOPIC_HARD_SYNC,
   TOPIC_GPS_SIGNAL_LEVEL,
   TOPIC_GPS_CONTROL_LEVEL,
-  TOPIC_RC_FULL_RAW_DATA,
+  TOPIC_RC_FULL_RAW_DATA, //deprecated
   TOPIC_RC_WITH_FLAG_DATA,
   TOPIC_ESC_DATA,
   TOPIC_RTK_CONNECT_STATUS,
@@ -534,7 +534,8 @@ typedef struct Battery
 typedef struct SDKInfo
 {
   uint8_t controlMode;      /*!< See CtlrMode in dji_status.hpp*/
-  uint8_t deviceStatus : 3; /*!< 0->rc  1->app  2->serial*/
+  uint8_t deviceStatus : 3; /*!< For M300 and M210V2(firmware version V01.00.0690 and later):0->rc  1->app  4->serial; 
+                                 Other: 0->rc  1->app  2->serial*/
   uint8_t flightStatus : 1; /*!< 1->opensd  0->close */
   uint8_t vrcStatus : 1;
   uint8_t reserved : 3;
@@ -670,6 +671,7 @@ typedef struct SBUSFullRawData
 
 /*!
  * @brief union for TOPIC_RC_FULL_RAW_DATA
+ * Only support A3/N3/M600
  */
 typedef union
 {

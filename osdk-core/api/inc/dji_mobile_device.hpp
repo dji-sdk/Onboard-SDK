@@ -1,5 +1,5 @@
 /** @file dji_mobile_device.hpp
- *  @version 3.7
+ *  @version 4.0.0
  *  @date July 2018
  *
  *  @brief Implementation of DJI Mobile Device Abstraction
@@ -54,6 +54,7 @@ public:
   /*!
    * @brief sending data from OSDK to MSDK
    *
+   * @platforms M210V2, M300
    * @param data sent data
    * @param len length of data
    */
@@ -64,6 +65,13 @@ public:
 
 public:
   VehicleCallBackHandler fromMSDKHandler;
+  /*!
+   * @brief set callback to receive data from MSDK
+   *
+   * @platforms M210V2, M300
+   * @param callback callback to receive data
+   * @param userData user data to be passed in callback
+   */
   void setFromMSDKCallback(VehicleCallBack callback, UserData userData = 0);
 };
 

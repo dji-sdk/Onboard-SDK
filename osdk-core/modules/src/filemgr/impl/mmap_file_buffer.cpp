@@ -8,13 +8,14 @@
 namespace DJI {
 namespace OSDK {
 
-MmapFileBuffer::MmapFileBuffer() : fdAddr(NULL) {}
+MmapFileBuffer::MmapFileBuffer() : fdAddr(NULL), curFilePos(0) {}
 
 MmapFileBuffer::~MmapFileBuffer() {}
 
 bool MmapFileBuffer::init(std::string path, uint64_t fileSize) {
   currentLogFilePath = path;
   fdAddrSize = fileSize;
+  curFilePos = 0;
   printf("Preparing File : %s\n", this->currentLogFilePath.c_str());
   fd = open(this->currentLogFilePath.c_str(), O_RDWR | O_CREAT, 0644);
   DSTATUS("fd = %d", fd);
@@ -38,17 +39,20 @@ bool MmapFileBuffer::deInit() {
   return true;
 }
 
-// flag 代表是否覆盖已有队列缓存
-bool MmapFileBuffer::InsertBlock(const uint8_t *pack, uint32_t data_length, int index) {
-  static uint32_t tempAdaptingBufferCnt = 0;
-  //DSTATUS("data_length = %d index = %d", data_length, index);
-  if (data_length != tempAdaptingBufferCnt) DSTATUS("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!data_length != 800  (%d)\n", data_length);
-  tempAdaptingBufferCnt = data_length;
 
+// flag 代表是否覆盖已有队列缓存
+bool MmapFileBuffer::InsertBlock(const uint8_t *pack, uint32_t data_length, uint64_t index) {
+#if 0
+  static uint32_t tempAdaptingBufferCnt = 0;
+  if (index == 1) tempAdaptingBufferCnt = data_length;
+#endif
   if ((data_length <= 0) || !fdAddr) {
     return false;
   }
+#if 0
   index = index * tempAdaptingBufferCnt;
+#endif
+
   memcpy(fdAddr + index, pack, data_length);
 
   return true;

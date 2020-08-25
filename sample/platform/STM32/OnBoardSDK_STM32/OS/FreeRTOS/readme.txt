@@ -1,1 +1,0 @@
-﻿请参考DJI OSDK文档进行FreeRTOS系统源码移植。

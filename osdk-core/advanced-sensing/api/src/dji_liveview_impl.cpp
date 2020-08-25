@@ -1,5 +1,5 @@
 /** @file dji_liveview_impl.cpp
- *  @version 4.0
+ *  @version 4.0.0
  *  @date Jan 2020
  *
  *  @brief Camera liveview API code implement
@@ -55,11 +55,17 @@ using namespace DJI::OSDK;
 #define LIVEVIEW_VICE_CAM_TEMP_CMD_ID           (0x56)
 #define LIVEVIEW_TOP_CAM_TEMP_CMD_ID            (0x57)
 
+uint8_t defUserData[LiveView::OSDK_CAMERA_POSITION_FPV + 1] = {0};
+
+void defaultH264CB(uint8_t* buf, int bufLen, void* userData) {
+  *(uint8_t *)userData = 1;
+}
+
 std::map<LiveView::LiveViewCameraPosition, LiveViewImpl::H264CallbackHandler> LiveViewImpl::h264CbHandlerMap = {
-        {LiveView::OSDK_CAMERA_POSITION_NO_1, {NULL, NULL}},
-        {LiveView::OSDK_CAMERA_POSITION_NO_2, {NULL, NULL}},
-        {LiveView::OSDK_CAMERA_POSITION_NO_3, {NULL, NULL}},
-        {LiveView::OSDK_CAMERA_POSITION_FPV,  {NULL, NULL}},
+        {LiveView::OSDK_CAMERA_POSITION_NO_1, {defaultH264CB, (void *)&(defUserData[LiveView::OSDK_CAMERA_POSITION_NO_1])}},
+        {LiveView::OSDK_CAMERA_POSITION_NO_2, {defaultH264CB, (void *)&(defUserData[LiveView::OSDK_CAMERA_POSITION_NO_2])}},
+        {LiveView::OSDK_CAMERA_POSITION_NO_3, {defaultH264CB, (void *)&(defUserData[LiveView::OSDK_CAMERA_POSITION_NO_3])}},
+        {LiveView::OSDK_CAMERA_POSITION_FPV,  {defaultH264CB, (void *)&(defUserData[LiveView::OSDK_CAMERA_POSITION_FPV])}},
     };
 
 T_RecvCmdItem LiveViewImpl::bulkCmdList[] = {
@@ -79,6 +85,15 @@ LiveViewImpl::LiveViewImpl(Vehicle* vehiclePtr) :
 
   if(!vehicle->linker->registerCmdHandler(&recvCmdHandle)) {
     DERROR("register h264 cmd callback handler failed, exiting.");
+  } else {
+    DSTATUS("Finding if liveview stream is available now.");
+    OsdkOsal_TaskSleepMs(500);
+    for (int i = 0; i < sizeof(defUserData); i++) {
+        if (defUserData[i]) {
+          DSTATUS("Found liveview stream at pos [%d], cancel it now ...", i);
+          unsubscribeLiveViewData((LiveView::LiveViewCameraPosition)i);
+      }
+    }
   }
 }
 
@@ -119,7 +134,7 @@ E_OsdkStat LiveViewImpl::RecordStreamHandler(struct _CommandHandle *cmdHandle,
   if((handlerMap.find(pos) != handlerMap.end()) && (handlerMap[pos].cb != NULL)) {
     handlerMap[pos].cb((uint8_t *)cmdData, cmdInfo->dataLen, handlerMap[pos].userData);
   } else {
-    DERROR("Can't find valid cb in handlerMap");
+    //DERROR("Can't find valid cb in handlerMap, pos = %d", pos);
   }
 
   return OSDK_STAT_OK;
@@ -270,7 +285,7 @@ int LiveViewImpl::subscribeLiveViewData(E_OSDKCameraType type, LiveView::LiveVie
   subCtx->source.uuid.version = 1;
   if(type == OSDK_CAMERA_TYPE_PSDK)   subCtx->source.uuid.major = UUID_MAJOR_TYPE_PSDK;
   else subCtx->source.uuid.major = UUID_MAJOR_TYPE_CAMERA;
-  subCtx->source.uuid.minor = ((type == OSDK_CAMERA_TYPE_PSDK) ? 0 : type);
+  subCtx->source.uuid.minor = ((type == OSDK_CAMERA_TYPE_PSDK) ? 1 : type); //hardcore
   subCtx->source.uuid.reserved = 0;
   if ((type == OSDK_CAMERA_TYPE_GD610_DOUBLE_CAM)
       || (type == OSDK_CAMERA_TYPE_GD610_TIRPLE_CAM))
@@ -475,4 +490,35 @@ LiveView::LiveViewErrCode LiveViewImpl::stopH264Stream(LiveView::LiveViewCameraP
   stopHeartBeatTask();
   return LiveView::OSDK_LIVEVIEW_PASS;
   //vehicle->linker->destroyLiveViewTask();
+}
+#define CAM_POS_TO_LINKER_ID(pos) (pos * 2)
+LiveView::LiveViewErrCode LiveViewImpl::changeH264Source(LiveView::LiveViewCameraPosition pos,
+                                           LiveView::LiveViewCameraSource source) {
+  if (pos > LiveView::OSDK_CAMERA_POSITION_NO_3)
+    return LiveView::OSDK_LIVEVIEW_INDEX_ILLEGAL;
+  DSTATUS("Change liveview source to be %d", source);
+  uint8_t data = source;
+  
+  T_CmdInfo cmdInfo = {0};
+  T_CmdInfo ackInfo = {0};
+  uint8_t cbData[1024] = {0};
+
+  cmdInfo.cmdSet = 0x02;
+  cmdInfo.cmdId = 0x09;
+  cmdInfo.dataLen = sizeof(data);
+  cmdInfo.needAck = OSDK_COMMAND_NEED_ACK_FINISH_ACK;
+  cmdInfo.packetType = OSDK_COMMAND_PACKET_TYPE_REQUEST;
+  cmdInfo.addr = GEN_ADDR(0, ADDR_V1_COMMAND_INDEX);
+  cmdInfo.receiver = OSDK_COMMAND_DEVICE_ID(OSDK_COMMAND_DEVICE_TYPE_CAMERA,
+                                            CAM_POS_TO_LINKER_ID(pos));
+  cmdInfo.sender = vehicle->linker->getLocalSenderId();
+  E_OsdkStat ret =
+      vehicle->linker->sendSync(&cmdInfo, (uint8_t*)&data, &ackInfo, cbData, 1000, 3);
+  if (ret == OSDK_STAT_OK) {
+    return LiveView::OSDK_LIVEVIEW_PASS;
+  } else if (ret == OSDK_STAT_ERR_TIMEOUT) {
+    return LiveView::OSDK_LIVEVIEW_TIMEOUT;
+  } else {
+    return LiveView::OSDK_LIVEVIEW_UNSUPPORT_CAMERA;
+  }
 }

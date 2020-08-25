@@ -1,5 +1,5 @@
 /*! @file posix_thread.cpp
- *  @version 3.3
+ *  @version 4.0.0
  *  @date Jun 15 2017
  *
  *  @brief
@@ -134,6 +134,7 @@ PosixThread::send_call(void* param)
     vehiclePtr->protocolLayer->sendPoll();
     usleep(10); //! @note CPU optimization, reduce the CPU usage a lot
   }
+  return NULL;
 }
 
 void*
@@ -159,6 +160,7 @@ PosixThread::uart_serial_read_call(void* param)
 
   delete recvContainer_copy;
   DDEBUG("Quit read function\n");
+  return NULL;
 }
 
 void*

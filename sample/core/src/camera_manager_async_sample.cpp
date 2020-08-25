@@ -1,5 +1,5 @@
 /*! @file camera_manager_async_sample.cpp
- *  @version 3.9
+ *  @version 4.0.0
  *  @date July 29 2019
  *
  *  @brief
@@ -68,39 +68,29 @@ void CameraManagerAsyncSample::getExposureModeCb(
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
   DSTATUS("retCode : 0x%lX", retCode);
-  if (!uData) {
+  if ((!uData) || (!uData->pm)) {
     DERROR("User data is a null value.");
     return;
   }
   if (retCode == ErrorCode::SysCommonErr::Success) {
     DSTATUS("Get exposure mode = %d", exposureModeGet);
-    if (uData->pm) {
-      /*! compare the exposure mode set and get */
-      if (*(CameraModule::ExposureMode *)uData->dataTarget == exposureModeGet) {
-        DSTATUS("The exposure mode is already %d.", exposureModeGet);
-        if (uData->userCallBack) {
-          void (*cb)(ErrorCode::ErrorCodeType, UserData);
-          cb =
-              (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack;
-          cb(ErrorCode::SysCommonErr::Success, uData->userData);
-        }
-      } else {
-        uData->pm->setExposureModeAsync(
-            uData->index, *(CameraModule::ExposureMode *)uData->dataTarget,
-            (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack,
-            uData->userData);
+    /*! compare the exposure mode set and get */
+    if (*(CameraModule::ExposureMode *)uData->dataTarget == exposureModeGet) {
+      DSTATUS("The exposure mode is already %d.", exposureModeGet);
+      if (uData->userCallBack) {
+        void (*cb)(ErrorCode::ErrorCodeType, UserData);
+        cb =
+            (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack;
+        cb(ErrorCode::SysCommonErr::Success, uData->userData);
+        return;
       }
     }
-
-  } else {
-    DERROR("Get exposure mode error. Error code : 0x%lX", retCode);
-    ErrorCode::printErrorCodeMsg(retCode);
-    if (uData->userCallBack) {
-      void (*cb)(ErrorCode::ErrorCodeType, UserData);
-      cb = (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack;
-      cb(retCode, uData->userData);
-    }
   }
+
+  uData->pm->setExposureModeAsync(
+    uData->index, *(CameraModule::ExposureMode *)uData->dataTarget,
+    (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack,
+    uData->userData);
 }
 
 void CameraManagerAsyncSample::getISOCb(ErrorCode::ErrorCodeType retCode,
@@ -150,39 +140,29 @@ void CameraManagerAsyncSample::getShutterSpeedCb(
   AsyncSampleData *uData = (AsyncSampleData *)userData;
 
   DSTATUS("retCode : 0x%lX", retCode);
-  if (!uData) {
+  if ((!uData) || (!uData->pm)) {
     DERROR("User data is a null value.");
     return;
   }
   if (retCode == ErrorCode::SysCommonErr::Success) {
     DSTATUS("Get shutter speed = %d", shutterSpeedGet);
-    if (uData->pm) {
-      /*! compare the shutter speed set and get */
-      if (*(CameraModule::ShutterSpeed *)uData->dataTarget == shutterSpeedGet) {
-        DSTATUS("The shutter speed  value is already %d.", shutterSpeedGet);
-        if (uData->userCallBack) {
-          void (*cb)(ErrorCode::ErrorCodeType, UserData);
-          cb =
-              (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack;
-          cb(ErrorCode::SysCommonErr::Success, uData->userData);
-        }
-      } else {
-        uData->pm->setShutterSpeedAsync(
-            uData->index, *(CameraModule::ShutterSpeed *)uData->dataTarget,
-            (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack,
-            uData->userData);
+    /*! compare the shutter speed set and get */
+    if (*(CameraModule::ShutterSpeed *)uData->dataTarget == shutterSpeedGet) {
+      DSTATUS("The shutter speed  value is already %d.", shutterSpeedGet);
+      if (uData->userCallBack) {
+        void (*cb)(ErrorCode::ErrorCodeType, UserData);
+        cb =
+            (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack;
+        cb(ErrorCode::SysCommonErr::Success, uData->userData);
+        return;
       }
     }
-
-  } else {
-    DERROR("Get shutter speed error. Error code : 0x%lX", retCode);
-    ErrorCode::printErrorCodeMsg(retCode);
-    if (uData->userCallBack) {
-      void (*cb)(ErrorCode::ErrorCodeType, UserData);
-      cb = (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack;
-      cb(retCode, uData->userData);
-    }
   }
+
+  uData->pm->setShutterSpeedAsync(
+    uData->index, *(CameraModule::ShutterSpeed *)uData->dataTarget,
+    (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack,
+    uData->userData);
 }
 
 void CameraManagerAsyncSample::getApertureCb(ErrorCode::ErrorCodeType retCode,
@@ -669,22 +649,17 @@ void CameraManagerAsyncSample::setShootPhotoModeForSingleShootCb(
   }
   if (retCode == ErrorCode::SysCommonErr::Success) {
     DSTATUS("Set shoot photo mode as Single successfully ");
-    if (uData->pm) {
-      /*! start to shoot SINGLE photo */
-      uData->pm->startShootPhotoAsync(
-          uData->index, CameraModule::ShootPhotoMode::SINGLE,
-          (void (*)(ErrorCode::ErrorCodeType retCode,
-                    UserData userData))uData->userCallBack,
-          uData->userData);
-    }
   } else {
-    DERROR("Set shoot photo mode error. Error code : 0x%lX", retCode);
-    ErrorCode::printErrorCodeMsg(retCode);
-    if (uData->userCallBack) {
-      void (*cb)(ErrorCode::ErrorCodeType, UserData);
-      cb = (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack;
-      cb(retCode, uData->userData);
-    }
+    DSTATUS("Set shoot photo mode error. Error code : 0x%lX. "
+            "trying to shoot photo", retCode);
+  }
+  if (uData->pm) {
+    /*! start to shoot SINGLE photo */
+    uData->pm->startShootPhotoAsync(
+      uData->index, CameraModule::ShootPhotoMode::SINGLE,
+      (void (*)(ErrorCode::ErrorCodeType retCode,
+                UserData userData))uData->userCallBack,
+      uData->userData);
   }
 }
 
@@ -698,29 +673,6 @@ void CameraManagerAsyncSample::setCameraModeForSingleShootCb(
     return;
   }
 
-  if (retCode == ErrorCode::SysCommonErr::Success) {
-    DSTATUS("Set camera work mode successfully ");
-    if (uData->pm) {
-      /*! start to shoot SINGLE photo */
-      uData->pm->startShootPhotoAsync(
-        uData->index, CameraModule::ShootPhotoMode::SINGLE,
-        (void (*)(ErrorCode::ErrorCodeType retCode,
-                  UserData userData))uData->userCallBack,
-        uData->userData);
-    }
-  } else {
-    DERROR("Set camera mode error. Error code : 0x%lX", retCode);
-    ErrorCode::printErrorCodeMsg(retCode);
-    if (uData->userCallBack) {
-      void (*cb)(ErrorCode::ErrorCodeType, UserData);
-      cb = (void (*)(ErrorCode::ErrorCodeType, UserData))uData->userCallBack;
-      cb(retCode, uData->userData);
-    }
-  }
-
-  /*! @TODO XT* and Z30 don't support set shoot-photo mode. To fix it in the
-   * future */
-  /*
   if (retCode == ErrorCode::SysCommonErr::Success) {
     DSTATUS("Set camera work mode successfully ");
     if (uData->pm) {
@@ -741,7 +693,6 @@ void CameraManagerAsyncSample::setCameraModeForSingleShootCb(
       cb(retCode, uData->userData);
     }
   }
-  */
 }
 
 void CameraManagerAsyncSample::startShootSinglePhotoAsyncSample(

@@ -1,5 +1,5 @@
 /*! @file main.cpp
- *  @version 3.3
+ *  @version 4.0.0
  *  @date May 2017
  *
  *  @brief
@@ -134,6 +134,8 @@ void *mainLoopTask(void *p){
   char func[50];
   uint32_t runOnce = 1;
 
+  delay_nms(1500); //wait for usb acm detected
+
   /*! init the vehicle */
   env->initVehicle();
   v = env->getVehicle();
@@ -194,9 +196,9 @@ void *mainLoopTask(void *p){
             zPosition = 1.2;
           }
 
-          moveByPositionOffset(0, 6, zPosition, 0);
-          moveByPositionOffset(6, 0, zPosition, 0);
-          moveByPositionOffset(-6, -6, zPosition, 0);
+          moveByPositionOffset(0, 6, zPosition, 0, 0.8, 1);
+          moveByPositionOffset(6, 0, zPosition, 0, 0.8, 1);
+          moveByPositionOffset(-6, -6, zPosition, 0, 0.8, 1);
           // Run monitored landing sample
           monitoredLanding();
           break;
@@ -272,12 +274,12 @@ void *mainLoopTask(void *p){
           break;
         case 10:
           DSTATUS("Starting executing camera manager sample 1:\r\n");
-          DSTATUS("Please make sure X5S camera is at the payload 0 site\r\n");
+          DSTATUS("Please make sure X5S camera is at the main payload 0 site\r\n");
           cameraManagerTest(v, X5S_AT_PAYLOAD_0);
           break;
         case 11:
           DSTATUS("Starting executing camera manager sample 1:\r\n");
-          DSTATUS("Please make sure Z30 camera is at the payload 0 site\r\n");
+          DSTATUS("Please make sure Z30 camera is at the vice payload site\r\n");
           cameraManagerTest(v, Z30_AT_PAYLOAD_1);
           break;
         case 12:

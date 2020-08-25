@@ -1,5 +1,5 @@
 /** @file dji_mop_server.hpp
- *  @version 4.0
+ *  @version 4.0.0
  *  @date Jan 2020
  *
  *  @brief Implementation of the mop client
@@ -48,6 +48,8 @@ class MopServer : MopPipelineManagerBase {
   /*! @brief Accept the connecting request from target device with properties of
    * a pipelineid and pipeline type. If success, a pipeline object will be
    * created.
+   *
+   *  @platforms M300
    *  @note This is a blocking api
    *  @param id The pipeline id which to be connected, ref to
    * DJI::OSDK::MOP::PipelineID
@@ -60,6 +62,8 @@ class MopServer : MopPipelineManagerBase {
   MopErrCode accept(PipelineID id, PipelineType type, MopPipeline *&p);
 
   /*! @brief Close the target pipeline by a pipelineid.
+   *
+   *  @platforms M300
    *  @note This is a blocking api
    *  @param id The pipeline id which to be connected, ref to
    * DJI::OSDK::MOP::PipelineID

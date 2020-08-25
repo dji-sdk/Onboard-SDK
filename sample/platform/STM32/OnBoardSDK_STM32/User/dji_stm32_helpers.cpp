@@ -1,5 +1,5 @@
 /*! @file dji_stm32_helpers.cpp
- *  @version 3.3
+ *  @version 4.0.0
  *  @date Sep 12 2017
  *
  *  @brief
@@ -45,7 +45,7 @@ STM32Setup::~STM32Setup()
 }
 
 static E_OsdkStat OsdkUser_Console(const uint8_t *data, uint16_t dataLen) {
-  //printf("%s", data);
+  return OSDK_STAT_OK;
   DJI::OSDK::Log::instance().print("%s", data);
   return OSDK_STAT_OK;
 }

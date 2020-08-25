@@ -1,5 +1,5 @@
 /** @file dji_macros.hpp
- *  @version 3.7
+ *  @version 4.0.0
  *  @date Jun 2018
  *
  *  @brief Circular buffer class for the DJI OSDK

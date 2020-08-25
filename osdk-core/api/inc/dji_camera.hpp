@@ -1,5 +1,5 @@
 /** @file dji_camera.hpp
- *  @version 3.3
+ *  @version 4.0.0
  *  @date April 2017
  *
  *  @brief
@@ -54,15 +54,23 @@ public:
 
 public:
   // Non-Blocking API
-  /*! take a photo, check DJI Go app or SD card for photo */
+  /*! @brief take a photo, check DJI Go app or SD card for photo
+   *  @deprecated This API is deprecated, please use APIs of CameraManager
+   * */
   void shootPhoto();
-  /*! start recording video, check DJI Go app or SD card for video */
+  /*! @brief start recording video, check DJI Go app or SD card for video
+   *  @deprecated This API is deprecated, please use APIs of CameraManager
+   * */
   void videoStart();
-  /*! stop recording video, check DJI Go app or SD card for video */
+  /*! @brief stop recording video, check DJI Go app or SD card for video
+   *  @deprecated This API is deprecated, please use APIs of CameraManager
+   * */
   void videoStop();
 
 private:
   /*! @brief Function for commanding: Take Picture, Start Video, Stop Video
+   *
+   *  @deprecated This API is deprecated, please use APIs of CameraManager
    *  @note The camera function does not return an acknowledgment.
    *  @param cmd array representing camera command
    *  Available camera commands:

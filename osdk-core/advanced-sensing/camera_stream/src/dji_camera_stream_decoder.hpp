@@ -1,5 +1,5 @@
 /** @file dji_camera_stream_decoder.hpp
- *  @version 3.5
+ *  @version 4.0.0
  *  @date Dec 2017
  *
  *  @brief The class to decode the raw data from main camera into pictures

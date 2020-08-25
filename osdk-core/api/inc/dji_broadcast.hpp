@@ -1,5 +1,5 @@
 /** @file dji_broadcast.hpp
- *  @version 3.3
+ *  @version 4.0.0
  *  @date April 2017
  *
  *  @brief
@@ -117,12 +117,16 @@ public:
   // clang-format off
 
   /*! Get timestamp from local cache
+   *
+   *  @platforms M210V2, M300
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *  @return Telemetry::TimeStamp data structure with the newest value.
    */
   Telemetry::TimeStamp    getTimeStamp()          ;
 
   /*! Get software sync timestamp from local cache
+   *
+   *  @platforms M210V2, M300
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *  @details Note that this is unrelated to the hardware sync subscription.
    *  @return Telemetry::SyncStamp data structure with the newest value.
@@ -130,6 +134,8 @@ public:
   Telemetry::SyncStamp    getSyncStamp()          ;
 
   /*! Get quaternion data from local cache
+   *
+   *  @platforms M210V2, M300
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *  @return Telemetry::Quaternion data structure with the newest value.
    *  @details Data accuracy:
@@ -142,6 +148,8 @@ public:
   Telemetry::Quaternion    getQuaternion()         ;
 
   /*! Get acceleration from local cache
+   *
+   *  @platforms M210V2, M300
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *  @details The acceleration may be in body or ground frame, fused or raw,
    *           based on settings on DJI Assistant 2's SDK page.
@@ -150,6 +158,8 @@ public:
   Telemetry::Vector3f    getAcceleration()       ;
 
   /*! Get velocity from local cache
+   *
+   *  @platforms M210V2, M300
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *  @details Data accuracy:
    * | Axis     | Unit | Accuracy                                                                                    |
@@ -164,6 +174,8 @@ public:
   Telemetry::Vector3f    getVelocity()           ;
 
   /*! Get Angular Rates from local cache
+   *
+   *  @platforms M210V2, M300
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *  @details The angular rates may be in body or ground frame, fused or raw,
    *           based on settings on DJI Assistant 2's SDK page.
@@ -172,6 +184,8 @@ public:
   Telemetry::Vector3f   getAngularRate()          ;
 
   /*! Get Velocity Info (health) from local cache
+   *
+   *  @platforms M210V2, M300
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *  @details This data is received along with velocity.
    *  @return Telemetry::VelocityInfo data structure with the newest value.
@@ -179,6 +193,8 @@ public:
   Telemetry::VelocityInfo    getVelocityInfo()       ;
 
   /*! Get Globalc Position (LLA and metadata) from local cache
+   *
+   *  @platforms M210V2, M300
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *  @details Data accuracy:
    *  | Axis | Unit | Position Sensor | Accuracy                                         |
@@ -194,6 +210,8 @@ public:
   Telemetry::GlobalPosition    getGlobalPosition()     ;
 
   /*! Get Obstacle info around the vehicle from local cache
+   *
+   *  @platforms M210V2, M300
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *  @details The returned value is relative to your home location.
    *  @return Telemetry::RelativePosition data structure with the newest value.
@@ -201,6 +219,8 @@ public:
   Telemetry::RelativePosition    getRelativePosition()   ;
 
   /*! Get GPS Info from local cache
+   *
+   *  @platforms M210V2, M300
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *  @details This feature provides detailed GPS info. Available on A3/N3/M600.
    *           You need to enable it separately on DJI Assistant 2's SDK page.
@@ -209,6 +229,8 @@ public:
   Telemetry::GPSInfo     getGPSInfo()            ;
 
   /*! Get RTK data from local cache
+   *
+   *  @platforms M210V2, M300
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *  @details This feature provides detailed RTK info. Available on A3/M600.
    *           You need to enable it separately on DJI Assistant 2's SDK page.
@@ -239,6 +261,8 @@ public:
   Telemetry::RTK     getRTKInfo()            ;
 
   /*! Get Magnetometer data from local cache
+   *
+   *  @platforms M210V2, M300
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *  @details The returned value is calibrated mag data,
    *           1000 < |mag| < 2000 for normal operation
@@ -247,12 +271,16 @@ public:
   Telemetry::Mag     getMag()                ;
 
   /*! Get RC channel data from local cache
+   *
+   *  @platforms M210V2, M300
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *  @return Telemetry::RC data structure with the newest value.
    */
   Telemetry::RC     getRC()                 ;
 
   /*! Get Gimbal data from local cache
+   *
+   *  @platforms M210V2, M300
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *  @details Data Accuracy: 0.1 deg in all axes
    *
@@ -261,6 +289,8 @@ public:
   Telemetry::Gimbal     getGimbal()             ;
 
   /*! Get Status (flight status, mode, gear and error) from local cache
+   *
+   *  @platforms M210V2, M300
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *
    *  @return Telemetry::Status data structure with the newest value.
@@ -268,6 +298,8 @@ public:
   Telemetry::Status     getStatus()             ;
 
   /*! Get Battery Info from local cache
+   *
+   *  @platforms M210V2, M300
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *
    *  @return Telemetry::Battery data structure with the newest value.
@@ -275,13 +307,17 @@ public:
   Telemetry::Battery     getBatteryInfo()        ;
 
   /*! Get SDK Control Mode/Authority info from local cache
+   *
+   *  @platforms M210V2, M300
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *
    *  @return Telemetry::SDKInfo data structure with the newest value.
    */
   Telemetry::SDKInfo     getSDKInfo()            ;
 
-    /*! Get Compass status info from local cache
+  /*! Get Compass status info from local cache
+   *
+   *  @platforms M210V2, M300
    *  @note This getter function is only available with Broadcast, not with Subscribe telemetry
    *
    *  @return Telemetry::Compass data structure with the newest value.
@@ -292,6 +328,7 @@ public:
 public:
   /*! Non-blocking call for Frequency setting
    *
+   *  @platforms M210V2, M300
    *  @param dataLenIs16 Array of length 16 that has frequency values for each
    *  topic
    *  @param callback Callback function you want called upon ACK
@@ -302,6 +339,7 @@ public:
                         UserData userData = 0);
   /*! Blocking call for Frequency setting
    *
+   *  @platforms M210V2, M300
    *  @param dataLenIs16 Array of length 16 that has frequency values for each
    *  topic
    *  @param wait_timeout Time(in s) you want the function to wait for an ACK
@@ -311,11 +349,13 @@ public:
 
   /*! Non-Blocking call for setting default frequencies
    *
+   *  @platforms M210V2, M300
    */
   void setBroadcastFreqDefaults();
 
   /*! Blocking call for setting default frequencies
    *
+   *  @platforms M210V2, M300
    *  @param wait_timeout Time(in s) you want the function to wait for an ACK
    *  @return ACK::ErrorCode struct containing the ACK and metadata
    */
@@ -323,12 +363,14 @@ public:
 
   /*! Non-Blocking call for setting all frequencies to zero
    *
+   *  @platforms M210V2, M300
    */
   void setBroadcastFreqToZero();
 
   /*! getter function for passFlag
    *
-   * @return uint16_t passFlag
+   *  @platforms M210V2, M300
+   *  @return uint16_t passFlag
    */
   uint16_t getPassFlag();
 

@@ -1,5 +1,5 @@
 /*! @file MissionSample.cpp
- *  @version 3.3
+ *  @version 4.0.0
  *  @date May 2017
  *
  *  @brief
@@ -122,7 +122,7 @@ setWaypointDefaults(WayPointSettings* wp)
   wp->actionRepeat    = 0;
   for (int i = 0; i < 16; ++i)
   {
-    wp->commandList[i]      = 0;
+    wp->commandList[i]      = WP_ACTION_STAY;
     wp->commandParameter[i] = 0;
   }
 }

@@ -1,5 +1,5 @@
 /*! @file mission_sample.cpp
- *  @version 3.3
+ *  @version 4.0.0
  *  @date Jun 05 2017
  *
  *  @brief
@@ -31,6 +31,7 @@
  */
 
 #include "mission_sample.hpp"
+#include "osdkosal_linux.h"
 
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
@@ -95,6 +96,15 @@ teardownSubscription(DJI::OSDK::Vehicle* vehicle, const int pkgIndex,
   return true;
 }
 
+static void WaypointEventCallBack(Vehicle* vehicle, RecvContainer recvFrame,
+                                  UserData userData)
+{
+  DSTATUS("%s",__FUNCTION__ );
+  DSTATUS("waypoint_index is %d.\n", recvFrame.recvData.wayPointReachedData.waypoint_index);
+  DSTATUS("current_status is %d.\n", recvFrame.recvData.wayPointReachedData.current_status);
+  DSTATUS("incident_type is %d.\n", recvFrame.recvData.wayPointReachedData.incident_type);
+}
+
 bool
 runWaypointMission(Vehicle* vehicle, uint8_t numWaypoints, int responseTimeout)
 {
@@ -120,6 +130,9 @@ runWaypointMission(Vehicle* vehicle, uint8_t numWaypoints, int responseTimeout)
 
   ACK::ErrorCode initAck = vehicle->missionManager->init(
     DJI_MISSION_TYPE::WAYPOINT, responseTimeout, &fdata);
+
+  vehicle->missionManager->wpMission->setWaypointEventCallback(&WaypointEventCallBack,vehicle);
+
   if (ACK::getError(initAck))
   {
     ACK::getErrorCodeMessage(initAck, __func__);
@@ -149,6 +162,7 @@ runWaypointMission(Vehicle* vehicle, uint8_t numWaypoints, int responseTimeout)
     std::cout << "Starting Waypoint Mission.\n";
   }
 
+  OsdkOsal_TaskSleepMs(120000);
   // Cleanup before return. The mission isn't done yet, but it doesn't need any
   // more input from our side.
   if (!vehicle->isM100() && !vehicle->isLegacyM600())
@@ -173,7 +187,7 @@ setWaypointDefaults(WayPointSettings* wp)
   wp->actionRepeat    = 0;
   for (int i = 0; i < 16; ++i)
   {
-    wp->commandList[i]      = 0;
+    wp->commandList[i]      = WP_ACTION_STAY;
     wp->commandParameter[i] = 0;
   }
 }

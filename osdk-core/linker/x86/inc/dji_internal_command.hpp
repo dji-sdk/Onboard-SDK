@@ -1,5 +1,5 @@
 /** @file dji_internal_command.hpp
- *  @version 4.0
+ *  @version 4.0.0
  *  @date April 2020
  *
  *  @brief All DJI OSDK internal Command IDs
@@ -74,6 +74,8 @@ class V1ProtocolCMD
     const static uint8_t setShotMode[MAX_CMD_ARRAY_SIZE];
     const static uint8_t getShotMode[MAX_CMD_ARRAY_SIZE];
     const static uint8_t controlOptizoom[MAX_CMD_ARRAY_SIZE];
+    const static uint8_t setModeProfile[MAX_CMD_ARRAY_SIZE];
+    const static uint8_t setTimeLapsePara[MAX_CMD_ARRAY_SIZE];
   } Camera;
 
   typedef struct Gimbal
