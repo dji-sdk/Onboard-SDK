@@ -434,8 +434,8 @@ std::vector<WaypointV2> WaypointV2MissionSample::generatePolygonWaypoints(float3
     setWaypointV2Defaults(waypointV2);
     float32_t X = radius * cos(angle);
     float32_t Y = radius * sin(angle);
-    waypointV2.latitude = Y/EARTH_RADIUS + startPoint.latitude;
-    waypointV2.longitude = X/(EARTH_RADIUS * cos(startPoint.latitude)) + startPoint.longitude;
+    waypointV2.latitude = X/EARTH_RADIUS + startPoint.latitude;
+    waypointV2.longitude = Y/(EARTH_RADIUS * cos(startPoint.latitude)) + startPoint.longitude;
     waypointV2.relativeHeight = startPoint.relativeHeight ;
     waypointList.push_back(waypointV2);
   }
