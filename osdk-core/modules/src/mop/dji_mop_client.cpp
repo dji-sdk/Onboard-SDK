@@ -68,13 +68,15 @@ MopErrCode MopClient::connect(PipelineID id, PipelineType type,
     return getMopErrCode(ret);
   }
 
+  const int connectRtyTimes = 10;
   /*! 3.Do connecting */
-  do {
+  for (int i = 0; i < connectRtyTimes; i++) {
     DSTATUS("Trying to connect pipeline slot : %d, channel_id : %d", slot, id);
     ret = mop_connect_channel(p->channelHandle, MOP_DEVICE_PSDK, slot, id);
     DSTATUS("Result of connecting pipeline (slot:%d, channel_id:%d) : %d", slot, id, ret);
+    if (ret == MOP_SUCCESS) break;
     sleep(1);
-  } while (ret != MOP_SUCCESS);
+  }
 
   if (ret != MOP_SUCCESS) {
     DERROR("Connect Mop Channel failed, destroy mop channel");
