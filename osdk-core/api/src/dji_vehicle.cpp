@@ -1343,9 +1343,23 @@ Vehicle::activate(ActivateData* data, uint32_t timeoutMs)
     timeoutMs = 3;
   }
 
-  ack = *(ACK::ErrorCode *) legacyLinker->sendSync(
-      OpenProtocolCMD::CMDSet::Activation::activate, (uint8_t *) &accountData,
-      sizeof(accountData) - sizeof(char *), timeoutMs * 1000 / 3, 3);
+  uint8_t activateRetryTimes = 0;
+  while (1)
+  {
+    /*! Try several times to avoid the NEW_DEVICE_ERROR issues */
+    ack = *(ACK::ErrorCode*)legacyLinker->sendSync(
+      OpenProtocolCMD::CMDSet::Activation::activate,
+      (uint8_t*)&accountData,
+      sizeof(accountData) - sizeof(char*),
+      timeoutMs * 1000 / 3,
+      3);
+    if ((ack.data == OpenProtocolCMD::ErrorCode::ActivationACK::SUCCESS) ||
+        (activateRetryTimes >= 3))
+      break;
+    OsdkOsal_TaskSleepMs(1000);
+    DSTATUS("Retry to activate again ..");
+    activateRetryTimes++;
+  }
 
   if (ack.data == OpenProtocolCMD::ErrorCode::ActivationACK::SUCCESS &&
       accountData.encKey)
@@ -1493,6 +1507,22 @@ Vehicle::activateCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
   {
     vehiclePtr->linker->setKey(vehiclePtr->accountData.encKey);
     vehiclePtr->setActivationStatus(true);
+  }
+  else if(ack_data == OpenProtocolCMD::ErrorCode::ActivationACK::NEW_DEVICE_ERROR)
+  {
+    DERROR("Solutions for NEW_DEVICE_ERROR:\n"
+           "\t* Double-check your app_id and app_key in UserConfig.txt. "
+           "Does it match with your DJI developer account?\n"
+           "\t* If this is a new device, you need to activate it through the App or DJI Assistant 2 with Internet\n"
+           "\tFor different aircraft, the App and the version of DJI Assistant 2 might be different\n"
+           "\tFor A3, N3, M600/Pro and M100, please use DJI GO App\n"
+           "\tFor M210 V1, please use DJI GO 4 App or DJI Pilot App\n"
+           "\tFor M210 V2, please use DJI Pilot App\n"
+           "\tFor DJI Assistant 2, it's available on the 'Download' tab of the product page\n"
+           "\t* If this device is previously activated with another app_id and app_key, "
+           "you will need to re-activate it again.\n"
+           "\t* A new device needs to be activated twice to fix the NEW_DEVICE_ERROR, "
+           "so please try it twice.\n");
   }
 }
 
