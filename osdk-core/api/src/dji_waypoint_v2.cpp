@@ -216,8 +216,8 @@ std::vector<WaypointV2Internal> transformMission2MisssionInternal(std::vector<Wa
   for (auto waypointV2:mission)
   {
     WaypointV2Internal waypointV2Internal;
-    waypointV2Internal.positionX = (waypointV2.longitude - mission[0].longitude) * EARTH_RADIUS *cos(mission[0].latitude);
-    waypointV2Internal.positionY = (waypointV2.latitude - mission[0].latitude) * EARTH_RADIUS;
+    waypointV2Internal.positionX = (waypointV2.latitude - mission[0].latitude) * EARTH_RADIUS;
+    waypointV2Internal.positionY = (waypointV2.longitude - mission[0].longitude) * EARTH_RADIUS *cos(mission[0].latitude);
     waypointV2Internal.positionZ = waypointV2.relativeHeight;
     waypointV2Internal.waypointType    = waypointV2.waypointType ;
     waypointV2Internal.headingMode     = waypointV2.headingMode;
