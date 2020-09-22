@@ -150,7 +150,7 @@ void FileMgrImpl::fileListMonitorTask(void *arg) {
 
       /*! Task timeout */
       if (curTimeMs - refreshTimeMs >= taskTimeOutMs) {
-        DSTATUS("curTimeMs:%d refreshTimeMs:%d", curTimeMs, refreshTimeMs);
+        DSTATUS("curTimeMs:%u refreshTimeMs:%u", curTimeMs, refreshTimeMs);
         DERROR("downloadMonitorTask timeout!! device type : %d index: %d", impl->type, impl->index);
 
           if (impl->fileListHandler->downloadState == RECVING_FILE_LIST) {
@@ -407,10 +407,6 @@ ErrorCode::ErrorCodeType FileMgrImpl::startReqFileList(FileMgr::FileListReqCBTyp
   if ((fileListHandler->downloadState == DOWNLOAD_IDLE) &&
       (fileDataHandler->downloadState == DOWNLOAD_IDLE)) {
     nameRule = getNameRule();
-    if(nameRule == UNKNOWN_RULE)  {
-      DERROR("Cannot get camera status .");
-      return ErrorCode::CameraCommonErr::UndefineError;
-    }
     fileListHandler->downloadState = RECVING_FILE_LIST;
     if (fileListHandler->download_buffer_) {
       fileListHandler->download_buffer_->Clear();
@@ -659,7 +655,7 @@ FilePackage FileMgrImpl::parseFileList(std::list<DataPointer> fullDataList) {
               validFlagNew = false;
           }
 
-          if ((file.valid) && (file.fileSize > 0) && (file.date.year != 1980))
+          if ((file.valid) && (file.fileSize > 0))// && (file.date.year != 1980))
             validFlagBasic = true;
           else
             validFlagBasic = false;
