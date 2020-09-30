@@ -26,8 +26,23 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "osdkhal_linux.h"
+#include "errno.h"
 
-/* Exported functions definition ---------------------------------------------*/
+#ifdef OSDK_HOTPLUG
+#include "pthread.h"
+#include "osdkhal_hotplug.h"
+#include "stdlib.h"
+
+E_OsdkStat OsdkLinux_UartHotPlugInit(const char *port,
+                                     const int baudrate,
+                                     T_HalObj *obj);
+E_OsdkStat OsdkLinux_USBBulkHotPlugInit(uint16_t pid,
+                                        uint16_t vid,
+                                        uint16_t num,
+                                        uint16_t epIn,
+                                        uint16_t epOut,
+                                        T_HalObj *obj);
+#endif
 
 /**
  * @brief Uart interface send function.
@@ -64,7 +79,14 @@ E_OsdkStat OsdkLinux_UartReadData(const T_HalObj *obj, uint8_t *pBuf,
   if ((obj == NULL) || (obj->uartObject.fd == -1)) {
     return OSDK_STAT_ERR;
   }
-  *bufLen = read(obj->uartObject.fd, pBuf, 1024);
+  ssize_t readLen = read(obj->uartObject.fd, pBuf, 1024);
+  if (readLen < 0) {
+    *bufLen = 0;
+    printf("errno = %d\n", errno);
+    perror("OsdkLinux_UartReadData");
+  } else {
+    *bufLen = readLen;
+  }
 
   return OSDK_STAT_OK;
 }
@@ -105,7 +127,7 @@ E_OsdkStat OsdkLinux_UartInit(const char *port, const int baudrate,
     return OSDK_STAT_ERR_PARAM;
   }
 
-  obj->uartObject.fd = open(port, O_RDWR | O_NOCTTY | O_NDELAY);
+  obj->uartObject.fd = open(port, O_RDWR | O_NOCTTY);
   if (obj->uartObject.fd == -1) {
     OsdkStat = OSDK_STAT_ERR;
     goto out;
@@ -155,7 +177,9 @@ E_OsdkStat OsdkLinux_UartInit(const char *port, const int baudrate,
 
     goto out;
   }
-
+#ifdef OSDK_HOTPLUG
+  OsdkLinux_UartHotPlugInit(port, baudrate, obj);
+#endif
   out:
 
   return OsdkStat;
@@ -197,7 +221,9 @@ E_OsdkStat OsdkLinux_USBBulkInit(uint16_t pid, uint16_t vid, uint16_t num, uint1
   obj->bulkObject.handle = (void *)handle;
   obj->bulkObject.epIn = epIn;
   obj->bulkObject.epOut = epOut;
-
+#ifdef OSDK_HOTPLUG
+  OsdkLinux_USBBulkHotPlugInit(pid, vid, num, epIn, epOut, obj);
+#endif
   return OSDK_STAT_OK;
 }
 
@@ -262,6 +288,107 @@ E_OsdkStat OsdkLinux_USBBulkClose(T_HalObj *obj) {
   return OSDK_STAT_OK;
 }
 
+#endif
+
+#ifdef OSDK_HOTPLUG
+void uartHotplugCb(struct udev_device *dev, HotplugHandler *handler) {
+  if (!dev || !handler) return;
+
+  E_OsdkStat ret;
+  if (strstr(udev_device_get_action(dev), "add")) {
+    printf("UART Hotplug :[%s] %s (%s)\n",
+           udev_device_get_action(dev),
+           udev_device_get_sysname(dev),
+           udev_device_get_devpath(dev));
+    if (strstr(udev_device_get_devpath(dev), handler->filter.uartFilter.devPathHeader)) {
+      ret = OsdkLinux_UartInit(udev_device_get_devnode(dev),
+                               handler->param.uartInitParam.baudrate,
+                               handler->param.obj);
+      printf(">>> UART Hot plug init ret : %d\n", ret);
+    }
+  } else if (strstr(udev_device_get_action(dev), "remove")) {
+
+  }
+
+  return;
+}
+
+void
+usbBulkHotplugCb(struct udev_device *dev, HotplugHandler *handler) {
+  if (!dev || !handler)
+    return;
+
+  E_OsdkStat ret;
+  if (strstr(udev_device_get_action(dev), "add")) {
+    printf("USBBULK Hotplug :[%s] %s (%s)\n",
+           udev_device_get_action(dev),
+           udev_device_get_sysname(dev),
+           udev_device_get_devpath(dev));
+
+    uint16_t targetNum = (uint16_t)(-1);
+    uint32_t targetVID = (uint32_t)(-1);
+    uint32_t targetPID = (uint32_t)(-1);
+    if (!udev_device_get_sysattr_value(dev, "bInterfaceNumber")
+        || !udev_device_get_sysattr_value(dev, "modalias"))
+      return;
+    if (2 != sscanf(udev_device_get_sysattr_value(dev, "modalias"),
+                    "usb:v%4xp%4x",
+                    &targetVID,
+                    &targetPID))
+      return;
+    targetNum = atoi(udev_device_get_sysattr_value(dev, "bInterfaceNumber"));
+    if ((targetNum == handler->filter.usbBulkFilter.num) &&
+        (targetVID == handler->filter.usbBulkFilter.vid) &&
+        (targetPID == handler->filter.usbBulkFilter.pid)) {
+      ret = OsdkLinux_USBBulkInit(handler->param.bulkInitParam.pid,
+                                  handler->param.bulkInitParam.vid,
+                                  handler->param.bulkInitParam.num,
+                                  handler->param.bulkInitParam.epIn,
+                                  handler->param.bulkInitParam.epOut,
+                                  handler->param.obj);
+      printf(">>> USBBULK Hot plug init ret : %d\n", ret);
+    }
+  } else if (strstr(udev_device_get_action(dev), "remove")) {
+  }
+
+  return;
+}
+
+#include "stdlib.h"
+E_OsdkStat OsdkLinux_UartHotPlugInit(const char *port, const int baudrate,
+                                     T_HalObj *obj) {
+  HotplugHandler *handler = malloc(sizeof(HotplugHandler));
+  strcpy(handler->param.uartInitParam.port, port);
+  handler->subsystem = "tty";
+  handler->param.uartInitParam.baudrate = baudrate;
+  handler->param.obj = obj;
+  handler->filter = getDevFilter(port);
+  if (handler->filter.valid)
+  {
+    handler->callback = uartHotplugCb;
+    pthread_t pth;
+    pthread_create(&pth, NULL, hotplugThread, handler);
+  }
+}
+
+E_OsdkStat OsdkLinux_USBBulkHotPlugInit(uint16_t pid, uint16_t vid, uint16_t num, uint16_t epIn,
+                                        uint16_t epOut, T_HalObj *obj) {
+  HotplugHandler *handler = malloc(sizeof(HotplugHandler));
+  handler->filter.valid = true;
+  handler->filter.usbBulkFilter.num = num;
+  handler->filter.usbBulkFilter.vid = vid;
+  handler->filter.usbBulkFilter.pid = pid;
+  handler->subsystem = "usb";
+  handler->param.bulkInitParam.pid = pid;
+  handler->param.bulkInitParam.vid = vid;
+  handler->param.bulkInitParam.epIn = epIn;
+  handler->param.bulkInitParam.epOut = epOut;
+  handler->param.bulkInitParam.num = num;
+  handler->param.obj = obj;
+  handler->callback = usbBulkHotplugCb;
+  pthread_t pth;
+  pthread_create(&pth, NULL, hotplugThread, handler);
+}
 #endif
 
 /****************** (C) COPYRIGHT DJI Innovations *****END OF FILE****/
