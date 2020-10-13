@@ -221,7 +221,7 @@ typedef struct DJIWaypointV2AircraftControlRotateHeadingParam {
    */
   uint8_t isRelative:1;
 
-  uint8_t reserved:8;
+  uint8_t reserved:7;
 
   /**
    *  Determines the direction how aircraft changes its heading.
@@ -350,6 +350,7 @@ typedef struct DJIWaypointV2GimbalActuatorParam {
 
   DJIWaypointV2GimbalActuatorParam(const DJIWaypointV2ActionActuatorGimbalOperationType &type , void *param)
   {
+    operationType =type;
     switch (type) {
       case DJIWaypointV2ActionActuatorGimbalOperationTypeRotateGimbal:
         rotation =  *(DJIGimbalRotation*)param;
@@ -381,6 +382,7 @@ typedef struct DJIWaypointV2AircraftControlParam {
 
   DJIWaypointV2AircraftControlParam(const DJIWaypointV2ActionActuatorAircraftControlOperationType &type , void *param)
   {
+    operationType =type;
     switch (type) {
       case DJIWaypointV2ActionActuatorAircraftControlOperationTypeRotateYaw: {
         yawRotatingParam =  *(DJIWaypointV2AircraftControlRotateHeadingParam *)param;
