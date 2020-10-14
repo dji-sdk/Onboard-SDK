@@ -367,13 +367,13 @@ enum  DJIWaypointV2ActionActuatorType:uint8_t {
    *  The action will be executed by the gimbal.
    *  The parameters should be defined by ``DJIWaypointV2Action_DJIWaypointV2GimbalActuatorParam``.
    */
-    DJIWaypointV2ActionActuatorTypeGimbal,
+    DJIWaypointV2ActionActuatorTypeGimbal = 2,
 
   /**
    *  The action will executes by control aircraft.
    *  The parameters should be setting by ``DJIWaypointV2Action_DJIWaypointV2CameraActuatorParam``.
    */
-    DJIWaypointV2ActionActuatorTypeAircraftControl,
+    DJIWaypointV2ActionActuatorTypeAircraftControl = 4,
 
   /**
    *  Unknown actuator type.
@@ -385,7 +385,7 @@ enum  DJIWaypointV2ActionActuatorType:uint8_t {
 /**
 *  The type of gimbal actuator operation.
 */
-enum  DJIWaypointV2ActionActuatorGimbalOperationType:uint8_t {
+enum  DJIWaypointV2ActionActuatorGimbalOperationType:uint16_t {
 
   /**
    *  Rotates the gimbal. Only valid when the trigger type is
@@ -446,7 +446,7 @@ enum DJIWaypointV2ActionActuatorCameraOperationType:uint16_t {
 /**
 * Possible types of aircraft control actuator operation.
 */
-enum  DJIWaypointV2ActionActuatorAircraftControlOperationType:uint8_t {
+enum  DJIWaypointV2ActionActuatorAircraftControlOperationType:uint16_t {
 
   /**
    *  Rotates the aircraft's yaw.
@@ -456,7 +456,7 @@ enum  DJIWaypointV2ActionActuatorAircraftControlOperationType:uint8_t {
   /**
    *  Keeps the aircraft stop flying or start flying.
    */
-    DJIWaypointV2ActionActuatorAircraftControlOperationTypeFlyingControl,
+    DJIWaypointV2ActionActuatorAircraftControlOperationTypeFlyingControl = 2,
 
   /**
    *  Unknown
