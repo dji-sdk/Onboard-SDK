@@ -50,6 +50,7 @@ private:
   CameraImageCallback cb;
   void*               cbUserParam;
 
+  pthread_mutex_t       decodemutex;
   AVCodecContext*       pCodecCtx;
   AVCodec*              pCodec;
   AVCodecParserContext* pCodecParserCtx;

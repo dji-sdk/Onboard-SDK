@@ -43,10 +43,12 @@ DJICameraStreamDecoder::DJICameraStreamDecoder()
     rgbBuf(NULL),
     bufSize(0)
 {
+  pthread_mutex_init(&decodemutex, NULL);
 }
 
 DJICameraStreamDecoder::~DJICameraStreamDecoder()
 {
+  pthread_mutex_destroy(&decodemutex);
   if(cb)
   {
     registerCallback(NULL, NULL);
@@ -57,6 +59,8 @@ DJICameraStreamDecoder::~DJICameraStreamDecoder()
 
 bool DJICameraStreamDecoder::init()
 {
+  pthread_mutex_lock(&decodemutex);
+
   if(true == initSuccess)
   {
     DSTATUS_PRIVATE("Decoder already initialized.\n");
@@ -101,8 +105,10 @@ bool DJICameraStreamDecoder::init()
   DDEBUG_PRIVATE("Decoder Version = %d\n", avcodec_version());
 
   pCodecCtx->flags2 |= AV_CODEC_FLAG2_SHOW_ALL;
-
   initSuccess = true;
+
+  pthread_mutex_unlock(&decodemutex);
+
   return true;
 }
 
@@ -113,6 +119,8 @@ bool DJICameraStreamDecoder::getNewImage(CameraRGBImage & copyOfImage, int timeo
 
 void DJICameraStreamDecoder::cleanup()
 {
+  pthread_mutex_lock(&decodemutex);
+
   initSuccess = false;
   if (NULL != pSwsCtx)
   {
@@ -155,11 +163,14 @@ void DJICameraStreamDecoder::cleanup()
     av_free(pFrameRGB);
     pFrameRGB = NULL;
   }
+
+  pthread_mutex_unlock(&decodemutex);
 }
 
 void* DJICameraStreamDecoder::callbackThreadEntry(void* p)
 {
   DSTATUS_PRIVATE("****** Decoder Callback Thread Start ******\n");
+  usleep(50*1000);
   static_cast<DJICameraStreamDecoder*>(p)->callbackThreadFunc();
   return NULL;
 }
@@ -191,8 +202,13 @@ void DJICameraStreamDecoder::decodeBuffer(uint8_t* buf, int bufLen)
 
   AVPacket pkt;
   av_init_packet(&pkt);
+  pthread_mutex_lock(&decodemutex);
   while (remainingLen > 0)
   {
+    if (!pCodecParserCtx || !pCodecCtx) {
+      //DSTATUS("Invalid decoder ctx.");
+      break;
+    }
     processedLen = av_parser_parse2(pCodecParserCtx, pCodecCtx,
                                     &pkt.data, &pkt.size,
                                     pData, remainingLen,
@@ -244,6 +260,7 @@ void DJICameraStreamDecoder::decodeBuffer(uint8_t* buf, int bufLen)
       }
     }
   }
+  pthread_mutex_unlock(&decodemutex);
   av_free_packet(&pkt);
 }
 
