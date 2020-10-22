@@ -513,11 +513,11 @@ bool AdvancedSensing::startMainCameraStream(CameraImageCallback cb, void * cbPar
 void AdvancedSensing::stopFPVCameraStream()
 {
   if (vehicle_ptr->isM300()) {
+    stopH264Stream(LiveView::OSDK_CAMERA_POSITION_FPV);
     auto deocderPair = streamDecoder.find(LiveView::OSDK_CAMERA_POSITION_FPV);
     if ((deocderPair != streamDecoder.end()) && deocderPair->second) {
       deocderPair->second->cleanup();
     }
-    stopH264Stream(LiveView::OSDK_CAMERA_POSITION_FPV);
   } else {
     fpvCam_ptr->stopCameraStream();
   }
@@ -526,11 +526,11 @@ void AdvancedSensing::stopFPVCameraStream()
 void AdvancedSensing::stopMainCameraStream()
 {
   if (vehicle_ptr->isM300()) {
+    stopH264Stream(LiveView::OSDK_CAMERA_POSITION_NO_1);
     auto deocderPair = streamDecoder.find(LiveView::OSDK_CAMERA_POSITION_NO_1);
     if ((deocderPair != streamDecoder.end()) && deocderPair->second) {
       deocderPair->second->cleanup();
     }
-    stopH264Stream(LiveView::OSDK_CAMERA_POSITION_NO_1);
   } else {
     mainCam_ptr->stopCameraStream();
   }
