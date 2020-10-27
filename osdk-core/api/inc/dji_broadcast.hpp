@@ -167,8 +167,7 @@ public:
    * | vgx, vgy | m/s  | Around 5cm/s for GNSS navigation. Around 3cm/s with VO at 1 meter height                    |
    * | vgz      | m/s  | 10cm/s only with barometer in steady air. 3cm/s with VO at 1 meter height with 8cm baseline |
    *
-   *  The velocity may be in body or ground frame
-   *           based on settings on DJI Assistant 2's SDK page.
+   *  The velocity is based on ground frame.
    *  @return Telemetry::Vector3f data structure with the newest value.
    */
   Telemetry::Vector3f    getVelocity()           ;
