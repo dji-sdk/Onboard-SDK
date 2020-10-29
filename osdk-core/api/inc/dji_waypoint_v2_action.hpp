@@ -149,14 +149,14 @@ typedef struct DJIWaypointV2IntervalTriggerParam {
    *  If the
    * ``DJIWaypointV2Action_DJIWaypointV2IntervalTriggerParam_actionIntervalType``
    * is ``DJIWaypointV2MissionV2_DJIWaypointV2TriggerAssociatedTimingType_Time``
-   *  The time interval in seconds when two action are executed as the aircraft
+   *  The time interval in 0.01 seconds when two action are executed as the aircraft
    * moves
    *  from the current waypoint to the next waypoint.
    *  If the
    * ``DJIWaypointV2Action_DJIWaypointV2IntervalTriggerParam_actionIntervalType``
    * is
    * ``DJIWaypointV2MissionV2_DJIWaypointV2TriggerAssociatedTimingType_Distance``
-   *  The distance interval in meters when two action are executed as the
+   *  The distance interval in 0.01 meters when two action are executed as the
    * aircraft
    * moves
    *  from the current waypoint to the next waypoint.
