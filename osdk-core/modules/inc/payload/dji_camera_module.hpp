@@ -2011,6 +2011,8 @@ class CameraModule : public PayloadBase {
   T_OsdkMutexHandle lensUpdatedMutex;
   void updateLensInfo(dji_camera_len_para_push data);
   LensInfoPacketType getLensInfo();
+  std::string getCameraVersion();
+  std::string getFirmwareVersion();
 
  private:
   LensInfoPacketType lensInfo;
@@ -2125,7 +2127,7 @@ class CameraModule : public PayloadBase {
 
  private:
   std::string cameraVersion;
-  std::string getCameraVersion();
+  std::string firmwareVersion;
   void requestCameraVersion();
   void getCaptureParamDataAsync(
       void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,

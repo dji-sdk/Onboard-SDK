@@ -217,6 +217,24 @@ ErrorCode::ErrorCodeType CameraManager::getCameraModuleEnable(
   }
 }
 
+std::string CameraManager::getCameraVersion(PayloadIndexType index) {
+  CameraModule* cameraMgr = getCameraModule(index);
+  if (cameraMgr) {
+    return cameraMgr->getCameraVersion();
+  } else {
+    return "UNKNOWN";
+  }
+}
+
+std::string CameraManager::getFirmwareVersion(PayloadIndexType index) {
+  CameraModule* cameraMgr = getCameraModule(index);
+  if (cameraMgr) {
+    return cameraMgr->getFirmwareVersion();
+  } else {
+    return "UNKNOWN";
+  }
+}
+
 void CameraManager::startShootPhotoAsync(
     PayloadIndexType index, CameraModule::ShootPhotoMode mode,
     void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
