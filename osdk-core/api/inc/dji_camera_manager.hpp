@@ -1756,7 +1756,7 @@ class CameraManager {
 
   CameraModule *getCameraModule(PayloadIndexType index);
   CameraModule *getCameraModule(std::string name);
-
+  void m300LensCbInit(Linker *linker);
   /*! @note default name of camera module */
   const char *defaultCameraName = "uninitialized_camera";
 };

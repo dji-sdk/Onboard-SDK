@@ -42,6 +42,83 @@ CameraManager::CameraManager(Vehicle* vehiclePtr) {
         vehiclePtr->linker, (PayloadIndexType)index, defaultCameraName, false);
     cameraModuleVector.push_back(module);
   }
+  m300LensCbInit(vehiclePtr->linker);
+}
+
+E_OsdkStat getCameraLensPushing(struct _CommandHandle *cmdHandle,
+                              const T_CmdInfo *cmdInfo,
+                              const uint8_t *cmdData,
+                              void *userData) {
+  if (cmdInfo && userData) {
+    /*DSTATUS("test lens pushing : 0x80 puhsing sender=0x%02X receiver:0x%02X len=%d", cmdInfo->sender,
+             cmdInfo->receiver, cmdInfo->dataLen);*/
+    auto modules = *(std::vector<CameraModule *> *)userData;
+    uint8_t modId = 0xFF;
+    switch (cmdInfo->sender) {
+      case 0x01:
+      //case 0x21:
+        modId = 0;
+        break;
+      case 0x41:
+      case 0x61:
+        modId = 1;
+        break;
+      case 0x81:
+      case 0xA1:
+        modId = 2;
+        break;
+      default:
+        return OSDK_STAT_SYS_ERR;
+    }
+    if (modules.size() >= (modId + 1)) {
+      CameraModule::dji_camera_len_para_push data = {0};
+      memcpy(&data, cmdData, cmdInfo->dataLen);
+      modules[modId]->updateLensInfo(data);
+    }
+  } else {
+    DERROR("cmdInfo is a null value");
+    return OSDK_STAT_SYS_ERR;
+  }
+  return OSDK_STAT_OK;
+}
+
+#include "dji_linker.hpp"
+void CameraManager::m300LensCbInit(Linker *linker) {
+  static T_RecvCmdHandle handle = {0};
+  static T_RecvCmdItem item = {0};
+
+  handle.protoType = PROTOCOL_V1;
+  handle.cmdCount = 1;
+  handle.cmdList = &item;
+  item.cmdSet = 0x02;
+  item.cmdId = 0x87;
+  item.mask = MASK_HOST_XXXXXX_SET_ID;
+  item.host = 0;
+  item.device = 0;
+  item.pFunc = getCameraLensPushing;
+  item.userData = (void *)(&cameraModuleVector);
+
+  bool registerRet = linker->registerCmdHandler(&(handle));
+  DSTATUS("...... register result of geting camera pushing : %d\n", registerRet);
+
+  uint8_t reqStartData[] = {0x01, 0x00, 0x02, 0x87};
+  T_CmdInfo cmdInfo = {0};
+  T_CmdInfo ackInfo = {0};
+  uint8_t ackData[1024];
+
+  cmdInfo.cmdSet = 0x05;
+  cmdInfo.cmdId = 0x0b;
+  cmdInfo.dataLen = sizeof(reqStartData);
+  cmdInfo.needAck = OSDK_COMMAND_NEED_ACK_FINISH_ACK;
+  cmdInfo.packetType = OSDK_COMMAND_PACKET_TYPE_REQUEST;
+  cmdInfo.addr = GEN_ADDR(0, ADDR_V1_COMMAND_INDEX);
+  cmdInfo.receiver =
+      OSDK_COMMAND_DEVICE_ID(OSDK_COMMAND_DEVICE_TYPE_CENTER, 0);
+  cmdInfo.sender = linker->getLocalSenderId();
+  E_OsdkStat linkAck =
+      linker->sendSync(&cmdInfo, (uint8_t *) reqStartData, &ackInfo, ackData,
+                                1000 / 4, 4);
+  DSTATUS("Request start pushing lens info ack = %d\n", linkAck);
 }
 
 CameraManager::~CameraManager() {
@@ -672,7 +749,21 @@ ErrorCode::ErrorCodeType CameraManager::setOpticalZoomFactorSync(PayloadIndexTyp
 ErrorCode::ErrorCodeType CameraManager::getOpticalZoomFactorSync(PayloadIndexType index, float &factor, int timeout) {
   CameraModule* cameraMgr = getCameraModule(index);
   if (cameraMgr) {
-    return cameraMgr->getOpticalZoomFactorSync(factor, timeout);
+    auto lensInfo = cameraMgr->getLensInfo();
+    uint32_t curMs = 0;
+    OsdkOsal_GetTimeMs(&curMs);
+    /* Valid : data updated in 500 ms */
+    if ((lensInfo.updateTimeStamp <= curMs) && (lensInfo.updateTimeStamp >= curMs - 500)) {
+      DSTATUS("Get lens data from pushing data.");
+      if (cameraMgr)
+      factor = 1.0f * lensInfo.data.current_focus_length
+          / lensInfo.data.min_focus_length;
+      DSTATUS("Getting zoom factor from lens info.");
+      return ErrorCode::SysCommonErr::Success;
+    } else {
+      DSTATUS("Get lens data from cmd request.");
+      return cameraMgr->getOpticalZoomFactorSync(factor, timeout);
+    }
   } else {
     return ErrorCode::SysCommonErr::AllocMemoryFailed;
   }
