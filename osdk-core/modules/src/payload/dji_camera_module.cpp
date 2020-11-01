@@ -52,7 +52,8 @@ CameraModule::CameraModule(Linker* linker,
                            PayloadIndexType payloadIndex, std::string name,
                            bool enable)
     : PayloadBase(linker, payloadIndex, name, enable) {
-
+  cameraVersion = "UNKNOWN";
+  firmwareVersion = "UNKNOWN";
   OsdkOsal_TaskCreate(&camModuleHandle,
                       (void *(*)(void *)) (&camHWInfoTask),
                       OSDK_TASK_STACK_SIZE_DEFAULT, this);
@@ -1842,9 +1843,16 @@ CameraModule::CaptureParamData CameraModule::CreateDefCaptureParamData(ShootPhot
 
 #include <string.h>
 std::string CameraModule::getCameraVersion() {
+  requestCameraVersion();
+  //DSTATUS("Camera Version : %s", cameraVersion.c_str());
   return cameraVersion;
 }
 
+std::string CameraModule::getFirmwareVersion() {
+  requestCameraVersion();
+  //DSTATUS("Firmware Version : %s", firmwareVersion.c_str());
+  return firmwareVersion;
+}
 void CameraModule::requestCameraVersion() {
   uint8_t   temp = 0;
   T_CmdInfo cmdInfo        = { 0 };
@@ -1861,17 +1869,25 @@ void CameraModule::requestCameraVersion() {
     OSDK_COMMAND_DEVICE_ID(OSDK_COMMAND_DEVICE_TYPE_CAMERA, getIndex() * 2);
   cmdInfo.sender     = this->getLinker()->getLocalSenderId();
   E_OsdkStat linkAck = this->getLinker()->sendSync(&cmdInfo, &temp, &ackInfo, ackData,
-                                                   500, 2);
-
+                                                   300, 2);
   if (linkAck == OSDK_STAT_ERR_TIMEOUT) {
-    cameraVersion = "Unmounted";
-  } else if ((linkAck == OSDK_STAT_OK) && (ackInfo.dataLen >= 18)) {
+    cameraVersion = "UNKNOWN";
+    firmwareVersion = "UNKNOWN";
+  } else if ((linkAck == OSDK_STAT_OK) && (ackInfo.dataLen >= 26)) {
     //3~18 : hardware version
     if (strstr((char *)(ackData + 2), "gd610") != NULL) cameraVersion = "H20";
     else if (strstr((char *)(ackData + 2), "CA02") != NULL) cameraVersion = "Z30";
-    else cameraVersion = "OtherCameras";
+    else if (strstr((char *)(ackData + 2), "XT_V2") != NULL) cameraVersion = "XT2";
+    else cameraVersion = (char *)(ackData + 2);
+
+    char fmVer[40] = {0};
+    sprintf(fmVer, "%d.%d.%d.%d", ackData[25], ackData[24], ackData[23], ackData[22]);
+    firmwareVersion = fmVer;
+    //DSTATUS("%s %s", cameraVersion.c_str(), firmwareVersion.c_str());
+
   } else {
-    cameraVersion = "Unknown";
+    cameraVersion = "UNKNOWN";
+    firmwareVersion = "UNKNOWN";
   }
   //DSTATUS("------------- cam[%d] cameraVersion = %s", getIndex(), cameraVersion.c_str());
 }
