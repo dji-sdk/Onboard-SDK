@@ -387,9 +387,9 @@ ErrorCode::ErrorCodeType CameraManagerSyncSample::setZoomSyncSample(
         "lens Olympus M.Zuiko ED 14-42mm f/3.5-5.6 EZ, Z3 camera, Z30 camera.");
     return retCode;
   }
-  DSTATUS("Got the current optical zoom factor : %0.2f", curFactor);
+  DSTATUS("Got the current optical zoom factor : %0.1f", curFactor);
   if (curFactor != factor) {
-    DSTATUS("Set the current optical zoom factor as %0.2f", factor);
+    DSTATUS("Set the current optical zoom factor as %0.1f", factor);
     retCode = pm->setOpticalZoomFactorSync(index, factor, 1);
 
     if (retCode != ErrorCode::SysCommonErr::Success) {

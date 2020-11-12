@@ -538,7 +538,147 @@ class CameraModule : public PayloadBase {
     FASTEST = 78,         /*!< fastest speed */
   };
 
+  typedef enum
+  {
+    DJI_CAMERA_FOCUS_MODE_MANUAL = 0, // 手动对焦
+    DJI_CAMERA_FOCUS_MODE_SHOT_AF = 1, // 自动对焦
+    DJI_CAMERA_FOCUS_MODE_CONTIN_AF = 2, // 连续自动对焦
+    DJI_CAMERA_FOCUS_MODE_MANUAL_FINE = 3, // 手动精细对焦（自动对焦后，再手动进行精细对焦）
+  } DJI_CAMERA_FOCUS_MODE;
+  typedef enum
+  {
+    DJI_CAMERA_DJPH1_CALIBRATE_RESULT_IDLE = 0,
+    DJI_CAMERA_DJPH1_CALIBRATE_RESULT_SUCCESS = 1,
+    DJI_CAMERA_DJPH1_CALIBRATE_RESULT_TOOCLOSE = 2,
+  } DJI_CAMERA_DJPH1_CALIBRATE_RESULT;
+// X5相机协议类型
+  typedef enum
+  {
+    DJI_X5_CAMERA_PROTOCOL_TYPE_DEFAULT = 0, // 默认协议
+    DJI_X5_CAMERA_PROTOCOL_TYPE_ASSISTANT_FOCUS = 1, // 辅助对焦
+    DJI_X5_CAMERA_PROTOCOL_TYPE_CMODE = 2, // CMode协议
+  } DJI_X5_CAMERA_PROTOCOL_TYPE;
+
 #pragma pack(1)
+// ========== structs ==========
+  typedef struct dji_camera_focus_area_struct
+  {
+    // 点对焦区域X
+    float focus_index_x;
+    // 点对焦区域Y
+    float focus_index_y;
+  } dji_camera_focus_area_struct;
+
+  typedef struct dji_camera_aperture_range
+  {
+    // 最小光圈Size 实际值X100,  这才是最大光圈 最小的值
+    uint16_t min_aperture_size;
+    // 最大光圈Size 实际值X100， 这才是最小光圈， 最大的值
+    uint16_t max_aperture_size;
+  } dji_camera_aperture_range;
+
+  typedef struct dji_camera_assist_digital_zoom_para
+  {
+    // 手动对焦时的数字对焦辅助 0关闭，1开启
+    uint8_t mf_assist_state:1;
+    // 自动对焦时的数字对焦辅助  0关闭，1开启
+    uint8_t af_assist_state:1;
+    uint8_t reserved       :6;
+  } dji_camera_assist_digital_zoom_para;
+
+  typedef struct dji_camera_real_focus_area_struct
+  {
+    // X轴实际对焦窗口起始下标
+    uint8_t focus_index_x;
+    // X轴实际对焦窗口个数
+    // 220&240下推送为0时，由app决定显示对焦框的大小
+    uint8_t focus_count_x;
+    // Y轴实际对焦窗口起始下标
+    uint8_t focus_index_y;
+    // Y轴实际对焦窗口个数
+    // 220&240下推送为0时，由app决定显示对焦框的大小
+    uint8_t focus_count_y;
+  } dji_camera_real_focus_area_struct;
+
+  typedef struct dji_camera_focusing_state
+  {
+    // 0: Idle, 1: Focusing, 2: Successful, 3: Failed, 4: Unknown
+    uint8_t state            :2;
+    uint8_t is_back_to_center:1;
+    uint8_t reserved         :5;
+  } dji_camera_focusing_state;
+
+  typedef struct dji_camera_lens_state
+  {
+    // 机身对焦模式
+    uint8_t camera_body_focusing_mode:2;	// enum-type: DJI_CAMERA_FOCUS_MODE
+    // 镜头对焦模式
+    uint8_t camera_lens_focusing_mode:2;	// enum-type: DJI_CAMERA_FOCUS_MODE
+    // 变焦特性 （0 = 手动，1 ＝ 电动)
+    uint8_t auto_focal_lenstype      :1;
+    // 定焦特性 （0 ＝ AF 镜头，1 ＝ MF 镜头）
+    uint8_t fix_focal_lenstype       :1;
+    // 镜头焦距特性（0 ＝ 定焦镜头，1 ＝ 变焦镜头）
+    uint8_t lens_focal_distancetype  :1;
+    // 镜头连接状态，0 = 未连接，1 = 已连接
+    uint8_t connect_state            :1;
+  } dji_camera_lens_state;
+// ========== structs end ======
+
+// ========== commands =========
+// 该命令用于推送相机镜头参数
+  typedef struct dji_camera_len_para_push
+  {
+    // 相机镜头状态
+    dji_camera_lens_state lens_state;
+    // 最大电机行程
+    uint16_t max_focus_engine_scole;
+    // 当前电机行程
+    uint16_t cur_focus_engine_value;
+    // 当前物距
+    float object_distance;
+    // 光圈范围
+    dji_camera_aperture_range aperture_range;
+    // 对焦区域
+    dji_camera_focus_area_struct focus_area;
+    // 对焦状态
+    dji_camera_focusing_state focusing_state;
+    // 合焦概率
+    uint8_t focusing_probability;
+    // 最小焦距(单位 0.1mm)
+    uint16_t min_focus_length;
+    // 最大焦距 (单位 0.1mm)
+    uint16_t max_focus_length;
+    // 当前焦距 (单位 0.1mm)
+    uint16_t current_focus_length;
+    // 焦距最小变化量 （单位 0.1mm）
+    uint16_t min_focus_interval;
+    dji_camera_assist_digital_zoom_para assist_digital_zoom_para;
+    uint8_t focal_window_size_x;
+    uint8_t focal_window_size_y;
+    uint8_t assist_zoom_working;
+    // 实际对焦区域,将视图切分为格子然后通过起始index跟格子数确定对焦窗口。HG210有 12x8 个格子
+    dji_camera_real_focus_area_struct real_focus_area;
+    // X5相机协议
+    uint8_t x5_camera_protocol_type;	// enum-type: DJI_X5_CAMERA_PROTOCOL_TYPE
+    // 自动对焦时的 对焦电机状态0 ＝正常， 1= 初始化失败， 2＝电机卡住， 3=电机损坏 其它reserved
+    uint8_t af_focus_state;
+    // 镜头标定状态 0 = 未标定 1 ＝ 已标定  2= 标定中
+    uint8_t calibrate_state;
+    // MF标定操作执行结果
+    uint8_t djph1_calibrate_result;	// enum-type: DJI_CAMERA_DJPH1_CALIBRATE_RESULT
+    // 镜头标定的无穷远位置 用于app一键无穷远
+    uint16_t calibrate_infinity_len;
+    // cleandirt状态
+    uint8_t ffcamera_clean_dirt_status;
+    // 是否支持连续的数字变焦，1为支持，0为不支持。
+    uint8_t support_continuous_dzoom;
+    // 数字变焦的起始等效焦距值。此值一般为光学变焦的tele值，最小单位为0.1mm；例如，数值变焦起始等效焦距值为48.0mm，此值为480。
+    uint16_t dzoom_start_focus_length;
+    // 目标焦距 (单位 0.1mm)，用户设置的希望达到的焦距。
+    // 如果是用速度模式设置焦距，则目标焦距和当前焦距相同。
+    uint16_t target_focus_length;
+  } dji_camera_len_para_push;
 
   /*! @brief It is the common ack of Open Protocol CMD
    * DJI::OSDK::CameraModule::FunctionID. All the ack data from this CMD will
@@ -1857,7 +1997,17 @@ class CameraModule : public PayloadBase {
   std::string getCameraVersion();
   std::string getFirmwareVersion();
 
+  typedef struct LensInfoPacketType {
+    uint32_t updateTimeStamp; //ms
+    dji_camera_len_para_push data;
+  } LensInfoPacketType;
+  void updateLensInfo(dji_camera_len_para_push data);
+  LensInfoPacketType getLensInfo();
+
  private:
+  LensInfoPacketType lensInfo;
+  T_OsdkMutexHandle lensUpdatedMutex;
+
   /*! @brief Decoder callback to decode the ack of getting tap zoom enable
    * parameter, then call the ucb
    *
