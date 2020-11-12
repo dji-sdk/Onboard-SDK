@@ -1854,6 +1854,9 @@ class CameraModule : public PayloadBase {
    */
   ErrorCode::ErrorCodeType obtainDownloadRightSync(bool enable, int timeout);
 
+  std::string getCameraVersion();
+  std::string getFirmwareVersion();
+
  private:
   /*! @brief Decoder callback to decode the ack of getting tap zoom enable
    * parameter, then call the ucb
@@ -1966,7 +1969,7 @@ class CameraModule : public PayloadBase {
 
  private:
   std::string cameraVersion;
-  std::string getCameraVersion();
+  std::string firmwareVersion;
   void requestCameraVersion();
   void getCaptureParamDataAsync(
       void (*UserCallBack)(ErrorCode::ErrorCodeType retCode,

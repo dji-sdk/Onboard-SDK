@@ -110,6 +110,9 @@ class CameraManager {
   ErrorCode::ErrorCodeType getCameraModuleEnable(PayloadIndexType index,
                                                  bool &enable);
 
+  std::string getCameraVersion(PayloadIndexType index);
+
+  std::string getFirmwareVersion(PayloadIndexType index);
  public:
   /*! @brief start to shoot photo, non-blocking calls
    *

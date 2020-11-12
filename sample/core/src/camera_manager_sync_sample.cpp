@@ -34,17 +34,27 @@ using namespace DJI::OSDK::Telemetry;
 
 CameraManagerSyncSample::CameraManagerSyncSample(Vehicle *vehiclePtr)
     : vehicle(vehiclePtr) {
+  std::string camNames[PAYLOAD_INDEX_CNT];
+  std::string camFWs[PAYLOAD_INDEX_CNT];
+  for (int i = PAYLOAD_INDEX_0; i < PAYLOAD_INDEX_CNT; i++) {
+    camNames[i] = vehicle->cameraManager->getCameraVersion((PayloadIndexType)i);
+    camFWs[i] = vehicle->cameraManager->getFirmwareVersion((PayloadIndexType)i);
+    DSTATUS("Payload [%d] info : name : [%s] firmare : [%s]",
+            i,
+            camNames[i].c_str(),
+            camFWs[i].c_str());
+  }
   /*! init camera modules for cameraManager */
   /*! main camera init */
   ErrorCode::ErrorCodeType ret = vehicle->cameraManager->initCameraModule(
-      PAYLOAD_INDEX_0, "Sample_main_camera");
+      PAYLOAD_INDEX_0, camNames[PAYLOAD_INDEX_0].c_str());
   if (ret != ErrorCode::SysCommonErr::Success) {
     DERROR("Init Camera module Sample_main_camera failed.");
     ErrorCode::printErrorCodeMsg(ret);
   }
   /*! vice camera init */
   ret = vehicle->cameraManager->initCameraModule(PAYLOAD_INDEX_1,
-                                                 "Sample_vice_camera");
+                                                 camNames[PAYLOAD_INDEX_1].c_str());
   if (ret != ErrorCode::SysCommonErr::Success) {
     DERROR("Init Camera module Sample_vice_camera failed.");
     ErrorCode::printErrorCodeMsg(ret);
@@ -52,7 +62,7 @@ CameraManagerSyncSample::CameraManagerSyncSample(Vehicle *vehiclePtr)
   /*! top camera init for M300 */
   if (vehiclePtr->isM300()) {
     ret = vehicle->cameraManager->initCameraModule(PAYLOAD_INDEX_2,
-                                                   "Sample_top_camera");
+                                                   camNames[PAYLOAD_INDEX_2].c_str());
     if (ret != ErrorCode::SysCommonErr::Success) {
       DERROR("Init Camera module Sample_top_camera failed.");
       ErrorCode::printErrorCodeMsg(ret);
