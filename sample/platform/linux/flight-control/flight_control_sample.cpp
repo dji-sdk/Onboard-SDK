@@ -460,8 +460,8 @@ moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired,
                                          yawDesiredRad / DEG2RAD);
 
     usleep(cycleTimeInMs * 1000);
+    vehicle->flightController->emergencyBrakeAction();
     elapsedTimeInMs += cycleTimeInMs;
-
     //! Get current position in required coordinates and units
     if (!vehicle->isM100() && !vehicle->isLegacyM600())
     {

@@ -36,6 +36,10 @@ class FlightLink;
 class FlightJoystick {
  public:
 
+  enum class JoystickCtrlAuthorityCommand {
+    RELEASE_AUTHORITY = 0,
+    OBTAIN_AUTHORITY  = 1,
+  };
   /*! @brief bit 7:6 of the 8-bit (7:0) CtrlData.flag
    *
    *  @note
@@ -192,11 +196,25 @@ class FlightJoystick {
                         * 2: disarm protection */
     uint8_t reserved : 6;
   } KillSwitchData;  // pack(1)
+
+  typedef struct CommonAck {
+    uint8_t retCode; /*!< original return code from vehicle */
+  } CommonAck;       // pack(1)
 #pragma pack()
 
  public:
   FlightJoystick(Vehicle *vehicle);
   ~FlightJoystick();
+
+/* JoystickCtrlAuthority manage */
+  void obtainJoystickCtrlAuthorityAsync(void (*userCB)(ErrorCode::ErrorCodeType,
+                                                       UserData userData),
+                                        UserData userData, int timeout, int retryTime);
+  ErrorCode::ErrorCodeType obtainJoystickCtrlAuthoritySync(int timeout);
+  void releaseJoystickCtrlAuthorityAsync(void (*userCB)(ErrorCode::ErrorCodeType,
+                                                        UserData userData),
+                                         UserData userData, int timeout, int retryTime);
+  ErrorCode::ErrorCodeType releaseJoystickCtrlAuthoritySync(int timeout);
 
   void setHorizontalLogic(HorizontalLogic horizontalLogic);
   void setVerticalLogic(VerticalLogic verticalLogic);

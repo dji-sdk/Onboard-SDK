@@ -43,6 +43,64 @@ FlightController::~FlightController() {
   delete this->flightJoystick;
 }
 
+void FlightController::obtainJoystickCtrlAuthorityAsync(void (*userCB)(ErrorCode::ErrorCodeType,
+                                                       UserData userData),
+                                                       UserData userData, int timeout, int retryTime)
+{
+  if (flightJoystick)
+  {
+    return flightJoystick->obtainJoystickCtrlAuthorityAsync(userCB, userData, timeout, retryTime);
+  }
+  else
+  {
+    if (userCB)
+    {
+      userCB(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
+    }
+  }
+}
+
+ErrorCode::ErrorCodeType FlightController::obtainJoystickCtrlAuthoritySync(int timeout)
+{
+  if (flightJoystick)
+  {
+    return flightJoystick->obtainJoystickCtrlAuthoritySync(timeout);
+  }
+  else
+  {
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
+  }
+}
+
+void FlightController::releaseJoystickCtrlAuthorityAsync(void (*userCB)(ErrorCode::ErrorCodeType,
+                                                                        UserData userData),
+                                                         UserData userData, int timeout, int retryTime)
+{
+  if (flightJoystick)
+  {
+    return flightJoystick->releaseJoystickCtrlAuthorityAsync(userCB, userData, timeout, retryTime);
+  }
+  else
+  {
+    if (userCB)
+    {
+      userCB(ErrorCode::SysCommonErr::AllocMemoryFailed, userData);
+    }
+  }
+}
+
+ErrorCode::ErrorCodeType FlightController::releaseJoystickCtrlAuthoritySync(int timeout)
+{
+  if (flightJoystick)
+  {
+    return flightJoystick->releaseJoystickCtrlAuthoritySync(timeout);
+  }
+  else
+  {
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
+  }
+}
+
 ErrorCode::ErrorCodeType FlightController::setRtkEnableSync(
     RtkEnabled rtkEnable, int timeout) {
   if (flightAssistant)
@@ -514,4 +572,20 @@ ErrorCode::ErrorCodeType FlightController::killSwitch(KillSwitch cmd,
     DSTATUS("Kill switch fail, Alloc memory failed");
     return OSDK_STAT_ERR_ALLOC;
   }
+}
+
+ErrorCode::ErrorCodeType FlightController::emergencyBrakeAction(void)
+{
+  FlightController::JoystickMode joystickMode = {
+    FlightController::HorizontalLogic::HORIZONTAL_VELOCITY,
+    FlightController::VerticalLogic::VERTICAL_VELOCITY,
+    FlightController::YawLogic::YAW_RATE,
+    FlightController::HorizontalCoordinate::HORIZONTAL_BODY,
+    FlightController::StableMode::STABLE_ENABLE,
+  };
+
+  FlightController::JoystickCommand joystickCommand = {0, 0, 0, 0};
+  this->setJoystickMode(joystickMode);
+  this->setJoystickCommand(joystickCommand);
+  this->joystickAction();
 }

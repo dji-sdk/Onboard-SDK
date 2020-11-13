@@ -67,6 +67,44 @@ class FlightController {
     StableMode stableMode;
   } JoystickMode;
 
+  /*! @brief
+  *
+  *  Obtain the control authority of the api (non-blocking call)
+  *
+  *  @platforms M210V2, M300
+  *  @param callback callback function
+  *  @param userData user data (void ptr)
+  */
+  void obtainJoystickCtrlAuthorityAsync(void (*userCB)(ErrorCode::ErrorCodeType,
+                                                       UserData userData),
+                                        UserData userData, int timeout, int retryTime);
+  /*! @brief
+  *
+  *  Obtain the control authority of the api (blocking call)
+  *
+  *  @platforms M210V2, M300
+  *  @param timeout time(s) to wait for ACK
+  */
+  ErrorCode::ErrorCodeType obtainJoystickCtrlAuthoritySync(int timeout);
+  /*! @brief
+  *
+  *  Release the control authority of the api (non-blocking call)
+  *
+  *  @platforms M210V2, M300
+  *  @param callback callback function
+  *  @param userData user data (void ptr)
+  */
+  void releaseJoystickCtrlAuthorityAsync(void (*userCB)(ErrorCode::ErrorCodeType,
+                                                        UserData userData),
+                                         UserData userData, int timeout, int retryTime);
+  /*! @brief
+  *
+  *  Release the control authority of the api (blocking call)
+  *
+  *  @platforms M210V2, M300
+  *  @param timeout time(s) to wait for ACK
+  */
+  ErrorCode::ErrorCodeType releaseJoystickCtrlAuthoritySync(int timeout);
   /*! @brief Set RTK enable or disable, blocking calls
    *
    *  @platforms M210V2, M300
@@ -609,6 +647,13 @@ class FlightController {
    */
   ErrorCode::ErrorCodeType killSwitch(KillSwitch cmd,int wait_timeout,
                                                      char debugMsg[10]);
+
+  /*! @brief Stop the vehicle in horiz velocity, vert velocity, yaw rate mode
+   * (body frame)
+   *
+   *  @platforms M210V2, M300
+   */
+  ErrorCode::ErrorCodeType emergencyBrakeAction(void);
 
  private:
   FlightAssistant *flightAssistant;

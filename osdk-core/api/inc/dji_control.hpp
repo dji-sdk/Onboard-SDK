@@ -268,8 +268,8 @@ public:
                      float32_t y_forw);
   } AdvancedCtrlData; // pack(1)
 
-  // CMD data supported in Matrice 100
   typedef struct LegacyCMDData
+  // CMD data supported in Matrice 100
   {
     uint8_t sequence;
     uint8_t cmd;

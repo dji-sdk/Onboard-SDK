@@ -37,6 +37,8 @@ Control::Control(Vehicle* vehicle)
   : vehicle(vehicle)
   , wait_timeout(10)
 {
+  DSTATUS("The control class is going to be deprecated.\
+It will be better to use the FlightController class instead!");
 }
 
 Control::~Control()

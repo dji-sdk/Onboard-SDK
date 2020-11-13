@@ -38,6 +38,22 @@
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
 
+void ObtainJoystickCtrlAuthorityCB(ErrorCode::ErrorCodeType errorCode, UserData userData)
+{
+  if (errorCode == ErrorCode::FlightControllerErr::SetControlParam::ObtainJoystickCtrlAuthoritySuccess)
+  {
+    DSTATUS("ObtainJoystickCtrlAuthoritySuccess");
+  }
+}
+
+void ReleaseJoystickCtrlAuthorityCB(ErrorCode::ErrorCodeType errorCode, UserData userData)
+{
+  if (errorCode == ErrorCode::FlightControllerErr::SetControlParam::ReleaseJoystickCtrlAuthoritySuccess)
+  {
+    DSTATUS("ReleaseJoystickCtrlAuthoritySuccess");
+  }
+}
+
 int main(int argc, char** argv) {
   // Initialize variables
   int functionTimeout = 1;
@@ -51,8 +67,8 @@ int main(int argc, char** argv) {
   }
 
   // Obtain Control Authority
-  // TODO: move this to flight controlller
-  vehicle->control->obtainCtrlAuthority(functionTimeout);
+  // vehicle->flightController->obtainJoystickCtrlAuthoritySync(functionTimeout);
+  vehicle->flightController->obtainJoystickCtrlAuthorityAsync(ObtainJoystickCtrlAuthorityCB, nullptr ,functionTimeout, 2);
   FlightSample* flightSample = new FlightSample(vehicle);
   // Display interactive prompt
   std::cout
@@ -78,6 +94,7 @@ int main(int argc, char** argv) {
       break;
     case 'b':
       monitoredTakeoff(vehicle);
+
       DSTATUS("Take off over!\n");
       moveByPositionOffset(vehicle, 0, 6, 6, 30, 0.8, 1);
       DSTATUS("Step 1 over!\n");
@@ -123,6 +140,8 @@ int main(int argc, char** argv) {
       break;
   }
 
+  // vehicle->flightController->releaseJoystickCtrlAuthoritySync(functionTimeout);
+  vehicle->flightController->releaseJoystickCtrlAuthorityAsync(ReleaseJoystickCtrlAuthorityCB, nullptr ,functionTimeout, 2);
   delete flightSample;
   return 0;
 }
