@@ -39,8 +39,7 @@ using namespace DJI;
 using namespace DJI::OSDK;
 
 Firewall::Firewall(Linker *linker)
-    : linker(linker), policyUpdated(false) {
-  appKeyBuffer.keyLen = 0;
+    : linker(linker), policyUpdated(false), appKeyBuffer({{0}, 0}) {
   OsdkOsal_MutexCreate(&policyUpdatedMutex);
   OsdkOsal_MutexCreate(&appKeyBufferMutex);
   DSTATUS("Firewall is initializing ...");
@@ -55,9 +54,81 @@ Firewall::Firewall(Linker *linker)
   if (!linker->registerCmdHandler(&recvCmdHandle)) {
     DERROR("register firewall callback handler failed !");
   }
+
+  /*! M300 drone do the firewall logic */
+  uint8_t retryTimes = 0;
+  if (this->linker->isUSBPlugged()
+      && !isPolicyUpdated()) {
+   // setAppKey((uint8_t *) data->encKey, strlen(data->encKey) - 1);
+    do {
+      retryTimes ++;
+      DSTATUS("osdk policy file updating(1) ......");
+      OsdkOsal_TaskSleepMs(1000);
+    } while ((!RequestUpdatePolicy()) && (retryTimes < 15));
+
+    /*! pending for firewall logic finished */
+    retryTimes = 0;
+    do {
+      retryTimes++;
+      DSTATUS("osdk policy file updating(2) ......");
+      OsdkOsal_TaskSleepMs(1000);
+    } while ((!isPolicyUpdated()) && (retryTimes < 15));
+  }
+  E_OsdkStat osdkStat = OsdkOsal_TaskCreate(&firewallTaskHandle,
+                                            (void *(*)(
+                                                void *)) (firewallTask),
+                                            OSDK_TASK_STACK_SIZE_DEFAULT,
+                                            this);
 }
 
 Firewall::~Firewall() {
+  OsdkOsal_TaskDestroy(firewallTaskHandle);
+}
+
+bool Firewall::checkFireWallConnection() {
+  T_CmdInfo cmdInfo = {0};
+  uint8_t data = 2;
+  T_CmdInfo ackInfo = {0};
+  uint8_t ackData[1024];
+
+  cmdInfo.cmdSet = V1ProtocolCMD::Common::getVersion[0];
+  cmdInfo.cmdId = V1ProtocolCMD::Common::getVersion[1];
+  cmdInfo.dataLen = sizeof(data);
+  cmdInfo.needAck = OSDK_COMMAND_NEED_ACK_FINISH_ACK;
+  cmdInfo.packetType = OSDK_COMMAND_PACKET_TYPE_REQUEST;
+  cmdInfo.addr = GEN_ADDR(0, ADDR_V1_COMMAND_INDEX);
+  cmdInfo.receiver = OSDK_COMMAND_DEVICE_ID(OSDK_COMMAND_DEVICE_TYPE_WIFI, 0x01);
+  cmdInfo.sender = linker->getLocalSenderId();
+  E_OsdkStat ret =
+      linker->sendSync(&cmdInfo, (uint8_t *) &data, &ackInfo, ackData, 300, 3);
+  if (ret == OSDK_STAT_OK) return true;
+  else {
+    setPolicyUpdated(false);
+    return false;
+  }
+}
+
+void *Firewall::firewallTask(void *arg) {
+  DSTATUS("firewall task created ...");
+  if(arg) {
+    Firewall *fw = (Firewall *) arg;
+    for (;;) {
+      if (fw->linker->isUSBPlugged()) {
+        auto ret = fw->checkFireWallConnection();
+        //DSTATUS("Ret of checkFireWallConnection = %s ...", ret ? "true" : "false");
+        //DSTATUS("fw->isPolicyUpdated() = %s ...", fw->isPolicyUpdated() ? "true" : "false");
+        while (!fw->isPolicyUpdated()) {
+          DSTATUS("Requesting update policy ...");
+          fw->RequestUpdatePolicy();
+          OsdkOsal_TaskSleepMs(1000);
+        }
+      }
+      OsdkOsal_TaskSleepMs(500);
+    }
+  } else {
+    DERROR("OSDK firewall task create failed caused by invalid param.");
+  }
+  return NULL;
 }
 
 bool Firewall::RequestUpdatePolicy(void) {
@@ -80,7 +151,7 @@ bool Firewall::RequestUpdatePolicy(void) {
 
   E_OsdkStat linkAck =
       linker->sendSync(&reqCmdInfo, (uint8_t *) &uploadPolicyFileReq, &ackInfo,
-                       ackData, 3000, 3);
+                       ackData, 1000, 0);
 
   if (linkAck == OSDK_STAT_OK)
     return true;
@@ -120,8 +191,8 @@ E_OsdkStat Firewall::GetIdentityVerifyHandle(struct _CommandHandle *cmdHandle,
 
   //key + random = md5
   pCal = calBuf;
-  pCal = OsdkStr_PutStrToBuf(pCal, (char *) firewall->appKeyBuffer.data,
-                             firewall->appKeyBuffer.keyLen);
+  /*pCal = OsdkStr_PutStrToBuf(pCal, (char *) firewall->getAppKey().data,
+                             firewall->getAppKey().keyLen);*/
   pCal = OsdkStr_PutStrToBuf(pCal, (char *) req->nonce, sizeof(req->nonce));
 
   OsdkMd5_Init(&md5Ctx);
