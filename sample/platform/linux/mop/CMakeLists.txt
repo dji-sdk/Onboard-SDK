@@ -34,6 +34,10 @@ FILE(GLOB SOURCE_FILES
         ${CMAKE_CURRENT_SOURCE_DIR}/../osal/*.c
         )
 
+if (OSDK_HOTPLUG)
+    FILE(GLOB SOURCE_FILES ${SOURCE_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/../hal/hotplug/*.c)
+endif ()
+
 add_executable(op_download_sample ${SOURCE_FILES} op_download_sample.cpp)
 
 add_executable(op_upload_sample ${SOURCE_FILES} op_upload_sample.cpp)

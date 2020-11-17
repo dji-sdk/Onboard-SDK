@@ -119,8 +119,21 @@ if(ADVANCED_SENSING)
     link_libraries(${FFMPEG_LIBRARIES})
 endif()
 
+if (OSDK_HOTPLUG)
+    add_definitions(-DOSDK_HOTPLUG)
+    message("\n-- Enable OSDK Hotplug monitoring.")
+    find_package(LibUDEV REQUIRED)
+    include_directories(${LIBUDEV_INCLUDE_DIRS})
+    include_directories(${CMAKE_CURRENT_SOURCE_DIR}/hal/hotplug)
+    link_libraries(${LIBUDEV_LIBRARIES})
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ludev")
+else ()
+    message("\n-- You can cmake with \"-DOSDK_HOTPLUG=ON\" to enable OSDK Hotplug monitoring for linux platform.")
+endif ()
+
 #if(WAYPT2_CORE)
 #endif()
+
 
 #add_subdirectory(camera-gimbal)
 add_subdirectory(flight-control)
