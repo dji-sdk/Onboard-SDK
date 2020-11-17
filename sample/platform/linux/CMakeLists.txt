@@ -134,6 +134,12 @@ endif ()
 #if(WAYPT2_CORE)
 #endif()
 
+if (CONFIG_TOOL)
+    message("\n-- Rebuild the config tool")
+    add_subdirectory(config_tool)
+else()
+    message("\n-- You can cmake with \"-DCONFIG_TOOL=ON\" to rebuild the config tool.")
+endif()
 
 #add_subdirectory(camera-gimbal)
 add_subdirectory(flight-control)
