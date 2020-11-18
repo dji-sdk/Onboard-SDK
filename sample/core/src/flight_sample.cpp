@@ -101,8 +101,7 @@ bool FlightSample::moveByPositionOffset(const Vector3f& offsetDesired,
   int speedFactor = 2;
 
   int pkgIndex = 0;
-  TopicName topicList[] = {TOPIC_QUATERNION, TOPIC_GPS_FUSED,
-                           TOPIC_HEIGHT_FUSION};
+  TopicName topicList[] = {TOPIC_QUATERNION, TOPIC_GPS_FUSED};
   int numTopic = sizeof(topicList) / sizeof(topicList[0]);
   if (!setUpSubscription(pkgIndex, controlFreqInHz, topicList, numTopic,
                          responseTimeout)) {
@@ -112,7 +111,6 @@ bool FlightSample::moveByPositionOffset(const Vector3f& offsetDesired,
   //! get origin position and relative height(from home point)of aircraft.
   Telemetry::TypeMap<TOPIC_GPS_FUSED>::type originGPSPosition =
       vehicle->subscribe->getValue<TOPIC_GPS_FUSED>();
-  /*! TODO: TOPIC_HEIGHT_FUSION is abnormal in real world but normal in simulator */
   Telemetry::GlobalPosition currentBroadcastGP = vehicle->broadcast->getGlobalPosition();
   float32_t originHeightBaseHomepoint = currentBroadcastGP.height;
   FlightController::JoystickMode joystickMode = {
@@ -129,10 +127,12 @@ bool FlightSample::moveByPositionOffset(const Vector3f& offsetDesired,
         vehicle->subscribe->getValue<TOPIC_GPS_FUSED>();
     Telemetry::TypeMap<TOPIC_QUATERNION>::type currentQuaternion =
         vehicle->subscribe->getValue<TOPIC_QUATERNION>();
+    currentBroadcastGP = vehicle->broadcast->getGlobalPosition();
     float yawInRad = quaternionToEulerAngle(currentQuaternion).z;
     //! get the vector between aircraft and origin point.
-    Vector3f localOffset =
-        localOffsetFromGpsOffset(currentGPSPosition, originGPSPosition);
+
+    Vector3f localOffset = localOffsetFromGpsAndFusedHeightOffset(currentGPSPosition, originGPSPosition,
+                                                                  currentBroadcastGP.height, originHeightBaseHomepoint);
     //! get the vector between aircraft and target point.
     Vector3f offsetRemaining = vector3FSub(offsetDesired, localOffset);
 
@@ -172,7 +172,7 @@ bool FlightSample::moveByPositionOffset(const Vector3f& offsetDesired,
 
   while (brakeCounter < withinControlBoundsTimeReqmt) {
     //! TODO: remove emergencyBrake
-    vehicle->control->emergencyBrake();
+    vehicle->flightController->emergencyBrakeAction();
     usleep(cycleTimeInMs * 1000);
     brakeCounter += cycleTimeInMs;
   }
@@ -464,14 +464,15 @@ Vector3f FlightSample::vector3FSub(const Vector3f& vectorA,
   return result;
 }
 
-Vector3f FlightSample::localOffsetFromGpsOffset(
-    const Telemetry::GPSFused& target, const Telemetry::GPSFused& origin) {
+Vector3f FlightSample::localOffsetFromGpsAndFusedHeightOffset(
+    const Telemetry::GPSFused& target, const Telemetry::GPSFused& origin,
+    const float32_t& targetHeight, const float32_t& originHeight) {
   Telemetry::Vector3f deltaNed;
   double deltaLon = target.longitude - origin.longitude;
   double deltaLat = target.latitude - origin.latitude;
   deltaNed.x = deltaLat * EarthCenter;
   deltaNed.y = deltaLon * EarthCenter * cos(target.latitude);
-  deltaNed.z = target.altitude - origin.altitude;
+  deltaNed.z = targetHeight - originHeight;
   return deltaNed;
 }
 

@@ -132,8 +132,10 @@ class FlightSample {
   static int signOfData(Type type);
   static float32_t vectorNorm(Vector3f v);
   static Vector3f vector3FSub(const Vector3f &vectorA, const Vector3f &vectorB);
-  static Vector3f localOffsetFromGpsOffset(const Telemetry::GPSFused &target,
-                                           const Telemetry::GPSFused &origin);
+  static Vector3f localOffsetFromGpsAndFusedHeightOffset(const Telemetry::GPSFused& target,
+                                                         const Telemetry::GPSFused& origin,
+                                                         const float32_t& targetHeight, 
+                                                         const float32_t& originHeight);
   static Vector3f quaternionToEulerAngle(const Telemetry::Quaternion &quat);
   static void  horizCommandLimit(float speedFactor, float& commandX, float& commandY);
 
