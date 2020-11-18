@@ -84,6 +84,53 @@ bool FlightSample::monitoredTakeoff(int timeout) {
   return true;
 }
 
+bool FlightSample::monitoredLanding(int timeout)
+{
+   /*! Step 1: Verify and setup the subscription */
+  const int pkgIndex = 0;
+  int freq = 10;
+  TopicName topicList[] = {TOPIC_STATUS_FLIGHT, TOPIC_STATUS_DISPLAYMODE};
+  int topicSize = sizeof(topicList) / sizeof(topicList[0]);
+  setUpSubscription(pkgIndex, freq, topicList, topicSize, timeout);
+
+  /*! Step 2: Start landing */
+  DSTATUS("Start landing action");
+  ErrorCode::ErrorCodeType landingErrCode = vehicle->flightController->startLandingSync(timeout);
+  if (landingErrCode != ErrorCode::SysCommonErr::Success)
+  {
+    DERROR( "Fail to execute landing action! Error code: "
+            "%llx\n ",landingErrCode);
+    return false;
+  }
+
+   /*! Step 3: check Landing start*/
+  if (!checkActionStarted(VehicleStatus::DisplayMode::MODE_AUTO_LANDING))
+  {
+    DERROR("Fail to execute Landing action!");
+    return false;
+  } 
+  else
+  {
+    /*! Step 4: check Landing finished*/
+    if (this->landFinishedCheck())
+    {
+      DSTATUS("Successful landing!");
+    }
+    else
+    {
+      DERROR("Landing finished, but the aircraft is in an unexpected mode. "
+             "Please connect DJI Assistant.");
+      teardownSubscription(pkgIndex, timeout);
+      return false;
+    }
+  }
+
+  /*! Step 5: Cleanup */
+  teardownSubscription(pkgIndex, timeout);
+  return true;
+
+}
+
 bool FlightSample::moveByPositionOffset(const Vector3f& offsetDesired,
                                         float yawDesiredInDeg,
                                         float posThresholdInM,
@@ -521,3 +568,20 @@ bool FlightSample::takeoffFinishedCheck() {
              ? true
              : false;
 }
+
+ bool FlightSample::landFinishedCheck(void)
+ {
+    while(vehicle->subscribe->getValue<TOPIC_STATUS_DISPLAYMODE>() ==
+               VehicleStatus::DisplayMode::MODE_AUTO_LANDING &&
+           vehicle->subscribe->getValue<TOPIC_STATUS_FLIGHT>() ==
+               VehicleStatus::FlightStatus::IN_AIR)
+   {
+      Platform::instance().taskSleepMs(1000);
+   }
+
+   return ((vehicle->subscribe->getValue<TOPIC_STATUS_DISPLAYMODE>() !=
+           VehicleStatus::DisplayMode::MODE_P_GPS ||
+           vehicle->subscribe->getValue<TOPIC_STATUS_DISPLAYMODE>() !=
+           VehicleStatus::DisplayMode::MODE_ATTITUDE)) ? true:false;
+ }
+

@@ -64,6 +64,19 @@ class FlightSample {
     */
   bool teardownSubscription( const int pkgIndex,
                             int timeout = 1);
+  /*! @brief Sample to takeoff(blocking)
+   *
+   *  @param timeout timeout
+   *  @return result:true:success, false:fail
+   */
+  bool monitoredTakeoff(int timeout = 1);
+
+  /*! @brief Sample to landing(blocking)
+   *
+   *  @param timeout timeout
+   *  @return result:true:success, false:fail
+   */
+  bool monitoredLanding(int timeout = 1);
 
   /*! @brief Sample to get current home location and status
     *
@@ -119,8 +132,6 @@ class FlightSample {
    *  @return result:true:success, false:fail
    */
 
-  bool monitoredTakeoff(int timeout = 1);
-
   bool moveByPositionOffset(const Vector3f &offsetDesired,
                             float yawDesiredInDeg,
                             float posThresholdInM = 0.8,
@@ -142,5 +153,6 @@ class FlightSample {
   bool motorStartedCheck();
   bool takeOffInAirCheck();
   bool takeoffFinishedCheck();
+  bool landFinishedCheck();
 };
 #endif  // DJIOSDK_FLIGHT_SAMPLE_HPP
