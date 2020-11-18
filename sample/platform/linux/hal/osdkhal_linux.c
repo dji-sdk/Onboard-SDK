@@ -296,18 +296,21 @@ void uartHotplugCb(struct udev_device *dev, HotplugHandler *handler) {
 
   E_OsdkStat ret;
   if (strstr(udev_device_get_action(dev), "add")) {
-    printf("UART Hotplug :[%s] %s (%s)\n",
-           udev_device_get_action(dev),
-           udev_device_get_sysname(dev),
-           udev_device_get_devpath(dev));
+    HotPlug_Log("[%s] %s (%s)\n",
+                udev_device_get_action(dev),
+                udev_device_get_sysname(dev),
+                udev_device_get_devpath(dev));
     if (strstr(udev_device_get_devpath(dev), handler->filter.uartFilter.devPathHeader)) {
       ret = OsdkLinux_UartInit(udev_device_get_devnode(dev),
                                handler->param.uartInitParam.baudrate,
                                handler->param.obj);
-      printf(">>> UART Hot plug init ret : %d\n", ret);
+      HotPlug_Log("UART Hot plug init ret : %d\n", ret);
     }
   } else if (strstr(udev_device_get_action(dev), "remove")) {
-
+    HotPlug_Log("[%s] %s (%s)\n",
+                udev_device_get_action(dev),
+                udev_device_get_sysname(dev),
+                udev_device_get_devpath(dev));
   }
 
   return;
@@ -320,11 +323,10 @@ usbBulkHotplugCb(struct udev_device *dev, HotplugHandler *handler) {
 
   E_OsdkStat ret;
   if (strstr(udev_device_get_action(dev), "add")) {
-    printf("USBBULK Hotplug :[%s] %s (%s)\n",
-           udev_device_get_action(dev),
-           udev_device_get_sysname(dev),
-           udev_device_get_devpath(dev));
-
+    HotPlug_Log("[%s] %s (%s)\n",
+                udev_device_get_action(dev),
+                udev_device_get_sysname(dev),
+                udev_device_get_devpath(dev));
     uint16_t targetNum = (uint16_t)(-1);
     uint32_t targetVID = (uint32_t)(-1);
     uint32_t targetPID = (uint32_t)(-1);
@@ -346,9 +348,13 @@ usbBulkHotplugCb(struct udev_device *dev, HotplugHandler *handler) {
                                   handler->param.bulkInitParam.epIn,
                                   handler->param.bulkInitParam.epOut,
                                   handler->param.obj);
-      printf(">>> USBBULK Hot plug init ret : %d\n", ret);
+      HotPlug_Log("USBBULK Hot plug init ret : %d\n", ret);
     }
   } else if (strstr(udev_device_get_action(dev), "remove")) {
+    HotPlug_Log("[%s] %s (%s)\n",
+                udev_device_get_action(dev),
+                udev_device_get_sysname(dev),
+                udev_device_get_devpath(dev));
   }
 
   return;

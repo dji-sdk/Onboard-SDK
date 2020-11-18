@@ -5,6 +5,14 @@
 #ifndef ONBOARDSDK_SAMPLE_PLATFORM_LINUX_HAL_OSDKHAL_HOTPLUG_H_
 #define ONBOARDSDK_SAMPLE_PLATFORM_LINUX_HAL_OSDKHAL_HOTPLUG_H_
 
+#define LOGGER_COLOR_END       "\033[0m"
+#define LOGGER_COLOR_START     "\033["
+#define LOGGER_COLOR_GREEN     "32m"
+
+#define HotPlug_Log(fmt, ...)                                     \
+  printf(LOGGER_COLOR_START LOGGER_COLOR_GREEN "[%s] L%d: " fmt LOGGER_COLOR_END, \
+                 __FUNCTION__, __LINE__, ##__VA_ARGS__)
+
 #include <libudev.h>
 #include "string.h"
 #include "stdbool.h"
