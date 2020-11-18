@@ -81,7 +81,7 @@ void* hotplugThread(void *arg) {
     printf("hotplugThread : error handler");
     return NULL;
   } else {
-    printf("[hotplugThread] for subSystem[%s] created.\n", handler.subsystem);
+    HotPlug_Log("Hotplug thread for subSystem[%s] created.\n", handler.subsystem);
   }
 
   struct udev *udev;

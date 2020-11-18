@@ -96,7 +96,7 @@ void CameraManager::m300LensCbInit(Linker *linker) {
   item.userData = (void *)(&cameraModuleVector);
 
   bool registerRet = linker->registerCmdHandler(&(handle));
-  DSTATUS("...... register result of geting camera pushing : %d\n", registerRet);
+  //DSTATUS("...... register result of geting camera pushing : %d\n", registerRet);
 
   uint8_t reqStartData[] = {0x01, 0x00, 0x02, 0x87};
   T_CmdInfo cmdInfo = {0};
@@ -115,7 +115,7 @@ void CameraManager::m300LensCbInit(Linker *linker) {
   E_OsdkStat linkAck =
       linker->sendSync(&cmdInfo, (uint8_t *) reqStartData, &ackInfo, ackData,
                                 1000 / 4, 4);
-  DSTATUS("Request start pushing lens info ack = %d\n", linkAck);
+  //DSTATUS("Request start pushing lens info ack = %d\n", linkAck);
 }
 
 CameraManager::~CameraManager() {

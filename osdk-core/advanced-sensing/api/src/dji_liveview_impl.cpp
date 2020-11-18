@@ -196,7 +196,7 @@ LiveViewImpl::CameraListType LiveViewImpl::getCameraList() {
   item.userData = &typeList;
 
   bool registerRet = vehicle->linker->registerCmdHandler(&(handle));
-  DSTATUS("register result of geting camera pushing : %d\n", registerRet);
+  //DSTATUS("register result of geting camera pushing : %d\n", registerRet);
 
   uint8_t reqStartData[] = {0x01, 0x00, 0x02, 0x80};
   T_CmdInfo cmdInfo = {0};
