@@ -137,6 +137,17 @@ class FlightSample {
                             float posThresholdInM = 0.8,
                             float yawThresholdInDeg = 1.0);
 
+
+  /*! @brief Sample to move by velocity.
+   *
+   *  @param offsetDesired relative position vector
+   *  @param yawRate  yaw rate
+   *  @param timeMs   Time to fly at this speed(ms)
+   *
+   *  @return result:true:success, false:fail
+   */
+  void velocityAndYawRateCtrl(const Vector3f &offsetDesired, float yawRate, uint32_t timeMs);
+
  private:
   Vehicle *vehicle;
   template <typename Type>

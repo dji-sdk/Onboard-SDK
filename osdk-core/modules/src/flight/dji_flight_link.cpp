@@ -67,7 +67,7 @@ void FlightLink::linkSendFCAsync(const uint8_t cmd[], const uint8_t *cmdData, si
    cmdInfo.receiver   = OSDK_COMMAND_FC_2_DEVICE_ID;
    cmdInfo.addr       = GEN_ADDR(0, ADDR_SDK_COMMAND_INDEX);
 
-   callbackWarpperHandler *handler = (callbackWarpperHandler *)malloc(sizeof(callbackWarpperHandler));
+   callbackWarpperHandler *handler = (callbackWarpperHandler *)OsdkOsal_Malloc(sizeof(callbackWarpperHandler));
    handler->cb    = UserCallBack;
    handler->udata = userData;
 
@@ -92,9 +92,6 @@ E_OsdkStat FlightLink::linkSendFCSync(const uint8_t cmd[], const uint8_t *cmdDat
    E_OsdkStat linkAck = vehicle->linker->sendSync(&cmdInfo, cmdData, &ackInfo, ackData, timeOut, retryTimes);
    memcpy(ack_len, &ackInfo.dataLen, sizeof(ack_len));
    return linkAck;
-   // ErrorCode::ErrorCodeType ret = ErrorCode::getLinkerErrorCode(linkAck);
-
-   // return ret;
 }
 
 void FlightLink::sendDirectly(const uint8_t cmd[], void *pdata, size_t len){

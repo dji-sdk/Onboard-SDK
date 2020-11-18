@@ -131,6 +131,38 @@ bool FlightSample::monitoredLanding(int timeout)
 
 }
 
+
+void FlightSample::velocityAndYawRateCtrl(const Vector3f &offsetDesired,
+                                          float yawRate,uint32_t timeMs)
+{
+  uint32_t originTime  = 0;
+  uint32_t currentTime = 0;
+  uint32_t elapsedTimeInMs = 0;
+  OsdkOsal_GetTimeMs(&originTime);
+  OsdkOsal_GetTimeMs(&currentTime);
+  elapsedTimeInMs = currentTime - originTime;
+
+  FlightController::JoystickMode joystickMode = {
+    FlightController::HorizontalLogic::HORIZONTAL_VELOCITY,
+    FlightController::VerticalLogic::VERTICAL_VELOCITY,
+    FlightController::YawLogic::YAW_RATE,
+    FlightController::HorizontalCoordinate::HORIZONTAL_GROUND,
+    FlightController::StableMode::STABLE_ENABLE,
+  };
+
+  vehicle->flightController->setJoystickMode(joystickMode);
+  FlightController::JoystickCommand joystickCommand = {offsetDesired.x, offsetDesired.y, offsetDesired.z,yawRate};
+  vehicle->flightController->setJoystickCommand(joystickCommand);
+
+  while(elapsedTimeInMs <= timeMs)
+  {
+    vehicle->flightController->joystickAction();
+    usleep(20000);
+    OsdkOsal_GetTimeMs(&currentTime);
+    elapsedTimeInMs = currentTime - originTime;
+  }
+}
+
 bool FlightSample::moveByPositionOffset(const Vector3f& offsetDesired,
                                         float yawDesiredInDeg,
                                         float posThresholdInM,
