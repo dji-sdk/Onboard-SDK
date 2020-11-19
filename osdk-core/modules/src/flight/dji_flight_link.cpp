@@ -28,6 +28,7 @@
 
 #include "dji_flight_link.hpp"
 #include <dji_vehicle.hpp>
+#include "dji_linker.hpp"
 
 using namespace DJI;
 using namespace DJI::OSDK;
@@ -48,6 +49,50 @@ void *FlightLink::sendSync(const uint8_t cmd[], void *pdata, size_t len,
                             int timeout) {
   return vehicle->legacyLinker->sendSync(cmd, (void *) pdata, len,
                                          timeout * 1000 / 2, 2);
+}
+
+void FlightLink::linkSendFCAsync(const uint8_t cmd[], const uint8_t *cmdData, size_t len,
+                                 Command_SendCallback func,
+                                 void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
+                                 void *userData, uint32_t timeOut, uint16_t retryTimes)
+{
+   T_CmdInfo cmdInfo  = {0};
+
+   cmdInfo.cmdSet     = cmd[0];
+   cmdInfo.cmdId      = cmd[1];
+   cmdInfo.dataLen    = len;
+   cmdInfo.needAck    = OSDK_COMMAND_NEED_ACK_FINISH_ACK;
+   cmdInfo.packetType = OSDK_COMMAND_PACKET_TYPE_REQUEST;
+   cmdInfo.protoType  = PROTOCOL_SDK;
+   cmdInfo.receiver   = OSDK_COMMAND_FC_2_DEVICE_ID;
+   cmdInfo.addr       = GEN_ADDR(0, ADDR_SDK_COMMAND_INDEX);
+
+   callbackWarpperHandler *handler = (callbackWarpperHandler *)OsdkOsal_Malloc(sizeof(callbackWarpperHandler));
+   handler->cb    = UserCallBack;
+   handler->udata = userData;
+
+   vehicle->linker->sendAsync(&cmdInfo, cmdData, func, handler, timeOut, retryTimes);
+}
+
+E_OsdkStat FlightLink::linkSendFCSync(const uint8_t cmd[], const uint8_t *cmdData, size_t req_len, uint8_t *ackData,
+                                      uint32_t *ack_len, uint32_t timeOut, uint16_t retryTimes)
+{
+   T_CmdInfo cmdInfo = {0};
+   T_CmdInfo ackInfo = {0};
+
+   cmdInfo.cmdSet     = cmd[0];
+   cmdInfo.cmdId      = cmd[1];
+   cmdInfo.dataLen    = req_len;
+   cmdInfo.needAck    = OSDK_COMMAND_NEED_ACK_FINISH_ACK;
+   cmdInfo.packetType = OSDK_COMMAND_PACKET_TYPE_REQUEST;
+   cmdInfo.protoType  = PROTOCOL_SDK;
+   cmdInfo.receiver   = OSDK_COMMAND_FC_2_DEVICE_ID;
+   cmdInfo.addr       = GEN_ADDR(0, ADDR_SDK_COMMAND_INDEX);
+
+   E_OsdkStat linkAck = vehicle->linker->sendSync(&cmdInfo, cmdData, &ackInfo, ackData, timeOut, retryTimes);
+   memcpy(ack_len, &ackInfo.dataLen, sizeof(ack_len));
+
+   return linkAck;
 }
 
 void FlightLink::sendDirectly(const uint8_t cmd[], void *pdata, size_t len){

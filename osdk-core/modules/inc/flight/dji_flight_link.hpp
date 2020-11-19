@@ -29,6 +29,7 @@
 #ifndef DJI_CONTROL_LINK_HPP
 #define DJI_CONTROL_LINK_HPP
 #include "dji_vehicle_callback.hpp"
+#include "osdk_command.h"
 
 namespace DJI {
 namespace OSDK {
@@ -37,6 +38,24 @@ class FlightLink {
   FlightLink(Vehicle *vehicle);
 
   ~FlightLink();
+
+  /*! Used as the type of userData to be passed in the callbackWrapperFunc to
+   * wrapper the callback handling.
+   *
+   */
+  typedef struct callbackWarpperHandler {
+    void (*cb)(ErrorCode::ErrorCodeType retCode, UserData userData);
+    UserData udata;
+  } callbackWarpperHandler;
+  typedef uint8_t retCodeType;
+
+  void linkSendFCAsync(const uint8_t cmd[], const uint8_t *cmdData, size_t len,
+                       Command_SendCallback func,
+                       void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
+                       void *userData, uint32_t timeOut, uint16_t retryTimes);
+
+  E_OsdkStat linkSendFCSync(const uint8_t cmd[], const uint8_t *cmdData, size_t len,
+                            uint8_t *ackData, uint32_t *ack_len, uint32_t timeOut, uint16_t retryTimes);
 
   /*! @brief wrapper the sending interface and callback for control. It should
    * be paid attention that this is only a temporary glue class of sending

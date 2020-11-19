@@ -33,6 +33,31 @@
 using namespace DJI;
 using namespace DJI::OSDK;
 
+void joystickCtrlAuthorityCbWrapperFunc(const T_CmdInfo *cmdInfo,
+                                        const uint8_t *cmdData,
+                                        void *userData, E_OsdkStat cb_type) {
+  if(!userData)
+    return;
+
+  FlightLink::callbackWarpperHandler *handler = (FlightLink::callbackWarpperHandler *) userData;
+  if ((cmdInfo) && (cmdInfo->dataLen >= sizeof(uint8_t))) {
+    if (handler->cb) {
+      ErrorCode::ErrorCodeType ret = ErrorCode::getLinkerErrorCode(cb_type);
+      if(ret != ErrorCode::SysCommonErr::Success) {
+        handler->cb(ret, handler->udata);
+      } else {
+        ret = ErrorCode::getErrorCode(ErrorCode::FCModule,
+                                      ErrorCode::FCControlTask, cmdData[0]);
+        handler->cb(ret, handler->udata);
+      }
+    }
+  } else {
+    handler->cb(ErrorCode::getLinkerErrorCode(cb_type), handler->udata);
+  }
+
+  free(userData);
+}
+
 FlightJoystick::FlightJoystick(Vehicle *vehicle) {
   flightLink = new FlightLink(vehicle);
   setHorizontalLogic(HORIZONTAL_POSITION);
@@ -44,6 +69,163 @@ FlightJoystick::FlightJoystick(Vehicle *vehicle) {
 }
 
 FlightJoystick::~FlightJoystick() { delete (flightLink); }
+
+ErrorCode::ErrorCodeType FlightJoystick::obtainJoystickCtrlAuthoritySync(int timeout)
+{
+  uint8_t command = static_cast<uint8_t>(FlightJoystick::JoystickCtrlAuthorityCommand::OBTAIN_AUTHORITY);
+  E_OsdkStat linkAck;
+  ErrorCode::ErrorCodeType errorCode;
+  uint8_t ackData[1024];
+  uint32_t ackLen = 0;
+  if (flightLink) 
+  {
+    linkAck = flightLink->linkSendFCSync(OpenProtocolCMD::CMDSet::Control::setControl, &command,
+                                          sizeof(command), ackData, &ackLen, timeout * 1000 / 2, 2);
+
+    errorCode = ErrorCode::getLinkerErrorCode(linkAck);
+    if (errorCode != ErrorCode::SysCommonErr::Success)
+    {
+      return errorCode;
+    }
+
+    if (ackLen < sizeof(CommonAck::retCode))
+    {
+      return ErrorCode::SysCommonErr::UnpackDataMismatch;
+    }
+
+    errorCode = ErrorCode::getErrorCode(ErrorCode::FCModule, ErrorCode::FCControlTask, ackData[0]);
+    if (errorCode == ErrorCode::FlightControllerErr::SetControlParam::ObtainJoystickCtrlAuthorityFail)
+    {
+      errorCode = this->obtainJoystickCtrlAuthoritySync(timeout);
+    }
+
+    return errorCode;
+  } 
+  else
+  {
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
+  }
+}
+
+void FlightJoystick::obtainJoystickCtrlAuthorityAsync(void (*userCB)(ErrorCode::ErrorCodeType,
+                                                                     UserData userData),
+                                                      UserData userData, int timeout, int retryTime)
+{
+  uint8_t command = static_cast<uint8_t>(FlightJoystick::JoystickCtrlAuthorityCommand::OBTAIN_AUTHORITY);
+  E_OsdkStat linkAck;
+  ErrorCode::ErrorCodeType errorCode;
+  uint8_t ackData[1024];
+  uint32_t ackLen = 0;
+  if (flightLink) 
+  {
+    linkAck = flightLink->linkSendFCSync(OpenProtocolCMD::CMDSet::Control::setControl, &command,
+                                          sizeof(command), ackData, &ackLen, timeout * 1000 / 2, 2);
+
+    errorCode = ErrorCode::getLinkerErrorCode(linkAck);
+    if (errorCode != ErrorCode::SysCommonErr::Success)
+    {
+      return;
+    }
+
+    if (ackLen < sizeof(CommonAck::retCode))
+    {
+      return ;
+    }
+
+    errorCode = ErrorCode::getErrorCode(ErrorCode::FCModule, ErrorCode::FCControlTask, ackData[0]);
+    if (errorCode == ErrorCode::FlightControllerErr::SetControlParam::ObtainJoystickCtrlAuthorityFail)
+    {
+      flightLink->linkSendFCAsync(OpenProtocolCMD::CMDSet::Control::setControl, &command,sizeof(command),
+                                  joystickCtrlAuthorityCbWrapperFunc, 
+                                  userCB ,userData, timeout* 1000 / 2, retryTime);
+    }
+    return;
+  } 
+  else
+  {
+    return;
+  }
+}
+
+ErrorCode::ErrorCodeType FlightJoystick::releaseJoystickCtrlAuthoritySync(int timeout)
+{
+  uint8_t command = static_cast<uint8_t>(FlightJoystick::JoystickCtrlAuthorityCommand::RELEASE_AUTHORITY);
+  E_OsdkStat linkAck;
+  ErrorCode::ErrorCodeType errorCode;
+  uint8_t ackData[1024];
+  uint32_t ackLen = 0;
+  if (flightLink) 
+  {
+    linkAck = flightLink->linkSendFCSync(OpenProtocolCMD::CMDSet::Control::setControl, &command,
+                                          sizeof(command), ackData, &ackLen, timeout * 1000 / 2, 2);
+
+    errorCode = ErrorCode::getLinkerErrorCode(linkAck);
+    if (errorCode != ErrorCode::SysCommonErr::Success)
+    {
+      return errorCode;
+    }
+
+    if (ackLen < sizeof(CommonAck::retCode))
+    {
+      return ErrorCode::SysCommonErr::UnpackDataMismatch;
+    }
+
+    errorCode = ErrorCode::getErrorCode(ErrorCode::FCModule, ErrorCode::FCControlTask, ackData[0]);
+    if (errorCode == ErrorCode::FlightControllerErr::SetControlParam::ReleaseJoystickCtrlAuthorityFail)
+    {
+      errorCode = this->releaseJoystickCtrlAuthoritySync(timeout);
+    }
+
+    return errorCode;
+  } 
+  else
+  {
+    return ErrorCode::SysCommonErr::AllocMemoryFailed;
+  }
+}
+
+void FlightJoystick::releaseJoystickCtrlAuthorityAsync(void (*userCB)(ErrorCode::ErrorCodeType,
+                                                                     UserData userData),
+                                                      UserData userData, int timeout, int retryTime)
+{
+  uint8_t command = static_cast<uint8_t>(FlightJoystick::JoystickCtrlAuthorityCommand::RELEASE_AUTHORITY);
+  E_OsdkStat linkAck;
+  ErrorCode::ErrorCodeType errorCode;
+  uint8_t ackData[1024];
+  uint32_t ackLen = 0;
+  if (flightLink) 
+  {
+    linkAck = flightLink->linkSendFCSync(OpenProtocolCMD::CMDSet::Control::setControl, &command,
+                                          sizeof(command), ackData, &ackLen, timeout * 1000 / 2, 2);
+
+    errorCode = ErrorCode::getLinkerErrorCode(linkAck);
+    if (errorCode != ErrorCode::SysCommonErr::Success)
+    {
+      DSTATUS("SysCommonErr");
+      return;
+    }
+
+    if (ackLen < sizeof(CommonAck::retCode))
+    {
+      DSTATUS("UnpackDataMismatch");
+      return ;
+    }
+
+    errorCode = ErrorCode::getErrorCode(ErrorCode::FCModule, ErrorCode::FCControlTask, ackData[0]);
+    if (errorCode == ErrorCode::FlightControllerErr::SetControlParam::ReleaseJoystickCtrlAuthorityFail)
+    {
+      flightLink->linkSendFCAsync(OpenProtocolCMD::CMDSet::Control::setControl, &command,sizeof(command),
+                            joystickCtrlAuthorityCbWrapperFunc, 
+                            userCB ,userData, timeout* 1000 / 2, retryTime);
+    }
+    return;
+  } 
+  else
+  {
+    DSTATUS("flightLink id null");
+    return;
+  }
+}
 
 void FlightJoystick::setHorizontalLogic( HorizontalLogic horizontalLogic) {
   ctrlData.controlMode.horizMode = horizontalLogic;
