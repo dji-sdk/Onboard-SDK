@@ -468,8 +468,8 @@ void WaypointV2MissionOperator::RegisterOSDInfoCallback(Vehicle *vehiclePtr) {
   item.pFunc = updateOSDbrodcast;
   item.userData = this;
   bool registerRet = vehiclePtr->linker->registerCmdHandler(&handle);
-  DSTATUS("register result of geting　FC ground station status pushing : %d\n",
-          registerRet);
+  /*DSTATUS("register result of geting　FC ground station status pushing : %d\n",
+          registerRet);*/
 }
 
 WaypointV2MissionOperator::WaypointV2MissionOperator(Vehicle *vehiclePtr) {

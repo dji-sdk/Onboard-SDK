@@ -132,6 +132,9 @@ class Firewall {
  private:
   T_OsdkMutexHandle policyUpdatedMutex;
   T_OsdkMutexHandle appKeyBufferMutex;
+  T_OsdkTaskHandle firewallTaskHandle;
+  bool checkFireWallConnection();
+  static void *firewallTask(void *arg);
 };
 }
 }

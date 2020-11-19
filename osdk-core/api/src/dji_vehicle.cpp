@@ -1297,7 +1297,7 @@ Vehicle::activate(ActivateData* data, uint32_t timeoutMs)
     return ack;
   }
 
-#if 1
+#if 0
   /*! M300 drone do the firewall logic */
   uint8_t retryTimes = 0;
   if (this->isM300()
@@ -1414,7 +1414,7 @@ Vehicle::activate(ActivateData* data, VehicleCallBack callback,
     return;
   }
 
-#if 1
+#if 0
   /*! M300 drone do the firewall logic */
   uint8_t retryTimes = 0;
   if (this->isM300()

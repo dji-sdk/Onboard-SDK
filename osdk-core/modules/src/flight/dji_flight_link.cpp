@@ -90,7 +90,7 @@ E_OsdkStat FlightLink::linkSendFCSync(const uint8_t cmd[], const uint8_t *cmdDat
    cmdInfo.addr       = GEN_ADDR(0, ADDR_SDK_COMMAND_INDEX);
 
    E_OsdkStat linkAck = vehicle->linker->sendSync(&cmdInfo, cmdData, &ackInfo, ackData, timeOut, retryTimes);
-   memcpy(ack_len, &ackInfo.dataLen, sizeof(ack_len));
+
    return linkAck;
 }
 

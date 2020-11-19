@@ -110,6 +110,9 @@ class CameraManager {
   ErrorCode::ErrorCodeType getCameraModuleEnable(PayloadIndexType index,
                                                  bool &enable);
 
+  std::string getCameraVersion(PayloadIndexType index);
+
+  std::string getFirmwareVersion(PayloadIndexType index);
  public:
   /*! @brief start to shoot photo, non-blocking calls
    *
@@ -1756,7 +1759,7 @@ class CameraManager {
 
   CameraModule *getCameraModule(PayloadIndexType index);
   CameraModule *getCameraModule(std::string name);
-
+  void m300LensCbInit(Linker *linker);
   /*! @note default name of camera module */
   const char *defaultCameraName = "uninitialized_camera";
 };
