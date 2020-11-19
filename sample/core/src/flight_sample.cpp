@@ -84,6 +84,85 @@ bool FlightSample::monitoredTakeoff(int timeout) {
   return true;
 }
 
+bool FlightSample::monitoredLanding(int timeout)
+{
+   /*! Step 1: Verify and setup the subscription */
+  const int pkgIndex = 0;
+  int freq = 10;
+  TopicName topicList[] = {TOPIC_STATUS_FLIGHT, TOPIC_STATUS_DISPLAYMODE};
+  int topicSize = sizeof(topicList) / sizeof(topicList[0]);
+  setUpSubscription(pkgIndex, freq, topicList, topicSize, timeout);
+
+  /*! Step 2: Start landing */
+  DSTATUS("Start landing action");
+  ErrorCode::ErrorCodeType landingErrCode = vehicle->flightController->startLandingSync(timeout);
+  if (landingErrCode != ErrorCode::SysCommonErr::Success)
+  {
+    DERROR( "Fail to execute landing action! Error code: "
+            "%llx\n ",landingErrCode);
+    return false;
+  }
+
+   /*! Step 3: check Landing start*/
+  if (!checkActionStarted(VehicleStatus::DisplayMode::MODE_AUTO_LANDING))
+  {
+    DERROR("Fail to execute Landing action!");
+    return false;
+  } 
+  else
+  {
+    /*! Step 4: check Landing finished*/
+    if (this->landFinishedCheck())
+    {
+      DSTATUS("Successful landing!");
+    }
+    else
+    {
+      DERROR("Landing finished, but the aircraft is in an unexpected mode. "
+             "Please connect DJI Assistant.");
+      teardownSubscription(pkgIndex, timeout);
+      return false;
+    }
+  }
+
+  /*! Step 5: Cleanup */
+  teardownSubscription(pkgIndex, timeout);
+  return true;
+
+}
+
+
+void FlightSample::velocityAndYawRateCtrl(const Vector3f &offsetDesired,
+                                          float yawRate,uint32_t timeMs)
+{
+  uint32_t originTime  = 0;
+  uint32_t currentTime = 0;
+  uint32_t elapsedTimeInMs = 0;
+  OsdkOsal_GetTimeMs(&originTime);
+  OsdkOsal_GetTimeMs(&currentTime);
+  elapsedTimeInMs = currentTime - originTime;
+
+  FlightController::JoystickMode joystickMode = {
+    FlightController::HorizontalLogic::HORIZONTAL_VELOCITY,
+    FlightController::VerticalLogic::VERTICAL_VELOCITY,
+    FlightController::YawLogic::YAW_RATE,
+    FlightController::HorizontalCoordinate::HORIZONTAL_GROUND,
+    FlightController::StableMode::STABLE_ENABLE,
+  };
+
+  vehicle->flightController->setJoystickMode(joystickMode);
+  FlightController::JoystickCommand joystickCommand = {offsetDesired.x, offsetDesired.y, offsetDesired.z,yawRate};
+  vehicle->flightController->setJoystickCommand(joystickCommand);
+
+  while(elapsedTimeInMs <= timeMs)
+  {
+    vehicle->flightController->joystickAction();
+    usleep(20000);
+    OsdkOsal_GetTimeMs(&currentTime);
+    elapsedTimeInMs = currentTime - originTime;
+  }
+}
+
 bool FlightSample::moveByPositionOffset(const Vector3f& offsetDesired,
                                         float yawDesiredInDeg,
                                         float posThresholdInM,
@@ -101,8 +180,7 @@ bool FlightSample::moveByPositionOffset(const Vector3f& offsetDesired,
   int speedFactor = 2;
 
   int pkgIndex = 0;
-  TopicName topicList[] = {TOPIC_QUATERNION, TOPIC_GPS_FUSED,
-                           TOPIC_HEIGHT_FUSION};
+  TopicName topicList[] = {TOPIC_QUATERNION, TOPIC_GPS_FUSED};
   int numTopic = sizeof(topicList) / sizeof(topicList[0]);
   if (!setUpSubscription(pkgIndex, controlFreqInHz, topicList, numTopic,
                          responseTimeout)) {
@@ -112,7 +190,6 @@ bool FlightSample::moveByPositionOffset(const Vector3f& offsetDesired,
   //! get origin position and relative height(from home point)of aircraft.
   Telemetry::TypeMap<TOPIC_GPS_FUSED>::type originGPSPosition =
       vehicle->subscribe->getValue<TOPIC_GPS_FUSED>();
-  /*! TODO: TOPIC_HEIGHT_FUSION is abnormal in real world but normal in simulator */
   Telemetry::GlobalPosition currentBroadcastGP = vehicle->broadcast->getGlobalPosition();
   float32_t originHeightBaseHomepoint = currentBroadcastGP.height;
   FlightController::JoystickMode joystickMode = {
@@ -129,10 +206,12 @@ bool FlightSample::moveByPositionOffset(const Vector3f& offsetDesired,
         vehicle->subscribe->getValue<TOPIC_GPS_FUSED>();
     Telemetry::TypeMap<TOPIC_QUATERNION>::type currentQuaternion =
         vehicle->subscribe->getValue<TOPIC_QUATERNION>();
+    currentBroadcastGP = vehicle->broadcast->getGlobalPosition();
     float yawInRad = quaternionToEulerAngle(currentQuaternion).z;
     //! get the vector between aircraft and origin point.
-    Vector3f localOffset =
-        localOffsetFromGpsOffset(currentGPSPosition, originGPSPosition);
+
+    Vector3f localOffset = localOffsetFromGpsAndFusedHeightOffset(currentGPSPosition, originGPSPosition,
+                                                                  currentBroadcastGP.height, originHeightBaseHomepoint);
     //! get the vector between aircraft and target point.
     Vector3f offsetRemaining = vector3FSub(offsetDesired, localOffset);
 
@@ -172,7 +251,7 @@ bool FlightSample::moveByPositionOffset(const Vector3f& offsetDesired,
 
   while (brakeCounter < withinControlBoundsTimeReqmt) {
     //! TODO: remove emergencyBrake
-    vehicle->control->emergencyBrake();
+    vehicle->flightController->emergencyBrakeAction();
     usleep(cycleTimeInMs * 1000);
     brakeCounter += cycleTimeInMs;
   }
@@ -464,14 +543,15 @@ Vector3f FlightSample::vector3FSub(const Vector3f& vectorA,
   return result;
 }
 
-Vector3f FlightSample::localOffsetFromGpsOffset(
-    const Telemetry::GPSFused& target, const Telemetry::GPSFused& origin) {
+Vector3f FlightSample::localOffsetFromGpsAndFusedHeightOffset(
+    const Telemetry::GPSFused& target, const Telemetry::GPSFused& origin,
+    const float32_t& targetHeight, const float32_t& originHeight) {
   Telemetry::Vector3f deltaNed;
   double deltaLon = target.longitude - origin.longitude;
   double deltaLat = target.latitude - origin.latitude;
   deltaNed.x = deltaLat * EarthCenter;
   deltaNed.y = deltaLon * EarthCenter * cos(target.latitude);
-  deltaNed.z = target.altitude - origin.altitude;
+  deltaNed.z = targetHeight - originHeight;
   return deltaNed;
 }
 
@@ -520,3 +600,20 @@ bool FlightSample::takeoffFinishedCheck() {
              ? true
              : false;
 }
+
+ bool FlightSample::landFinishedCheck(void)
+ {
+    while(vehicle->subscribe->getValue<TOPIC_STATUS_DISPLAYMODE>() ==
+               VehicleStatus::DisplayMode::MODE_AUTO_LANDING &&
+           vehicle->subscribe->getValue<TOPIC_STATUS_FLIGHT>() ==
+               VehicleStatus::FlightStatus::IN_AIR)
+   {
+      Platform::instance().taskSleepMs(1000);
+   }
+
+   return ((vehicle->subscribe->getValue<TOPIC_STATUS_DISPLAYMODE>() !=
+           VehicleStatus::DisplayMode::MODE_P_GPS ||
+           vehicle->subscribe->getValue<TOPIC_STATUS_DISPLAYMODE>() !=
+           VehicleStatus::DisplayMode::MODE_ATTITUDE)) ? true:false;
+ }
+

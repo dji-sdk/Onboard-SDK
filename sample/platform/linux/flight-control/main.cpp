@@ -83,32 +83,38 @@ int main(int argc, char** argv) {
   std::cout << "| [c] Monitored Takeoff + Position Control + Force Landing "
                "Avoid Ground  |"
             << std::endl;
+  std::cout << "| [d] Monitored Takeoff + Velocity Control + Landing |"
+            << std::endl;
 
   char inputChar;
   std::cin >> inputChar;
 
   switch (inputChar) {
     case 'a':
-      monitoredTakeoff(vehicle);
-      monitoredLanding(vehicle);
+    {
+      flightSample->monitoredTakeoff();
+      flightSample->monitoredLanding();
       break;
+    }
     case 'b':
-      monitoredTakeoff(vehicle);
+    {
+      flightSample->monitoredTakeoff();
 
       DSTATUS("Take off over!\n");
-      moveByPositionOffset(vehicle, 0, 6, 6, 30, 0.8, 1);
+      flightSample->moveByPositionOffset((FlightSample::Vector3f){0, 6, 6}, 30, 0.8, 1);
       DSTATUS("Step 1 over!\n");
-      moveByPositionOffset(vehicle, 6, 0, -3, -30, 0.8, 1);
+      flightSample->moveByPositionOffset((FlightSample::Vector3f){6, 0, -3}, -30, 0.8, 1);
       DSTATUS("Step 2 over!\n");
-      moveByPositionOffset(vehicle, -6, -6, 0, 0, 0.8, 1);
+      flightSample->moveByPositionOffset((FlightSample::Vector3f){-6, -6, 0}, 0, 0.8, 1);
       DSTATUS("Step 3 over!\n");
-      monitoredLanding(vehicle);
+      flightSample->monitoredLanding();
       break;
+    }
 
-    /*! @NOTE: case 'c' only support for m210 V2*/
+    /*! @NOTE: case 'c' only support for m210 V2 and M300*/
     case 'c':
+    {
       /*!  Take off */
-
       flightSample->monitoredTakeoff();
       vehicle->flightController->setCollisionAvoidanceEnabledSync(
           FlightController::AvoidEnable::AVOID_ENABLE, 1);
@@ -136,6 +142,20 @@ int main(int argc, char** argv) {
       vehicle->flightController->setCollisionAvoidanceEnabledSync(
         FlightController::AvoidEnable::AVOID_ENABLE, 1);
       break;
+    }
+
+    case 'd':
+    {
+      flightSample->monitoredTakeoff();
+
+      flightSample->velocityAndYawRateCtrl((FlightSample::Vector3f){0, 0, 5.0}, 0, 2000);
+      flightSample->velocityAndYawRateCtrl((FlightSample::Vector3f){-1.5, 2, 0}, 0, 2000);
+      flightSample->velocityAndYawRateCtrl((FlightSample::Vector3f){3, 0, 0}, 0, 2500);
+      flightSample->velocityAndYawRateCtrl((FlightSample::Vector3f){-1.5, -2, 0}, 0, 2500);
+
+      flightSample->monitoredLanding();
+    }
+
     default:
       break;
   }

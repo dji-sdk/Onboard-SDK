@@ -64,6 +64,19 @@ class FlightSample {
     */
   bool teardownSubscription( const int pkgIndex,
                             int timeout = 1);
+  /*! @brief Sample to takeoff(blocking)
+   *
+   *  @param timeout timeout
+   *  @return result:true:success, false:fail
+   */
+  bool monitoredTakeoff(int timeout = 1);
+
+  /*! @brief Sample to landing(blocking)
+   *
+   *  @param timeout timeout
+   *  @return result:true:success, false:fail
+   */
+  bool monitoredLanding(int timeout = 1);
 
   /*! @brief Sample to get current home location and status
     *
@@ -119,12 +132,21 @@ class FlightSample {
    *  @return result:true:success, false:fail
    */
 
-  bool monitoredTakeoff(int timeout = 1);
-
   bool moveByPositionOffset(const Vector3f &offsetDesired,
                             float yawDesiredInDeg,
                             float posThresholdInM = 0.8,
                             float yawThresholdInDeg = 1.0);
+
+
+  /*! @brief Sample to move by velocity.
+   *
+   *  @param offsetDesired relative position vector
+   *  @param yawRate  yaw rate
+   *  @param timeMs   Time to fly at this speed(ms)
+   *
+   *  @return result:true:success, false:fail
+   */
+  void velocityAndYawRateCtrl(const Vector3f &offsetDesired, float yawRate, uint32_t timeMs);
 
  private:
   Vehicle *vehicle;
@@ -132,13 +154,16 @@ class FlightSample {
   static int signOfData(Type type);
   static float32_t vectorNorm(Vector3f v);
   static Vector3f vector3FSub(const Vector3f &vectorA, const Vector3f &vectorB);
-  static Vector3f localOffsetFromGpsOffset(const Telemetry::GPSFused &target,
-                                           const Telemetry::GPSFused &origin);
+  static Vector3f localOffsetFromGpsAndFusedHeightOffset(const Telemetry::GPSFused& target,
+                                                         const Telemetry::GPSFused& origin,
+                                                         const float32_t& targetHeight, 
+                                                         const float32_t& originHeight);
   static Vector3f quaternionToEulerAngle(const Telemetry::Quaternion &quat);
   static void  horizCommandLimit(float speedFactor, float& commandX, float& commandY);
 
   bool motorStartedCheck();
   bool takeOffInAirCheck();
   bool takeoffFinishedCheck();
+  bool landFinishedCheck();
 };
 #endif  // DJIOSDK_FLIGHT_SAMPLE_HPP
