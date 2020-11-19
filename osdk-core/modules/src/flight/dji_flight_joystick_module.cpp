@@ -55,7 +55,7 @@ void joystickCtrlAuthorityCbWrapperFunc(const T_CmdInfo *cmdInfo,
     handler->cb(ErrorCode::getLinkerErrorCode(cb_type), handler->udata);
   }
 
-  free(userData);
+  OsdkOsal_Free(userData);
 }
 
 FlightJoystick::FlightJoystick(Vehicle *vehicle) {
