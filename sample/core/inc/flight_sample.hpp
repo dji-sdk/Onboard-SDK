@@ -64,11 +64,19 @@ class FlightSample {
     */
   bool teardownSubscription( const int pkgIndex,
                             int timeout = 1);
+
+  /*! @brief Sample to start global position broadcast with 50HZ
+   *
+   *  @return result:true:success, false:fail
+   */
+  bool startGlobalPositionBroadcast(void);
+
   /*! @brief Sample to takeoff(blocking)
    *
    *  @param timeout timeout
    *  @return result:true:success, false:fail
    */
+
   bool monitoredTakeoff(int timeout = 1);
 
   /*! @brief Sample to landing(blocking)

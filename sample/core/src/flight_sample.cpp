@@ -186,7 +186,17 @@ bool FlightSample::moveByPositionOffset(const Vector3f& offsetDesired,
                          responseTimeout)) {
     return false;
   }
+
+  /* now we need position-height broadcast to obtain the real-time altitude of the aircraft, 
+   * which is consistent with the altitude closed-loop data of flight control internal position control
+   * TO DO:the data will be replaced by new data subscription.
+   */
+  if (!startGlobalPositionBroadcast())
+  {
+    return false;
+  }
   sleep(1);
+
   //! get origin position and relative height(from home point)of aircraft.
   Telemetry::TypeMap<TOPIC_GPS_FUSED>::type originGPSPosition =
       vehicle->subscribe->getValue<TOPIC_GPS_FUSED>();
@@ -405,6 +415,56 @@ bool FlightSample::teardownSubscription(const int pkgIndex, int timeout) {
     return false;
   }
   return true;
+}
+
+bool FlightSample::startGlobalPositionBroadcast(void)
+{
+   uint8_t freq[16];
+
+  /* Channels definition for A3/N3/M600
+   * 0 - Timestamp
+   * 1 - Attitude Quaternions
+   * 2 - Acceleration
+   * 3 - Velocity (Ground Frame)
+   * 4 - Angular Velocity (Body Frame)
+   * 5 - Position
+   * 6 - GPS Detailed Information
+   * 7 - RTK Detailed Information
+   * 8 - Magnetometer
+   * 9 - RC Channels Data
+   * 10 - Gimbal Data
+   * 11 - Flight Status
+   * 12 - Battery Level
+   * 13 - Control Information
+   */
+  freq[0]  = DataBroadcast::FREQ_HOLD;
+  freq[1]  = DataBroadcast::FREQ_HOLD;
+  freq[2]  = DataBroadcast::FREQ_HOLD;
+  freq[3]  = DataBroadcast::FREQ_HOLD;
+  freq[4]  = DataBroadcast::FREQ_HOLD;
+  /* We need this data to obtain the real-time altitude of the aircraft, 
+   * which is consistent with the altitude closed-loop data of flight control internal position control
+   */
+  freq[5]  = DataBroadcast::FREQ_50HZ; 
+  freq[6]  = DataBroadcast::FREQ_HOLD;
+  freq[7]  = DataBroadcast::FREQ_HOLD;
+  freq[8]  = DataBroadcast::FREQ_HOLD;
+  freq[9]  = DataBroadcast::FREQ_HOLD;
+  freq[10] = DataBroadcast::FREQ_HOLD;
+  freq[11] = DataBroadcast::FREQ_HOLD;
+  freq[12] = DataBroadcast::FREQ_HOLD;
+  freq[13] = DataBroadcast::FREQ_HOLD;
+
+  ACK::ErrorCode ack = vehicle->broadcast->setBroadcastFreq(freq, 1);
+  if (ACK::getError(ack))
+  {
+    ACK::getErrorCodeMessage(ack, __func__);
+    return false;
+  }
+  else
+  {
+    return true;
+  }
 }
 
 bool FlightSample::checkActionStarted(uint8_t mode) {
