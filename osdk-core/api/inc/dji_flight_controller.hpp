@@ -653,7 +653,7 @@ class FlightController {
    *
    *  @platforms M210V2, M300
    */
-  ErrorCode::ErrorCodeType emergencyBrakeAction(void);
+  void emergencyBrakeAction(void);
 
  private:
   FlightAssistant *flightAssistant;
