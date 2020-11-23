@@ -156,6 +156,8 @@ class FlightSample {
    */
   void velocityAndYawRateCtrl(const Vector3f &offsetDesired, float yawRate, uint32_t timeMs);
 
+  void emergencyBrake(void);
+
  private:
   Vehicle *vehicle;
   template <typename Type>

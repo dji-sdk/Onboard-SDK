@@ -574,7 +574,7 @@ ErrorCode::ErrorCodeType FlightController::killSwitch(KillSwitch cmd,
   }
 }
 
-ErrorCode::ErrorCodeType FlightController::emergencyBrakeAction(void)
+void FlightController::emergencyBrakeAction(void)
 {
   FlightController::JoystickMode joystickMode = {
     FlightController::HorizontalLogic::HORIZONTAL_VELOCITY,
@@ -588,4 +588,5 @@ ErrorCode::ErrorCodeType FlightController::emergencyBrakeAction(void)
   this->setJoystickMode(joystickMode);
   this->setJoystickCommand(joystickCommand);
   this->joystickAction();
+  OsdkOsal_TaskSleepMs(2000);
 }

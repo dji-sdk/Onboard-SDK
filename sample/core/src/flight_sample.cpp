@@ -163,6 +163,11 @@ void FlightSample::velocityAndYawRateCtrl(const Vector3f &offsetDesired,
   }
 }
 
+ void FlightSample::emergencyBrake()
+ {
+   vehicle->flightController->emergencyBrakeAction();
+ }
+
 bool FlightSample::moveByPositionOffset(const Vector3f& offsetDesired,
                                         float yawDesiredInDeg,
                                         float posThresholdInM,

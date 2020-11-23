@@ -149,9 +149,12 @@ int main(int argc, char** argv) {
       flightSample->monitoredTakeoff();
 
       flightSample->velocityAndYawRateCtrl((FlightSample::Vector3f){0, 0, 5.0}, 0, 2000);
+      flightSample->emergencyBrake();
       flightSample->velocityAndYawRateCtrl((FlightSample::Vector3f){-1.5, 2, 0}, 0, 2000);
+      flightSample->emergencyBrake();
       flightSample->velocityAndYawRateCtrl((FlightSample::Vector3f){3, 0, 0}, 0, 2500);
-      flightSample->velocityAndYawRateCtrl((FlightSample::Vector3f){-1.5, -2, 0}, 0, 2500);
+      flightSample->emergencyBrake();
+      flightSample->velocityAndYawRateCtrl((FlightSample::Vector3f){-1.6, -2, 0}, 0, 2200);
 
       flightSample->monitoredLanding();
     }
