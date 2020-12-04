@@ -479,4 +479,3 @@ void WaypointV2MissionSample::setWaypointV2Defaults(WaypointV2& waypointV2) {
   waypointV2.maxFlightSpeed= 9;
   waypointV2.autoFlightSpeed = 2;
 }
-
