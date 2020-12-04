@@ -732,10 +732,9 @@ ErrorCode::ErrorCodeType WaypointV2MissionOperator::getActionRemainMemory(
 
   linkAck = vehiclePtr->linker->sendSync(&cmdInfo, (uint8_t *)&dataLen, &ackInfo, ackData,
                              timeout * 1000 / 4, 4);
-
-  auto *ack = (GetRemainRamAck *)ackData;
-  DSTATUS("Total memory is:%d\n", ack->totalMemory);
-  DSTATUS("Remain memory is:%d\n", ack->remainMemory);
+  memcpy(&remainRamAck, ackData, sizeof(GetRemainRamAck));
+  DSTATUS("Total memory is:%d\n", remainRamAck.totalMemory);
+  DSTATUS("Remain memory is:%d\n", remainRamAck.remainMemory);
   ErrorCode::ErrorCodeType ret = getWP2LinkerErrorCode(linkAck);
   return ret;
 }

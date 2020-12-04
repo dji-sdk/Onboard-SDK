@@ -171,6 +171,7 @@ ErrorCode::ErrorCodeType WaypointV2MissionSample::runWaypointV2Mission()
   }
 
   int timeout = 1;
+  GetRemainRamAck actionMemory = {0};
   ErrorCode::ErrorCodeType ret;
 
   if (!setUpSubscription(timeout))
@@ -197,7 +198,7 @@ ErrorCode::ErrorCodeType WaypointV2MissionSample::runWaypointV2Mission()
     return ret;
   sleep(timeout);
 
- /*! download mission */
+  /*! download mission */
   std::vector<WaypointV2> mission;
   downloadWaypointMission(mission, timeout);
   if(ret != ErrorCode::SysCommonErr::Success)
@@ -205,9 +206,19 @@ ErrorCode::ErrorCodeType WaypointV2MissionSample::runWaypointV2Mission()
   sleep(timeout);
 
   /*! upload  actions */
+  /*! check action memory */
+  getActionRemainMemory(actionMemory, timeout);
+  if (actionMemory.remainMemory <= 0)
+  {
+     DSTATUS("action memory is not enough.Can not upload more action!");
+     return ErrorCode::SysCommonErr::UndefinedError;
+  }
+
   uploadWapointActions(timeout);
   if(ret != ErrorCode::SysCommonErr::Success)
     return ret;
+
+  getActionRemainMemory(actionMemory, timeout);
   sleep(timeout);
 
   /*! start mission */
@@ -478,4 +489,20 @@ void WaypointV2MissionSample::setWaypointV2Defaults(WaypointV2& waypointV2) {
   waypointV2.pointOfInterest.positionZ = 0;
   waypointV2.maxFlightSpeed= 9;
   waypointV2.autoFlightSpeed = 2;
+}
+
+ErrorCode::ErrorCodeType WaypointV2MissionSample::getActionRemainMemory
+    (GetRemainRamAck &actionMemory, int timeout) {
+  ErrorCode::ErrorCodeType ret = vehiclePtr->waypointV2Mission->getActionRemainMemory(actionMemory, timeout);
+  if(ret != ErrorCode::SysCommonErr::Success)
+  {
+    DERROR("get waypoint v2 action remain memory failed:0x%lX", ret);
+    ErrorCode::printErrorCodeMsg(ret);
+    return ret;
+  }
+  else
+  {
+    DSTATUS("get waypoint v2 action remain memory successfully!");
+  }
+  return ret;
 }

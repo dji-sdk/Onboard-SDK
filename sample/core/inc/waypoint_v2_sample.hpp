@@ -169,6 +169,15 @@ public:
    */
   std::vector<DJIWaypointV2Action> generateWaypointActions(uint16_t actionNum);
 
+  /*! @brief Get action's remain memory.Only if remian memory is enough, action can be uploaded successfully!
+  *
+  *  @param actionMemory contains total memory and remain memory
+  *  refer to the definition of DJI::OSDK::GetRemainRamAck
+  *  @param timeout blocking timeout in seconds
+  *  @return ErrorCode::ErrorCodeType error code
+  */
+  ErrorCode::ErrorCodeType getActionRemainMemory(GetRemainRamAck &actionMemory, int timeout);
+
 private:
   Vehicle *vehiclePtr;
   std::vector<DJIWaypointV2Action> actions;
