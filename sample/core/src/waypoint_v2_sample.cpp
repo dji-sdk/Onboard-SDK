@@ -193,60 +193,56 @@ ErrorCode::ErrorCodeType WaypointV2MissionSample::runWaypointV2Mission()
   sleep(timeout);
 
   /*! upload mission */
-  uploadWaypointMission(timeout);
+  ret = uploadWaypointMission(timeout);
   if(ret != ErrorCode::SysCommonErr::Success)
     return ret;
   sleep(timeout);
 
   /*! download mission */
   std::vector<WaypointV2> mission;
-  downloadWaypointMission(mission, timeout);
+  ret = downloadWaypointMission(mission, timeout);
   if(ret != ErrorCode::SysCommonErr::Success)
     return ret;
   sleep(timeout);
 
   /*! upload  actions */
   /*! check action memory */
-  getActionRemainMemory(actionMemory, timeout);
+  ret = getActionRemainMemory(actionMemory, timeout);
   if (actionMemory.remainMemory <= 0)
   {
      DSTATUS("action memory is not enough.Can not upload more action!");
      return ErrorCode::SysCommonErr::UndefinedError;
   }
 
-  uploadWapointActions(timeout);
+  ret = uploadWapointActions(timeout);
   if(ret != ErrorCode::SysCommonErr::Success)
     return ret;
 
-  getActionRemainMemory(actionMemory, timeout);
+  ret = getActionRemainMemory(actionMemory, timeout);
   sleep(timeout);
 
   /*! start mission */
-  startWaypointMission(timeout);
+  ret = startWaypointMission(timeout);
   if(ret != ErrorCode::SysCommonErr::Success)
     return ret;
   sleep(20);
 
   /*! set global cruise speed */
   setGlobalCruiseSpeed(1.5, timeout);
-  if(ret != ErrorCode::SysCommonErr::Success)
-    return ret;
   sleep(timeout);
 
   /*! get global cruise speed */
   getGlobalCruiseSpeed(timeout);
-  if(ret != ErrorCode::SysCommonErr::Success)
-    return ret;
   sleep(timeout);
 
   /*! pause the mission*/
-  pauseWaypointMission(timeout);
+  ret = pauseWaypointMission(timeout);
   if(ret != ErrorCode::SysCommonErr::Success)
     return ret;
   sleep(5);
 
   /*! resume the mission*/
-  resumeWaypointMission(timeout);
+  ret = resumeWaypointMission(timeout);
   if(ret != ErrorCode::SysCommonErr::Success)
     return ret;
   sleep(50);
