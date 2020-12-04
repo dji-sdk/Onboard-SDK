@@ -588,5 +588,4 @@ void FlightController::emergencyBrakeAction(void)
   this->setJoystickMode(joystickMode);
   this->setJoystickCommand(joystickCommand);
   this->joystickAction();
-  OsdkOsal_TaskSleepMs(2000);
 }
