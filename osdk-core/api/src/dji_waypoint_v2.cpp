@@ -130,6 +130,7 @@ bool missionEncode(const std::vector<WaypointV2Internal> &mission, uint8_t *push
   endIndex = i - 1;
   startIndex = endIndex + 1;
   memcpy(tempTempPtr, &endIndex, sizeof(endIndex));
+  DSTATUS("mis_upload_start_index:%d, mis_upload_end_index:%d, upload_len:%d",*pushPtr, *(pushPtr + 2), len);
   if (endIndex >= mission.size() - 1) {
     startIndex = 0;
     endIndex = 0;
@@ -373,9 +374,11 @@ bool ActionsEncode(std::vector<DJIWaypointV2Action> &actions,
     actuatorEncode(action.actuator, tempTotalLen, tempPtr);
 
     len = tempTotalLen;
+    DSTATUS("upload_action_ID:%d",action.actionId);
   }
+  DSTATUS("total_len:%d",len);
   startIndex = i;
-  if (startIndex >= actions.size() - 1) {
+  if (startIndex > actions.size() - 1) {
     finished = true;
     startIndex = 0;
   }
@@ -586,6 +589,7 @@ ErrorCode::ErrorCodeType WaypointV2MissionOperator::uploadMission(
     }
     if (ackInfo.dataLen >= sizeof(RetCodeType)) {
       auto *ackCode = (UploadMissionRawAck *)ackData;
+      // DSTATUS("mis_upload_result:%d,mis_ack_start_index:%d, mis_ack_end_index:%d",ackCode->result,ackCode->startIndex,ackCode->endIndex);
       if (ackCode->result != 0)
         return ErrorCode::getErrorCode(ErrorCode::MissionV2Module,
                                        ErrorCode::MissionV2Common,
@@ -728,10 +732,9 @@ ErrorCode::ErrorCodeType WaypointV2MissionOperator::getActionRemainMemory(
 
   linkAck = vehiclePtr->linker->sendSync(&cmdInfo, (uint8_t *)&dataLen, &ackInfo, ackData,
                              timeout * 1000 / 4, 4);
-
-  auto *ack = (GetRemainRamAck *)ackData;
-  DSTATUS("Total memory is:%d\n", ack->totalMemory);
-  DSTATUS("Remain memory is:%d\n", ack->remainMemory);
+  memcpy(&remainRamAck, ackData, sizeof(GetRemainRamAck));
+  DSTATUS("Total memory is:%d\n", remainRamAck.totalMemory);
+  DSTATUS("Remain memory is:%d\n", remainRamAck.remainMemory);
   ErrorCode::ErrorCodeType ret = getWP2LinkerErrorCode(linkAck);
   return ret;
 }
