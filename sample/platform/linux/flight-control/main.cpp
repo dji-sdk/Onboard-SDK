@@ -147,14 +147,24 @@ int main(int argc, char** argv) {
     case 'd':
     {
       flightSample->monitoredTakeoff();
+      DSTATUS("Take off over!\n");
 
       flightSample->velocityAndYawRateCtrl((FlightSample::Vector3f){0, 0, 5.0}, 0, 2000);
+      DSTATUS("Step 1 over!EmergencyBrake for 2s\n");
       flightSample->emergencyBrake();
+      sleep(2);
       flightSample->velocityAndYawRateCtrl((FlightSample::Vector3f){-1.5, 2, 0}, 0, 2000);
+      DSTATUS("Step 2 over!EmergencyBrakefor 2s\n");
       flightSample->emergencyBrake();
+      sleep(2);
       flightSample->velocityAndYawRateCtrl((FlightSample::Vector3f){3, 0, 0}, 0, 2500);
+      DSTATUS("Step 3 over!EmergencyBrake for 2s\n");
       flightSample->emergencyBrake();
+      sleep(2);
       flightSample->velocityAndYawRateCtrl((FlightSample::Vector3f){-1.6, -2, 0}, 0, 2200);
+      DSTATUS("Step 4 over!EmergencyBrake for 2s\n");
+      flightSample->emergencyBrake();
+      sleep(2);
 
       flightSample->monitoredLanding();
     }
