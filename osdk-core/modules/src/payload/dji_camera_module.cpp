@@ -26,6 +26,7 @@
  *
  */
 
+#include <stdio.h>
 #include <dji_linker.hpp>
 #include "dji_camera_module.hpp"
 #include "dji_vehicle_callback.hpp"
