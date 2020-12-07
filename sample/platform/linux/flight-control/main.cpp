@@ -67,7 +67,7 @@ int main(int argc, char** argv) {
   }
 
   // Obtain Control Authority
-  // vehicle->flightController->obtainJoystickCtrlAuthoritySync(functionTimeout);
+  // ErrorCode::ErrorCodeType ret = vehicle->flightController->obtainJoystickCtrlAuthoritySync(functionTimeout);
   vehicle->flightController->obtainJoystickCtrlAuthorityAsync(ObtainJoystickCtrlAuthorityCB, nullptr ,functionTimeout, 2);
   FlightSample* flightSample = new FlightSample(vehicle);
   // Display interactive prompt
@@ -173,7 +173,7 @@ int main(int argc, char** argv) {
       break;
   }
 
-  // vehicle->flightController->releaseJoystickCtrlAuthoritySync(functionTimeout);
+  // ret = vehicle->flightController->releaseJoystickCtrlAuthoritySync(functionTimeout);
   vehicle->flightController->releaseJoystickCtrlAuthorityAsync(ReleaseJoystickCtrlAuthorityCB, nullptr ,functionTimeout, 2);
   delete flightSample;
   return 0;
