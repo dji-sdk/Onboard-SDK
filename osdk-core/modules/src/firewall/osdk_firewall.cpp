@@ -77,7 +77,7 @@ Firewall::Firewall(Linker *linker)
   E_OsdkStat osdkStat = OsdkOsal_TaskCreate(&firewallTaskHandle,
                                             (void *(*)(
                                                 void *)) (firewallTask),
-                                            OSDK_TASK_STACK_SIZE_DEFAULT,
+                                            OSDK_TASK_STACK_SIZE_DEFAULT / 2,
                                             this);
 }
 
