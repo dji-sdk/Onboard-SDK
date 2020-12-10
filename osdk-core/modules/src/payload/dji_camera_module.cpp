@@ -57,7 +57,7 @@ CameraModule::CameraModule(Linker* linker,
   firmwareVersion = "UNKNOWN";
   OsdkOsal_TaskCreate(&camModuleHandle,
                       (void *(*)(void *)) (&camHWInfoTask),
-                      OSDK_TASK_STACK_SIZE_DEFAULT, this);
+                      OSDK_TASK_STACK_SIZE_DEFAULT / 2, this);
   memset(&lensInfo, 0, sizeof(lensInfo));
   OsdkOsal_MutexCreate(&lensUpdatedMutex);
 }
@@ -1884,7 +1884,7 @@ void CameraModule::requestCameraVersion() {
   uint8_t   temp = 0;
   T_CmdInfo cmdInfo        = { 0 };
   T_CmdInfo ackInfo        = { 0 };
-  uint8_t   ackData[1024];
+  uint8_t* ackData = (uint8_t*)OsdkOsal_Malloc(1024);
 
   cmdInfo.cmdSet     = 0x00;
   cmdInfo.cmdId      = 0x01;
@@ -1916,5 +1916,6 @@ void CameraModule::requestCameraVersion() {
     cameraVersion = "UNKNOWN";
     firmwareVersion = "UNKNOWN";
   }
+  OsdkOsal_Free(ackData);
   //DSTATUS("------------- cam[%d] cameraVersion = %s", getIndex(), cameraVersion.c_str());
 }

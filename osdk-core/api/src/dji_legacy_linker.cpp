@@ -83,7 +83,7 @@ void LegacyLinker::initX5SEnableThread() {
   /*! create task for X5S enable pinging */
   E_OsdkStat osdkStat = OsdkOsal_TaskCreate(&legacyX5SEnableHandle,
       (void *(*)( void *)) (DJI::OSDK::LegacyLinker::legacyX5SEnableTask),
-      OSDK_TASK_STACK_SIZE_DEFAULT, vehicle->linker);
+      OSDK_TASK_STACK_SIZE_DEFAULT / 2, vehicle->linker);
   if (osdkStat != OSDK_STAT_OK) {
     DERROR("legacyX5SEnableTask create error:%d", osdkStat);
   }
