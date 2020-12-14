@@ -48,7 +48,7 @@ using namespace DJI::OSDK;
 
 /* Private constants ---------------------------------------------------------*/
 #define TEST_OM_UNRELIABLE_PIPELINE_ID                    49154
-#define TEST_OM_UNRELIABLE_TRANSFOR_FREQ                  40
+#define TEST_OM_UNRELIABLE_TRANSFOR_FREQ                  3
 #define UNRELIABLE_READ_ONCE_BUFFER_SIZE                  (100 * 1024)
 #define UNRELIABLE_SEND_ONCE_BUFFER_SIZE                  (100 * 1024)
 
@@ -388,14 +388,19 @@ static void* MopChannelFileServiceRecvTask(void *arg)
         readPack.length = RELIABLE_RECV_ONCE_BUFFER_SIZE;
         mopRet = OM_Pipeline->recvData(readPack, &readPack.length);
 
-        if (mopRet != MOP_PASSED) {
-            DERROR("[File-Service]  recv data from cilent error,stat:%lld", mopRet);
-            if (mopRet == MOP_CONNECTIONCLOSE) {
-                DERROR("[File-Service]  disconnect from cilent now stop task");
-                break;
-            }
-            OsdkOsal_TaskSleepMs(1000);
+      if (mopRet != MOP_PASSED) {
+        if (mopRet == MOP_TIMEOUT) {
+          //DSTATUS("[File-Service] receive timeout");
+        } else if (mopRet == MOP_CONNECTIONCLOSE) {
+          DSTATUS("[File-Service]  connection of pipeline [%d] closed", OM_Pipeline->getId());
+          DSTATUS("[File-Service]  disconnect from cilent now stop task");
+          break;
         } else {
+          DERROR("[File-Service]  recv data from cilent error,stat:%lld",
+                 mopRet);
+        }
+        OsdkOsal_TaskSleepMs(1000);
+      } else {
             DSTATUS("[File-Service]  recv data from cilent, len:%d", readPack.length);
             if (readPack.length > 0) {
                 sampleProtocolStruct *fileTransfor = (sampleProtocolStruct *) recvBuf;
@@ -513,7 +518,7 @@ static void* MopChannelFileServiceRecvTask(void *arg)
                                 uploadFile = NULL;
                                 if (uploadFileInfo.fileLength == uploadFileTotalSize) {
                                     if (memcmp(uploadFileInfo.md5Buf, uploadFileMd5, sizeof(uploadFileMd5)) == 0) {
-                                        DERROR(
+                                        DSTATUS(
                                             "[File-Service]  upload file md5 check success");
                                         s_fileServiceContent.uploadState = MOP_FILE_SERVICE_UPLOAD_FINISHED_SUCCESS;
                                         s_fileServiceContent.uploadSeqNum = fileTransfor->seq;
@@ -537,7 +542,7 @@ static void* MopChannelFileServiceRecvTask(void *arg)
                     case FILE_TRANSFOR_CMD_RESULT:
                         if (fileTransfor->subcmd == FILE_TRANSFOR_SUBCMD_RESULT_OK) {
                             s_fileServiceContent.downloadState = MOP_FILE_SERVICE_DOWNLOAD_FINISHED_SUCCESS;
-                            DERROR("[File-Service]  download file result notify success");
+                            DSTATUS("[File-Service]  download file result notify success");
                         } else {
                             s_fileServiceContent.downloadState = MOP_FILE_SERVICE_DOWNLOAD_FINISHED_FAILED;
                             DERROR("[File-Service]  download file result notify failed");
@@ -580,6 +585,11 @@ static void OMDownloadFileTask(MopPipeline *OM_Pipeline)
   while(sampleFinish == false) {
     OsdkOsal_TaskSleepMs(500);
   }
+
+  pthread_cancel(sendTask);
+  pthread_join(sendTask, NULL);
+  pthread_cancel(recvTask);
+  pthread_join(recvTask, NULL);
 }
 
 static void OMUnreliableTransTask(MopPipeline *OM_Pipeline)
@@ -598,15 +608,21 @@ static void OMUnreliableTransTask(MopPipeline *OM_Pipeline)
     }
     MopPipeline::DataPackType reqPack = {.data = (uint8_t *) sendBuf, .length = UNRELIABLE_SEND_ONCE_BUFFER_SIZE};
 
-    OsdkOsal_TaskSleepMs(10000);
+    OsdkOsal_TaskSleepMs(5000);
     while (1) {
-        sendDataCount++;
-        memset(sendBuf, sendDataCount, UNRELIABLE_SEND_ONCE_BUFFER_SIZE);
-        reqPack.length = UNRELIABLE_SEND_ONCE_BUFFER_SIZE;
-        mopRet = OM_Pipeline->sendData(reqPack, &reqPack.length);
-        ASSERT_MOP_RET(mopRet)
-        total_len += reqPack.length;
-        OsdkOsal_TaskSleepMs(1000 / TEST_OM_UNRELIABLE_TRANSFOR_FREQ);
+      sendDataCount++;
+      memset(sendBuf, sendDataCount, UNRELIABLE_SEND_ONCE_BUFFER_SIZE);
+      reqPack.length = UNRELIABLE_SEND_ONCE_BUFFER_SIZE;
+      mopRet = OM_Pipeline->sendData(reqPack, &reqPack.length);
+      DSTATUS("Sending buf {%d,%d,%d ...} to MSDK, length : %d",
+              sendBuf[0],
+              sendBuf[1],
+              sendBuf[2],
+              reqPack.length);
+      //ASSERT_MOP_RET(mopRet)
+      if (mopRet == MOP_CONNECTIONCLOSE) break;
+      total_len += reqPack.length;
+      OsdkOsal_TaskSleepMs(1000 / TEST_OM_UNRELIABLE_TRANSFOR_FREQ);
     }
     OsdkOsal_Free(sendBuf);
 }
@@ -617,40 +633,45 @@ static void* MopServerTask(void *arg)
   PipelineType type = UNRELIABLE;
   PipelineID id = TEST_OM_UNRELIABLE_PIPELINE_ID;
 
-  /*! create mop server */
-  MopServer *server = new MopServer();
+  for (;;) {
+    /*! create mop server */
+    MopServer *server = new MopServer();
 
-  /*! connect pipeline */
-  MopPipeline *OM_Pipeline = NULL;
-  if (isReliable) {
-    type = RELIABLE;
-    id = TEST_OM_RELIABLE_PIPELINE_ID;
-  }
-  if ((server->accept(id, type, OM_Pipeline)
-      != MOP_PASSED) || (OM_Pipeline == NULL)) {
-    DERROR("MOP server accept failed");
+    /*! connect pipeline */
+    MopPipeline *OM_Pipeline = NULL;
+    if (isReliable) {
+      type = RELIABLE;
+      id = TEST_OM_RELIABLE_PIPELINE_ID;
+    }
+
+    sampleFinish = false;
+    MopErrCode acceptRet = MOP_PASSED;
+    if (((acceptRet = server->accept(id, type, OM_Pipeline))
+        != MOP_PASSED) || (OM_Pipeline == NULL)) {
+      DERROR("MOP server accept failed, ret : %d", acceptRet);
+      delete server;
+      return NULL;
+    } else {
+      DSTATUS("accept successfully");
+    }
+    isAccept = true;
+
+    /*! OSDK download file from  */
+    if (isReliable) {
+      OMDownloadFileTask(OM_Pipeline);
+    } else {
+      OMUnreliableTransTask(OM_Pipeline);
+    }
+
+    /*! Disconnect pipeline */
+    if (server->close(id) != MOP_PASSED) {
+      DERROR("MOP Pipeline disconnect pipeline(%d) failed", id);
+    } else {
+      DSTATUS("Disconnect mop pipeline id(%d) successfully", id);
+    }
+    sampleFinish = true;
     delete server;
-    return NULL;
-  } else {
-    DSTATUS("accept successfully");
   }
-  isAccept = true;
-
-  /*! OSDK download file from  */
-  if (isReliable) {
-    OMDownloadFileTask(OM_Pipeline);
-  } else {
-    OMUnreliableTransTask(OM_Pipeline);
-  }
-
-  /*! Disconnect pipeline */
-  if (server->close(id) != MOP_PASSED) {
-    DERROR("MOP Pipeline disconnect pipeline(%d) failed", id);
-  } else {
-    DSTATUS("Disconnect mop pipeline id(%d) successfully", id);
-  }
-  sampleFinish = true;
-  delete server;
 
   return NULL;
 }
@@ -670,6 +691,7 @@ int main(int argc, char** argv)
     return -1;
   }
 
+sampleMain:
   cout << "OSDK<--->MSDK MOP Sample!\n"
        << "please choose connection type!\n"
        << "a: reliable connection\n"
@@ -694,16 +716,8 @@ int main(int argc, char** argv)
     DSTATUS("Server task create success!\n");
   }
 
-  //press q to exit
-  while(!sampleFinish) {
+  pthread_join(serverTask, NULL);
 
-    if(!isReliable && isAccept) {
-        time++;
-        DSTATUS("total send len: %d\n", total_len);
-        DSTATUS("total time: %d s\n", time);
-        DSTATUS("average speed: %d KBps\n", (total_len/1024)/time);
-    }
-    OsdkOsal_TaskSleepMs(1000);
-  }
   DSTATUS("Sample exit.");
+  return 0;
 }

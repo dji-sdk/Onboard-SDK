@@ -56,6 +56,12 @@ void PayloadLink::sendToPSDK(uint8_t *data, uint16_t len) {
     DERROR("The drone has not been activated");
     return;
   }
+
+  if (vehicle->isM210V2() && (len > 235)) {
+    DSTATUS("While sending data to PSDK, the byte limit of M210V2 vice camera "
+            "position needs to be <= 235, otherwise packet loss will occur.");
+  }
+
   vehicle->legacyLinker->send(OpenProtocolCMD::CMDSet::Activation::toPayload,
                               data, len);
 }
