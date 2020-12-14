@@ -29,6 +29,8 @@
 #include "dji_mop_server.hpp"
 #include "mop.h"
 
+#define ACCEPT_RETRY_TIMES 3
+
 using namespace std;
 
 MopServer::MopServer() : MopPipelineManagerBase() {
@@ -74,7 +76,15 @@ MopErrCode MopServer::accept(PipelineID id, PipelineType type, MopPipeline *&p) 
   }
   DSTATUS("/*! 3.Do accepting */");
   DSTATUS("Do accepting blocking for channel [%d] ...", id);
-  ret = mop_accept_channel(bind_handle, &p->channelHandle);
+  for (int retry = 0; retry < ACCEPT_RETRY_TIMES; retry++) {
+    ret = mop_accept_channel(bind_handle, &p->channelHandle);
+    if (ret == MOP_SUCCESS) break;
+    else {
+      DSTATUS("Trying to accept pipeline id [%d] failed, ret [%d] (%d/%d)",
+              id, ret, retry, ACCEPT_RETRY_TIMES);
+      sleep(1);
+    }
+  }
   if (MOP_SUCCESS != ret) {
     DERROR("MOP accept failed");
     return getMopErrCode(ret);
@@ -105,7 +115,10 @@ MopErrCode MopServer::close(PipelineID id) {
   DSTATUS("Trying to close pipeline channel_id : %d", id);
   ret = mop_close_channel(handler);
   DSTATUS("Result of close pipeline channel_id:%d : %d", id, ret);
+  ret = mop_destroy_channel(handler);
+  DSTATUS("Result of destroy pipeline channel_id:%d : %d", id, ret);
   delete pipeline;
 
+  pipelineMap.erase(id);
   return getMopErrCode(ret);
 }

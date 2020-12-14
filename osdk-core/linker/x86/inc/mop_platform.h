@@ -9,10 +9,10 @@
 
 #include "logger/psdk_logger_internal.h"
 
-#define MOP_LOGF(...)    PSDK_LOG_ERROR(MODULE_NAME_MOP, __VA_ARGS__)
-#define MOP_LOGE(...)    PSDK_LOG_ERROR(MODULE_NAME_MOP, __VA_ARGS__)
-#define MOP_LOGW(...)    PSDK_LOG_WARN(MODULE_NAME_MOP, __VA_ARGS__)
-#define MOP_LOGI(...)    PSDK_LOG_INFO(MODULE_NAME_MOP, __VA_ARGS__)
+#define MOP_LOGF(...)    PSDK_LOG_DEBUG(MODULE_NAME_MOP, __VA_ARGS__)
+#define MOP_LOGE(...)    PSDK_LOG_DEBUG(MODULE_NAME_MOP, __VA_ARGS__)
+#define MOP_LOGW(...)    PSDK_LOG_DEBUG(MODULE_NAME_MOP, __VA_ARGS__)
+#define MOP_LOGI(...)    PSDK_LOG_DEBUG(MODULE_NAME_MOP, __VA_ARGS__)
 #define MOP_LOGT(...)    PSDK_LOG_DEBUG(MODULE_NAME_MOP, __VA_ARGS__)
 #define MOP_LOGV(...)    PSDK_LOG_DEBUG(MODULE_NAME_MOP, __VA_ARGS__)
 

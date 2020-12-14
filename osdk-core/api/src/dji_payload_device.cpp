@@ -31,6 +31,10 @@ void PayloadDevice::setVehicle(Vehicle *value)
 
 void PayloadDevice::sendDataToPSDK(uint8_t *data, uint16_t len)
 {
+  if (this->vehicle->isM210V2() && (len > 235)) {
+    DSTATUS("While sending data to PSDK, the byte limit of M210V2 vice camera "
+            "position needs to be <= 235, otherwise packet loss will occur.");
+  }
   if (len > MAX_SIZE_OF_PACKAGE)
   {
     DERROR("Too much data to send");
