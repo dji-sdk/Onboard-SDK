@@ -46,6 +46,11 @@ typedef enum {
 }mop_device_t;
 
 typedef enum {
+    MOP_CHANNEL_STATUS_CONNECTED,
+    MOP_CHANNEL_STATUS_DISCONNECTED,
+}mop_channel_status_t;
+
+typedef enum {
     MOP_TRANS_RELIABLE,
     MOP_TRANS_UNRELIABLE
 }mop_trans_t;
@@ -75,6 +80,10 @@ int32_t mop_close_channel(mop_channel_handle_t chl_handle);
 
 int32_t mop_set_channel_opt(mop_channel_handle_t chl_handle);
 int32_t mop_add_multicast(mop_device_t device);
+int32_t mop_get_channel_status(mop_channel_handle_t chl_handle,
+                               mop_channel_status_t *chl_status);
+
+int32_t mop_get_bandwidth(uint32_t *total_available_bandwidth_kps);
 
 #ifdef __cplusplus
 }
