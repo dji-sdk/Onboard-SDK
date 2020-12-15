@@ -39,6 +39,15 @@ uint16_t mobileDataID_glob = 0;
 // command state
 bool keepLoopRunning = true;
 
+void *activateTask(void *arg) {
+  if (arg) {
+    LinuxSetup* linuxEnvironment = (LinuxSetup*)arg;
+    Vehicle *vehicle = linuxEnvironment->getVehicle();
+    vehicle->activate(linuxEnvironment->getActivateData(),
+                      activateMobileCallback);
+  }
+}
+
 void
 parseFromMobileCallback(Vehicle* vehicle, RecvContainer recvFrame,
                         UserData userData)
@@ -68,8 +77,10 @@ parseFromMobileCallback(Vehicle* vehicle, RecvContainer recvFrame,
       vehicle->control->releaseCtrlAuthority(controlAuthorityMobileCallback, &mobile_data_id);
       break;
     case 4:
-      vehicle->activate(linuxEnvironment->getActivateData(),
-                        activateMobileCallback);
+      T_OsdkTaskHandle mobileActivateHandle;
+      OsdkOsal_TaskCreate(&mobileActivateHandle, activateTask,
+                          OSDK_TASK_STACK_SIZE_DEFAULT,
+                          linuxEnvironment);
       break;
     case 5:
       vehicle->control->armMotors(actionMobileCallback, &mobile_data_id);

@@ -1698,7 +1698,8 @@ Vehicle::getDroneVersion(uint32_t timeoutMs)
     timeoutMs = 3;
   }
 
-  linker->sendSync(&cmdInfo, &cmd_data, &ackInfo, data, timeoutMs/3, 3);
+  auto ret = linker->sendSync(&cmdInfo, &cmd_data, &ackInfo, data, timeoutMs/3, 3);
+  DSTATUS("ret = %d", ret);
 
   // Parse received data
   if (!parseDroneVersionInfo(this->versionData, data))
