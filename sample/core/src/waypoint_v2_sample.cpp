@@ -193,7 +193,9 @@ ErrorCode::ErrorCodeType WaypointV2MissionSample::runWaypointV2Mission()
   sleep(timeout);
 
   /*! upload mission */
-  ret = uploadWaypointMission(timeout);
+  /*! upload mission's timeout need to be longer than 2s*/
+  int uploadMissionTimeOut = 3;
+  ret = uploadWaypointMission(uploadMissionTimeOut);
   if(ret != ErrorCode::SysCommonErr::Success)
     return ret;
   sleep(timeout);
