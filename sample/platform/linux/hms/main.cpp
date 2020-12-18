@@ -77,7 +77,7 @@ int main(int argc, char** argv) {
     {
         OsdkLinux_TaskSleepMs(waitTimeMs);
         hmsSample->printAllError();
-        DSTATUS("now flight status is %d\n", hmsSample->getFlightStatus());
+        DSTATUS("now flight status is %d", hmsSample->getFlightStatus());
         timeSoFar += waitTimeMs;
     }
 
