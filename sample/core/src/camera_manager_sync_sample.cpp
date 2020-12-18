@@ -307,7 +307,7 @@ ErrorCode::ErrorCodeType CameraManagerSyncSample::setTapZoomPointSyncSample(
   if (retCode != ErrorCode::SysCommonErr::Success) {
     DERROR("Set tap zoom enable fail. Error code : 0x%lX", retCode);
     ErrorCode::printErrorCodeMsg(retCode);
-    DERROR("It is only supported Z30 camera.");
+    DERROR("It is only supported Z30 camera or H20/H20T zoom mode.");
     return retCode;
   }
 
@@ -317,7 +317,7 @@ ErrorCode::ErrorCodeType CameraManagerSyncSample::setTapZoomPointSyncSample(
   if (retCode != ErrorCode::SysCommonErr::Success) {
     DERROR("Set tap zoom multiplier fail. Error code : 0x%lX", retCode);
     ErrorCode::printErrorCodeMsg(retCode);
-    DERROR("It is only supported Z30 camera.");
+    DERROR("It is only supported Z30 camera or H20/H20T zoom mode.");
     return retCode;
   }
 
@@ -327,7 +327,7 @@ ErrorCode::ErrorCodeType CameraManagerSyncSample::setTapZoomPointSyncSample(
   if (retCode != ErrorCode::SysCommonErr::Success) {
     DERROR("Set tap zoom target fail. Error code : 0x%lX", retCode);
     ErrorCode::printErrorCodeMsg(retCode);
-    DERROR("It is only supported Z30 camera.");
+    DERROR("It is only supported Z30 camera or H20/H20T zoom mode.");
     return retCode;
   } else {
     DSTATUS(

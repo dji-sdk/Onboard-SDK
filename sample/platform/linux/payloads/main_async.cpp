@@ -224,7 +224,7 @@ int main(int argc, char **argv) {
         sleep(4);
         p->stopZoomAsyncSample(PAYLOAD_INDEX_1, asyncSampleCallBack,
                                (UserData) "stop continuous zoom");
-        sleep(2);
+        sleep(4);
         p->startZoomAsyncSample(
             PAYLOAD_INDEX_1, CameraModule::ZoomDirection::ZOOM_OUT,
             CameraModule::ZoomSpeed::FASTEST, asyncSampleCallBack,
