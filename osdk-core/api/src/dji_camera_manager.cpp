@@ -43,6 +43,7 @@ CameraManager::CameraManager(Vehicle* vehiclePtr) {
     cameraModuleVector.push_back(module);
   }
   m300LensCbInit(vehiclePtr->linker);
+  linker = vehiclePtr->linker;
 }
 
 E_OsdkStat getCameraLensPushing(struct _CommandHandle *cmdHandle,
@@ -70,7 +71,8 @@ E_OsdkStat getCameraLensPushing(struct _CommandHandle *cmdHandle,
     if (modules.size() >= (modId + 1)) {
       CameraModule::dji_camera_len_para_push data = {0};
       memcpy(&data, cmdData, cmdInfo->dataLen);
-      modules[modId]->updateLensInfo(data);
+      if (modules[modId])
+        modules[modId]->updateLensInfo(data);
     }
   } else {
     DERROR("cmdInfo is a null value");
@@ -118,12 +120,53 @@ void CameraManager::m300LensCbInit(Linker *linker) {
   //DSTATUS("Request start pushing lens info ack = %d\n", linkAck);
 }
 
+void CameraManager::m300LensCbDeinit(Linker *linker) {
+  uint8_t reqStartData[] = {0x00, 0x00, 0x02, 0x87};
+  T_CmdInfo cmdInfo = {0};
+  T_CmdInfo ackInfo = {0};
+  uint8_t ackData[1024];
+
+  cmdInfo.cmdSet = 0x05;
+  cmdInfo.cmdId = 0x0b;
+  cmdInfo.dataLen = sizeof(reqStartData);
+  cmdInfo.needAck = OSDK_COMMAND_NEED_ACK_FINISH_ACK;
+  cmdInfo.packetType = OSDK_COMMAND_PACKET_TYPE_REQUEST;
+  cmdInfo.addr = GEN_ADDR(0, ADDR_V1_COMMAND_INDEX);
+  cmdInfo.receiver =
+      OSDK_COMMAND_DEVICE_ID(OSDK_COMMAND_DEVICE_TYPE_CENTER, 0);
+  cmdInfo.sender = linker->getLocalSenderId();
+  E_OsdkStat linkAck =
+      linker->sendSync(&cmdInfo, (uint8_t *) reqStartData, &ackInfo, ackData,
+                       1000 / 4, 4);
+  //DSTATUS("Request start pushing lens info ack = %d\n", linkAck);
+  OsdkOsal_TaskSleepMs(100);
+
+  static T_RecvCmdHandle handle = {0};
+  static T_RecvCmdItem item = {0};
+
+  handle.protoType = PROTOCOL_V1;
+  handle.cmdCount = 1;
+  handle.cmdList = &item;
+  item.cmdSet = 0x02;
+  item.cmdId = 0x87;
+  item.mask = MASK_HOST_XXXXXX_SET_ID;
+  item.host = 0;
+  item.device = 0;
+  item.pFunc = NULL;
+  item.userData = NULL;
+
+  bool registerRet = linker->registerCmdHandler(&(handle));
+  //DSTATUS("...... register result of geting camera pushing : %d\n", registerRet);
+}
+
 CameraManager::~CameraManager() {
+  m300LensCbDeinit(linker);
   for (int i = 0; i < cameraModuleVector.size(); i++) {
     if (cameraModuleVector[i]) {
       delete cameraModuleVector[i];
     }
   }
+  cameraModuleVector.clear();
 #if defined(__linux__)
   delete fileMgr;
 #endif
