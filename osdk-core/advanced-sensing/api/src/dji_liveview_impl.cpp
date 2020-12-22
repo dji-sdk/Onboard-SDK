@@ -318,14 +318,11 @@ int LiveViewImpl::subscribeLiveViewData(E_OSDKCameraType type, LiveView::LiveVie
     goto send_fail;
   }
   if(ackInfo.dataLen == 1 && ackData[0] == 0) {
-    printf("subsrcibe data success!\n");
+    DSTATUS("subsrcibe data success!\n");
   } else {
-    printf("subscribe data failed!\n");
-    printf("ackData:");
-    for(int i = 0; i < ackInfo.dataLen; i++) {
-      printf("%x", ackData[i]);
-    }
-    printf("\nend\n");
+    DERROR("subsrcibe data failed!\n");
+    if (ackInfo.dataLen >= 1)
+      DERROR("Subscribe raw error code : 0x%02X", ackData[0]);
     goto subscribe_fail;
   }
   free(subCtx);
@@ -391,14 +388,16 @@ int LiveViewImpl::unsubscribeLiveViewData(LiveView::LiveViewCameraPosition pos) 
     goto send_fail;
   }
   if(ackInfo.dataLen == 1 && ackData[0] == 0) {
-    printf("unsubsrcibe data success!\n");
+/*    printf("unsubsrcibe data success!\n");*/
   } else {
+/*
     printf("unsubscribe data failed!\n");
     printf("ackData:");
     for(int i = 0; i < ackInfo.dataLen; i++) {
       printf("%x", ackData[i]);
     }
     printf("\nend\n");
+*/
     goto unsubscribe_fail;
   }
   free(unsubCtx);
