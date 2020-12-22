@@ -224,7 +224,7 @@ public:
 
   /*! @brief The interface of getting single battery's dynamic information
    *
-   *  @platforms M210V2
+   *  @platforms M210V2,M300
    *  @param batteryIndex the index of battery.enum-type:RequestSmartBatteryIndex
    *  @param batteryDynamicInfo
    *  @return bool true:success;false:fail
