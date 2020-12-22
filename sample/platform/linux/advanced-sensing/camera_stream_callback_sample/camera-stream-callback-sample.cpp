@@ -62,7 +62,7 @@ int main(int argc, char** argv)
   bool f = false;
   bool m = false;
   char c = 0;
-  cout << "Please enter the type of camera stream you want to view (M210 V2)\n"
+  cout << "Please enter the type of camera stream you want to view\n"
        << "m: Main Camera\n"
        << "f: FPV  Camera" << endl;
   cin >> c;

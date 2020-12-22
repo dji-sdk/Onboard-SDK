@@ -1037,7 +1037,7 @@ class CameraManager {
    *
    *  @platforms M210V2, M300
    *  @note Enable/disable TapZoom. tapZoomAtTarget can only be called when
-   * TapZoom is enabled. It is only supported Z30 camera.
+   * TapZoom is enabled. It is only supported Z30 camera or H20/H20T zoom mode.
    *  @note All the APIs whose name ending with sync or async in this class
    * have a restriction on calling. All these API should not be called until
    * the previous request receives ack or timeout.
@@ -1062,7 +1062,7 @@ class CameraManager {
    *
    *  @platforms M210V2, M300
    *  @note Enable/disable TapZoom. tapZoomAtTarget can only be called when
-   * TapZoom is enabled. It is only supported Z30 camera.
+   * TapZoom is enabled. It is only supported Z30 camera or H20/H20T zoom mode.
    *  @note All the APIs whose name ending with sync or async in this class
    * have a restriction on calling. All these API should not be called until
    * the previous request receives ack or timeout.
@@ -1216,7 +1216,8 @@ class CameraManager {
    *  @note TapZoom at the target. It can be called only when TapZoom is
    * enabled. When a new target is set, the gimbal will rotate and locate the
    * target in the center of the screen. At the same time, the camera will zoom
-   * by multiplying the TapZoom multiplier. It is only supported Z30 camera.
+   * by multiplying the TapZoom multiplier. It is only supported Z30 camera
+   * or H20/H20T zoom mode.
    *  @note All the APIs whose name ending with sync or async in this class
    * have a restriction on calling. All these API should not be called until
    * the previous request receives ack or timeout.
@@ -1242,7 +1243,8 @@ class CameraManager {
    *  @note TapZoom at the target. It can be called only when TapZoom is
    * enabled. When a new target is set, the gimbal will rotate and locate the
    * target in the center of the screen. At the same time, the camera will zoom
-   * by multiplying the TapZoom multiplier. It is only supported Z30 camera.
+   * by multiplying the TapZoom multiplier. It is only supported Z30 camera
+   * or H20/H20T zoom mode.
    *  @note All the APIs whose name ending with sync or async in this class
    * have a restriction on calling. All these API should not be called until
    * the previous request receives ack or timeout.
@@ -1756,10 +1758,12 @@ class CameraManager {
   FileMgr *fileMgr;
 #endif
   std::vector<CameraModule *> cameraModuleVector;
+  Linker *linker;
 
   CameraModule *getCameraModule(PayloadIndexType index);
   CameraModule *getCameraModule(std::string name);
   void m300LensCbInit(Linker *linker);
+  void m300LensCbDeinit(Linker *linker);
   /*! @note default name of camera module */
   const char *defaultCameraName = "uninitialized_camera";
 };

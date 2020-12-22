@@ -507,7 +507,7 @@ void CameraManagerAsyncSample::setTapZoomPointAsyncSample(
     PayloadIndexType index, uint8_t multiplier, float x, float y,
     void (*UserCallBack)(ErrorCode::ErrorCodeType retCode, UserData userData),
     UserData userData) {
-  DSTATUS("It is only supported Z30 camera.");
+  DSTATUS("It is only supported Z30 camera or H20/H20T zoom mode.");
   if (!vehicle || !vehicle->cameraManager) {
     DERROR("vehicle or cameraManager is a null value.");
     if (UserCallBack)

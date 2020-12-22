@@ -130,7 +130,7 @@ void FileMgrImpl::printFileDownloadStatus() {
       : (fileDataHandler->mmap_file_buffer_->curFilePos * 100.0f /
          fileDataHandler->mmap_file_buffer_->fdAddrSize);
   DSTATUS("\033[0;32m[Complete rate : %0.1f%%] (%s\t recv:\t%d packs\t loss:\t%d packs) \033[0m",
-          speedMsg, finishPercent, recvPackCnt, lossPackCnt);
+          finishPercent, speedMsg, recvPackCnt, lossPackCnt);
 }
 
 void FileMgrImpl::fileListMonitorTask(void *arg) {

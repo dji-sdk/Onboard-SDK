@@ -62,8 +62,6 @@ main(int argc, char** argv)
     << "| Available commands:                                            |\n"
     << "| [a] Subscribe to 240p stereo images (M210 only)                |\n"
     << "| [b] Subscribe to VGA front stereo images (M210/M300 only)      |\n"
-    << "| [c] Unsubscribe to 240p stereo images (M210 only)              |\n"
-    << "| [d] Unsubscribe to VGA front stereo images (M210/M300 only)    |\n"
     << std::endl;
   char inputChar = ' ';
   std::cin >> inputChar;
@@ -98,16 +96,6 @@ main(int argc, char** argv)
       // register a callback for "image reading" thread
       vehicle->advancedSensing->subscribeFrontStereoVGA(AdvancedSensingProtocol::FREQ_20HZ, &storeStereoImgVGACallback, NULL);
       isVGA = true;
-    }
-      break;
-    case 'c':
-    {
-      vehicle->advancedSensing->unsubscribeStereoImages();
-    }
-      break;
-    case 'd':
-    {
-      vehicle->advancedSensing->unsubscribeVGAImages();
     }
       break;
     default:
