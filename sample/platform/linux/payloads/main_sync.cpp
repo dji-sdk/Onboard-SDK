@@ -67,38 +67,36 @@ int main(int argc, char **argv) {
   while (true) {
     std::cout << std::endl;
     std::cout
-        << "| Available commands:                                            |"
-        << std::endl
-        << "| [a] Set camera shutter speed                                   |"
-        << std::endl
-        << "| [b] Set camera aperture                                        |"
-        << std::endl
-        << "| [c] Set camera EV value                                        |"
-        << std::endl
-        << "| [d] Set camera ISO value                                       |"
-        << std::endl
-        << "| [e] Set camera focus point                                     |"
-        << std::endl
-        << "| [f] Set camera tap zoom point                                  |"
-        << std::endl
-        << "| [g] Set camera zoom parameter                                  |"
-        << std::endl
-        << "| [h] Shoot Single photo Sample                                  |"
-        << std::endl
-        << "| [i] Shoot AEB photo Sample                                     |"
-        << std::endl
-        << "| [j] Shoot Burst photo Sample                                   |"
-        << std::endl
-        << "| [k] Shoot Interval photo Sample                                |"
-        << std::endl
-        << "| [l] Record video Sample                                        |"
-        << std::endl
-        << "| [m] Rotate gimbal sample                                       |"
-        << std::endl
-        << "| [n] Reset gimbal sample                                        |"
-        << std::endl
-        << "| [q] Quit                                                       |"
-        << std::endl;
+        << "| Available commands:                                            |\n"
+        << "| [a] Set camera shutter speed                                   |\n"
+        << "|     Main camera : X5S, X7, Z30, H20/H20T(zoom mode) etc.       |\n"
+        << "| [b] Set camera aperture                                        |\n"
+        << "|     Main camera : X5S, X7, Z30, H20/H20T(zoom mode) etc.       |\n"
+        << "| [c] Set camera EV value                                        |\n"
+        << "|     Main camera : X5S, X7, Z30, H20/H20T(zoom mode) etc.       |\n"
+        << "| [d] Set camera ISO value                                       |\n"
+        << "|     Main camera : X5S, X7, Z30, H20/H20T(zoom mode) etc.       |\n"
+        << "| [e] Set camera focus point                                     |\n"
+        << "|     Main camera : X5S, X7, H20/H20T(zoom mode) etc.            |\n"
+        << "| [f] Set camera tap zoom point                                  |\n"
+        << "|     Vice camera : Z30, H20/H20T(zoom mode) etc.                |\n"
+        << "| [g] Set camera zoom parameter                                  |\n"
+        << "|     Vice camera : Z30, H20/H20T(zoom mode) etc.                |\n"
+        << "| [h] Shoot Single photo Sample                                  |\n"
+        << "|     Main camera : X5S, X7, XTS, Z30, H20/H20T etc.             |\n"
+        << "| [i] Shoot AEB photo Sample                                     |\n"
+        << "|     Main camera : X5S, X7 etc.                                 |\n"
+        << "| [j] Shoot Burst photo Sample                                   |\n"
+        << "|     Main camera : X5S, X7 etc.                                 |\n"
+        << "| [k] Shoot Interval photo Sample                                |\n"
+        << "|     Main camera : X5S, X7, XTS, Z30, H20/H20T etc.             |\n"
+        << "| [l] Record video Sample                                        |\n"
+        << "|     Main camera : X5S, X7, XTS, Z30, H20/H20T etc.             |\n"
+        << "| [m] Rotate gimbal sample                                       |\n"
+        << "|     Main camera : X5S, X7, XTS, Z30, H20/H20T etc.             |\n"
+        << "| [n] Reset gimbal sample                                        |\n"
+        << "|     Main camera : X5S, X7, XTS, Z30, H20/H20T etc.             |\n"
+        << "| [q] Quit                                                       |\n";
 
     if (inputChar != 0) {
       sampleCaseValidFlag = true;
