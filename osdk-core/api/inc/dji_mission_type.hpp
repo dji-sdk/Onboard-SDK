@@ -922,11 +922,11 @@ typedef struct RelativePosition{
 typedef struct WaypointV2Config
   {
     /*! 0: set local waypoint's cruise speed,
-     *  1: unset global waypoint's cruise speed*/
+     *  1: unset local waypoint's cruise speed*/
     uint16_t  useLocalCruiseVel:1;
 
     /*! 0: set local waypoint's max speed,
-     *  1: unset global waypoint's max speed*/
+     *  1: unset local waypoint's max speed*/
     uint16_t  useLocalMaxVel:1;
 
     uint16_t  reserved :14;
@@ -986,34 +986,14 @@ typedef struct WaypointV2Internal
   */
   RelativePosition pointOfInterest;
 
-  /**
-  *  While the aircraft is travelling between waypoints, you can offset its speed by
-  *  using the throttle joystick on the remote controller. "maxFlightSpeed" is this
-  *  offset when the joystick is pushed to maximum deflection. For example, If
-  *  maxFlightSpeed is 10 m/s, then pushing the throttle joystick all the way up will
-  *  add 10 m/s to the aircraft speed, while pushing down will subtract 10 m/s from
-  *  the aircraft speed. If the remote controller stick is not at maximum deflection,
-  *  then the offset speed will be interpolated between "[0, maxFlightSpeed]"" with a
-  *  resolution of 1000 steps. If the offset speed is negative, then the aircraft
-  *  will fly backwards to previous waypoints. When it reaches the first waypoint, it
-  *  will then hover in place until a positive speed is applied. "maxFlightSpeed" has
-  *  a range of [2,15] m/s.
+    /**
+  *  range :[0, maxFlightSpeed](WayPointV2InitSettings).
    *  unit:cm/s
   */
   uint16_t maxFlightSpeed;
 
   /**
-  *  The base automatic speed of the aircraft as it moves between waypoints with
-  *  range [-15, 15] m/s. The aircraft's actual speed is a combination of the base
-  *  automatic speed, and the speed control given by the throttle joystick on the
-  *  remote controller. If "autoFlightSpeed >0": Actual speed is "autoFlightSpeed" +
-  *  Joystick Speed (with combined max of "maxFlightSpeed") If "autoFlightSpeed =0":
-  *  Actual speed is controlled only by the remote controller joystick. If
-  *  "autoFlightSpeed <0" and the aircraft is at the first waypoint, the aircraft
-  *  will hover in place until the speed is made positive by the remote controller
-  *  joystick. In flight controller firmware 3.2.10.0 or above, different speeds
-  *  between individual waypoints can also be set in waypoint objects which will
-  *  overwrite "autoFlightSpeed".
+  *  range:[0 , localMaxFlightSpeed]
    * unit :cm/s
   */
   uint16_t autoFlightSpeed;

@@ -119,11 +119,11 @@ bool missionEncode(const std::vector<WaypointV2Internal> &mission, uint8_t *push
       elementEncode<RelativePosition>(wp.pointOfInterest, tempTotalLen,
                                             tempPtr);
     }
-    if (wp.config.useLocalCruiseVel == 1) {
-      elementEncode<uint16_t>(wp.autoFlightSpeed , tempTotalLen, tempPtr);
-    }
     if (wp.config.useLocalMaxVel == 1) {
       elementEncode<uint16_t>(wp.maxFlightSpeed, tempTotalLen, tempPtr);
+    }
+    if (wp.config.useLocalCruiseVel ==1) {
+      elementEncode<uint16_t>(wp.autoFlightSpeed, tempTotalLen, tempPtr);
     }
   }
   len = tempTotalLen;
@@ -173,11 +173,11 @@ bool missionDecode(std::vector<WaypointV2Internal> &mission, uint8_t *const pull
     if (wp.headingMode == DJIWaypointV2HeadingTowardPointOfInterest) {
       elementDecode<RelativePosition>(wp.pointOfInterest, tempPtr);
     }
-    if (wp.config.useLocalCruiseVel == 1) {
-      elementDecode<uint16_t>(wp.maxFlightSpeed, tempPtr);
-    }
     if (wp.config.useLocalMaxVel == 1) {
       elementDecode<uint16_t>(wp.maxFlightSpeed, tempPtr);
+    }
+    if (wp.config.useLocalCruiseVel == 1) {
+      elementDecode<uint16_t>(wp.autoFlightSpeed, tempPtr);
     }
     mission.push_back(wp);
   }
