@@ -98,7 +98,7 @@ monitoredTakeOff()
 
   // First check: Motors started
   uint32_t CONTROL_TIMEOUT = 15000; // milliseconds
-  uint32_t RETRY_TICK      = 500;   // milliseconds
+  uint32_t RETRY_TICK      = 100;   // milliseconds
   uint32_t nextRetryTick   = 0;     // millisesonds
   uint32_t timeoutTick;
   bool     isTakeOffState = false;
@@ -109,8 +109,7 @@ monitoredTakeOff()
   timeoutTick += CONTROL_TIMEOUT;
   do
   {
-    //! Two seconds delay
-    delay_nms(2000);
+    delay_nms(RETRY_TICK);
 
     if (v->getFwVersion() != Version::M100_31)
     {
@@ -167,8 +166,7 @@ monitoredTakeOff()
   timeoutTick += CONTROL_TIMEOUT;
   do
   {
-    //! Two seconds delay
-    delay_nms(500);
+    delay_nms(RETRY_TICK);
 
     if (v->getFwVersion() != Version::M100_31)
     {
@@ -547,7 +545,7 @@ moveByPositionOffset(float xOffsetDesired, float yOffsetDesired,
     startGlobalPositionBroadcast(v);
 
     // Wait for data to come in
-    delay_nms(8000);
+    delay_nms(1000);
   }
 
   // Get data
@@ -756,7 +754,7 @@ moveByPositionOffset(float xOffsetDesired, float yOffsetDesired,
   if (v->getFwVersion() != Version::M100_31)
   {
     v->subscribe->removePackage(pkgIndex);
-    delay_nms(3000);
+    delay_nms(1000);
   }
   return ACK::SUCCESS;
 }
