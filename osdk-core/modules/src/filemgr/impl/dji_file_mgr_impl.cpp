@@ -113,7 +113,7 @@ void FileMgrImpl::printFileDownloadStatus() {
   if ((curPrintMs > lastPrintMs) && ((curPrintMs - lastPrintMs) < 600) &&
       (curFilePos > lastFilePos) &&
       curFilePos && lastFilePos && curPrintMs && lastPrintMs)
-    snprintf(speedMsg, sizeof(speedMsg), "%lu\tkB/s", (curFilePos - lastFilePos) / (curPrintMs - lastPrintMs));
+    snprintf(speedMsg, sizeof(speedMsg), "%llu\tkB/s", (curFilePos - lastFilePos) / (curPrintMs - lastPrintMs));
   else
     snprintf(speedMsg, sizeof(speedMsg), "--\tkB/s");
   lastFilePos = curFilePos;
