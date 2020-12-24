@@ -36,6 +36,8 @@
 using namespace DJI;
 using namespace DJI::OSDK;
 
+const float32_t INVALID_TAKOFF_ALTITUDE = 999999.99;
+
 
 ErrorCode::ErrorCodeType getWP2LinkerErrorCode(E_OsdkStat cb_type) {
   switch (cb_type) {
@@ -477,6 +479,7 @@ void WaypointV2MissionOperator::RegisterOSDInfoCallback(Vehicle *vehiclePtr) {
 
 WaypointV2MissionOperator::WaypointV2MissionOperator(Vehicle *vehiclePtr) {
   this->vehiclePtr = vehiclePtr;
+  takeoffAltitude = INVALID_TAKOFF_ALTITUDE;
   currentState = DJIWaypointV2MissionStateUnWaypointActionActuatorknown;
   prevState = DJIWaypointV2MissionStateUnWaypointActionActuatorknown;
   RegisterOSDInfoCallback(vehiclePtr);
@@ -516,6 +519,11 @@ ErrorCode::ErrorCodeType WaypointV2MissionOperator::init(WayPointV2InitSettings 
     return ErrorCode::SysCommonErr::ReqNotSupported;
   }
   /*!Set reference altitude is takeoff altitude*/
+  if (this->getTakeoffAltitude() == INVALID_TAKOFF_ALTITUDE)
+  {
+  /*! waiting for takeoff altitude subscription*/
+    OsdkOsal_TaskSleepMs(1000);
+  }
   initSettingsInternal.refAlti = this->getTakeoffAltitude();
   //DSTATUS("initSettingsInternal.refAlti %f\n",initSettingsInternal.refAlti );
   T_CmdInfo cmdInfo =
