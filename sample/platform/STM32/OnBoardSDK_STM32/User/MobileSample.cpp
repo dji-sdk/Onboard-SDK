@@ -45,18 +45,22 @@ parseFromMobileCallback(DJI::OSDK::Vehicle*      vehicle,
   mobile_data_id =
     *(reinterpret_cast<uint16_t*>(&recvFrame.recvData.raw_ack_array));
 
+  DSTATUS("mobile_data_id = 0x%04X", mobile_data_id);
   switch (mobile_data_id)
   {
     case 2:
+      DSTATUS("Obtain control authority.");
       v->control->obtainCtrlAuthority(controlAuthorityMobileCallback);
       break;
     case 3:
+      DSTATUS("Release control authority.");
       v->control->releaseCtrlAuthority(controlAuthorityMobileCallback);
       break;
     case 5:
+      DSTATUS("Arm motors.");
       if(v->getFwVersion() != Version::M100_31)
       {
-	v->control->action(Control::FlightCommand::startMotor,
+        v->control->action(Control::FlightCommand::startMotor,
         actionMobileCallback);
       }
       else
@@ -65,6 +69,7 @@ parseFromMobileCallback(DJI::OSDK::Vehicle*      vehicle,
       }
       break;
     case 6:
+      DSTATUS("Stop motors.");
       if(v->getFwVersion() != Version::M100_31)
       {
         v->control->action(Control::FlightCommand::stopMotor,
@@ -72,7 +77,7 @@ parseFromMobileCallback(DJI::OSDK::Vehicle*      vehicle,
       }
       else
       {
-	v->control->disArmMotors(actionMobileCallback);
+        v->control->disArmMotors(actionMobileCallback);
       }
       break;
     default:
