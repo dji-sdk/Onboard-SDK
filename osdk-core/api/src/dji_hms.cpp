@@ -216,7 +216,7 @@ static bool MarchErrCodeInfoTbl(DJIHMSImpl *djiHMSImpl, HMSPushData *hmsPushData
                                                   hmsPushData->errList[i].alarmID,
                                                   hmsPushData->errList[i].sensorIndex,
                                                   djiHMSImpl->getDeviceIndex());
-                            DSTATUS("TimeStamp: %ld.Info: %s", djiHMSImpl->getHMSPushPacket().timeStamp,
+                            DSTATUS("TimeStamp: %u.Info: %s", djiHMSImpl->getHMSPushPacket().timeStamp,
                                     DJI::OSDK::hmsErrCodeInfoTbl[j].flyAlarmInfo.c_str());
                         }
                         break;
@@ -229,7 +229,7 @@ static bool MarchErrCodeInfoTbl(DJIHMSImpl *djiHMSImpl, HMSPushData *hmsPushData
                                                   hmsPushData->errList[i].alarmID,
                                                   hmsPushData->errList[i].sensorIndex,
                                                   djiHMSImpl->getDeviceIndex());
-                            DSTATUS("TimeStamp: %ld.Info:%s",djiHMSImpl->getHMSPushPacket().timeStamp,
+                            DSTATUS("TimeStamp: %u.Info:%s",djiHMSImpl->getHMSPushPacket().timeStamp,
                                     DJI::OSDK::hmsErrCodeInfoTbl[j].groundAlarmInfo.c_str());
                         }
                         break;
