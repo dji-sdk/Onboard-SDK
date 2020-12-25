@@ -37,65 +37,13 @@ namespace DJI {
 namespace OSDK {
 
 typedef enum {
-  DJI_CAMERA_TYPE_FC350 = 0, // Inpire 1
-  DJI_CAMERA_TYPE_FC550 = 1, // Inpire 1 pro
-  DJI_CAMERA_TYPE_FC260 = 2, // phantom3C
-  DJI_CAMERA_TYPE_FC300S = 3, // phantom3S
-  DJI_CAMERA_TYPE_FC300X = 4, // phantom3X
-  DJI_CAMERA_TYPE_FC550RAW = 5, // Inpire 1 pro Raw
-  DJI_CAMERA_TYPE_FC330X = 6, // Phantom 4
-  DJI_CAMERA_TYPE_TAU640 = 7, // Flir 640
-  DJI_CAMERA_TYPE_TAU336 = 8, // Flir 336
-  DJI_CAMERA_TYPE_FC220 = 9, // wm220 camera
-  DJI_CAMERA_TYPE_FC300XW = 10, // phantom3 4k
-  DJI_CAMERA_TYPE_CV600 = 11, // cv600 3.5x
-  DJI_CAMERA_TYPE_FC65XXUNKNOWN = 12, // IN2的 SENSOR未检测到
-  DJI_CAMERA_TYPE_FC6310 = 13, // P4PRO IMX183 相机
-  DJI_CAMERA_TYPE_FC6510 = 14, // IN2的 H1   （IMX183, X4
-  DJI_CAMERA_TYPE_FC6520 = 15, // IN2的 H1（IMX269） 目前确定在用, X5S
-  DJI_CAMERA_TYPE_FC6532 = 16, // IN2的全画幅(MN34401)
-  DJI_CAMERA_TYPE_FC6540 = 17, // IN2的S35
-  DJI_CAMERA_TYPE_FC220LOW = 18, // 小飞机低端版本
-  DJI_CAMERA_TYPE_FC1102 = 19, // 小小飞机
-  DJI_CAMERA_TYPE_GD600 = 20, // 30X变焦
-  DJI_CAMERA_TYPE_FC6310A = 21, // P4A IMX183 相机
-  DJI_CAMERA_TYPE_P3SE = 22, // P3C魔改版，P3SE
-  DJI_CAMERA_TYPE_WM230 = 23, // WM230 Mavic Air
-  DJI_CAMERA_TYPE_HG200 = 24, // OSMO MINI 小相机
-  DJI_CAMERA_TYPE_FC2204 = 25, // WM240 IMX477 相机
-  DJI_CAMERA_TYPE_FC1705 = 26, // XT2
-  DJI_CAMERA_TYPE_HG330 = 27, // HG330 相机
-  DJI_CAMERA_TYPE_FC6310S = 28, // P4PRO V2.0（P4P SDR版本）IMX183 相机
-  DJI_CAMERA_TYPE_FC2211 = 29, // WM240 IMX283 相机
-  DJI_CAMERA_TYPE_OCUSYNC = 30, // ZV811
-  DJI_CAMERA_TYPE_P_SDK = 31, // 第三方相机通用相机类型
-  DJI_CAMERA_TYPE_OCUSYNC2 = 32, // OcuSync2型
-  DJI_CAMERA_TYPE_AC101 = 33, // AC101运动相机
-  DJI_CAMERA_TYPE_EC1704 = 34, // EC1704
-  DJI_CAMERA_TYPE_EC1709 = 35, // EC1709
-  DJI_CAMERA_TYPE_BR1609 = 36, // BR1609
-  DJI_CAMERA_TYPE_XW0607_OV5695 = 37, // XW0607（教育机器人） OV5695 相机
-  DJI_CAMERA_TYPE_FC2220 = 38, // WM245 IMX477 相机
-  DJI_CAMERA_TYPE_MATRICE_FPV = 39, // M200系列、VITOL系列FPV相机
-  DJI_CAMERA_TYPE_FC2403 = 40, // WM245 IMX378 相机
-  DJI_CAMERA_TYPE_TP1810 = 41, // 国产红外相机，基于Iray LT模组
-  DJI_CAMERA_TYPE_GD610_DOUBLE_CAM =
-  42, // GD610 双光相机（一路imx378 Wide，一路imx204 Zoom)
-  DJI_CAMERA_TYPE_GD610_TRIPLE_CAM =
-  43, // GD610 三光相机（一路imx378 Wide，一路imx204 Zoom，一路自研红外）
-  DJI_CAMERA_TYPE_FC7103 = 44, // WM160 IMX378 相机
-  DJI_CAMERA_TYPE_WM231 = 45, // WM231 IMX586 相机
-  DJI_CAMERA_TYPE_WM170 = 46, // WM170 IMX577 相机
-  DJI_CAMERA_TYPE_THIRDPARTYSTART = 160, // 比这个大的都认为是第三方相机
-  DJI_CAMERA_TYPE_HASSELH6D_50C = 166, // 哈苏
-  DJI_CAMERA_TYPE_HASSELH6D_100C = 167,
-  DJI_CAMERA_TYPE_UNK = 255, // Inpire 1
+  DJI_CAMERA_TYPE_UNK = 255,
 } DJI_CAMERA_TYPE;
 
 enum class FileType {
-  MEDIA = 0, //媒体文件
-  COMMON = 1, //普通文件例如日志
-  SPEAKER_AUDIO = 2, //扬声器音频文件
+  MEDIA = 0, //Media files
+  COMMON = 1, //Common file, logs
+  SPEAKER_AUDIO = 2, // Audio files
   UNKNOWN = 0xFFFF, //Unknown
 };
 
@@ -116,24 +64,24 @@ enum class MediaFileType {
   UL_CTRL_INFO = 6,
   UL_CTRL_INFO_LZ4 = 7,
   AUDIO = 10,
-  UNKNOWN = 0xFFFF, //Unknown
+  UNKNOWN = 0xFFFF,
 };
 
 struct DateTime {
-  int year; // 年
-  int month; // 月
-  int day; // 日
-  int hour; // 小时
-  int minute; // 分钟
-  int second; // 秒钟
+  int year;
+  int month;
+  int day;
+  int hour;
+  int minute;
+  int second;
 };
 
 struct CommonFile {
-  int fileIndex; //文件编号
-  MediaFileType fileType; //文件类型
-  std::string fileName; //文件名
-  int64_t fileSize; //文件大小
-  DateTime date; //创建日期
+  int fileIndex;
+  MediaFileType fileType;
+  std::string fileName;
+  int64_t fileSize;
+  DateTime date;
 };
 
 struct FileExifInfo {
@@ -150,9 +98,9 @@ struct FileExifInfo {
   int meteringMode;
   int lightSource;
   int focalLength35mmFormat;
-  std::string shutterSpeedText; //exposureTime格式化后的Shutter 1/12.5
-  std::string apertureText; //fnumber格式化后的光圈 1.3
-  std::string exposureCompensationText; //exposureCompensation格式化后的EV +3.5
+  std::string shutterSpeedText;
+  std::string apertureText;
+  std::string exposureCompensationText;
 };
 
 enum class MediaFileStarTag {
@@ -293,28 +241,28 @@ enum class PhotoRatio {
 };
 
 struct MediaFile {
-  bool valid; //文件是否有效
-  //bool isManualGroupFile; // 是否上层(SDK)手动成组文件, 即拉列表拉到几个index不一样但fileGroupIndex一致文件时，上层手动成组最终返回一个isManualGroupFile为true对象
-  int fileIndex; //文件编号
-  MediaFileType fileType; //文件类型
-  std::string fileName; //文件名
-  int64_t fileSize; //文件大小
-  DateTime date; //创建日期
-  //MediaFileStarTag starTag; //星标
-  int64_t duration; //时长
-  CameraOrientation orientation; //朝向
-  VideoFrameRate frameRate; //帧率
-  VideoResolution resolution; //分辨率信息
-  MediaVideoType videoType; //视频类型
-  MediaPhotoType photoType; //拍照类型
-  CameraPanoType panoType; // 全景拍照类型
-  //int videoSpeedRatio; // SlowMotion 及 FastMotion 倍速
-  //int panoCount; // 全景照片张数
-  //int guid; //视频guid
-  //int fileGroupIndex; //文件组
-  //int subIndex; // html占位组文件子index，正常文件默认为0
-  //int segSubIndex; // fat32文件系统中 4g以上文件会做切分
-  //int timeLapseInterval; //TimeLapse视频帧间隔，存储值乘以100ms
+  bool valid; //File valid or not
+  //bool isManualGroupFile; // reserve
+  int fileIndex; //Using for download
+  MediaFileType fileType;
+  std::string fileName;
+  int64_t fileSize; //Bytes
+  DateTime date; //Create date
+  //MediaFileStarTag starTag;
+  int64_t duration;
+  CameraOrientation orientation;
+  VideoFrameRate frameRate;
+  VideoResolution resolution;
+  MediaVideoType videoType;
+  MediaPhotoType photoType;
+  CameraPanoType panoType;
+  //int videoSpeedRatio;
+  //int panoCount;
+  //int guid;
+  //int fileGroupIndex;
+  //int subIndex;
+  //int segSubIndex;
+  //int timeLapseInterval;
   //FileExifInfo EXIFInfo;
   PhotoRatio photoRatio;
   //std::vector<MediaFile> subMediaFile;
@@ -322,8 +270,8 @@ struct MediaFile {
 
 struct FilePackage {
   FileType type;
-  std::vector<MediaFile> media; //媒体文件
-  //std::vector<CommonFile> common; //普通文件
+  std::vector<MediaFile> media;
+  //std::vector<CommonFile> common;
 };
 
 extern const std::map<const int, const char*> orientationMsgMap;
