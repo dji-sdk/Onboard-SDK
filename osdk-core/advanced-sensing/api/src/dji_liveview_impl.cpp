@@ -42,7 +42,7 @@ using namespace DJI::OSDK;
 #define OSDK_CMDID_REQ_SDR_LIVEVIEW             (0x68)
 
 #define OSDK_CAMERA_INDEX_LIVEVIEW              (0)
-#define OSDK_GD610_INDEX_LIVEVIEW               (1)
+#define OSDK_H20_INDEX_LIVEVIEW                 (1)
 
 #define OSDK_FPV_LIVEVIEW_CHANNEL               (81)
 #define OSDK_MAIN_CAMERA_LIVEVIEW_CHANNEL       (82)
@@ -287,9 +287,9 @@ int LiveViewImpl::subscribeLiveViewData(E_OSDKCameraType type, LiveView::LiveVie
   else subCtx->source.uuid.major = UUID_MAJOR_TYPE_CAMERA;
   subCtx->source.uuid.minor = ((type == OSDK_CAMERA_TYPE_PSDK) ? 1 : type); //hardcore
   subCtx->source.uuid.reserved = 0;
-  if ((type == OSDK_CAMERA_TYPE_GD610_DOUBLE_CAM)
-      || (type == OSDK_CAMERA_TYPE_GD610_TIRPLE_CAM))
-    subCtx->source.uuid.dataIdx = OSDK_GD610_INDEX_LIVEVIEW;
+  if ((type == OSDK_CAMERA_TYPE_H20_DOUBLE_CAM)
+      || (type == OSDK_CAMERA_TYPE_H20_TIRPLE_CAM))
+    subCtx->source.uuid.dataIdx = OSDK_H20_INDEX_LIVEVIEW;
   else
     subCtx->source.uuid.dataIdx = OSDK_CAMERA_INDEX_LIVEVIEW;
 
