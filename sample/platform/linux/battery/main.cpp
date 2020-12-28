@@ -56,11 +56,15 @@ int main(int argc, char** argv) {
     while(true)
     {
       vehicle->djiBattery->getBatteryWholeInfo(batteryWholeInfo);
-      DSTATUS("batteryCapacityPercentage is %ld\n",batteryWholeInfo.batteryCapacityPercentage);
+      DSTATUS("(It's valid only for M210V2)batteryCapacityPercentage is %ld%\n",batteryWholeInfo.batteryCapacityPercentage);
       vehicle->djiBattery->getSingleBatteryDynamicInfo(DJIBattery::RequestSmartBatteryIndex::FIRST_SMART_BATTERY, firstBatteryDynamicInfo);
-      DSTATUS("battery index %d batteryCapacityPercent is %ld\n",firstBatteryDynamicInfo.batteryIndex, firstBatteryDynamicInfo.batteryCapacityPercent);
+      DSTATUS("battery index %d batteryCapacityPercent is %ld%\n",firstBatteryDynamicInfo.batteryIndex, firstBatteryDynamicInfo.batteryCapacityPercent);
+      DSTATUS("battery index %d currentVoltage is %ldV\n",firstBatteryDynamicInfo.batteryIndex, firstBatteryDynamicInfo.currentVoltage/1000);
+      DSTATUS("battery index %d batteryTemperature is %ld\n",firstBatteryDynamicInfo.batteryIndex, firstBatteryDynamicInfo.batteryTemperature/10);
       vehicle->djiBattery->getSingleBatteryDynamicInfo(DJIBattery::RequestSmartBatteryIndex::SECOND_SMART_BATTERY, secondBatteryDynamicInfo);
-      DSTATUS("battery index %d batteryCapacityPercent is %ld\n",secondBatteryDynamicInfo.batteryIndex, secondBatteryDynamicInfo.batteryCapacityPercent);
+      DSTATUS("battery index %d batteryCapacityPercent is %ld%\n",secondBatteryDynamicInfo.batteryIndex, secondBatteryDynamicInfo.batteryCapacityPercent);
+      DSTATUS("battery index %d currentVoltage is %ldV\n",secondBatteryDynamicInfo.batteryIndex, secondBatteryDynamicInfo.currentVoltage/1000);
+      DSTATUS("battery index %d batteryTemperature is %ld\n",secondBatteryDynamicInfo.batteryIndex, secondBatteryDynamicInfo.batteryTemperature/10);
 
       OsdkLinux_TaskSleepMs(waitTimeMs);
     }

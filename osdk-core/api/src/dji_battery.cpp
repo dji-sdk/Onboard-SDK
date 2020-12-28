@@ -89,7 +89,7 @@ bool DJIBattery::subscribeBatteryWholeInfo(bool enable)
     static T_RecvCmdItem recvCmdItem;
     recvCmdItem.device = OSDK_COMMAND_FC_2_DEVICE_ID;
     recvCmdItem.cmdSet = V1ProtocolCMD::fc::batteryInfo[0];
-    recvCmdItem.cmdId = V1ProtocolCMD::fc::batteryInfo[1];
+    recvCmdItem.cmdId = V1ProtocolCMD::fc::batteryInfo[1];                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
     recvCmdItem.mask = MASK_HOST_XXXXXX_SET_ID;
     recvCmdItem.userData = this->djiBatteryImpl;
     recvCmdHandle.protoType = PROTOCOL_SDK;
@@ -129,29 +129,42 @@ bool DJIBattery::getSingleBatteryDynamicInfo(const DJIBattery::RequestSmartBatte
     cmdInfo.cmdId = V1ProtocolCMD::BatteryCmd::getBatteryDynamicInfo[1];
     cmdInfo.protoType = PROTOCOL_V1;
     cmdInfo.addr = GEN_ADDR(0, ADDR_V1_COMMAND_INDEX);
-    /*! sender:may be replace in the future */
-    cmdInfo.sender = OSDK_COMMAND_PC_DEVICE_ID ;
 
     bool batteryIndexResult = true;
-    switch (batteryIndex)
+    if (vehicle->isM300())
     {
-      case DJIBattery::RequestSmartBatteryIndex::FIRST_SMART_BATTERY:
+      cmdInfo.sender = OSDK_COMMAND_OSDK_DEVICE_ID ;
+      cmdInfo.receiver = OSDK_COMMAND_BATTERY_FIRST_DEVICE_ID;
+    }
+    else if(vehicle->isM210V2())
+    {
+      cmdInfo.sender = OSDK_COMMAND_PC_DEVICE_ID ;
+      switch (batteryIndex)
       {
-        cmdInfo.receiver = OSDK_COMMAND_BATTERY_FIRST_DEVICE_ID;
-        break;
-      }
-      case DJIBattery::RequestSmartBatteryIndex::SECOND_SMART_BATTERY:
-      {
-        cmdInfo.receiver = OSDK_COMMAND_BATTERY_SECOND_DEVICE_ID;
-        break;
-      }
+        case DJIBattery::RequestSmartBatteryIndex::FIRST_SMART_BATTERY:
+        {
+          cmdInfo.receiver = OSDK_COMMAND_BATTERY_FIRST_DEVICE_ID;
+          break;
+        }
+        case DJIBattery::RequestSmartBatteryIndex::SECOND_SMART_BATTERY:
+        {
+          cmdInfo.receiver = OSDK_COMMAND_BATTERY_SECOND_DEVICE_ID;
+          break;
+        }
 
-      default:
-      {
-        batteryIndexResult = false;
-        break;
+        default:
+        {
+          batteryIndexResult = false;
+          break;
+        }
       }
     }
+    else
+    {
+      DSTATUS("Not support the Drone type.Please recheck!\n");
+      return false;
+    }
+    
 
     if (!batteryIndexResult)
     {
@@ -159,7 +172,7 @@ bool DJIBattery::getSingleBatteryDynamicInfo(const DJIBattery::RequestSmartBatte
       return false;
     }
 
-    cmdInfo.needAck = OSDK_COMMAND_NEED_ACK_RECEIVE_ACK ;
+    cmdInfo.needAck = OSDK_COMMAND_NEED_ACK_FINISH_ACK ;
     cmdInfo.packetType = OSDK_COMMAND_PACKET_TYPE_REQUEST;
     cmdInfo.dataLen = sizeof(cmd);
 
