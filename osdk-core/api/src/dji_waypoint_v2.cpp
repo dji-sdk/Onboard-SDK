@@ -326,11 +326,6 @@ void triggerEncode(const DJIWaypointV2Trigger &trigger, uint16_t &tempTotalLen,
                    uint8_t *&tempPtr) {
   elementEncode<uint8_t >(trigger.actionTriggerType, tempTotalLen, *&tempPtr);
   switch (trigger.actionTriggerType) {
-    case DJIWaypointV2ActionTriggerTypeReachPoint:
-    {
-      elementEncode<DJIWaypointV2ReachPointTriggerParam>(trigger.reachPointTriggerParam, tempTotalLen, *&tempPtr);
-    }
-
     case DJIWaypointV2ActionTriggerTypeActionAssociated: {
       elementEncode<DJIWaypointV2AssociateTriggerParam>(trigger.associateTriggerParam, tempTotalLen, *&tempPtr);
       break;

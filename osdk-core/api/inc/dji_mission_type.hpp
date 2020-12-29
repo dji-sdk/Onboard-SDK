@@ -318,13 +318,6 @@ enum DJIWaypointV2ActionIntervalType:uint8_t {
 *  Possible types of action trigger.
 */
 enum  DJIWaypointV2ActionTriggerType:uint8_t {
-
-  /**
-   *  The action will be trigger when the aircraft reach the waypoint point.
-   *  The parameters should be setting by ``DJIWaypointV2Action_DJIWaypointV2ReachPointTriggerParam``.
-   */
-    DJIWaypointV2ActionTriggerTypeReachPoint = 1,
-
   /**
    *  The action will be triggered when action associated executes.
    *  The parameters should be defined by ``DJIWaypointV2Action_DJIWaypointV2AssociateTriggerParam``.
@@ -343,6 +336,10 @@ enum  DJIWaypointV2ActionTriggerType:uint8_t {
    */
     DJIWaypointV2ActionTriggerTypeInterval,
 
+  /**
+   *  The action will be trigger when the aircraft reach the waypoint point. 
+   *  The parameters should be setting by ``DJIWaypointV2SampleReachPointTriggerParam``.
+   */
     DJIWaypointV2ActionTriggerTypeSampleReachPoint,
 
   /**
