@@ -38,13 +38,13 @@ namespace DJI {
  */
 typedef struct CGPoint {
   /*! x axis focus point value
-   * range: [0,10000]
+   * range: [0,1]
    */
-  uint16_t x;
+  float32_t x;
   /*! y axis focus point value
-   * range: [0,10000]
+   * range: [0,1]
    */
-  uint16_t y;
+  float32_t y;
 } CGPoint;
 
 /*! Gimbal rotation parameter
@@ -161,10 +161,30 @@ typedef struct DJIWaypointV2CameraFocusParam {
    */
   CGPoint focusTarget;
 
+  /**
+   * focus type:
+   * 0:point focus
+   * 1:rectangle focus
+   */
+  uint8_t regionType;
+
+  /**
+   * Normalized focus area width(0,1)
+   */
+  float32_t width;
+
+  /**
+   * Normalized focus area height(0,1)
+   */
+
+  float32_t height;
+
+  uint32_t reserve;
+
+  /**
+   * [0,255]
+   */
   uint8_t retryTimes = 1;
-
-  uint8_t focusDelayTime = 0;
-
 } DJIWaypointV2CameraFocusParam;
 
 /**
