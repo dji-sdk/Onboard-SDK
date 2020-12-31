@@ -38,21 +38,21 @@ namespace DJI {
  */
 typedef struct CGPoint {
   /*! x axis focus point value
-   * range: [0,10000]
+   * range: [0,1]
    */
-  uint16_t x;
+  float32_t x;
   /*! y axis focus point value
-   * range: [0,10000]
+   * range: [0,1]
    */
-  uint16_t y;
+  float32_t y;
 } CGPoint;
 
 /*! Gimbal rotation parameter
  */
 typedef struct DJIGimbalRotation {
 
-  int16_t x;  /*! gimbal roll angle,  unit: 0.1 deg,range:[-200, 200]*/
-  int16_t y;  /*! gimbal pitch angle, unit: 0.1 deg,range:[-1300, 1300]*/
+  int16_t x;  /*! gimbal roll angle,  unit: 0.1 deg,range:[-3600, 3600]*/
+  int16_t y;  /*! gimbal pitch angle, unit: 0.1 deg,range:[-3600, 3600]*/
   int16_t z;  /*! gimbal yaw angle,   unit: 0.1 deg,range:[-3600, 3600]*/
   uint8_t ctrl_mode:1;   /*! 0: absolute position control, 1:relative position control*/
   uint8_t rollCmdIgnore:1;/*! 0: roll command normal,  1: roll command ignore*/
@@ -161,10 +161,30 @@ typedef struct DJIWaypointV2CameraFocusParam {
    */
   CGPoint focusTarget;
 
+  /**
+   * focus type:
+   * 0:point focus
+   * 1:rectangle focus
+   */
+  uint8_t regionType;
+
+  /**
+   * Normalized focus area width(0,1)
+   */
+  float32_t width;
+
+  /**
+   * Normalized focus area height(0,1)
+   */
+
+  float32_t height;
+
+  uint32_t reserve;
+
+  /**
+   * [0,255]
+   */
   uint8_t retryTimes = 1;
-
-  uint8_t focusDelayTime = 0;
-
 } DJIWaypointV2CameraFocusParam;
 
 /**
