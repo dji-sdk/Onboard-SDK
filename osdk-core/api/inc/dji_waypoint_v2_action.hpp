@@ -64,30 +64,6 @@ typedef struct DJIGimbalRotation {
   uint8_t duationTime;  /*! 0: rotate time,unit:0.1s, range[1,255]*/
 } DJIGimbalRotation;
 
-/**
-*  This class defines
-* ``DJIWaypointV2MissionV2_DJIWaypointV2ActionTriggerType_ReachPoint``.
-*  It describes an action will be triggered when the aircraft reach the certain
-* waypoint.
-*/
-typedef struct DJIWaypointV2ReachPointTriggerParam {
-  /**
-   *  It determines the index of the waypoint at which the action will be
-   * triggered.
-   */
-  uint16_t startIndex;
-
-  uint16_t endIndex;
-
-  uint16_t intervalWPNum;
-
-  /**
-   *  It determines the waypoint count till the action triggered stops.
-   */
-  uint16_t waypointCountToTerminate;
-
-} DJIWaypointV2ReachPointTriggerParam;
-
 typedef struct DJIWaypointV2SampleReachPointTriggerParam {
   /**
    *  It determines the index of the waypoint at which the action will be
@@ -249,11 +225,6 @@ typedef struct DJIWaypointV2Trigger
   DJIWaypointV2Trigger(const DJIWaypointV2ActionTriggerType &type,const void *param)
   {actionTriggerType = type;
     switch (actionTriggerType) {
-      case DJIWaypointV2ActionTriggerTypeReachPoint:
-      {
-        reachPointTriggerParam = *(DJIWaypointV2ReachPointTriggerParam*)param;
-        break;
-      }
       case DJIWaypointV2ActionTriggerTypeActionAssociated: {
         associateTriggerParam = *(DJIWaypointV2AssociateTriggerParam *)param;
         break;
@@ -277,7 +248,6 @@ typedef struct DJIWaypointV2Trigger
   DJIWaypointV2ActionTriggerType actionTriggerType;
   union {
     DJIWaypointV2SampleReachPointTriggerParam sampleReachPointTriggerParam;
-    DJIWaypointV2ReachPointTriggerParam      reachPointTriggerParam;
     DJIWaypointV2AssociateTriggerParam associateTriggerParam;
     DJIWaypointV2TrajectoryTriggerParam trajectoryTriggerParam;
     DJIWaypointV2IntervalTriggerParam intervalTriggerParam;
