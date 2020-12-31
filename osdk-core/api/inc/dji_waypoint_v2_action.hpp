@@ -51,8 +51,8 @@ typedef struct CGPoint {
  */
 typedef struct DJIGimbalRotation {
 
-  int16_t x;  /*! gimbal roll angle,  unit: 0.1 deg,range:[-200, 200]*/
-  int16_t y;  /*! gimbal pitch angle, unit: 0.1 deg,range:[-1300, 1300]*/
+  int16_t x;  /*! gimbal roll angle,  unit: 0.1 deg,range:[-3600, 3600]*/
+  int16_t y;  /*! gimbal pitch angle, unit: 0.1 deg,range:[-3600, 3600]*/
   int16_t z;  /*! gimbal yaw angle,   unit: 0.1 deg,range:[-3600, 3600]*/
   uint8_t ctrl_mode:1;   /*! 0: absolute position control, 1:relative position control*/
   uint8_t rollCmdIgnore:1;/*! 0: roll command normal,  1: roll command ignore*/
