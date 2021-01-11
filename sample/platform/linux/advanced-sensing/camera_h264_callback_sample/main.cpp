@@ -45,13 +45,13 @@ int writeStreamData(const char *fileName, const uint8_t *data, uint32_t len) {
   }
   size = fwrite(data, 1, len, fp);
   if(size != len) {
+    fclose(fp);
     return -1;
   }
 
   fflush(fp);
-  if(fp) {
-    fclose(fp);
-  }
+  fclose(fp);
+
   return 0;
 }
 
