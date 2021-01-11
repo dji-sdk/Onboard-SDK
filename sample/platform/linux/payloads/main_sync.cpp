@@ -212,6 +212,7 @@ int main(int argc, char **argv) {
       case 'q':
         DSTATUS("Quit now ...");
         delete p;
+        delete g;
         return 0;
       default:
         break;

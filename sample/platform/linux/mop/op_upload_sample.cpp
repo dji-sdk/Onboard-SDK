@@ -198,6 +198,7 @@ static void OPUploadFileTask(MopPipeline *OP_Pipeline) {
           cnt++;
           DSTATUS("send cnt %d!", cnt);
         } while (totalSize < targetFileSize);
+        fclose(fp);
         uploadState = RECV_FINAL_RESULT;
         break;
       }
