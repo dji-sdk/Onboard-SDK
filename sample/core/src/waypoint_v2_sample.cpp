@@ -462,11 +462,11 @@ std::vector<DJIWaypointV2Action> WaypointV2MissionSample::generateWaypointAction
     sampleReachPointTriggerParam.waypointIndex = i;
     sampleReachPointTriggerParam.terminateNum = 0;
 
-    auto *trigger = new DJIWaypointV2Trigger(DJIWaypointV2ActionTriggerTypeSampleReachPoint,&sampleReachPointTriggerParam);
-    auto *cameraActuatorParam = new DJIWaypointV2CameraActuatorParam(DJIWaypointV2ActionActuatorCameraOperationTypeTakePhoto, nullptr);
-    auto *actuator = new DJIWaypointV2Actuator(DJIWaypointV2ActionActuatorTypeCamera, 0, cameraActuatorParam);
-    auto *action = new DJIWaypointV2Action(i, *trigger,*actuator);
-    actionVector.push_back(*action);
+    auto trigger = DJIWaypointV2Trigger(DJIWaypointV2ActionTriggerTypeSampleReachPoint,&sampleReachPointTriggerParam);
+    auto cameraActuatorParam = DJIWaypointV2CameraActuatorParam(DJIWaypointV2ActionActuatorCameraOperationTypeTakePhoto, nullptr);
+    auto actuator = DJIWaypointV2Actuator(DJIWaypointV2ActionActuatorTypeCamera, 0, &cameraActuatorParam);
+    auto action = DJIWaypointV2Action(i, trigger,actuator);
+    actionVector.push_back(action);
   }
   return actionVector;
 }
