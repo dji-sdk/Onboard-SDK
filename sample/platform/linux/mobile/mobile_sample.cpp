@@ -46,6 +46,8 @@ void *activateTask(void *arg) {
     vehicle->activate(linuxEnvironment->getActivateData(),
                       activateMobileCallback);
   }
+
+  return NULL;
 }
 
 void

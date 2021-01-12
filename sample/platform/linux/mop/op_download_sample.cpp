@@ -214,6 +214,7 @@ static void OPDownloadFileTask(MopPipeline *OP_Pipeline) {
         MD5_Final(md5_out, &ctx);
         DSTATUS("Step 5 : Recv file raw data finish.");
         uploadState = MD5_RESULT_CHECK;
+        fclose(fp);
         break;
       }
       case MD5_RESULT_CHECK: {

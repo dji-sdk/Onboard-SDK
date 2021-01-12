@@ -75,7 +75,7 @@ ErrorCode::ErrorCodeType FlightJoystick::obtainJoystickCtrlAuthoritySync(int tim
   uint8_t command = static_cast<uint8_t>(FlightJoystick::JoystickCtrlAuthorityCommand::OBTAIN_AUTHORITY);
   E_OsdkStat linkAck;
   ErrorCode::ErrorCodeType errorCode;
-  uint8_t ackData[1024];
+  uint8_t ackData[1024] = {0};
   uint32_t ackLen = 0;
   if (flightLink) 
   {
@@ -114,7 +114,7 @@ void FlightJoystick::obtainJoystickCtrlAuthorityAsync(void (*userCB)(ErrorCode::
   uint8_t command = static_cast<uint8_t>(FlightJoystick::JoystickCtrlAuthorityCommand::OBTAIN_AUTHORITY);
   E_OsdkStat linkAck;
   ErrorCode::ErrorCodeType errorCode;
-  uint8_t ackData[1024];
+  uint8_t ackData[1024] = {0};
   uint32_t ackLen = 0;
   if (flightLink) 
   {
@@ -152,7 +152,7 @@ ErrorCode::ErrorCodeType FlightJoystick::releaseJoystickCtrlAuthoritySync(int ti
   uint8_t command = static_cast<uint8_t>(FlightJoystick::JoystickCtrlAuthorityCommand::RELEASE_AUTHORITY);
   E_OsdkStat linkAck;
   ErrorCode::ErrorCodeType errorCode;
-  uint8_t ackData[1024];
+  uint8_t ackData[1024] = {0};
   uint32_t ackLen = 0;
   if (flightLink) 
   {
@@ -191,7 +191,7 @@ void FlightJoystick::releaseJoystickCtrlAuthorityAsync(void (*userCB)(ErrorCode:
   uint8_t command = static_cast<uint8_t>(FlightJoystick::JoystickCtrlAuthorityCommand::RELEASE_AUTHORITY);
   E_OsdkStat linkAck;
   ErrorCode::ErrorCodeType errorCode;
-  uint8_t ackData[1024];
+  uint8_t ackData[1024] = {0};
   uint32_t ackLen = 0;
   if (flightLink) 
   {
