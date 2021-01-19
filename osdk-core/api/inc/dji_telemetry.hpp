@@ -335,12 +335,19 @@ typedef struct PositionData
   float32_t HFSL;      /*!< height above mean sea level (m) */
 } PositionData;        // pack(1)
 
+
+/*!
+ * @brief struct for TOPIC_HOME_POINT_INFO
+ */
 typedef struct HomeLocationData
 {
   float64_t latitude;  /*!< unit: rad */
   float64_t longitude; /*!< unit: rad */
 }HomeLocationData; // pack(1)
 
+/*!
+ * @brief struct for TOPIC_HOME_POINT_SET_STATUS
+ */
 typedef struct HomeLocationSetStatus
 {
   uint8_t status;     /*!<0:fail, 1:success*/
@@ -693,11 +700,17 @@ typedef struct GimbalSingleData
 #define SDK_M210_GIMBAL_MAX_NUM 2
 #define SDK_M300_GIMBAL_MAX_NUM 3
 
+/*!
+ * @brief struct for TOPIC_DUAL_GIMBAL_DATA
+ */
 typedef struct GimbalDualData
 {
   GimbalSingleData gbData[SDK_M210_GIMBAL_MAX_NUM];
 } GimbalDualData;
 
+/*!
+ * @brief struct for TOPIC_THREE_GIMBAL_DATA
+ */
 typedef struct GimbalThreeData
 {
   GimbalSingleData gbData[SDK_M300_GIMBAL_MAX_NUM];

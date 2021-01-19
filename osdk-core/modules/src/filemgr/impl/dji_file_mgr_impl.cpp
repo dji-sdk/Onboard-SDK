@@ -381,6 +381,7 @@ FileMgrImpl::FileNameRule FileMgrImpl::getNameRule() {
   T_CmdInfo cmdInfo        = { 0 };
   T_CmdInfo ackInfo        = { 0 };
   uint8_t   ackData[1024];
+  uint8_t magicNumberH20[] = {103, 100, 54, 49, 48, 0};
 
   cmdInfo.cmdSet     = 0x00;
   cmdInfo.cmdId      = 0x01;
@@ -396,7 +397,8 @@ FileMgrImpl::FileNameRule FileMgrImpl::getNameRule() {
 
   if ((linkAck == OSDK_STAT_OK) && (ackInfo.dataLen >= 18)) {
     //3~18 : hardware version
-    if (strstr((char *)(ackData + 2), "gd610") != NULL) return H20_RULE;
+    if (strstr((char *) (ackData + 2), (char *) magicNumberH20) != NULL)
+      return H20_RULE;
     else return ORIGIN_RULE;
   } else {
     return UNKNOWN_RULE;
