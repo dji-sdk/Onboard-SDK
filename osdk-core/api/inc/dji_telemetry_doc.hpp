@@ -64,7 +64,7 @@ using namespace DJI::OSDK::Telemetry;
  * @sensors IMU, Visual Odometry (M210 only)
  * @platforms M210V2,M300
  * @units rad (when converted to a rotation matrix or Euler angles)
- * @datastruct \ref Quaternion
+ * @details \b Data \b Structure \b : \ref Quaternion "Quaternion"
  *
  */
 
@@ -78,8 +78,7 @@ using namespace DJI::OSDK::Telemetry;
  * any right-handed frame of reference.
  * @platforms M210V2,M300
  * @units m/s<SUP>2</SUP>
- * @datastruct \ref Vector3f
-
+ * @details \b Data \b Structure \b : \ref Vector3f "Vector3f"
  */
 
 /*!
@@ -89,7 +88,7 @@ using namespace DJI::OSDK::Telemetry;
  * @details This is a fusion output from the flight control system.
  * @platforms M210V2,M300
  * @units m/s<SUP>2</SUP>
- * @datastruct \ref Vector3f
+ * @details \b Data \b Structure \b : \ref Vector3f "Vector3f"
  */
 
 
@@ -100,7 +99,7 @@ using namespace DJI::OSDK::Telemetry;
  * @sensors IMU
  * @platforms M210V2,M300
  * @units m/s<SUP>2</SUP>
- * @datastruct \ref Vector3f
+ * @details \b Data \b Structure \b : \ref Vector3f "Vector3f"
  */
 
 
@@ -120,7 +119,7 @@ using namespace DJI::OSDK::Telemetry;
  * @sensors IMU, GPS, Baro, RTK (if available), Visual Odometry (M210 only), TOF (M210 Only)
  * @platforms M210V2,M300
  * @units m/s
- * @datastruct \ref Velocity
+ * @details \b Data \b Structure \b : \ref Velocity "Velocity"
  */
 
 /*!
@@ -129,7 +128,7 @@ using namespace DJI::OSDK::Telemetry;
  * @details This is a fusion output from the flight control system.
  * @platforms M210V2,M300
  * @units rad/s
- * @datastruct \ref Vector3f
+ * @details \b Data \b Structure \b : \ref Vector3f "Vector3f"
  */
 
 /*!
@@ -139,7 +138,7 @@ using namespace DJI::OSDK::Telemetry;
  * @sensors IMU
  * @platforms M210V2,M300
  * @units rad/s
- * @datastruct \ref Vector3f
+ * @details \b Data \b Structure \b : \ref Vector3f "Vector3f"
  */
 
 /*!
@@ -162,7 +161,7 @@ using namespace DJI::OSDK::Telemetry;
  * @sensors GPS, Barometer, IMU
  * @platforms M210V2,M300
  * @units m
- * @datastruct \ref float32_t
+ * @datastruct float32_t
  */
 
 
@@ -187,7 +186,7 @@ using namespace DJI::OSDK::Telemetry;
  * @sensors GPS, Barometer, IMU
  * @platforms M210V2,M300
  * @units m
- * @datastruct \ref float32_t
+ * @datastruct float32_t
  *
  */
 
@@ -214,7 +213,7 @@ using namespace DJI::OSDK::Telemetry;
  * @sensors Visual Odometry (M210 only), Barometer, IMU
  * @platforms M210V2,M300
  * @units m
- * @datastruct \ref float32_t
+ * @datastruct float32_t
  *
  */
 
@@ -231,7 +230,7 @@ using namespace DJI::OSDK::Telemetry;
  * @sensors Visual Odometry, Ultrasonic
  * @platforms M210V2,M300
  * @units m
- * @datastruct \ref float32_t
+ * @datastruct float32_t
  *
  */
 
@@ -254,7 +253,7 @@ using namespace DJI::OSDK::Telemetry;
  * @sensors GPS/IMU (x,y), Barometer(z)
  * @platforms M210V2,M300
  * @units rad (Lat,Lon), m (Alt)
- * @datastruct \ref GPSFused
+ * @details \b Data \b Structure \b : \ref GPSFused "GPSFused"
  */
 
 
@@ -264,7 +263,7 @@ using namespace DJI::OSDK::Telemetry;
  * @details Format : yyyymmdd
  * @sensors GPS
  * @platforms M210V2,M300
- * @datastruct \ref uint32_t
+ * @datastruct uint32_t
  */
 
 /*!@var TOPIC_GPS_TIME
@@ -272,7 +271,7 @@ using namespace DJI::OSDK::Telemetry;
  * @details Format : hhmmss
  * @sensors GPS
  * @platforms M210V2,M300
- * @datastruct \ref uint32_t
+ * @datastruct uint32_t
  */
 
 
@@ -288,7 +287,7 @@ using namespace DJI::OSDK::Telemetry;
  * @sensors GPS
  * @platforms M210V2,M300
  * @units rad*10<SUP>-7</SUP> (Lat,Lon), mm (Alt)
- * @datastruct \ref Vector3d
+ * @details \b Data \b Structure \b : \ref Vector3d "Vector3d"
  * @note The data structure for this UID is too generic for the data itself - please note that in the vector3d struct,
  * x = Latitude, y = Longitude, z = Altitude
  */
@@ -299,7 +298,7 @@ using namespace DJI::OSDK::Telemetry;
  * @sensors GPS
  * @platforms M210V2,M300
  * @units cm/s
- * @datastruct \ref Vector3f
+ * @details \b Data \b Structure \b : \ref Vector3f "Vector3f"
  */
 
 /*!
@@ -307,7 +306,7 @@ using namespace DJI::OSDK::Telemetry;
  * @brief Provides aircraft's raw GPS status and other details @ up to 5Hz
  * @sensors GPS
  * @platforms M210V2,M300
- * @datastruct \ref GPSDetail
+ * @details \b Data \b Structure \b : \ref GPSDetail "GPSDetail"
  */
 
 
@@ -323,7 +322,7 @@ using namespace DJI::OSDK::Telemetry;
  * @sensors RTK
  * @platforms M210V2,M300 (in each case, if RTK is installed)
  * @units deg (x, y), m(z)
- * @datastruct \ref PositionData
+ * @details \b Data \b Structure \b : \ref PositionData "PositionData"
  */
 
 /*!
@@ -332,7 +331,7 @@ using namespace DJI::OSDK::Telemetry;
  * @sensors RTK
  * @platforms M210V2,M300 (in each case, if RTK is installed)
  * @units cm/s
- * @datastruct \ref Vector3f
+ * @details \b Data \b Structure \b : \ref Vector3f "Vector3f"
  */
 
 /*!
@@ -412,7 +411,7 @@ using namespace DJI::OSDK::Telemetry;
  * @sensors Magnetometer, IMU, GPS
  * @platforms M210V2,M300
  * @units N/A
- * @datastruct \ref Mag
+ * @details \b Data \b Structure \b : \ref Mag "Mag"
  */
 
 /*!
@@ -424,8 +423,8 @@ using namespace DJI::OSDK::Telemetry;
  * - Landing gear switch (Up/Down)
  *
  * @platforms M210V2,M300
- * @datastruct \ref RC
- * @also \ref TOPIC_RC_WITH_FLAG_DATA
+ * @details \b Data \b Structure \b : \ref RC "RC"
+ * @details \b Also \b Refer \b To \ref TOPIC_RC_WITH_FLAG_DATA
  */
 
 
@@ -447,8 +446,8 @@ using namespace DJI::OSDK::Telemetry;
  * @sensors Gimbal Encoder, IMU, Magnetometer
  * @platforms M210V2,M300
  * @units deg
- * @datastruct \ref Vector3f
- * @also \ref TOPIC_GIMBAL_STATUS, \ref TOPIC_GIMBAL_CONTROL_MODE
+ * @details \b Data \b Structure \b : \ref Vector3f "Vector3f"
+ * @details \b Also \b Refer \b To \ref TOPIC_GIMBAL_STATUS "TOPIC_GIMBAL_STATUS", \ref TOPIC_GIMBAL_CONTROL_MODE "TOPIC_GIMBAL_CONTROL_MODE"
  */
 
 /*!
@@ -457,8 +456,8 @@ using namespace DJI::OSDK::Telemetry;
  * @details Please see the \ref GimbalStatus struct for the details on what data you can receive.
  *
  * @platforms M210V2,M300
- * @datastruct \ref GimbalStatus
- * @also \ref TOPIC_GIMBAL_ANGLES, \ref TOPIC_GIMBAL_CONTROL_MODE
+ * @details \b Data \b Structure \b : \ref GimbalStatus
+ * @details \b Also \b Refer \b To \ref TOPIC_GIMBAL_ANGLES "TOPIC_GIMBAL_ANGLES", \ref TOPIC_GIMBAL_CONTROL_MODE "TOPIC_GIMBAL_CONTROL_MODE"
  */
 
 
@@ -472,8 +471,8 @@ using namespace DJI::OSDK::Telemetry;
  *
  *
  * @platforms M210V2,M300
- * @datastruct uint8_t (For detailed enumerations see \ref VehicleStatus::FlightStatus "FlightStatus")
- * @also \ref TOPIC_STATUS_DISPLAYMODE
+ * @details \b Data \b Structure \b : uint8_t (For detailed enumerations see \ref VehicleStatus::FlightStatus "FlightStatus")
+ * @details \b Also \b Refer \b To \ref TOPIC_STATUS_DISPLAYMODE "TOPIC_STATUS_DISPLAYMODE"
  */
 
 /*!
@@ -483,8 +482,8 @@ using namespace DJI::OSDK::Telemetry;
  * better understanding of the overall status of the aircraft.
  *
  * @platforms M210V2,M300
- * @datastruct uint8_t (For detailed enumerations see \ref VehicleStatus::DisplayMode "DisplayMode")
- * @also \ref TOPIC_STATUS_FLIGHT
+ * @details \b Data \b Structure \b : uint8_t (For detailed enumerations see \ref VehicleStatus::DisplayMode "DisplayMode")
+ * @details \b Also \b Refer \b To \ref TOPIC_STATUS_FLIGHT "TOPIC_STATUS_FLIGHT"
  */
 
 /*!
@@ -492,14 +491,14 @@ using namespace DJI::OSDK::Telemetry;
  * @brief Provides status for the landing gear state @ up to 50Hz
  *
  * @platforms M300
- * @datastruct uint8_t (For detailed enumerations see \ref VehicleStatus::LandingGearMode "LandingGearMode")
+ * @details \b Data \b Structure \b : uint8_t (For detailed enumerations see \ref VehicleStatus::LandingGearMode "LandingGearMode")
  */
 
 /*!
  * @var TOPIC_STATUS_MOTOR_START_ERROR
  * @brief If motors failed to start, this topic provides reasons why. Available @ up to 50Hz
  * @platforms M210V2,M300
- * @datastruct uint8_t (For detailed enumerations see \ref ErrorCode::CommonACK "CommonACK", starting from the 6th element)
+ * @details \b Data \b Structure \b : uint8_t (For detailed enumerations see \ref ErrorCode::CommonACK "CommonACK", starting from the 6th element)
  * \note These enumerations show up in the ErrorCode class because they can also be returned as acknowledgements
  * for APIs that start the motors, such as \ref Control::takeoff "Takeoff" or \ref Control::armMotors "Arm"
  */
@@ -515,7 +514,7 @@ using namespace DJI::OSDK::Telemetry;
  * @units
  * |voltage           | mV |
  * |current           | mA |
- * @datastruct \ref Battery
+ * @details \b Data \b Structure \b : \ref Battery "Battery"
  */
 
 /*!
@@ -529,7 +528,7 @@ using namespace DJI::OSDK::Telemetry;
  * |flightStatus          |Has the OSDK been granted control authority? Since MSDK and RC have precedence, it is possible that deviceStatus shows RC or MSDK actually controlling the aircraft but this value is 1.     |
  * |vrcStatus             |Deprecated|
  * @platforms M210V2,M300
- * @datastruct \ref SDKInfo
+ * @details \b Data \b Structure \b : \ref SDKInfo "SDKInfo"
  */
 
 /*!
@@ -548,7 +547,7 @@ using namespace DJI::OSDK::Telemetry;
  * |Quaternion |rad (after converting to rotation matrix)|
  * |Acceleration |g|
  * |Gyroscope |rad/sec|
- * @datastruct \ref HardSyncData
+ * @details \b Data \b Structure \b : \ref HardSyncData "HardSyncData"
  *
  */
 
@@ -560,7 +559,7 @@ using namespace DJI::OSDK::Telemetry;
  * @sensors GPS
  * @platforms M210V2,M300
  * @datastruct uint8_t
- * @also \ref TOPIC_GPS_CONTROL_LEVEL
+ * @details \b Also \b Refer \b To \ref TOPIC_GPS_CONTROL_LEVEL "TOPIC_GPS_CONTROL_LEVEL"
  */
 
 
@@ -573,7 +572,7 @@ using namespace DJI::OSDK::Telemetry;
  * @sensors GPS
  * @platforms M210V2,M300
  * @datastruct uint8_t
- * @also \ref TOPIC_GPS_SIGNAL_LEVEL
+ * @details \b Also \b Refer \b To \ref TOPIC_GPS_SIGNAL_LEVEL "TOPIC_GPS_SIGNAL_LEVEL"
  */
 
 /*!
@@ -586,8 +585,8 @@ using namespace DJI::OSDK::Telemetry;
  * - Landing gear switch (Up/Down)
  * - All other buttons (Camera, Video, C1, C2, etc.)
  * @platforms Deprecated
- * @datastruct \ref RCFullRawData, \ref LB2RcFullRawData, \ref SBUSFullRawData
- * @also \ref TOPIC_RC_WITH_FLAG_DATA, TOPIC_RC
+ * @details \b Data \b Structure \b : \ref RCFullRawData, \ref LB2RcFullRawData, \ref SBUSFullRawData
+ * @details \b Also \b Refer \b To \ref TOPIC_RC_WITH_FLAG_DATA "TOPIC_RC_WITH_FLAG_DATA", \ref TOPIC_RC "TOPIC_RC"
  */
 
 /*!
@@ -604,8 +603,8 @@ using namespace DJI::OSDK::Telemetry;
  * - Deadzones near the center of the stick positions are also handled in this topic.
  *
  * @platforms M210V2,M300
- * @datastruct \ref RCWithFlagData
- * @also \ref TOPIC_RC_FULL_RAW_DATA, TOPIC_RC
+ * @details \b Data \b Structure \b : \ref RCWithFlagData
+ * @details \b Also \b Refer \b To \ref TOPIC_RC_FULL_RAW_DATA "TOPIC_RC_FULL_RAW_DATA", \ref TOPIC_RC "TOPIC_RC"
  */
 
 
@@ -617,7 +616,7 @@ using namespace DJI::OSDK::Telemetry;
  * for this reporting feature. Use this topic to get data on elements close to the hardware - e.g. motor speeds,
  * ESC current and voltage, error flags at the ESC level etc.
  * @platforms M210V2,M300
- * @datastruct \ref ESCStatusIndividual, \ref EscData
+ * @details \b Data \b Structure \b : \ref ESCStatusIndividual "ESCStatusIndividual", \ref EscData "EscData"
  */
 
 
@@ -628,7 +627,7 @@ using namespace DJI::OSDK::Telemetry;
  * @details This topic will update in real time whether the RTK GPS system is connected or not; typical uses
  * include app-level logic to switch between GPS and RTK sources of positioning based on this flag.
  * @platforms M210V2,M300
- * @datastruct \ref RTKConnectStatus
+ * @details \b Data \b Structure \b : \ref RTKConnectStatus "RTKConnectStatus"
  */
 
 /*!
@@ -639,7 +638,7 @@ using namespace DJI::OSDK::Telemetry;
  * DJI Go app, MSDK apps, or through Onboard SDK gimbal control APIs (see \ref Gimbal::AngleData "AngleData" struct
  * for more information)
  * @platforms M210V2,M300
- * @datastruct \ref GimbalControlMode
+ * @details \b Data \b Structure \b : \ref GimbalControlMode "GimbalControlMode"
  */
 
 /*!
@@ -649,7 +648,7 @@ using namespace DJI::OSDK::Telemetry;
  * @warning Most of the errors reported by this topic are cases where immediate action is required; you can use these
  * as a baseline for implementing safety-related error-handling routines.
  * @platforms M210V2,M300
- * @datastruct \ref FlightAnomaly
+ * @details \b Data \b Structure \b : \ref FlightAnomaly "FlightAnomaly"
  */
 
 /*!
@@ -682,7 +681,39 @@ using namespace DJI::OSDK::Telemetry;
  * @sensors IMU, VO, GPS(if available), RTK (if available), ultrasonic, magnetometer, barometer
  * @platforms M210V2,M300
  * @units m
- * @datastruct \ref LocalPositionVO
+ * @var TOPIC_AVOID_DATA
+ * @brief Provides obstacle info around the vehicle @ up to 100Hz
+ * @platforms M210V2,M300
+ * @details \b Data \b Structure \b : \ref LocalPositionVO "LocalPositionVO"
+ */
+
+/*!
+ * @var TOPIC_HOME_POINT_SET_STATUS
+ * @brief Provides status of whether the home point was set or not
+ * @platforms M210V2,M300
+ * @details \b Data \b Structure \b : \ref HomeLocationSetStatus "HomeLocationSetStatus"
+ */
+
+/*!
+ * @var TOPIC_HOME_POINT_INFO
+ * @brief Provides homepoint information, the valid of the home point infomation can ref to the
+ * topic DJI_DATA_SUBSCRIPTION_TOPIC_HOME_POINT_SET_STATUS
+ * @platforms M210V2,M300
+ * @details \b Data \b Structure \b : \ref HomeLocationData "HomeLocationData"
+ */
+
+/*!
+ * @var TOPIC_DUAL_GIMBAL_DATA
+ * @brief Provides double gimbal information, used for M210V2
+ * @platforms M210V2
+ * @details \b Data \b Structure \b : \ref GimbalDualData "GimbalDualData"
+ */
+
+/*!
+ * @var TOPIC_THREE_GIMBAL_DATA
+ * @platforms M300
+ * @brief Provides three gimbal information, used for M300
+ * @details \b Data \b Structure \b : \ref GimbalThreeData "GimbalThreeData"
  */
 
 #endif //ONBOARDSDK_DJI_TELEMETRY_DOC_HPP

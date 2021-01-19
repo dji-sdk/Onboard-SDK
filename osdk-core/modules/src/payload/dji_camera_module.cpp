@@ -1885,6 +1885,9 @@ void CameraModule::requestCameraVersion() {
   T_CmdInfo cmdInfo        = { 0 };
   T_CmdInfo ackInfo        = { 0 };
   uint8_t* ackData = (uint8_t*)OsdkOsal_Malloc(1024);
+  uint8_t magicNumberH20[] = {103, 100, 54, 49, 48, 0};
+  uint8_t magicNumberZ30[] = {67, 65, 48, 50, 0};
+  uint8_t magicNumberXT2[] = {88, 84, 95, 86, 50, 0};
 
   cmdInfo.cmdSet     = 0x00;
   cmdInfo.cmdId      = 0x01;
@@ -1902,9 +1905,12 @@ void CameraModule::requestCameraVersion() {
     firmwareVersion = "UNKNOWN";
   } else if ((linkAck == OSDK_STAT_OK) && (ackInfo.dataLen >= 26)) {
     //3~18 : hardware version
-    if (strstr((char *)(ackData + 2), "gd610") != NULL) cameraVersion = "H20";
-    else if (strstr((char *)(ackData + 2), "CA02") != NULL) cameraVersion = "Z30";
-    else if (strstr((char *)(ackData + 2), "XT_V2") != NULL) cameraVersion = "XT2";
+    if (strstr((char *) (ackData + 2), (char *) magicNumberH20) != NULL)
+      cameraVersion = "H20";
+    else if (strstr((char *) (ackData + 2), (char *) magicNumberZ30) != NULL)
+      cameraVersion = "Z30";
+    else if (strstr((char *) (ackData + 2), (char *) magicNumberXT2) != NULL)
+      cameraVersion = "XT2";
     else cameraVersion = (char *)(ackData + 2);
 
     char fmVer[40] = {0};
