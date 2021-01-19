@@ -53,7 +53,7 @@ using namespace DJI::OSDK::Telemetry;
 
 /*!
  * @var TOPIC_QUATERNION
- * @brief Provides quaternion representing body frame \b (FRD) to ground frame \b (NED) rotation @ up to 200Hz
+ * @brief Provides quaternion representing ground frame \b (NED) to body frame \b (FRD) rotation @ up to 200Hz
  * @details The DJI quaternion follows Hamilton convention (q0 = w, q1 = x, q2 = y, q3 = z)
  * @perf
  * | Angle        | Unit | Accuracy   | Notes                                           |
