@@ -1024,6 +1024,22 @@ typedef struct WaypointV2
    */
   WaypointV2Config config;
 
+  /**Physical meaning: the turning distance in advance when the aircraft arrives at the waypoint;
+   * Unit: 0.01M
+   * Range: 0.2m ~ 655.25m
+   * Valid conditions:
+   * (1) Waypointtype = DJIWaypointV2FlightPathModeCoordinateTurn (enumeration value is 3)
+   *     The waypoint type is coordinated turning point, which needs to be set; 
+   *     Indicates that the aircraft starts to coordinate turning at the distance from the waypoint.
+   * (2) Waypointtype = DJIWaypointV2FlightPathModeGoToFirstPointAlongAStraightLine (enumeration value is 4)
+   *     The waypoint type is straight line entry point (first waypoint), which needs to be set; 
+   *     Indicates the straight line of the aircraft entering the route
+   * (3) Waypointtype = DJIWaypointV2FlightPathModeStraightOut (enumeration value is 5)
+   *     The waypoint type is straight exit point (terminal waypoint), which needs to be set;
+   *     Indicates how long a straight line the aircraft exits the route
+   * For other waypoint types, this value is not valid.
+   */
+
   uint16_t dampingDistance;
 
   /**
