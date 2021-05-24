@@ -77,6 +77,13 @@ ProtocolBase::readPoll()
   {
     this->buf_read_pos = 0;
     this->read_len     = deviceDriver->readall(this->buf, BUFFER_SIZE);
+
+    if (this->read_len < 0)
+    {
+      memset(p_filter->recvBuf, 0, p_filter->recvIndex);
+      p_filter->recvIndex = 0;
+      return false;
+    }
   }
 
 #ifdef API_BUFFER_DATA
