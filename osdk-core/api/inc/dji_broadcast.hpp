@@ -330,6 +330,25 @@ public:
    *  @platforms M210V2, M300
    *  @param dataLenIs16 Array of length 16 that has frequency values for each
    *  topic
+   *  | Channel | Flag              |Data                                       |
+   *  |-------  |----------------- -|-------------------------------------------|
+   *  | 0       | FLAG_TIME         | getSyncStamp()/getTimeStamp()             |
+   *  | 1       | FLAG_QUATERNION   | getQuaternion()                           |
+   *  | 2       | FLAG_ACCELERATION | getAcceleration()                         |
+   *  | 3       | FLAG_VELOCITY     | getVelocity()/getVelocityInfo()           |
+   *  | 4       | FLAG_ANGULAR_RATE | getAngularRate()                          |
+   *  | 5       | FLAG_POSITION     | getGlobalPosition()/getRelativePosition() |
+   *  | 6       | FLAG_GPSINFO      | getGPSInfo()                              |
+   *  | 7       | FLAG_RTKINFO      | getRTKInfo()                              |
+   *  | 8       | FLAG_MAG          | getMag()                                  |
+   *  | 9       | FLAG_RC           | getRC()                                   |
+   *  | 10      | FLAG_GIMBAL       | getGimbal()                               |
+   *  | 11      | FLAG_STATUS       | getStatus()                               |
+   *  | 12      | FLAG_BATTERY      | getBatteryInfo()                          |
+   *  | 13      | FLAG_DEVICE       | getSDKInfo()                              |
+   *  | 14      | Reserve           | Reserve                                   |
+   *  | 15      | Reserve           | Reserve                                   |
+   *
    *  @param callback Callback function you want called upon ACK
    *  @param userData Additional data you want the callback function to have
    *  access to
@@ -341,6 +360,24 @@ public:
    *  @platforms M210V2, M300
    *  @param dataLenIs16 Array of length 16 that has frequency values for each
    *  topic
+   *  | Channel | Flag              |Data                                       |
+   *  |-------  |----------------- -|-------------------------------------------|
+   *  | 0       | FLAG_TIME         | getSyncStamp()/getTimeStamp()             |
+   *  | 1       | FLAG_QUATERNION   | getQuaternion()                           |
+   *  | 2       | FLAG_ACCELERATION | getAcceleration()                         |
+   *  | 3       | FLAG_VELOCITY     | getVelocity()/getVelocityInfo()           |
+   *  | 4       | FLAG_ANGULAR_RATE | getAngularRate()                          |
+   *  | 5       | FLAG_POSITION     | getGlobalPosition()/getRelativePosition() |
+   *  | 6       | FLAG_GPSINFO      | getGPSInfo()                              |
+   *  | 7       | FLAG_RTKINFO      | getRTKInfo()                              |
+   *  | 8       | FLAG_MAG          | getMag()                                  |
+   *  | 9       | FLAG_RC           | getRC()                                   |
+   *  | 10      | FLAG_GIMBAL       | getGimbal()                               |
+   *  | 11      | FLAG_STATUS       | getStatus()                               |
+   *  | 12      | FLAG_BATTERY      | getBatteryInfo()                          |
+   *  | 13      | FLAG_DEVICE       | getSDKInfo()                              |
+   *  | 14      | FLAG_COMPASS      | getCompassData()                          |
+   *  | 15      | Reserve           | Reserve                                   |
    *  @param wait_timeout Time(in s) you want the function to wait for an ACK
    *  @return ACK::ErrorCode struct containing the ACK and metadata
    */
