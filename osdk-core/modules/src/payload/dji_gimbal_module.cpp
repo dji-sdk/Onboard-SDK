@@ -86,7 +86,7 @@ void GimbalModule::resetAsync(
       cmdInfo.packetType = OSDK_COMMAND_PACKET_TYPE_REQUEST;
       cmdInfo.addr = GEN_ADDR(0, ADDR_V1_COMMAND_INDEX);
       uint8_t V1GimbalIndex =
-          getIndex() == PAYLOAD_INDEX_0 ? getIndex() : getIndex() + 1;
+          getIndex() == PAYLOAD_INDEX_0 ? getIndex() : getIndex() * 2;
       cmdInfo.receiver = OSDK_COMMAND_DEVICE_ID(OSDK_COMMAND_DEVICE_TYPE_GIMBAL,
                                                 V1GimbalIndex);
       cmdInfo.sender = getLinker()->getLocalSenderId();
@@ -119,7 +119,7 @@ ErrorCode::ErrorCodeType GimbalModule::resetSync(int timeout) {
   cmdInfo.packetType = OSDK_COMMAND_PACKET_TYPE_REQUEST;
   cmdInfo.addr = GEN_ADDR(0, ADDR_V1_COMMAND_INDEX);
   uint8_t V1GimbalIndex =
-      getIndex() == PAYLOAD_INDEX_0 ? getIndex() : getIndex() + 1;
+      getIndex() == PAYLOAD_INDEX_0 ? getIndex() : getIndex() * 2;
   cmdInfo.receiver =
       OSDK_COMMAND_DEVICE_ID(OSDK_COMMAND_DEVICE_TYPE_GIMBAL, V1GimbalIndex);
   cmdInfo.sender = getLinker()->getLocalSenderId();
@@ -160,7 +160,7 @@ void GimbalModule::rotateAsync(Rotation rotation,
     cmdInfo.packetType = OSDK_COMMAND_PACKET_TYPE_REQUEST;
     cmdInfo.addr = GEN_ADDR(0, ADDR_V1_COMMAND_INDEX);
     uint8_t V1GimbalIndex =
-        getIndex() == PAYLOAD_INDEX_0 ? getIndex() : getIndex() + 1;
+        getIndex() == PAYLOAD_INDEX_0 ? getIndex() : getIndex() * 2;
     cmdInfo.receiver =
         OSDK_COMMAND_DEVICE_ID(OSDK_COMMAND_DEVICE_TYPE_GIMBAL, V1GimbalIndex);
     cmdInfo.sender = getLinker()->getLocalSenderId();
@@ -185,7 +185,11 @@ ErrorCode::ErrorCodeType GimbalModule::rotateSync(Rotation rotation,
   setting.pitch_angle = (int16_t)(rotation.pitch * 10);
   setting.roll_angle = (int16_t)(rotation.roll * 10);
   setting.allowance = 10;  /*!< 0.1 degree allowance */
-  setting.reference = 0; /*!< default reference (initial point) */
+  if (rotation.rotationMode == 0) {
+    setting.reference = 1;
+  } else {
+    setting.reference = 0;
+  }
   setting.coordinate = rotation.rotationMode;
   setting.is_control = 1; /*!< take control */
   setting.timeout = 0; /*!< default 2s timeout */
@@ -202,7 +206,7 @@ ErrorCode::ErrorCodeType GimbalModule::rotateSync(Rotation rotation,
   cmdInfo.packetType = OSDK_COMMAND_PACKET_TYPE_REQUEST;
   cmdInfo.addr = GEN_ADDR(0, ADDR_V1_COMMAND_INDEX);
   uint8_t V1GimbalIndex =
-      getIndex() == PAYLOAD_INDEX_0 ? getIndex() : getIndex() + 1;
+      getIndex() == PAYLOAD_INDEX_0 ? getIndex() : getIndex() * 2;
   cmdInfo.receiver =
       OSDK_COMMAND_DEVICE_ID(OSDK_COMMAND_DEVICE_TYPE_GIMBAL, V1GimbalIndex);
   cmdInfo.sender = getLinker()->getLocalSenderId();
