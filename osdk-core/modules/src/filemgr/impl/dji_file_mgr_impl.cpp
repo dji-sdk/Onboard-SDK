@@ -390,7 +390,7 @@ FileMgrImpl::FileNameRule FileMgrImpl::getNameRule() {
   cmdInfo.packetType = OSDK_COMMAND_PACKET_TYPE_REQUEST;
   cmdInfo.addr       = GEN_ADDR(0, ADDR_V1_COMMAND_INDEX);
   cmdInfo.receiver =
-    OSDK_COMMAND_DEVICE_ID(this->type, this->index * 2);
+    OSDK_COMMAND_DEVICE_ID(this->type, this->index);
   cmdInfo.sender     = linker->getLocalSenderId();
   E_OsdkStat linkAck = linker->sendSync(&cmdInfo, &temp, &ackInfo, ackData,
                                         250, 2);
