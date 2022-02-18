@@ -444,14 +444,10 @@ moveByPositionOffset(Vehicle *vehicle, float xOffsetDesired,
   else
     yCmd = 0;
 
-  if (!vehicle->isM100() && !vehicle->isLegacyM600())
-  {
-    zCmd = currentBroadcastGP.height + zOffsetDesired; //Since subscription cannot give us a relative height, use broadcast.
-  }
-  else
-  {
-    zCmd = currentBroadcastGP.height + zOffsetDesired;
-  }
+
+  zCmd = currentBroadcastGP.height + zOffsetDesired; //Since subscription cannot give us a relative height, use broadcast.
+
+ 
 
   //! Main closed-loop receding setpoint position control
   while (elapsedTimeInMs < timeoutInMilSec)
