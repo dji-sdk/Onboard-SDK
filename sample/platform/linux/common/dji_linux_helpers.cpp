@@ -33,7 +33,6 @@
 
 static E_OsdkStat OsdkUser_Console(const uint8_t *data, uint16_t dataLen)
 {
-  return OSDK_STAT_OK;
   printf("%s", data);
 
   return OSDK_STAT_OK;
