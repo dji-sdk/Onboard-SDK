@@ -593,10 +593,6 @@ FilePackage FileMgrImpl::parseFileList(std::list<DataPointer> fullDataList) {
   /*! Parse file list total info */
   auto listdata = (dji_file_list_download_resp *)((uint8_t *)dataFront.data + sizeof(dji_general_transfer_msg_ack) - 1);
   DSTATUS("###data->amount = %d, data->len = %d", listdata->amount, listdata->len);
-  if (listdata->len > fullDataList.size() * maxDataFrameLen) {
-    DERROR("File list total data len error !");
-    return pack;
-  }
 
   /*! Make the total data buffer */
   DataPointer dataPtr = {malloc(listdata->len), 0};
