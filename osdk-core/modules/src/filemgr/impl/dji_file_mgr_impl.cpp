@@ -879,6 +879,7 @@ void FileMgrImpl::fileDataRawDataCB(dji_general_transfer_msg_ack *rsp) {
       (range_handler_->GetLastNotReceiveSeq() == rsp->seq + 1)) {
     DSTATUS("Got the last one pack .");
     packFinishFlag = true;
+    fileDataHandler->mmap_file_buffer_->deInit();
   }
   if (range_handler_->GetNoAckRanges().size() != 0) {
     DERROR("pack loss !!!");
