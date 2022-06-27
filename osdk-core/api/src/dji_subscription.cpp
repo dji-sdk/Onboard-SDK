@@ -575,8 +575,7 @@ SubscriptionPackage::SubscriptionPackage()
   , incomingDataBuffer(NULL)
   , packageDataSize(0)
 {
-  userUnpackHandler.callback = NULL;
-  userUnpackHandler.userData = NULL;
+  cleanUpPackage();
 }
 
 SubscriptionPackage::~SubscriptionPackage()
