@@ -661,43 +661,42 @@ enum DJIWaypointV2MissionState{
    *  The state of the operator is unknown. It is the initial state when the operator
    *  is just created.
    */
-    DJIWaypointV2MissionStateUnWaypointActionActuatorknown = -1,
+    DJIWaypointV2MissionStateUnknown = -1,
 
   /**
-   *  The connection OSDK device, remote controller and aircraft is
-   *  broken.
+   *  The ground station is not start.
    */
-    DJIWaypointV2MissionStateDisconnected = 0,
+    DJIWaypointV2MissionStateGroundStationNotStart= 0,
 
   /**
-   *  Raed to execute the mission.
+   *  The mission is prepared to execute it.
    */
-    DJIWaypointV2MissionStateReadyToExecute = 1,
+    DJIWaypointV2MissionStateMissionPrepared = 1,
 
   /**
-   *  The execution is started successfully.
+   *  The state is enter mission executing.
    */
-    DJIWaypointV2MissionStateExecuting = 2,
+    DJIWaypointV2MissionStateEnterMission = 2,
 
   /**
-   *  Waypoint mission is paused successfully.
+   *  The state is executing flying route mission.
    */
-    DJIWaypointV2MissionStateInterrupted = 3,
+    DJIWaypointV2MissionStateExecutingMission = 3,
 
   /**
-   *  Waypoint mission is restarted after interrupted.
+   *  The state is mission pause.
    */
-    DJIWaypointV2MissionStateResumeAfterInterrupted = 4,
+    DJIWaypointV2MissionStatePauseMission = 4,
 
   /**
-   *  Waypoint mission is exited.
+   *  The state is mission resume.
    */
-    DJIWaypointV2MissionStateExitMission = 5,
+    DJIWaypointV2MissionStateResumeMission = 5,
 
   /**
-   *  Waypoint mission is finished.
+   *  The state is mission exit.
    */
-    DJIWaypointV2MissionStateFinishedMission = 6,
+    DJIWaypointV2MissionStateExitMission = 6,
 };
 
 typedef uint8_t  RetCodeType;
