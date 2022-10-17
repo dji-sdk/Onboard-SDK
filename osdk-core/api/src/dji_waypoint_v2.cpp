@@ -475,8 +475,8 @@ void WaypointV2MissionOperator::RegisterOSDInfoCallback(Vehicle *vehiclePtr) {
 WaypointV2MissionOperator::WaypointV2MissionOperator(Vehicle *vehiclePtr) {
   this->vehiclePtr = vehiclePtr;
   takeoffAltitude = INVALID_TAKOFF_ALTITUDE;
-  currentState = DJIWaypointV2MissionStateUnWaypointActionActuatorknown;
-  prevState = DJIWaypointV2MissionStateUnWaypointActionActuatorknown;
+  currentState = DJIWaypointV2MissionStateUnknown;
+  prevState = DJIWaypointV2MissionStateUnknown;
   RegisterOSDInfoCallback(vehiclePtr);
 }
 

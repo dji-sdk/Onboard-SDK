@@ -146,7 +146,11 @@ void GimbalModule::rotateAsync(Rotation rotation,
     setting.pitch_angle = rotation.pitch * 10;
     setting.roll_angle = rotation.roll * 10;
     setting.allowance = 10;  /*!< 0.1 degree allowance */
-    setting.reference = 0; /*!< default reference (initial point) */
+    if (rotation.rotationMode == 0) {
+      setting.reference = 1;
+    } else {
+      setting.reference = 0;
+    }
     setting.coordinate = rotation.rotationMode;
     setting.is_control = 1; /*!< take control */
     setting.timeout = 0; /*!< default 2s timeout */
