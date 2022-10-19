@@ -69,9 +69,9 @@ class GimbalModule : public PayloadBase {
   typedef uint8_t retCodeType;
 
   typedef struct Rotation {
-    /*! rotation cooradiration
-     *  0 = execute angle command based on ground frame as the horizontal frame (NEU)
-     *  1 = execute angle command based on current gimbal angle
+    /*! rotation coordination
+     *  0 = execute angle command based on current gimbal angle
+     *  1 = execute angle command based on ground frame as the horizontal frame (NEU)
      */
     uint8_t rotationMode;
     /*! pitch angle in degree, unit : deg

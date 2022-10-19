@@ -46,10 +46,12 @@ This chart shows the latest firmware that were available and are supported at th
 
 You can get support from DJI and the community with the following methods:
 
-- **Send E-mail to dev@dji.com** describing your problem and a clear description of your setup
 - Post questions on Developer Forum
-  * [DJI SDK Developer Forum(Cn)](https://bbs.dji.com/forum-79-1.html?from=developer)
-  * [DJI SDK Developer Forum(En)](https://forum.dji.com/forum-139-1.html?from=developer)
+  * [DJI SDK Developer Forum(Cn)](https://djisdksupport.zendesk.com/hc/zh-cn/community/topics)
+  * [DJI SDK Developer Forum(En)](https://djisdksupport.zendesk.com/hc/en-us/community/topics)
+- Submit a request describing your problem on Developer Support
+  * [DJI SDK Developer Support(Cn)](https://djisdksupport.zendesk.com/hc/zh-cn/requests/new)
+  * [DJI SDK Developer Support(En)](https://djisdksupport.zendesk.com/hc/en-us/requests/new)
 - Github Issues or [gitter.im](https://gitter.im/dji-sdk/Onboard-SDK)
 - Post questions on [**Stackoverflow**](http://stackoverflow.com) using [**dji-sdk**](http://stackoverflow.com/questions/tagged/dji-sdk) tag
 

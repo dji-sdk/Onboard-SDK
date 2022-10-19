@@ -1113,6 +1113,7 @@ class ErrorCode {
       GS_ERR_CODE_TRAJ_FIRST_WP_TYPE_IS_WP_TURN_NO                = 0x10035,   /*!< first waypoint type error, it can not be WP_TURN_NO */
       GS_ERR_CODE_TRAJ_WP_EXCEED_RADIUS_LIMIT                     = 0x10038,   /*!< waypoint position exceed radius limit */
       GS_ERR_CODE_TRAJ_WP_EXCEED_HEIGHT_LIMIT                     = 0x10039,   /*!< waypoint position exceed height limit */
+      GS_ERR_CODE_TRAJ_UPLOADED_WP_EXCEED_HEIGHT_LIMIT            = 0x10040,   /*!< the uploaded waypoint exceed height limit */
     } ;
 
 /* The enum that defines the detail error code of flight-status module */

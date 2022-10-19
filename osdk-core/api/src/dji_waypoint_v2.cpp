@@ -196,8 +196,8 @@ std::vector<WaypointV2> transformMisssionInternal2Mission(std::vector<WaypointV2
   for(auto waypointV2Internal:missionInternal)
   {
     WaypointV2 waypointV2;
-    waypointV2.longitude = float64_t (waypointV2Internal.positionX) / (EARTH_RADIUS *cos(refLatitude))+ refLongitude;
-    waypointV2.latitude  = float64_t (waypointV2Internal.positionY) / EARTH_RADIUS + refLatitude ;
+    waypointV2.longitude = float64_t (waypointV2Internal.positionY) / (EARTH_RADIUS *cos(refLatitude))+ refLongitude;
+    waypointV2.latitude  = float64_t (waypointV2Internal.positionX) / EARTH_RADIUS + refLatitude ;
     waypointV2.relativeHeight    = waypointV2Internal.positionZ;
     waypointV2.waypointType      = waypointV2Internal.waypointType;
     waypointV2.headingMode       = waypointV2Internal.headingMode;
@@ -475,8 +475,8 @@ void WaypointV2MissionOperator::RegisterOSDInfoCallback(Vehicle *vehiclePtr) {
 WaypointV2MissionOperator::WaypointV2MissionOperator(Vehicle *vehiclePtr) {
   this->vehiclePtr = vehiclePtr;
   takeoffAltitude = INVALID_TAKOFF_ALTITUDE;
-  currentState = DJIWaypointV2MissionStateUnWaypointActionActuatorknown;
-  prevState = DJIWaypointV2MissionStateUnWaypointActionActuatorknown;
+  currentState = DJIWaypointV2MissionStateUnknown;
+  prevState = DJIWaypointV2MissionStateUnknown;
   RegisterOSDInfoCallback(vehiclePtr);
 }
 

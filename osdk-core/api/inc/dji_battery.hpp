@@ -86,14 +86,14 @@ typedef struct BatteryWholeInfo {
 
 /*! Smart battery self-checkout error flag */
 typedef enum DJISmartBatterySelfCheck {
-    DJI_BATTERY_SELF_CHECK_NORAML        = 0,
-    DJI_BATTERY_SELF_CHECK_NTC_ABNORAML  = 1,
-    DJI_BATTERY_SELF_CHECK_MOS_ABNROMAL  = 2,
-    DJI_BATTERY_SELF_CHECK_R_ABNORMAL    = 3,
-    DJI_BATTERY_SELF_CHECK_CELL_DAMAGE   = 4,
-    DJI_BATTERY_SELF_CHECK_CAL_EXP       = 5,
-    DJI_BATTERY_SELF_CHECK_GAUGEPARM_EXP = 6,
-    DJI_BATTERY_SELF_CHECK_RES           = 7,
+    DJI_BATTERY_SELF_CHECK_NORAML        = 0, /*! Battery is normal */
+    DJI_BATTERY_SELF_CHECK_NTC_ABNORAML  = 1, /*! Battery self-test NTC abnormal */
+    DJI_BATTERY_SELF_CHECK_MOS_ABNROMAL  = 2, /*! Battery self-test MOS is abnormal */
+    DJI_BATTERY_SELF_CHECK_R_ABNORMAL    = 3, /*! Battery self-check sampling resistance is abnormal */
+    DJI_BATTERY_SELF_CHECK_CELL_DAMAGE   = 4, /*! Battery cell is damaged */
+    DJI_BATTERY_SELF_CHECK_CAL_EXP       = 5, /*! Battery is not calibrated */
+    DJI_BATTERY_SELF_CHECK_GAUGEPARM_EXP = 6, /*! Abnormal fuel gauge parameters */
+    DJI_BATTERY_SELF_CHECK_RES           = 7, /*! Reserved */
 } DJISmartBatterySelfCheck;
 
 /*! Smart battery closed reason*/

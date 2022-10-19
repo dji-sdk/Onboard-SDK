@@ -176,7 +176,7 @@ LinuxUSBDevice::readall(uint8_t* buf, size_t maxlen)
   int read_len = 0, ret;
   ret = libusb_bulk_transfer(DJI_dev_handle, IN_END_PT,
                              buf, maxlen, &read_len, TIMEOUT);
-  if (0 == ret)
+  if (0 == ret || read_len != 0)
     return (size_t)read_len;
 
   return (size_t)-1;

@@ -661,43 +661,42 @@ enum DJIWaypointV2MissionState{
    *  The state of the operator is unknown. It is the initial state when the operator
    *  is just created.
    */
-    DJIWaypointV2MissionStateUnWaypointActionActuatorknown = -1,
+    DJIWaypointV2MissionStateUnknown = -1,
 
   /**
-   *  The connection OSDK device, remote controller and aircraft is
-   *  broken.
+   *  The ground station is not start.
    */
-    DJIWaypointV2MissionStateDisconnected = 0,
+    DJIWaypointV2MissionStateGroundStationNotStart= 0,
 
   /**
-   *  Raed to execute the mission.
+   *  The mission is prepared to execute it.
    */
-    DJIWaypointV2MissionStateReadyToExecute = 1,
+    DJIWaypointV2MissionStateMissionPrepared = 1,
 
   /**
-   *  The execution is started successfully.
+   *  The state is enter mission executing.
    */
-    DJIWaypointV2MissionStateExecuting = 2,
+    DJIWaypointV2MissionStateEnterMission = 2,
 
   /**
-   *  Waypoint mission is paused successfully.
+   *  The state is executing flying route mission.
    */
-    DJIWaypointV2MissionStateInterrupted = 3,
+    DJIWaypointV2MissionStateExecutingMission = 3,
 
   /**
-   *  Waypoint mission is restarted after interrupted.
+   *  The state is mission pause.
    */
-    DJIWaypointV2MissionStateResumeAfterInterrupted = 4,
+    DJIWaypointV2MissionStatePauseMission = 4,
 
   /**
-   *  Waypoint mission is exited.
+   *  The state is mission resume.
    */
-    DJIWaypointV2MissionStateExitMission = 5,
+    DJIWaypointV2MissionStateResumeMission = 5,
 
   /**
-   *  Waypoint mission is finished.
+   *  The state is mission exit.
    */
-    DJIWaypointV2MissionStateFinishedMission = 6,
+    DJIWaypointV2MissionStateExitMission = 6,
 };
 
 typedef uint8_t  RetCodeType;
@@ -1023,6 +1022,22 @@ typedef struct WaypointV2
    *  Represents current waypoint's speed config.
    */
   WaypointV2Config config;
+
+  /**Physical meaning: the turning distance in advance when the aircraft arrives at the waypoint;
+   * Unit: 0.01M
+   * Range: 0.2m ~ 655.25m
+   * Valid conditions:
+   * (1) Waypointtype = DJIWaypointV2FlightPathModeCoordinateTurn (enumeration value is 3)
+   *     The waypoint type is coordinated turning point, which needs to be set; 
+   *     Indicates that the aircraft starts to coordinate turning at the distance from the waypoint.
+   * (2) Waypointtype = DJIWaypointV2FlightPathModeGoToFirstPointAlongAStraightLine (enumeration value is 4)
+   *     The waypoint type is straight line entry point (first waypoint), which needs to be set; 
+   *     Indicates the straight line of the aircraft entering the route
+   * (3) Waypointtype = DJIWaypointV2FlightPathModeStraightOut (enumeration value is 5)
+   *     The waypoint type is straight exit point (terminal waypoint), which needs to be set;
+   *     Indicates how long a straight line the aircraft exits the route
+   * For other waypoint types, this value is not valid.
+   */
 
   uint16_t dampingDistance;
 
