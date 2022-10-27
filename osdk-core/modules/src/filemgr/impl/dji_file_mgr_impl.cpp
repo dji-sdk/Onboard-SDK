@@ -183,7 +183,7 @@ void FileMgrImpl::fileDataMonitorTask(void *arg) {
     uint32_t curTimeMs = 0;
     uint32_t preTimeMs = 0;
     uint32_t pollTimeMsInterval = 500;
-    uint32_t taskTimeOutMs = 6000;
+    uint32_t taskTimeOutMs = 30000;
     FileMgrImpl *impl = (FileMgrImpl *)arg;
     OsdkOsal_GetTimeMs(&curTimeMs);
     OsdkOsal_GetTimeMs(&preTimeMs);
