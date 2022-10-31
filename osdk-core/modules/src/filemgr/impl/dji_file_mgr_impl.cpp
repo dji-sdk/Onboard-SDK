@@ -390,7 +390,7 @@ FileMgrImpl::FileNameRule FileMgrImpl::getNameRule() {
   cmdInfo.packetType = OSDK_COMMAND_PACKET_TYPE_REQUEST;
   cmdInfo.addr       = GEN_ADDR(0, ADDR_V1_COMMAND_INDEX);
   cmdInfo.receiver =
-    OSDK_COMMAND_DEVICE_ID(this->type, this->index);
+    OSDK_COMMAND_DEVICE_ID(this->type, this->index * 2);
   cmdInfo.sender     = linker->getLocalSenderId();
   E_OsdkStat linkAck = linker->sendSync(&cmdInfo, &temp, &ackInfo, ackData,
                                         250, 2);
@@ -593,6 +593,10 @@ FilePackage FileMgrImpl::parseFileList(std::list<DataPointer> fullDataList) {
   /*! Parse file list total info */
   auto listdata = (dji_file_list_download_resp *)((uint8_t *)dataFront.data + sizeof(dji_general_transfer_msg_ack) - 1);
   DSTATUS("###data->amount = %d, data->len = %d", listdata->amount, listdata->len);
+  if (listdata->len > fullDataList.size() * maxDataFrameLen) {
+    DERROR("File list total data len error !");
+    return pack;
+  }
 
   /*! Make the total data buffer */
   DataPointer dataPtr = {malloc(listdata->len), 0};
@@ -875,7 +879,6 @@ void FileMgrImpl::fileDataRawDataCB(dji_general_transfer_msg_ack *rsp) {
       (range_handler_->GetLastNotReceiveSeq() == rsp->seq + 1)) {
     DSTATUS("Got the last one pack .");
     packFinishFlag = true;
-    fileDataHandler->mmap_file_buffer_->deInit();
   }
   if (range_handler_->GetNoAckRanges().size() != 0) {
     DERROR("pack loss !!!");
