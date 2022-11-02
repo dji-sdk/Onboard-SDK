@@ -183,7 +183,7 @@ void FileMgrImpl::fileDataMonitorTask(void *arg) {
     uint32_t curTimeMs = 0;
     uint32_t preTimeMs = 0;
     uint32_t pollTimeMsInterval = 500;
-    uint32_t taskTimeOutMs = 3000;
+    uint32_t taskTimeOutMs = 6000;
     FileMgrImpl *impl = (FileMgrImpl *)arg;
     OsdkOsal_GetTimeMs(&curTimeMs);
     OsdkOsal_GetTimeMs(&preTimeMs);
@@ -578,7 +578,6 @@ std::string FileMgrImpl::GetSuffixByFileType(MediaFileType type) {
 }
 
 FilePackage FileMgrImpl::parseFileList(std::list<DataPointer> fullDataList) {
-  const uint32_t maxDataFrameLen = 1024; //link data frame max size
   size_t chunk_index = 0;
   FilePackage pack;
   pack.type = FileType::UNKNOWN;
@@ -593,10 +592,6 @@ FilePackage FileMgrImpl::parseFileList(std::list<DataPointer> fullDataList) {
   /*! Parse file list total info */
   auto listdata = (dji_file_list_download_resp *)((uint8_t *)dataFront.data + sizeof(dji_general_transfer_msg_ack) - 1);
   DSTATUS("###data->amount = %d, data->len = %d", listdata->amount, listdata->len);
-  if (listdata->len > fullDataList.size() * maxDataFrameLen) {
-    DERROR("File list total data len error !");
-    return pack;
-  }
 
   /*! Make the total data buffer */
   DataPointer dataPtr = {malloc(listdata->len), 0};
@@ -879,6 +874,7 @@ void FileMgrImpl::fileDataRawDataCB(dji_general_transfer_msg_ack *rsp) {
       (range_handler_->GetLastNotReceiveSeq() == rsp->seq + 1)) {
     DSTATUS("Got the last one pack .");
     packFinishFlag = true;
+    fileDataHandler->mmap_file_buffer_->deInit();
   }
   if (range_handler_->GetNoAckRanges().size() != 0) {
     DERROR("pack loss !!!");
