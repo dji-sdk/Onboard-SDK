@@ -304,7 +304,7 @@ public:
   Control(Vehicle* vehicle = 0);
   ~Control();
 
-  Vehicle* vehicle;
+  Vehicle* vehicle = nullptr;
 
 
   ////// Control authorities //////

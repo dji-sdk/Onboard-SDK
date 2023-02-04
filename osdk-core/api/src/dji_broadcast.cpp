@@ -410,8 +410,6 @@ DataBroadcast::setBroadcastFreq(uint8_t* dataLenIs16, VehicleCallBack callback,
 ACK::ErrorCode
 DataBroadcast::setBroadcastFreq(uint8_t* dataLenIs16, int timeout)
 {
-  ACK::ErrorCode ack;
-
   for (int i = 0; i < 16; ++i)
   {
     dataLenIs16[i] = (dataLenIs16[i] > 7 ? 5 : dataLenIs16[i]);

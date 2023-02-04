@@ -34,8 +34,8 @@ using namespace DJI;
 using namespace DJI::OSDK;
 
 Control::Control(Vehicle* vehicle)
-  : vehicle(vehicle)
-  , wait_timeout(10)
+  : wait_timeout(10)
+  , vehicle(vehicle)
 {
   DSTATUS("The control class is going to be deprecated.\
 It will be better to use the FlightController class instead!");
@@ -500,9 +500,8 @@ Control::actionCallback(Vehicle* vehiclePtr, RecvContainer recvFrame,
                         UserData userData)
 {
   ACK::ErrorCode ack;
-  Control*       controlPtr = vehiclePtr->control;
 
-  if (recvFrame.recvInfo.len - OpenProtocol::PackageMin <= sizeof(uint16_t))
+  if (recvFrame.recvInfo.len - OpenProtocol::PackageMin <= static_cast<int>(sizeof(uint16_t)))
   {
 
     ack.info = recvFrame.recvInfo;
