@@ -70,7 +70,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES Linux)
   add_subdirectory(sample/platform/linux)
 endif()
 
-#[[
+
 INSTALL(DIRECTORY osdk-lib/${ARCH}/osdk-core/inc/
 	DESTINATION ${CMAKE_INSTALL_PREFIX}/include
 	FILES_MATCHING PATTERN "*.h*")
@@ -94,6 +94,6 @@ INSTALL(DIRECTORY osdk-lib/${ARCH}/advanced-sensing-2.0.3/lib/
 INSTALL(DIRECTORY osdk-lib/${ARCH}/waypointv2-core-1.0.0/lib/
         DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
         FILES_MATCHING PATTERN "*.a*")
-]]
+
 
 

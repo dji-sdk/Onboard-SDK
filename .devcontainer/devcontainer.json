@@ -1,0 +1,51 @@
+{
+    "name": "flight-algorithms",
+	"image": "docker.cloudsmith.io/thread-one/release/flight_controller:latest-dev",
+    // Set the workspace in VS code to match the one in the devcontainer
+    "workspaceFolder": "/workspace",
+    "workspaceMount": "source=${localWorkspaceFolder},target=/workspace/src/flight-algorithms,type=bind",
+    "remoteUser": "root",
+    "runArgs": [
+        "--network=host",
+        //"--publish 9999:9999/tcp",
+        "--cap-add=SYS_PTRACE",
+        "--security-opt=seccomp:unconfined",
+        "--security-opt=apparmor:unconfined",
+        "--volume=/tmp/.X11-unix:/tmp/.X11-unix",
+        "--volume=${localEnv:HOME}/.ssh:/home/ros/.ssh"
+    ],
+    "containerEnv": {
+        "DISPLAY": "${localEnv:DISPLAY}"
+    },
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "terminal.integrated.profiles.linux": {
+                    "bash": {
+                        "path": "bash"
+                    }
+                },
+                "terminal.integrated.defaultProfile.linux": "bash",
+                "files.eol": "\n"
+            },
+            "extensions": [
+                "ms-azuretools.vscode-docker",
+                "ms-python.python",
+                "ms-vscode.cpptools",
+                "redhat.vscode-yaml",
+                "smilerobotics.urdf",
+                "twxs.cmake",
+                "yzhang.markdown-all-in-one",
+                "ms-iot.vscode-ros",
+                "donjayamanne.githistory",
+                "eamodio.gitlens",
+                "ms-vscode.cpptools-extension-pack",
+                "mhutchie.git-graph",
+                "bierner.markdown-mermaid"
+            ]
+        }
+    },
+    "features": {},
+    // avoid dubious ownership https://www.kenmuse.com/blog/avoiding-dubious-ownership-in-dev-containers/
+    "postStartCommand": "git config --global --add safe.directory ${containerWorkspaceFolder}"
+}

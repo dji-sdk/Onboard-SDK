@@ -1,0 +1,94 @@
+version: 2.1
+orbs:
+  docker: circleci/docker@2.1.4
+  cloudsmith: cloudsmith/cloudsmith@1.0.5
+jobs:
+
+  package:
+    machine:
+      image: ubuntu-2004:202101-01
+      docker_layer_caching: true
+      # arm64 not supported.  Must use machine image with docker cli https://circleci.com/docs/using-arm/#limitations
+    parameters:
+      source-path:
+        type: string
+        default: .
+      docker-build-image:
+        type: string
+        default: docker.cloudsmith.io/thread-one/release/flight_controller:latest-dev
+      package-repo-org:
+        type: string
+        default: thread-one
+      package-repo:
+        type: string
+        default: dev
+      package-format: 
+        type: string
+        default: deb
+      package-distribution:
+        type: string
+        default: ubuntu/focal
+      package-path:
+        type: string
+        default: dist/*.deb
+      resource_class:
+        description: The architecture and size of the machine
+        type: string
+    resource_class: << parameters.resource_class >>
+
+    steps:
+      - checkout
+      - docker/check:
+          registry:  docker.cloudsmith.io
+          docker-username: CLOUDSMITH_API_USER
+          docker-password: CLOUDSMITH_API_KEY
+      - cloudsmith/ensure-api-key
+      - docker/pull:
+          images: << parameters.docker-build-image >>
+      - run:
+          name: Build Debian Package
+          command: |
+            # calling make debian within the docker to build the package for deployment
+            VERSION=$(git describe --tags)-<< parameters.resource_class >>
+            echo ==========================================================
+            echo build debian package
+            echo ==========================================================
+            docker run -v `pwd`:/workspace -w /workspace << parameters.docker-build-image >> /bin/bash -c ".circleci/package.sh $VERSION"
+
+
+      - cloudsmith/install-cli
+      - cloudsmith/publish:
+          cloudsmith-repository:  << parameters.package-repo-org >>/<< parameters.package-repo >>
+          package-format: << parameters.package-format >>
+          package-distribution: << parameters.package-distribution >>
+          package-path: << parameters.source-path >>/<< parameters.package-path >>
+      - store_test_results:
+          path: test_results
+      - store_artifacts:
+          path: dist  
+workflows:
+  development:
+    jobs:
+      - package:
+          matrix:
+            parameters:
+              resource_class: [medium, arm.medium]
+          context:
+            - cloudsmith-creds     
+          filters:  
+            branches:
+              ignore: main
+  release:
+    jobs:
+      - package:
+          filters:  
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
+          matrix:
+            parameters:
+              resource_class: [medium, arm.medium]
+          package-repo: "release"
+          context:
+            - cloudsmith-creds 
