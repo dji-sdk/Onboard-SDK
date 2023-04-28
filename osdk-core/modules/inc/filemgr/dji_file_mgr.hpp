@@ -50,6 +50,8 @@ class FileMgr {
   typedef void (*FileDataReqCBType)(E_OsdkStat ret_code, void* userData);
 
   ErrorCode::ErrorCodeType startReqFileList(E_OSDKCommandDeiveType type, uint8_t index, FileListReqCBType cb, void* userData);
+  ErrorCode::ErrorCodeType startReqFileListBySlices(E_OSDKCommandDeiveType type, uint8_t index, uint32_t startFileIndex,
+                                                    uint16_t count, FileListReqCBType cb, void* userData);
   ErrorCode::ErrorCodeType startReqFileData(E_OSDKCommandDeiveType type, uint8_t index, int fileIndex, std::string localPath, FileDataReqCBType cb, void* userData);
 
  private:
