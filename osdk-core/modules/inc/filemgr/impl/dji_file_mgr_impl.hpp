@@ -98,11 +98,14 @@ class FileMgrImpl {
 
   void setTargetDevice(E_OSDKCommandDeiveType type, uint8_t index);
 
-  ErrorCode::ErrorCodeType startReqFileList(FileMgr::FileListReqCBType cb, void* userData);
+  ErrorCode::ErrorCodeType startReqFileList(FileMgr::FileListReqCBType cb,
+                                            uint32_t startFileIndex,
+                                            uint16_t count,
+                                            void* userData);
   ErrorCode::ErrorCodeType startReqFileData(int fileIndex, std::string localPath, FileMgr::FileDataReqCBType cb, void* userData);
 
   void HandlePushPack(dji_general_transfer_msg_ack *rsp);
-  ErrorCode::ErrorCodeType SendReqFileListPack();
+  ErrorCode::ErrorCodeType SendReqFileListPack(uint32_t index, uint32_t count);
   ErrorCode::ErrorCodeType SendReqFileDataPack(int fileIndex) ;
 
  private:
@@ -126,6 +129,7 @@ class FileMgrImpl {
   uint8_t index;
   FileNameRule nameRule;
   FileNameRule getNameRule();
+  uint16_t sessionId;
 
  private:
   //typedef void (*FileDataReqCBType)(E_OsdkStat ret_code, dji_general_transfer_msg_ack* ackData);
