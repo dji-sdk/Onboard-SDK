@@ -161,7 +161,7 @@ typedef enum
   UID_POSITION_VO              = 0xd3462697,
   UID_AVOID_DATA               = 0xf6405daa,
   UID_DUAL_GIMBAL_FULL_DATA    = 0xcfeea4fa,
-  UID_THREE_GIMBAL_FULL_DATA   = 0x19d374a0,
+  UID_THREE_GIMBAL_FULL_DATA   = 0xb9c5d99e,
 } TOPIC_UID;
 
 // clang-format on

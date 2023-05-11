@@ -50,7 +50,17 @@ FileMgr::~FileMgr(){
 ErrorCode::ErrorCodeType FileMgr::startReqFileList(E_OSDKCommandDeiveType type,
                           uint8_t index, FileListReqCBType cb, void* userData) {
   impl->setTargetDevice(type, index);
-  return impl->startReqFileList(cb, userData);
+  return impl->startReqFileList(cb, 0, 0xFFFF, userData);
+}
+
+ErrorCode::ErrorCodeType FileMgr::startReqFileListBySlices(E_OSDKCommandDeiveType type,
+                                                           uint8_t index,
+                                                           uint32_t startFileIndex,
+                                                           uint16_t count,
+                                                           FileListReqCBType cb,
+                                                           void* userData) {
+  impl->setTargetDevice(type, index);
+  return impl->startReqFileList(cb, startFileIndex, count, userData);
 }
 
 ErrorCode::ErrorCodeType FileMgr::startReqFileData(E_OSDKCommandDeiveType type,

@@ -1190,6 +1190,15 @@ ErrorCode::ErrorCodeType CameraManager::startReqFileList(PayloadIndexType index,
   return ret;
 }
 
+ErrorCode::ErrorCodeType CameraManager::startReqFileListbySlices(PayloadIndexType index,
+                                        uint32_t startFileIndex, uint16_t count,
+                                        FileMgr::FileListReqCBType cb, void *userData) {
+  ErrorCode::ErrorCodeType ret;
+  ret = fileMgr->startReqFileListBySlices(OSDK_COMMAND_DEVICE_TYPE_CAMERA,
+                                  PAYLOAD_INDEX_TO_DEVICE_ID(index), startFileIndex, count, cb, userData);
+  return ret;
+}
+
 ErrorCode::ErrorCodeType CameraManager::startReqFileData(PayloadIndexType index, int fileIndex, std::string localPath, FileMgr::FileDataReqCBType cb, void *userData) {
   ErrorCode::ErrorCodeType ret;
   ret = fileMgr->startReqFileData(OSDK_COMMAND_DEVICE_TYPE_CAMERA,
