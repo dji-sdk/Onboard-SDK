@@ -74,6 +74,10 @@ int main(int argc, char **argv) {
         << std::endl
         << "| [b] Download main camera filedata from case a                  |"
         << std::endl
+        << "| [c] Download main camera filelist by slices                    |"
+        << std::endl
+        << "| [d] Download main camera filedata from case c                  |"
+        << std::endl
         << "| [q] Quit                                                       |"
         << std::endl;
     char inputChar = 0;
@@ -98,7 +102,27 @@ int main(int argc, char **argv) {
         ErrorCode::printErrorCodeMsg(ret);
         break;
       }
-      case 'b': {
+      case 'c':
+        ErrorCode::ErrorCodeType ret;
+        DSTATUS("Play back mode setting......");
+        vehicle->cameraManager->setModeSync(PAYLOAD_INDEX_0,
+                                            CameraModule::WorkMode::PLAYBACK,
+                                            2);
+        DSTATUS("Get liveview right......");
+        ret = vehicle->cameraManager->obtainDownloadRightSync(PAYLOAD_INDEX_0,
+                                                              true, 2);
+        ErrorCode::printErrorCodeMsg(ret);
+        DSTATUS("Try to download file list by slices .......");
+        ret = vehicle->cameraManager->startReqFileListbySlices(
+          PAYLOAD_INDEX_0,
+          0,
+          100,
+          fileListReqCB,
+          (void*)("Download main camera file list by slices."));
+        ErrorCode::printErrorCodeMsg(ret);
+        break;
+      case 'b':
+      case 'd': {
         ErrorCode::ErrorCodeType ret;
         DSTATUS("Download file number : %d", cur_file_list.media.size());
         uint32_t downloadCnt = cur_file_list.media.size();

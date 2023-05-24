@@ -1738,6 +1738,22 @@ class CameraManager {
    */
   ErrorCode::ErrorCodeType startReqFileList(PayloadIndexType index, FileMgr::FileListReqCBType cb, void *userData);
 
+  /*! @brief start to requeset the filelist data of camera by slices, non-blocking calls
+   *
+   *  @platforms M300
+   *  @param index Camera module index, input limit see enum
+   * DJI::OSDK::PayloadIndexType
+   *  @param startFileIndex: the index of the file list to start downloading, from 0-N
+   *  @param count: the number of file lists downloaded at a time
+   *  @param cb The download result will be called by this cb. The detail
+   * of the callback ref to the DJI::OSDK::FileMgr::FileListReqCBType
+   *  @param userData The parameter to pass user data into the cb
+   *  @return ErrorCode::ErrorCodeType error code
+   */
+  ErrorCode::ErrorCodeType startReqFileListbySlices(PayloadIndexType index,
+                                                    uint32_t startFileIndex, uint16_t count,
+                                                    FileMgr::FileListReqCBType cb, void *userData);
+
   /*! @brief start to requeset the files of camera, non-blocking calls
    *
    *  @platforms M300

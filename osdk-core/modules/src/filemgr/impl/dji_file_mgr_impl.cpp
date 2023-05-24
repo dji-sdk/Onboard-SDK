@@ -234,6 +234,7 @@ void FileMgrImpl::fileDataMonitorTask(void *arg) {
 FileMgrImpl::FileMgrImpl(Linker *linker) : linker(linker) {
   type = OSDK_COMMAND_DEVICE_TYPE_NONE;
   index = 0;
+  sessionId = 999;
   fileListHandler = new DownloadListHandler();
   fileDataHandler = new DownloadDataHandler();
   localSenderId = OSDK_COMMAND_DEVICE_ID(OSDK_COMMAND_DEVICE_TYPE_APP, 0);
@@ -256,6 +257,7 @@ FileMgrImpl::FileMgrImpl(Linker *linker) : linker(linker) {
 }
 
 FileMgrImpl::~FileMgrImpl(){
+  sessionId = 999;
   if (fileListHandler) {
     delete fileListHandler;
   }
@@ -265,7 +267,7 @@ FileMgrImpl::~FileMgrImpl(){
 }
 
 
-ErrorCode::ErrorCodeType FileMgrImpl::SendReqFileListPack() {
+ErrorCode::ErrorCodeType FileMgrImpl::SendReqFileListPack(uint32_t index, uint32_t count) {
   uint8_t reqBuf[1024] = {0};
   dji_general_transfer_msg_req
       *setting = (dji_general_transfer_msg_req *) reqBuf;
@@ -274,13 +276,13 @@ ErrorCode::ErrorCodeType FileMgrImpl::SendReqFileListPack() {
   setting->task_id = DJI_GENERAL_DOWNLOAD_FILE_TASK_TYPE_LIST;
   setting->func_id = DJI_GENERAL_DOWNLOAD_FILE_FUNC_TYPE_REQ;
   setting->msg_flag = 0;
-  setting->session_id = 999;
+  setting->session_id = sessionId++;
   setting->seq = 0;
 
   dji_file_list_download_req reqData = {0};
   reqData.index.drive = 0;
-  reqData.index.index = 1;
-  reqData.count = 0xffff;
+  reqData.index.index = index + 1;
+  reqData.count = count;
   reqData.type = DJI_MEDIA;
   uint32_t reqDataLen =
       sizeof(reqData) - sizeof(reqData.filter_enable)
@@ -329,7 +331,7 @@ ErrorCode::ErrorCodeType FileMgrImpl::SendReqFileDataPack(int fileIndex) {
   setting->task_id = DJI_GENERAL_DOWNLOAD_FILE_TASK_TYPE_FILE;
   setting->func_id = DJI_GENERAL_DOWNLOAD_FILE_FUNC_TYPE_REQ;
   setting->msg_flag = 0;
-  setting->session_id = 999;
+  setting->session_id = sessionId++;
   setting->seq = 0;
 
   dji_file_download_req reqData = {0};
@@ -405,7 +407,10 @@ FileMgrImpl::FileNameRule FileMgrImpl::getNameRule() {
   }
 }
 
-ErrorCode::ErrorCodeType FileMgrImpl::startReqFileList(FileMgr::FileListReqCBType cb, void* userData) {
+ErrorCode::ErrorCodeType FileMgrImpl::startReqFileList(FileMgr::FileListReqCBType cb,
+                                                       uint32_t startFileIndex,
+                                                       uint16_t count,
+                                                       void* userData) {
   if ((fileListHandler->downloadState == DOWNLOAD_IDLE) &&
       (fileDataHandler->downloadState == DOWNLOAD_IDLE)) {
     nameRule = getNameRule();
@@ -426,7 +431,7 @@ ErrorCode::ErrorCodeType FileMgrImpl::startReqFileList(FileMgr::FileListReqCBTyp
     fileListHandler->reqCB = cb;
     fileListHandler->reqCBUserData = userData;
 
-    return SendReqFileListPack();
+    return SendReqFileListPack(startFileIndex, count);
   } else {
     DERROR("Current state cannot support to do downloading ...");
     return ErrorCode::CameraCommonErr::InvalidState;
