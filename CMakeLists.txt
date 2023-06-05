@@ -97,3 +97,10 @@ INSTALL(DIRECTORY osdk-lib/${ARCH}/waypointv2-core-1.0.0/lib/
 
 
 
+
+
+SET(CPACK_PACKAGE_VERSION $ENV{VERSION})
+
+SET(CPACK_GENERATOR "DEB")
+SET(CPACK_DEBIAN_PACKAGE_MAINTAINER "dev@airtonomy.ai") #required
+INCLUDE(CPack)

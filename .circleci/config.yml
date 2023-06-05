@@ -72,7 +72,7 @@ workflows:
       - package:
           matrix:
             parameters:
-              resource_class: [medium, arm.medium]
+              resource_class: [large, arm.large]
           context:
             - cloudsmith-creds     
           filters:  
@@ -88,7 +88,7 @@ workflows:
               ignore: /.*/
           matrix:
             parameters:
-              resource_class: [medium, arm.medium]
+              resource_class: [large, arm.large]
           package-repo: "release"
           context:
             - cloudsmith-creds 

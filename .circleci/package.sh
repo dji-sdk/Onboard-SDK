@@ -8,12 +8,12 @@ version=$(echo ${version} | sed -r 's/-/+/2')
 echo "version=$version"
 export VERSION=${version}
 DEBIAN_FRONTEND=noninteractive apt-get update
-DEBIAN_FRONTEND=noninteractive apt-get install -y libpcl-dev libeigen3-dev
+DEBIAN_FRONTEND=noninteractive apt-get install -y libpcl-dev libeigen3-dev libusb-1.0-0-dev
 mkdir build
 cd build
 cmake ..
 make -j
-cmake --build .
+cmake --build . --config RELEASE 
 cpack
 mkdir -p ../dist/
 cp ./*.deb ../dist/
