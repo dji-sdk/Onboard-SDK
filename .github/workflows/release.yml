@@ -1,0 +1,67 @@
+on:
+  push:
+    branches:
+      - airtonomy/main
+jobs:
+  release:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 #required for tags
+      - name: Setup Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.7
+      - name: Bump Next Release Version
+        run: |
+          set -e
+          # previous version in github tags or return empty if none
+          PREVIOUS_VERSION=$(git describe --tags --abbrev=0 || true)
+          echo "Previous version is ${PREVIOUS_VERSION}"
+          #bumpver uses calendar versioning to create the next version
+          pip3 install bumpver==2022.1116
+          # second patch of day returns two lines so always just grab the first
+          NEXT_VERSION_RESULT=$(bumpver test ${PREVIOUS_VERSION:-22.21.11} 'YY.0W.BUILD' | head -n 1)
+          NEXT_RELEASE_VERSION=$(cut -d ":" -f2 <<< "${NEXT_VERSION_RESULT}" | xargs)
+          echo "Next version is ${NEXT_RELEASE_VERSION}"
+          echo "NEXT_RELEASE_VERSION=${NEXT_RELEASE_VERSION}" >> $GITHUB_ENV
+          echo "PREVIOUS_RELEASE_VERSION=${PREVIOUS_VERSION}" >> $GITHUB_ENV
+      - run: echo Bumping from ${PREVIOUS_RELEASE_VERSION} to ${NEXT_RELEASE_VERSION}
+      # Find the PR associated with this push, if there is one.
+      - uses: Airtonomy/gh-find-current-pr@v1
+        id: findPr
+        with:
+          state: all
+      - name: Create Release Body from Pull Request
+        run: | 
+          RELEASE_TITLE="${NEXT_RELEASE_VERSION}: ${PR_TITLE}"
+          RELEASE_BODY="<a href="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/pull/${PR_NUMBER}">Pull Request #${PR_NUMBER}</a><br/><a href="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/compare/${PREVIOUS_RELEASE_VERSION}...${NEXT_RELEASE_VERSION}">${PREVIOUS_RELEASE_VERSION}...${NEXT_RELEASE_VERSION}</a>"
+          echo "title: ${RELEASE_TITLE}"
+          echo "body: ${RELEASE_BODY}"
+          echo "RELEASE_TITLE=${RELEASE_TITLE}" >> $GITHUB_ENV
+          echo "RELEASE_BODY=${RELEASE_BODY}" >> $GITHUB_ENV
+        if: success() && steps.findPr.outputs.number
+        env:
+          PR_NUMBER: ${{ steps.findPr.outputs.number }}
+          PR_TITLE: ${{ steps.findPr.outputs.title }}
+          NEXT_RELEASE_VERSION: ${{ env.NEXT_RELEASE_VERSION }}
+          PREVIOUS_RELEASE_VERSION: ${{ env.PREVIOUS_RELEASE_VERSION }}
+      - uses: actions/setup-go@v3
+        with:
+          go-version: '1.18.1'
+      - name: Create Release Tag
+        run: |
+          go install github.com/tcnksm/ghr@v0.14.0
+          ghr -t ${{secrets.GITHUB_TOKEN}} -c ${GITHUB_SHA} -n "${RELEASE_TITLE}" -b "${RELEASE_BODY}" ${NEXT_RELEASE_VERSION}
+        env:
+          RELEASE_TITLE: ${{ env.RELEASE_TITLE }}
+          RELEASE_BODY: ${{ env.RELEASE_BODY }}
+      - name: Comment Related Pull Requests
+        uses: Airtonomy/add-pr-comment@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          message: |
+           :robot: Released in [${{ env.NEXT_RELEASE_VERSION }}](${{ github.server_url }}/${{ github.repository }}/releases/tag/${{ env.NEXT_RELEASE_VERSION }})
+          allow-repeats: false
