@@ -21,7 +21,7 @@
 # *
 
 
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8.12)
 project(onboardsdk-linux-samples)
 
 # set(DJIOSDK_DIR ${OSDK_CORE_LIB_DIR}/lib/cmake/djiosdk)

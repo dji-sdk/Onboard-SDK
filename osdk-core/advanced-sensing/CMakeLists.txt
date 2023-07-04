@@ -4,7 +4,7 @@
 #*  please visit https://developer.dji.com/policies/eula/
 #*
 
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8.12)
 project(advanced-sensing)
 
 unset(MY_CPU_ARCH)
