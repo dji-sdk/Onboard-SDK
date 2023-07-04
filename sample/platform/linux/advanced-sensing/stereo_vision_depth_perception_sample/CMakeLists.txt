@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8.12)
 project(stereo-vision-depth-perception-sample)
 
 find_path(OPENCV_CONTRIB_IMG_PROC

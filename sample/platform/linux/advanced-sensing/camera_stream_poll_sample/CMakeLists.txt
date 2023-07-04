@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8.12)
 project(camera-stream-poll-sample)
 
 # Try to see if user has OpenCV installed
