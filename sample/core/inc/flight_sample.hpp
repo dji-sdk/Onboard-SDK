@@ -157,6 +157,7 @@ class FlightSample {
   void velocityAndYawRateCtrl(const Vector3f &offsetDesired, float yawRate, uint32_t timeMs);
 
   void emergencyBrake(void);
+  static Vector3f quaternionToEulerAngle(const Telemetry::Quaternion &quat);
 
  private:
   Vehicle *vehicle;
@@ -168,7 +169,6 @@ class FlightSample {
                                                          const Telemetry::GPSFused& origin,
                                                          const float32_t& targetHeight, 
                                                          const float32_t& originHeight);
-  static Vector3f quaternionToEulerAngle(const Telemetry::Quaternion &quat);
   static void  horizCommandLimit(float speedFactor, float& commandX, float& commandY);
 
   bool motorStartedCheck();

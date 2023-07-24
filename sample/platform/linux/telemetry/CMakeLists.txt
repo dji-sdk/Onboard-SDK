@@ -31,6 +31,9 @@ FILE(GLOB SOURCE_FILES *.hpp *.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_helpers.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/../hal/*.c
         ${CMAKE_CURRENT_SOURCE_DIR}/../osal/*.c
+
+        # for euler angle function
+        ${CMAKE_CURRENT_SOURCE_DIR}/../../../core/src/flight_sample.cpp
         )
 
 if (OSDK_HOTPLUG)
@@ -38,3 +41,16 @@ if (OSDK_HOTPLUG)
 endif ()
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
+
+# for euler angle function
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../core/inc)
+
+# Linking to RPC Client
+
+target_link_libraries(${PROJECT_NAME} 
+xmlrpc++
+xmlrpc_client++ 
+xmlrpc_util
+boost_filesystem
+boost_system
+)
