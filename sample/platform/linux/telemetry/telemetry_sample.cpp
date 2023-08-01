@@ -665,7 +665,7 @@ subscribeToDataAndSaveLogToFile(Vehicle* vehicle, int responseTimeout)
     TypeMap<TOPIC_QUATERNION>::type        quaternion;
     TypeMap<TOPIC_ANGULAR_RATE_FUSIONED>::type        angular_rate;
 
-    std::string logPath = "/home/droneteam/Documents/Onboard-SDK/logs/";
+    std::string logPath = "/home/weiminn/Documents/Onboard-SDK/logs/";
     boost::filesystem::create_directories(logPath);
     std::string fileName = logPath + std::to_string((int)time(NULL)) + "_log.txt";
 

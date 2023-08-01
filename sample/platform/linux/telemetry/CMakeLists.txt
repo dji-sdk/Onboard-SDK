@@ -43,10 +43,12 @@ endif ()
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
 # for euler angle function
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../core/inc)
+target_include_directories(${PROJECT_NAME} 
+    PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../core/inc
+)
 
 # Linking to RPC Client
-
 target_link_libraries(${PROJECT_NAME} 
 xmlrpc++
 xmlrpc_client++ 
