@@ -142,6 +142,7 @@ void FlightSample::velocityAndYawRateCtrl(const Vector3f &offsetDesired,
   OsdkOsal_GetTimeMs(&currentTime);
   elapsedTimeInMs = currentTime - originTime;
 
+
   FlightController::JoystickMode joystickMode = {
     FlightController::HorizontalLogic::HORIZONTAL_VELOCITY,
     FlightController::VerticalLogic::VERTICAL_VELOCITY,

@@ -5,6 +5,8 @@
 #include <time.h>
 #include "flight_control_sample.hpp"
 
+// #include "grammar.cpp"
+
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
 using namespace std;
@@ -168,6 +170,9 @@ subscribeToDataAndSaveLogToFile(Vehicle* vehicle, int responseTimeout)
     }
 
     std::cout << "Done printing!\n";
+    vehicle->subscribe->removePackage(0, responseTimeout);
+    vehicle->subscribe->removePackage(1, responseTimeout);
+    
     return true;
 }
 
