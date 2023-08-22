@@ -306,6 +306,9 @@ public:
 
   Vehicle* vehicle = nullptr;
 
+  void setVehicle(Vehicle* v) {
+    vehicle = v;
+  }
 
   ////// Control authorities //////
 

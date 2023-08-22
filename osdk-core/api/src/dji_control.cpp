@@ -609,19 +609,31 @@ Control::releaseCtrlAuthority(VehicleCallBack callback, UserData userData)
 ACK::ErrorCode
 Control::releaseCtrlAuthority(int timeout)
 {
-  ACK::ErrorCode ack;
+  ACK::ErrorCode* ack = nullptr;
   uint8_t        data = 0;
-
-  ack = *(ACK::ErrorCode *) vehicle->legacyLinker->sendSync(
+  if (nullptr == vehicle) {
+    printf("nullptr == vehicle\n");
+  }
+  if (nullptr == vehicle->legacyLinker) {
+    printf("nullptr == vehicle->legacyLinker\n");
+  }
+  printf("before legacyLinker->sendSync\n");
+  ack = (ACK::ErrorCode *) vehicle->legacyLinker->sendSync(
       OpenProtocolCMD::CMDSet::Control::setControl, &data, 1,
       timeout * 1000 / 2, 2);
-  if (ack.data == OpenProtocolCMD::ErrorCode::ControlACK::SetControl::
+  if (nullptr == ack) {
+    printf("nullptr == ack\n");
+  }
+  printf("after legacyLinker->sendSync\n");
+  if (ack->data == OpenProtocolCMD::ErrorCode::ControlACK::SetControl::
   RELEASE_CONTROL_IN_PROGRESS)
   {
-    ack = this->releaseCtrlAuthority(timeout);
+    printf("before releaseCtrlAuthority(timeout)\n");
+    *ack = this->releaseCtrlAuthority(timeout);
+    printf("after releaseCtrlAuthority(timeout)\n");
   }
 
-  return ack;
+  return *ack;
 }
 
 void
