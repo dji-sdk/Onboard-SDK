@@ -9,6 +9,7 @@
 #ifndef ADVANCED_SENSING_DJI_CAMERA_IMAGE_HPP
 #define ADVANCED_SENSING_DJI_CAMERA_IMAGE_HPP
 #include <cstdint>
+#include <mutex>
 #include <vector>
 
 /*! @brief Data structure for the image frames from the
@@ -20,12 +21,13 @@ struct CameraRGBImage
   std::vector<uint8_t> rawData;
   int height;
   int width;
+  uint64_t time;
 };
 
 /*! @brief User callback function called by OSDK (in a dedicated thread)
  *  when a new image frame from camera is received.
  */
-typedef void (*CameraImageCallback)(CameraRGBImage pImg, void* userData);
+typedef void (*CameraImageCallback)(CameraRGBImage& pImg, pthread_mutex_t& mut, void* userData);
 
 /*! @brief User callback function called by OSDK (in a dedicated thread)
  *  when a H264 frame is received.

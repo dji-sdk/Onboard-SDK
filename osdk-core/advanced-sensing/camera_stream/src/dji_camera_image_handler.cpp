@@ -37,6 +37,10 @@ DJICameraImageHandler::~DJICameraImageHandler()
   pthread_cond_destroy(&m_condv);
 }
 
+pthread_mutex_t& DJICameraImageHandler::getMutex() {
+  return m_mutex;
+}
+
 bool DJICameraImageHandler::getNewImageWithLock(CameraRGBImage & copyOfImage, int timeoutMilliSec)
 {
   int result = -1;
@@ -72,18 +76,19 @@ bool DJICameraImageHandler::getNewImageWithLock(CameraRGBImage & copyOfImage, in
   return (result == 0) ? true : false;
 }
 
-bool DJICameraImageHandler::newImageIsReady()
+bool DJICameraImageHandler::newImageIsReady() const
 {
   return m_newImageFlag;
 }
 
-void DJICameraImageHandler::writeNewImageWithLock(uint8_t* buf, int bufSize, int width, int height)
+void DJICameraImageHandler::writeNewImageWithLock(uint8_t* buf, int bufSize, int width, int height, uint64_t time)
 {
   pthread_mutex_lock(&m_mutex);
 
   m_img.rawData.assign(buf, buf+bufSize);
   m_img.height = height;
   m_img.width  = width;
+  m_img.time  = time;
   m_newImageFlag = true;
 
   pthread_cond_signal(&m_condv);

@@ -188,7 +188,7 @@ void DJICameraStreamDecoder::callbackThreadFunc()
 
     if(cb)
     {
-      (*cb)(copyOfImage, cbUserParam);
+      (*cb)(copyOfImage, decodedImageHandler.getMutex(), cbUserParam);
     }
   }
   DSTATUS_PRIVATE("Decoder Callback Thread Stopped...\n");
@@ -196,6 +196,7 @@ void DJICameraStreamDecoder::callbackThreadFunc()
 
 void DJICameraStreamDecoder::decodeBuffer(uint8_t* buf, int bufLen)
 {
+  auto time = std::chrono::high_resolution_clock::now().time_since_epoch().count();
   uint8_t* pData   = buf;
   int remainingLen = bufLen;
   int processedLen = 0;
@@ -255,7 +256,7 @@ void DJICameraStreamDecoder::decodeBuffer(uint8_t* buf, int bufLen)
           pFrameRGB->height = h;
           pFrameRGB->width = w;
 
-          decodedImageHandler.writeNewImageWithLock(pFrameRGB->data[0], bufSize, w, h);
+          decodedImageHandler.writeNewImageWithLock(pFrameRGB->data[0], bufSize, w, h, time);
         }
       }
     }

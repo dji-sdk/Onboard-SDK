@@ -262,7 +262,7 @@ void M300VGAHandleCB(Perception::ImageInfoType info, uint8_t *imageRawBuffer,
     DERROR("Error image raw data len : %d, should be 480 * 640.", bufferLen);
     return;
   }
-  auto m300Handler = (M300VGAHandlerData *) userData;
+  auto* m300Handler = (M300VGAHandlerData *) userData;
   if ((!m300Handler) || (!m300Handler->vehicle)) {
     DERROR("Error userdata");
     return;

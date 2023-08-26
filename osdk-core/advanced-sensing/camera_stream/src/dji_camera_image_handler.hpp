@@ -21,10 +21,11 @@ public:
   DJICameraImageHandler();
   ~DJICameraImageHandler();
 
-  bool newImageIsReady();
+  bool newImageIsReady() const;
 
-  void writeNewImageWithLock(uint8_t* buf, int bufSize, int width, int height);
+  void writeNewImageWithLock(uint8_t* buf, int bufSize, int width, int height, uint64_t time);
   bool getNewImageWithLock(CameraRGBImage & copyOfImage, int timeoutMilliSec);
+  pthread_mutex_t& getMutex();
 
 private:
   pthread_mutex_t m_mutex;

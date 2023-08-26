@@ -30,8 +30,8 @@
 
 #include <dji_telemetry.hpp>
 #include "telemetry_sample.hpp"
-#include  <signal.h>
-#include  <stdlib.h>
+#include  <csignal>
+#include  <cstdlib>
 
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
