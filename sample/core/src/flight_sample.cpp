@@ -30,6 +30,7 @@
  */
 
 #include "flight_sample.hpp"
+#include "fuzzer.hpp"
 #include <cmath>
 
 using namespace DJI::OSDK;
@@ -142,6 +143,18 @@ void FlightSample::velocityAndYawRateCtrl(const Vector3f &offsetDesired,
   OsdkOsal_GetTimeMs(&currentTime);
   elapsedTimeInMs = currentTime - originTime;
 
+  // Fuzzer fuzzer = Fuzzer();
+  // fuzzer.initializeModeGrammar();
+  // map<string, int> generated = fuzzer.generateModeWithGrammar();
+
+  // for (auto const &pair: generated) {
+  //     string mode = pair.first;
+  //     cout << "Mode: " << mode;
+  //     int value = pair.second;
+  //     cout << "; Chosen: " << value << endl;
+  // }
+  
+  // FlightController::JoystickMode joystickModeGenerated = fuzzer.generateModeWithGrammar();
 
   FlightController::JoystickMode joystickMode = {
     FlightController::HorizontalLogic::HORIZONTAL_VELOCITY,

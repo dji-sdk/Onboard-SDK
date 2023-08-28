@@ -317,16 +317,16 @@ install(TARGETS ${PROJECT_NAME}
         )
 ]]
 
-install(FILES
-        ${CMAKE_CURRENT_SOURCE_DIR}/linker/${ARCH}/lib/libdji-linker.a
-        DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" COMPONENT shlib
-        )
+# install(FILES
+#         ${CMAKE_CURRENT_SOURCE_DIR}/linker/${ARCH}/lib/libdji-linker.a
+#         DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" COMPONENT shlib
+#         )
 
-install(TARGETS ${PROJECT_NAME}
-        EXPORT djiosdkTargets
-        ARCHIVE DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" COMPONENT shlib
-        PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_PREFIX}/include" COMPONENT dev
-        )
+# install(TARGETS ${PROJECT_NAME}
+#         EXPORT djiosdkTargets
+#         ARCHIVE DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" COMPONENT shlib
+#         PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_PREFIX}/include" COMPONENT dev
+#         )
 
 #install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/advanced-sensing-2.0.3
 #        DESTINATION ${OSDK_LIB_ARCH_DIR} )

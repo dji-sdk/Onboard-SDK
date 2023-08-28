@@ -3,7 +3,9 @@
 #include <signal.h>
 #include <stdlib.h>
 #include <time.h>
-#include "flight_control_sample.hpp"
+
+// Copied from flight-control module code
+// #include "flight_control_sample.hpp"
 
 // #include "grammar.cpp"
 

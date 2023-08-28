@@ -1,11 +1,8 @@
 #include "testing.hpp"
 
 // import flight control sample codes
-#include "flight_control_sample.hpp"
 #include "flight_sample.hpp"
 #include "dji_linux_helpers.hpp"
-
-#include "grammar.hpp"
 
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
@@ -69,42 +66,29 @@ void flyVelocity(FlightSample* flightSample){
 
 int main(int argc, char** argv)
 {
-  randomHorizMode();
 
-  // srand(time(NULL));
-  // cout << "Random pick: " << someArr[rand() % 3] << endl;
-  // cout << "Map entries: " << enumValues["test"] << endl;
-  // cout << "Map entries: " << enumValues["chungus"] << endl;
-  // // for (int i = 0; i < enumValues["vertiMode"].size(); i++){
-  // //   cout << "entry " << i << ": " << enumValues["vertiMode"][i] << endl;
-  // for (const auto &entry: enumValues){
-  //   cout << "{" << entry.first << ", " << entry.second << "}" << endl;
-  // }
+  // 1. Setup OSDK.
+  LinuxSetup linuxEnvironment(argc, argv);
 
+  // 2. Setup Environment, 3. Initialize Communication, 4. Activate Vehicle
+  Vehicle* vehicle = linuxEnvironment.getVehicle();
+  if (vehicle == NULL)
+  {
+    std::cout << "Vehicle not initialized, exiting.\n";
+    return -1;
+  }
+
+  // Obtain Authority
+  vehicle->flightController->obtainJoystickCtrlAuthorityAsync(ObtainJoystickCtrlAuthorityCB, nullptr ,1, 2);
+
+  // Import flight functions
+  FlightSample* flightSample = new FlightSample(vehicle);
   
+  // Scenario A:
+  // flyOffset(flightSample);
 
-  // // 1. Setup OSDK.
-  // LinuxSetup linuxEnvironment(argc, argv);
-
-  // // 2. Setup Environment, 3. Initialize Communication, 4. Activate Vehicle
-  // Vehicle* vehicle = linuxEnvironment.getVehicle();
-  // if (vehicle == NULL)
-  // {
-  //   std::cout << "Vehicle not initialized, exiting.\n";
-  //   return -1;
-  // }
-
-  // // Obtain Authority
-  // vehicle->flightController->obtainJoystickCtrlAuthorityAsync(ObtainJoystickCtrlAuthorityCB, nullptr ,1, 2);
-
-  // // Import flight functions
-  // FlightSample* flightSample = new FlightSample(vehicle);
-  
-  // // Scenario A:
-  // // flyOffset(flightSample);
-
-  // // Scenario B:
-  // flyVelocity(flightSample);
+  // Scenario B:
+  flyVelocity(flightSample);
   
   return 0;
 }
