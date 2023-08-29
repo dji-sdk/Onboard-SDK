@@ -16,7 +16,7 @@ FILE(GLOB SOURCE_FILES
         # for flight control, no need to supply source cos alr compiled in the previous package before this
         # ${CMAKE_CURRENT_SOURCE_DIR}/../flight-control/flight_control_sample.cpp
 
-        # for euler angle function
+        # for flight procedure functions; they are not library but source!
         ${CMAKE_CURRENT_SOURCE_DIR}/../../../core/src/flight_sample.cpp
 )
 

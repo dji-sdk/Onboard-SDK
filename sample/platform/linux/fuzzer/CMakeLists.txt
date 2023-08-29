@@ -17,6 +17,8 @@ target_include_directories(
     ${PROJECT_NAME}
     PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
+
+    # the apis are already part of djiosdk-core which is already been added by upper CMake
     # ${CMAKE_CURRENT_SOURCE_DIR}/../../../../osdk-core/api/inc # mode struct
     # ${CMAKE_CURRENT_SOURCE_DIR}/../../../../osdk-core/modules/inc/flight # enums
 )

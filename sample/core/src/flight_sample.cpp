@@ -143,29 +143,37 @@ void FlightSample::velocityAndYawRateCtrl(const Vector3f &offsetDesired,
   OsdkOsal_GetTimeMs(&currentTime);
   elapsedTimeInMs = currentTime - originTime;
 
-  // Fuzzer fuzzer = Fuzzer();
-  // fuzzer.initializeModeGrammar();
-  // map<string, int> generated = fuzzer.generateModeWithGrammar();
+  ///////////////////////////////////////// Original Mode ////////////////////////////////////////////////////////////////////
 
-  // for (auto const &pair: generated) {
-  //     string mode = pair.first;
-  //     cout << "Mode: " << mode;
-  //     int value = pair.second;
-  //     cout << "; Chosen: " << value << endl;
-  // }
+  // FlightController::JoystickMode joystickMode = {
+  //   FlightController::HorizontalLogic::HORIZONTAL_VELOCITY,
+  //   FlightController::VerticalLogic::VERTICAL_VELOCITY,
+  //   FlightController::YawLogic::YAW_RATE,
+  //   FlightController::HorizontalCoordinate::HORIZONTAL_GROUND,
+  //   FlightController::StableMode::STABLE_ENABLE,
+  // };
+
+  // vehicle->flightController->setJoystickMode(joystickMode);
+
+  ///////////////////////////////////////// Fuzzed Mode ////////////////////////////////////////////////////////////////////
+
+  Fuzzer fuzzer = Fuzzer();
+  fuzzer.initializeModeGrammar();  
+  FlightController::JoystickMode joystickMode = fuzzer.generateModeWithGrammar();
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  ///////////////////////////////////////// Original Cmd ////////////////////////////////////////////////////////////////////
   
-  // FlightController::JoystickMode joystickModeGenerated = fuzzer.generateModeWithGrammar();
-
-  FlightController::JoystickMode joystickMode = {
-    FlightController::HorizontalLogic::HORIZONTAL_VELOCITY,
-    FlightController::VerticalLogic::VERTICAL_VELOCITY,
-    FlightController::YawLogic::YAW_RATE,
-    FlightController::HorizontalCoordinate::HORIZONTAL_GROUND,
-    FlightController::StableMode::STABLE_ENABLE,
-  };
-
-  vehicle->flightController->setJoystickMode(joystickMode);
   FlightController::JoystickCommand joystickCommand = {offsetDesired.x, offsetDesired.y, offsetDesired.z,yawRate};
+  
+  ///////////////////////////////////////// Fuzzed Cmd ////////////////////////////////////////////////////////////////////
+
+  
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  
+  vehicle->flightController->setJoystickMode(joystickMode);
   vehicle->flightController->setJoystickCommand(joystickCommand);
 
   while(elapsedTimeInMs <= timeMs)

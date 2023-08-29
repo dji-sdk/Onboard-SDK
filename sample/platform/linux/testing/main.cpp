@@ -3,6 +3,9 @@
 // import flight control sample codes
 #include "flight_sample.hpp"
 #include "dji_linux_helpers.hpp"
+#include "fuzzer.hpp"
+#include <random>
+#include <typeinfo>
 
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
@@ -67,28 +70,49 @@ void flyVelocity(FlightSample* flightSample){
 int main(int argc, char** argv)
 {
 
-  // 1. Setup OSDK.
-  LinuxSetup linuxEnvironment(argc, argv);
+  // test random generation
 
-  // 2. Setup Environment, 3. Initialize Communication, 4. Activate Vehicle
-  Vehicle* vehicle = linuxEnvironment.getVehicle();
-  if (vehicle == NULL)
-  {
-    std::cout << "Vehicle not initialized, exiting.\n";
-    return -1;
+  std::default_random_engine generator;
+
+  std::uniform_real_distribution<double> continuousDistribution = std::uniform_real_distribution<double>(2.0,5.0);
+  std::cout << typeid(continuousDistribution(generator)).name() << endl;
+  std::cout << typeid((float32_t) continuousDistribution(generator)).name() << endl;
+    for (int i=0; i<20; ++i) {
+    std::cout << (float32_t) continuousDistribution(generator) << ", ";
   }
+  std::cout << endl;
 
-  // Obtain Authority
-  vehicle->flightController->obtainJoystickCtrlAuthorityAsync(ObtainJoystickCtrlAuthorityCB, nullptr ,1, 2);
+  Fuzzer fuzzer = Fuzzer();
+  fuzzer.initializeModeGrammar();  
+  fuzzer.initializeCommandGrammar();
 
-  // Import flight functions
-  FlightSample* flightSample = new FlightSample(vehicle);
+  FlightController::JoystickMode joystickMode = fuzzer.generateModeWithGrammar();
+  // std::cout << joystickMode.horizontalCoordinate << joystickMode.horizontalLogic << joystickMode.verticalLogic << joystickMode.yawLogic << joystickMode.stableMode << endl;
+
+  DJI::OSDK::FlightController::JoystickCommand joystickCommand = fuzzer.generateCommandWithGrammar(joystickMode);
+
+  // // 1. Setup OSDK.
+  // LinuxSetup linuxEnvironment(argc, argv);
+
+  // // 2. Setup Environment, 3. Initialize Communication, 4. Activate Vehicle
+  // Vehicle* vehicle = linuxEnvironment.getVehicle();
+  // if (vehicle == NULL)
+  // {
+  //   std::cout << "Vehicle not initialized, exiting.\n";
+  //   return -1;
+  // }
+
+  // // Obtain Authority
+  // vehicle->flightController->obtainJoystickCtrlAuthorityAsync(ObtainJoystickCtrlAuthorityCB, nullptr ,1, 2);
+
+  // // Import flight functions
+  // FlightSample* flightSample = new FlightSample(vehicle);
   
-  // Scenario A:
-  // flyOffset(flightSample);
+  // // Scenario A:
+  // // flyOffset(flightSample);
 
-  // Scenario B:
-  flyVelocity(flightSample);
+  // // Scenario B:
+  // flyVelocity(flightSample);
   
   return 0;
 }
