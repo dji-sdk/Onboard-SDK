@@ -70,26 +70,12 @@ void flyVelocity(FlightSample* flightSample){
 int main(int argc, char** argv)
 {
 
-  // test random generation
+  // Fuzzer fuzzer = Fuzzer();
+  // fuzzer.initializeModeGrammar();  
+  // fuzzer.initializeCommandGrammar();
 
-  std::default_random_engine generator;
-
-  std::uniform_real_distribution<double> continuousDistribution = std::uniform_real_distribution<double>(2.0,5.0);
-  std::cout << typeid(continuousDistribution(generator)).name() << endl;
-  std::cout << typeid((float32_t) continuousDistribution(generator)).name() << endl;
-    for (int i=0; i<20; ++i) {
-    std::cout << (float32_t) continuousDistribution(generator) << ", ";
-  }
-  std::cout << endl;
-
-  Fuzzer fuzzer = Fuzzer();
-  fuzzer.initializeModeGrammar();  
-  fuzzer.initializeCommandGrammar();
-
-  FlightController::JoystickMode joystickMode = fuzzer.generateModeWithGrammar();
-  // std::cout << joystickMode.horizontalCoordinate << joystickMode.horizontalLogic << joystickMode.verticalLogic << joystickMode.yawLogic << joystickMode.stableMode << endl;
-
-  DJI::OSDK::FlightController::JoystickCommand joystickCommand = fuzzer.generateCommandWithGrammar(joystickMode);
+  // FlightController::JoystickMode joystickMode = fuzzer.generateModeWithGrammar();
+  // FlightController::JoystickCommand joystickCommand = fuzzer.generateCommandWithGrammar(joystickMode);
 
   // // 1. Setup OSDK.
   // LinuxSetup linuxEnvironment(argc, argv);
