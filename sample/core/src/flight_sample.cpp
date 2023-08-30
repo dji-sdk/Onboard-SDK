@@ -145,21 +145,21 @@ void FlightSample::velocityAndYawRateCtrl(const Vector3f &offsetDesired,
 
   ///////////////////////////////////////// Original Mode ////////////////////////////////////////////////////////////////////
 
-  // FlightController::JoystickMode joystickMode = {
-  //   FlightController::HorizontalLogic::HORIZONTAL_VELOCITY,
-  //   FlightController::VerticalLogic::VERTICAL_VELOCITY,
-  //   FlightController::YawLogic::YAW_RATE,
-  //   FlightController::HorizontalCoordinate::HORIZONTAL_GROUND,
-  //   FlightController::StableMode::STABLE_ENABLE,
-  // };
+  FlightController::JoystickMode joystickMode = {
+    FlightController::HorizontalLogic::HORIZONTAL_VELOCITY,
+    FlightController::VerticalLogic::VERTICAL_VELOCITY,
+    FlightController::YawLogic::YAW_RATE,
+    FlightController::HorizontalCoordinate::HORIZONTAL_GROUND,
+    FlightController::StableMode::STABLE_ENABLE,
+  };
 
-  // vehicle->flightController->setJoystickMode(joystickMode);
+  vehicle->flightController->setJoystickMode(joystickMode);
 
   ///////////////////////////////////////// Fuzzed Mode ////////////////////////////////////////////////////////////////////
 
-  Fuzzer fuzzer = Fuzzer();
-  fuzzer.initializeModeGrammar();  
-  FlightController::JoystickMode joystickMode = fuzzer.generateModeWithGrammar();
+  // Fuzzer fuzzer = Fuzzer();
+  // fuzzer.initializeModeGrammar();  
+  // FlightController::JoystickMode joystickMode = fuzzer.generateModeWithGrammar();
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -169,7 +169,7 @@ void FlightSample::velocityAndYawRateCtrl(const Vector3f &offsetDesired,
   
   ///////////////////////////////////////// Fuzzed Cmd ////////////////////////////////////////////////////////////////////
 
-  
+  // FlightController::JoystickCommand joystickCommand = fuzzer.generateCommandWithGrammar(joystickMode);  
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////
   
@@ -300,6 +300,55 @@ bool FlightSample::moveByPositionOffset(const Vector3f& offsetDesired,
   }
   teardownSubscription(pkgIndex);
   return true;
+}
+
+void FlightSample::fuzz(Fuzzer &fuzzer, uint32_t timeMs) {
+  uint32_t originTime  = 0;
+  uint32_t currentTime = 0;
+  uint32_t elapsedTimeInMs = 0;
+  OsdkOsal_GetTimeMs(&originTime);
+  OsdkOsal_GetTimeMs(&currentTime);
+  elapsedTimeInMs = currentTime - originTime;
+
+  ///////////////////////////////////////// Original Mode ////////////////////////////////////////////////////////////////////
+
+  // FlightController::JoystickMode joystickMode = {
+  //   FlightController::HorizontalLogic::HORIZONTAL_VELOCITY,
+  //   FlightController::VerticalLogic::VERTICAL_VELOCITY,
+  //   FlightController::YawLogic::YAW_RATE,
+  //   FlightController::HorizontalCoordinate::HORIZONTAL_GROUND,
+  //   FlightController::StableMode::STABLE_ENABLE,
+  // };
+
+  // vehicle->flightController->setJoystickMode(joystickMode);
+
+  ///////////////////////////////////////// Fuzzed Mode ////////////////////////////////////////////////////////////////////
+
+  FlightController::JoystickMode joystickMode = fuzzer.generateModeWithGrammar();
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  ///////////////////////////////////////// Original Cmd ////////////////////////////////////////////////////////////////////
+  
+  // FlightController::JoystickCommand joystickCommand = {-5000, -5000, 50, 0};
+  
+  ///////////////////////////////////////// Fuzzed Cmd ////////////////////////////////////////////////////////////////////
+
+  FlightController::JoystickCommand joystickCommand = fuzzer.generateCommandWithGrammar(joystickMode);  
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  
+  vehicle->flightController->setJoystickMode(joystickMode);
+  vehicle->flightController->setJoystickCommand(joystickCommand);
+
+  while(elapsedTimeInMs <= timeMs)
+  {
+    vehicle->flightController->joystickAction();
+    usleep(20000);
+    OsdkOsal_GetTimeMs(&currentTime);
+    elapsedTimeInMs = currentTime - originTime;
+  }
+
 }
 
 bool FlightSample::goHomeAndConfirmLanding(int timeout) {

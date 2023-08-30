@@ -25,12 +25,12 @@ void Fuzzer::initializeModeGrammar(){
   Fuzzer::modeGrammar["horizMode"] = {
     FlightJoystick::HorizontalLogic::HORIZONTAL_ANGLE,
     FlightJoystick::HorizontalLogic::HORIZONTAL_ANGULAR_RATE,
-    FlightJoystick::HorizontalLogic::HORIZONTAL_POSITION,
+    // FlightJoystick::HorizontalLogic::HORIZONTAL_POSITION,
     FlightJoystick::HorizontalLogic::HORIZONTAL_VELOCITY
   };
   Fuzzer::modeGrammar["stableMode"] = {
     FlightJoystick::StableMode::STABLE_DISABLE,
-    FlightJoystick::StableMode::STABLE_ENABLE
+    // FlightJoystick::StableMode::STABLE_ENABLE
   };
   Fuzzer::modeGrammar["vertiMode"] = {
     FlightJoystick::VerticalLogic::VERTICAL_POSITION,
@@ -46,7 +46,6 @@ void Fuzzer::initializeModeGrammar(){
 void Fuzzer::initializeCommandGrammar(){
 
   // for x and y
-
   vector<float> horizAngle = {0, 35.0};// degree
   vector<float> horizVelocity = {0, 30.0};// m/s
   vector<float> horizPosition = {0, 10};
@@ -57,11 +56,9 @@ void Fuzzer::initializeCommandGrammar(){
   horizontalGrammar[FlightJoystick::HorizontalLogic::HORIZONTAL_VELOCITY] = horizVelocity; 
   horizontalGrammar[FlightJoystick::HorizontalLogic::HORIZONTAL_POSITION] = horizPosition;
   horizontalGrammar[FlightJoystick::HorizontalLogic::HORIZONTAL_ANGULAR_RATE] = horizAngularRate; 
-
   Fuzzer::cmdGrammar["horizontalGrammar"] = horizontalGrammar;
 
   // z
-
   vector<float> vertiVelocity = {-5.0, 5.0};// m/s
   vector<float> vertiPosition = {0, 120.0};// m
   vector<float> vertiThrust = {0, 100.0}; // %
@@ -70,11 +67,9 @@ void Fuzzer::initializeCommandGrammar(){
   vertiLogic[FlightJoystick::VerticalLogic::VERTICAL_VELOCITY] = vertiVelocity; // m/s 
   vertiLogic[FlightJoystick::VerticalLogic::VERTICAL_POSITION] = vertiPosition; // m
   vertiLogic[FlightJoystick::VerticalLogic::VERTICAL_THRUST] = vertiThrust; // %
-
   Fuzzer::cmdGrammar["verticalGrammar"] = vertiLogic;
 
   // yaw
-
   vector<float> yawAngle = {0, 360.0};// self-infered
   vector<float> yawRate = {0, 150.0};// deg/s
   

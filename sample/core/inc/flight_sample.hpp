@@ -34,6 +34,7 @@
 
 #include <dji_linux_helpers.hpp>
 #include <dji_vehicle.hpp>
+#include "fuzzer.hpp"
 
 class FlightSample {
  public:
@@ -158,6 +159,8 @@ class FlightSample {
 
   void emergencyBrake(void);
   static Vector3f quaternionToEulerAngle(const Telemetry::Quaternion &quat);
+
+  void fuzz(Fuzzer &fuzzer, uint32_t timeMs);
 
  private:
   Vehicle *vehicle;

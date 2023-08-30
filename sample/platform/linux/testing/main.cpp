@@ -6,6 +6,7 @@
 #include "fuzzer.hpp"
 #include <random>
 #include <typeinfo>
+#include <chrono>
 
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
@@ -66,39 +67,62 @@ void flyVelocity(FlightSample* flightSample){
 
 }
 
+void startFuzzing(FlightSample *flightSample) {
+
+  Fuzzer fuzzer = Fuzzer();
+  fuzzer.initializeModeGrammar();  
+  fuzzer.initializeCommandGrammar();
+  int seconds = 60;
+  int count = 1;
+  chrono::milliseconds fuzzMs = chrono::milliseconds(seconds * 1000);
+
+  flightSample->monitoredTakeoff();
+  DSTATUS("Take off over!\n");
+
+  chrono::milliseconds start = chrono::duration_cast< chrono::milliseconds >(chrono::system_clock::now().time_since_epoch());
+  chrono::milliseconds now = chrono::duration_cast< chrono::milliseconds >(chrono::system_clock::now().time_since_epoch());
+  while (now - start < fuzzMs) {
+    std::cout << "======================================================"<< endl;
+    std::cout << "#" << count++ << ", Elapsed: " << (now - start).count()/1000 << " seconds."<< endl;
+    flightSample->fuzz(fuzzer, 1000);
+    flightSample->emergencyBrake();
+    sleep(2);
+    now = chrono::duration_cast< chrono::milliseconds>(chrono::system_clock::now().time_since_epoch());
+  }
+}
+
 
 int main(int argc, char** argv)
 {
+  // 1. Setup OSDK.
+  LinuxSetup linuxEnvironment(argc, argv);
 
-  // Fuzzer fuzzer = Fuzzer();
-  // fuzzer.initializeModeGrammar();  
-  // fuzzer.initializeCommandGrammar();
+  // 2. Setup Environment, 3. Initialize Communication, 4. Activate Vehicle
+  Vehicle* vehicle = linuxEnvironment.getVehicle();
+  if (vehicle == NULL)
+  {
+    std::cout << "Vehicle not initialized, exiting.\n";
+    return -1;
+  }
 
-  // FlightController::JoystickMode joystickMode = fuzzer.generateModeWithGrammar();
-  // FlightController::JoystickCommand joystickCommand = fuzzer.generateCommandWithGrammar(joystickMode);
+  // Obtain Authority
+  vehicle->flightController->obtainJoystickCtrlAuthorityAsync(ObtainJoystickCtrlAuthorityCB, nullptr ,1, 2);
 
-  // // 1. Setup OSDK.
-  // LinuxSetup linuxEnvironment(argc, argv);
-
-  // // 2. Setup Environment, 3. Initialize Communication, 4. Activate Vehicle
-  // Vehicle* vehicle = linuxEnvironment.getVehicle();
-  // if (vehicle == NULL)
-  // {
-  //   std::cout << "Vehicle not initialized, exiting.\n";
-  //   return -1;
-  // }
-
-  // // Obtain Authority
-  // vehicle->flightController->obtainJoystickCtrlAuthorityAsync(ObtainJoystickCtrlAuthorityCB, nullptr ,1, 2);
-
-  // // Import flight functions
-  // FlightSample* flightSample = new FlightSample(vehicle);
+  // Import flight functions
+  FlightSample* flightSample = new FlightSample(vehicle);
   
-  // // Scenario A:
-  // // flyOffset(flightSample);
+  // Scenario A:
+  // flyOffset(flightSample);
 
-  // // Scenario B:
+  // Scenario B:
   // flyVelocity(flightSample);
+
+  // Fuzz
+  flightSample->monitoredLanding();
+
+  startFuzzing(flightSample);
+  
+  flightSample->monitoredLanding();
   
   return 0;
 }
