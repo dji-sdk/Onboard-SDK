@@ -6,6 +6,7 @@
 #include <vector>
 #include <random>
 #include "fuzzer.hpp"
+#include <boost/math/special_functions/round.hpp>
 
 #include "dji_flight_joystick_module.hpp" // for enum values
 #include "dji_flight_controller.hpp" // for mode struct
@@ -25,12 +26,12 @@ void Fuzzer::initializeModeGrammar(){
   Fuzzer::modeGrammar["horizMode"] = {
     FlightJoystick::HorizontalLogic::HORIZONTAL_ANGLE,
     FlightJoystick::HorizontalLogic::HORIZONTAL_ANGULAR_RATE,
-    // FlightJoystick::HorizontalLogic::HORIZONTAL_POSITION,
+    FlightJoystick::HorizontalLogic::HORIZONTAL_POSITION,
     FlightJoystick::HorizontalLogic::HORIZONTAL_VELOCITY
   };
   Fuzzer::modeGrammar["stableMode"] = {
     FlightJoystick::StableMode::STABLE_DISABLE,
-    // FlightJoystick::StableMode::STABLE_ENABLE
+    FlightJoystick::StableMode::STABLE_ENABLE
   };
   Fuzzer::modeGrammar["vertiMode"] = {
     FlightJoystick::VerticalLogic::VERTICAL_POSITION,
@@ -47,9 +48,9 @@ void Fuzzer::initializeCommandGrammar(){
 
   // for x and y
   vector<float> horizAngle = {0, 35.0};// degree
-  vector<float> horizVelocity = {0, 30.0};// m/s
-  vector<float> horizPosition = {0, 10};
-  vector<float> horizAngularRate = {0, 150.0};// degree/s
+  vector<float> horizVelocity = {-2.0, 2.0};// m/s original is 30 m/s
+  vector<float> horizPosition = {-10, 10}; // arbitrary
+  vector<float> horizAngularRate = {-150, 150.0};// degree/s original is 150 deg/s
 
   map<int, vector<float>> horizontalGrammar;
   horizontalGrammar[FlightJoystick::HorizontalLogic::HORIZONTAL_ANGLE] = horizAngle;  
@@ -59,7 +60,7 @@ void Fuzzer::initializeCommandGrammar(){
   Fuzzer::cmdGrammar["horizontalGrammar"] = horizontalGrammar;
 
   // z
-  vector<float> vertiVelocity = {-5.0, 5.0};// m/s
+  vector<float> vertiVelocity = {-1.0, 1.0};// m/s
   vector<float> vertiPosition = {0, 120.0};// m
   vector<float> vertiThrust = {0, 100.0}; // %
 
@@ -78,18 +79,17 @@ void Fuzzer::initializeCommandGrammar(){
   yawLogic[FlightJoystick::YawLogic::YAW_RATE] = yawRate;
   Fuzzer::cmdGrammar["yawGrammar"] = yawLogic; 
   
-  for (auto const& [dir, grammar]: Fuzzer::cmdGrammar) {
-    std::cout << "Direction: " << dir << std::endl;        // string (key)
-    for (auto const& [key, val] : grammar) {
-      std::cout << key        // string (key)
-                << ':'  
-                << val[0]        // string's value
-                << ','  
-                << val[1]        // string's value
-                << std::endl;
-    }
-  }
-
+  // for (auto const& [dir, grammar]: Fuzzer::cmdGrammar) {
+  //   std::cout << "Direction: " << dir << std::endl;        // string (key)
+  //   for (auto const& [key, val] : grammar) {
+  //     std::cout << key        // string (key)
+  //               << ':'  
+  //               << val[0]        // string's value
+  //               << ','  
+  //               << val[1]        // string's value
+  //               << std::endl;
+  //   }
+  // }
 }
 
 FlightController::JoystickMode Fuzzer::generateModeWithGrammar() {
@@ -97,19 +97,19 @@ FlightController::JoystickMode Fuzzer::generateModeWithGrammar() {
   random_device dev;
   default_random_engine generator(dev());
 
-  std::cout << "Vector sizes: " << 
-  Fuzzer::modeGrammar["horizMode"].size() << ", " <<
-  Fuzzer::modeGrammar["vertiMode"].size() << ", " <<
-  Fuzzer::modeGrammar["yawMode"].size() << ", " <<
-  Fuzzer::modeGrammar["horizFrame"].size() << ", " <<
-  Fuzzer::modeGrammar["stableMode"].size() << endl;
+  // std::cout << "Vector sizes: " << 
+  // Fuzzer::modeGrammar["horizMode"].size() << ", " <<
+  // Fuzzer::modeGrammar["vertiMode"].size() << ", " <<
+  // Fuzzer::modeGrammar["yawMode"].size() << ", " <<
+  // Fuzzer::modeGrammar["horizFrame"].size() << ", " <<
+  // Fuzzer::modeGrammar["stableMode"].size() << endl;
 
-  std::cout << "Generated Random Mode positions: " << 
-  std::uniform_int_distribution<int>(0, Fuzzer::modeGrammar["horizMode"].size()-1)(generator) << ", " <<
-  std::uniform_int_distribution<int>(0, Fuzzer::modeGrammar["vertiMode"].size()-1)(generator) << ", " <<
-  std::uniform_int_distribution<int>(0, Fuzzer::modeGrammar["yawMode"].size()-1)(generator) << ", " <<
-  std::uniform_int_distribution<int>(0, Fuzzer::modeGrammar["horizFrame"].size()-1)(generator) << ", " <<
-  std::uniform_int_distribution<int>(0, Fuzzer::modeGrammar["stableMode"].size()-1)(generator) << endl;
+  // std::cout << "Generated Random Mode positions: " << 
+  // std::uniform_int_distribution<int>(0, Fuzzer::modeGrammar["horizMode"].size()-1)(generator) << ", " <<
+  // std::uniform_int_distribution<int>(0, Fuzzer::modeGrammar["vertiMode"].size()-1)(generator) << ", " <<
+  // std::uniform_int_distribution<int>(0, Fuzzer::modeGrammar["yawMode"].size()-1)(generator) << ", " <<
+  // std::uniform_int_distribution<int>(0, Fuzzer::modeGrammar["horizFrame"].size()-1)(generator) << ", " <<
+  // std::uniform_int_distribution<int>(0, Fuzzer::modeGrammar["stableMode"].size()-1)(generator) << endl;
 
   FlightController::JoystickMode joystickMode = {
     // enums are stored as integers, so need to recast them before composing the new instance
@@ -128,6 +128,7 @@ FlightController::JoystickMode Fuzzer::generateModeWithGrammar() {
     (FlightJoystick::StableMode) Fuzzer::modeGrammar["stableMode"][
       std::uniform_int_distribution<int>(0, Fuzzer::modeGrammar["stableMode"].size()-1)(generator)]
   };
+
   return joystickMode;
 }
 
@@ -164,28 +165,24 @@ FlightController::JoystickCommand Fuzzer::generateCommandWithGrammar(FlightContr
   };
 
   std::cout << 
-    "Command Range: " << 
+    "X: " << joystickCommand.x << " ∈ [" <<
     Fuzzer::cmdGrammar["horizontalGrammar"][mode.horizontalLogic][0] << ", " << 
-    Fuzzer::cmdGrammar["horizontalGrammar"][mode.horizontalLogic][1] << 
-    ", Generated Command: " << joystickCommand.x << endl;
+    Fuzzer::cmdGrammar["horizontalGrammar"][mode.horizontalLogic][1] << "]" << endl;
 
   std::cout << 
-    "Command Range: " << 
+    "Y: " << joystickCommand.y << " ∈ [" << 
     Fuzzer::cmdGrammar["horizontalGrammar"][mode.horizontalLogic][0] << ", " << 
-    Fuzzer::cmdGrammar["horizontalGrammar"][mode.horizontalLogic][1] << 
-    ", Generated Command: " << joystickCommand.y << endl;
+    Fuzzer::cmdGrammar["horizontalGrammar"][mode.horizontalLogic][1] << "]" << endl;
 
   std::cout << 
-    "Command Range: " << 
+    "Z: " << joystickCommand.z << " ∈ [" <<
     Fuzzer::cmdGrammar["verticalGrammar"][mode.verticalLogic][0] << ", " << 
-    Fuzzer::cmdGrammar["verticalGrammar"][mode.verticalLogic][1] << 
-    ", Generated Command: " << joystickCommand.z << endl;
+    Fuzzer::cmdGrammar["verticalGrammar"][mode.verticalLogic][1] << "]" << endl;
 
   std::cout << 
-    "Command Range: " << 
+    "Yaw: " << joystickCommand.yaw << " ∈ [" << 
     Fuzzer::cmdGrammar["yawGrammar"][mode.yawLogic][0] << ", " << 
-    Fuzzer::cmdGrammar["yawGrammar"][mode.yawLogic][1] << 
-    ", Generated Command: " << joystickCommand.yaw << endl;
+    Fuzzer::cmdGrammar["yawGrammar"][mode.yawLogic][1] << "]" << endl;
 
   return joystickCommand;
 }

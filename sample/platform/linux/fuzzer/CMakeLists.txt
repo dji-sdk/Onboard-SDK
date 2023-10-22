@@ -4,6 +4,9 @@ cmake_minimum_required(VERSION 2.8)
 project(djiosdk-fuzzer)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread -g -O0")
+set(BOOST_INCLUDEDIR /usr/include)
+
+find_package(Boost)
 
 FILE(GLOB SOURCE_FILES 
     *.hpp 
@@ -23,9 +26,10 @@ target_include_directories(
     # ${CMAKE_CURRENT_SOURCE_DIR}/../../../../osdk-core/modules/inc/flight # enums
 )
 
-# target_link_libraries(
-#     ${PROJECT_NAME}
-#     PUBLIC
-#     djiosdk-core
-#     djiosdk-flightcontrol-sample  
-# )
+target_link_libraries(
+    ${PROJECT_NAME}
+    PUBLIC
+    djiosdk-core
+    # djiosdk-flightcontrol-sample  
+    # boost
+)

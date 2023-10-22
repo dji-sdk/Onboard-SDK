@@ -53,4 +53,5 @@ target_link_libraries(
     ${PROJECT_NAME}
     PUBLIC
     djiosdk-core
+    djiosdk-fuzzer
 )

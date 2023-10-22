@@ -20,6 +20,7 @@
 # *
 # *
 
+# cd ~/Documents/Onboard-SDK/build/ &&  make clean && cmake .. && make && cd ~/Documents/Onboard-SDK/build/bin/ && ./djiosdk-telemetry
 
 cmake_minimum_required(VERSION 2.8)
 project(djiosdk-telemetry-sample)
@@ -33,7 +34,7 @@ FILE(GLOB SOURCE_FILES *.hpp *.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/../osal/*.c
 
         # for euler angle function, no need to compile here cos it's already compiled in the previous project as a library and linked below
-        # ${CMAKE_CURRENT_SOURCE_DIR}/../../../core/src/flight_sample.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/../../../core/src/flight_sample.cpp
         )
 
 if (OSDK_HOTPLUG)
@@ -43,10 +44,10 @@ endif ()
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
 # for euler angle function
-# target_include_directories(${PROJECT_NAME} 
-#     PRIVATE
-#     ${CMAKE_CURRENT_SOURCE_DIR}/../../../core/inc
-# )
+target_include_directories(${PROJECT_NAME} 
+    PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../core/inc
+)
 
 # Linking to RPC Client
 target_link_libraries(${PROJECT_NAME} 
@@ -55,5 +56,7 @@ xmlrpc_client++
 xmlrpc_util
 boost_filesystem
 boost_system
-djiosdk-flightcontrol-sample
+
+# djiosdk-flightcontrol-sample
+djiosdk-fuzzer
 )
