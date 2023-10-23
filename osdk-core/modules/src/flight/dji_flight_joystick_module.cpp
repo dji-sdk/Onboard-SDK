@@ -261,7 +261,8 @@ void FlightJoystick::getControlMode(ControlMode &controlMode) {
 void FlightJoystick::joystickAction() {
  if(flightLink)
   flightLink->sendDirectly(OpenProtocolCMD::CMDSet::Control::control,
-                           (void *)(&this->ctrlData), sizeof(CtrlData));
+                          //  (void *)(&this->ctrlData), sizeof(CtrlData));
+                           &this->ctrlData, sizeof(CtrlData));
  else
    DERROR(" flight Link is NULL");
 

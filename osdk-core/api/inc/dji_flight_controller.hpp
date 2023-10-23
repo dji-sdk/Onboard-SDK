@@ -65,7 +65,7 @@ class FlightController {
     YawLogic yawLogic;
     HorizontalCoordinate horizontalCoordinate;
     StableMode stableMode;
-  } JoystickMode;
+  }  JoystickMode;
 
   /*! @brief
   *

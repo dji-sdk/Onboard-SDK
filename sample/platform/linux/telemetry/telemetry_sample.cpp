@@ -32,16 +32,29 @@
 #include "telemetry_sample.hpp"
 #include  <signal.h>
 #include  <stdlib.h>
+#include "flight_sample.hpp"
+#include <time.h>
+#include <boost/filesystem.hpp>
 
 using namespace DJI::OSDK;
 using namespace DJI::OSDK::Telemetry;
+
+// RPC Client imports
+#include <cstdlib>
+#include <string>
+#include <iostream>
+#include <cassert>
+#include <xmlrpc-c/girerr.hpp>
+#include <xmlrpc-c/base.hpp>
+#include <xmlrpc-c/client_simple.hpp>
+using namespace std;
 
 bool
 getBroadcastData(DJI::OSDK::Vehicle* vehicle, int responseTimeout)
 {
   // Counters
   int elapsedTimeInMs = 0;
-  int timeToPrintInMs = 2000;
+  int timeToPrintInMs = 200000;
 
   // We will listen to five broadcast data sets:
   // 1. Flight Status
@@ -118,6 +131,7 @@ subscribeToData(Vehicle* vehicle, int responseTimeout)
   // Counters
   int elapsedTimeInMs = 0;
   int timeToPrintInMs = 20000;
+  int sendEvery = 1000;
 
   // We will subscribe to six kinds of data:
   // 1. Flight Status at 1 Hz
@@ -272,13 +286,9 @@ subscribeToData(Vehicle* vehicle, int responseTimeout)
   TypeMap<TOPIC_RC>::type                rc;
   TypeMap<TOPIC_VELOCITY>::type          velocity;
   TypeMap<TOPIC_QUATERNION>::type        quaternion;
-  TypeMap<TOPIC_RTK_POSITION>::type      rtk;
-  TypeMap<TOPIC_RTK_POSITION_INFO>::type rtk_pos_info;
-  TypeMap<TOPIC_RTK_VELOCITY>::type      rtk_velocity;
-  TypeMap<TOPIC_RTK_YAW>::type           rtk_yaw;
-  TypeMap<TOPIC_RTK_YAW_INFO>::type      rtk_yaw_info;
+  TypeMap<TOPIC_ACCELERATION_GROUND>::type        acceleration;
 
-  // Print in a loop for 2 sec
+  // Print in a loop for defined sec
   while (elapsedTimeInMs < timeToPrintInMs)
   {
     flightStatus = vehicle->subscribe->getValue<TOPIC_STATUS_FLIGHT>();
@@ -287,13 +297,8 @@ subscribeToData(Vehicle* vehicle, int responseTimeout)
     rc           = vehicle->subscribe->getValue<TOPIC_RC>();
     velocity     = vehicle->subscribe->getValue<TOPIC_VELOCITY>();
     quaternion   = vehicle->subscribe->getValue<TOPIC_QUATERNION>();
-    if(rtkAvailable) {
-      rtk = vehicle->subscribe->getValue<TOPIC_RTK_POSITION>();
-      rtk_pos_info = vehicle->subscribe->getValue<TOPIC_RTK_POSITION_INFO>();
-      rtk_velocity = vehicle->subscribe->getValue<TOPIC_RTK_VELOCITY>();
-      rtk_yaw = vehicle->subscribe->getValue<TOPIC_RTK_YAW>();
-      rtk_yaw_info = vehicle->subscribe->getValue<TOPIC_RTK_YAW_INFO>();
-    }
+    acceleration   = vehicle->subscribe->getValue<TOPIC_ACCELERATION_GROUND>();
+    
     std::cout << "Counter = " << elapsedTimeInMs << ":\n";
     std::cout << "-------\n";
     std::cout << "Flight Status                         = " << (int)flightStatus
@@ -307,12 +312,9 @@ subscribeToData(Vehicle* vehicle, int responseTimeout)
     std::cout << "Attitude Quaternion   (w,x,y,z)       = " << quaternion.q0
               << ", " << quaternion.q1 << ", " << quaternion.q2 << ", "
               << quaternion.q3 << "\n";
-    if(rtkAvailable) {
-      std::cout << "RTK if available   (lat/long/alt/velocity_x/velocity_y/velocity_z/yaw/yaw_info/pos_info) ="
-                << rtk.latitude << "," << rtk.longitude << "," << rtk.HFSL << ","
-                << rtk_velocity.x << ","<< rtk_velocity.y<< "," << rtk_velocity.z
-                << "," << rtk_yaw << "," << (uint16_t)rtk_yaw_info <<","<< (uint16_t)rtk_pos_info<< "\n";
-    }
+    std::cout << "Acceleration   (x,y,z)       = " << acceleration.x
+              << ", " << acceleration.y << ", " << acceleration.z << "\n";
+
     std::cout << "-------\n\n";
     usleep(5000);
     elapsedTimeInMs += 5;
@@ -559,8 +561,19 @@ subscribeToDataAndSaveLogToFile(Vehicle* vehicle, int responseTimeout)
         return false;
     }
 
+    // RPC Client Init
+    xmlrpc_c::clientXmlTransport_curl myTransport(
+            xmlrpc_c::clientXmlTransport_curl::constrOpt()
+            .timeout(10000)
+            .user_agent("test/1.0")
+    );
+    xmlrpc_c::client_xml myClient(&myTransport);
+    string const methodName("test");
+    string const serverUrl("http://localhost:8000/RPC2");
+    xmlrpc_c::carriageParm_curl0 myCarriageParm(serverUrl);
+
     int       pkgIndex        = 0;
-    int       freq            = 50;
+    int       freq            = 10;
     TopicName topicList50Hz[]  = {
              TOPIC_VELOCITY
             ,TOPIC_RC_WITH_FLAG_DATA
@@ -571,6 +584,11 @@ subscribeToDataAndSaveLogToFile(Vehicle* vehicle, int responseTimeout)
             ,TOPIC_HEIGHT_FUSION
             ,TOPIC_GPS_FUSED
             ,TOPIC_STATUS_DISPLAYMODE
+
+            // additional topics
+            ,TOPIC_ACCELERATION_GROUND // need to converted euler: x,y,z
+            ,TOPIC_QUATERNION
+            ,TOPIC_ANGULAR_RATE_FUSIONED
     };
 
     int       numTopic        = sizeof(topicList50Hz) / sizeof(topicList50Hz[0]);
@@ -642,19 +660,43 @@ subscribeToDataAndSaveLogToFile(Vehicle* vehicle, int responseTimeout)
     TypeMap<TOPIC_GPS_POSITION>::type       gpsPostion;
     TypeMap<TOPIC_GPS_VELOCITY>::type       gpsVelocity;
 
+    // additional topics
+    TypeMap<TOPIC_ACCELERATION_GROUND>::type           acceleration;
+    TypeMap<TOPIC_QUATERNION>::type        quaternion;
+    TypeMap<TOPIC_ANGULAR_RATE_FUSIONED>::type        angular_rate;
+
+    std::string logPath = "/home/weiminn/Documents/Onboard-SDK/logs/";
+    boost::filesystem::create_directories(logPath);
+    std::string fileName = logPath + std::to_string((int)time(NULL)) + "_log.txt";
+
   // Counters
-    int printFrequency          = 50; //Hz
+    int printFrequency          = 10; //Hz
     int printIntervalInMicroSec = 1e6/printFrequency;
-    int totalPrintTimeInSec     = 1000;  // 1000 : 16min
+    int totalPrintTimeInSec     = 2500;  // 1000 : 16min
     int totalSample             = totalPrintTimeInSec * printFrequency;
     int notifyInterval          = 50;
     int notifyCount             = notifyInterval;
     FILE * pFile;
-    pFile = fopen ("telemetryLogFile.txt","w");
+    pFile = fopen (fileName.c_str(),"w");
     fprintf ( pFile,
             "velocity_data_x,"
             "velocity_data_y,"
             "velocity_data_z,"
+
+            // additional 
+            "acceleration_data_x,"
+            "acceleration_data_y,"
+            "acceleration_data_z,"
+
+            "euler_data_r,"
+            "euler_data_p,"
+            "euler_data_y,"
+
+            "angular_rate_data_vr,"
+            "angular_rate_data_vp,"
+            "angular_rate_data_vy,"
+            // addtional end
+
             "rc_with_flag_data_roll,"
             "rc_with_flag_data_pitch,"
             "rc_with_flag_data_yaw,"
@@ -679,7 +721,7 @@ subscribeToDataAndSaveLogToFile(Vehicle* vehicle, int responseTimeout)
             "status_flight,"
             "rtk_connect_status_rtkConnected\n"
     );
-    // Print in a loop for 2 sec
+    // Print in a loop for defined sec
     while(totalSample--)
     {
         velocity           = vehicle->subscribe->getValue<TOPIC_VELOCITY>();
@@ -694,11 +736,44 @@ subscribeToDataAndSaveLogToFile(Vehicle* vehicle, int responseTimeout)
         gpsPostion         = vehicle->subscribe->getValue<TOPIC_GPS_POSITION>();
         gpsVelocity        = vehicle->subscribe->getValue<TOPIC_GPS_VELOCITY>();
         status_displaymode = vehicle->subscribe->getValue<TOPIC_STATUS_DISPLAYMODE>();
+
+        acceleration            = vehicle->subscribe->getValue<TOPIC_ACCELERATION_GROUND>();
+        quaternion              = vehicle->subscribe->getValue<TOPIC_QUATERNION>();
+        angular_rate            = vehicle->subscribe->getValue<TOPIC_ANGULAR_RATE_FUSIONED>();
+        Telemetry::Vector3f euler = FlightSample::quaternionToEulerAngle(quaternion);
+
+
+        std::cout << "-------\n";
+        std::cout << "Velocity              (vx,vy,vz)      = " << velocity.data.x
+                  << ", " << velocity.data.y << ", " << velocity.data.z << "\n";
+        std::cout << "Acceleration   (x,y,z)       = " << acceleration.x
+                  << ", " << acceleration.y << ", " << acceleration.z << "\n";
+        std::cout << "Euler   (r,p,y)       = " << euler.x
+                  << ", " << euler.y << ", " << euler.z << "\n";
+        std::cout << "Angular Rate   (vr,vp,vy)       = " << angular_rate.x
+                  << ", " << angular_rate.y << ", " << angular_rate.z << "\n";
+
+
         DSTATUS("height_homepoint%f\n",height_homepoint);
-        fprintf ( pFile, "%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%lf,%lf,%f,%d,%d,%d,%f,%f,%f,%d,%d,%d\n"
+        fprintf ( pFile, "%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%lf,%lf,%f,%d,%d,%d,%f,%f,%f,%d,%d,%d\n"
                  ,velocity.data.x
                  ,velocity.data.y
                  ,velocity.data.z
+
+                  // additional 
+                  ,acceleration.x
+                  ,acceleration.y
+                  ,acceleration.z
+
+                  ,euler.x
+                  ,euler.y
+                  ,euler.z
+
+                  ,angular_rate.x
+                  ,angular_rate.y
+                  ,angular_rate.z
+                  // addtional end
+            
                  ,rc_with_flag_data.roll
                  ,rc_with_flag_data.pitch
                  ,rc_with_flag_data.yaw
@@ -723,6 +798,26 @@ subscribeToDataAndSaveLogToFile(Vehicle* vehicle, int responseTimeout)
                  ,status_flight
                  ,rtk_connect_status.rtkConnected
         );
+      
+        // Send to RPC Server
+      
+        xmlrpc_c::paramList sampleAddParms;
+        sampleAddParms.add(xmlrpc_c::value_double(velocity.data.x));
+        sampleAddParms.add(xmlrpc_c::value_double(velocity.data.y));
+        sampleAddParms.add(xmlrpc_c::value_double(velocity.data.z));
+        sampleAddParms.add(xmlrpc_c::value_double(acceleration.x));
+        sampleAddParms.add(xmlrpc_c::value_double(acceleration.y));
+        sampleAddParms.add(xmlrpc_c::value_double(acceleration.z));
+        sampleAddParms.add(xmlrpc_c::value_double(euler.x));
+        sampleAddParms.add(xmlrpc_c::value_double(euler.y));
+        sampleAddParms.add(xmlrpc_c::value_double(euler.z));
+        sampleAddParms.add(xmlrpc_c::value_double(angular_rate.x));
+        sampleAddParms.add(xmlrpc_c::value_double(angular_rate.y));
+        sampleAddParms.add(xmlrpc_c::value_double(angular_rate.z));
+        xmlrpc_c::rpcPtr myRpcP(methodName, sampleAddParms);
+
+        myRpcP-> call(&myClient, &myCarriageParm);
+        assert(myRpcP->isFinished());
 
         if(!keepRunning)
         {

@@ -16,7 +16,8 @@
 #include <fcntl.h>
 #include <termios.h>
 #include <unistd.h>
-#include <libusb.h>
+// #include <libusb.h>
+#include <libusb-1.0/libusb.h>
 
 #include "dji_hard_driver.hpp"
 

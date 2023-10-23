@@ -25,14 +25,12 @@ project(djiosdk-flightcontrol-sample)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread -g -O0")
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../core/inc)
-
 FILE(GLOB SOURCE_FILES *.hpp *.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_environment.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/../common/dji_linux_helpers.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/../../../core/src/flight_sample.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/../hal/*.c
         ${CMAKE_CURRENT_SOURCE_DIR}/../osal/*.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/../../../core/src/flight_sample.cpp
         ${LINKER_HEADER_SRC}
         )
 
@@ -40,4 +38,20 @@ if (OSDK_HOTPLUG)
     FILE(GLOB SOURCE_FILES ${SOURCE_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/../hal/hotplug/*.c)
 endif ()
 
-add_executable(${PROJECT_NAME} ${SOURCE_FILES})
+# add_executable(${PROJECT_NAME} ${SOURCE_FILES})
+add_library(${PROJECT_NAME} STATIC ${SOURCE_FILES})
+
+# for flight functions
+target_include_directories(
+    ${PROJECT_NAME}
+    PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../core/inc
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
+target_link_libraries(
+    ${PROJECT_NAME}
+    PUBLIC
+    djiosdk-core
+    djiosdk-fuzzer
+)

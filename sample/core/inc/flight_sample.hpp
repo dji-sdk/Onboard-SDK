@@ -34,6 +34,7 @@
 
 #include <dji_linux_helpers.hpp>
 #include <dji_vehicle.hpp>
+#include "fuzzer.hpp"
 
 class FlightSample {
  public:
@@ -157,6 +158,9 @@ class FlightSample {
   void velocityAndYawRateCtrl(const Vector3f &offsetDesired, float yawRate, uint32_t timeMs);
 
   void emergencyBrake(void);
+  static Vector3f quaternionToEulerAngle(const Telemetry::Quaternion &quat);
+
+  void fuzz(Fuzzer &fuzzer, uint32_t timeMs);
 
  private:
   Vehicle *vehicle;
@@ -168,7 +172,6 @@ class FlightSample {
                                                          const Telemetry::GPSFused& origin,
                                                          const float32_t& targetHeight, 
                                                          const float32_t& originHeight);
-  static Vector3f quaternionToEulerAngle(const Telemetry::Quaternion &quat);
   static void  horizCommandLimit(float speedFactor, float& commandX, float& commandY);
 
   bool motorStartedCheck();
