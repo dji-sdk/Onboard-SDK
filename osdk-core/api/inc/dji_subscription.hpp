@@ -343,7 +343,8 @@ public: // public methods
     lockMSG();
     if (p)
     {
-      ans = *reinterpret_cast<typename Telemetry::TypeMap<topic>::type*>(p);
+      size_t size = Telemetry::TopicDataBase[topic].size;
+      memcpy(&ans, p, size);
       freeMSG();
       return ans;
     }
